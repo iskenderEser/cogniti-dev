@@ -85,6 +85,7 @@ export function cekTalepDurumuMu(deger: unknown): deger is CekTalepDurumu {
 }
 
 export interface EclubEczaneStoreOzetItem {
+  talep_no?: number | null;
   gorunum_testi_mi?: boolean;
   yayin_id: string;
   urun_id: string;

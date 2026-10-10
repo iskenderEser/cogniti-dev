@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { TarihPill } from "@/components/ui/tarih-pill";
 import EclubHediyeCekiGunleriPill from "@/components/eclub/EclubHediyeCekiGunleriPill";
+
+import { useEffect } from "react";
 import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { CheckCircle2, Clock3, Coins, Sparkles, Trophy, Video } from "lucide-react";
 import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
@@ -17,6 +18,9 @@ import {
 import { useEclubPanel, type PanelOneri } from "../panel/_hooks/useEclubPanel";
 import EclubVideoOynatici from "../panel/_components/EclubVideoOynatici";
 import EclubFirmaVideoKatalogu from "../panel/_components/EclubFirmaVideoKatalogu";
+import { useEclubFirmaSecimi } from "@/components/eclub/EclubFirmaSecimi";
+import { eclubUrunIcerigi } from "@/lib/eclub/firmaGezinme";
+import { eclubFirmaYolu } from "@/lib/eclub/firmaGezinme";
 import { hbstoreBakiyesiDegistiBildir } from "@/lib/tclub/store/olay";
 
 function videoDurumu(oneri: PanelOneri): "bekleyen" | "tamamlanan" | "suresi_gecmis" {
@@ -41,8 +45,12 @@ export default function EclubPanelPage() {
   const { mesajlar, hata, basari, uyari } = useHataMesaji();
   const eclubKisi = !!kullanici && kullanici.kimlik_turu === "eclub_kisi";
   const hazir = !authYukleniyor && eclubKisi;
-  const { kisi, oneriler, firmaOzetleri, ozet, loading, veriCek, etkilesimGuncelle } = useEclubPanel({ hazir, hata });
-  const [seciliOneri, setSeciliOneri] = useState<PanelOneri | null>(null);
+  const rotaFirmaId = params.firma_id ?? null;
+  const secim = useEclubFirmaSecimi();
+  const kendiPaneli = useEclubPanel({ hazir: hazir && !secim.gomulu, hata, firmaId: rotaFirmaId });
+  const { kisi, oneriler, firmaOzetleri, ozet, loading, veriCek, etkilesimGuncelle } = secim.panel ?? kendiPaneli;
+  const gorunenOneriler = secim.gomulu ? eclubUrunIcerigi(oneriler, secim.urunId) : oneriler;
+  const seciliOneri = gorunenOneriler.find((o) => o.oneri_id === searchParams.get("oneri_id")) ?? null;
 
   useEffect(() => {
     if (authYukleniyor) return;
@@ -50,19 +58,17 @@ export default function EclubPanelPage() {
     if (!eclubKisi) { router.replace("/ana-sayfa"); }
   }, [kullanici, authYukleniyor, eclubKisi, router]);
 
-  // Açık video adresin kendisinde taşınır (?oneri_id=...). Böylece navbar'daki
-  // "Ana Sayfa" parametresiz adrese gittiğinde bu etki videoyu kapatır — aynı
-  // rotada takılı kalma sorunu (kullanıcı listeye dönemiyordu) böyle çözülür.
   useEffect(() => {
-    const oneriId = searchParams.get("oneri_id");
-    if (!oneriId) { setSeciliOneri(null); return; }
-    const hedef = oneriler.find((o) => o.oneri_id === oneriId);
-    if (hedef) setSeciliOneri(hedef);
-  }, [oneriler, searchParams]);
+    if (loading) return;
+    const hedefFirma = rotaFirmaId ?? seciliOneri?.firma_id;
+    if (hedefFirma && !pathname.startsWith("/eclub/firma/")) {
+      const sorgu = searchParams.toString();
+      router.replace(`${eclubFirmaYolu(hedefFirma, "yayinlar")}${sorgu ? `?${sorgu}` : ""}`);
+    }
+  }, [loading, rotaFirmaId, seciliOneri?.firma_id, pathname, searchParams, router]);
 
   if (authYukleniyor || !kullanici || loading) return <EclubKisiYukleniyor />;
 
-  const rotaFirmaId = params.firma_id ?? null;
   const aktifFirmaId = firmaOzetleri.some((firma) => firma.firma_id === rotaFirmaId)
     ? rotaFirmaId
     : null;
@@ -103,9 +109,11 @@ export default function EclubPanelPage() {
   };
 
   const handleVideoSec = (oneri: PanelOneri) => {
-    setSeciliOneri(oneri);
     // Adrese yaz — "Ana Sayfa" parametresiz adrese gidince video kapansın.
-    router.push(`${pathname}?oneri_id=${oneri.oneri_id}`, { scroll: false });
+    const sorgu = new URLSearchParams(searchParams.toString());
+    sorgu.set("oneri_id", oneri.oneri_id);
+    if (oneri.urun_id) sorgu.set("urun_id", oneri.urun_id);
+    router.push(`${pathname}?${sorgu}`, { scroll: false });
   };
 
   return (
@@ -121,7 +129,7 @@ export default function EclubPanelPage() {
             arac_id: seciliOneri.arac_id,
             arac_turu: seciliOneri.arac_turu,
           }}
-          onKapat={() => { setSeciliOneri(null); router.push(pathname, { scroll: false }); void veriCek(); }}
+          onKapat={() => { const sorgu = new URLSearchParams(searchParams.toString()); sorgu.delete("oneri_id"); router.push(`${pathname}${sorgu.size ? `?${sorgu}` : ""}`, { scroll: false }); void veriCek(); }}
           onTamamlandi={() => { void veriCek(true); hbstoreBakiyesiDegistiBildir(); }}
           hata={hata}
           basari={basari}
@@ -129,29 +137,32 @@ export default function EclubPanelPage() {
         />
       ) : (
         <>
+          {!secim.gomulu && <>
           <EclubKisiBaslik
             ikon={Sparkles}
             ustEtiket=""
             baslikClassName="text-lg md:text-xl font-extrabold text-gray-900 m-0"
             baslik={karsilamaBasligi}
-            aciklama="Firmaların size ilettiği yayınları izleyin, soruları yanıtlayın ve puan kazanın."
             aksiyon={statOzeti.eclub_store_aktif ? <EclubHediyeCekiGunleriPill /> : undefined}
             altAksiyon={<TarihPill />}
+            aciklama="Firmaların size ilettiği yayınları izleyin, soruları yanıtlayın ve puan kazanın."
           />
 
-          <section className={`grid gap-3 ${statOzeti.eclub_store_aktif ? "grid-cols-2 lg:grid-cols-4" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"}`}>
+          <section className={`grid gap-3 ${statOzeti.eclub_store_aktif ? "grid-cols-2 lg:grid-cols-4" : "grid-cols-1 sm:grid-cols-3"}`}>
             <EclubKisiStat ikon={Clock3} etiket="Bekleyen İçerik" deger={bekleyen} detay="Süresi devam eden" renk="#d78022" zemin="#fff6e8" />
             <EclubKisiStat ikon={CheckCircle2} etiket="Tamamlanan" deger={tamamlanan} detay="Tamamladığınız içerikler" renk="#16865f" zemin="#ebf8f2" />
             <EclubKisiStat ikon={Trophy} etiket="Net Puan" deger={Math.max(0, statOzeti.toplam_kazanilan_puan - statOzeti.ileri_sarma_kaybi).toLocaleString("tr-TR")} detay={`${statOzeti.dogru_cevap} doğru · ${statOzeti.ileri_sarma_kaybi} ileri sarma kaybı`} renk="#7358c7" zemin="#f2efff" />
             {statOzeti.eclub_store_aktif && <EclubKisiStat ikon={Coins} etiket="Kullanılabilir Puan" deger={statOzeti.harcanabilir_puan.toLocaleString("tr-TR")} detay="E‑Club Store bakiyesi" />}
           </section>
+          </>}
 
           {firmaOzetleri.length === 0 ? (
             <EclubKisiBosDurum ikon={Video} baslik="Firma içeriği bulunmuyor" aciklama="Firmanız size öğrenme içeriği gönderdiğinde burada görüntülenecek." />
           ) : (
             <EclubFirmaVideoKatalogu
               key={aktifFirmaId}
-              oneriler={oneriler}
+              oneriler={gorunenOneriler}
+              seciliUrunAdi={secim.urunAdi}
               seciliFirmaId={aktifFirmaId}
               seciliFirmaAdi={aktifFirmaAdi}
               onVideoSec={handleVideoSec}

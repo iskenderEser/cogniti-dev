@@ -9,6 +9,7 @@
 // hiçbir yüke girmez (İP-§9, TR §5.5).
 //
 import { IU_ROLU, MUSTERI_ROLU, URETICI_ROLLER, TUKETICI_ROLLER, ECLUB_TUKETICI_ROLLERI } from "@/lib/utils/roller";
+import { eclubFirmaYolu } from "@/lib/eclub/firmaGezinme";
 import type { PushBaglami, PushOlayTuru, PushYuku } from "./tipler";
 
 function icKullaniciYuku(baslik: string, govde: string): PushYuku {
@@ -47,7 +48,7 @@ export function icerikUret(olayTuru: PushOlayTuru, aliciRol: string, baglam: Pus
 
     case "eclub_oneri":
       if (ECLUB_TUKETICI_ROLLERI.includes(aliciRol)) {
-        return { baslik: "HapBilgi E-Club", govde: "Eczanenize yeni bir öğrenme içeriği önerildi.", url: baglam.bagId ? `/eclub/ana-sayfa?oneri_id=${encodeURIComponent(baglam.bagId)}` : "/eclub/ana-sayfa" };
+        return { baslik: "HapBilgi E-Club", govde: "Eczanenize yeni bir öğrenme içeriği önerildi.", url: `${baglam.firmaId ? eclubFirmaYolu(baglam.firmaId, "yayinlar") : "/eclub/ana-sayfa"}${baglam.bagId ? `?oneri_id=${encodeURIComponent(baglam.bagId)}` : ""}` };
       }
       return null;
 
@@ -56,9 +57,7 @@ export function icerikUret(olayTuru: PushOlayTuru, aliciRol: string, baglam: Pus
         return {
           baslik: "HapBilgi E-Club",
           govde: "Eczanenizin Migros hediye çeki hazır.",
-          url: baglam.bagId
-            ? `/eclub/cek-taleplerim?talep_id=${encodeURIComponent(baglam.bagId)}`
-            : "/eclub/cek-taleplerim",
+          url: `${baglam.firmaId ? eclubFirmaYolu(baglam.firmaId, "cek-talepleri") : "/eclub/cek-taleplerim"}${baglam.bagId ? `?talep_id=${encodeURIComponent(baglam.bagId)}` : ""}`,
         };
       }
       return null;

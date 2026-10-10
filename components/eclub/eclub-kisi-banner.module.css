@@ -1,0 +1,30 @@
+.raf { width: 100%; min-width: 0; flex-shrink: 0; }
+.banner {
+  width: 100%;
+  min-width: 0;
+  flex-shrink: 0;
+  aspect-ratio: 1932 / 480;
+  overflow: hidden;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 18px;
+  background: linear-gradient(115deg, #edf6fd, #f7f9fc);
+  box-shadow: 0 8px 30px rgba(36, 64, 98, 0.06);
+}
+.serit { display: flex; width: 100%; height: 100%; transition: transform 450ms ease; }
+.gorsel {
+  flex: 0 0 100%;
+  min-width: 0;
+  height: 100%;
+  background: #f7f9fc;
+}
+.gorsel img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.cizgiler { display: flex; justify-content: center; gap: 6px; }
+.secim { display: grid; place-items: center; width: 44px; height: 28px; padding: 0; background: transparent; border: 0; cursor: pointer; }
+.secim span { width: 32px; height: 3px; border-radius: 9999px; background: #cbd5e1; transition: background 150ms ease; }
+.aktif span { background: #237ac8; }
+.secim:hover span { background: #87bde8; }
+.secim:focus-visible { outline: 2px solid #237ac8; outline-offset: -2px; border-radius: 6px; }
+@media (max-width: 767px) { .secim { height: 44px; } }
+@media (prefers-reduced-motion: reduce) { .serit, .secim span { transition: none; } }
+/* HBLigi: geniş ekranda 1932×480 görsel alanının 2/3 genişliği dış yüksekliği belirler. */
+@media (min-width: 768px) { .banner { aspect-ratio: 1932 / 320; } }

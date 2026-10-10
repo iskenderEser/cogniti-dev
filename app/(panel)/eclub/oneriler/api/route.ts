@@ -447,6 +447,7 @@ export async function POST(request: NextRequest) {
       await eclubBildirimOlustur({
         adminSupabase,
         alici_kisi_id: kid,
+        firma_id: yayin.firma_id,
         gonderen_id: user.id,
         kayit_turu: "oneri",
         kayit_id: atomikSonuc.oneri_id,

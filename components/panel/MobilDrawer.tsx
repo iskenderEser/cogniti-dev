@@ -51,7 +51,7 @@ export default function MobilDrawer(props: MobilDrawerProps) {
     return grup.oglar.some((oge) => {
       if (!oge.gate(props)) return false;
       const p = cozPath(oge);
-      if (p && (oge.tamEslesme ? pathname === p : pathname === p || pathname.startsWith(`${p}/`))) {
+      if ((p && (oge.tamEslesme ? pathname === p : pathname === p || pathname.startsWith(`${p}/`))) || oge.aktifYollar?.some((yol) => pathname === yol || pathname.startsWith(`${yol}/`))) {
         return true;
       }
       if (oge.altOglar) {
@@ -118,8 +118,8 @@ export default function MobilDrawer(props: MobilDrawerProps) {
   const git = (path: string) => { router.push(path); props.onKapat(); };
   const cikis = () => { props.onKapat(); props.onCikis(); };
 
-  const Satir = ({ etiket, path, sayi, girintili = false, tamEslesme = false }: { etiket: string; path: string; sayi?: number; girintili?: boolean; tamEslesme?: boolean }) => {
-    const aktif = tamEslesme ? pathname === path : pathname === path || pathname.startsWith(`${path}/`);
+  const Satir = ({ etiket, path, sayi, girintili = false, tamEslesme = false, aktifYollar }: { etiket: string; path: string; sayi?: number; girintili?: boolean; tamEslesme?: boolean; aktifYollar?: string[] }) => {
+    const aktif = (tamEslesme ? pathname === path : pathname === path || pathname.startsWith(`${path}/`)) || aktifYollar?.some((yol) => pathname === yol || pathname.startsWith(`${yol}/`)) === true;
     return (
       <button
         onClick={() => git(path)}
@@ -150,7 +150,7 @@ export default function MobilDrawer(props: MobilDrawerProps) {
   const OgeBlogu = ({ oge, girintili = false }: { oge: NavOge; girintili?: boolean }) => {
     const altOglar = (oge.altOglar ?? []).filter((altOge) => altOge.gate(props));
     if (altOglar.length === 0) {
-      return <Satir etiket={oge.etiket} path={cozPath(oge)} sayi={rozetSayisi(oge)} girintili={girintili} tamEslesme={oge.tamEslesme} />;
+      return <Satir etiket={oge.etiket} path={cozPath(oge)} sayi={rozetSayisi(oge)} girintili={girintili} tamEslesme={oge.tamEslesme} aktifYollar={oge.aktifYollar} />;
     }
     const altAktif = altOglar.some((alt) => {
       const p = cozPath(alt);

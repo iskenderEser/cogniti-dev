@@ -36,6 +36,7 @@ import SistemAyarlari from "./_components/SistemAyarlari";
 import HbStorePaneli from "./_components/global/HbStorePaneli";
 import EclubStorePaneli from "./_components/global/EclubStorePaneli";
 import EclubYonetimPaneli from "./eclub/_components/EclubYonetimPaneli";
+import EclubBannerYonetimi from "./eclub/_components/EclubBannerYonetimi";
 import UretimAtamaPaneli from "./_components/global/UretimAtamaPaneli";
 
 import type { GlobalBolumId, ModulSekmeId } from "./_constants";
@@ -235,6 +236,7 @@ export default function AdminPanel() {
                     aciklama="Eczanelere özel tanıtım modülü — eczane onayları, kayıtlı eczane/kişi yönetimi ve öneri akışları."
                     m4NotuGoster={false}
                   />
+                  <EclubBannerYonetimi key={f.firma_id} firmaId={f.firma_id} firmaAdi={f.firma_adi} />
                   <EclubYonetimPaneli hata={admin.hata} basari={admin.basari} />
                 </div>
               )}

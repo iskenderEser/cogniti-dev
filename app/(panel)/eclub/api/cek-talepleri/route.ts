@@ -1,3 +1,5 @@
+import { eclubFirmaKapsami } from "@/lib/eclub/firmaGezinme";
+import { uuidGecerliMi } from "@/lib/uretim/rpc";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { ECLUB_TUKETICI_ROLLERI } from "@/lib/utils/roller";
@@ -12,7 +14,7 @@ import {
 import { eclubKisiErisimi } from "@/lib/eclub/kisiErisim";
 import { eclubStoreSiparisAcikMi, eclubStoreTakvimDurumu } from "@/lib/eclub/store/takvim";
 import { eclubCekTalebiOlusturabilirMi } from "@/lib/eclub/store/cekTalebiYetkisi";
-import { ECLUB_CEK_KARTI_TEST_PUAN_IDLERI } from "@/lib/eclub/store/gorunumTesti";
+import { ECLUB_CEK_KARTI_TEST_PUAN_IDLERI, eclubCekTalebiGorunumTestiMi } from "@/lib/eclub/store/gorunumTesti";
 
 async function kisiCoz(adminSupabase: ReturnType<typeof createAdminClient>, authUserId: string) {
   const { data } = await adminSupabase
@@ -36,6 +38,11 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
     const durum = searchParams.get("durum");
+    const firmaId = searchParams.get("firma_id");
+    if (firmaId !== null && !uuidGecerliMi(firmaId)) return validasyonHatasi("Geçersiz firma.", ["firma_id"]);
+    const erisim = await eclubKisiErisimi(adminSupabase, user.id);
+    const firmaKapsami = eclubFirmaKapsami(erisim.firmalar, firmaId, true);
+    if (firmaId !== null && firmaKapsami.length === 0) return rolHatasi("Bu firmanın çek taleplerine erişiminiz bulunmuyor.");
     const { data: aktifUyelikler, error: uyelikError } = await adminSupabase
       .from("eclub_kisi_eczane")
       .select("eczane_id")
@@ -57,6 +64,7 @@ export async function GET(request: NextRequest) {
         firmalar ( firma_adi )
       `)
       .in("eczane_id", eczaneIdler)
+      .in("firma_id", firmaKapsami.map((firma) => firma.firma_id))
       .order("created_at", { ascending: false });
     if (durum) talepQuery = talepQuery.eq("durum", durum);
 
@@ -82,10 +90,12 @@ export async function GET(request: NextRequest) {
       const firma = Array.isArray(talep.firmalar) ? talep.firmalar[0] : talep.firmalar;
       return {
         talep_id: talep.talep_id,
+        gorunum_testi_mi: eclubCekTalebiGorunumTestiMi(talep.talep_id),
         eczane_id: talep.eczane_id,
         firma_id: talep.firma_id,
         firma_adi: firma?.firma_adi ?? "Firma",
         yayin_id: talep.yayin_id,
+        urun_id: kunye?.urun_id ?? null,
         urun_adi: (kunye?.urun_id ? urunAdlari.get(kunye.urun_id) : null) ?? "Migros Hediye Çeki",
         talep_eden_kisi_id: talep.talep_eden_kisi_id,
         toplanan_puan: Number(talep.toplanan_puan ?? 0),
@@ -102,7 +112,7 @@ export async function GET(request: NextRequest) {
       };
     });
 
-    return NextResponse.json({ talepler: sonuc }, { status: 200 });
+    return NextResponse.json({ firma: firmaId ? firmaKapsami[0] : null, talepler: sonuc }, { status: 200 });
   } catch (err) {
     return sunucuHatasi(err, "GET /eclub/api/cek-talepleri");
   }
@@ -135,6 +145,14 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     if (!body.yayin_id || typeof body.yayin_id !== "string") {
       return validasyonHatasi("yayin_id zorunludur.", ["yayin_id"]);
+    }
+
+    const { data: kunye, error: kunyeError } = await adminSupabase.from("v_yayin_kunye")
+      .select("firma_id").eq("yayin_id", body.yayin_id).maybeSingle();
+    if (kunyeError) return hataYaniti("Yayının firması doğrulanamadı.", "Çek talebi firma kapsamı", kunyeError);
+    if (!kunye || eclubFirmaKapsami(erisim.firmalar, kunye.firma_id, true).length === 0
+      || (body.firma_id !== undefined && body.firma_id !== kunye.firma_id)) {
+      return rolHatasi("Bu firma için hediye çeki talebi oluşturamazsınız.");
     }
 
     const { data: testPuani, error: testError } = await adminSupabase
@@ -185,6 +203,20 @@ export async function PATCH(request: NextRequest) {
     if (body.action !== "iptal") return validasyonHatasi("Yalnız iptal işlemi desteklenir.", ["action"]);
     if (!body.talep_id || typeof body.talep_id !== "string") {
       return validasyonHatasi("talep_id zorunludur.", ["talep_id"]);
+    }
+
+    if (eclubCekTalebiGorunumTestiMi(body.talep_id)) {
+      return isKuraluHatasi("Bu talep görünüm testi içindir; iptal edilemez.");
+    }
+
+    if (body.firma_id !== undefined) {
+      if (!uuidGecerliMi(body.firma_id)) return validasyonHatasi("Geçersiz firma.", ["firma_id"]);
+      const erisim = await eclubKisiErisimi(adminSupabase, user.id);
+      const { data: talep, error: talepError } = await adminSupabase.from("eclub_store_cek_talepleri")
+        .select("talep_id").eq("talep_id", body.talep_id).eq("firma_id", body.firma_id)
+        .in("eczane_id", erisim.eczane_idler).maybeSingle();
+      if (talepError) return hataYaniti("Talep kapsamı doğrulanamadı.", "İptal firma kapsamı", talepError);
+      if (!talep || eclubFirmaKapsami(erisim.firmalar, body.firma_id, true).length === 0) return yetkiHatasi();
     }
 
     const { data: rpcRes, error: rpcErr } = await adminSupabase.rpc("eclub_store_cek_talebi_iptal", {

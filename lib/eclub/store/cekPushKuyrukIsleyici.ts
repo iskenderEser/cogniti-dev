@@ -21,11 +21,17 @@ export async function eclubCekPushKuyrugunuTuket(maxIsSayisi = 10) {
 
     try {
       if (!is.alici_auth_user_id) throw new Error("PUSH_AUTH_YOK");
+      const { data: talep, error: talepHatasi } = await supabase
+        .from("eclub_store_cek_talepleri")
+        .select("firma_id")
+        .eq("talep_id", is.talep_id)
+        .single();
+      if (talepHatasi || !talep?.firma_id) throw new Error("PUSH_TALEP_FIRMA_YOK");
       const sonuc = await pushYayinlaSonuclu(
         supabase,
         "eclub_cek_teslim",
         [is.alici_auth_user_id],
-        { bagId: is.talep_id }
+        { bagId: is.talep_id, firmaId: talep.firma_id }
       );
       if (sonuc.gonderilen < 1) {
         throw new Error(

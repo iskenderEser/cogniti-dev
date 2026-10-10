@@ -52,7 +52,7 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
   const [drawerAcik, setDrawerAcik] = useState(false);
   const [ozet, setOzet] = useState<{ takimSirasi: number | null; siparisPuani: number } | null>(null);
   const [eclubStorePuani, setEclubStorePuani] = useState<number | null>(null);
-  const [eclubFirmalar, setEclubFirmalar] = useState<Array<{ firma_id: string; firma_adi: string }>>([]);
+  const [eclubFirmalar, setEclubFirmalar] = useState<Array<{ firma_id: string; firma_adi: string; eclub_store_aktif: boolean }>>([]);
   const [firmaAdi, setFirmaAdi] = useState<string | null>(null);
 
   const rolKucu = kullanici?.rol?.trim().toLowerCase() ?? "";

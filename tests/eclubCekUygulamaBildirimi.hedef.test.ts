@@ -32,14 +32,15 @@ test("bildirim API'si yalnız oturumdaki E-Club kişisinin çek bildirimini okur
   assert.match(bildirimApi, /kayit_turu === "cek"[\s\S]*?eq\("alici_kisi_id", kisi\.kisi_id\)[\s\S]*?eq\("kayit_turu", kayit_turu\)/);
 });
 
-test("çek bildirimi oturum içinde gösterilir ve Çek Taleplerim rozetine yansır", () => {
+test("çek bildirimi oturum içinde gösterilir ve Firmalar rozetine yansır", () => {
   assert.match(bildirimGosterimi, /b\.kayit_turu === "cek"[\s\S]*?basari\(b\.mesaj\)/);
   assert.match(panelLayout, /\["\/bildirimler\/api", "\/eczanem\/eczane\/api\/rozet"\]/);
   assert.match(panelLayout, /setInterval\([\s\S]*?bildirimRozetleriniYenile\(\)[\s\S]*?30000/);
-  assert.match(panelNav, /Çek Taleplerim[\s\S]*?badgeKey: "cek"/);
+  assert.match(panelNav, /etiket: "Firmalar"[\s\S]*?badgeKey: "cek"/);
+  assert.match(bildirimApi, /eclubQuery = eclubQuery\.in\("kayit_id", cekler\.map\(\(t\) => t\.talep_id\)\)/);
 });
 
-test("Çek Taleplerim açılınca çek bildirimleri görüldü yapılır", () => {
+test("Hediye Çeki Takibi açılınca çek bildirimleri görüldü yapılır", () => {
   assert.match(ceklerim, /fetch\("\/bildirimler\/api"[\s\S]*?method: "PUT"[\s\S]*?kayit_turu: "cek"/);
   assert.match(ceklerim, /bildirimRozetleriniYenile\(\)/);
   assert.match(ceklerim, /CEK_KODU_GORUNUR_DURUMLARI[\s\S]*?CEK_KODU_GORUNUR_DURUMLARI\.includes\(talep\.durum\)[\s\S]*?talep\.cek_kodu/);

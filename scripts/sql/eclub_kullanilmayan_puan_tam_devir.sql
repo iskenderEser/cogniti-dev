@@ -1,3 +1,5 @@
+-- TEMEL GEÇİŞ: Bu dosyadan sonra eclub_puan_siparis_ve_yil_sonu_kapanisi.sql uygulanmalıdır.
+-- Yeni kapanış kurulumundan sonra bu eski dosyayı tekrar çalıştırmayın; kapanış kurallarını geri alır.
 -- E-Club: kullanılmayan çekli puanlar eksiksiz devreder.
 -- Supabase SQL Editor'da TEK PARÇA çalıştırılır. DB'de ajan tarafından çalıştırılmadı.
 -- Geçmiş dönemler de yeniden hesaplanır; kazanım ve talep kayıtları silinmez.

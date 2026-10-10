@@ -52,6 +52,7 @@ export interface PushYuku {
 }
 
 export interface PushBaglami {
+  firmaId?: string | null;
   yayinId?: string | null;
   bagId?: string | null;
 }

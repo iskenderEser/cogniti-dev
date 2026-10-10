@@ -44,7 +44,7 @@ export default function SolListe(props: SolListeProps) {
     return grup.oglar.some((oge) => {
       if (!oge.gate(props)) return false;
       const p = cozPath(oge);
-      if (p && (oge.tamEslesme ? pathname === p : pathname === p || pathname.startsWith(`${p}/`))) {
+      if ((p && (oge.tamEslesme ? pathname === p : pathname === p || pathname.startsWith(`${p}/`))) || oge.aktifYollar?.some((yol) => pathname === yol || pathname.startsWith(`${yol}/`))) {
         return true;
       }
       if (oge.altOglar) {
@@ -104,7 +104,7 @@ export default function SolListe(props: SolListeProps) {
 
   const Satir = ({ oge, seviye = 0 }: { oge: NavOge; seviye?: number }) => {
     const path = cozPath(oge);
-    const aktif = oge.tamEslesme ? pathname === path : pathname === path || pathname.startsWith(`${path}/`);
+    const aktif = (oge.tamEslesme ? pathname === path : pathname === path || pathname.startsWith(`${path}/`)) || oge.aktifYollar?.some((yol) => pathname === yol || pathname.startsWith(`${yol}/`)) === true;
     const isHover = hover === oge.etiket;
     const sayi = rozetSayisi(oge);
 

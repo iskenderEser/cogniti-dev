@@ -44,7 +44,7 @@ export async function GET() {
         .map((firma) => firma.firma_adi);
       const aktifFirmalar = eclubErisim.firmalar
         .filter((firma) => firma.aktif !== false && firma.eclub_aktif === true)
-        .map((firma) => ({ firma_id: firma.firma_id, firma_adi: firma.firma_adi }));
+        .map((firma) => ({ firma_id: firma.firma_id, firma_adi: firma.firma_adi, eclub_store_aktif: firma.eclub_store_aktif === true }));
       return NextResponse.json({
         profil: {
           kullanici_id: kisi.kisi_id,

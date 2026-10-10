@@ -1,0 +1,22 @@
+.panel { padding: 24px; border: 1px solid #e5e7eb; border-radius: 14px; background: white; font-family: 'Nunito', sans-serif; }
+.panel h2 { margin: 0; font-size: 16px; font-weight: 700; color: #111827; }
+.panel p { margin: 6px 0 16px; font-size: 12.5px; color: #6b7280; }
+.kartlar { display: grid; grid-template-columns: 1fr; gap: 16px; }
+.ekleme { display: flex; align-items: center; gap: 12px; margin-top: 16px; }
+.ekleme span { font-size: 12px; color: #6b7280; }
+.panel button:disabled { opacity: .5; cursor: default !important; }
+.kart { min-width: 0; padding: 14px; border: 1px solid #e5e7eb; border-radius: 10px; background: #f9fafb; }
+.kart h3 { margin: 0 0 12px; font-size: 13px; font-weight: 700; color: #374151; }
+.onizleme { aspect-ratio: 1932 / 480; min-height: 70px; display: grid; place-items: center; overflow: hidden; border: 1px dashed #d1d5db; border-radius: 8px; background: white; color: #9ca3af; font-size: 12px; }
+.onizleme img { width: 100%; height: 100%; object-fit: contain; }
+.aksiyonlar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.aksiyonlar label { position: relative; overflow: hidden; display: inline-flex; align-items: center; }
+.aksiyonlar input { position: absolute; inset: 0; opacity: 0; width: 100%; cursor: pointer; }
+.aksiyonlar label:focus-within { outline: 2px solid #bc2d0d; outline-offset: 2px; }
+.aksiyonlar button:disabled { opacity: .5; cursor: default !important; }
+.panel .durum { margin: 8px 0 0; font-size: 11.5px; color: #6b7280; }
+.kapali { opacity: .5; cursor: default !important; }
+.panel .not { margin: 12px 0 0; font-size: 11.5px; }
+.panel .hata { margin: 12px 0; color: #b91c1c; }
+.panel .basari { margin: 12px 0; color: #166534; }
+@media (max-width: 767px) { .aksiyonlar label, .panel button { min-height: 44px; } }

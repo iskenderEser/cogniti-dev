@@ -1,3 +1,5 @@
+import { eclubKisiErisimi } from "@/lib/eclub/kisiErisim";
+import { eclubFirmaKapsami } from "@/lib/eclub/firmaGezinme";
 // app/bildirimler/api/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
@@ -79,6 +81,17 @@ export async function GET() {
       if (b.kayit_turu === "oneri") continue;
       sayilar[b.kayit_turu] = (sayilar[b.kayit_turu] ?? 0) + 1;
     }
+    const cekBildirimleri = (eclubBildirimleri ?? []).filter((b) => b.kayit_turu === "cek" && b.kayit_id);
+    if (cekBildirimleri.length) {
+      const { data: cekler, error: cekError } = await adminSupabase.from("eclub_store_cek_talepleri")
+        .select("talep_id, firma_id").in("talep_id", cekBildirimleri.map((b) => b.kayit_id));
+      if (cekError) return hataYaniti("Firma çek rozetleri alınamadı.", "Çek bildirimi firma kapsamı", cekError);
+      const firmaHaritasi = new Map((cekler ?? []).map((t) => [t.talep_id, t.firma_id]));
+      for (const b of cekBildirimleri) {
+        const firmaId = firmaHaritasi.get(b.kayit_id);
+        if (firmaId) { const anahtar = `cek_firma_${firmaId}`; sayilar[anahtar] = (sayilar[anahtar] ?? 0) + 1; }
+      }
+    }
     sayilar.oneri = (rozetOnerileri ?? []).filter((oneri) => oneriIzlenebilirMi(oneri, simdi)).length;
     sayilar.yayin = yayinBekleyenSayisi;
 
@@ -144,7 +157,8 @@ export async function PUT(request: NextRequest) {
     if (authError || !user) return yetkiHatasi();
 
     const body = await request.json();
-    const { kayit_turu, talep_id, gorev_id, bildirim_id } = body;
+    const { kayit_turu, talep_id, gorev_id, bildirim_id, firma_id } = body;
+    if (firma_id !== undefined && !uuidGecerliMi(firma_id)) return validasyonHatasi("Geçersiz firma.", ["firma_id"]);
 
     if (bildirim_id !== undefined && !uuidGecerliMi(bildirim_id)) {
       return validasyonHatasi("bildirim_id geçerli bir UUID olmalıdır.", ["bildirim_id"]);
@@ -164,6 +178,15 @@ export async function PUT(request: NextRequest) {
       const { data: kisi, error: kisiError } = await adminSupabase.from("eclub_kisiler").select("kisi_id").eq("auth_user_id", user.id).maybeSingle();
       if (kisiError || !kisi) return hataYaniti("E-Club kişisi bulunamadı.", "eclub_kisiler SELECT — bildirim", kisiError, 404);
       let eclubQuery = adminSupabase.from("eclub_bildirimler").update({ goruldu_mu: true }).eq("alici_kisi_id", kisi.kisi_id).eq("goruldu_mu", false).eq("kayit_turu", kayit_turu);
+      if (firma_id !== undefined) {
+        const erisim = await eclubKisiErisimi(adminSupabase, user.id);
+        if (eclubFirmaKapsami(erisim.firmalar, firma_id, true).length === 0) return yetkiHatasi();
+        const { data: cekler, error: cekError } = await adminSupabase.from("eclub_store_cek_talepleri")
+          .select("talep_id").eq("firma_id", firma_id).in("eczane_id", erisim.eczane_idler);
+        if (cekError) return hataYaniti("Firma çek kapsamı alınamadı.", "Çek bildirimi kapsamı", cekError);
+        if (!cekler?.length) return NextResponse.json({ mesaj: "Okunacak çek bildirimi bulunmuyor." });
+        eclubQuery = eclubQuery.in("kayit_id", cekler.map((t) => t.talep_id));
+      }
       if (talep_id) eclubQuery = eclubQuery.eq("kayit_id", talep_id);
       const { error } = await eclubQuery;
       if (error) return hataYaniti("E-Club bildirimleri güncellenemedi.", "eclub_bildirimler UPDATE", error);

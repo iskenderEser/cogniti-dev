@@ -49,6 +49,8 @@ test("geçmiş veri silinmeden eski yazma kapıları kapatılır", () => {
 test("gezinmede fiziksel adres ve ürün mağazası bağlantısı kalmadı", () => {
   const nav = oku("components/panel/panelNav.config.ts");
   assert.doesNotMatch(nav, /\/eclub\/store\/adreslerim/);
-  assert.match(nav, /Hediye Çeki/);
-  assert.match(nav, /Çek Taleplerim/);
+  assert.match(nav, /Firmalar/);
+  const alan = oku("components/eclub/EclubFirmaCalismaAlani.tsx");
+  assert.match(alan, /Hediye Çeki Talebi/);
+  assert.match(alan, /Hediye Çeki Takibi/);
 });

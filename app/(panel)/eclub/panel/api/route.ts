@@ -1,3 +1,5 @@
+import { eclubFirmaKapsami } from "@/lib/eclub/firmaGezinme";
+import { uuidGecerliMi } from "@/lib/uretim/rpc";
 // app/eclub/panel/api/route.ts
 //
 // E-Club kişi paneli (eczacı/teknisyen) — kendine gelen başlamış önerileri döndürür.
@@ -10,14 +12,14 @@
 import { NextResponse } from "next/server";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { ECLUB_TUKETICI_ROLLERI, hedefRolleriOku, yayinTuketiciRoluneAcikMi, type HedefRoller } from "@/lib/utils/roller";
-import { hataYaniti, sunucuHatasi, yetkiHatasi, rolHatasi } from "@/lib/utils/hataIsle";
+import { hataYaniti, sunucuHatasi, yetkiHatasi, rolHatasi, validasyonHatasi } from "@/lib/utils/hataIsle";
 import { eclubOneriDurumu } from "@/lib/eclub/izlemeKurali";
 import { ogrenmeAraciBayraklari } from "@/lib/ogrenmeAraci/bayraklar";
 import { yayinGorunenUrunIdHaritasi } from "@/lib/urunler/gorunenId";
 import { eclubKisiErisimi } from "@/lib/eclub/kisiErisim";
 import { yayinThumbnailUrlCoz } from "@/lib/ogrenmeAraci/yayinThumbnail";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const supabase = await createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -32,6 +34,10 @@ export async function GET() {
     if (!ECLUB_TUKETICI_ROLLERI.includes(kisi.rol)) return rolHatasi("Geçersiz kişi rolü.");
     if (!kisiErisimi.eclub_aktif) return rolHatasi("Aktif E-Club firma bağlantısı bulunamadı.");
 
+    const firmaId = new URL(request.url).searchParams.get("firma_id");
+    if (firmaId !== null && !uuidGecerliMi(firmaId)) return validasyonHatasi("Geçersiz firma.", ["firma_id"]);
+    const firmaKapsami = eclubFirmaKapsami(kisiErisimi.firmalar, firmaId);
+    if (firmaId !== null && firmaKapsami.length === 0) return rolHatasi("Bu firmaya erişiminiz bulunmuyor.");
     const simdi = new Date().toISOString();
 
     // Henüz başlamayan öneri gösterilmez; süresi geçen, puansız tekrar izleme için korunur.
@@ -92,7 +98,7 @@ export async function GET() {
         .from("v_yayin_detay")
         .select("yayin_id, urun_adi, teknik_adi, video_url, thumbnail_url, arac_kapak_yolu, arac_dosya_yolu, arac_metadata, icerik_turu, talep_no, firma_id, firma_adi, hedef_roller, durum, video_puani, soru_puani, video_basi_soru_sayisi, arac_id, arac_turu")
         .in("yayin_id", yayinIds)
-        .in("firma_id", kisiErisimi.firmalar.filter((firma) => firma.aktif !== false && firma.eclub_aktif === true).map((firma) => firma.firma_id))
+        .in("firma_id", firmaKapsami.map((firma) => firma.firma_id))
         .in("arac_turu", Object.entries(ogrenmeAraciBayraklari()).filter(([, acik]) => acik).map(([tur]) => tur))
         // Görünürlük kapısı (Faz 1): süresi hazır olmayan video izleyiciye gösterilmez.
         .or("arac_turu.in.(gorsel,flip_pdf),video_suresi_saniye.gt.0");
@@ -109,6 +115,13 @@ export async function GET() {
           arac_id: yy.arac_id, arac_turu: yy.arac_turu,
         });
       }
+    }
+    const urunIdleri = new Map<string, string>();
+    if (yayinMap.size > 0) {
+      const { data: kunyeler, error: kunyeHatasi } = await adminSupabase.from("v_yayin_kunye")
+        .select("yayin_id, urun_id").in("yayin_id", [...yayinMap.keys()]);
+      if (kunyeHatasi) return hataYaniti("Yayın ürünleri alınamadı.", "v_yayin_kunye SELECT — E-Club panel", kunyeHatasi);
+      for (const kunye of kunyeler ?? []) urunIdleri.set(kunye.yayin_id, kunye.urun_id);
     }
     const gorunenUrunIdleri = await yayinGorunenUrunIdHaritasi(adminSupabase, [...yayinMap.keys()]);
 
@@ -177,6 +190,7 @@ export async function GET() {
         talep_no: y?.talep_no ?? null,
         firma_adi: y?.firma_adi ?? null,
         firma_id: y?.firma_id ?? null,
+        urun_id: urunIdleri.get(oo.yayin_id) ?? null,
         urun_adi: y?.urun_adi ?? "-",
         gorunen_urun_id: gorunenUrunIdleri.get(oo.yayin_id) ?? null,
         teknik_adi: y?.teknik_adi ?? null,
@@ -233,6 +247,7 @@ export async function GET() {
       firmaOzetleri.set(firmaId, mevcut);
       return mevcut;
     };
+    for (const firma of firmaKapsami) firmaOzetiniAl(firma.firma_id, firma.firma_adi);
     for (const puan of puanlar) {
       const yayin = yayinMap.get(puan.yayin_id);
       if (!yayin?.firma_id) continue;
@@ -254,15 +269,16 @@ export async function GET() {
     }
 
     return NextResponse.json({
+      firma: firmaId ? firmaKapsami[0] : null,
       kisi: { ad: kisi.ad, soyad: kisi.soyad, rol: kisi.rol },
       oneriler: sonuc,
       firma_ozetleri: [...firmaOzetleri.values()].sort((a, b) => a.firma_adi.localeCompare(b.firma_adi, "tr")),
       ozet: {
-        eclub_store_aktif: kisiErisimi.eclub_store_aktif,
-        toplam_kazanilan_puan: puanlar.reduce((toplam, puan) => toplam + Number(puan.puan ?? 0), 0),
-        ileri_sarma_kaybi: (kayipSonucu.data ?? []).reduce((toplam, kayip) => toplam + Number(kayip.kaybedilen_puan ?? 0), 0),
+        eclub_store_aktif: firmaKapsami.some((firma) => firma.eclub_store_aktif === true),
+        toplam_kazanilan_puan: puanlar.filter((p) => !firmaId || yayinMap.has(p.yayin_id)).reduce((toplam, puan) => toplam + Number(puan.puan ?? 0), 0),
+        ileri_sarma_kaybi: (kayipSonucu.data ?? []).filter((p) => !firmaId || yayinMap.has(p.yayin_id)).reduce((toplam, kayip) => toplam + Number(kayip.kaybedilen_puan ?? 0), 0),
         harcanabilir_puan: 0,
-        dogru_cevap: (dogruSonucu.data ?? []).length,
+        dogru_cevap: (dogruSonucu.data ?? []).filter((p) => !firmaId || yayinMap.has(p.yayin_id)).length,
       },
     }, { status: 200 });
 

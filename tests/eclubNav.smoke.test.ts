@@ -49,37 +49,15 @@ test("BM ve TM E-Club Takımım, Yayınları ve ligi; diğer üst roller yalnız
   assert.equal(tclub.oglar.some((oge) => oge.etiket === "E-Club Ligi"), false);
 });
 
-test("eclub_kisi (eczacı/teknisyen) grupları ve sekmeleri eksiksiz görür", async () => {
+test("eczane sidebarı firma sayısından bağımsız tek Firmalar bağlantısı gösterir", async () => {
   const { eclubKisiNavOlustur } = await import("@/components/panel/panelNav.config");
-  const nav = eclubKisiNavOlustur([
-    { firma_id: "f1", firma_adi: "Firma A" },
-    { firma_id: "f2", firma_adi: "Firma B" },
-  ]);
-
-  const baglam: NavContext = {
-    rolKucu: "eczaci",
-    storeAcik: true,
-    ccAcik: false,
-    eclubAcik: true,
-    eclubStoreAcik: true,
-    eczanemAcik: true,
-  };
-
-  assert.equal(nav.length, 3);
-  assert.equal(nav[0].baslik, "E-Club");
-  assert.equal(nav[0].oglar[0].etiket, "Firmaların Videoları");
-  assert.equal(nav[0].oglar[0].altOglar?.length, 2);
-
-  assert.equal(nav[1].baslik, "E-Club Hediye Çeki");
-  assert.deepEqual(
-    nav[1].oglar.filter((o) => o.gate(baglam)).map((o) => o.etiket),
-    ["Hediye Çeki", "Çek Taleplerim"]
-  );
-  assert.equal(nav[1].oglar.find((o) => o.etiket === "Çek Taleplerim")?.path, "/eclub/cek-taleplerim");
-
-  assert.equal(nav[2].baslik, "Eczanem");
-  assert.deepEqual(
-    nav[2].oglar.filter((o) => o.gate(baglam)).map((o) => o.etiket),
-    ["Müşterilerim", "Video Dağıtımı", "Sipariş Onayı", "İşlem Dökümü"]
-  );
+  const firmalar = Array.from({ length: 10 }, (_, i) => ({ firma_id: `f${i}`, firma_adi: `Firma ${i}`, eclub_store_aktif: i % 2 === 0 }));
+  const nav = eclubKisiNavOlustur(firmalar);
+  assert.deepEqual(nav.map((g) => g.baslik), ["E-Club", "Eczanem"]);
+  assert.deepEqual(nav[0].oglar.map((o) => [o.etiket, o.path]), [["Firmalar", "/eclub/firmalar"]]);
+  assert.equal(nav[0].oglar[0].altOglar, undefined);
+  assert.equal(nav[0].oglar[0].badgeKey, "cek");
+  assert.deepEqual(nav[0].oglar[0].aktifYollar, ["/eclub/firma"]);
+  assert.equal(nav[0].oglar[0].gate({ ...uttBaglami, eclubAcik: false }), false);
+  assert.deepEqual(nav[1].oglar.filter((o) => o.gate(uttBaglami)).map((o) => o.etiket), ["Müşterilerim", "Video Dağıtımı", "Sipariş Onayı"]);
 });

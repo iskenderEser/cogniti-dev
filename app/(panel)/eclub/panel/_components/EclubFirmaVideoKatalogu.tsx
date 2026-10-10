@@ -10,6 +10,7 @@ interface Props {
   oneriler: PanelOneri[];
   seciliFirmaId: string | null;
   seciliFirmaAdi: string | null;
+  seciliUrunAdi?: string | null;
   onVideoSec: (oneri: PanelOneri) => void;
   onBegeni: (yayinId: string) => void;
   onFavori: (yayinId: string) => void;
@@ -162,7 +163,7 @@ export function VideoRafi({
   );
 }
 
-export default function EclubFirmaVideoKatalogu({ oneriler, seciliFirmaId, seciliFirmaAdi, onVideoSec, onBegeni, onFavori }: Props) {
+export default function EclubFirmaVideoKatalogu({ oneriler, seciliFirmaId, seciliFirmaAdi, seciliUrunAdi, onVideoSec, onBegeni, onFavori }: Props) {
   const firmaVideolari = useMemo(
     () => seciliFirmaId ? oneriler.filter((oneri) => oneri.firma_id === seciliFirmaId) : oneriler,
     [oneriler, seciliFirmaId],
@@ -176,12 +177,12 @@ export default function EclubFirmaVideoKatalogu({ oneriler, seciliFirmaId, secil
     .sort((a, b) => b.favori_sayisi - a.favori_sayisi || a.urun_adi.localeCompare(b.urun_adi, "tr"))
     .slice(0, 10), [firmaVideolari]);
   const firmaBasligi = seciliFirmaAdi ? firmaIyelik(seciliFirmaAdi) : null;
-  const sifirlamaKapsami = seciliFirmaId ?? "tumu";
+  const sifirlamaKapsami = `${seciliFirmaId ?? "tumu"}:${seciliUrunAdi ?? "tumu"}`;
 
   return (
     <div className="flex flex-col gap-6">
       <VideoRafi
-        baslik={firmaBasligi ? `${firmaBasligi} Tüm İçerikleri` : "Tüm Firmaların İçerikleri"}
+        baslik={seciliUrunAdi ? `${seciliUrunAdi} Yayınları` : firmaBasligi ? `${firmaBasligi} Tüm İçerikleri` : "Tüm Firmaların İçerikleri"}
         videolar={firmaVideolari}
         onVideoSec={onVideoSec}
         onBegeni={onBegeni}
@@ -190,7 +191,7 @@ export default function EclubFirmaVideoKatalogu({ oneriler, seciliFirmaId, secil
         sifirlamaAnahtari={`${sifirlamaKapsami}-tumu`}
       />
       <VideoRafi
-        baslik={firmaBasligi ? `${firmaBasligi} En Çok Beğenilenleri` : "En Çok Beğenilenler"}
+        baslik={seciliUrunAdi ? `${seciliUrunAdi} En Çok Beğenilenler` : firmaBasligi ? `${firmaBasligi} En Çok Beğenilenleri` : "En Çok Beğenilenler"}
         videolar={enCokBegenilen}
         onVideoSec={onVideoSec}
         onBegeni={onBegeni}
@@ -199,7 +200,7 @@ export default function EclubFirmaVideoKatalogu({ oneriler, seciliFirmaId, secil
         sifirlamaAnahtari={`${sifirlamaKapsami}-begenilen`}
       />
       <VideoRafi
-        baslik={firmaBasligi ? `${firmaBasligi} En Çok Favorilenenleri` : "En Çok Favorilenenler"}
+        baslik={seciliUrunAdi ? `${seciliUrunAdi} En Çok Favorilenenler` : firmaBasligi ? `${firmaBasligi} En Çok Favorilenenleri` : "En Çok Favorilenenler"}
         videolar={enCokFavorilenen}
         onVideoSec={onVideoSec}
         onBegeni={onBegeni}

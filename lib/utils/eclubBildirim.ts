@@ -12,6 +12,7 @@ interface EclubBildirimParams {
   adminSupabase: SupabaseClient;
   alici_kisi_id: string;
   gonderen_id?: string | null;
+  firma_id?: string | null;
   kayit_turu: EclubKayitTuru;
   kayit_id: string;
   mesaj: string;
@@ -22,7 +23,7 @@ interface EclubBildirimParams {
  */
 export async function eclubBildirimOlustur(params: EclubBildirimParams): Promise<void> {
   try {
-    const { adminSupabase, alici_kisi_id, gonderen_id, kayit_turu, kayit_id, mesaj } = params;
+    const { adminSupabase, alici_kisi_id, gonderen_id, firma_id, kayit_turu, kayit_id, mesaj } = params;
 
     const { error } = await adminSupabase
       .from("eclub_bildirimler")
@@ -43,7 +44,7 @@ export async function eclubBildirimOlustur(params: EclubBildirimParams): Promise
     }
 
     // P6: kisi_id → auth_user_id köprüsü orkestrasyonda (NULL'lar elenir — K-P2).
-    pushYayinlaEclubKisilereArkada(adminSupabase, "eclub_oneri", [alici_kisi_id], { bagId: kayit_id });
+    pushYayinlaEclubKisilereArkada(adminSupabase, "eclub_oneri", [alici_kisi_id], { bagId: kayit_id, firmaId: firma_id });
   } catch (err) {
     console.error("[ECLUB BİLDİRİM] Beklenmeyen hata:", err);
   }
@@ -53,6 +54,7 @@ interface EclubCokluBildirimParams {
   adminSupabase: SupabaseClient;
   alici_kisi_idler: string[];
   gonderen_id?: string | null;
+  firma_id?: string | null;
   kayit_turu: EclubKayitTuru;
   kayit_id: string;
   mesaj: string;
@@ -63,7 +65,7 @@ interface EclubCokluBildirimParams {
  */
 export async function eclubCokluBildirimOlustur(params: EclubCokluBildirimParams): Promise<void> {
   try {
-    const { adminSupabase, alici_kisi_idler, gonderen_id, kayit_turu, kayit_id, mesaj } = params;
+    const { adminSupabase, alici_kisi_idler, gonderen_id, firma_id, kayit_turu, kayit_id, mesaj } = params;
 
     if (alici_kisi_idler.length === 0) return;
 
@@ -87,7 +89,7 @@ export async function eclubCokluBildirimOlustur(params: EclubCokluBildirimParams
       return; // in-app yazılamadıysa push da gitmez (K-P3)
     }
 
-    pushYayinlaEclubKisilereArkada(adminSupabase, "eclub_oneri", alici_kisi_idler, { bagId: kayit_id });
+    pushYayinlaEclubKisilereArkada(adminSupabase, "eclub_oneri", alici_kisi_idler, { bagId: kayit_id, firmaId: firma_id });
   } catch (err) {
     console.error("[ECLUB BİLDİRİM] Beklenmeyen hata:", err);
   }

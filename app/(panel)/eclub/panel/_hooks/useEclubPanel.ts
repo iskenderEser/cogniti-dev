@@ -1,7 +1,7 @@
 // app/eclub/panel/_hooks/useEclubPanel.ts
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export interface PanelOneri {
   oneri_id: string;
@@ -9,6 +9,7 @@ export interface PanelOneri {
   talep_no?: number | null;
   firma_id: string | null;
   firma_adi?: string | null;
+  urun_id?: string | null;
   urun_adi: string;
   gorunen_urun_id?: string | null;
   teknik_adi: string | null;
@@ -66,11 +67,14 @@ export interface PanelOzet {
 }
 
 interface UseEclubPanelArgs {
+  firmaId?: string | null;
   hazir: boolean;
   hata: (mesaj: string, adim?: string, detay?: string) => void;
 }
 
-export function useEclubPanel({ hazir, hata }: UseEclubPanelArgs) {
+export function useEclubPanel({ hazir, hata, firmaId = null }: UseEclubPanelArgs) {
+  const istekSirasi = useRef(0);
+  const [yuklenenKapsam, setYuklenenKapsam] = useState<string | null | undefined>(undefined);
   const [kisi, setKisi] = useState<PanelKisi | null>(null);
   const [oneriler, setOneriler] = useState<PanelOneri[]>([]);
   const [firmaOzetleri, setFirmaOzetleri] = useState<PanelFirmaOzeti[]>([]);
@@ -78,11 +82,15 @@ export function useEclubPanel({ hazir, hata }: UseEclubPanelArgs) {
   const [loading, setLoading] = useState(true);
 
   const veriCek = useCallback(async (sessiz = false) => {
+    const istek = ++istekSirasi.current;
     if (!sessiz) setLoading(true);
     try {
-      const res = await fetch("/eclub/panel/api");
+      const res = await fetch(`/eclub/panel/api${firmaId ? `?firma_id=${encodeURIComponent(firmaId)}` : ""}`);
       const d = await res.json();
+      if (istek !== istekSirasi.current) return;
       if (!res.ok) {
+        setOneriler([]); setFirmaOzetleri([]);
+        setOzet({ eclub_store_aktif: false, toplam_kazanilan_puan: 0, ileri_sarma_kaybi: 0, harcanabilir_puan: 0, dogru_cevap: 0 });
         hata(d.hata ?? "E-Club Panel Verileri Yüklenemedi.", d.adim, d.detay);
       } else {
         setKisi(d.kisi ?? null);
@@ -97,14 +105,18 @@ export function useEclubPanel({ hazir, hata }: UseEclubPanelArgs) {
         });
       }
     } catch (err) {
+      if (istek !== istekSirasi.current) return;
+      setOneriler([]); setFirmaOzetleri([]);
+        setOzet({ eclub_store_aktif: false, toplam_kazanilan_puan: 0, ileri_sarma_kaybi: 0, harcanabilir_puan: 0, dogru_cevap: 0 });
       hata("Veri yüklenirken hata oluştu.", "useEclubPanel veriCek", err instanceof Error ? err.message : undefined);
     } finally {
-      if (!sessiz) setLoading(false);
+      if (istek === istekSirasi.current) { setYuklenenKapsam(firmaId); setLoading(false); }
     }
-  }, [hata]);
+  }, [hata, firmaId]);
 
   useEffect(() => {
-    if (hazir) veriCek();
+    if (hazir) void veriCek();
+    return () => { istekSirasi.current += 1; };
   }, [hazir, veriCek]);
 
   const etkilesimGuncelle = (tur: "begeni" | "favori", yayinId: string, aktif: boolean) => {
@@ -116,5 +128,5 @@ export function useEclubPanel({ hazir, hata }: UseEclubPanelArgs) {
     }));
   };
 
-  return { kisi, oneriler, firmaOzetleri, ozet, loading, veriCek, etkilesimGuncelle };
+  return { kisi, oneriler, firmaOzetleri, ozet, loading: loading || yuklenenKapsam !== firmaId, veriCek, etkilesimGuncelle };
 }

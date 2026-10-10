@@ -1,0 +1,116 @@
+// İzole PostgreSQL doğrulaması. Canlı veritabanına bağlanmaz.
+// ECLUB_SQL_TEST_RUNTIME=/paket/konumu/dist/index.js node scripts/denetim/eclub-puan-kapanisi-dogrula.mjs
+import { fileURLToPath, pathToFileURL } from 'node:url';
+const runtime=process.env.ECLUB_SQL_TEST_RUNTIME;
+if (!runtime) throw new Error('ECLUB_SQL_TEST_RUNTIME, PGlite modülünün mutlak dosya yolunu göstermeli.');
+const { PGlite } = await import(pathToFileURL(runtime).href);
+import { readFile } from 'node:fs/promises';
+import assert from 'node:assert/strict';
+const root=fileURLToPath(new URL('../../', import.meta.url));
+const read=async p=>readFile(root+p,'utf8');
+const db=new PGlite();
+await db.exec(`
+CREATE ROLE anon; CREATE ROLE authenticated; CREATE ROLE service_role;
+CREATE SCHEMA cron;
+CREATE FUNCTION cron.schedule(text,text,text) RETURNS bigint LANGUAGE sql AS $$ SELECT 1::bigint $$;
+CREATE TABLE eclub_eczaneler(eczane_id uuid PRIMARY KEY,gln text);
+CREATE TABLE yayin_yonetimi(yayin_id uuid PRIMARY KEY,satis_sarti_tipi text,cek_karsiligi_var_mi boolean,durum text,barem_tablosu jsonb,karsilik_puan int,karsilik_tl numeric,gizli_sart_katlama_orani int);
+CREATE TABLE eclub_kazanilan_puanlar(kazanilan_puan_id uuid DEFAULT gen_random_uuid(),eczane_id uuid NOT NULL,yayin_id uuid NOT NULL,puan int,cek_karsiligi_var_mi bool,created_at timestamptz);
+CREATE TABLE eclub_store_cek_talepleri(talep_id uuid DEFAULT gen_random_uuid(),eczane_id uuid,yayin_id uuid,donem_kodu text,durum text,toplanan_puan int,siparis_tipi text,siparis_verildi_mi bool,created_at timestamptz DEFAULT now(),cek_kodu text);
+CREATE TABLE eclub_store_puan_devirleri(devir_id uuid DEFAULT gen_random_uuid(),eczane_id uuid,yayin_id uuid,kaynak_donem_kodu text,hedef_donem_kodu text,puan int CHECK(puan>0),kaynak_talep_id uuid,kullanildi_mi bool DEFAULT false,kullanilan_talep_id uuid,iptal_edildi bool DEFAULT false,created_at timestamptz DEFAULT now(),guncellenme_at timestamptz DEFAULT now());
+CREATE UNIQUE INDEX eclub_puan_devir_tekil_idx ON eclub_store_puan_devirleri(eczane_id,yayin_id,kaynak_donem_kodu) WHERE iptal_edildi=false;
+CREATE TABLE eclub_kisi_eczane(kisi_id uuid,eczane_id uuid,aktif_mi bool);
+CREATE TABLE eclub_eczane_master(gln text,eczane_adi text);
+CREATE TABLE eclub_eczane_firma(eczane_id uuid,firma_id uuid,aktif_mi bool);
+CREATE TABLE firmalar(firma_id uuid,firma_adi text);
+CREATE TABLE urunler(urun_id uuid,urun_adi text);
+CREATE TABLE v_yayin_kunye(yayin_id uuid,urun_id uuid,firma_id uuid);
+CREATE FUNCTION eclub_store_onceki_deviri_hazirla(uuid,uuid,text) RETURNS void LANGUAGE plpgsql AS $$ BEGIN RETURN; END $$;
+CREATE FUNCTION eclub_store_cek_talebi_olustur(uuid,uuid,bool) RETURNS void LANGUAGE plpgsql AS $$ BEGIN RETURN; END $$;
+CREATE FUNCTION eclub_store_barem_gecerli(jsonb) RETURNS bool LANGUAGE sql AS $$SELECT true$$;
+`);
+const src=await read('scripts/sql/eclub_store_yeni_donem_satis_sartli_cek.sql');
+await db.exec(src.slice(src.indexOf('CREATE OR REPLACE FUNCTION public.eclub_store_donem_sinirlari'),src.indexOf('CREATE OR REPLACE FUNCTION public.eclub_store_barem_gecerli')));
+const snap=await read('scripts/sql/eclub_store_rapor_lig_eczane_snapshot.sql');
+const pos=snap.indexOf('CREATE OR REPLACE FUNCTION public.get_eclub_eczane_store_ozet');
+let summary=snap.slice(pos,snap.indexOf('$fonksiyon$;',pos)+'$fonksiyon$;'.length);
+summary=summary.replaceAll('k.urun_adi','u.urun_adi').replace('LEFT JOIN public.firmalar f','LEFT JOIN public.urunler u ON u.urun_id=k.urun_id\n  LEFT JOIN public.firmalar f');
+await db.exec(summary);
+await db.exec(await read('scripts/sql/eclub_kullanilmayan_puan_tam_devir.sql'));
+const migration=await read('scripts/sql/eclub_puan_siparis_ve_yil_sonu_kapanisi.sql');
+await db.exec(migration);
+await db.exec(migration); // Kurulum tekrar çalıştırılabilir.
+const pharmacy='00000000-0000-4000-8000-000000000001';
+await db.query('INSERT INTO eclub_eczaneler VALUES($1,$2)',[pharmacy,'test']);
+let seq=1;
+async function setup(type,points,date){
+ const publication=`00000000-0000-4000-8000-${String(++seq).padStart(12,'0')}`;
+ await db.query('INSERT INTO yayin_yonetimi VALUES($1,$2,true,\'yayinda\',\'[{"min_puan":100,"max_puan":500,"adet":10,"mal_fazlasi":1}]\',10,2,20)',[publication,type]);
+ await db.query('INSERT INTO eclub_kazanilan_puanlar(eczane_id,yayin_id,puan,cek_karsiligi_var_mi,created_at) VALUES($1,$2,$3,true,$4)',[pharmacy,publication,points,date]);
+ return publication;
+}
+const calc=async(pub,period,date)=>db.query('SELECT eclub_store_devir_ve_silinme_hesapla($1,$2,$3,$4)',[pharmacy,pub,period,date]);
+const losses=async pub=>(await db.query('SELECT coalesce(sum(silinen_puan),0)::int AS n FROM eclub_store_puan_silinmeleri WHERE yayin_id=$1',[pub])).rows[0].n;
+const carried=async(pub,period)=>(await db.query('SELECT coalesce(sum(puan),0)::int AS n FROM eclub_store_puan_devirleri WHERE yayin_id=$1 AND hedef_donem_kodu=$2 AND NOT iptal_edildi',[pub,period])).rows[0].n;
+const order=async(pub,period,points)=>db.query("INSERT INTO eclub_store_cek_talepleri(eczane_id,yayin_id,donem_kodu,durum,toplanan_puan,siparis_tipi,siparis_verildi_mi) VALUES($1,$2,$3,'beklemede',$4,'satis_sartli',true)",[pharmacy,pub,period,points]);
+const a=await setup('satis_sartli',300,'2026-01-10T12:00:00+03:00');
+await calc(a,'2026-P1','2026-03-07T23:59:59.999+03:00'); assert.equal(await losses(a),0);
+await calc(a,'2026-P1','2026-03-08T00:00:00+03:00'); assert.equal(await losses(a),300); assert.equal(await carried(a,'2026-P2'),0);
+await calc(a,'2026-P2','2026-05-07T00:00:00+03:00'); assert.equal(await losses(a),300); assert.equal(await carried(a,'2026-P2'),0);
+console.log('PASS zorunlu sipariş: 7. gün sonuna kadar korunur, 8. gün silinir, yeniden çalıştırmada dirilmez');
+const b=await setup('siparissiz_cek',300,'2026-01-10T12:00:00+03:00');
+await calc(b,'2026-P2','2026-05-01T12:00:00+03:00'); assert.equal(await carried(b,'2026-P2'),300); assert.equal(await losses(b),0);
+await calc(b,'2026-P3','2026-07-01T12:00:00+03:00'); assert.equal(await carried(b,'2026-P3'),300);
+console.log('PASS siparişsiz puanlar aynı yıl içinde birden fazla döneme devreder');
+const c=await setup('satis_sartli',650,'2026-01-10T12:00:00+03:00'); await order(c,'2026-P1',500);
+await calc(c,'2026-P2','2026-05-01T12:00:00+03:00'); assert.equal(await carried(c,'2026-P2'),150); assert.equal(await losses(c),0);
+await db.query("UPDATE eclub_store_cek_talepleri SET durum='iptal' WHERE yayin_id=$1",[c]);
+await calc(c,'2026-P2','2026-05-01T12:00:00+03:00'); assert.equal(await losses(c),650); assert.equal(await carried(c,'2026-P2'),0);
+console.log('PASS siparişli talebe ayrılan puan silinmez, iptal sonrası kapanmış zorunlu döneme iade de devretmez');
+const d=await setup('serbest_siparis',650,'2026-11-10T12:00:00+03:00');
+await calc(d,'2026-P6','2027-01-07T23:59:59.999+03:00'); assert.equal(await losses(d),0);
+await calc(d,'2026-P6','2027-01-08T00:00:00+03:00'); assert.equal(await losses(d),650); assert.equal(await carried(d,'2027-P1'),0);
+await calc(d,'2027-P1','2027-03-01T00:00:00+03:00'); assert.equal(await losses(d),650); assert.equal(await carried(d,'2027-P1'),0);
+await db.query('INSERT INTO eclub_kazanilan_puanlar(eczane_id,yayin_id,puan,cek_karsiligi_var_mi,created_at) VALUES($1,$2,200,true,$3)',[pharmacy,d,'2027-01-10T00:00:00+03:00']);
+await calc(d,'2027-P2','2027-05-01T00:00:00+03:00'); assert.equal(await carried(d,'2027-P2'),200);
+console.log('PASS 8 Ocak Türkiye gece yarısı: geçen yıl silinir; yeni yıl puanı korunur');
+const e=await setup('siparissiz_cek',650,'2026-11-10T12:00:00+03:00'); await order(e,'2026-P6',500);
+await calc(e,'2026-P6','2027-01-08T00:00:00+03:00'); assert.equal(await losses(e),150);
+console.log('PASS yıl sonunda yalnız kullanılmamış bakiye silinir, bekleyen talep korunur');
+const f=await setup('satis_sartli',300,'2026-01-10T12:00:00+03:00');
+await db.query("UPDATE yayin_yonetimi SET satis_sarti_tipi='siparissiz_cek' WHERE yayin_id=$1",[f]);
+await calc(f,'2026-P2','2026-05-01T00:00:00+03:00'); assert.equal(await losses(f),300);
+console.log('PASS sonraki yayın koşulu değişikliği kazanım dönemi koşulunu değiştirmez');
+const g=await setup('siparissiz_cek',650,'2025-11-10T12:00:00+03:00');
+const person='00000000-0000-4000-8000-000000000099'; const firm='00000000-0000-4000-8000-000000000098';
+await db.query('INSERT INTO eclub_kisi_eczane VALUES($1,$2,true)',[person,pharmacy]);
+await db.query('INSERT INTO v_yayin_kunye VALUES($1,NULL,$2)',[g,firm]);
+await db.query('INSERT INTO eclub_eczane_firma VALUES($1,$2,true)',[pharmacy,firm]);
+// Eski yılın puanı kaynak kaydı korunurken güncel bakiyeye geri dönmez.
+const result=await db.query('SELECT toplanan_puan FROM get_eclub_eczane_store_ozet($1)',[person]); assert.equal(result.rows[0].toplanan_puan,0);
+assert.equal((await db.query('SELECT puan FROM eclub_kazanilan_puanlar WHERE yayin_id=$1',[g])).rows[0].puan,650);
+console.log('PASS gerçek okuma RPC: silinen puan tekrar bakiyeye katılmaz; kazanım tarihçesi korunur');
+// Gerçek toplamın iki dönemden gelmesi, yıl sonunda iki kez silinmesine yol açmaz.
+const h=await setup('siparissiz_cek',300,'2026-01-10T12:00:00+03:00');
+await db.query('INSERT INTO eclub_kazanilan_puanlar(eczane_id,yayin_id,puan,cek_karsiligi_var_mi,created_at) VALUES($1,$2,200,true,$3)',[pharmacy,h,'2026-11-10T00:00:00+03:00']);
+await calc(h,'2026-P6','2027-01-07T23:59:59.999+03:00');
+assert.equal(await carried(h,'2026-P6'),300); assert.equal(await losses(h),0);
+await calc(h,'2026-P6','2027-01-08T00:00:00+03:00'); assert.equal(await losses(h),500);
+await calc(h,'2027-P1','2027-03-01T00:00:00+03:00'); assert.equal(await carried(h,'2027-P1'),0); assert.equal(await losses(h),500);
+console.log('PASS önceki dönemden gelen ve son dönemde kazanılan puan yıl sonunda yalnız bir kez kapanır');
+// Önceden oluşturulmuş yanlış devir, ilk kapanış hesabında pasifleştirilir.
+const i=await setup('satis_sartli',300,'2026-01-10T12:00:00+03:00');
+await db.query("INSERT INTO eclub_store_puan_devirleri(eczane_id,yayin_id,kaynak_donem_kodu,hedef_donem_kodu,puan) VALUES($1,$2,'2026-P1','2026-P2',300)",[pharmacy,i]);
+await calc(i,'2026-P2','2026-05-01T00:00:00+03:00'); assert.equal(await carried(i,'2026-P2'),0);
+console.log('PASS eski yanlış devir pasifleştirilir');
+// Puan bir sonraki dönemde zaten kullanılmışsa SQL sessizce negatif bakiye üretmez.
+const j=await setup('satis_sartli',300,'2026-01-10T12:00:00+03:00');
+await db.query("INSERT INTO eclub_store_puan_devirleri(eczane_id,yayin_id,kaynak_donem_kodu,hedef_donem_kodu,puan) VALUES($1,$2,'2026-P1','2026-P2',300)",[pharmacy,j]);
+await order(j,'2026-P2',300);
+await assert.rejects(calc(j,'2026-P3','2026-07-01T00:00:00+03:00'), /Devir hesabı tutarsız/);
+assert.equal(await carried(j,'2026-P2'),300); assert.equal(await losses(j),0);
+console.log('PASS eski bakiye sonraki talebe ayrılmışsa hesap geri alınır; mevcut talep bozulmaz');
+assert.equal((await db.query("SELECT has_function_privilege('authenticated','public.eclub_store_devir_ve_silinme_hesapla(uuid,uuid,text,timestamptz)','EXECUTE') AS ok")).rows[0].ok,false);
+assert.equal((await db.query("SELECT has_function_privilege('service_role','public.eclub_store_devir_ve_silinme_hesapla(uuid,uuid,text,timestamptz)','EXECUTE') AS ok")).rows[0].ok,true);
+console.log('PASS kapanış fonksiyonları yalnız sunucu yetkisiyle çalışır');
+await db.close();

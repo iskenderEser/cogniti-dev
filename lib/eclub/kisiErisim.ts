@@ -4,6 +4,7 @@ import { FIRMA_KOLONLARI } from "@/lib/firma/kolonlar";
 interface EclubFirmaModulSatiri {
   firma_id: string;
   firma_adi: string;
+  logo_url?: string | null;
   aktif: boolean | null;
   eclub_aktif: boolean | null;
   eclub_store_aktif: boolean | null;

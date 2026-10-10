@@ -29,6 +29,7 @@ export interface PanelNavbarOzet {
 export interface PanelFirmaOge {
   firma_id: string;
   firma_adi: string;
+  eclub_store_aktif: boolean;
 }
 
 export interface PanelCacheData {

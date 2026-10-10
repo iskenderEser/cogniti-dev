@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import {
   Calendar,
   CheckCircle2,
   Coins,
   Gift,
-  Info,
   Package,
   Sparkles,
   Store,
@@ -22,29 +22,36 @@ import {
   EclubKisiStat,
   EclubKisiYukleniyor,
 } from "@/components/eclub/EclubKisiSayfa";
+import EclubHediyeCekiBilgiPaneli from "@/components/eclub/EclubHediyeCekiBilgiPaneli";
 import { useEclubStore } from "./_hooks/useEclubStore";
 import {
   CEK_KODU_GORUNUR_DURUMLARI,
   CEK_TALEP_DURUM_META,
   type BaremSatiri,
 } from "@/lib/eclub/store/eclubStoreTipler";
+import { useEclubFirmaSecimi } from "@/components/eclub/EclubFirmaSecimi";
+import { eclubUrunIcerigi } from "@/lib/eclub/firmaGezinme";
+import { eclubFirmaYolu, eclubUrunGruplari } from "@/lib/eclub/firmaGezinme";
 import { YenileButonu } from "@/components/ui/yenile-butonu";
 import { useEclubStoreTakvim } from "@/hooks/useEclubStoreTakvim";
 import { eclubCekTalebiOlusturabilirMi } from "@/lib/eclub/store/cekTalebiYetkisi";
 
 export default function EclubStorePage() {
   const router = useRouter();
+  const secim = useEclubFirmaSecimi();
+  const firmaId = useParams<{ firma_id?: string }>().firma_id ?? null;
   const { kullanici, yukleniyor: authYukleniyor } = useAuth();
   const { mesajlar, hata, basari } = useHataMesaji();
   const eclubKisi = !!kullanici && kullanici.kimlik_turu === "eclub_kisi";
   const cekTalebiOlusturabilir = eclubCekTalebiOlusturabilirMi(kullanici?.rol);
   const {
+    firma,
     cekYayinlar,
     loading,
     yenileniyor,
     yenile,
     cekTalebiOlustur,
-  } = useEclubStore({ hata, basari });
+  } = useEclubStore({ hata, basari, firmaId, hazir: !authYukleniyor && eclubKisi });
   const { takvim, acik: storeAcik, yenile: takvimYenile } = useEclubStoreTakvim({
     aktif: Boolean(eclubKisi),
   });
@@ -62,7 +69,8 @@ export default function EclubStorePage() {
 
   if (authYukleniyor || !kullanici || loading) return <EclubKisiYukleniyor />;
 
-  const ornekGosterim = cekYayinlar.some((item) => item.gorunum_testi_mi);
+  const gorunenYayinlar = secim.gomulu ? eclubUrunIcerigi(cekYayinlar, secim.urunId) : cekYayinlar;
+  const urunGruplari = eclubUrunGruplari(gorunenYayinlar);
 
   const handleTalepVer = async (
     yayinId: string,
@@ -103,26 +111,31 @@ export default function EclubStorePage() {
 
   return (
     <EclubKisiSayfa>
+      {secim.gomulu && secim.aksiyonAlani && createPortal(
+        <YenileButonu yenileniyor={yenileniyor} onYenile={tumunuYenile} disabled={islemLoading} />,
+        secim.aksiyonAlani,
+      )}
+      {!secim.gomulu && <>
       <EclubKisiBaslik
         ikon={Store}
-        ustEtiket=""
-        baslik="Hediye Çeki"
+        ustEtiket={firma?.firma_adi ?? ""}
+        baslik="Hediye Çekleri"
         rehberAnahtar="eclub-store-magaza"
         aciklama="Eczanenizin kazandığı puanları Hediye Çeki'ne dönüştürebilirsiniz"
         aksiyon={
-          <div className="flex gap-2">
             <YenileButonu
               yenileniyor={yenileniyor}
               onYenile={tumunuYenile}
               disabled={islemLoading}
             />
+        }
+        ekKontroller={
             <Link
-              href="/eclub/cek-taleplerim"
+              href={firmaId ? eclubFirmaYolu(firmaId, "cek-talepleri") : "/eclub/cek-taleplerim"}
               className="rounded-xl border border-[#d7e1ec] bg-white px-3.5 py-2 text-xs font-extrabold text-[#45627f] hover:bg-[#f6f9fc]"
             >
-              Çek Taleplerim
+              Çek Talepleri
             </Link>
-          </div>
         }
       />
 
@@ -155,60 +168,26 @@ export default function EclubStorePage() {
           />
         </div>
       </section>
-
-      {/* Çek talebi ve devir kuralı bilgi kutusu */}
-      <section aria-labelledby="hediye-ceki-sorular" className="space-y-3">
-        <div className="flex items-center gap-3">
-          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-indigo-600 text-white shadow">
-            <Info size={16} />
-          </div>
-          <h3 id="hediye-ceki-sorular" className="text-sm font-bold text-slate-900">
-            Hediye Çeki Hakkında Yararlı Bilgiler
-          </h3>
-        </div>
-        <dl className="grid grid-cols-1 gap-3 text-xs leading-relaxed text-slate-600 sm:grid-cols-2 xl:grid-cols-4">
-              <div className="min-w-0 rounded-2xl border border-indigo-100 bg-gradient-to-br from-indigo-50/70 via-white to-white p-4 shadow-sm">
-                <dt className="font-bold text-slate-900">Eczane Havuz Puanı</dt>
-                <dd className="mt-3">Platformda tamamladığınız yayınlar sonrası kazandığınız puanlar, firmanın belirlediği oranda hediye çekine dönüştürülür. Eczane havuz puanı olarak tanımlanır.</dd>
-              </div>
-              <div className="min-w-0 rounded-2xl border border-indigo-100 bg-gradient-to-br from-indigo-50/70 via-white to-white p-4 shadow-sm">
-                <dt className="font-bold text-slate-900">Puan Limitleri ve Puanların Devri</dt>
-                <dd className="mt-3">Firma, her yayın için hediye çeki talebinde kullanılabilecek en az ve en çok puanı belirler. Talepler bu limitler dahilinde verilebilir. Sipariş zorunlu yayınlar hariç diğer yayınlardan kazanılan puanlar, devredilebilir.</dd>
-              </div>
-              <div className="min-w-0 rounded-2xl border border-indigo-100 bg-gradient-to-br from-indigo-50/70 via-white to-white p-4 shadow-sm">
-                <dt className="font-bold text-slate-900">Sipariş ve Hediye Çeki İlişkisi</dt>
-                <dd className="mt-3 space-y-2">
-                  <p>Firma, her yayın için sipariş koşulunu belirleyebilir. Üç seçenek vardır:</p>
-                  <ul className="list-disc space-y-1 pl-4">
-                    <li><strong>Sipariş gerekmiyorsa:</strong> Sipariş vermeden puanlarınızı hediye çekine dönüştürebilirsiniz.</li>
-                    <li><strong>Sipariş isteğe bağlıysa:</strong> Sipariş vermeden de hediye çeki talep edebilirsiniz. Siparişi vermeniz durumunda hediye çeki tutarı firmanın belirlediği orandan daha fazla olabilir.</li>
-                    <li><strong>Sipariş zorunluysa:</strong> Firmanın belirlediği siparişi verdiğinizde puanlarınız hediye çekine dönüşür. Sipariş vermezseniz puanlarınız devredilmez ve silinir.</li>
-                  </ul>
-                </dd>
-              </div>
-              <div className="min-w-0 rounded-2xl border border-indigo-100 bg-gradient-to-br from-indigo-50/70 via-white to-white p-4 shadow-sm">
-                <dt className="font-bold text-slate-900">Talep Takibi ve İptali</dt>
-                <dd className="mt-3 space-y-2">
-                  <p>Hediye çeki talebini yalnızca eczane sahibi oluşturabilir.</p>
-                  <p>Hediye çeki talebinizin durumunu <strong>Çek Taleplerim</strong> sayfasından takip edebilirsiniz.</p>
-                  <p>Talebiniz firma yöneticisinin onayını beklerken iptal edebilirsiniz. İptal sonrası puanlarınız eczanenizin havuzuna geri eklenir.</p>
-                </dd>
-              </div>
-        </dl>
-      </section>
+      </>}
+      <EclubHediyeCekiBilgiPaneli />
 
       {/* Çek & Satış Şartı Listesi */}
-      {cekYayinlar.length === 0 && (
+      {gorunenYayinlar.length === 0 && (
         <EclubKisiBosDurum ikon={Gift} baslik="Henüz puan biriken yayın bulunmuyor"
           aciklama="Eczane çalışanlarınız eğitimleri izleyip soruları yanıtladıkça firmanızın ürünleri ve hak ettiğiniz hediye çekleri burada listelenecektir." />
       )}
-      {ornekGosterim && (
-        <p className="rounded-xl border border-blue-200 bg-blue-50 p-3 text-xs text-blue-800">
-          <strong>Görünüm testi:</strong> Örnek puanlar veritabanından yüklenmiştir. “Test verisi” etiketli kartlar tasarım çalışması içindir; bu kartlardan çek talebi oluşturulamaz.
-        </p>
-      )}
         <div className="grid gap-4">
-          {cekYayinlar.map((item) => {
+          {urunGruplari.map((grup) => (
+            <section key={grup.anahtar} className="overflow-hidden rounded-2xl border border-[#dfe7f1] bg-white shadow-sm">
+              <header className="flex flex-wrap items-center justify-between gap-2 border-b border-[#dfe7f1] bg-[#f5f8fb] px-5 py-4">
+                <div>
+                  {!firmaId && <p className="text-xs font-semibold text-slate-500">{grup.firmaAdi}</p>}
+                  <h2 className="text-lg font-extrabold text-[#203653]">{grup.urunAdi}</h2>
+                </div>
+                <span className="text-xs font-semibold text-slate-500">{grup.yayinlar.length} yayın</span>
+              </header>
+              <div className="grid gap-3 p-3 sm:p-4">
+          {grup.yayinlar.map((item) => {
             const toplananPuan = item.havuz_toplam_puan ?? item.toplanan_puan ?? 0;
             const bazCek = item.baz_cek_tutari_tl ?? item.hak_edilen_cek_tl ?? 0;
             const katlanmisCek = item.katlanmis_cek_tutari_tl ?? item.katlanmis_cek_tl ?? 0;
@@ -225,7 +204,7 @@ export default function EclubStorePage() {
 
             return (
               <article
-                key={item.yayin_id}
+                key={`${item.eczane_id}:${item.yayin_id}`}
                 className="overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm transition hover:shadow-md"
               >
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -235,9 +214,6 @@ export default function EclubStorePage() {
                       {item.gorunum_testi_mi && (
                         <span className="rounded-md border border-blue-200 bg-blue-50 px-2 py-0.5 text-[11px] font-bold text-blue-800">Test verisi · Salt okunur</span>
                       )}
-                      <span className="rounded-md bg-slate-100 px-2.5 py-0.5 text-[11px] font-bold text-slate-700">
-                        {item.firma_adi || "Firma"}
-                      </span>
                       {siparissiz ? (
                         <span className="inline-flex items-center gap-1 rounded-md border border-blue-200 bg-blue-50 px-2 py-0.5 text-xs font-bold text-blue-800">
                           <Gift size={13} /> Siparişsiz Hediye Çeki
@@ -253,9 +229,9 @@ export default function EclubStorePage() {
                       )}
                     </div>
 
-                    <h2 className="mt-1.5 text-lg font-extrabold tracking-tight text-slate-900">
-                      {item.urun_adi}
-                    </h2>
+                    <h3 className="mt-1.5 text-sm font-extrabold tracking-tight text-slate-900">
+                      {item.talep_no ? `Yayın ${item.talep_no}` : "Yayın"}{item.donem_kodu ? ` · ${item.donem_kodu}` : ""}
+                    </h3>
                     <p className="mt-0.5 text-xs text-slate-500">
                       Eczaneniz: <strong>{item.eczane_adi}</strong>
                     </p>
@@ -345,7 +321,8 @@ export default function EclubStorePage() {
                           </div>
                         ) : !yeterliPuanVarMi ? (
                           <div className="rounded-lg bg-amber-50 p-2 text-right text-[11px] font-bold text-amber-800">
-                            Çek için en az {minimumPuan.toLocaleString("tr-TR")} puan gerekir. (Kalan puanlar devredilir).
+                            Çek için en az {minimumPuan.toLocaleString("tr-TR")} puan gerekir.
+                            {(siparissiz || isSerbest) && " Kalan puanlar devredilir."}
                           </div>
                         ) : siparissiz ? (
                           <button type="button" onClick={() => handleTalepVer(item.yayin_id, false, item.urun_adi)} disabled={Boolean(item.gorunum_testi_mi) || Boolean(islemLoading) || !storeAcik} className="rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-extrabold text-white shadow-md transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300">
@@ -397,6 +374,9 @@ export default function EclubStorePage() {
               </article>
             );
           })}
+              </div>
+            </section>
+          ))}
         </div>
 
       <HataMesajiContainer mesajlar={mesajlar} />

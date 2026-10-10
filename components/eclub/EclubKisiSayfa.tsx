@@ -1,14 +1,18 @@
 "use client";
 
+import { useEclubFirmaSecimi } from "./EclubFirmaSecimi";
 import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import SayfaRehberi from "@/components/rehber/SayfaRehberi";
 import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
+import EclubKisiBanner from "./EclubKisiBanner";
 
 export function EclubKisiSayfa({ children }: { children: ReactNode }) {
+  const { gomulu } = useEclubFirmaSecimi();
+  if (gomulu) return <div data-eclub-sayfa className="flex min-w-0 flex-col gap-4">{children}</div>;
   return (
     <div className="min-h-full bg-[#f7f9fc] pb-20 md:pb-8" style={{ fontFamily: "'Nunito', sans-serif" }}>
-      <main className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-3 py-4 md:gap-5 md:px-6 md:py-6">
+      <main data-eclub-sayfa className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-3 py-4 md:gap-5 md:px-6 md:py-6">
         {children}
       </main>
     </div>
@@ -51,6 +55,7 @@ export function EclubKisiBaslik({
       altAksiyon={altAksiyon}
       ekKontroller={ekKontroller}
     />
+    <EclubKisiBanner />
     </>
   );
 }

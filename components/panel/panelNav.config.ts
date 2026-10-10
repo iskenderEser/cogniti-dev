@@ -1,3 +1,4 @@
+import { type EclubGezinmeFirmasi } from "@/lib/eclub/firmaGezinme";
 // components/panel/panelNav.config.ts
 //
 // Panel gezinme TEK KAYNAĞI — Faz 1 / Adım 1.1
@@ -44,6 +45,7 @@ export interface NavOge {
   path?: string | ((ctx: NavContext) => string);
   altOglar?: NavOge[];
   badgeKey?: string;             // bildirimler/api "sayilar" anahtarı (talep/senaryo/…)
+  aktifYollar?: string[];       // Aynı çalışma alanındaki diğer rotalar
   tamEslesme?: boolean;          // Alt rotalarda başka menü öğesini de aktif göstermemek için
   gate: (ctx: NavContext) => boolean;
 }
@@ -206,29 +208,11 @@ export function mobilPanelNavOlustur(gruplar: NavGrup[], ctx: NavContext): NavGr
 
 // eclub_kisi (eczacı/teknisyen) dar gezinmesi — kişi paneli + hediye çeki yolları.
 // Çok-firmalı erişim bayrakları aktif eczane→firma zincirinden profil API'sinde çözülür.
-export function eclubKisiNavOlustur(firmalar: Array<{ firma_id: string; firma_adi: string }>): NavGrup[] {
+export function eclubKisiNavOlustur(firmalar: EclubGezinmeFirmasi[]): NavGrup[] {
   return [
   {
     baslik: "E-Club",
-    oglar: [
-      {
-        etiket: "Firmaların Videoları",
-        path: "/eclub/ana-sayfa",
-        gate: (c) => c.eclubAcik,
-        altOglar: firmalar.map((firma) => ({
-          etiket: firma.firma_adi,
-          path: `/eclub/ana-sayfa/firma/${firma.firma_id}`,
-          gate: (c) => c.eclubAcik,
-        })),
-      },
-    ],
-  },
-  {
-    baslik: "E-Club Hediye Çeki",
-    oglar: [
-      { etiket: "Hediye Çeki", path: "/eclub/store", tamEslesme: true, gate: (c) => c.eclubAcik && c.eclubStoreAcik },
-      { etiket: "Çek Taleplerim", path: "/eclub/cek-taleplerim", badgeKey: "cek", gate: (c) => c.eclubAcik && c.eclubStoreAcik },
-    ],
+    oglar: [{ etiket: "Firmalar", path: "/eclub/firmalar", badgeKey: "cek", aktifYollar: ["/eclub/firma"], gate: (c) => c.eclubAcik && firmalar.length > 0 }],
   },
   {
     baslik: "Eczanem",

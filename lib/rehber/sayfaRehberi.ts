@@ -453,7 +453,7 @@ export const SAYFA_REHBERLERI: Record<string, SayfaRehberBilgisi> = {
   "eclub-store-magaza": {
     anahtar: "eclub-store-magaza",
     baslik: "Hediye Çeki",
-    ozet: "E-Club eğitimlerinden eczanenizin kazandığı Çekli Puanı, uygun Migros Hediye Çeki karşılığını ve talep dönemini gösterir.",
+    ozet: "E-Club yayınlarından eczanenizin kazandığı puanları, bu puanların hediye çeki karşılığını ve talep zamanını gösterir.",
     maddeler: [],
   },
 

@@ -3,6 +3,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { NextResponse, type NextRequest } from "next/server";
 import { ADMIN_ROLLER, ECLUB_TUKETICI_ROLLERI, MUSTERI_ROLU, TUKETICI_ROLLER, URETICI_ROLLER, YAYINDAKI_VIDEO_GORENLER } from "@/lib/utils/roller";
 import { rolCozucu } from "@/lib/utils/rolCozucu";
+import { eclubFirmaKapsami } from "@/lib/eclub/firmaGezinme";
 import { eclubKisiErisimi } from "@/lib/eclub/kisiErisim";
 import { ECZANEM_KAPALI_MESAJI, eczanemRolErisimi } from "@/lib/eczanem/erisim";
 
@@ -32,6 +33,7 @@ export async function proxy(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser();
   const { pathname } = request.nextUrl;
+  const eclubFirmaRotasi = pathname.match(/^\/eclub\/firma\/([^/]+)\/(yayinlar|hediye-cekleri|cek-talepleri)(?:\/|$)/);
   if (user?.app_metadata.eclub_davet_bekliyor === true && ![
     "/login", "/sifre-olustur", "/sifre-olustur/api", "/sifre-yenile", "/davet-bekliyor",
   ].includes(pathname)) {
@@ -271,6 +273,7 @@ export async function proxy(request: NextRequest) {
     || pathname.startsWith("/eclub/cek-taleplerim")
     || pathname.startsWith("/eclub/api/cek-talepleri")
     || pathname.startsWith("/eclub/hediye-takip")
+    || (eclubFirmaRotasi !== null && eclubFirmaRotasi[2] !== "yayinlar")
   ) {
     const storeApiYolu = pathname.includes("/api/") || pathname.endsWith("/api");
 
@@ -316,7 +319,8 @@ export async function proxy(request: NextRequest) {
       // E-Club kişisinde firma doğrudan kimlikte değil; aktif eczane bağından çözülür.
       try {
         const kisiErisim = await eclubKisiErisimOku(esSupabase);
-        if (!kisiErisim.kisi || !kisiErisim.eclub_store_aktif) {
+        if (!kisiErisim.kisi || !kisiErisim.eclub_store_aktif
+          || (eclubFirmaRotasi !== null && eclubFirmaKapsami(kisiErisim.firmalar, eclubFirmaRotasi[1], true).length === 0)) {
           if (storeApiYolu) {
             return NextResponse.json({ error: "E-Club Hediye Çeki bağlı olduğunuz firmalar için kapalıdır." }, { status: 403 });
           }
@@ -384,7 +388,8 @@ export async function proxy(request: NextRequest) {
     } else {
       try {
         const kisiErisim = await eclubKisiErisimOku(eclubSupabase);
-        if (!kisiErisim.kisi || !kisiErisim.eclub_aktif) {
+        if (!kisiErisim.kisi || !kisiErisim.eclub_aktif
+          || (eclubFirmaRotasi !== null && eclubFirmaKapsami(kisiErisim.firmalar, eclubFirmaRotasi[1]).length === 0)) {
           if (eclubApiYolu) {
             return NextResponse.json({ error: "E-Club bağlı olduğunuz firmalar için kapalıdır." }, { status: 403 });
           }
