@@ -13,6 +13,8 @@
 // yok, kısaltma yok — "uzayacaksa uzasın").
 
 "use client";
+import type { ReactNode } from "react";
+import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 
 import { SadeKontrolButonu, SadeKontrolGrubu } from "@/components/kontrol/SadeKontroller";
 
@@ -57,19 +59,18 @@ interface Props {
   aktif: DurumKodu;
   onSec: (d: DurumKodu) => void;
   sayim: Partial<Record<DurumKodu, number>>;
+  aksiyon?: ReactNode;
 }
 
-export default function DurumAnahtari({ baslik, rol, asama, aktif, onSec, sayim }: Props) {
+export default function DurumAnahtari({ baslik, rol, asama, aktif, onSec, sayim, aksiyon }: Props) {
   const piller = uretimDurumSirasi(rol).map((kod) => PILL_TANIMLARI[kod]);
   // Filtreler HER ZAMAN tek satır (25.07): başlık ve kayıt sayacı kendi satırında
   // durur, filtre şeridi kartın TAM genişliğini kullanır — pill'ler ne alt satıra
   // kayar ne de kırpılır. Çok dar ekranda şerit yatay kaydırılır.
   return (
     <div className="px-4 md:px-5 py-3.5 border-b border-gray-100 flex flex-col gap-2.5">
-      <div className="flex items-center justify-between gap-3">
-        <span className="text-lg font-semibold text-gray-900 whitespace-nowrap">{baslik}</span>
-        <span className="text-xs text-gray-500 whitespace-nowrap">{sayim[aktif] ?? 0} kayıt</span>
-      </div>
+      <SayfaYenileBasligi baslik={<h1 className="text-lg font-semibold text-gray-900">{baslik}</h1>} aksiyon={aksiyon}
+        aciklama={<span className="text-xs text-gray-500">{sayim[aktif] ?? 0} kayıt</span>} />
       <div className="min-w-0">
         <SadeKontrolGrubu tur="kapsul">
           {piller.filter((p) => !(p.yalnizKayitVarsa && (sayim[p.kod] ?? 0) === 0 && aktif !== p.kod)).map((p) => {

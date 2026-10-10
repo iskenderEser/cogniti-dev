@@ -1,6 +1,9 @@
+"use client";
+
 import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import SayfaRehberi from "@/components/rehber/SayfaRehberi";
+import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 
 export function EclubKisiSayfa({ children }: { children: ReactNode }) {
   return (
@@ -17,6 +20,8 @@ export function EclubKisiBaslik({
   baslik,
   aciklama,
   aksiyon,
+  altAksiyon,
+  ekKontroller,
   ustEtiket = "E‑Club",
   rehberAnahtar,
   baslikClassName = "m-0 text-2xl font-extrabold tracking-[-0.03em] text-[#203653]",
@@ -25,24 +30,28 @@ export function EclubKisiBaslik({
   baslik: string;
   aciklama: string;
   aksiyon?: ReactNode;
+  altAksiyon?: ReactNode;
+  ekKontroller?: ReactNode;
   ustEtiket?: string;
   rehberAnahtar?: string;
   baslikClassName?: string;
 }) {
   return (
-    <header className="flex flex-wrap items-end justify-between gap-3">
-      <div className="min-w-0">
-        {ustEtiket && <div className="mb-1 flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#3589d8]">
-          <Icon size={14} /> {ustEtiket}
-        </div>}
-        <div className="inline-flex items-center">
-          <h1 className={baslikClassName}>{baslik}</h1>
-          {rehberAnahtar && <SayfaRehberi anahtar={rehberAnahtar} className="ml-1.5 -translate-y-1" />}
-        </div>
-        <p className="mt-1 max-w-2xl text-xs font-semibold leading-5 text-[#8190a3]">{aciklama}</p>
-      </div>
-      {aksiyon}
-    </header>
+    <>
+    <SayfaYenileBasligi
+      ustBilgi={ustEtiket && <div className="mb-1 flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#3589d8]">
+        <Icon size={14} /> {ustEtiket}
+      </div>}
+      baslik={<div className="inline-flex items-center">
+        <h1 className={baslikClassName}>{baslik}</h1>
+        {rehberAnahtar && <SayfaRehberi anahtar={rehberAnahtar} className="ml-1.5 -translate-y-1" />}
+      </div>}
+      aciklama={<p className="mt-1 max-w-2xl text-xs font-semibold leading-5 text-[#8190a3]">{aciklama}</p>}
+      aksiyon={aksiyon}
+      altAksiyon={altAksiyon}
+      ekKontroller={ekKontroller}
+    />
+    </>
   );
 }
 

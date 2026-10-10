@@ -26,6 +26,7 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 import styles from "../utt/utt-report.module.css";
+import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 
 const DEFAULT_PERIYOT: Periyot = "bu_ay";
 
@@ -211,21 +212,21 @@ export default function TclubUreticiRaporPage() {
           <ArrowLeft className="h-3.5 w-3.5" /> Ana Sayfa
         </Link>
 
-        <header className={styles.header}>
-          <div>
-            <div className="inline-flex items-center">
-              <h1 className="text-2xl font-extrabold tracking-[-0.03em] text-[#10213d]">T-Club Raporları</h1>
-              <SayfaRehberi anahtar="raporlar-uretici" className="ml-1.5 -translate-y-1" />
-            </div>
-            <p className="mt-0.5 text-xs font-semibold text-[#78889d]">
-              Firma T-Club puanlarının saha, yayın ve içerik ayrıntılarını görebilirsiniz.
-            </p>
-          </div>
-          <div className="flex w-full items-center gap-2 sm:w-auto">
+        <SayfaYenileBasligi className={styles.header}
+          baslik={<div className="inline-flex items-center">
+            <h1 className="text-2xl font-extrabold tracking-[-0.03em] text-[#10213d]">T-Club Raporları</h1>
+            <SayfaRehberi anahtar="raporlar-uretici" className="ml-1.5 -translate-y-1" />
+          </div>}
+
+          aciklama={<><p className="mt-0.5 text-xs font-semibold text-[#78889d]">
+            Firma T-Club puanlarının saha, yayın ve içerik ayrıntılarını görebilirsiniz.
+          </p></>}
+          aksiyon={<YenileButonu yenileniyor={yenileniyor} onYenile={yenile} className="min-w-[88px] justify-center" />}
+          ekKontroller={<><div className="flex w-full items-center gap-2 sm:w-auto">
             <RaporPeriyotSecici deger={periyot} onDegistir={periyotDegistir} />
-            <YenileButonu yenileniyor={yenileniyor} onYenile={yenile} className="min-w-[88px] justify-center" />
-          </div>
-        </header>
+
+          </div></>}
+        />
 
         {(loading || yenileniyor || error) && (
           <div className={`mb-4 rounded-xl border px-3 py-2 text-[11px] font-bold ${error ? "border-amber-200 bg-amber-50 text-amber-800" : "border-blue-100 bg-blue-50 text-blue-700"}`} role="status">

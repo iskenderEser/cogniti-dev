@@ -30,12 +30,13 @@ export default function LeaguePage({
   userId,
   eclubAcik,
   periyotSecici,
+  yenileButonu,
 }: {
   ligler: Record<LigKapsami, LigSatiri[]>;
   aylikKursu?: AylikKursu;
   userId: string;
   eclubAcik: boolean;
-  periyotSecici: ReactNode;
+  periyotSecici: ReactNode; yenileButonu?: ReactNode;
 }) {
   const [kapsam, setKapsam] = useState<LigKapsami>("bolge");
   const satirlar = ligler[kapsam];
@@ -67,7 +68,7 @@ export default function LeaguePage({
         <div className={styles.shell} style={{ fontFamily: "'Nunito', sans-serif" }}>
           <div className={`${styles.dashboard} ${styles.fixedDashboard}`}>
             <div className="shrink-0">
-              <LeagueHeader periyotSecici={null} />
+              <LeagueHeader periyotSecici={null} yenileButonu={yenileButonu} />
             </div>
             {filtreler}
             <div className={`${styles.panel} py-16 text-center`}>
@@ -103,7 +104,7 @@ export default function LeaguePage({
       <div className={styles.shell} style={{ fontFamily: "'Nunito', sans-serif" }}>
         <div className={`${styles.dashboard} ${styles.fixedDashboard}`}>
         <div className="shrink-0">
-          <LeagueHeader periyotSecici={null} />
+          <LeagueHeader periyotSecici={null} yenileButonu={yenileButonu} />
         </div>
         <MonthlyLeaders top3={sirketTop3} ayAdi={aylikKursu?.ay_adi} />
         {filtreler}

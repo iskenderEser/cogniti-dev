@@ -19,6 +19,7 @@ import { Banknote, ChevronDown, CircleAlert, Coins, FileText, type LucideIcon } 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import MutabakatExcelButonu from "../../_components/MutabakatExcelButonu";
 import MutabakatIslemTablosu, { type MutabakatDuzKaydi } from "../../_components/MutabakatIslemTablosu";
+import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 
 const DURUMLAR: { deger: UttMutabakatFiltresi; etiket: string }[] = [
   { deger: "tumu", etiket: "Tümü" }, { deger: "bekliyor", etiket: "Karar bekliyor" },
@@ -229,16 +230,16 @@ export default function EczanemUttMutabakatPage() {
 
   return <div className="min-h-full bg-gray-50" style={{ fontFamily: "'Nunito', sans-serif" }}>
     <div className="mx-auto flex max-w-[1480px] flex-col gap-5 px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
-      <header className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <div className="inline-flex items-center">
-            <h1 className="text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]">Eczanem Mutabakat</h1>
-            <SayfaRehberi anahtar="eczanem-utt-mutabakat" className="ml-1.5 -translate-y-1.5" />
-          </div>
-          <p className="mt-1 max-w-3xl text-sm leading-5 text-[#6b7f9b]">Onaylı indirimleri yayın ve tarife kayıtlarıyla karşılaştırıp UTT kararınızı verin.</p>
-        </div>
-        <YenileButonu yenileniyor={yukleniyor} onYenile={() => setYenileme((deger) => deger + 1)} />
-      </header>
+      <SayfaYenileBasligi className="flex flex-wrap items-end justify-between gap-4"
+        baslik={<div className="inline-flex items-center">
+          <h1 className="text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]">Eczanem Mutabakat</h1>
+          <SayfaRehberi anahtar="eczanem-utt-mutabakat" className="ml-1.5 -translate-y-1.5" />
+        </div>}
+
+        aciklama={<><p className="mt-1 max-w-3xl text-sm leading-5 text-[#6b7f9b]">Onaylı indirimleri yayın ve tarife kayıtlarıyla karşılaştırıp UTT kararınızı verin.</p></>}
+        aksiyon={<YenileButonu yenileniyor={yukleniyor} onYenile={() => setYenileme((deger) => deger + 1)} />}
+
+      />
 
       {veri && <section aria-label="Mutabakat dönem özeti" className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3">
         <OzetKarti ikon={FileText} etiket="Toplam İndirim Adedi" deger={sayi(veri.toplam)} detay="Mutabakat ayı içinde eczanelerinizin onayladığı indirim adedi" renk="#237ac8" zemin="#edf6fd" />

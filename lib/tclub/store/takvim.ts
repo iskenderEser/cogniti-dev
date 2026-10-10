@@ -170,8 +170,8 @@ export function hbstoreTakvimDurumu(tarih: Date = new Date()): TakvimDurumu {
     kalanMs = Math.max(0, sonrakiPencere.baslangic.getTime() - an);
     const kalanSure = formatKalanSure(kalanMs);
     const kisaKalan = formatKisaKalanSure(kalanMs);
-    durumMetni = `HBStore Günleri’ne ${kalanSure} kaldı`;
-    navMetni = `HBStore Günleri’ne ${kisaKalan}`;
+    durumMetni = `HBStore Günlerine ${kalanSure} kaldı`;
+    navMetni = `HBStore Günlerine ${kisaKalan}`;
     bakiyeDonemEtiketi = `${sonrakiPencere.etiket} siparişi için biriken ${sonrakiPencere.donemAdi} (Q${sonrakiPencere.ceyrek}) puanı`;
   }
 

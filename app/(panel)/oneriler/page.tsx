@@ -6,7 +6,6 @@ import { useSearchParams } from "next/navigation";
 import { TUKETICI_ROLLER } from "@/lib/utils/roller";
 import { HataMesajiContainer } from "@/components/HataMesaji";
 import { YayinKarti } from "@/components/yayin/YayinKarti";
-import { YenileButonu } from "@/components/ui/yenile-butonu";
 import { UttYayinKartIskeletleri } from "@/components/yayin/UttYayinListeOrtaklari";
 import BmOneriTakibi from "./_components/BmOneriTakibi";
 import TmOneriTakibi from "./_components/TmOneriTakibi";
@@ -137,7 +136,6 @@ function OnerilerIcerik() {
 
       {/* Test Uyumu Referansları (Statik denetimler için) */}
       <div className="hidden" aria-hidden="true">
-        <YenileButonu yenileniyor={false} onYenile={() => {}} />
         {oneriler[0] && <YayinKarti yayin={oneriler[0]} />}
       </div>
 

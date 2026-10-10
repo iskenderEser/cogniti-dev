@@ -1,4 +1,5 @@
 "use client";
+import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 
 import { SadeKontrolButonu, SadeKontrolGrubu } from "@/components/kontrol/SadeKontroller";
 
@@ -77,17 +78,15 @@ export function YayinKumandaPaneli({
 
   return (
     <section aria-labelledby="yayin-merkezi-baslik" className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <div className="inline-flex items-center">
-            <h1 id="yayin-merkezi-baslik" className="text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]">
-              Yayın Yönetimi
-            </h1>
-            <SayfaRehberi anahtar="yayin-yonetimi" className="ml-1.5 -translate-y-1.5" />
-          </div>
-        </div>
-        {aksiyon}
-      </div>
+      <SayfaYenileBasligi
+        baslik={<div className="inline-flex items-center">
+          <h1 id="yayin-merkezi-baslik" className="text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]">
+            Yayın Yönetimi
+          </h1>
+          <SayfaRehberi anahtar="yayin-yonetimi" className="ml-1.5 -translate-y-1.5" />
+        </div>}
+        aksiyon={aksiyon}
+      />
 
       <div className="rounded-2xl border border-[#dfe8f3] bg-white p-3 shadow-[0_8px_24px_rgba(31,55,90,0.045)] md:p-4">
         <div className="mb-3 flex items-center justify-between gap-3">
@@ -103,7 +102,7 @@ export function YayinKumandaPaneli({
         </div>
         <SadeKontrolGrubu tur="sekme">
           {ANA_SEKMELER.map((hedef) => {
-            
+
             const aktif = hedef === aktifHedef;
             const bekleyenSayi = bekleyenHedefSayilari[hedef];
             return (

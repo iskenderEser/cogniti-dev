@@ -17,6 +17,7 @@ import { talepIdGoster } from "@/lib/utils/talepId";
 import { Plus, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
+import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 
 export interface OneriKaydi {
   oneri_id: string;
@@ -147,21 +148,21 @@ export default function BmOneriTakibi({
 
   return (
     <div className="mx-auto flex max-w-[1480px] flex-col gap-5 px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
-      <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <div className="inline-flex items-center">
-            <h1 className="mt-1 text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]">Öneri Takibi</h1>
-            <SayfaRehberi anahtar="oneriler-bm" className="ml-1.5 -translate-y-1.5" />
-          </div>
-          <p className="mt-1 max-w-3xl text-sm leading-5 text-[#6b7f9b]">Ekibinizdeki UTT’lere önerilen yayınların tamamlanma durumunu takip edebilirsiniz.</p>
-        </div>
-        <div className="flex w-full flex-col gap-2 sm:w-auto sm:items-end">
+      <SayfaYenileBasligi className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"
+        baslik={<div className="inline-flex items-center">
+          <h1 className="mt-1 text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]">Öneri Takibi</h1>
+          <SayfaRehberi anahtar="oneriler-bm" className="ml-1.5 -translate-y-1.5" />
+        </div>}
+
+        aciklama={<><p className="mt-1 max-w-3xl text-sm leading-5 text-[#6b7f9b]">Ekibinizdeki UTT’lere önerilen yayınların tamamlanma durumunu takip edebilirsiniz.</p></>}
+        aksiyon={onYenile && <YenileButonu yenileniyor={yenileniyor} onYenile={onYenile} />}
+        ekKontroller={<><div className="flex w-full flex-col gap-2 sm:w-auto sm:items-end">
           <div className="flex items-center gap-2">
             {!bitisYaklasan && <RaporPeriyotSecici deger={periyot} onDegistir={onPeriyotDegistir} />}
-            {onYenile && <YenileButonu yenileniyor={yenileniyor} onYenile={onYenile} />}
+
           </div>
-        </div>
-      </header>
+        </div></>}
+      />
 
       {bitisYaklasan && (
         <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-[#f4d89a] bg-[#fffbeb] px-3 py-2 text-xs font-semibold text-[#8a5a12]">

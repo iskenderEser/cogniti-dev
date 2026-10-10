@@ -4,14 +4,12 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { RefreshCw, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 
 interface Props {
   ad: string;
   telefon?: string | null;
   onCikis: () => void | Promise<void>;
-  onYenile?: () => void | Promise<void>;
-  yenileniyor?: boolean;
   onHesapSil?: () => void;
   onHamburger?: () => void;
 }
@@ -29,8 +27,6 @@ export default function EczanemMusteriNavbar({
   ad,
   telefon,
   onCikis,
-  onYenile,
-  yenileniyor = false,
   onHesapSil,
   onHamburger,
 }: Props) {
@@ -150,20 +146,8 @@ export default function EczanemMusteriNavbar({
 
           {/* Sağ Kolon: Masaüstü Profil + Çıkış */}
           <div className="hidden md:flex items-center gap-4 flex-shrink-0" style={{ marginRight: 24 }}>
-            {onYenile && (
-              <button
-                type="button"
-                onClick={() => void onYenile()}
-                disabled={yenileniyor}
-                aria-label="Sayfayı yenile"
-                title="Sayfayı yenile"
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#4b5563] hover:text-[#111827] bg-transparent border-none cursor-pointer p-1 transition-colors"
-                style={{ fontFamily: "'Nunito', sans-serif" }}
-              >
-                <RefreshCw className={`size-3.5 ${yenileniyor ? "animate-spin" : ""}`} />
-                <span>Yenile</span>
-              </button>
-            )}
+
+
 
             <div ref={profilRef} className="relative flex flex-col items-end gap-0.5">
               <button
@@ -270,19 +254,10 @@ export default function EczanemMusteriNavbar({
             </div>
           </div>
 
-          {/* Mobil Kolon: Yenileme + Avatar + Hamburger */}
+          {/* Mobil Kolon: Avatar + Hamburger */}
           <div className="flex md:hidden items-center gap-2">
-            {onYenile && (
-              <button
-                type="button"
-                onClick={() => void onYenile()}
-                disabled={yenileniyor}
-                aria-label="Sayfayı yenile"
-                className="p-1 text-[#4b5563] bg-transparent border-none cursor-pointer"
-              >
-                <RefreshCw className={`size-4 ${yenileniyor ? "animate-spin" : ""}`} />
-              </button>
-            )}
+
+
             <button
               type="button"
               onClick={hamburgerTiklandi}

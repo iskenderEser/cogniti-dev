@@ -277,9 +277,10 @@ export default function HBLigiPage() {
         periyot={periyot}
         onPeriyotChange={setPeriyot}
       />
-      <YenileButonu yenileniyor={yenileniyor} onYenile={() => void veriCek(true)} />
     </div>
   );
+
+  const yenileButonu = <YenileButonu yenileniyor={yenileniyor} onYenile={() => void veriCek(true)} />;
 
   if (authYukleniyor || !kullanici || (loading && !veri)) {
     return <TClubPageSkeleton aktifSayfa="lig" />;
@@ -308,7 +309,7 @@ export default function HBLigiPage() {
             aylikKursu={veri.aylik_kursu}
             userId={kullanici.id}
             eclubAcik={veri.eclub_acik === true}
-            periyotSecici={periyotSecici}
+            periyotSecici={periyotSecici} yenileButonu={yenileButonu}
           />
         </div>
       </div>
@@ -328,7 +329,7 @@ export default function HBLigiPage() {
             veri={veri}
             bakis={ureticiBakisi}
             onBakisDegistir={setUreticiBakisi}
-            periyotSecici={periyotSecici}
+            periyotSecici={periyotSecici} yenileButonu={yenileButonu}
           />
         </div>
       </div>
@@ -341,8 +342,8 @@ export default function HBLigiPage() {
         <div className="mx-auto min-h-full max-w-[1440px] px-3 py-3 md:flex md:h-full md:min-h-0 md:flex-col md:px-5 md:py-3">
           {hata && <p role="status" className="mb-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">{hata} Mevcut veriler gösterilmeye devam ediyor.</p>}
           {veri.gorunum === "bm"
-            ? <BmLeaguePage key={veri.kapsam_adi} veri={veri} periyotSecici={periyotSecici} />
-            : <TmLeaguePage key={veri.kapsam_adi} veri={veri} periyotSecici={periyotSecici} />}
+            ? <BmLeaguePage key={veri.kapsam_adi} veri={veri} periyotSecici={periyotSecici} yenileButonu={yenileButonu} />
+            : <TmLeaguePage key={veri.kapsam_adi} veri={veri} periyotSecici={periyotSecici} yenileButonu={yenileButonu} />}
         </div>
       </div>
     );
@@ -351,7 +352,7 @@ export default function HBLigiPage() {
   return (
     <div className="h-full min-h-0 overflow-y-auto bg-[linear-gradient(135deg,#f8fbff_0%,#f5f8fc_48%,#fbfcfe_100%)]" style={{ fontFamily: "'Nunito', sans-serif" }}>
       <div className="mx-auto min-h-full max-w-[1500px] px-3 py-3 md:h-full md:min-h-0 md:px-5 md:py-3">
-        <FieldLeaguePage key={`${veri.gorunum}-${veri.kapsam_adi}`} veri={veri} periyotSecici={periyotSecici} />
+        <FieldLeaguePage key={`${veri.gorunum}-${veri.kapsam_adi}`} veri={veri} periyotSecici={periyotSecici} yenileButonu={yenileButonu} />
       </div>
     </div>
   );

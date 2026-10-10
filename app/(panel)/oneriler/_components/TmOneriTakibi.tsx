@@ -14,6 +14,7 @@ import type { Periyot } from "@/lib/utils/raporUtils";
 import { UTT_VIDEO_KATEGORILERI } from "@/lib/video/uttVideoKategorileri";
 import { CheckCircle2, ChevronDown, Clock3, Send, TriangleAlert, X } from "lucide-react";
 import { useMemo, useState } from "react";
+import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 
 export type TmOneriDurumu = "planlandi" | "tamamlanan" | "bekleyen" | "suresi_gecmis";
 type TmOneriSecimi = "toplam" | TmOneriDurumu;
@@ -198,19 +199,19 @@ export default function TmOneriTakibi({
 
   return (
     <div aria-busy={yenileniyor} className="mx-auto flex max-w-[1480px] flex-col gap-5 px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
-      <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <div className="inline-flex items-center">
-            <h1 className="mt-1 text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]">Öneri Takibi</h1>
-            <SayfaRehberi anahtar="oneriler-tm" className="ml-1.5 -translate-y-1.5" />
-          </div>
-          <p className="mt-1 max-w-3xl text-sm leading-5 text-[#6b7f9b]">Takımınızdaki BM’lerin temsilcilere gönderdiği önerileri takip edebilirsiniz</p>
-        </div>
-        <div className="flex items-center gap-2">
+      <SayfaYenileBasligi className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"
+        baslik={<div className="inline-flex items-center">
+          <h1 className="mt-1 text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]">Öneri Takibi</h1>
+          <SayfaRehberi anahtar="oneriler-tm" className="ml-1.5 -translate-y-1.5" />
+        </div>}
+
+        aciklama={<><p className="mt-1 max-w-3xl text-sm leading-5 text-[#6b7f9b]">Takımınızdaki BM’lerin temsilcilere gönderdiği önerileri takip edebilirsiniz</p></>}
+        aksiyon={onYenile && <YenileButonu yenileniyor={yenileniyor} onYenile={onYenile} />}
+        ekKontroller={<><div className="flex items-center gap-2">
           <RaporPeriyotSecici deger={periyot} onDegistir={onPeriyotDegistir} />
-          {onYenile && <YenileButonu yenileniyor={yenileniyor} onYenile={onYenile} />}
-        </div>
-      </header>
+
+        </div></>}
+      />
 
       <section aria-label="Takım öneri durumu" className="grid grid-cols-2 gap-2.5 xl:grid-cols-4">
         {kartlar.map((kart) => {

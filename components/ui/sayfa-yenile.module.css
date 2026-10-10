@@ -1,0 +1,28 @@
+.baslik {
+  display: grid !important;
+  width: 100%;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center !important;
+  column-gap: 12px !important;
+  row-gap: 4px !important;
+}
+.metin { grid-column: 1; min-width: 0; }
+.metin h1 { margin-block: 0 !important; overflow-wrap: anywhere; }
+.metin > :is(div, h1) { max-width: 100%; }
+.aksiyon { grid-column: 2; justify-self: end; display: flex; align-items: center; min-height: 32px; }
+.ustBilgi, .aciklama, .ekKontroller { grid-column: 1 / -1; min-width: 0; }
+.aciklamaYaninda { grid-column: 1; min-width: 0; }
+.altAksiyon { grid-column: 2; justify-self: end; align-self: end; }
+@media (max-width: 767px) {
+  .aciklamaYaninda { grid-column: 1 / -1; }
+  .altAksiyon { display: none; }
+}
+.ekKontroller { display: flex; flex-wrap: wrap; justify-content: flex-end; margin-top: 8px; }
+.buton { flex-shrink: 0; height: 32px !important; }
+.etiket { display: inline; }
+@media (max-width: 639px) {
+  .baslik { column-gap: 8px !important; }
+  .aksiyon { min-height: 44px; }
+  .buton { width: 44px; min-width: 44px !important; min-height: 44px; height: 44px !important; padding-inline: 0 !important; gap: 0; }
+  .etiket { display: none; }
+}

@@ -27,6 +27,7 @@ import type {
 } from "@/lib/tclub/hbligi/getSahaLig";
 import { esitPuanEsitSira } from "@/lib/tclub/hbligi/siralama";
 import styles from "./field.module.css";
+import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 
 interface BirimSatiri {
   id: string;
@@ -179,9 +180,10 @@ function siraRozeti(sira: number): string {
 export default function FieldLeaguePage({
   veri,
   periyotSecici,
+  yenileButonu,
 }: {
   veri: SahaLigSonuc;
-  periyotSecici: React.ReactNode;
+  periyotSecici: React.ReactNode; yenileButonu?: React.ReactNode;
 }) {
   const [secilenBirim, setSecilenBirim] = useState<string | null>(veri.odak_birim_id);
   const [acikUtt, setAcikUtt] = useState<string | null>(null);
@@ -244,17 +246,10 @@ export default function FieldLeaguePage({
     return (
       <div className={styles.shell}>
         <div className={styles.dashboard}>
-          <header className={styles.header}>
-            <div>
-              <div className={styles.eyebrow}><Sparkles className="h-3.5 w-3.5" /> Saha gelişim merkezi</div>
-              <h1 className="inline-flex items-center flex-wrap">
-                <span>T-Club Ligi — Saha Perspektifi</span>
-                <SayfaRehberi anahtar="tclub-ligi-saha" className="ml-1.5 -translate-y-1.5" />
-              </h1>
-              <p><strong>{veri.kapsam_adi}</strong> · {veri.kapsam_aciklamasi}</p>
-            </div>
-            <div className={styles.headerActions}>{periyotSecici}</div>
-          </header>
+          <SayfaYenileBasligi className={styles.header} baslik={<h1 className="inline-flex items-center flex-wrap">
+            <span>T-Club Ligi — Saha Perspektifi</span>
+            <SayfaRehberi anahtar="tclub-ligi-saha" className="ml-1.5 -translate-y-1.5" />
+          </h1>} ustBilgi={<><div className={styles.eyebrow}><Sparkles className="h-3.5 w-3.5" /> Saha gelişim merkezi</div></>} aciklama={<><p><strong>{veri.kapsam_adi}</strong> · {veri.kapsam_aciklamasi}</p></>} aksiyon={yenileButonu} ekKontroller={periyotSecici} />
 
           <section className={styles.statsGrid} aria-label="Saha özeti">
             <StatCard eyebrow="Net saha puanı" value={ozet.net.toLocaleString("tr-TR")} detail={`${seciliBirimAdi} görünümü`} tone="blue" icon={Gauge} />
@@ -331,17 +326,10 @@ export default function FieldLeaguePage({
   return (
     <div className={styles.shell}>
       <div className={styles.dashboard}>
-        <header className={styles.header}>
-          <div>
-            <div className={styles.eyebrow}><Sparkles className="h-3.5 w-3.5" /> Saha gelişim merkezi</div>
-            <h1 className="inline-flex items-center flex-wrap">
-              <span>T-Club Ligi — Saha Perspektifi</span>
-              <SayfaRehberi anahtar="tclub-ligi-saha" className="ml-1.5 -translate-y-1.5" />
-            </h1>
-            <p><strong>{veri.kapsam_adi}</strong> · {veri.kapsam_aciklamasi}</p>
-          </div>
-          <div className={styles.headerActions}>{periyotSecici}</div>
-        </header>
+        <SayfaYenileBasligi className={styles.header} baslik={<h1 className="inline-flex items-center flex-wrap">
+          <span>T-Club Ligi — Saha Perspektifi</span>
+          <SayfaRehberi anahtar="tclub-ligi-saha" className="ml-1.5 -translate-y-1.5" />
+        </h1>} ustBilgi={<><div className={styles.eyebrow}><Sparkles className="h-3.5 w-3.5" /> Saha gelişim merkezi</div></>} aciklama={<><p><strong>{veri.kapsam_adi}</strong> · {veri.kapsam_aciklamasi}</p></>} aksiyon={yenileButonu} ekKontroller={periyotSecici} />
 
         <section className={styles.statsGrid} aria-label="Saha özeti">
           <StatCard

@@ -9,7 +9,6 @@
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { useEclubStoreTakvim } from "@/hooks/useEclubStoreTakvim";
 
 const BORDO = "#bc2d0d";
 
@@ -85,8 +84,6 @@ interface PanelNavbarProps {
   siparisPuaniGoster?: boolean;
   // HBStore giriş pill'i yalnız mağazadan kişisel sipariş verebilen rollerde görünür.
   hbStoreGoster?: boolean;
-  // E-Club Store Günleri geri sayımı — E-Club kişisi ve aktif firma E-Club Store açıkken görünür.
-  eclubStoreGeriSayimGoster?: boolean;
   // Dış müşteri ana sayfası /eclub/ana-sayfa'dir; iç kullanıcıda varsayılan korunur.
   anaSayfaYolu?: string;
   eclubStorePuani?: number | null;
@@ -110,7 +107,6 @@ export default function PanelNavbar({
   ozet,
   siparisPuaniGoster,
   hbStoreGoster,
-  eclubStoreGeriSayimGoster,
   anaSayfaYolu = "/ana-sayfa",
   eclubStorePuani,
   firmaLogoUrl,
@@ -122,7 +118,6 @@ export default function PanelNavbar({
   const router = useRouter();
   const pathname = usePathname();
   const [hover, setHover] = useState<string | null>(null);
-  const { takvim: eclubTakvim } = useEclubStoreTakvim({ aktif: Boolean(eclubStoreGeriSayimGoster) });
 
   // Ana Sayfa navbarın sürekli görünen ana hedefidir. Butonla yapılan router.push
   // geçişi Link'in otomatik ön yüklemesini kullanmadığı için rotayı önceden hazırla.
@@ -256,31 +251,6 @@ export default function PanelNavbar({
               </div>
             </div>
             <div className="flex items-center gap-2">
-              {eclubStoreGeriSayimGoster && eclubTakvim && (
-                <>
-                  <button
-                    type="button"
-                    onClick={() => router.push("/eclub/store")}
-                    className="inline-flex items-center gap-1.5 text-[11px] font-bold transition-all hover:opacity-80 cursor-pointer bg-transparent border-none p-0 select-none"
-                    style={{ color: eclubTakvim.acik ? "#027a48" : "#4b5563" }}
-                    title={
-                      eclubTakvim.acik
-                        ? `Hediye Çeki açık · Kapanışa ${eclubTakvim.kalanSureMetni} kaldı`
-                        : `Sonraki sipariş dönemi: ${eclubTakvim.sonrakiDonemEtiketi} (${eclubTakvim.kalanSureMetni} kaldı)`
-                    }
-                  >
-                    <span
-                      className="size-1.5 rounded-full shrink-0"
-                      style={{
-                        backgroundColor: eclubTakvim.acik ? "#12b76a" : "#f59e0b",
-                        boxShadow: eclubTakvim.acik ? "0 0 6px #12b76a" : "none",
-                      }}
-                    />
-                    <span>{eclubTakvim.durumMetni}</span>
-                  </button>
-                  <span style={{ color: "#d1d5db", fontSize: 11, userSelect: "none" }}>·</span>
-                </>
-              )}
               <button
                 onClick={onCikis}
                 className="flex items-center gap-1 text-xs font-semibold cursor-pointer bg-transparent border-none"
@@ -297,22 +267,6 @@ export default function PanelNavbar({
 
         {/* Mobil: avatar + hamburger (sol drawer'ı açar). flex-shrink-0 ile asla kesilmez */}
         <div className="flex md:hidden items-center gap-1.5 flex-shrink-0">
-          {eclubStoreGeriSayimGoster && eclubTakvim && (
-            <button
-              type="button"
-              onClick={() => router.push("/eclub/store")}
-              className="inline-flex items-center gap-1 text-[11px] font-bold bg-transparent border-none p-0 mr-1"
-              style={{ color: eclubTakvim.acik ? "#027a48" : "#4b5563" }}
-            >
-              <span
-                className="size-1.5 rounded-full shrink-0"
-                style={{
-                  backgroundColor: eclubTakvim.acik ? "#12b76a" : "#f59e0b",
-                }}
-              />
-              <span>{eclubTakvim.acik ? "Açık" : eclubTakvim.kisaKalanSureMetni}</span>
-            </button>
-          )}
           <div
             onClick={() => router.push("/profil")}
             className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold cursor-pointer"

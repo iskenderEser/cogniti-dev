@@ -13,6 +13,7 @@ import { YenileButonu } from "@/components/ui/yenile-butonu";
 import SayfaRehberi from "@/components/rehber/SayfaRehberi";
 import { TUKETICI_ROLLER } from "@/lib/utils/roller";
 import EclubLigiSkeleton from "@/components/eclub/EclubLigiSkeleton";
+import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 
 interface LigData {
   kullanici: { ad: string; soyad: string; rol: string };
@@ -233,32 +234,27 @@ export default function EclubLigiPage() {
   return (
     <div className={styles.page} style={{ fontFamily: "'Nunito', sans-serif" }}>
       <div className={styles.container}>
-        <header className={styles.header}>
-          <div>
-            <div className="inline-flex items-center">
-              <h1 className="m-0 text-2xl font-extrabold tracking-[-0.03em] text-[#10213d]">E-Club Ligi</h1>
-              <SayfaRehberi anahtar="eclub-ligi" className="ml-1.5 -translate-y-1" />
-            </div>
-            <p className="mt-1 text-xs font-semibold text-[#78889d]">
-              Eczacıların ve teknisyenlerin öğrenme motivasyonunu gözlemleyebilirsiniz.
-            </p>
+        <SayfaYenileBasligi className={styles.header} baslik={<div className="inline-flex items-center">
+          <h1 className="m-0 text-2xl font-extrabold tracking-[-0.03em] text-[#10213d]">E-Club Ligi</h1>
+          <SayfaRehberi anahtar="eclub-ligi" className="ml-1.5 -translate-y-1" />
+        </div>} aciklama={<><p className="mt-1 text-xs font-semibold text-[#78889d]">
+          Eczacıların ve teknisyenlerin öğrenme motivasyonunu gözlemleyebilirsiniz.
+        </p>
 
-            {data && takimAdiDuzenleyebilir && (
-              takimDuzenleniyor ? (
-                <div className={`${styles.teamLine} ${styles.teamEditor}`}>
-                  <input className={styles.teamInput} value={takimTaslak} onChange={(event) => setTakimTaslak(event.target.value)} maxLength={100} placeholder="Takımınızın adı" autoFocus />
-                  <button type="button" className={`${styles.editorAction} ${styles.editorPrimary}`} onClick={() => void takimAdiKaydet()} disabled={takimKaydediliyor || !takimTaslak.trim()}>Kaydet</button>
-                  <button type="button" className={styles.editorAction} onClick={() => { setTakimDuzenleniyor(false); setTakimTaslak(data.takim_adi ?? ""); }}>Vazgeç</button>
-                </div>
-              ) : (
-                <div className={styles.teamLine}>
-                  <span>{data.takim_adi || "Takımım"} · {data.kullanici.ad} {data.kullanici.soyad}</span>
-                  <button type="button" className={styles.teamButton} onClick={() => setTakimDuzenleniyor(true)}>{data.takim_adi ? "Takım adını düzenle" : "Takım adı ver"}</button>
-                </div>
-              )
-            )}
-          </div>
-        </header>
+          {data && takimAdiDuzenleyebilir && (
+            takimDuzenleniyor ? (
+              <div className={`${styles.teamLine} ${styles.teamEditor}`}>
+                <input className={styles.teamInput} value={takimTaslak} onChange={(event) => setTakimTaslak(event.target.value)} maxLength={100} placeholder="Takımınızın adı" autoFocus />
+                <button type="button" className={`${styles.editorAction} ${styles.editorPrimary}`} onClick={() => void takimAdiKaydet()} disabled={takimKaydediliyor || !takimTaslak.trim()}>Kaydet</button>
+                <button type="button" className={styles.editorAction} onClick={() => { setTakimDuzenleniyor(false); setTakimTaslak(data.takim_adi ?? ""); }}>Vazgeç</button>
+              </div>
+            ) : (
+              <div className={styles.teamLine}>
+                <span>{data.takim_adi || "Takımım"} · {data.kullanici.ad} {data.kullanici.soyad}</span>
+                <button type="button" className={styles.teamButton} onClick={() => setTakimDuzenleniyor(true)}>{data.takim_adi ? "Takım adını düzenle" : "Takım adı ver"}</button>
+              </div>
+            )
+          )}</>} aksiyon={<YenileButonu yenileniyor={yenileniyor} onYenile={() => void veriCek(true)} disabled={yenileniyor || takimDuzenleniyor || takimKaydediliyor} />} />
 
         <section className={styles.leagueBanner} aria-label="E-Club Ligi podyumu">
           <div className={styles.leagueBannerHeader}>
@@ -308,7 +304,7 @@ export default function EclubLigiPage() {
 
         <div className={`${styles.headerActions} mb-[14px] [&_.hb-ligi-periyot-secici]:mb-0`}>
           {periyotSecici}
-          <YenileButonu yenileniyor={yenileniyor} onYenile={() => void veriCek(true)} disabled={yenileniyor || takimDuzenleniyor || takimKaydediliyor} />
+
         </div>
 
         {hata && data && (

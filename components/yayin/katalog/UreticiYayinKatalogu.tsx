@@ -18,6 +18,7 @@ import { talepIdGoster } from "@/lib/utils/talepId";
 import { YAYIN_TURU_SUNUMU, YAYIN_TURLERI } from "@/lib/ogrenmeAraci/turSunumu";
 import { YayinTuruFiltresi, type YayinTuruFiltreDegeri } from "@/components/ogrenme-araci/YayinTuruFiltresi";
 import { getKatalogOnbellek, setKatalogOnbellek } from "@/lib/video/katalogOnbellek";
+import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 
 type Kapsam = "benim" | "digerleri";
 
@@ -353,23 +354,22 @@ export default function UreticiYayinKatalogu({ kapsam }: Props) {
   return (
     <div className="min-h-full bg-[#f5f8fc]" style={{ fontFamily: "'Nunito', sans-serif" }}>
       <div className="mx-auto flex max-w-[1480px] flex-col gap-5 px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
-        <header className="flex flex-col items-start justify-between gap-3 sm:flex-row">
-          <div>
-            {kapsam === "digerleri" && <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-[#4f7fb7]">Yayın kataloğu</p>}
-            <div className="inline-flex items-center">
-              <h1 className={`${kapsam === "digerleri" ? "mt-1 " : ""}text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]`}>{baslik}</h1>
-              <SayfaRehberi
-                anahtar={kapsam === "benim" ? "sizin-yayinlariniz-katalog" : "tum-yayinlar-katalog"}
-                className="ml-1.5 -translate-y-2"
-              />
-            </div>
-            {aciklama && <p className="mt-1 text-sm text-[#6b7f9b]">{aciklama}</p>}
-          </div>
-          <div className="flex flex-wrap items-center justify-end gap-2">
+        <SayfaYenileBasligi className="flex flex-col items-start justify-between gap-3 sm:flex-row"
+          baslik={<div className="inline-flex items-center">
+            <h1 className={`${kapsam === "digerleri" ? "mt-1 " : ""}text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]`}>{baslik}</h1>
+            <SayfaRehberi
+              anahtar={kapsam === "benim" ? "sizin-yayinlariniz-katalog" : "tum-yayinlar-katalog"}
+              className="ml-1.5 -translate-y-2"
+            />
+          </div>}
+          ustBilgi={<>{kapsam === "digerleri" && <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-[#4f7fb7]">Yayın kataloğu</p>}</>}
+          aciklama={<>{aciklama && <p className="mt-1 text-sm text-[#6b7f9b]">{aciklama}</p>}</>}
+          aksiyon={<YenileButonu yenileniyor={yenileniyor} onYenile={() => veriCek()} />}
+          ekKontroller={<><div className="flex flex-wrap items-center justify-end gap-2">
             <ListeArama arama={katalogListesi.arama} ipucu="Ürün adı, talep ID veya diğer alanlarda ara" yukseklik="secim" />
-            <YenileButonu yenileniyor={yenileniyor} onYenile={() => veriCek()} />
-          </div>
-        </header>
+
+          </div></>}
+        />
 
         {loading && videolar.length === 0 ? (
           <div className="flex flex-col gap-5">

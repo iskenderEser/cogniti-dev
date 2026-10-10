@@ -1,6 +1,8 @@
 // components/ana-sayfa/BmAnaSayfa.tsx
 "use client";
 
+import { TarihPill } from "@/components/ui/tarih-pill";
+
 import { ROL_ADLARI } from "@/lib/utils/roller";
 
 import { useEffect, useRef, useState, type MouseEvent } from "react";
@@ -79,8 +81,6 @@ export default function BmAnaSayfa({ user, adSoyad }: Props) {
     return () => { aktif = false; controller.abort(); };
   }, [user.id, periyot, aracTuru, hata]);
 
-  const bugunTarih = () =>
-    new Date().toLocaleDateString("tr-TR", { day: "2-digit", month: "2-digit", year: "numeric" });
 
   const etkilesimYap = async (tur: "begeni" | "favori", event: MouseEvent, yayinId: string) => {
     event.stopPropagation();
@@ -138,7 +138,7 @@ export default function BmAnaSayfa({ user, adSoyad }: Props) {
           <p className="text-sm text-gray-500 mt-1">{ROL_ADLARI["bm"]}</p>
         </div>
 
-        <div className="flex items-start md:items-stretch gap-1.5 flex-wrap md:flex-col">
+        <div className="flex items-start gap-1.5 flex-wrap md:flex-col md:items-end">
           {takvim && (() => {
             const kalanGun = Math.floor(takvim.kalanMs / (24 * 60 * 60 * 1000));
             const onGunKala = !takvim.acik && kalanGun <= 10;
@@ -172,9 +172,7 @@ export default function BmAnaSayfa({ user, adSoyad }: Props) {
             );
           })()}
 
-          <span className="hidden md:inline-flex items-center justify-center text-[10px] text-gray-500 bg-white border border-gray-200 rounded-full px-3 py-1 whitespace-nowrap shadow-xs text-center">
-            {bugunTarih()}
-          </span>
+          <TarihPill />
         </div>
       </div>
 

@@ -37,6 +37,7 @@ import CcChallengeListesi from "@/components/cc-ligi/CcChallengeListesi";
 import { YenileButonu } from "@/components/ui/yenile-butonu";
 import SayfaRehberi from "@/components/rehber/SayfaRehberi";
 import type { AuthKullanici } from "@/types/auth";
+import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 
 const GRI_METIN = "#737373";
 const KOYU_METIN = "#111827";
@@ -278,21 +279,21 @@ export default function CcLigiPage() {
         </button>
 
         {/* Başlık */}
-        <div className="mb-5 flex items-start justify-between gap-3">
-          <div>
-            <h1
-              className="text-xl font-bold inline-flex items-center flex-wrap"
-              style={{ color: KOYU_METIN, margin: 0 }}
-            >
-              <span>C-Club Ligi</span>
-              <SayfaRehberi anahtar="cclub-ligi" className="ml-1.5 -translate-y-1" />
-            </h1>
-            <div className="text-xs mt-1" style={{ color: GRI_METIN }}>
-              Challenge Club bölge müdürlerinin öğrenme yarışı.
-            </div>
-          </div>
-          <YenileButonu yenileniyor={yenileniyor} onYenile={tumunuYenile} />
-        </div>
+        <SayfaYenileBasligi className="mb-5 flex items-start justify-between gap-3"
+          baslik={<h1
+            className="text-xl font-bold inline-flex items-center flex-wrap"
+            style={{ color: KOYU_METIN, margin: 0 }}
+          >
+            <span>C-Club Ligi</span>
+            <SayfaRehberi anahtar="cclub-ligi" className="ml-1.5 -translate-y-1" />
+          </h1>}
+
+          aciklama={<><div className="text-xs mt-1" style={{ color: GRI_METIN }}>
+            Challenge Club bölge müdürlerinin öğrenme yarışı.
+          </div></>}
+          aksiyon={<YenileButonu yenileniyor={yenileniyor} onYenile={tumunuYenile} />}
+
+        />
 
         {/* Banner */}
         <CcLigiBanner />

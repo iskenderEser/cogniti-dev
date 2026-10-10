@@ -1,6 +1,9 @@
 // Eczanem müşteri ana sayfası: dijital kanal rafları, sayfa içi oynatıcı ve
 // hesap güvenliği. Puan/indirim işlemleri navbar'daki ayrı Puanlarım sayfasıdır.
 "use client";
+import { TarihPill } from "@/components/ui/tarih-pill";
+import { YenileButonu } from "@/components/ui/yenile-butonu";
+import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -213,8 +216,6 @@ function EczanemPanelIcerik() {
         ad={kullanici.adSoyad || kullanici.ad || "Müşteri"}
         telefon={kullanici.telefon}
         onCikis={cikisYap}
-        onYenile={() => videolariCek(true)}
-        yenileniyor={videoYukleniyor || videoYenileniyor}
         onHesapSil={() => setSilmeModalAcik(true)}
       />
       <main className="mx-auto flex w-full max-w-[1440px] items-start gap-6 px-4 py-5 md:px-6 md:py-7">
@@ -245,7 +246,13 @@ function EczanemPanelIcerik() {
 
           <section className="relative overflow-hidden rounded-3xl bg-[linear-gradient(125deg,#173b63_0%,#237ac8_56%,#43a5d7_100%)] px-5 py-6 text-white shadow-[0_12px_32px_rgba(35,122,200,0.18)] md:px-8 md:py-8">
             <div className="absolute -right-16 -top-24 size-64 rounded-full border-[32px] border-white/5" /><div className="absolute -bottom-24 right-28 size-52 rounded-full bg-white/5" />
-            <div className="relative max-w-2xl"><p className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#cae8ff]"><Sparkles className="size-3.5" /> HapBilgi Eczanem</p><h1 className="mt-2 text-2xl font-black tracking-[-0.025em] md:text-3xl">{musteriAd ? `Merhaba ${musteriAd}` : "Merhaba"}</h1><p className="mt-2 max-w-xl text-xs font-semibold leading-5 text-white/78 md:text-sm md:leading-6">Eczanenizden gelen öğrenme içeriklerini inceleyin; size özel içerik akışınızı tek sayfada yönetin.</p></div>
+            <SayfaYenileBasligi className="relative"
+              altAksiyon={<TarihPill />}
+              ustBilgi={<p className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#cae8ff]"><Sparkles className="size-3.5" /> HapBilgi Eczanem</p>}
+              baslik={<h1 className="text-2xl font-black tracking-[-0.025em] md:text-3xl">{musteriAd ? `Merhaba ${musteriAd}` : "Merhaba"}</h1>}
+              aciklama={<p className="mt-2 max-w-xl text-xs font-semibold leading-5 text-white/78 md:text-sm md:leading-6">Eczanenizden gelen öğrenme içeriklerini inceleyin; size özel içerik akışınızı tek sayfada yönetin.</p>}
+              aksiyon={<YenileButonu yenileniyor={videoYukleniyor || videoYenileniyor} onYenile={() => videolariCek(true)} />}
+            />
           </section>
           <EclubGecisKarti hata={hata} basari={basari} />
           {videoHatasi && <div className="rounded-2xl border border-[#f0d1d1] bg-[#fff7f7] px-4 py-3 text-xs font-bold text-[#a74646]">{videoHatasi}{videoHazir ? " · Son başarılı içerik akışı gösteriliyor." : ""}</div>}

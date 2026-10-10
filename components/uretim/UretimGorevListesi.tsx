@@ -92,8 +92,8 @@ export default function UretimGorevListesi({ asama, baslik, asamaEtiketi, bosMes
     <>
       <div className="mx-auto max-w-6xl px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
         <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
-          <DurumAnahtari baslik={baslik} rol={kullanici.rol} asama={asamaEtiketi} aktif={aktifDurum} onSec={durumSec} sayim={sayim} />
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 px-5 py-3"><span className="text-xs text-gray-500">{liste.toplam} kayıt</span><div className="flex flex-wrap items-center justify-end gap-2"><ListeArama arama={liste.arama} /><YenileButonu yenileniyor={yenileniyor} onYenile={() => veriCek()} /></div></div>
+          <DurumAnahtari baslik={baslik} rol={kullanici.rol} asama={asamaEtiketi} aktif={aktifDurum} onSec={durumSec} sayim={sayim} aksiyon={<YenileButonu yenileniyor={yenileniyor} onYenile={() => veriCek()} />} />
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 px-5 py-3"><span className="text-xs text-gray-500">{liste.toplam} kayıt</span><div className="flex flex-wrap items-center justify-end gap-2"><ListeArama arama={liste.arama} /></div></div>
           {liste.toplam === 0 ? <div className="p-10 text-center text-sm text-gray-400">{gorevler.length === 0 ? bosMesaj : liste.hamToplam === 0 ? "Bu durumda görev yok." : "Aramanıza uyan kayıt bulunamadı."}</div> : (
             <>
               <div className="md:hidden">{liste.gorunen.map((gorev) => {

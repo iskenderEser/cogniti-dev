@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import { TarihPill } from "@/components/ui/tarih-pill";
+import EclubHediyeCekiGunleriPill from "@/components/eclub/EclubHediyeCekiGunleriPill";
 import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
-import { CheckCircle2, Clock3, Coins, ShoppingBag, Sparkles, Trophy, Video } from "lucide-react";
+import { CheckCircle2, Clock3, Coins, Sparkles, Trophy, Video } from "lucide-react";
 import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
 import { useAuth } from "@/app/providers/AuthProvider";
 import {
@@ -134,11 +135,8 @@ export default function EclubPanelPage() {
             baslikClassName="text-lg md:text-xl font-extrabold text-gray-900 m-0"
             baslik={karsilamaBasligi}
             aciklama="Firmaların size ilettiği yayınları izleyin, soruları yanıtlayın ve puan kazanın."
-            aksiyon={(
-              <Link href="/eclub/store" className="inline-flex items-center gap-2 rounded-xl border border-[#cfe3f4] bg-white px-4 py-2.5 text-xs font-extrabold text-[#237ac8] shadow-sm hover:bg-[#f4f9fd]">
-                <ShoppingBag size={15} /> Mağazaya Git
-              </Link>
-            )}
+            aksiyon={statOzeti.eclub_store_aktif ? <EclubHediyeCekiGunleriPill /> : undefined}
+            altAksiyon={<TarihPill />}
           />
 
           <section className={`grid gap-3 ${statOzeti.eclub_store_aktif ? "grid-cols-2 lg:grid-cols-4" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"}`}>

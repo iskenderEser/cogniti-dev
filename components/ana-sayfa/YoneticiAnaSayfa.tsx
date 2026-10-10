@@ -1,6 +1,8 @@
 // components/ana-sayfa/YoneticiAnaSayfa.tsx
 "use client";
 
+import { TarihPill } from "@/components/ui/tarih-pill";
+
 import { ROL_ADLARI } from "@/lib/utils/roller";
 
 import { useEffect, useMemo, useState } from "react";
@@ -76,8 +78,6 @@ export default function YoneticiAnaSayfa({ user, rol, adSoyad }: Props) {
     veriCek();
   }, [user]);
 
-  const bugunTarih = () =>
-    new Date().toLocaleDateString("tr-TR", { timeZone: "Europe/Istanbul", day: "2-digit", month: "2-digit", year: "numeric" });
 
   const haftaTarihi = () => {
     const baslangic = haftaBaslangici(new Date());
@@ -133,9 +133,7 @@ export default function YoneticiAnaSayfa({ user, rol, adSoyad }: Props) {
           <h1 className="text-lg md:text-xl font-extrabold text-gray-900 m-0">Merhaba {ad}, 👋</h1>
           <p className="text-sm text-gray-500 mt-1">{ROL_ADLARI[rol.toLowerCase()] ?? rol.toUpperCase()}</p>
         </div>
-        <span className="hidden md:inline text-[10px] text-gray-500 bg-white border border-gray-200 rounded-full px-3 py-1 whitespace-nowrap">
-          {bugunTarih()}
-        </span>
+        <TarihPill />
       </div>
 
       {/* Mobilde Odak Bilgi Alanı */}

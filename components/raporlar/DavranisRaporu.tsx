@@ -18,6 +18,7 @@ import { TUR_RAPOR_ADI, TUR_SIRA, type IcerikTuru } from '@/lib/video/icerikTuru
 import { ArrowLeft, BookOpenCheck, CheckCheck, CircleHelp, Clock3, FastForward, Repeat2, Send, Users } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
+import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 
 const ARACLAR = [{ key: 'tumu', label: 'Tümü' }, { key: 'video', label: 'Videolar' }, { key: 'podcast', label: 'Podcastler' }, { key: 'gorsel', label: 'Dijital Broşürler' }, { key: 'flip_pdf', label: 'Literatürler' }];
 const fmt = (n: number) => n.toLocaleString('tr-TR', { maximumFractionDigits: 1 });
@@ -90,10 +91,13 @@ export default function DavranisRaporu({ rol }: { rol: 'utt' | 'bm' | 'tm' | 'yo
   return <div className={styles.page} style={{ fontFamily: "'Nunito', sans-serif" }}>
     <div className={styles.container}>
       <Link href="/ana-sayfa" className="mb-3 inline-flex items-center gap-1.5 text-xs font-bold text-[#7890aa]"><ArrowLeft size={14} /> Ana Sayfa</Link>
-      <header className={styles.header}>
-        <div><h1 className="text-2xl font-extrabold tracking-tight text-[#10213d]">T-Club Raporları</h1><p className="mt-1 text-xs font-semibold text-[#78889d]">{karsilastirma ? takimRolu ? 'İki bölgenin temsilcilerinin öğrenme davranışlarını karşılaştırın.' : 'Bölgenizdeki iki temsilcinin öğrenme davranışlarını karşılaştırın.' : takimGorunumu ? yonetici ? 'Seçili takımın lig sonucunu oluşturan öğrenme davranışları.' : 'Takımınızın lig sonucunu oluşturan öğrenme davranışları.' : bolgeGorunumu ? 'Bölgenizin lig sonucunu oluşturan öğrenme davranışları.' : rol !== 'utt' ? 'Seçili temsilcinin lig sonucunu oluşturan öğrenme davranışları.' : 'Lig sonucunu oluşturan öğrenme davranışlarınız.'}</p></div>
-        <YenileButonu onYenile={raporuYenile} yenileniyor={loading || yenileniyor} />
-      </header>
+      <SayfaYenileBasligi className={styles.header}
+        baslik={<h1 className="text-2xl font-extrabold tracking-tight text-[#10213d]">T-Club Raporları</h1>}
+
+        aciklama={<><p className="mt-1 text-xs font-semibold text-[#78889d]">{karsilastirma ? takimRolu ? 'İki bölgenin temsilcilerinin öğrenme davranışlarını karşılaştırın.' : 'Bölgenizdeki iki temsilcinin öğrenme davranışlarını karşılaştırın.' : takimGorunumu ? yonetici ? 'Seçili takımın lig sonucunu oluşturan öğrenme davranışları.' : 'Takımınızın lig sonucunu oluşturan öğrenme davranışları.' : bolgeGorunumu ? 'Bölgenizin lig sonucunu oluşturan öğrenme davranışları.' : rol !== 'utt' ? 'Seçili temsilcinin lig sonucunu oluşturan öğrenme davranışları.' : 'Lig sonucunu oluşturan öğrenme davranışlarınız.'}</p></>}
+        aksiyon={<YenileButonu onYenile={raporuYenile} yenileniyor={loading || yenileniyor} />}
+
+      />
       {yonetici && (yanit?.takimlar?.length ?? 0) > 1 && <div className="mb-5 flex min-w-0 justify-end"><SadeKontrolGrubu tur="kapsul" aria-label="Rapor takımı" className="min-w-0 max-w-full">
         {yanit?.takimlar?.map(takim => <SadeKontrolButonu key={takim.id} type="button" aria-pressed={(takimId || yanit?.takimId) === takim.id} onClick={() => { setTakimId(takim.id); setBmId(''); setTemsilciId(''); setIkinciId(''); }}>{takim.ad}</SadeKontrolButonu>)}
       </SadeKontrolGrubu></div>}

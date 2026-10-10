@@ -1,5 +1,7 @@
 "use client";
 
+import { TarihPill } from "@/components/ui/tarih-pill";
+
 import { SadeKontrolButonu, SadeKontrolGrubu } from "@/components/kontrol/SadeKontroller";
 
 import SahaVideoRaflari from "@/components/ana-sayfa/SahaVideoRaflari";
@@ -165,8 +167,6 @@ function TmAnaSayfaIcerigi({ user, adSoyad }: Props) {
     return () => { aktif = false; controller.abort(); };
   }, [user.id, periyot, aracTuru, hata]);
 
-  const bugunTarih = () =>
-    new Date().toLocaleDateString("tr-TR", { day: "2-digit", month: "2-digit", year: "numeric" });
 
   if (aktifVideo?.kullaniciId === user.id) {
     return (
@@ -211,9 +211,7 @@ function TmAnaSayfaIcerigi({ user, adSoyad }: Props) {
           <h1 className="m-0 text-lg font-extrabold text-gray-900 md:text-xl">Merhaba {ad}, 👋</h1>
           <p className="mt-1 text-sm text-gray-500">{ROL_ADLARI["tm"]}</p>
         </div>
-        <span className="hidden whitespace-nowrap rounded-full border border-gray-200 bg-white px-3 py-1 text-[10px] text-gray-500 md:inline">
-          {bugunTarih()}
-        </span>
+        <TarihPill />
       </div>
 
       {/* Stat kartlar */}

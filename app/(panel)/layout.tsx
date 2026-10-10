@@ -262,7 +262,6 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
           ozet={isEclubKisi ? null : etkinOzet}
           siparisPuaniGoster={!isEclubKisi && etkinFlags.storeAcik}
           hbStoreGoster={!isEclubKisi && etkinFlags.storeAcik && STORE_ALABILEN_ROLLER.includes(rolKucu)}
-          eclubStoreGeriSayimGoster={Boolean(isEclubKisi && etkinFlags.eclubStoreAcik)}
           anaSayfaYolu={anaSayfaYolu}
           eclubStorePuani={isEclubKisi && etkinFlags.eclubStoreAcik ? etkinEclubStorePuani : null}
           firmaLogoUrl={!isEclubKisi ? etkinFlags.firmaLogoUrl : null}

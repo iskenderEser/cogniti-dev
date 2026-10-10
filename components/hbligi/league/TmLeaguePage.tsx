@@ -17,7 +17,7 @@ function sirala(satirlar: LigSatiri[]): SiraliSatir[] {
     .map((satir) => ({ ...satir, rank: siralar.get(satir.toplam_puan)!, degisim: null }));
 }
 
-export default function TmLeaguePage({ veri, periyotSecici }: { veri: SahaLigSonuc; periyotSecici: ReactNode }) {
+export default function TmLeaguePage({ veri, periyotSecici, yenileButonu }: { veri: SahaLigSonuc; periyotSecici: ReactNode; yenileButonu?: ReactNode }) {
   const [kapsam, setKapsam] = useState<"takim" | "firma">("takim");
   const [seciliTakimId, setSeciliTakimId] = useState<string | null>(null);
   const yonetici = veri.gorunum === "yonetici";
@@ -72,7 +72,7 @@ export default function TmLeaguePage({ veri, periyotSecici }: { veri: SahaLigSon
   return (
     <div className={styles.shell} style={{ fontFamily: "'Nunito', sans-serif" }}>
       <div className={`${styles.dashboard} ${styles.fixedDashboard}`}>
-        <LeagueHeader periyotSecici={null} />
+        <LeagueHeader periyotSecici={null} yenileButonu={yenileButonu} />
         <MonthlyLeaders top3={kursu} baslik={`${veri.aylik_kursu?.ay_adi ?? "Geçen"} Ayının ${yonetici ? "Firma" : "Takım"} Öğrenme Liderleri`} />
         <div className="flex flex-wrap items-center justify-end gap-2">
           {(!yonetici || takimlar.length > 1) && <SadeKontrolGrubu tur="kapsul" aria-label={yonetici ? "Lig takımı" : "Lig kapsamı"} className="min-w-0 max-w-full">

@@ -3245,7 +3245,69 @@ Her sayfada yalnız kullanılan kontrol aileleri için uygulanacak checklist:
 | 44 | Belirtilen Rapor/Karşılaştırma ve Tümü/Kazandıranlar/Kaybettirenler içerikleri sekme çizgisinden **20 px** sonra mı başlıyor? | ☐ Uygun ☐ Uyumsuz ☐ Uygulanmaz |
 | 45 | Üç stat kartı bulunan gruplar mobilde (640 px altında) tek sütunda, üç kart alt alta ve tam satır genişliğinde mi? Koşullu olarak üç karta düşen gruplar da bu kurala uyuyor mu? | ☐ Uygun ☐ Uyumsuz ☐ Uygulanmaz |
 
-**İşlem butonları:** §13’te ayrı ölçü standardı bulunmadığından Ekle, Gönder, Kaydet, İptal, Yenile ve Kapat butonlarına seçim ölçüleri uygulanarak uyumsuzluk yazılmaz.
+**Yenile butonu**
+
+| No | Kontrol | Sonuç |
+|---|---|---|
+| 46 | Yenile butonu başlık satırının sağında, başlık metniyle dikey merkezleri aynı yatay çizgide ve sağ kenarı en sağdaki stat kartın sağ kenarıyla (stat kart yoksa içerik alanının sağ sınırıyla) hizalı mı; takvim, açıklama, bilgi bandı veya stat kartının dışında mı? | ☐ Uygun ☐ Uyumsuz ☐ Uygulanmaz |
+| 47 | Mobilde Yenile başlıkla aynı satırda kalıyor mu; alan daraldığında yatay boşluklar azaltılıp gerekirse yalnız simge gösteriliyor mu; dokunma alanı en az 44 × 44 px ve erişilebilir adı “Yenile” mi? | ☐ Uygun ☐ Uyumsuz ☐ Uygulanmaz |
+| 48 | Ortak `YenileButonu` kullanılıyor ve sayfaya özel görünüm oluşturulmuyor mu? | ☐ Uygun ☐ Uyumsuz ☐ Uygulanmaz |
+| 49 | Yenileme sırasında buton pasif ve simgesi döner durumda mı; metin gösterilen görünümde etiket, yalnız simgeli görünümde erişilebilir ad “Yenileniyor…” mu? | ☐ Uygun ☐ Uyumsuz ☐ Uygulanmaz |
+| 50 | Yenileme yalnız verileri güncelliyor; seçili firma, ürün, sekme, filtre ve dönem korunuyor mu? | ☐ Uygun ☐ Uyumsuz ☐ Uygulanmaz |
+| 51 | Yenile butonunun kullanımı, §13.7'deki sayfa içeriği ölçütüne uygun mu; otomatik güncellenen sayfalarda ayrıca buton gereksinimi değerlendirilmiş mi? | ☐ Uygun ☐ Uyumsuz ☐ Uygulanmaz |
+
+**İşlem butonları:** Ekle, Gönder, Kaydet, İptal, Yenile ve Kapat butonlarına seçim kontrollerinin ölçüleri uygulanarak uyumsuzluk yazılmaz. Yenile butonunun yerleşim, ortak bileşen ve davranış kuralları §13.7 kapsamında ayrıca değerlendirilir.
+
+### 13.7. Yenile Butonu Standardı
+
+*Karar ve yürürlük tarihi: 10 Ekim 2026 | Kapsam: tüm sayfalar ve tüm roller*
+
+**Kullanım ölçütü**
+
+Yenile butonu; kullanıcı sayfada kalırken başka kullanıcıların veya sistemin işlemleriyle değişebilen liste, durum, puan, bakiye ve rapor verilerini gösteren sayfalarda kullanılır. Sabit içerik ve yalnızca veri girişine yönelik sayfalarda kullanılmaz.
+
+| Sayfanın içeriği | Yenile ihtiyacı |
+|---|---|
+| Talep, sipariş, onay, teslimat ve işlem takibi | Yararlıdır. İşlemin durumu başka kullanıcı tarafından değişebilir. |
+| Yayın, görev ve dağıtım listeleri | Yararlıdır. Yeni kayıt gelebilir veya mevcut kaydın durumu değişebilir. |
+| Puan, bakiye, lig ve performans raporları | Yararlıdır. Başka kullanıcıların işlemleri sonuçları değiştirebilir. |
+| Kullanıcı, ekip ve müşteri listeleri | Yararlıdır. Kayıtlar başka yetkililer tarafından değiştirilebilir. |
+| Sabit açıklamalar, kullanım bilgileri ve tanıtım sayfaları | Gerekli değildir. Güncellenecek işlem verisi yoktur. |
+| Yalnızca kullanıcının doldurduğu form veya düzenleme ekranı | Gerekli değildir. Buradaki işlem kaydetmedir. |
+
+Sayfa bu değişiklikleri otomatik olarak güncelliyorsa, ayrıca Yenile butonu koyma ihtiyacı değerlendirilir.
+
+**Yerleşim ve davranış**
+
+- Yenile butonu, **sayfa başlığının bulunduğu satırın sağındaki aksiyon alanında** yer alır.
+- **Başlık metni ile butonun dikey merkezleri aynı yatay çizgide** olur. Hizalama, başlık ve alt açıklamanın toplam yüksekliğine göre yapılmaz.
+- Butonun **sağ kenarı, en sağdaki stat kartın sağ kenarıyla aynı dikey çizgide** olur. Stat kart bulunmayan sayfalarda içerik alanının sağ sınırı esas alınır.
+- Takvim, açıklama, bilgi bandı veya stat kartının içine yerleştirilmez.
+- **Mobilde buton başlıkla aynı satırda, sağda kalır; alt satıra taşınmaz.** Alan daraldığında önce yatay boşluklar azaltılır; gerekirse “Yenile” yazısı kaldırılıp yalnız simge gösterilir. Dokunma alanı **en az 44 × 44 px** kalır ve yalnız simgeli butonun erişilebilir adı **“Yenile”** olur.
+- Ortak **`components/ui/yenile-butonu.tsx` içindeki `YenileButonu`** bileşeni kullanılır; sayfaya özel görünüm oluşturulmaz.
+- Yenileme sırasında buton pasif olur ve simgesi döner. Metin gösterilen görünümde **“Yenileniyor…”** yazısı gösterilir; yalnız simgeli görünümde erişilebilir ad **“Yenileniyor…”** olur.
+- Yenileme yalnız verileri günceller; seçili firma, ürün, sekme, filtre ve dönem korunur.
+- Bu standart, yeni sayfalarda ve mevcut sayfalar yeniden düzenlenirken tüm roller için zorunludur.
+
+Bu kayıt standardı tanımlar; mevcut sayfaların tamamının bu standarda dönüştürüldüğü anlamına gelmez.
+
+---
+
+### 13.8. Ana Sayfa Tarih Pill’i Standardı
+
+*Karar ve yürürlük tarihi: 10 Ekim 2026 | Kapsam: admin hariç tüm rollerin ana sayfaları*
+
+- **Kapsam:** Admin hariç tüm rollerin ana sayfalarında bulunur.
+- **İçerik:** Türkiye saatine göre güncel tarih, **GG.AA.YYYY** biçiminde gösterilir.
+- **Yükseklik:** **24 px**.
+- **Genişlik:** İçeriğe göre belirlenir; sağ ve sol iç boşluk **12 px** olur.
+- **Yazı:** **10 px**, normal kalınlık, gri (`#6b7280`).
+- **Görünüm:** Beyaz zemin, **1 px** açık gri kenarlık (`#e5e7eb`), tam yuvarlatılmış köşeler.
+- **Konum:** Karşılama alanının sağında, stat kartlarının üstünde bulunur. Sağ kenarı, en sağdaki stat kartının sağ kenarıyla hizalanır. Alt kenarı, karşılama bloğunun alt kenarıyla hizalanır.
+- **Süre pill’i varsa:** Süre pill’i üstte, tarih pill’i altta yer alır. Aralarında **6 px** boşluk bulunur.
+- **Mobil:** **768 px altındaki ekranlarda gizlenir.**
+- **Davranış:** Bilgi gösterimidir; tıklanmaz ve bağlantı içermez.
+- **Ortak uygulama:** `components/ui/tarih-pill.tsx` içindeki `TarihPill` ve `tarih-pill.module.css` kullanılır. Ana sayfalarda ayrı güncel tarih hesaplama veya pill görünüm kodu tutulmaz. Ortak bileşen Türkiye saatini esas alır ve açık kalan sayfada tarih değişimini günceller.
 
 ---
 

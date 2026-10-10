@@ -22,6 +22,7 @@ import { TalepDetayi } from "./TalepDetayi";
 import { YeniTalepAkordiyonu } from "./YeniTalepAkordiyonu";
 import { IptalAkordiyonu } from "./IptalAkordiyonu";
 import SayfaRehberi from "@/components/rehber/SayfaRehberi";
+import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 
 export function UreticiRolGorunum() {
   const { kullanici, yukleniyor: authYukleniyor } = useAuth();
@@ -100,26 +101,24 @@ export function UreticiRolGorunum() {
       <div className="min-h-full bg-[#f5f8fc]">
       <div className="max-w-[1480px] mx-auto px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7 flex flex-col gap-5">
         <section aria-labelledby="talep-merkezi-baslik" className="flex flex-col gap-4">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <div className="inline-flex items-center">
+            <SayfaYenileBasligi className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"
+              baslik={<div className="inline-flex items-center">
                 <h1 id="talep-merkezi-baslik" className="text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]">
                   Yayın Oluşturma ve Takip
                 </h1>
                 <SayfaRehberi anahtar="talep-merkezi" className="ml-1.5 -translate-y-2" />
-              </div>
-              <p className="mt-1 text-xs text-[#7b8ca5]">
+              </div>}
+
+              aciklama={<><p className="mt-1 text-xs text-[#7b8ca5]">
                 Yeni yayınlar açabilir ve yayınlarınızı takip edebilirsiniz.
-              </p>
-            </div>
-            <div className="flex items-center justify-end self-start sm:self-auto">
-              <YenileButonu
+              </p></>}
+              aksiyon={<YenileButonu
                 yenileniyor={merkez.yenileniyor}
                 onYenile={() => merkez.veriCek({ manuel: true })}
                 disabled={merkez.kararYukleniyor || merkez.videoYuzdesi !== null}
-              />
-            </div>
-          </div>
+              />}
+
+            />
 
           <div aria-label="Talep operasyon özeti" className="grid grid-cols-2 gap-2.5 lg:grid-cols-4 lg:gap-3">
             {ozetKartlari.map((kart) => (

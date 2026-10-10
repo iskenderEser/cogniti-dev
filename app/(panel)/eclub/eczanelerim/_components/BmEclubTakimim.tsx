@@ -1,13 +1,15 @@
 "use client";
+import { YenileButonu } from "@/components/ui/yenile-butonu";
 
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Building2, ChevronDown, Gift, LoaderCircle, RefreshCw, UserCheck, Users } from "lucide-react";
+import { Building2, ChevronDown, Gift, LoaderCircle, UserCheck, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import SayfaRehberi from "@/components/rehber/SayfaRehberi";
 import bmStyles from "@/app/(panel)/raporlar/bm/bm-report.module.css";
 import { eclubBmGruplari } from "@/lib/eclub/bmGruplari";
+import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 
 interface BmKisi {
   kisi_id: string;
@@ -95,23 +97,21 @@ export default function BmEclubTakimim({ rol = "bm" }: { rol?: "bm" | "tm" }) {
   return (
     <div className="min-h-full bg-gray-50" style={{ fontFamily: "'Nunito', sans-serif" }}>
       <div className="mx-auto flex max-w-[1480px] flex-col gap-4 px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
-        <header className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <div className="inline-flex items-center">
-              <h1 className="text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]">E-Club Takımım</h1>
-              <SayfaRehberi anahtar="eclub-eczanelerim" className="ml-1.5 -translate-y-1.5" />
-            </div>
-            <p className="mt-1 max-w-3xl text-xs leading-5 text-[#6b7f9b]">{rol === "tm" ? "Takımınızdaki BM ve UTT’lerin E-Club eczane ve kadro yapılarını inceleyin." : "Bölgenizdeki UTT’lerin E-Club eczane ve kadro yapılarını inceleyin."}</p>
-          </div>
-          <div className="flex flex-col items-stretch gap-2">
+        <SayfaYenileBasligi className="flex flex-wrap items-end justify-between gap-4"
+          baslik={<div className="inline-flex items-center">
+            <h1 className="text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]">E-Club Takımım</h1>
+            <SayfaRehberi anahtar="eclub-eczanelerim" className="ml-1.5 -translate-y-1.5" />
+          </div>}
+
+          aciklama={<><p className="mt-1 max-w-3xl text-xs leading-5 text-[#6b7f9b]">{rol === "tm" ? "Takımınızdaki BM ve UTT’lerin E-Club eczane ve kadro yapılarını inceleyin." : "Bölgenizdeki UTT’lerin E-Club eczane ve kadro yapılarını inceleyin."}</p></>}
+          aksiyon={<YenileButonu yenileniyor={yukleniyor} onYenile={() => veriCek()} />}
+          ekKontroller={<><div className="flex flex-col items-stretch gap-2">
             <Button type="button" size="sm" onClick={() => router.push("/eclub/hediye-takip")} className="h-9 gap-2 border border-[#bfdbfe] bg-[#eaf4ff] px-3 text-xs font-extrabold text-[#1d4ed8] shadow-none hover:bg-[#dbeafe]">
               <Gift className="size-4" /> Hediye Takip
             </Button>
-            <Button type="button" variant="outline" size="sm" onClick={() => void veriCek()} disabled={yukleniyor} className="gap-2 border-[#d8e2ed] text-[#60758d]">
-              <RefreshCw className={`size-3.5 ${yukleniyor ? "animate-spin" : ""}`} /> Yenile
-            </Button>
-          </div>
-        </header>
+
+          </div></>}
+        />
 
         <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <OzetKart ikon={<Users className="size-3.5 text-[#2563eb]" />} etiket="UTT" deger={veri?.uttler.length ?? 0} />

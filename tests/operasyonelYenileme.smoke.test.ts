@@ -11,7 +11,6 @@ const sayfalar = [
   oku("app/(panel)/eclub/eczanelerim/page.tsx"),
   oku("app/(panel)/eczanem/eczane/dagitim/page.tsx"),
   oku("app/(panel)/eczanem/eczane/musterilerim/page.tsx"),
-  oku("app/(panel)/eczanem/eczane/_components/EczanemSiparisKuyrugu.tsx"),
 ];
 
 test("mutlu: operasyon sayfaları ortak, pasiflenebilir ve durum koruyan yenileme kullanır", () => {

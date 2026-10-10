@@ -19,6 +19,7 @@ import bmStyles from "@/app/(panel)/raporlar/bm/bm-report.module.css";
 import { DepoTercihFormu } from "@/components/eclub/DepoTercihFormu";
 import SayfaRehberi from "@/components/rehber/SayfaRehberi";
 import BmEclubTakimim from "./_components/BmEclubTakimim";
+import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 
 export default function EclubEczanelerimPage() {
   const { kullanici, yukleniyor } = useAuth();
@@ -177,44 +178,43 @@ function UttEclubEczanelerimPage() {
     <div className="min-h-full bg-gray-50" style={{ fontFamily: "'Nunito', sans-serif" }}>
       <HataMesajiContainer mesajlar={mesajlar} />
       <div className="mx-auto flex max-w-[1480px] flex-col gap-4 px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
-        <header className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <div className="inline-flex items-center">
-              <h1 className="text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]">E-Club Takımım</h1>
-              <SayfaRehberi anahtar="eclub-eczanelerim" className="ml-1.5 -translate-y-1.5" />
+        <SayfaYenileBasligi className="flex flex-wrap items-end justify-between gap-4"
+          baslik={<div className="inline-flex items-center">
+            <h1 className="text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]">E-Club Takımım</h1>
+            <SayfaRehberi anahtar="eclub-eczanelerim" className="ml-1.5 -translate-y-1.5" />
+          </div>}
+
+          aciklama={<>{takimDuzenleniyor ? (
+            <div className="mt-2 flex flex-wrap items-center gap-2">
+              <input
+                className="h-8 rounded-lg border border-[#3b82f6] bg-white px-3 text-xs font-bold text-[#1e3a8a] outline-none ring-2 ring-blue-100"
+                value={takimTaslak}
+                onChange={(e) => setTakimTaslak(e.target.value)}
+                maxLength={100}
+                placeholder="Takım adı yazın (Örn: Ege Yıldızları)"
+                autoFocus
+              />
+              <Button size="sm" onClick={() => void takimAdiKaydet()} disabled={takimKaydediliyor || !takimTaslak.trim()} className="h-8 bg-[#237ac8] text-xs font-bold hover:bg-[#1d69ad]">Kaydet</Button>
+              <Button size="sm" variant="ghost" onClick={() => { setTakimDuzenleniyor(false); setTakimTaslak(takimAdi ?? ""); }} className="h-8 text-xs font-bold text-[#6b7f9b]">Vazgeç</Button>
             </div>
-            
-            {takimDuzenleniyor ? (
-              <div className="mt-2 flex flex-wrap items-center gap-2">
-                <input
-                  className="h-8 rounded-lg border border-[#3b82f6] bg-white px-3 text-xs font-bold text-[#1e3a8a] outline-none ring-2 ring-blue-100"
-                  value={takimTaslak}
-                  onChange={(e) => setTakimTaslak(e.target.value)}
-                  maxLength={100}
-                  placeholder="Takım adı yazın (Örn: Ege Yıldızları)"
-                  autoFocus
-                />
-                <Button size="sm" onClick={() => void takimAdiKaydet()} disabled={takimKaydediliyor || !takimTaslak.trim()} className="h-8 bg-[#237ac8] text-xs font-bold hover:bg-[#1d69ad]">Kaydet</Button>
-                <Button size="sm" variant="ghost" onClick={() => { setTakimDuzenleniyor(false); setTakimTaslak(takimAdi ?? ""); }} className="h-8 text-xs font-bold text-[#6b7f9b]">Vazgeç</Button>
-              </div>
-            ) : (
-              <div className="mt-2 flex items-center gap-2 text-sm text-[#4b5563]">
-                <span className="font-extrabold text-[#1e3a8a]">{takimAdi || "Takımım"}</span>
-                <span className="text-[#9ca3af]">·</span>
-                <span className="font-semibold text-[#6b7280]">{kullanici.ad} {kullanici.soyad}</span>
-                <button
-                  type="button"
-                  onClick={() => setTakimDuzenleniyor(true)}
-                  className="ml-1 inline-flex items-center gap-1 rounded-md bg-[#eef6ff] px-2 py-0.5 text-[10px] font-extrabold text-[#2563eb] hover:bg-[#dbeafe]"
-                >
-                  <Edit3 size={11} />
-                  {takimAdi ? "Takım adını düzenle" : "Takım adı ver"}
-                </button>
-              </div>
-            )}
-            <p className="mt-1 max-w-3xl text-xs leading-5 text-[#6b7f9b]">E‑Club takımınızı oluşturun; eczaneleri bağlayarak eczacı ve teknisyen kadronuzu yönetin.</p>
-          </div>
-          <div className="flex flex-col items-stretch gap-2">
+          ) : (
+            <div className="mt-2 flex items-center gap-2 text-sm text-[#4b5563]">
+              <span className="font-extrabold text-[#1e3a8a]">{takimAdi || "Takımım"}</span>
+              <span className="text-[#9ca3af]">·</span>
+              <span className="font-semibold text-[#6b7280]">{kullanici.ad} {kullanici.soyad}</span>
+              <button
+                type="button"
+                onClick={() => setTakimDuzenleniyor(true)}
+                className="ml-1 inline-flex items-center gap-1 rounded-md bg-[#eef6ff] px-2 py-0.5 text-[10px] font-extrabold text-[#2563eb] hover:bg-[#dbeafe]"
+              >
+                <Edit3 size={11} />
+                {takimAdi ? "Takım adını düzenle" : "Takım adı ver"}
+              </button>
+            </div>
+          )}
+            <p className="mt-1 max-w-3xl text-xs leading-5 text-[#6b7f9b]">E‑Club takımınızı oluşturun; eczaneleri bağlayarak eczacı ve teknisyen kadronuzu yönetin.</p></>}
+          aksiyon={<YenileButonu yenileniyor={yenileniyor} onYenile={() => veriCek()} disabled={eczaneFormAcik || islemLoading || takimDuzenleniyor} />}
+          ekKontroller={<><div className="flex flex-col items-stretch gap-2">
             <Button
               type="button"
               onClick={() => router.push("/eclub/hediye-takip")}
@@ -223,9 +223,9 @@ function UttEclubEczanelerimPage() {
               <Gift className="size-4" />
               Hediye Takip
             </Button>
-            <YenileButonu yenileniyor={yenileniyor} onYenile={() => veriCek()} disabled={eczaneFormAcik || islemLoading || takimDuzenleniyor} />
-          </div>
-        </header>
+
+          </div></>}
+        />
 
         {/* Takım Özeti Kartları */}
         <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">

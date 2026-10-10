@@ -17,6 +17,7 @@ import { Building2, ChevronLeft, CircleAlert, Send, UsersRound } from "lucide-re
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { EczanemYayinGonderimKarti } from "./_components/EczanemYayinGonderimKarti";
 import type { UttEczanemGonderim, UttEczanemVeri, UttEczanemYayin } from "./_types";
+import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 
 type GonderimFiltresi = "tumu" | "gonderilebilir" | "gonderilen";
 
@@ -266,16 +267,16 @@ export default function EczanemYayinlariPage() {
   return (
     <div className="min-h-full bg-gray-50" style={{ fontFamily: "'Nunito', sans-serif" }}>
       <div className="mx-auto flex max-w-[1480px] flex-col gap-5 px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
-        <header className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <div className="inline-flex items-center">
-              <h1 className="text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]">Eczanem Yayınları</h1>
-              <SayfaRehberi anahtar="eczanem-yayinlar" className="ml-1.5 -translate-y-1.5" />
-            </div>
-            <p className="mt-1 max-w-3xl text-sm leading-5 text-[#6b7f9b]">Eczanem hedefli öğrenme içeriklerini inceleyin ve üyelik eşiğini tamamlayan eczanelerinize gönderin.</p>
-          </div>
-          <YenileButonu yenileniyor={yenileniyor} onYenile={() => veriCek()} />
-        </header>
+        <SayfaYenileBasligi className="flex flex-wrap items-end justify-between gap-4"
+          baslik={<div className="inline-flex items-center">
+            <h1 className="text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]">Eczanem Yayınları</h1>
+            <SayfaRehberi anahtar="eczanem-yayinlar" className="ml-1.5 -translate-y-1.5" />
+          </div>}
+
+          aciklama={<><p className="mt-1 max-w-3xl text-sm leading-5 text-[#6b7f9b]">Eczanem hedefli öğrenme içeriklerini inceleyin ve üyelik eşiğini tamamlayan eczanelerinize gönderin.</p></>}
+          aksiyon={<YenileButonu yenileniyor={yenileniyor} onYenile={() => veriCek()} />}
+
+        />
 
         {veriHatasi && !veri ? (
           <Card className="gap-3 border-[#f2c9c9] bg-[#fffafa] py-8 text-center shadow-none">

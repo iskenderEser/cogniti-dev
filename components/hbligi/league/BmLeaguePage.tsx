@@ -17,7 +17,7 @@ function sirala(satirlar: LigSatiri[]): SiraliSatir[] {
     .map((satir) => ({ ...satir, rank: siralar.get(satir.toplam_puan)!, degisim: null }));
 }
 
-export default function BmLeaguePage({ veri, periyotSecici }: { veri: SahaLigSonuc; periyotSecici: ReactNode }) {
+export default function BmLeaguePage({ veri, periyotSecici, yenileButonu }: { veri: SahaLigSonuc; periyotSecici: ReactNode; yenileButonu?: ReactNode }) {
   const [kapsam, setKapsam] = useState<"bolge" | "takim">("bolge");
   const bolgeLigi = sirala(veri.lig.filter((r) => r.bolge_id === veri.odak_birim_id)
     .map((r) => ({ ...r, detay_gorulebilir: true })));
@@ -35,7 +35,7 @@ export default function BmLeaguePage({ veri, periyotSecici }: { veri: SahaLigSon
   return (
     <div className={styles.shell} style={{ fontFamily: "'Nunito', sans-serif" }}>
       <div className={`${styles.dashboard} ${styles.fixedDashboard}`}>
-        <LeagueHeader periyotSecici={null} />
+        <LeagueHeader periyotSecici={null} yenileButonu={yenileButonu} />
         <MonthlyLeaders top3={kursu} baslik={`${veri.aylik_kursu?.ay_adi ?? "Geçen"} Ayının Bölge Öğrenme Liderleri`} />
         <div className="flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
           <SadeKontrolGrubu tur="kapsul">

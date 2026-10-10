@@ -22,6 +22,7 @@ import { formatPuan, GRI_METIN, KIRMIZI, type Periyot } from '@/lib/utils/raporU
 import BegeniFavoriListesi from '@/components/raporlar/BegeniFavoriListesi';
 import SayfaRehberi from '@/components/rehber/SayfaRehberi';
 import styles from './uretici-report.module.css';
+import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 
 const DEFAULT_PERIYOT: Periyot = 'bu_ay';
 
@@ -153,25 +154,23 @@ export default function UreticiRaporPage() {
           <ArrowLeft className="h-3.5 w-3.5" /> Ana Sayfa
         </Link>
 
-        <header className={styles.header}>
-          <div>
-            <div className={styles.eyebrow}>
-              <Sparkles className="h-3.5 w-3.5" /> Üretim ve saha etkisi
-            </div>
-            <h1 className={`${styles.title} inline-flex items-center flex-wrap`}>
-              <span>Raporlarım</span>
-              <SayfaRehberi anahtar="raporlar-uretici" className="ml-1.5 -translate-y-1.5" />
-            </h1>
-            <p className={styles.identity}>
-              {data.kullanici.ad} {data.kullanici.soyad} · {data.kullanici.rol.toUpperCase()} · {data.kullanici.takim_adi} · {data.kullanici.firma_adi}
-            </p>
-          </div>
-
-          <div className="flex w-full items-center gap-2 sm:w-auto">
+        <SayfaYenileBasligi className={styles.header}
+          baslik={<h1 className={`${styles.title} inline-flex items-center flex-wrap`}>
+            <span>Raporlarım</span>
+            <SayfaRehberi anahtar="raporlar-uretici" className="ml-1.5 -translate-y-1.5" />
+          </h1>}
+          ustBilgi={<><div className={styles.eyebrow}>
+            <Sparkles className="h-3.5 w-3.5" /> Üretim ve saha etkisi
+          </div></>}
+          aciklama={<><p className={styles.identity}>
+            {data.kullanici.ad} {data.kullanici.soyad} · {data.kullanici.rol.toUpperCase()} · {data.kullanici.takim_adi} · {data.kullanici.firma_adi}
+          </p></>}
+          aksiyon={<YenileButonu yenileniyor={yenileniyor} onYenile={yenile} className="min-w-[88px] justify-center" />}
+          ekKontroller={<><div className="flex w-full items-center gap-2 sm:w-auto">
             <RaporPeriyotSecici deger={periyot} onDegistir={setPeriyot} />
-            <YenileButonu yenileniyor={yenileniyor} onYenile={yenile} className="min-w-[88px] justify-center" />
-          </div>
-        </header>
+
+          </div></>}
+        />
         <section className={`${styles.panel} ${styles.section}`}>
           <div className={styles.sectionHeader}>
             <div>

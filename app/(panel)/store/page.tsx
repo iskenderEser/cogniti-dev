@@ -28,6 +28,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 
 function StatKarti({
   ikon: Icon,
@@ -281,21 +282,20 @@ export default function StorePage() {
 
       <main className="mx-auto flex w-full max-w-[1480px] flex-col gap-5 px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
         {/* Header */}
-        <header className="flex flex-wrap items-end justify-between gap-4">
-          <div className="min-w-0">
-            <div className="inline-flex items-center">
-              <h1 className="mt-1 text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]">
-                HBStore
-              </h1>
-              <SayfaRehberi anahtar="store-magaza" className="ml-1.5 -translate-y-1.5" />
-            </div>
-            <p className="mt-1 max-w-3xl text-xs font-semibold leading-5 text-[#7b8da3] md:text-sm">
-              Kazandığınız puanlarla siparişlerinizi ücretsiz olarak verebilirsiniz
-            </p>
-          </div>
+        <SayfaYenileBasligi className="flex flex-wrap items-end justify-between gap-4"
+          baslik={<div className="inline-flex items-center">
+            <h1 className="mt-1 text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]">
+              HBStore
+            </h1>
+            <SayfaRehberi anahtar="store-magaza" className="ml-1.5 -translate-y-1.5" />
+          </div>}
 
-          <div className="flex flex-wrap items-center gap-2">
-            <YenileButonu yenileniyor={yenileniyor} onYenile={tumunuYenile} />
+          aciklama={<><p className="mt-1 max-w-3xl text-xs font-semibold leading-5 text-[#7b8da3] md:text-sm">
+            Kazandığınız puanlarla siparişlerinizi ücretsiz olarak verebilirsiniz
+          </p></>}
+          aksiyon={<YenileButonu yenileniyor={yenileniyor} onYenile={tumunuYenile} />}
+          ekKontroller={<><div className="flex flex-wrap items-center gap-2">
+
             <Link
               href="/store/siparislerim"
               className="inline-flex items-center gap-1.5 rounded-xl border border-[#d7e1ec] bg-white px-3.5 py-2 text-xs font-extrabold text-[#45627f] shadow-sm transition-colors hover:bg-[#f6f9fc]"
@@ -308,8 +308,8 @@ export default function StorePage() {
             >
               <MapPin size={14} /> Adreslerim
             </Link>
-          </div>
-        </header>
+          </div></>}
+        />
 
         {/* HBStore Günleri Takvim Durumu Bannerı */}
         {takvim && (takvim.acik ? (

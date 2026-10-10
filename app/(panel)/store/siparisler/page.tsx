@@ -19,6 +19,7 @@ import SiparisFiltreleri from "./_components/SiparisFiltreleri";
 import SiparisTablosu from "./_components/SiparisTablosu";
 import { YenileButonu } from "@/components/ui/yenile-butonu";
 import SayfaRehberi from "@/components/rehber/SayfaRehberi";
+import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 
 const GRI_METIN = "#737373";
 const GRI_ZEMIN = "#f9fafb";
@@ -84,27 +85,26 @@ export default function SiparislerPage() {
       </div>
 
       <div className="mx-auto max-w-7xl px-3 py-4 md:px-6 md:py-6">
-        <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
-          <div>
-            <div className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#71859d]">
-              HBStore
-            </div>
-            <div className="inline-flex items-center">
-              <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-[#203653]">
-                Ekip Sipariş Takibi
-              </h1>
-              <SayfaRehberi anahtar="store-siparisler" className="ml-1.5 -translate-y-1" />
-            </div>
-            <p className="mt-1 text-xs font-medium text-[#8190a3]">
-              {rolKucu === "bm"
-                ? "Bölgenizdeki UTT ve KD_UTT siparişlerinin güncel durumu."
-                : rolKucu === "tm"
-                  ? "Takımınızdaki bölge ve saha siparişlerinin güncel durumu."
-                  : "Yetki kapsamınızdaki HBStore siparişlerinin güncel durumu."}
-            </p>
-          </div>
-          <YenileButonu yenileniyor={liste.yenileniyor || hiyerarsiYenileniyor} onYenile={() => Promise.all([liste.yukle(true), hiyerarsiYukle(true)]).then(() => undefined)} disabled={liste.dahaYukleniyor} />
-        </div>
+        <SayfaYenileBasligi className="mb-5 flex flex-wrap items-end justify-between gap-3"
+          baslik={<div className="inline-flex items-center">
+            <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-[#203653]">
+              Ekip Sipariş Takibi
+            </h1>
+            <SayfaRehberi anahtar="store-siparisler" className="ml-1.5 -translate-y-1" />
+          </div>}
+          ustBilgi={<><div className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#71859d]">
+            HBStore
+          </div></>}
+          aciklama={<><p className="mt-1 text-xs font-medium text-[#8190a3]">
+            {rolKucu === "bm"
+              ? "Bölgenizdeki UTT ve KD_UTT siparişlerinin güncel durumu."
+              : rolKucu === "tm"
+                ? "Takımınızdaki bölge ve saha siparişlerinin güncel durumu."
+                : "Yetki kapsamınızdaki HBStore siparişlerinin güncel durumu."}
+          </p></>}
+          aksiyon={<YenileButonu yenileniyor={liste.yenileniyor || hiyerarsiYenileniyor} onYenile={() => Promise.all([liste.yukle(true), hiyerarsiYukle(true)]).then(() => undefined)} disabled={liste.dahaYukleniyor} />}
+
+        />
 
         {/* Filtreler */}
         {hiyerarsiYukleniyor ? (

@@ -27,6 +27,7 @@ import { DURUM_ETIKETLERI, DURUM_RENKLERI, IPTAL_SURE_SAATI } from "@/lib/tclub/
 import { kargoTakipUrl } from "@/lib/tclub/store/kargo";
 import type { SiparisGosterim, AdresSnapshot } from "@/lib/tclub/store/tipler";
 import { hbstoreBakiyesiDegistiBildir } from "@/lib/tclub/store/olay";
+import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 
 function StatKarti({
   ikon: Icon,
@@ -238,22 +239,21 @@ export default function SiparislerimPage() {
       <HataMesajiContainer mesajlar={mesajlar} />
 
       <main className="mx-auto flex w-full max-w-[1480px] flex-col gap-5 px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
-        <header className="flex flex-wrap items-end justify-between gap-4">
-          <div className="min-w-0">
-            <h1 className="text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]">
-              Siparişlerim
-            </h1>
-            <p className="mt-1 max-w-3xl text-xs font-semibold leading-5 text-[#7b8da3] md:text-sm">
-              Verdiğiniz siparişlerin durumlarını, kargo takibini ve teslimat dökümünü inceleyin.
-            </p>
-          </div>
+        <SayfaYenileBasligi className="flex flex-wrap items-end justify-between gap-4"
+          baslik={<h1 className="text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]">
+            Siparişlerim
+          </h1>}
 
-          <div className="flex flex-wrap items-center gap-2">
-            <YenileButonu
-              yenileniyor={yenileniyor}
-              onYenile={() => siparisleriYukle(true)}
-              disabled={iptalIslemi || teslimIslemi}
-            />
+          aciklama={<><p className="mt-1 max-w-3xl text-xs font-semibold leading-5 text-[#7b8da3] md:text-sm">
+            Verdiğiniz siparişlerin durumlarını, kargo takibini ve teslimat dökümünü inceleyin.
+          </p></>}
+          aksiyon={<YenileButonu
+            yenileniyor={yenileniyor}
+            onYenile={() => siparisleriYukle(true)}
+            disabled={iptalIslemi || teslimIslemi}
+          />}
+          ekKontroller={<><div className="flex flex-wrap items-center gap-2">
+
             <Link
               href="/store"
               className="inline-flex items-center gap-1.5 rounded-xl border border-[#d7e1ec] bg-white px-3.5 py-2 text-xs font-extrabold text-[#45627f] shadow-sm transition-colors hover:bg-[#f6f9fc]"
@@ -266,8 +266,8 @@ export default function SiparislerimPage() {
             >
               <MapPin size={14} /> Adreslerim
             </Link>
-          </div>
-        </header>
+          </div></>}
+        />
 
         <section aria-label="Sipariş Özeti" className="grid grid-cols-1 gap-3 md:grid-cols-3">
           <StatKarti

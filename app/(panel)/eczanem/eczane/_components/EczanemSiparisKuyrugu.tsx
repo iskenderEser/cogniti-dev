@@ -7,7 +7,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { YenileButonu } from "@/components/ui/yenile-butonu";
 import { bildirimRozetleriniYenile } from "@/lib/bildirimler/rozet";
 import { CheckCircle2, CircleAlert, ClipboardCheck, ClipboardList, Clock3, History, XCircle } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -128,7 +127,6 @@ export default function EczanemSiparisKuyrugu({ hata, basari }: Props) {
         baslik="Sipariş Onayı"
         rehberAnahtar="eczanem-eczane-siparisler"
         aciklama="Müşteriden gelen indirim taleplerini inceleyin; onayda puan atomik olarak kullanılır, onaylanmayan talepte müşteri puanı korunur."
-        aksiyon={<YenileButonu yenileniyor={yenileniyor} onYenile={() => cek(true)} disabled={isliyor} />}
       />
 
     {veriHazir && <section className="grid grid-cols-1 gap-3 md:grid-cols-3">

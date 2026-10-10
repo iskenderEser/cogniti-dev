@@ -10,7 +10,9 @@ const kaynaklar = [
   oku("app/(panel)/yayin-yonetimi/page.tsx"),
   oku("app/(panel)/onaylanan-talepler/page.tsx"),
   oku("app/(panel)/kullanicilar/page.tsx"),
-  oku("app/(panel)/oneriler/page.tsx"),
+  oku("app/(panel)/oneriler/_components/BmOneriTakibi.tsx"),
+  oku("app/(panel)/oneriler/_components/TmOneriTakibi.tsx"),
+  oku("app/(panel)/oneriler/_components/UyeOnerilerGorunumu.tsx"),
   oku("app/(panel)/store/siparislerim/page.tsx"),
   oku("app/(panel)/store/siparisler/page.tsx"),
 ];

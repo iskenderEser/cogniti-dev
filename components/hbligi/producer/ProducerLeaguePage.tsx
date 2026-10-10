@@ -92,11 +92,12 @@ export default function ProducerLeaguePage({
   bakis,
   onBakisDegistir,
   periyotSecici,
+  yenileButonu,
 }: {
   veri: SahaLigSonuc;
   bakis: UreticiLigBakisi;
   onBakisDegistir: (bakis: UreticiLigBakisi) => void;
-  periyotSecici: React.ReactNode;
+  periyotSecici: React.ReactNode; yenileButonu?: React.ReactNode;
 }) {
   const varsayilanKapsam: LigKapsami = veri.yetki_kapsami === "takim" ? "takim" : "firma";
   const takimlar = veri.organizasyon?.takimlar ?? [];
@@ -252,7 +253,7 @@ export default function ProducerLeaguePage({
     <TooltipProvider delayDuration={200}>
       <div className={leagueStyles.shell} style={{ fontFamily: "'Nunito', sans-serif" }}>
         <div className={`${leagueStyles.dashboard} !h-auto !min-h-full`}>
-          <div className="shrink-0"><LeagueHeader periyotSecici={null} /></div>
+          <div className="shrink-0"><LeagueHeader periyotSecici={null} yenileButonu={yenileButonu} /></div>
           <p className="-mt-1 text-[11px] font-bold text-[#7b8ca5]">Performansları görebilirsiniz</p>
           <MonthlyLeaders top3={bannerTop3} ayAdi={veri.aylik_kursu?.ay_adi} />
           <div className="flex flex-wrap items-center justify-between gap-2">

@@ -1,6 +1,8 @@
 // components/ana-sayfa/UreticiAnaSayfa.tsx
 "use client";
 
+import { TarihPill } from "@/components/ui/tarih-pill";
+
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -128,8 +130,6 @@ export default function UreticiAnaSayfa({ user, rol, adSoyad }: Props) {
     return satir.yol;
   };
 
-  const bugunTarih = () =>
-    new Date().toLocaleDateString("tr-TR", { day: "2-digit", month: "2-digit", year: "numeric" });
 
   // durumRenk kaldırıldı (25.07): metin ve renk artık tek sözlükten okunur —
   // lib/utils/durum/mesaj.ts. Aynı durum her ekranda aynı yazar, aynı renkte çıkar.
@@ -285,9 +285,7 @@ export default function UreticiAnaSayfa({ user, rol, adSoyad }: Props) {
             {ROL_ADLARI[rol.toLowerCase()] ?? rol.toUpperCase()}
           </p>
         </div>
-        <span className="hidden md:inline text-[10px] text-gray-500 bg-white border border-gray-200 rounded-full px-3 py-1 whitespace-nowrap">
-          {bugunTarih()}
-        </span>
+        <TarihPill />
       </div>
 
       {/* Stat kartlar */}

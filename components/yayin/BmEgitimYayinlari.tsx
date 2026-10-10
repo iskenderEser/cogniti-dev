@@ -18,6 +18,7 @@ import type { UttVideoKategorisi } from "@/lib/video/uttVideoKategorileri";
 import type { YayindakiVideo } from "@/lib/video/yayindakiVideolar";
 import { trGunEkle, trGunu } from "@/lib/zaman/kontrol";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 
 interface Alici {
   kullanici_id: string;
@@ -161,16 +162,16 @@ export default function BmEgitimYayinlari({ kategoriBilgisi }: { kategoriBilgisi
 
   return (
     <div className="mx-auto max-w-6xl px-3 py-4 pb-20 md:px-6 md:py-5 md:pb-5 lg:px-8 lg:py-7">
-      <header className="mb-5 flex items-start justify-between gap-3">
-        <div>
-          <div className="inline-flex items-center">
-            <h1 className="m-0 text-xl font-extrabold text-gray-900 md:text-2xl">{kategoriBilgisi.etiket}</h1>
-            <SayfaRehberi anahtar="yayindaki-videolar" className="ml-1.5 -translate-y-0.5" />
-          </div>
-          <p className="mt-1 text-xs font-semibold text-gray-500">Yayındaki eğitim içeriklerini inceleyebilirsiniz.</p>
-        </div>
-        <YenileButonu yenileniyor={yenileniyor} onYenile={() => setYenileTetik((deger) => deger + 1)} />
-      </header>
+      <SayfaYenileBasligi className="mb-5 flex items-start justify-between gap-3"
+        baslik={<div className="inline-flex items-center">
+          <h1 className="m-0 text-xl font-extrabold text-gray-900 md:text-2xl">{kategoriBilgisi.etiket}</h1>
+          <SayfaRehberi anahtar="yayindaki-videolar" className="ml-1.5 -translate-y-0.5" />
+        </div>}
+
+        aciklama={<><p className="mt-1 text-xs font-semibold text-gray-500">Yayındaki eğitim içeriklerini inceleyebilirsiniz.</p></>}
+        aksiyon={<YenileButonu yenileniyor={yenileniyor} onYenile={() => setYenileTetik((deger) => deger + 1)} />}
+
+      />
 
       <div className="mb-5 flex min-w-0 flex-wrap items-center justify-between gap-3">
         <UttYayinTuruToggle yayinlar={kategoriYayinlari} deger={aktifTur} onDegistir={setAktifTur} className="min-w-0" />

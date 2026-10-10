@@ -7,6 +7,7 @@ import { useAuth } from "@/app/providers/AuthProvider";
 import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
 import { DahaFazlaGoster, ListeArama, useListe } from "@/components/liste";
 import { YenileButonu } from "@/components/ui/yenile-butonu";
+import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 import { createClient } from "@/lib/supabase/client";
 import { ADMIN_ROLLER, TUM_ROLLER } from "@/lib/utils/roller";
 import { useRouter } from "next/navigation";
@@ -168,6 +169,8 @@ export default function KullanicilarPage() {
   return (
     <div className="min-h-screen bg-gray-50 font-[Nunito]">
       <div className="max-w-5xl mx-auto px-4 py-6 flex flex-col gap-5">
+        <SayfaYenileBasligi baslik={<h1 className="text-2xl font-extrabold text-gray-900">Kullanıcılar</h1>}
+          aksiyon={<YenileButonu yenileniyor={yenileniyor} onYenile={() => veriCek()} disabled={formAcik || formLoading} />} />
 
         {/* Düzenleme formu */}
         {formAcik && duzenle && (
@@ -249,7 +252,6 @@ export default function KullanicilarPage() {
             </div>
             <div className="flex flex-wrap items-center justify-end gap-2">
               <ListeArama arama={liste.arama} />
-              <YenileButonu yenileniyor={yenileniyor} onYenile={() => veriCek()} disabled={formAcik || formLoading} />
             </div>
           </div>
 

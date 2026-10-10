@@ -29,6 +29,7 @@ import UretimVaryantlariModal from '@/components/rehber/UretimVaryantlariModal';
 import OgrenmeAraciPerformansi from '@/components/raporlar/OgrenmeAraciPerformansi';
 import { ureticiYetenegi } from '@/lib/uretici/yetenekler';
 import styles from '../utt/utt-report.module.css';
+import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 
 const DEFAULT_PERIYOT: Periyot = 'bu_ay';
 const PERIYOT_BASLIK: Record<Periyot, string> = {
@@ -111,21 +112,21 @@ export default function UretimRaporlariPage() {
           <ArrowLeft className="h-3.5 w-3.5" /> Ana Sayfa
         </Link>
 
-        <header className="mb-4 flex flex-col gap-3 md:flex-row md:items-end md:justify-between md:gap-6">
-          <div>
-            <h1 className="text-2xl font-extrabold tracking-[-0.03em] text-[#10213d] inline-flex items-center">
-              <span>Yayın Raporları</span>
-              <SayfaRehberi anahtar="raporlar-uretim" className="ml-1.5 -translate-y-1.5" />
-            </h1>
-            <p className="mt-0.5 text-xs font-semibold text-[#78889d]">
-              Yayınlarınızın üretim, saha etkisi ve öğrenme aracı performansını seçili dönemde görebilirsiniz.
-            </p>
-          </div>
-          <div className="flex w-full items-center gap-2 sm:w-auto">
+        <SayfaYenileBasligi className="mb-4 flex flex-col gap-3 md:flex-row md:items-end md:justify-between md:gap-6"
+          baslik={<h1 className="text-2xl font-extrabold tracking-[-0.03em] text-[#10213d] inline-flex items-center">
+            <span>Yayın Raporları</span>
+            <SayfaRehberi anahtar="raporlar-uretim" className="ml-1.5 -translate-y-1.5" />
+          </h1>}
+
+          aciklama={<><p className="mt-0.5 text-xs font-semibold text-[#78889d]">
+            Yayınlarınızın üretim, saha etkisi ve öğrenme aracı performansını seçili dönemde görebilirsiniz.
+          </p></>}
+          aksiyon={<YenileButonu yenileniyor={yenileniyor} onYenile={yenile} className="min-w-[88px] justify-center" />}
+          ekKontroller={<><div className="flex w-full items-center gap-2 sm:w-auto">
             <RaporPeriyotSecici deger={periyot} onDegistir={setPeriyot} />
-            <YenileButonu yenileniyor={yenileniyor} onYenile={yenile} className="min-w-[88px] justify-center" />
-          </div>
-        </header>
+
+          </div></>}
+        />
 
         {error && !data ? (
           <div className="flex min-h-[300px] items-center justify-center rounded-2xl border border-red-200 bg-white p-6">

@@ -13,7 +13,8 @@ const raporlar = [
 ].map((rol) => oku(`app/(panel)/raporlar/${rol}/page.tsx`));
 
 const canliYuzeyler = [
-  ...raporlar,
+  oku("components/raporlar/DavranisRaporu.tsx"),
+  oku("app/(panel)/raporlar/uretici/page.tsx"),
   oku("app/(panel)/t-club-ligi/page.tsx"),
   oku("app/(panel)/cc-ligi/page.tsx"),
   oku("app/(panel)/eclub/ligi/page.tsx"),
@@ -25,6 +26,8 @@ const canliYuzeyler = [
 
 test("mutlu: rapor, lig ve katalog yüzeyleri ortak yenileme sözleşmesini kullanır", () => {
   for (const kaynak of canliYuzeyler) assert.match(kaynak, /<YenileButonu/);
+  for (const kaynak of raporlar.slice(0, 3)) assert.match(kaynak, /<DavranisRaporu/);
+  assert.match(raporlar[4], /<DavranisRaporu/);
 
   const raporHooku = oku("hooks/useRapor.ts");
   assert.match(raporHooku, /yenileniyor/);

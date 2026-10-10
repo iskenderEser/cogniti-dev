@@ -1,6 +1,8 @@
 // components/ana-sayfa/IuAnaSayfa.tsx
 "use client";
 
+import { TarihPill } from "@/components/ui/tarih-pill";
+
 import { ROL_ADLARI } from "@/lib/utils/roller";
 
 import { iuDurumMesaji } from "@/lib/utils/durum/mesaj";
@@ -37,8 +39,6 @@ export default function IuAnaSayfa({ user, adSoyad }: Props) {
   const formatTarih = (tarih: string) =>
     new Date(tarih).toLocaleDateString("tr-TR", { day: "2-digit", month: "2-digit", year: "numeric" });
 
-  const bugunTarih = () =>
-    new Date().toLocaleDateString("tr-TR", { day: "2-digit", month: "2-digit", year: "numeric" });
 
   const asamaRenk = (asama: string) => {
     switch (asama) {
@@ -78,9 +78,7 @@ export default function IuAnaSayfa({ user, adSoyad }: Props) {
             <strong style={{ color: "#56aeff", fontWeight: 700 }}>HapBilgi · </strong>{ROL_ADLARI["iu"]}
           </p>
         </div>
-        <span className="hidden md:inline text-[10px] text-gray-500 bg-white border border-gray-200 rounded-full px-3 py-1 whitespace-nowrap">
-          {bugunTarih()}
-        </span>
+        <TarihPill />
       </div>
 
       {/* Stat kartlar */}

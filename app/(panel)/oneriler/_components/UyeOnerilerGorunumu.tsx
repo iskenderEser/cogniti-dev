@@ -11,6 +11,7 @@ import {
 import { YayinKarti } from "@/components/yayin/YayinKarti";
 import type { OneriKaydi } from "./BmOneriTakibi";
 import { YenileButonu } from "@/components/ui/yenile-butonu";
+import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 import SayfaRehberi from "@/components/rehber/SayfaRehberi";
 import type { YayinTuruFiltreDegeri } from "@/components/ogrenme-araci/YayinTuruFiltresi";
 import type { OgrenmeAraciTuru } from "@/lib/ogrenmeAraci/tipler";
@@ -259,19 +260,18 @@ export default function UyeOnerilerGorunumu({
   return (
     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
       {/* ─── Başlık & Yenileme Alanı ─── */}
-      <header className="mb-6">
-        <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-black tracking-tight text-gray-900 md:text-3xl">
-              Önerilen Yayınlar
-            </h1>
-            <SayfaRehberi anahtar="oneriler" />
-          </div>
-          <p className="mt-1 text-sm font-medium text-gray-500">
-            Bölge Müdürünüz tarafından önerilen yayınları görebilirsiniz.
-          </p>
-        </div>
-      </header>
+      <SayfaYenileBasligi className="mb-6"
+        baslik={<div className="flex items-center gap-2">
+          <h1 className="text-2xl font-black tracking-tight text-gray-900 md:text-3xl">
+            Önerilen Yayınlar
+          </h1>
+          <SayfaRehberi anahtar="oneriler" />
+        </div>}
+        aciklama={<p className="mt-1 text-sm font-medium text-gray-500">
+          Bölge Müdürünüz tarafından önerilen yayınları görebilirsiniz.
+        </p>}
+        aksiyon={<YenileButonu yenileniyor={yenileniyor} onYenile={onYenile} />}
+      />
 
       {/* ─── 1. Katman: Stat Kartları ─── */}
       <div className="mb-6 grid grid-cols-1 gap-2 sm:grid-cols-3 md:gap-3">
@@ -336,11 +336,6 @@ export default function UyeOnerilerGorunumu({
           onDegistir={setAktifTur}
           sayilariGoster={false}
           className="w-full min-w-0 sm:w-auto sm:flex-none"
-        />
-        <YenileButonu
-          yenileniyor={yenileniyor}
-          onYenile={onYenile}
-          className="shrink-0"
         />
       </div>
       {/* ─── 3. Katman: Yayın Kartları Izgarası ─── */}

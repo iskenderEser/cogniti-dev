@@ -21,6 +21,7 @@ import { useEclubOneriler } from "../oneriler/_hooks/useEclubOneriler";
 import type { OneriGecmisKaydi, OneriYayin } from "../oneriler/_types";
 import BmEclubYayinlari from "./_components/BmEclubYayinlari";
 import { EclubYayinGonderimKarti } from "./_components/EclubYayinGonderimKarti";
+import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 
 type HedefGrubu = "eczaci" | "eczane_teknisyeni" | "ortak";
 
@@ -36,7 +37,6 @@ const hedefGrubu = (video: OneriYayin): HedefGrubu => {
   if (eczaci && teknisyen) return "ortak";
   return teknisyen ? "eczane_teknisyeni" : "eczaci";
 };
-
 
 export default function EclubVideolarimPage() {
   const { kullanici, yukleniyor } = useAuth();
@@ -203,16 +203,16 @@ function UttEclubVideolarimPage() {
   return (
     <div className="min-h-full bg-gray-50" style={{ fontFamily: "'Nunito', sans-serif" }}>
       <div className="mx-auto flex max-w-[1480px] flex-col gap-5 px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
-        <header className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <div className="inline-flex items-center">
-              <h1 className="text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]">E-Club Yayınları</h1>
-              <SayfaRehberi anahtar="eclub-yayinlar" className="ml-1.5 -translate-y-1.5" />
-            </div>
-            <p className="mt-1 max-w-3xl text-sm leading-5 text-[#6b7f9b]">Uygun öğrenme içeriğini seçerek, eczacılara ve eczane teknisyenlerine gönderebilirsiniz.</p>
-          </div>
-          <YenileButonu yenileniyor={yenileniyor} onYenile={() => veriCek()} />
-        </header>
+        <SayfaYenileBasligi className="flex flex-wrap items-end justify-between gap-4"
+          baslik={<div className="inline-flex items-center">
+            <h1 className="text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]">E-Club Yayınları</h1>
+            <SayfaRehberi anahtar="eclub-yayinlar" className="ml-1.5 -translate-y-1.5" />
+          </div>}
+
+          aciklama={<><p className="mt-1 max-w-3xl text-sm leading-5 text-[#6b7f9b]">Uygun öğrenme içeriğini seçerek, eczacılara ve eczane teknisyenlerine gönderebilirsiniz.</p></>}
+          aksiyon={<YenileButonu yenileniyor={yenileniyor} onYenile={() => veriCek()} />}
+
+        />
 
         <section aria-label="E-Club öğrenme içeriği hedefleri" className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3">
           {HEDEF_GRUPLARI.map((grup) => {
