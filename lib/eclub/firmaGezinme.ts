@@ -7,8 +7,31 @@ export interface EclubGezinmeFirmasi {
 
 export type EclubFirmaSayfasi = "yayinlar" | "performans" | "hediye-cekleri" | "cek-talepleri";
 
-export function eclubFirmaYolu(firmaId: string, sayfa: EclubFirmaSayfasi): string {
-  return `/eclub/firma/${encodeURIComponent(firmaId)}/${sayfa}`;
+export function eclubFirmaAdiYolu(firmaAdi: string): string {
+  return firmaAdi.trim().toLocaleLowerCase("tr-TR")
+    .replace(/ı/g, "i").replace(/ş/g, "s").replace(/ğ/g, "g")
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+}
+
+/** Eski UUID bağlantıları da çözülür; aynı ada sahip firmalarda belirsiz eşleşme yapılmaz. */
+export function eclubFirmaRotasiKapsami<T extends {
+  firma_id: string; firma_adi: string; aktif: boolean | null;
+  eclub_aktif: boolean | null; eclub_store_aktif: boolean | null;
+}>(firmalar: T[], rota: string, cekSayfasi = false): T[] {
+  const kapsam = eclubFirmaKapsami(firmalar, null);
+  const eslesen = kapsam.filter((firma) => firma.firma_id === rota || eclubFirmaAdiYolu(firma.firma_adi) === rota);
+  return eslesen.length === 1 && (!cekSayfasi || eslesen[0].eclub_store_aktif === true) ? eslesen : [];
+}
+
+export function eclubFirmaYolu(firmaAdi: string, sayfa: EclubFirmaSayfasi): string {
+  const yollar: Record<EclubFirmaSayfasi, string> = {
+    yayinlar: "yayinlar",
+    performans: "yayin-tamamlama-performansi",
+    "hediye-cekleri": "hediye-ceki-talebi",
+    "cek-talepleri": "hediye-ceki-takibi",
+  };
+  return `/eclub/firma/${encodeURIComponent(eclubFirmaAdiYolu(firmaAdi))}/${yollar[sayfa]}`;
 }
 
 export function eclubFirmaKapsami<T extends {
@@ -39,10 +62,6 @@ export interface EclubFirmaUrunu { urun_id: string; urun_adi: string }
 
 export function eclubSeciliUrun(urunler: EclubFirmaUrunu[], istenenId: string | null): EclubFirmaUrunu | null {
   return urunler.find((urun) => urun.urun_id === istenenId) ?? urunler[0] ?? null;
-}
-
-export function eclubUrunYolu(firmaId: string, sayfa: EclubFirmaSayfasi, urunId: string | null): string {
-  return `${eclubFirmaYolu(firmaId, sayfa)}${urunId ? `?urun_id=${encodeURIComponent(urunId)}` : ""}`;
 }
 
 export function eclubUrunIcerigi<T extends { urun_id?: string | null }>(icerikler: T[], urunId: string | null): T[] {

@@ -34,21 +34,61 @@ test("yayın ve çek push bağlantıları ilgili firmanın sayfasına gider", ()
     assert.equal(icerikUret("eclub_oneri", rol, { firmaId: "a", bagId: "oneri-1" })?.url,
       "/eclub/firma/a/yayinlar?oneri_id=oneri-1");
     assert.equal(icerikUret("eclub_cek_teslim", rol, { firmaId: "b", bagId: "talep-1" })?.url,
-      "/eclub/firma/b/cek-talepleri?talep_id=talep-1");
+      "/eclub/firma/b/hediye-ceki-takibi?talep_id=talep-1");
   }
 });
 
 
 test("ürün seçimi dört firma yüzeyinde korunur; geçersiz ürün ilk ürüne döner", async () => {
-  const { eclubSeciliUrun, eclubUrunYolu, eclubUrunIcerigi } = await import("@/lib/eclub/firmaGezinme");
+  const { eclubSeciliUrun, eclubFirmaYolu, eclubUrunIcerigi } = await import("@/lib/eclub/firmaGezinme");
   const urunler = [{ urun_id: "u1", urun_adi: "Birinci" }, { urun_id: "u2", urun_adi: "İkinci" }];
   assert.equal(eclubSeciliUrun(urunler, "u2")?.urun_id, "u2");
   assert.equal(eclubSeciliUrun(urunler, "yabanci")?.urun_id, "u1");
   assert.equal(eclubSeciliUrun([], "u2"), null);
-  for (const sayfa of ["yayinlar", "performans", "hediye-cekleri", "cek-talepleri"] as const) {
-    assert.equal(eclubUrunYolu("f1", sayfa, "u2"), `/eclub/firma/f1/${sayfa}?urun_id=u2`);
+  for (const [sayfa, yol] of [["yayinlar", "yayinlar"], ["performans", "yayin-tamamlama-performansi"], ["hediye-cekleri", "hediye-ceki-talebi"], ["cek-talepleri", "hediye-ceki-takibi"]] as const) {
+    assert.equal(eclubFirmaYolu("Hepifarma", sayfa), `/eclub/firma/hepifarma/${yol}`);
   }
   const kayitlar = [{ urun_id: "u1", puan: 100 }, { urun_id: "u2", puan: 300 }, { urun_id: "u2", puan: 500 }, { urun_id: null, puan: 90 }];
   assert.deepEqual(eclubUrunIcerigi(kayitlar, "u2"), [kayitlar[1], kayitlar[2]]);
   assert.deepEqual(eclubUrunIcerigi(kayitlar, null), []);
+});
+
+test("firma adresi adı kullanır, Türkçe harfleri ve kelime aralarını dönüştürür", async () => {
+  const { eclubFirmaAdiYolu, eclubFirmaYolu, eclubFirmaRotasiKapsami } = await import("@/lib/eclub/firmaGezinme");
+  assert.equal(eclubFirmaAdiYolu("  İki İsimli Şirket  "), "iki-isimli-sirket");
+  assert.equal(eclubFirmaYolu("Hepifarma", "yayinlar"), "/eclub/firma/hepifarma/yayinlar");
+  const firma = { firma_id: "0c504d88-b9fb-40bb-beae-5bae33cb99ac", firma_adi: "İki İsimli Şirket", aktif: true, eclub_aktif: true, eclub_store_aktif: false };
+  assert.deepEqual(eclubFirmaRotasiKapsami([firma], "iki-isimli-sirket"), [firma]);
+  assert.deepEqual(eclubFirmaRotasiKapsami([firma], firma.firma_id), [firma]);
+  assert.deepEqual(eclubFirmaRotasiKapsami([firma], "iki-isimli-sirket", true), []);
+  assert.deepEqual(eclubFirmaRotasiKapsami([firma], "baska-firma"), []);
+  assert.deepEqual(eclubFirmaRotasiKapsami([firma, { ...firma, firma_id: "ikinci" }], "iki-isimli-sirket"), []);
+});
+
+test("URL dışındaki ürün seçimi kullanıcı ve firma bazında ayrılır; depolama kapalıysa bellekte korunur", async () => {
+  const { eclubFirmaUrunSeciminiOku, eclubFirmaUrunSeciminiYaz, eclubFirmaUrunSecimineAboneOl } = await import("@/lib/eclub/firmaUrunSecimi");
+  const oncekiWindow = Object.getOwnPropertyDescriptor(globalThis, "window");
+  const depo = new Map<string,string>();
+  Object.defineProperty(globalThis, "window", { configurable: true, value: { sessionStorage: {
+    getItem: (anahtar: string) => depo.get(anahtar) ?? null,
+    setItem: (anahtar: string, urunId: string) => { depo.set(anahtar, urunId); },
+  } } });
+  let bildirim = 0;
+  const aboneliktenCik = eclubFirmaUrunSecimineAboneOl(() => { bildirim++; });
+  try {
+    eclubFirmaUrunSeciminiYaz("k1:f1", "u2");
+    assert.equal(eclubFirmaUrunSeciminiOku("k1:f1"), "u2");
+    assert.equal(depo.get("k1:f1"), "u2");
+    assert.equal(eclubFirmaUrunSeciminiOku("k2:f1"), null);
+    assert.equal(eclubFirmaUrunSeciminiOku("k1:f2"), null);
+    assert.equal(bildirim, 1);
+    Object.defineProperty(globalThis, "window", { configurable: true, value: { get sessionStorage() { throw new Error("Depolama kapalı"); } } });
+    eclubFirmaUrunSeciminiYaz("k1:f1", "u3");
+    assert.equal(eclubFirmaUrunSeciminiOku("k1:f1"), "u3");
+    assert.equal(bildirim, 2);
+  } finally {
+    aboneliktenCik();
+    if (oncekiWindow) Object.defineProperty(globalThis, "window", oncekiWindow);
+    else Reflect.deleteProperty(globalThis, "window");
+  }
 });

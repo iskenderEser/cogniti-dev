@@ -4,6 +4,7 @@ import { createContext, useContext } from "react";
 import type { useEclubPanel } from "@/app/(panel)/eclub/panel/_hooks/useEclubPanel";
 
 export const EclubFirmaSecimi = createContext<{
+  firmaId?: string;
   gomulu: boolean;
   urunId: string | null;
   urunAdi: string | null;
