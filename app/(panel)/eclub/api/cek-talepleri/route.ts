@@ -15,6 +15,7 @@ import { eclubKisiErisimi } from "@/lib/eclub/kisiErisim";
 import { eclubStoreSiparisAcikMi, eclubStoreTakvimDurumu } from "@/lib/eclub/store/takvim";
 import { eclubCekTalebiOlusturabilirMi } from "@/lib/eclub/store/cekTalebiYetkisi";
 import { ECLUB_CEK_KARTI_TEST_PUAN_IDLERI, eclubCekTalebiGorunumTestiMi } from "@/lib/eclub/store/gorunumTesti";
+import { eclubUxTestYayiniMi } from "@/lib/eclub/store/uxGorunumTesti";
 
 async function kisiCoz(adminSupabase: ReturnType<typeof createAdminClient>, authUserId: string) {
   const { data } = await adminSupabase
@@ -32,7 +33,8 @@ export async function GET(request: NextRequest) {
     if (authError || !user) return yetkiHatasi();
 
     const adminSupabase = createAdminClient();
-    const kisi = await kisiCoz(adminSupabase, user.id);
+    const erisim = await eclubKisiErisimi(adminSupabase, user.id);
+    const kisi = erisim.kisi;
     if (!kisi) return rolHatasi("Bu işlem yalnız E-Club kişilerine açıktır.");
     if (!ECLUB_TUKETICI_ROLLERI.includes(kisi.rol)) return rolHatasi("Geçersiz kişi rolü.");
 
@@ -40,17 +42,9 @@ export async function GET(request: NextRequest) {
     const durum = searchParams.get("durum");
     const firmaId = searchParams.get("firma_id");
     if (firmaId !== null && !uuidGecerliMi(firmaId)) return validasyonHatasi("Geçersiz firma.", ["firma_id"]);
-    const erisim = await eclubKisiErisimi(adminSupabase, user.id);
     const firmaKapsami = eclubFirmaKapsami(erisim.firmalar, firmaId, true);
     if (firmaId !== null && firmaKapsami.length === 0) return rolHatasi("Bu firmanın çek taleplerine erişiminiz bulunmuyor.");
-    const { data: aktifUyelikler, error: uyelikError } = await adminSupabase
-      .from("eclub_kisi_eczane")
-      .select("eczane_id")
-      .eq("kisi_id", kisi.kisi_id)
-      .eq("aktif_mi", true);
-    if (uyelikError) return hataYaniti("Eczane üyeliği alınamadı.", "eclub_kisi_eczane SELECT — çek talepleri", uyelikError);
-
-    const eczaneIdler = [...new Set((aktifUyelikler ?? []).map((uyelik) => uyelik.eczane_id))];
+    const eczaneIdler = erisim.eczane_idler;
     if (eczaneIdler.length === 0) return NextResponse.json({ talepler: [] }, { status: 200 });
 
     let talepQuery = adminSupabase
@@ -145,6 +139,9 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     if (!body.yayin_id || typeof body.yayin_id !== "string") {
       return validasyonHatasi("yayin_id zorunludur.", ["yayin_id"]);
+    }
+    if (eclubUxTestYayiniMi(body.yayin_id)) {
+      return isKuraluHatasi("Bu kart UX görünüm testi içindir; gerçek çek talebi oluşturulamaz.");
     }
 
     const { data: kunye, error: kunyeError } = await adminSupabase.from("v_yayin_kunye")
