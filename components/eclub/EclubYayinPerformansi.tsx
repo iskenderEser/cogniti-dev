@@ -3,10 +3,16 @@
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { useParams } from "next/navigation";
 import { eclubPerformansGrafikSecenegi } from "@/lib/eclub/performansGrafik";
-import EChart, { type EChartTiklama } from "@/components/grafik/EChart";
+import type { EChartTiklama } from "@/components/grafik/EChart";
 import { useEclubFirmaSecimi } from "./EclubFirmaSecimi";
 import { ECLUB_PERFORMANS_TURLERI, type PerformansTuru, type PerformansVerisi } from "@/lib/eclub/performans";
+import dynamic from "next/dynamic";
+import { useAuth } from "@/app/providers/AuthProvider";
+import { performansOnbelleginiOku, performansVerisiniIste } from "@/lib/eclub/performansOnbellek";
+import { EclubPerformansIcerikSkeleton } from "./EclubFirmaPerformansSkeleton";
 import styles from "./eclub-performans.module.css";
+
+const EChart = dynamic(() => import("@/components/grafik/EChart"), { loading: () => <div style={{ height: "var(--eclub-cetvel-yuksekligi)" }} role="status" aria-label="Grafik yükleniyor" /> });
 
 const ISARETLER = { video: "▷", podcast: "♫", gorsel: "▧", flip_pdf: "≡" };
 function mobilDinle(bildir: () => void) {
@@ -19,31 +25,40 @@ const sunucuMobilOku = () => false;
 const sayi = (n: number) => n.toLocaleString("tr-TR");
 
 export default function EclubYayinPerformansi() {
-  const { firma_id: firmaId } = useParams<{ firma_id: string }>();
-  const { urunId, urunAdi } = useEclubFirmaSecimi();
-  const kapsam = `${firmaId}:${urunId}`;
+  const { kullanici } = useAuth();
+  const kullaniciId = kullanici?.id;
+  const params = useParams<{ firma_id: string }>();
+  const { urunId, urunAdi, firmaId: seciliFirmaId } = useEclubFirmaSecimi();
+  const firmaId = seciliFirmaId ?? params.firma_id;
+  const kapsam = `${kullaniciId}:${firmaId}:${urunId}`;
   const mobil = useSyncExternalStore(mobilDinle, mobilOku, sunucuMobilOku);
-  const [sonuc, setSonuc] = useState<{ kapsam: string; veri: PerformansVerisi } | null>(null);
+  const [sonuc, setSonuc] = useState<{ kapsam: string; veri: PerformansVerisi } | null>(() => {
+    const veri = kullaniciId && urunId ? performansOnbelleginiOku(kullaniciId, firmaId, urunId) : null;
+    return veri ? { kapsam, veri } : null;
+  });
   const [hata, setHata] = useState<{ kapsam: string; mesaj: string } | null>(null);
   const [yukleniyor, setYukleniyor] = useState(false);
   const [secim, setSecim] = useState<{ kapsam: string; tur: PerformansTuru; hafta: number } | null>(null);
   const controllerRef = useRef<AbortController | null>(null);
-  const veriCek = useCallback(async () => {
-    if (!urunId) return;
+  const veriCek = useCallback(async (onbellekten = false) => {
+    if (!urunId || !kullaniciId) return;
     controllerRef.current?.abort();
     const controller = new AbortController(); controllerRef.current = controller;
     setYukleniyor(true);
     try {
-      const res = await fetch(`/eclub/api/performans?firma_id=${encodeURIComponent(firmaId)}&urun_id=${encodeURIComponent(urunId)}`, { cache: "no-store", signal: controller.signal });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.hata ?? data.error ?? "Performans bilgileri yüklenemedi.");
+      if (onbellekten) {
+        const kayit = performansOnbelleginiOku(kullaniciId, firmaId, urunId);
+        if (kayit) setSonuc({ kapsam, veri: kayit });
+      }
+      const data = await performansVerisiniIste(kullaniciId, firmaId, urunId);
       if (!controller.signal.aborted) { setSonuc({ kapsam, veri: data }); setHata(null); }
     } catch (error) {
-      if (!controller.signal.aborted) setHata({ kapsam, mesaj: error instanceof Error ? error.message : "Performans bilgileri yüklenemedi." });
+      if (!controller.signal.aborted) { setSonuc(null); setHata({ kapsam, mesaj: error instanceof Error ? error.message : "Performans bilgileri yüklenemedi." }); }
     } finally { if (!controller.signal.aborted) setYukleniyor(false); }
-  }, [firmaId, urunId, kapsam]);
+  }, [firmaId, urunId, kapsam, kullaniciId]);
   useEffect(() => {
-    void veriCek();
+    void import("@/components/grafik/EChart").catch(() => undefined);
+    void veriCek(true);
     const guncelle = () => { if (document.visibilityState === "visible") void veriCek(); };
     const timer = window.setInterval(guncelle, 60000);
     window.addEventListener("focus", guncelle);
@@ -64,7 +79,7 @@ export default function EclubYayinPerformansi() {
     <div className={styles.heading}><div><h2>Yayın Tamamlama Performansı</h2><p className={styles.muted}>Eczanenizin yayınlardan kazandığı puanları haftalara göre takip edin.</p></div>
       {veri && <div className={styles.period}>{veri.donem.ad}<small>{veri.donem.aktifHafta}. hafta</small></div>}</div>
     {hata?.kapsam === kapsam && <div role="alert" className={styles.error}>{hata.mesaj} <button type="button" onClick={() => void veriCek()} disabled={yukleniyor}>Tekrar dene</button></div>}
-    {!veri ? !hata || hata.kapsam !== kapsam ? <p role="status" className={styles.empty}>Performans yükleniyor…</p> : null : <>
+    {!veri ? !hata || hata.kapsam !== kapsam ? <EclubPerformansIcerikSkeleton /> : null : <>
       <section className={styles.stats} aria-label="Dönem performansı">
         <div className={styles.stat}><label>Bu dönemde kazanılan puan</label><strong>{sayi(veri.ozet.puan)}</strong><small>Seçili ürünün dört yayın türü</small></div>
         <div className={styles.stat}><label>Tamamlanan yayın</label><strong>{sayi(veri.ozet.tamamlanan)}</strong><small>Tüm üyelerin tamamlamaları</small></div>
@@ -83,12 +98,17 @@ export default function EclubYayinPerformansi() {
         <div className={styles.detailHead}><div className={styles.detailTitle}><div className={styles.typeIcon} style={{ color: turBilgisi.renk, background: turBilgisi.zemin }}>{ISARETLER[tur]}</div>
           <div><h3>{turBilgisi.ad} · {hafta}. Hafta</h3><div className={styles.detailMeta}>{urunAdi} · Eczanenizin üye katkıları</div></div></div>
           <div className={styles.detailTotal}>{sayi(hucre?.puan ?? 0)}<small>puan</small></div></div>
-        <div role="table" aria-label="Üyelerin puan katkısı">
-          <div className={styles.tableHead} role="row"><span role="columnheader">E-Club üyesi</span><span role="columnheader">Tamamlanan yayın</span><span className={styles.right} role="columnheader">Puan katkısı</span></div>
+        <div className={styles.tableScroll} role="region" aria-label="Üye puan tablosu" tabIndex={0}>
+        <div className={styles.table} role="table" aria-label="Üyelerin puan katkısı">
+          <div className={styles.tableHead} role="row"><span role="columnheader">E-Club üyesi</span><span className={styles.right} role="columnheader">Tamamlanan Yayın</span><span className={styles.right} role="columnheader">Tamamlama Puanı</span><span className={styles.right} role="columnheader">Doğru Cevap Puanı</span><span className={styles.right} role="columnheader">Kayıp Puan</span><span className={styles.right} role="columnheader">Toplam Puan</span></div>
           <div role="rowgroup">{hucre?.uyeler.length ? hucre.uyeler.map(u => <div className={styles.person} role="row" key={u.kisi_id}>
-            <div className={styles.identity} role="cell"><span className={styles.avatar}>{u.ad.slice(0,1)}{u.soyad.slice(0,1)}</span><span className={styles.name}>{u.ad} {u.soyad}</span></div><span className={styles.count} role="cell">{u.tamamlanan} yayın</span>
+            <div className={styles.identity} role="cell"><span className={styles.avatar}>{u.ad.slice(0,1)}{u.soyad.slice(0,1)}</span><span className={styles.name}>{u.ad} {u.soyad}</span></div><span className={`${styles.count} ${styles.right}`} role="cell">{sayi(u.tamamlanan)} yayın</span>
+            <span className={styles.points} role="cell">{sayi(u.tamamlamaPuani)} puan</span>
+            <span className={styles.points} role="cell">{sayi(u.dogruCevapPuani)} puan</span>
+            <span className={styles.points} role="cell">{sayi(u.kayipPuani)} puan</span>
             <div className={styles.score} role="cell">{sayi(u.puan)} puan<div className={styles.bar}><i style={{ width: `${hucre.puan ? Math.round(u.puan / hucre.puan * 100) : 0}%`, background: turBilgisi.renk }} /></div></div>
           </div>) : <div className={styles.empty}>{hafta > veri.donem.aktifHafta ? "Bu hafta henüz başlamadı." : "Bu hafta bu yayın türünden puan kazanılmadı."}</div>}</div>
+        </div>
         </div>
       </section>
     </>}

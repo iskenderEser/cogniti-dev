@@ -5,6 +5,25 @@ import vm from "node:vm";
 import { eclubPerformansGrafikSecenegi } from "@/lib/eclub/performansGrafik";
 import { eclubPerformansDonemi, ECLUB_PERFORMANS_TURLERI } from "@/lib/eclub/performans";
 
+type GrafikTasarimSecenegi = {
+  grid: Record<string,unknown>;
+  xAxis: Record<string,unknown>;
+  yAxis: Record<string,unknown>;
+  animationDuration: number;
+  series: Record<string,unknown>[];
+};
+function nesneMi(value: unknown): value is Record<string,unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+function grafikTasariminiDogrula(value: unknown): asserts value is GrafikTasarimSecenegi {
+  assert.ok(nesneMi(value), "grafik seçeneği nesne olmalıdır");
+  assert.ok(nesneMi(value.grid), "grid nesne olmalıdır");
+  assert.ok(nesneMi(value.xAxis), "xAxis nesne olmalıdır");
+  assert.ok(nesneMi(value.yAxis), "yAxis nesne olmalıdır");
+  assert.equal(typeof value.animationDuration, "number", "animationDuration sayı olmalıdır");
+  assert.ok(Array.isArray(value.series) && value.series.every(nesneMi), "series nesnelerden oluşan bir dizi olmalıdır");
+}
+
 // Kullanıcının onayladığı HTML'den alınmış bağımsız tasarım referansı.
 const reference = JSON.parse(readFileSync("tests/fixtures/eclub-performans-onayli-tasarim.json","utf8"));
 const css = readFileSync("components/eclub/eclub-performans.module.css","utf8");
@@ -19,11 +38,18 @@ function rules(source: string) {
   }
   return result;
 }
-test("kart, stat, üye satırı ve mobil ölçüler onaylı HTML ile aynıdır", () => {
+test("onaylı görünüm korunur; üye tablosu altı puan sütununa genişler", () => {
   const referenceParts = reference.css.split("@media(max-width:700px)");
   const actualParts = css.split("@media(max-width:700px)");
   for (const index of [0,1]) {
     const expected = rules(referenceParts[index]), actual = rules(actualParts[index]);
+    // Kullanıcının onayladığı altı sütunlu tablo, ilk demonun üç sütunlu düzenini genişletir.
+    for (const selector of [".tableHead", ".person"]) {
+      const props = expected.get(selector);
+      props?.set("gap", index ? "12px" : "14px");
+      if (index) props?.delete("grid-template-columns");
+      else props?.set("grid-template-columns", "minmax(160px,1.5fr) repeat(4,minmax(95px,1fr)) minmax(100px,1fr)");
+    }
     for (const [selector,props] of expected) {
       const first = selector.match(/^\.([\w-]+)/)?.[1];
       if(!first || ![...classes].some(c => c.replace(/-([a-z])/g, (_m,x: string) => x.toUpperCase()) === first)) continue;
@@ -36,15 +62,17 @@ test("gerçek ECharts seçenekleri onaylanan HTML çizim fonksiyonuyla eşleşir
   const types = ECLUB_PERFORMANS_TURLERI.map((t,i) => ({ name:t.ad,color:t.renk,scores:[0,80 + i,0,40,0,0,0,0] }));
   const veri = { donem, ozet:{puan:0,tamamlanan:0,uye:0},satirlar:ECLUB_PERFORMANS_TURLERI.map((t,i)=>({tur:t.tur,haftalar:donem.haftalar.map((h,w)=>({hafta:h.hafta,puan:types[i].scores[w],tamamlanan:0,uyeler:[]}))})) };
   for(const mobile of [false,true]) {
-    let expected: Record<string,any> = {};
-    vm.runInNewContext(reference.draw+"draw();",{innerWidth:mobile?390:1100,types,selected:{type:1,week:2},currentWeek:donem.aktifHafta,number:(v:number)=>v.toLocaleString("tr-TR"),chart:{setOption:(option:Record<string,any>)=>{expected=option;}}});
-    const actual = eclubPerformansGrafikSecenegi(veri,"podcast",2,mobile) as Record<string,any>;
+    let expected: unknown;
+    vm.runInNewContext(reference.draw+"draw();",{innerWidth:mobile?390:1100,types,selected:{type:1,week:2},currentWeek:donem.aktifHafta,number:(v:number)=>v.toLocaleString("tr-TR"),chart:{setOption:(option:unknown)=>{expected=option;}}});
+    const actual: unknown = eclubPerformansGrafikSecenegi(veri,"podcast",2,mobile);
+    grafikTasariminiDogrula(expected);
+    grafikTasariminiDogrula(actual);
     // JSON karşılaştırması fonksiyonları ve yalnız bağlama yönelik seri kimliklerini dışarıda bırakır.
     const plain=(v:unknown)=>JSON.parse(JSON.stringify(v));
     assert.deepEqual(plain(actual.grid),plain(expected.grid));
     assert.deepEqual(plain(actual.xAxis),plain(expected.xAxis));
     assert.deepEqual(plain(actual.yAxis),plain(expected.yAxis));
     assert.equal(actual.animationDuration,expected.animationDuration);
-    for(let i=0;i<8;i++) { const {id:_id,...series}=actual.series[i]; assert.deepEqual(plain(series),plain(expected.series[i])); }
+    for(let i=0;i<8;i++) { const series: Record<string,unknown>={...actual.series[i]}; delete series.id; assert.deepEqual(plain(series),plain(expected.series[i])); }
   }
 });

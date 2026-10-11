@@ -26,10 +26,10 @@ export function eclubPerformansDonemi(simdi = new Date()): PerformansDonemi {
 }
 export interface PerformansUyesi { kisi_id: string; ad: string; soyad: string }
 export interface PerformansIzlemesi { izleme_id: string; kisi_id: string; yayin_id: string; arac_turu: string; izleme_bitis: string | null; tamamlandi_mi: boolean | null; ilerleme_durumu?: Record<string, unknown> | null }
-export interface PerformansPuani { kazanilan_puan_id: string; izleme_id: string; kisi_id: string; yayin_id: string; eczane_id: string; puan: number }
+export interface PerformansPuani { kazanilan_puan_id: string; izleme_id: string; kisi_id: string; yayin_id: string; eczane_id: string; puan_turu: "izleme" | "cevaplama"; puan: number }
 export interface PerformansKaybi { kayit_id: string; izleme_id: string; kisi_id: string; yayin_id: string; kaybedilen_puan: number }
 export interface PerformansBagi { kisi_id: string; eczane_id: string; baslangic_tarihi: string | null; bitis_tarihi: string | null; created_at: string | null; aktif_mi: boolean }
-export interface UyeKatkisi extends PerformansUyesi { tamamlanan: number; puan: number }
+export interface UyeKatkisi extends PerformansUyesi { tamamlanan: number; tamamlamaPuani: number; dogruCevapPuani: number; kayipPuani: number; puan: number }
 export interface HaftalikKatki { hafta: number; puan: number; tamamlanan: number; uyeler: UyeKatkisi[] }
 export interface PerformansVerisi { donem: PerformansDonemi; satirlar: { tur: PerformansTuru; haftalar: HaftalikKatki[] }[]; ozet: { puan: number; tamamlanan: number; uye: number } }
 
@@ -63,13 +63,17 @@ export function eclubPerformansiHesapla({ donem, izlemeler, puanlar, kayiplar, u
       b.kisi_id === izleme.kisi_id && eczaneler.has(b.eczane_id) &&
       an >= Date.parse(b.baslangic_tarihi ?? b.created_at ?? "9999-01-01") &&
       (b.bitis_tarihi ? an < Date.parse(b.bitis_tarihi) : b.aktif_mi))) continue;
-    const kazanilan = izlemePuanlari.filter(p => eczaneler.has(p.eczane_id)).reduce((s,p) => s + Number(p.puan), 0);
+    const kapsamPuanlari = izlemePuanlari.filter(p => eczaneler.has(p.eczane_id));
+    const tamamlamaPuani = kapsamPuanlari.filter(p => p.puan_turu === "izleme").reduce((s,p) => s + Number(p.puan), 0);
+    const dogruCevapPuani = kapsamPuanlari.filter(p => p.puan_turu === "cevaplama").reduce((s,p) => s + Number(p.puan), 0);
+    const kazanilan = kapsamPuanlari.reduce((s,p) => s + Number(p.puan), 0);
     const kayip = (kayipMap.get(izleme.izleme_id) ?? []).filter(k => k.kisi_id === izleme.kisi_id && k.yayin_id === izleme.yayin_id).reduce((s,k) => s + Number(k.kaybedilen_puan), 0);
     const net = Math.max(0, kazanilan - kayip);
     const hucre = satir.haftalar[hafta.hafta - 1];
     const kisi = kisiMap.get(izleme.kisi_id) ?? { kisi_id: izleme.kisi_id, ad: "Eski üye", soyad: "" };
     let katki = hucre.uyeler.find(u => u.kisi_id === kisi.kisi_id);
-    if (!katki) { katki = { ...kisi, puan: 0, tamamlanan: 0 }; hucre.uyeler.push(katki); }
+    if (!katki) { katki = { ...kisi, puan: 0, tamamlanan: 0, tamamlamaPuani: 0, dogruCevapPuani: 0, kayipPuani: 0 }; hucre.uyeler.push(katki); }
+    katki.tamamlamaPuani += tamamlamaPuani; katki.dogruCevapPuani += dogruCevapPuani; katki.kayipPuani += kayip;
     katki.puan += net; katki.tamamlanan++; hucre.puan += net; hucre.tamamlanan++;
     toplamPuan += net; toplamTamamlanan++; katkicilar.add(kisi.kisi_id);
   }

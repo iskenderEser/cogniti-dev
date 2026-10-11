@@ -4,10 +4,13 @@ import { useEffect, useState } from "react";
 import { useParams, usePathname } from "next/navigation";
 import type { EclubBanner } from "@/lib/eclub/banner";
 import styles from "./eclub-kisi-banner.module.css";
+import { useAuth } from "@/app/providers/AuthProvider";
+import { anaSayfaBannerlariniIste, anaSayfaBannerOnbelleginiOku } from "@/lib/eclub/anaSayfaBannerOnbellek";
+import { firmaBannerlariniIste, firmaBannerOnbelleginiOku } from "@/lib/eclub/firmaBannerOnbellek";
 
 const KAYMA_SURESI_MS = 5000;
 
-function BannerRafi({ bannerlar }: { bannerlar: EclubBanner[] }) {
+function BannerRafi({ bannerlar, anaSayfa = false }: { bannerlar: EclubBanner[]; anaSayfa?: boolean }) {
   const adet = bannerlar.length;
   const [aktif, setAktif] = useState(0);
   const [duraklat, setDuraklat] = useState(false);
@@ -40,7 +43,8 @@ function BannerRafi({ bannerlar }: { bannerlar: EclubBanner[] }) {
         {bannerlar.map((banner, index) => <div key={banner.sira} className={styles.gorsel}
           role="group" aria-roledescription="Banner" aria-label={`${index + 1} / ${adet}`} aria-hidden={aktif !== index}>
           {/* eslint-disable-next-line @next/next/no-img-element -- İstemcide optimize edilen firma bannerı. */}
-          <img src={banner.url} alt={`${index + 1}. firma bannerı`} />
+          <img src={banner.url} alt={`${index + 1}. firma bannerı`}
+            fetchPriority={anaSayfa ? (index === 0 ? "high" : "low") : undefined} />
         </div>)}
       </div>
     </div>
@@ -55,21 +59,32 @@ function BannerRafi({ bannerlar }: { bannerlar: EclubBanner[] }) {
 }
 
 function FirmaBannerlari({ firmaId }: { firmaId: string | null }) {
-  const [bannerlar, setBannerlar] = useState<EclubBanner[]>([]);
+  const { kullanici } = useAuth();
+  const kullaniciId = kullanici?.id;
+  const pathname = usePathname();
+  const anaSayfa = !firmaId && pathname === "/eclub/ana-sayfa";
+  const firmaYayinlari = !!firmaId && pathname.endsWith("/yayinlar");
+  const [bannerlar, setBannerlar] = useState<EclubBanner[]>(() => anaSayfa && kullaniciId ? anaSayfaBannerOnbelleginiOku(kullaniciId) ?? [] : firmaYayinlari && kullaniciId && firmaId ? firmaBannerOnbelleginiOku(kullaniciId, firmaId) ?? [] : []);
   useEffect(() => {
     const controller = new AbortController();
-    void fetch(`/eclub/api/bannerlar${firmaId ? `?firma_id=${encodeURIComponent(firmaId)}` : ""}`, { signal: controller.signal, cache: "no-store" })
+    const istek = anaSayfa && kullaniciId
+      ? anaSayfaBannerlariniIste(kullaniciId)
+      : firmaYayinlari && kullaniciId && firmaId ? firmaBannerlariniIste(kullaniciId, firmaId)
+      : fetch(`/eclub/api/bannerlar${firmaId ? `?firma=${encodeURIComponent(firmaId)}` : ""}`, { signal: controller.signal, cache: "no-store" })
       .then(async (res) => {
         const veri = await res.json();
         if (!res.ok) throw new Error(veri.hata ?? veri.error ?? "Firma bannerları okunamadı.");
-        if (!controller.signal.aborted) setBannerlar(veri.bannerlar);
-      }).catch((error) => {
-        if (!controller.signal.aborted) console.error("E-Club firma bannerları:", error);
+        return veri.bannerlar as EclubBanner[];
+      });
+    void istek.then((sonuc) => {
+      if (!controller.signal.aborted) setBannerlar(sonuc);
+    }).catch((error) => {
+        if (!controller.signal.aborted) { setBannerlar([]); console.error("E-Club firma bannerları:", error); }
       });
     return () => controller.abort();
-  }, [firmaId]);
+  }, [firmaId, kullaniciId, anaSayfa, firmaYayinlari]);
   if (!bannerlar.length) return null;
-  return <BannerRafi key={bannerlar.map((b) => b.url).join("|")} bannerlar={bannerlar} />;
+  return <BannerRafi key={bannerlar.map((b) => b.url).join("|")} bannerlar={bannerlar} anaSayfa={anaSayfa || firmaYayinlari} />;
 }
 
 /** Ana sayfa Hapbilgi'nin, firma sayfası yalnız ilgili firmanın yayınlanmış görsellerini okur. */

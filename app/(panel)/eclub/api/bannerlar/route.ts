@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { eclubKisiErisimi } from "@/lib/eclub/kisiErisim";
-import { eclubFirmaKapsami } from "@/lib/eclub/firmaGezinme";
+import { eclubFirmaKapsami, eclubFirmaRotasiKapsami } from "@/lib/eclub/firmaGezinme";
 import { firmaBannerlariniOku } from "@/lib/eclub/bannerSunucu";
 import { bannerKurulumuEksik } from "@/lib/eclub/banner";
 import { ECLUB_TUKETICI_ROLLERI } from "@/lib/utils/roller";
@@ -18,8 +18,13 @@ export async function GET(request: Request) {
     if (!erisim.kisi || !ECLUB_TUKETICI_ROLLERI.includes(erisim.kisi.rol)) return rolHatasi();
     const firmaId = new URL(request.url).searchParams.get("firma_id");
     if (firmaId !== null && !uuidGecerliMi(firmaId)) return validasyonHatasi("Geçersiz firma.", ["firma_id"]);
+    const firmaRotasi = new URL(request.url).searchParams.get("firma");
     let hedefFirmaId = firmaId;
-    if (firmaId) {
+    if (firmaRotasi !== null) {
+      const kapsam = eclubFirmaRotasiKapsami(erisim.firmalar, firmaRotasi);
+      if (!kapsam.length) return rolHatasi("Bu firmaya erişiminiz bulunmuyor.");
+      hedefFirmaId = kapsam[0].firma_id;
+    } else if (firmaId) {
       if (!eclubFirmaKapsami(erisim.firmalar, firmaId).length) return rolHatasi("Bu firmaya erişiminiz bulunmuyor.");
     } else {
       // Ana sayfa görselleri bütün aktif E-Club üyelerine gösterilir.

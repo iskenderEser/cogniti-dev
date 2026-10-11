@@ -25,13 +25,17 @@
 .detailMeta{font-size:11px;color:#8292a8}
 .detailTotal{font-weight:800;font-size:22px}
 .detailTotal small{font-size:11px;font-weight:500;color:#8493a8;margin-left:4px}
-.tableHead,.person{display:grid;grid-template-columns:minmax(160px,1.5fr) 1fr 100px;gap:18px;align-items:center;padding:15px 24px}
+.tableHead,.person{display:grid;grid-template-columns:minmax(160px,1.5fr) repeat(4,minmax(95px,1fr)) minmax(100px,1fr);gap:14px;align-items:center;padding:15px 24px}
 .tableHead{font-size:10px;color:#8b99ad;padding-bottom:10px;text-transform:uppercase;letter-spacing:.5px}
 .person{border-top:1px solid #f0f3f7}
 .identity{display:flex;align-items:center;gap:11px}
 .avatar{width:32px;height:32px;background:#edf3fa;border-radius:50%;display:grid;place-items:center;font-size:10px;font-weight:750;color:#6b829e}
 .name{font-weight:650;font-size:12px}
 .count{font-size:12px;color:#6d7f98}
+.tableScroll{overflow-x:auto}
+.tableScroll:focus-visible{outline:2px solid #237ac8;outline-offset:-2px}
+.table{min-width:800px}
+.points{text-align:right;font-size:12px;color:#6d7f98;white-space:nowrap}
 .score{text-align:right;font-size:12px;font-weight:750}
 .bar{width:100%;height:4px;border-radius:9px;background:#edf1f7;margin-top:7px}
 .bar i{display:block;height:4px;border-radius:9px}
@@ -58,8 +62,8 @@
 .chartHead strong{font-size:12px}
 .help{padding-left:14px;padding-right:14px;line-height:1.6}
 .detailHead{padding:17px 14px}
-.tableHead,.person{padding:13px 14px;grid-template-columns:minmax(115px,1fr) 70px 65px;gap:8px}
-.name,.count,.score{font-size:11px}
+.tableHead,.person{padding:13px 14px;gap:12px}
+.name,.count,.points,.score{font-size:11px}
 .avatar{width:27px;height:27px}
 .identity{gap:7px}
 .detailTotal{font-size:19px}

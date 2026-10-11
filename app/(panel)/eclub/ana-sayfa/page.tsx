@@ -2,9 +2,11 @@
 
 import { TarihPill } from "@/components/ui/tarih-pill";
 import EclubHediyeCekiGunleriPill from "@/components/eclub/EclubHediyeCekiGunleriPill";
+import EclubAnaSayfaSkeleton from "@/components/eclub/EclubAnaSayfaSkeleton";
+import { anaSayfaBannerlariniIste } from "@/lib/eclub/anaSayfaBannerOnbellek";
 
 import { useEffect } from "react";
-import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { CheckCircle2, Clock3, Coins, Sparkles, Trophy, Video } from "lucide-react";
 import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
 import { useAuth } from "@/app/providers/AuthProvider";
@@ -40,17 +42,23 @@ export default function EclubPanelPage() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const params = useParams<{ firma_id?: string }>();
   const { kullanici, yukleniyor: authYukleniyor } = useAuth();
   const { mesajlar, hata, basari, uyari } = useHataMesaji();
   const eclubKisi = !!kullanici && kullanici.kimlik_turu === "eclub_kisi";
   const hazir = !authYukleniyor && eclubKisi;
-  const rotaFirmaId = params.firma_id ?? null;
   const secim = useEclubFirmaSecimi();
-  const kendiPaneli = useEclubPanel({ hazir: hazir && !secim.gomulu, hata, firmaId: rotaFirmaId });
+  const rotaFirmaId = secim.firmaId ?? null;
+  const kendiPaneli = useEclubPanel({ hazir: hazir && !secim.gomulu, hata, firmaId: rotaFirmaId,
+    acilistaArkaPlandaYenile: !secim.gomulu && pathname === "/eclub/ana-sayfa",
+    onbellekKullaniciId: hazir && !secim.gomulu && pathname === "/eclub/ana-sayfa" ? kullanici?.id : undefined });
   const { kisi, oneriler, firmaOzetleri, ozet, loading, veriCek, etkilesimGuncelle } = secim.panel ?? kendiPaneli;
   const gorunenOneriler = secim.gomulu ? eclubUrunIcerigi(oneriler, secim.urunId) : oneriler;
   const seciliOneri = gorunenOneriler.find((o) => o.oneri_id === searchParams.get("oneri_id")) ?? null;
+
+  useEffect(() => {
+    if (!hazir || !kullanici || secim.gomulu || pathname !== "/eclub/ana-sayfa") return;
+    void anaSayfaBannerlariniIste(kullanici.id, true).catch(() => undefined);
+  }, [hazir, kullanici, secim.gomulu, pathname]);
 
   useEffect(() => {
     if (authYukleniyor) return;
@@ -63,11 +71,13 @@ export default function EclubPanelPage() {
     const hedefFirma = rotaFirmaId ?? seciliOneri?.firma_id;
     if (hedefFirma && !pathname.startsWith("/eclub/firma/")) {
       const sorgu = searchParams.toString();
-      router.replace(`${eclubFirmaYolu(hedefFirma, "yayinlar")}${sorgu ? `?${sorgu}` : ""}`);
+      router.replace(`${eclubFirmaYolu(firmaOzetleri.find((firma) => firma.firma_id === hedefFirma)?.firma_adi ?? hedefFirma, "yayinlar")}${sorgu ? `?${sorgu}` : ""}`);
     }
-  }, [loading, rotaFirmaId, seciliOneri?.firma_id, pathname, searchParams, router]);
+  }, [loading, rotaFirmaId, seciliOneri?.firma_id, firmaOzetleri, pathname, searchParams, router]);
 
-  if (authYukleniyor || !kullanici || loading) return <EclubKisiYukleniyor />;
+  if (authYukleniyor || !kullanici || loading) {
+    return secim.gomulu ? <EclubKisiYukleniyor /> : <EclubAnaSayfaSkeleton />;
+  }
 
   const aktifFirmaId = firmaOzetleri.some((firma) => firma.firma_id === rotaFirmaId)
     ? rotaFirmaId
@@ -160,6 +170,7 @@ export default function EclubPanelPage() {
             <EclubKisiBosDurum ikon={Video} baslik="Firma içeriği bulunmuyor" aciklama="Firmanız size öğrenme içeriği gönderdiğinde burada görüntülenecek." />
           ) : (
             <EclubFirmaVideoKatalogu
+              ilkKapakOncelikli={pathname === "/eclub/ana-sayfa" || (secim.gomulu && pathname.endsWith("/yayinlar"))}
               key={aktifFirmaId}
               oneriler={gorunenOneriler}
               seciliUrunAdi={secim.urunAdi}

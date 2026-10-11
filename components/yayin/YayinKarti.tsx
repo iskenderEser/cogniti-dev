@@ -68,6 +68,7 @@ export interface YayinKartiProps {
 
   className?: string;
   ariaLabel?: string;
+  kapakOncelikli?: boolean;
 }
 
 const GUN_MS = 24 * 60 * 60 * 1000;
@@ -139,6 +140,7 @@ export function YayinKarti({
 
   className = "",
   ariaLabel,
+  kapakOncelikli = false,
 }: YayinKartiProps) {
   const thumbnail = yayinThumbnailIstemciCoz(yayin);
 
@@ -206,7 +208,8 @@ export function YayinKarti({
             src={thumbnail}
             alt={yayin.urun_adi}
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-            loading="lazy"
+            loading={kapakOncelikli ? "eager" : "lazy"}
+            fetchPriority={kapakOncelikli ? "high" : undefined}
           />
         ) : (
           <AracVarsayilanKapak

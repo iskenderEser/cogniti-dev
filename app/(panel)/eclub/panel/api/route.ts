@@ -1,4 +1,4 @@
-import { eclubFirmaKapsami } from "@/lib/eclub/firmaGezinme";
+import { eclubFirmaKapsami, eclubFirmaRotasiKapsami } from "@/lib/eclub/firmaGezinme";
 import { uuidGecerliMi } from "@/lib/uretim/rpc";
 // app/eclub/panel/api/route.ts
 //
@@ -15,7 +15,7 @@ import { ECLUB_TUKETICI_ROLLERI, hedefRolleriOku, yayinTuketiciRoluneAcikMi, typ
 import { hataYaniti, sunucuHatasi, yetkiHatasi, rolHatasi, validasyonHatasi } from "@/lib/utils/hataIsle";
 import { eclubOneriDurumu } from "@/lib/eclub/izlemeKurali";
 import { ogrenmeAraciBayraklari } from "@/lib/ogrenmeAraci/bayraklar";
-import { yayinGorunenUrunIdHaritasi } from "@/lib/urunler/gorunenId";
+import { gorunenUrunIdHaritasi } from "@/lib/urunler/gorunenId";
 import { eclubKisiErisimi } from "@/lib/eclub/kisiErisim";
 import { yayinThumbnailUrlCoz } from "@/lib/ogrenmeAraci/yayinThumbnail";
 
@@ -34,23 +34,25 @@ export async function GET(request: Request) {
     if (!ECLUB_TUKETICI_ROLLERI.includes(kisi.rol)) return rolHatasi("Geçersiz kişi rolü.");
     if (!kisiErisimi.eclub_aktif) return rolHatasi("Aktif E-Club firma bağlantısı bulunamadı.");
 
-    const firmaId = new URL(request.url).searchParams.get("firma_id");
-    if (firmaId !== null && !uuidGecerliMi(firmaId)) return validasyonHatasi("Geçersiz firma.", ["firma_id"]);
-    const firmaKapsami = eclubFirmaKapsami(kisiErisimi.firmalar, firmaId);
-    if (firmaId !== null && firmaKapsami.length === 0) return rolHatasi("Bu firmaya erişiminiz bulunmuyor.");
+    const params = new URL(request.url).searchParams;
+    const istenenFirmaId = params.get("firma_id");
+    if (istenenFirmaId !== null && !uuidGecerliMi(istenenFirmaId)) return validasyonHatasi("Geçersiz firma.", ["firma_id"]);
+    const firmaRotasi = params.get("firma");
+    const firmaKapsami = firmaRotasi !== null
+      ? eclubFirmaRotasiKapsami(kisiErisimi.firmalar, firmaRotasi)
+      : eclubFirmaKapsami(kisiErisimi.firmalar, istenenFirmaId);
+    if ((istenenFirmaId !== null || firmaRotasi !== null) && firmaKapsami.length === 0) return rolHatasi("Bu firmaya erişiminiz bulunmuyor.");
+    const firmaId = firmaRotasi !== null ? firmaKapsami[0].firma_id : istenenFirmaId;
     const simdi = new Date().toISOString();
 
     // Henüz başlamayan öneri gösterilmez; süresi geçen, puansız tekrar izleme için korunur.
-    const { data: oneriler, error: oneriError } = await adminSupabase
+    const [oneriSonucu, izlemeSonucu, puanSonucu, kayipSonucu, dogruSonucu, yanlisSonucu] = await Promise.all([
+      adminSupabase
       .from("eclub_oneri_kayitlari")
       .select("oneri_id, yayin_id, oneri_baslangic, oneri_bitis, izlendi_mi, created_at")
       .eq("kisi_id", kisi.kisi_id)
       .lte("oneri_baslangic", simdi)
-      .order("created_at", { ascending: false });
-
-    if (oneriError) return hataYaniti("Öneriler çekilemedi.", "eclub_oneri_kayitlari SELECT — kisi_id", oneriError);
-
-    const [izlemeSonucu, puanSonucu, kayipSonucu, dogruSonucu, yanlisSonucu] = await Promise.all([
+      .order("created_at", { ascending: false }),
       adminSupabase
         .from("eclub_izleme_kayitlari")
         .select("izleme_id, oneri_id, yayin_id, tamamlandi_mi, izleme_baslangic, izleme_bitis, created_at")
@@ -72,6 +74,8 @@ export async function GET(request: Request) {
         .select("yayin_id, izleme_id")
         .eq("kisi_id", kisi.kisi_id),
     ]);
+    const { data: oneriler, error: oneriError } = oneriSonucu;
+    if (oneriError) return hataYaniti("Öneriler çekilemedi.", "eclub_oneri_kayitlari SELECT — kisi_id", oneriError);
     if (izlemeSonucu.error) return hataYaniti("İzleme özeti alınamadı.", "eclub_izleme_kayitlari SELECT — kişi paneli", izlemeSonucu.error);
     if (puanSonucu.error) return hataYaniti("Puan özeti alınamadı.", "eclub_kazanilan_puanlar SELECT — kişi paneli", puanSonucu.error);
     if (kayipSonucu.error) return hataYaniti("İleri sarma kaybı alınamadı.", "eclub_ileri_sarma_kayitlari SELECT — kişi paneli", kayipSonucu.error);
@@ -116,16 +120,11 @@ export async function GET(request: Request) {
         });
       }
     }
-    const urunIdleri = new Map<string, string>();
-    if (yayinMap.size > 0) {
-      const { data: kunyeler, error: kunyeHatasi } = await adminSupabase.from("v_yayin_kunye")
-        .select("yayin_id, urun_id").in("yayin_id", [...yayinMap.keys()]);
-      if (kunyeHatasi) return hataYaniti("Yayın ürünleri alınamadı.", "v_yayin_kunye SELECT — E-Club panel", kunyeHatasi);
-      for (const kunye of kunyeler ?? []) urunIdleri.set(kunye.yayin_id, kunye.urun_id);
-    }
-    const gorunenUrunIdleri = await yayinGorunenUrunIdHaritasi(adminSupabase, [...yayinMap.keys()]);
-
-    const [eclubBegeniSonucu, eclubFavoriSonucu] = await Promise.all([
+    // Ürün bağını bir kez oku; bağımsız etkileşim sorguları aynı anda başlar.
+    const [kunyeSonucu, eclubBegeniSonucu, eclubFavoriSonucu] = await Promise.all([
+      yayinMap.size > 0
+        ? adminSupabase.from("v_yayin_kunye").select("yayin_id, urun_id").in("yayin_id", [...yayinMap.keys()])
+        : Promise.resolve({ data: [], error: null }),
       yayinIds.length > 0
         ? adminSupabase.from("eclub_video_begeniler").select("yayin_id, kisi_id").in("yayin_id", yayinIds)
         : Promise.resolve({ data: [], error: null }),
@@ -133,8 +132,17 @@ export async function GET(request: Request) {
         ? adminSupabase.from("eclub_video_favoriler").select("yayin_id, kisi_id").in("yayin_id", yayinIds)
         : Promise.resolve({ data: [], error: null }),
     ]);
+    if (kunyeSonucu.error) return hataYaniti("Yayın ürünleri alınamadı.", "v_yayin_kunye SELECT — E-Club panel", kunyeSonucu.error);
     if (eclubBegeniSonucu.error) return hataYaniti("Beğeni bilgileri alınamadı.", "eclub_video_begeniler SELECT — E-Club panel", eclubBegeniSonucu.error);
     if (eclubFavoriSonucu.error) return hataYaniti("Favori bilgileri alınamadı.", "eclub_video_favoriler SELECT — E-Club panel", eclubFavoriSonucu.error);
+    const urunIdleri = new Map<string, string>();
+    for (const kunye of kunyeSonucu.data ?? []) urunIdleri.set(kunye.yayin_id, kunye.urun_id);
+    const gorunenUrunler = await gorunenUrunIdHaritasi(adminSupabase, [...urunIdleri.values()]);
+    const gorunenUrunIdleri = new Map<string, string>();
+    for (const [yayinId, urunId] of urunIdleri) {
+      const gorunenId = gorunenUrunler.get(urunId);
+      if (gorunenId) gorunenUrunIdleri.set(yayinId, gorunenId);
+    }
     const sayimHaritasi = (satirlar: Array<{ yayin_id: string }>) => {
       const harita = new Map<string, number>();
       for (const satir of satirlar) harita.set(satir.yayin_id, (harita.get(satir.yayin_id) ?? 0) + 1);

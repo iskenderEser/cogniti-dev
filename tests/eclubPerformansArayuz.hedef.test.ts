@@ -7,6 +7,7 @@ import * as React from "react";
 import * as jsxRuntime from "react/jsx-runtime";
 import * as ReactDOM from "react-dom";
 import { GlobalWindow } from "happy-dom";
+import * as performansOnbellek from "@/lib/eclub/performansOnbellek";
 import * as performans from "@/lib/eclub/performans";
 import { eclubPerformansGrafikSecenegi } from "@/lib/eclub/performansGrafik";
 
@@ -22,7 +23,7 @@ globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 const { createRoot } = await import("react-dom/client");
 const noopIcon = () => React.createElement("span");
 const donem = performans.eclubPerformansDonemi(new Date("2026-10-11T12:00:00Z"));
-const data = performans.eclubPerformansiHesapla({ donem, izlemeler: [{ izleme_id: "i", kisi_id: "k", yayin_id: "y", arac_turu: "podcast", izleme_bitis: donem.haftalar[1].baslangic, tamamlandi_mi: true }], puanlar: [{ kazanilan_puan_id: "p", izleme_id: "i", kisi_id: "k", yayin_id: "y", eczane_id: "e", puan: 80 }], kayiplar: [], baglar: [], eczaneIdler: ["e"], yayinIdler: ["y"], uyeler: [{ kisi_id: "k", ad: "Ayşe", soyad: "Yılmaz" }] });
+const data = performans.eclubPerformansiHesapla({ donem, izlemeler: [{ izleme_id: "i", kisi_id: "k", yayin_id: "y", arac_turu: "podcast", izleme_bitis: donem.haftalar[1].baslangic, tamamlandi_mi: true }], puanlar: [{ kazanilan_puan_id: "p", izleme_id: "i", kisi_id: "k", yayin_id: "y", eczane_id: "e", puan_turu: "izleme", puan: 60 }, { kazanilan_puan_id: "c", izleme_id: "i", kisi_id: "k", yayin_id: "y", eczane_id: "e", puan_turu: "cevaplama", puan: 20 }], kayiplar: [], baglar: [], eczaneIdler: ["e"], yayinIdler: ["y"], uyeler: [{ kisi_id: "k", ad: "Ayşe", soyad: "Yılmaz" }] });
 
 test("grafik seçimi üye katkısını açar; otomatik güncelleme seçimleri korur ve ürün değişiminde eski veri gizlenir", async () => {
   const portal = document.createElement("div"), container = document.createElement("div"); document.body.append(portal,container);
@@ -34,11 +35,15 @@ test("grafik seçimi üye katkısını açar; otomatik güncelleme seçimleri ko
   }) as typeof fetch;
   const modules: Record<string, unknown> = {
     react: React, "react/jsx-runtime": jsxRuntime, "react-dom": ReactDOM,
+    "@/app/providers/AuthProvider": { useAuth: () => ({ kullanici: { id: "performans-arayuz" } }) },
+    "@/lib/eclub/performansOnbellek": performansOnbellek,
+    "next/dynamic": { default: () => (modules["@/components/grafik/EChart"] as { default: React.ComponentType }).default },
     "next/navigation": { useParams: () => ({ firma_id: "f" }) },
     "lucide-react": { BookOpen: noopIcon, CheckCircle2: noopIcon, Headphones: noopIcon, Image: noopIcon, Trophy: noopIcon, Users: noopIcon, Video: noopIcon },
     "@/lib/eclub/performans": performans,
     "@/lib/eclub/performansGrafik": { eclubPerformansGrafikSecenegi },
     "./EclubFirmaSecimi": { useEclubFirmaSecimi: () => ({ urunId, urunAdi: "Laropen", aksiyonAlani: portal }) },
+    "./EclubFirmaPerformansSkeleton": { EclubPerformansIcerikSkeleton: () => React.createElement("span", null, "Performans yükleniyor…") },
     "./EclubKisiSayfa": { EclubKisiStat: (p: { etiket: string; deger: string }) => React.createElement("div",null,p.etiket+": "+p.deger) },
     "@/components/grafik/EChart": { default: (p: { onClick: (v: unknown) => void }) => React.createElement("div",null,
       ...performans.ECLUB_PERFORMANS_TURLERI.map((t,i) => React.createElement("button", { key:t.tur, onClick: () => p.onClick({ seriesId:t.tur, value:[2,i,t.tur === "podcast" ? 80 : 0] }) }, t.ad+" noktasını seç"))) },
@@ -60,7 +65,8 @@ test("grafik seçimi üye katkısını açar; otomatik güncelleme seçimleri ko
     await React.act(async () => { [...container.querySelectorAll("button")].find(b => b.textContent === "Podcast noktasını seç")!.click(); });
     assert.match(container.querySelector("h3")!.textContent!,/Podcast · 2. Hafta/);
     assert.match(container.querySelector('[role="rowgroup"]')!.textContent!,/Ayşe Yılmaz/);
-    assert.match(container.querySelector('[role="rowgroup"]')!.textContent!,/80 puan/);
+    assert.deepEqual([...container.querySelectorAll('[role="columnheader"]')].map(el => el.textContent), ["E-Club üyesi", "Tamamlanan Yayın", "Tamamlama Puanı", "Doğru Cevap Puanı", "Kayıp Puan", "Toplam Puan"]);
+    assert.deepEqual([...container.querySelectorAll('[role="rowgroup"] [role="cell"]')].map(el => el.textContent), ["AYAyşe Yılmaz", "1 yayın", "60 puan", "20 puan", "0 puan", "80 puan"]);
     for (const ad of ["Görsel", "Literatür", "Video"]) {
       await React.act(async () => { [...container.querySelectorAll("button")].find(b => b.textContent === ad+" noktasını seç")!.click(); });
       assert.equal(container.querySelector("h3")!.textContent,ad+" · 2. Hafta");
@@ -79,5 +85,22 @@ test("grafik seçimi üye katkısını açar; otomatik güncelleme seçimleri ko
     await React.act(async () => { [...container.querySelectorAll("button")].find(b => b.textContent === "Tekrar dene")!.click(); });
     assert.equal(container.querySelector('[role="alert"]'),null);
     assert.match(container.querySelector("h3")!.textContent!,/Video · 2. Hafta/);
+    await React.act(async () => root.render(null));
+    const eskiSaat = Date.now;
+    const donusSaati = eskiSaat() + 61_000;
+    Date.now = () => donusSaati;
+    let tamamla!: (r: Response) => void;
+    globalThis.fetch = (() => new Promise<Response>(r => { tamamla = r; })) as typeof fetch;
+    try {
+      await React.act(async () => draw());
+      assert.match(container.textContent!, /Bu dönemde kazanılan puan80/);
+      assert.equal(performansOnbellek.performansOnbelleginiOku("diger", "f", "u2"), null);
+      assert.equal(performansOnbellek.performansOnbelleginiOku("performans-arayuz", "baska-firma", "u2"), null);
+      assert.equal(performansOnbellek.performansOnbelleginiOku("performans-arayuz", "f", "baska-urun"), null);
+      await React.act(async () => tamamla(Response.json({ hata: "Yetki yok" }, { status: 403 })));
+      assert.equal(container.querySelector('[aria-label="Dönem performansı"]'), null);
+      assert.match(container.querySelector('[role="alert"]')!.textContent!, /Yetki yok/);
+      assert.equal(performansOnbellek.performansOnbelleginiOku("performans-arayuz", "f", "u2"), null);
+    } finally { Date.now = eskiSaat; }
   } finally { await React.act(async () => { root.unmount(); }); portal.remove(); container.remove(); globalThis.fetch = oldFetch; }
 });

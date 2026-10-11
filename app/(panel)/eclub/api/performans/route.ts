@@ -39,17 +39,21 @@ export async function GET(request: Request) {
     const { data: urun, error: urunHatasi } = await admin.from("urunler").select("urun_id").eq("firma_id", firmaId!).eq("urun_id", urunId!).maybeSingle();
     if (urunHatasi) throw new Error(urunHatasi.message);
     if (!urun) return rolHatasi("Bu ürün seçilen firmaya ait değil.");
-    const firmaBaglari = await tumSatirlar<{ eczane_id: string }>(() => admin.from("eclub_eczane_firma").select("eczane_id").in("eczane_id", erisim.eczane_idler).eq("firma_id", firmaId!).eq("aktif_mi", true).order("eczane_id"));
+    const [firmaBaglari, yayinlar] = await Promise.all([
+      tumSatirlar<{ eczane_id: string }>(() => admin.from("eclub_eczane_firma").select("eczane_id").in("eczane_id", erisim.eczane_idler).eq("firma_id", firmaId!).eq("aktif_mi", true).order("eczane_id")),
+      tumSatirlar<{ yayin_id: string }>(() => admin.from("v_yayin_kunye").select("yayin_id").eq("firma_id", firmaId!).eq("urun_id", urunId!).order("yayin_id")),
+    ]);
     const eczaneIdler = [...new Set(firmaBaglari.map(b => b.eczane_id))];
     if (!eczaneIdler.length) return rolHatasi("Aktif eczane–firma bağlantısı bulunamadı.");
     const donem = eclubPerformansDonemi();
-    const yayinlar = await tumSatirlar<{ yayin_id: string }>(() => admin.from("v_yayin_kunye").select("yayin_id").eq("firma_id", firmaId!).eq("urun_id", urunId!).order("yayin_id"));
     const yayinIdler = [...new Set(yayinlar.map(y => y.yayin_id))];
     const bosVeri = () => eclubPerformansiHesapla({ donem, izlemeler: [], puanlar: [], kayiplar: [], uyeler: [], baglar: [], eczaneIdler, yayinIdler });
     if (!yayinIdler.length) return NextResponse.json(bosVeri(), { headers: { "Cache-Control": "private, no-store" } });
-    const baglar = await tumSatirlar<PerformansBagi>(() => admin.from("eclub_kisi_eczane").select("kisi_id, eczane_id, baslangic_tarihi, bitis_tarihi, created_at, aktif_mi").in("eczane_id", eczaneIdler).order("id"));
     // Eski üyelerin kazanım anındaki eczane snapshot'ı korunur.
-    const kapsamPuanlari = await parcalar<{ izleme_id: string; kisi_id: string }>(yayinIdler, ids => admin.from("eclub_kazanilan_puanlar").select("izleme_id, kisi_id").in("eczane_id", eczaneIdler).in("yayin_id", ids).gte("created_at", donem.baslangic).lt("created_at", donem.bitisHaric).lte("created_at", donem.simdi).order("kazanilan_puan_id"));
+    const [baglar, kapsamPuanlari] = await Promise.all([
+      tumSatirlar<PerformansBagi>(() => admin.from("eclub_kisi_eczane").select("kisi_id, eczane_id, baslangic_tarihi, bitis_tarihi, created_at, aktif_mi").in("eczane_id", eczaneIdler).order("id")),
+      parcalar<{ izleme_id: string; kisi_id: string }>(yayinIdler, ids => admin.from("eclub_kazanilan_puanlar").select("izleme_id, kisi_id").in("eczane_id", eczaneIdler).in("yayin_id", ids).gte("created_at", donem.baslangic).lt("created_at", donem.bitisHaric).lte("created_at", donem.simdi).order("kazanilan_puan_id")),
+    ]);
     const kisiIdler = [...new Set([...baglar.map(b => b.kisi_id), ...kapsamPuanlari.map(p => p.kisi_id)])];
     const izlemeler: PerformansIzlemesi[] = [];
     for (let i = 0; i < yayinIdler.length; i += 100) {
@@ -61,7 +65,7 @@ export async function GET(request: Request) {
     }
     const izlemeIdler = [...new Set(izlemeler.map(i => i.izleme_id))];
     const [puanlar, kayiplar, uyeler] = await Promise.all([
-      parcalar<PerformansPuani>(izlemeIdler, ids => admin.from("eclub_kazanilan_puanlar").select("kazanilan_puan_id, izleme_id, kisi_id, yayin_id, eczane_id, puan").in("izleme_id", ids).lte("created_at", donem.simdi).order("kazanilan_puan_id")),
+      parcalar<PerformansPuani>(izlemeIdler, ids => admin.from("eclub_kazanilan_puanlar").select("kazanilan_puan_id, izleme_id, kisi_id, yayin_id, eczane_id, puan_turu, puan").in("izleme_id", ids).lte("created_at", donem.simdi).order("kazanilan_puan_id")),
       parcalar<PerformansKaybi>(izlemeIdler, ids => admin.from("eclub_ileri_sarma_kayitlari").select("kayit_id, izleme_id, kisi_id, yayin_id, kaybedilen_puan").in("izleme_id", ids).lte("created_at", donem.simdi).order("kayit_id")),
       parcalar<PerformansUyesi>([...new Set(izlemeler.map(i => i.kisi_id))], ids => admin.from("eclub_kisiler").select("kisi_id, ad, soyad").in("kisi_id", ids).order("kisi_id")),
     ]);

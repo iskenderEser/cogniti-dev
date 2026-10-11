@@ -5,7 +5,7 @@ import { eclubPerformansDonemi, eclubPerformansiHesapla, type PerformansIzlemesi
 const donem = eclubPerformansDonemi(new Date("2026-10-31T20:59:59Z"));
 const bag: PerformansBagi = { kisi_id: "k1", eczane_id: "e1", baslangic_tarihi: "2026-01-01T00:00:00Z", bitis_tarihi: null, created_at: null, aktif_mi: true };
 const izleme = (id: string, zaman: string, ekstra: Partial<PerformansIzlemesi> = {}): PerformansIzlemesi => ({ izleme_id: id, kisi_id: "k1", yayin_id: "y1", arac_turu: "video", tamamlandi_mi: true, izleme_bitis: zaman, ...ekstra });
-const puan = (id: string, izlemeId: string, deger: number, ekstra: Partial<PerformansPuani> = {}): PerformansPuani => ({ kazanilan_puan_id: id, izleme_id: izlemeId, kisi_id: "k1", yayin_id: "y1", eczane_id: "e1", puan: deger, ...ekstra });
+const puan = (id: string, izlemeId: string, deger: number, ekstra: Partial<PerformansPuani> = {}): PerformansPuani => ({ kazanilan_puan_id: id, izleme_id: izlemeId, kisi_id: "k1", yayin_id: "y1", eczane_id: "e1", puan_turu: "izleme", puan: deger, ...ekstra });
 function hesapla(izlemeler: PerformansIzlemesi[], puanlar: PerformansPuani[] = [], kayiplar: PerformansKaybi[] = [], baglar: PerformansBagi[] = [bag]) {
   return eclubPerformansiHesapla({ donem, izlemeler, puanlar, kayiplar, baglar, uyeler: [{ kisi_id: "k1", ad: "Adil", soyad: "Güçlü" }, { kisi_id: "k2", ad: "Ayşe", soyad: "Yılmaz" }], eczaneIdler: ["e1"], yayinIdler: ["y1"] });
 }
@@ -21,10 +21,10 @@ test("iki aylık takvim Türkiye saatinde başlar; yıl ve artık yıl son günl
 test("tamamlamalar doğru haftaya bir kez yazılır; izleme, cevap ve ileri sarma net hesaplanır", () => {
   const i = izleme("i1", donem.haftalar[1].baslangic);
   const p = puan("p1", "i1", 100);
-  const sonuc = hesapla([i, i], [p, p, puan("p2", "i1", 40)], [{ kayit_id: "s1", izleme_id: "i1", kisi_id: "k1", yayin_id: "y1", kaybedilen_puan: 20 }]);
+  const sonuc = hesapla([i, i], [p, p, puan("p2", "i1", 40, { puan_turu: "cevaplama" })], [{ kayit_id: "s1", izleme_id: "i1", kisi_id: "k1", yayin_id: "y1", kaybedilen_puan: 20 }]);
   assert.deepEqual(sonuc.ozet, { puan: 120, tamamlanan: 1, uye: 1 });
   assert.equal(sonuc.satirlar[0].haftalar[0].puan, 0);
-  assert.equal(sonuc.satirlar[0].haftalar[1].uyeler[0].puan, 120);
+  assert.deepEqual(sonuc.satirlar[0].haftalar[1].uyeler[0], { kisi_id: "k1", ad: "Adil", soyad: "Güçlü", tamamlanan: 1, tamamlamaPuani: 100, dogruCevapPuani: 40, kayipPuani: 20, puan: 120 });
 });
 test("eczane, ürün ve üye kimlikleri birbirine karışmaz; üyenin yeni eczanesi geçmiş puanı taşımaz", () => {
   const sonuc = hesapla([izleme("biz", donem.haftalar[1].baslangic), izleme("diger", donem.haftalar[1].baslangic), izleme("yabanci-urun", donem.haftalar[1].baslangic, { yayin_id: "y2" })],
@@ -55,4 +55,19 @@ test("dönemin son günleri sekizinci bölümdedir, negatif puan gösterilmez", 
   const sonuc = hesapla([izleme("son", "2026-10-31T20:59:58Z")], [puan("p", "son", 10)], [{ kayit_id: "s", izleme_id: "son", kisi_id: "k1", yayin_id: "y1", kaybedilen_puan: 25 }]);
   assert.equal(sonuc.satirlar[0].haftalar[7].tamamlanan, 1);
   assert.equal(sonuc.ozet.puan, 0);
+});
+
+test("her yayın türünde kişi kazanımları ayrılır ve aynı haftanın izlemeleri birleştirilir", () => {
+  for (const tur of ["video", "podcast", "gorsel", "flip_pdf"]) {
+    const an = donem.haftalar[2].baslangic;
+    const kayiplar = tur === "video" ? [{ kayit_id: "s1", izleme_id: "i1", kisi_id: "k1", yayin_id: "y1", kaybedilen_puan: 20 }] : [];
+    const sonuc = hesapla([izleme("i1", an, { arac_turu: tur }), izleme("i2", an, { arac_turu: tur })],
+      [puan("p1", "i1", 100), puan("p2", "i2", 60), puan("c1", "i2", 40, { puan_turu: "cevaplama" })], kayiplar);
+    const katki = sonuc.satirlar.find(s => s.tur === tur)!.haftalar[2].uyeler[0];
+    assert.equal(katki.tamamlanan, 2);
+    assert.equal(katki.tamamlamaPuani, 160);
+    assert.equal(katki.dogruCevapPuani, 40);
+    assert.equal(katki.kayipPuani, tur === "video" ? 20 : 0);
+    assert.equal(katki.puan, katki.tamamlamaPuani + katki.dogruCevapPuani - katki.kayipPuani);
+  }
 });

@@ -2,10 +2,13 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Check, CheckCircle2, Clock3, Copy, Gift, Store, XCircle } from "lucide-react";
 import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
 import { useAuth } from "@/app/providers/AuthProvider";
+import { cekTakipOnbellegi, type CekTalebi, type CekTakipVerisi } from "@/lib/eclub/store/cekTakipOnbellek";
+import { vitrinOnbellegi } from "@/lib/eclub/store/vitrinOnbellek";
+import EclubFirmaCekTakibiSkeleton from "@/components/eclub/EclubFirmaCekTakibiSkeleton";
 import EclubHediyeCekiBilgiPaneli from "@/components/eclub/EclubHediyeCekiBilgiPaneli";
 import { useEclubFirmaSecimi } from "@/components/eclub/EclubFirmaSecimi";
 import { eclubUrunIcerigi } from "@/lib/eclub/firmaGezinme";
@@ -22,37 +25,22 @@ import {
   CEK_KODU_GORUNUR_DURUMLARI,
   CEK_TALEP_DURUM_META,
   CEK_TALEP_ISLEMDE_DURUMLARI,
-  type CekTalepDurumu,
 } from "@/lib/eclub/store/eclubStoreTipler";
 
-interface CekTalebi {
-  gorunum_testi_mi?: boolean;
-  firma_id: string;
-  talep_id: string;
-  firma_adi: string;
-  urun_id: string | null;
-  urun_adi: string;
-  talep_eden_kisi_id: string;
-  toplanan_puan: number;
-  talep_edilen_cek_tl: number;
-  siparis_verildi_mi: boolean;
-  siparis_adet: number;
-  siparis_mal_fazlasi: number;
-  durum: CekTalepDurumu;
-  cek_kodu: string | null;
-  created_at: string;
-}
 
 export default function EclubCekTaleplerimPage() {
   const router = useRouter();
   const secim = useEclubFirmaSecimi();
-  const firmaId = useParams<{ firma_id?: string }>().firma_id ?? null;
+  const firmaId = secim.firmaId ?? null;
   const searchParams = useSearchParams();
   const istekSirasi = useRef(0);
   const [firma, setFirma] = useState<EclubGezinmeFirmasi | null>(null);
   const [yuklenenKapsam, setYuklenenKapsam] = useState<string | null | undefined>(undefined);
   const { kullanici, yukleniyor: authYukleniyor } = useAuth();
   const { mesajlar, hata, basari } = useHataMesaji();
+  const [yuklenenOnbellek, setYuklenenOnbellek] = useState<string | null>(null);
+  const [dogrulaniyor, setDogrulaniyor] = useState(false);
+  const onbellekAnahtari = secim.gomulu && kullanici?.kimlik_turu === "eclub_kisi" ? `${kullanici.id}:${firmaId ?? "genel"}` : null;
   const eclubKisi = !!kullanici && kullanici.kimlik_turu === "eclub_kisi";
   const [talepler, setTalepler] = useState<CekTalebi[]>([]);
   const gorunenTalepler = useMemo(() => secim.gomulu ? eclubUrunIcerigi(talepler, secim.urunId) : talepler, [talepler, secim.gomulu, secim.urunId]);
@@ -61,47 +49,60 @@ export default function EclubCekTaleplerimPage() {
   const [kopyalandiKod, setKopyalandiKod] = useState<string | null>(null);
 
   const kodKopyala = async (kod: string) => {
+    if (dogrulaniyor) return;
     await navigator.clipboard.writeText(kod);
     setKopyalandiKod(kod);
     setTimeout(() => setKopyalandiKod(null), 2000);
   };
 
-  const talepleriCek = useCallback(async () => {
+  const talepleriCek = useCallback(async (onbellekten = false) => {
     const istek = ++istekSirasi.current;
     setLoading(true);
+    setDogrulaniyor(true);
     try {
-      const res = await fetch(`/eclub/api/cek-talepleri${firmaId ? `?firma_id=${encodeURIComponent(firmaId)}` : ""}`);
-      const data = await res.json();
+      const kayit = onbellekten && onbellekAnahtari ? cekTakipOnbellegi.oku(onbellekAnahtari, 300_000) : null;
+      if (kayit) {
+        setFirma(kayit.firma ?? null); setTalepler(kayit.talepler ?? []);
+        setYuklenenKapsam(firmaId); setYuklenenOnbellek(onbellekAnahtari); setLoading(false);
+      }
+      const yukle = async (): Promise<CekTakipVerisi> => {
+        const res = await fetch(`/eclub/api/cek-talepleri${firmaId ? `?firma_id=${encodeURIComponent(firmaId)}` : ""}`, { cache: "no-store" });
+        const data = await res.json();
+        if (!res.ok) throw Object.assign(new Error(data.hata ?? "Çek talepleri yüklenemedi."), { api: true, adim: data.adim, detay: data.detay });
+        return data;
+      };
+      const data = onbellekAnahtari ? await cekTakipOnbellegi.iste(onbellekAnahtari, yukle, !onbellekten) : await yukle();
       if (istek !== istekSirasi.current) return;
-      if (!res.ok) { setTalepler([]); setFirma(null); hata(data.hata ?? "Çek talepleri yüklenemedi.", data.adim, data.detay); return; }
       setFirma(data.firma ?? null);
       setTalepler(data.talepler ?? []);
     } catch (err) {
       if (istek !== istekSirasi.current) return;
       setTalepler([]); setFirma(null);
-      hata("Çek talepleri yüklenirken hata oluştu.", "talepleriCek", err instanceof Error ? err.message : undefined);
+      const apiHatasi = err as { api?: boolean; adim?: string; detay?: string };
+      if (apiHatasi?.api && err instanceof Error) hata(err.message, apiHatasi.adim, apiHatasi.detay);
+      else hata("Çek talepleri yüklenirken hata oluştu.", "talepleriCek", err instanceof Error ? err.message : undefined);
     } finally {
-      if (istek === istekSirasi.current) { setYuklenenKapsam(firmaId); setLoading(false); }
+      if (istek === istekSirasi.current) { setYuklenenKapsam(firmaId); setYuklenenOnbellek(onbellekAnahtari); setLoading(false); setDogrulaniyor(false); }
     }
-  }, [hata, firmaId]);
+  }, [hata, firmaId, onbellekAnahtari]);
 
   useEffect(() => {
     if (authYukleniyor) return;
     if (!kullanici) { router.replace("/login"); return; }
     if (!eclubKisi) { router.replace("/ana-sayfa"); return; }
-    void talepleriCek();
+    void talepleriCek(true);
     return () => { istekSirasi.current += 1; };
   }, [kullanici, authYukleniyor, eclubKisi, router, talepleriCek]);
 
   useEffect(() => {
-    if (authYukleniyor || !eclubKisi || loading || yuklenenKapsam !== firmaId || (firmaId && !firma)) return;
+    if (authYukleniyor || !eclubKisi || dogrulaniyor || loading || yuklenenKapsam !== firmaId || yuklenenOnbellek !== onbellekAnahtari || (firmaId && !firma)) return;
     const hedef = talepler.find((talep) => talep.talep_id === searchParams.get("talep_id"));
     if (!firmaId && hedef) {
-      router.replace(`${eclubFirmaYolu(hedef.firma_id, "cek-talepleri")}?talep_id=${encodeURIComponent(hedef.talep_id)}`);
+      router.replace(`${eclubFirmaYolu(hedef.firma_adi, "cek-talepleri")}?talep_id=${encodeURIComponent(hedef.talep_id)}`);
       return;
     }
     if (secim.gomulu && hedef?.urun_id && hedef.urun_id !== secim.urunId) {
-      router.replace(`${eclubFirmaYolu(hedef.firma_id, "cek-talepleri")}?urun_id=${encodeURIComponent(hedef.urun_id)}&talep_id=${encodeURIComponent(hedef.talep_id)}`, { scroll: false });
+      router.replace(`${eclubFirmaYolu(hedef.firma_adi, "cek-talepleri")}?urun_id=${encodeURIComponent(hedef.urun_id)}&talep_id=${encodeURIComponent(hedef.talep_id)}`, { scroll: false });
       return;
     }
     const okunacak = secim.gomulu ? gorunenTalepler.map((talep) => talep.talep_id) : [null];
@@ -112,7 +113,7 @@ export default function EclubCekTaleplerimPage() {
     }))).then((yanitlar) => {
       if (yanitlar.some((yanit) => yanit.ok)) bildirimRozetleriniYenile();
     }).catch(() => {});
-  }, [authYukleniyor, eclubKisi, firmaId, loading, yuklenenKapsam, firma, talepler, gorunenTalepler, secim.gomulu, secim.urunId, searchParams, router]);
+  }, [authYukleniyor, eclubKisi, firmaId, dogrulaniyor, loading, yuklenenKapsam, yuklenenOnbellek, onbellekAnahtari, firma, talepler, gorunenTalepler, secim.gomulu, secim.urunId, searchParams, router]);
 
   const ozet = useMemo(() => ({
     toplam: talepler.length,
@@ -122,6 +123,7 @@ export default function EclubCekTaleplerimPage() {
   }), [talepler]);
 
   const talepIptal = async (talepId: string) => {
+    if (dogrulaniyor) return;
     setIslemId(talepId);
     try {
       const res = await fetch("/eclub/api/cek-talepleri", {
@@ -132,7 +134,8 @@ export default function EclubCekTaleplerimPage() {
       const data = await res.json();
       if (!res.ok) { hata(data.hata ?? "Talep iptal edilemedi.", data.adim, data.detay); return; }
       basari(data.mesaj ?? "Çek talebi iptal edildi.");
-      await talepleriCek();
+      if (onbellekAnahtari) { cekTakipOnbellegi.sil(onbellekAnahtari); vitrinOnbellegi.sil(onbellekAnahtari); }
+      await Promise.all([talepleriCek(), secim.panel?.veriCek(true)]);
     } catch (err) {
       hata("İptal işlemi sırasında hata oluştu.", "talepIptal", err instanceof Error ? err.message : undefined);
     } finally {
@@ -140,7 +143,7 @@ export default function EclubCekTaleplerimPage() {
     }
   };
 
-  if (authYukleniyor || !kullanici || loading || yuklenenKapsam !== firmaId) return <EclubKisiYukleniyor />;
+  if (authYukleniyor || !kullanici || loading || yuklenenKapsam !== firmaId || yuklenenOnbellek !== onbellekAnahtari) return secim.gomulu ? <EclubFirmaCekTakibiSkeleton /> : <EclubKisiYukleniyor />;
 
   return (
     <EclubKisiSayfa>
@@ -151,7 +154,7 @@ export default function EclubCekTaleplerimPage() {
         ustEtiket={firma?.firma_adi ?? ""}
         baslik="Çek Talepleri"
         aciklama="Hediye çeki taleplerinizi, onay durumlarını ve teslim edilen dijital çek kodlarını takip edin."
-        aksiyon={<Link href={firmaId ? eclubFirmaYolu(firmaId, "hediye-cekleri") : "/eclub/store"} className="inline-flex items-center gap-2 rounded-xl border border-[#cfe3f4] bg-white px-4 py-2.5 text-xs font-extrabold text-[#237ac8] shadow-sm hover:bg-[#f4f9fd]"><Store size={15} /> Hediye Çeki Ekranına Dön</Link>}
+        aksiyon={<Link href={firmaId ? eclubFirmaYolu(firma?.firma_adi ?? firmaId, "hediye-cekleri") : "/eclub/store"} className="inline-flex items-center gap-2 rounded-xl border border-[#cfe3f4] bg-white px-4 py-2.5 text-xs font-extrabold text-[#237ac8] shadow-sm hover:bg-[#f4f9fd]"><Store size={15} /> Hediye Çeki Ekranına Dön</Link>}
       />
 
       <section className="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -193,7 +196,7 @@ export default function EclubCekTaleplerimPage() {
                         <span className="text-[11px] font-extrabold text-emerald-800">Migros Hediye Çeki Kodunuz</span>
                         <div className="mt-1.5 flex items-center justify-between gap-2">
                           <span className="font-mono text-base font-black tracking-wider text-emerald-950">{talep.cek_kodu}</span>
-                          <button type="button" onClick={() => void kodKopyala(talep.cek_kodu!)} className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-extrabold text-white hover:bg-emerald-700">
+                          <button type="button" onClick={() => void kodKopyala(talep.cek_kodu!)} disabled={dogrulaniyor} className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-extrabold text-white hover:bg-emerald-700">
                             {kopyalandiKod === talep.cek_kodu ? <Check size={13} /> : <Copy size={13} />}
                             {kopyalandiKod === talep.cek_kodu ? "Kopyalandı" : "Kopyala"}
                           </button>
@@ -202,7 +205,7 @@ export default function EclubCekTaleplerimPage() {
                     )}
                   </div>
                   {talep.durum === "beklemede" && (
-                    <button type="button" onClick={() => void talepIptal(talep.talep_id)} disabled={islemSuruyor || talep.gorunum_testi_mi} className="rounded-xl border border-[#f1cccc] bg-white px-4 py-2 text-xs font-extrabold text-[#bc4b4b] hover:bg-[#fff7f7] disabled:cursor-not-allowed disabled:opacity-60">{islemSuruyor ? "İşleniyor..." : "Talebi İptal Et"}</button>
+                    <button type="button" onClick={() => void talepIptal(talep.talep_id)} disabled={dogrulaniyor || islemSuruyor || talep.gorunum_testi_mi} className="rounded-xl border border-[#f1cccc] bg-white px-4 py-2 text-xs font-extrabold text-[#bc4b4b] hover:bg-[#fff7f7] disabled:cursor-not-allowed disabled:opacity-60">{islemSuruyor ? "İşleniyor..." : "Talebi İptal Et"}</button>
                   )}
                 </div>
               </article>

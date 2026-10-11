@@ -16,7 +16,7 @@ function api({ authenticated = true, allowed = true, product = true, count = 1, 
     eclub_kisi_eczane: [{ id: "b1", kisi_id: "k1", eczane_id: "e1", aktif_mi: true, baslangic_tarihi: d.baslangic, bitis_tarihi: null, created_at: d.baslangic }],
     eclub_kisiler: [{ kisi_id: "k1", ad: "Adil", soyad: "Güçlü" }],
     eclub_izleme_kayitlari: Array.from({ length: count }, (_,i) => ({ izleme_id: `i${i}`, kisi_id: "k1", yayin_id: "y1", arac_turu: "video", tamamlandi_mi: true, izleme_bitis: d.haftalar[0].baslangic })),
-    eclub_kazanilan_puanlar: Array.from({ length: count }, (_,i) => ({ kazanilan_puan_id: `p${i}`, izleme_id: `i${i}`, kisi_id: "k1", yayin_id: "y1", eczane_id: "e1", puan: 10, created_at: d.haftalar[0].baslangic })),
+    eclub_kazanilan_puanlar: Array.from({ length: count }, (_,i) => ({ kazanilan_puan_id: `p${i}`, izleme_id: `i${i}`, kisi_id: "k1", yayin_id: "y1", eczane_id: "e1", puan_turu: "izleme", puan: 10, created_at: d.haftalar[0].baslangic })),
     eclub_ileri_sarma_kayitlari: [],
   };
   // Başka eczanenin yüksek puanı, yetkili eczanenin toplamına katılmamalı.
@@ -26,7 +26,10 @@ function api({ authenticated = true, allowed = true, product = true, count = 1, 
     reads++;
     let rows = [...(tables[name] ?? [])];
     const builder = {
-      select() { return builder; },
+      select(columns: string) {
+        if (name === "eclub_kazanilan_puanlar" && columns.includes("eczane_id")) assert.ok(columns.split(", ").includes("puan_turu"));
+        return builder;
+      },
       eq(k: string, v: unknown) { rows = rows.filter(r => r[k] === v); return builder; },
       in(k: string, values: unknown[]) { rows = rows.filter(r => values.includes(r[k])); return builder; },
       gte(k: string, v: string) { rows = rows.filter(r => String(r[k]) >= v); return builder; },

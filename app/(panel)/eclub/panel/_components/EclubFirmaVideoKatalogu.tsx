@@ -7,6 +7,7 @@ import { YayinKarti } from "@/components/yayin/YayinKarti";
 import MobilYayinAkisi from "@/components/yayin/MobilYayinAkisi";
 
 interface Props {
+  ilkKapakOncelikli?: boolean;
   oneriler: PanelOneri[];
   seciliFirmaId: string | null;
   seciliFirmaAdi: string | null;
@@ -36,6 +37,7 @@ export function EclubVideoKarti({
   onFavori,
   etkilesimAktif,
   mobilMi = false,
+  kapakOncelikli = false,
 }: {
   oneri: PanelOneri;
   onSec: () => void;
@@ -43,6 +45,7 @@ export function EclubVideoKarti({
   onFavori: () => void;
   etkilesimAktif: boolean;
   mobilMi?: boolean;
+  kapakOncelikli?: boolean;
 }) {
   const durumMetni = oneri.izlendi_mi
     ? "Tamamlandı"
@@ -52,6 +55,7 @@ export function EclubVideoKarti({
 
   const kartJSX = (
     <YayinKarti
+      kapakOncelikli={kapakOncelikli}
       yayin={{
         ...oneri,
         yayin_tarihi: oneri.created_at || oneri.oneri_baslangic,
@@ -91,6 +95,7 @@ export function VideoRafi({
   onFavori,
   etkilesimAktif,
   sifirlamaAnahtari,
+  ilkKapakOncelikli = false,
 }: {
   baslik: string;
   videolar: PanelOneri[];
@@ -99,6 +104,7 @@ export function VideoRafi({
   onFavori: (yayinId: string) => void;
   etkilesimAktif: boolean;
   sifirlamaAnahtari?: string | number;
+  ilkKapakOncelikli?: boolean;
 }) {
   const raf = useRef<HTMLDivElement>(null);
   const kaydir = (yon: number) => raf.current?.scrollBy({ left: yon * raf.current.clientWidth * 0.85, behavior: "smooth" });
@@ -114,10 +120,11 @@ export function VideoRafi({
         <svg className="h-7 w-7 text-gray-800 drop-shadow-sm" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
       </button>
       <div ref={raf} className="flex snap-x gap-2.5 overflow-x-auto px-1 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {videolar.map((oneri) => (
+        {videolar.map((oneri, index) => (
           <EclubVideoKarti
             key={oneri.oneri_id}
             oneri={oneri}
+            kapakOncelikli={ilkKapakOncelikli && index === 0}
             onSec={() => onVideoSec(oneri)}
             onBegeni={() => onBegeni(oneri.yayin_id)}
             onFavori={() => onFavori(oneri.yayin_id)}
@@ -140,9 +147,10 @@ export function VideoRafi({
     <MobilYayinAkisi<PanelOneri>
       kayitlar={videolar}
       kayitAnahtari={(oneri) => oneri.oneri_id}
-      renderKart={(oneri) => (
+      renderKart={(oneri, index) => (
         <EclubVideoKarti
           oneri={oneri}
+          kapakOncelikli={ilkKapakOncelikli && index === 0}
           onSec={() => onVideoSec(oneri)}
           onBegeni={() => onBegeni(oneri.yayin_id)}
           onFavori={() => onFavori(oneri.yayin_id)}
@@ -163,7 +171,7 @@ export function VideoRafi({
   );
 }
 
-export default function EclubFirmaVideoKatalogu({ oneriler, seciliFirmaId, seciliFirmaAdi, seciliUrunAdi, onVideoSec, onBegeni, onFavori }: Props) {
+export default function EclubFirmaVideoKatalogu({ oneriler, seciliFirmaId, seciliFirmaAdi, seciliUrunAdi, onVideoSec, onBegeni, onFavori, ilkKapakOncelikli = false }: Props) {
   const firmaVideolari = useMemo(
     () => seciliFirmaId ? oneriler.filter((oneri) => oneri.firma_id === seciliFirmaId) : oneriler,
     [oneriler, seciliFirmaId],
@@ -182,6 +190,7 @@ export default function EclubFirmaVideoKatalogu({ oneriler, seciliFirmaId, secil
   return (
     <div className="flex flex-col gap-6">
       <VideoRafi
+        ilkKapakOncelikli={ilkKapakOncelikli}
         baslik={seciliUrunAdi ? `${seciliUrunAdi} Yayınları` : firmaBasligi ? `${firmaBasligi} Tüm İçerikleri` : "Tüm Firmaların İçerikleri"}
         videolar={firmaVideolari}
         onVideoSec={onVideoSec}
