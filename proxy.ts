@@ -33,7 +33,7 @@ export async function proxy(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser();
   const { pathname } = request.nextUrl;
-  const eclubFirmaRotasi = pathname.match(/^\/eclub\/firma\/([^/]+)\/(yayinlar|hediye-cekleri|cek-talepleri)(?:\/|$)/);
+  const eclubFirmaRotasi = pathname.match(/^\/eclub\/firma\/([^/]+)\/(yayinlar|performans|hediye-cekleri|cek-talepleri)(?:\/|$)/);
   if (user?.app_metadata.eclub_davet_bekliyor === true && ![
     "/login", "/sifre-olustur", "/sifre-olustur/api", "/sifre-yenile", "/davet-bekliyor",
   ].includes(pathname)) {
@@ -273,7 +273,7 @@ export async function proxy(request: NextRequest) {
     || pathname.startsWith("/eclub/cek-taleplerim")
     || pathname.startsWith("/eclub/api/cek-talepleri")
     || pathname.startsWith("/eclub/hediye-takip")
-    || (eclubFirmaRotasi !== null && eclubFirmaRotasi[2] !== "yayinlar")
+    || (eclubFirmaRotasi !== null && ["hediye-cekleri", "cek-talepleri"].includes(eclubFirmaRotasi[2]))
   ) {
     const storeApiYolu = pathname.includes("/api/") || pathname.endsWith("/api");
 

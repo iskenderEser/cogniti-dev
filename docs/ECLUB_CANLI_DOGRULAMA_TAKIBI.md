@@ -99,3 +99,17 @@ Bu görünüm çalışması Hediye Takibi uçtan uca testinin yerine geçmez; on
 - İlgili 16 test, TypeScript kontrolü ve değişen geliştirme dosyalarının ESLint kontrolü geçti.
 - Teslimat kod ve veri akışı yeniden incelendi: SQL outbox tek aktif eczacıya e-posta, aynı eczanedeki aktif hesapların tamamına push kaydı oluşturuyor; uygulama bildirimi de aynı eczane kapsamını kullanıyor. Push firma takip rotasına yönleniyor. Gerçek e-posta/push teslimatı bu görünüm çalışmasında denenmedi.
 - Yeni SQL çalıştırılmadı. Hediye Takibi uçtan uca testleri beklemede. Hediye Takibi test verileri silinecek; kullanıcı temizlik talimatına kadar korunuyor.
+
+## Eczanenin yayın tamamlama performansı — 11 Ekim 2026
+
+**Durum:** Firma/ürün sayfasına taşındı; kod ve otomatik testler doğrulandı. Gerçek oturumdaki görsel ve veri karşılaştırması henüz yapılmadı.
+
+- Yeni sıra: Yayınlar → Yayın Tamamlama Performansı → Hediye Çeki Talebi → Hediye Çeki Takibi. Ürün seçimi korunur; E-Club Store kapalıyken yayınlar ve performans açıktır.
+- Dört yayın tipi, ECharts cetveli, hafta seçimi ve eczane üyelerinin tamamlanan yayın/net puan katkıları gerçek kayıtların salt okunur API hesabına bağlandı. Görünüm testi olarak işaretlenmiş izlemeler bu performans hesabına katılmaz.
+- Demodaki 1–8 cetveli korunur; son bölüm iki aylık takvim döneminin kalan günlerini de kapsar. Kazanım/talep dönemleri değiştirilmedi.
+- Türkiye saatindeki dönem ve hafta sınırları, puan/üye/ürün/eczane izolasyonu, mükerrer kayıtlar, 1000 satırdan büyük veri, yetkisiz erişim, hata/yeniden deneme, grafik tıklaması ve yenilemede seçim korunması test edildi. ECharts SVG çizimi 1100 ve 330 px genişlikte doğrulandı. Gerçek tarayıcı oturumu açılmadı.
+- Yeni SQL, sahte sipariş, talep, bildirim veya gerçek veri yazma işlemi yapılmadı. Çek e-posta/push teslimatına müdahale edilmedi; bu belge başındaki canlı teslimat ve Hediye Takibi testlerinin bekleme durumu korunur. Hediye Takibi test verileri silinecek.
+
+### Onaylı HTML tasarımına uyum düzeltmesi — 11 Ekim 2026
+
+Eklenen yayın tipi seçim kontrolü ve performans Yenile butonu kaldırıldı. Nokta tıklaması yayın türünü ve haftayı birlikte seçer; alt kart bu seçimin gerçek üye katkılarını gösterir. Demodaki hafta bağlantıları korunur. Performans sekmesinde ek firma özeti kaldırıldı; demodaki üç stat kartı kullanılır. Statlar, üye satırları, simgeler, boşluklar, renkler, masaüstü/mobil cetvel ölçüleri onaylı HTML kaynağına eşlendi. SVG çizici kullanılır. Onaylı HTML'den alınan bağımsız CSS ve ECharts çizim referansına karşı eşleşme testleri eklendi; dört yayın türünün nokta tıklaması React testinde doğrulandı. Gerçek tarayıcı oturumunda görsel karşılaştırma yapılmadı.

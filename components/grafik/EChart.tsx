@@ -13,23 +13,26 @@
 
 import { useEffect, useRef } from "react";
 import * as echarts from "echarts/core";
-import { BarChart, PieChart, LineChart } from "echarts/charts";
+import { BarChart, PieChart, LineChart, ScatterChart } from "echarts/charts";
 import {
   GridComponent,
+  MarkLineComponent,
   TooltipComponent,
   LegendComponent,
   DatasetComponent,
   GraphicComponent,
 } from "echarts/components";
 import { LabelLayout, UniversalTransition } from "echarts/features";
-import { CanvasRenderer } from "echarts/renderers";
+import { CanvasRenderer, SVGRenderer } from "echarts/renderers";
 import type { EChartsCoreOption } from "echarts/core";
 
 echarts.use([
   BarChart,
   PieChart,
   LineChart,
+  ScatterChart,
   GridComponent,
+  MarkLineComponent,
   TooltipComponent,
   LegendComponent,
   DatasetComponent,
@@ -37,16 +40,19 @@ echarts.use([
   LabelLayout,
   UniversalTransition,
   CanvasRenderer,
+  SVGRenderer,
 ]);
 
 export interface EChartTiklama {
   name?: string;
   dataIndex?: number;
+  seriesId?: string;
   value?: unknown;
 }
 
 interface EChartProps {
   option: EChartsCoreOption;
+  renderer?: "canvas" | "svg";
   height?: number | string;
   className?: string;
   style?: React.CSSProperties;
@@ -54,7 +60,7 @@ interface EChartProps {
   indirAdi?: string; // verilirse sağ üstte PNG indir butonu çizilir (dosya adı)
 }
 
-export default function EChart({ option, height = 320, className, style, onClick, indirAdi }: EChartProps) {
+export default function EChart({ option, height = 320, className, style, onClick, indirAdi, renderer = "canvas" }: EChartProps) {
   const kutuRef = useRef<HTMLDivElement>(null);
   const grafikRef = useRef<echarts.ECharts | null>(null);
   // Handler'ı ref'te tut ki her değişimde grafik yeniden kurulmasın.
@@ -67,7 +73,7 @@ export default function EChart({ option, height = 320, className, style, onClick
   // Kurulum + tıklama + boyut takibi + temizlik (bir kez).
   useEffect(() => {
     if (!kutuRef.current) return;
-    const grafik = echarts.init(kutuRef.current);
+    const grafik = echarts.init(kutuRef.current, null, { renderer });
     grafikRef.current = grafik;
     grafik.on("click", (p) => tiklamaRef.current?.(p as EChartTiklama));
 
@@ -90,7 +96,7 @@ export default function EChart({ option, height = 320, className, style, onClick
       grafik.dispose();
       grafikRef.current = null;
     };
-  }, []);
+  }, [renderer]);
 
   // Option değişince güncelle. replaceMerge: eksen bileşenleri (pie↔bar geçişinde
   // pie'da eksen yok → kaldırılır); series universalTransition ile morph olur.

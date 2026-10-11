@@ -39,13 +39,13 @@ test("yayın ve çek push bağlantıları ilgili firmanın sayfasına gider", ()
 });
 
 
-test("ürün seçimi üç firma yüzeyinde korunur; geçersiz ürün ilk ürüne döner", async () => {
+test("ürün seçimi dört firma yüzeyinde korunur; geçersiz ürün ilk ürüne döner", async () => {
   const { eclubSeciliUrun, eclubUrunYolu, eclubUrunIcerigi } = await import("@/lib/eclub/firmaGezinme");
   const urunler = [{ urun_id: "u1", urun_adi: "Birinci" }, { urun_id: "u2", urun_adi: "İkinci" }];
   assert.equal(eclubSeciliUrun(urunler, "u2")?.urun_id, "u2");
   assert.equal(eclubSeciliUrun(urunler, "yabanci")?.urun_id, "u1");
   assert.equal(eclubSeciliUrun([], "u2"), null);
-  for (const sayfa of ["yayinlar", "hediye-cekleri", "cek-talepleri"] as const) {
+  for (const sayfa of ["yayinlar", "performans", "hediye-cekleri", "cek-talepleri"] as const) {
     assert.equal(eclubUrunYolu("f1", sayfa, "u2"), `/eclub/firma/f1/${sayfa}?urun_id=u2`);
   }
   const kayitlar = [{ urun_id: "u1", puan: 100 }, { urun_id: "u2", puan: 300 }, { urun_id: "u2", puan: 500 }, { urun_id: null, puan: 90 }];

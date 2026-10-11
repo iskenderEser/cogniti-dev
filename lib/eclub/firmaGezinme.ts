@@ -5,7 +5,7 @@ export interface EclubGezinmeFirmasi {
   logo_url?: string | null;
 }
 
-export type EclubFirmaSayfasi = "yayinlar" | "hediye-cekleri" | "cek-talepleri";
+export type EclubFirmaSayfasi = "yayinlar" | "performans" | "hediye-cekleri" | "cek-talepleri";
 
 export function eclubFirmaYolu(firmaId: string, sayfa: EclubFirmaSayfasi): string {
   return `/eclub/firma/${encodeURIComponent(firmaId)}/${sayfa}`;
