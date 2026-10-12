@@ -13,6 +13,7 @@ import type { Yayin, OnizlemeHedefi } from "../_types";
 import type { Soru } from "@/app/(panel)/talepler/_types";
 import type { HesaplananTur } from "@/lib/tclub/tur/kayit";
 import { HedefRolPilleri } from "@/components/pill";
+import { yalnizEclubHedefliMi } from "@/lib/utils/roller";
 import { talepIdGoster } from "@/lib/utils/talepId";
 import { ureticiDurumMesaji, yayinDurumKodu } from "@/lib/utils/durum/mesaj";
 import { yayinThumbnailIstemciCoz } from "@/lib/ogrenmeAraci/thumbnailIstemci";
@@ -39,6 +40,8 @@ interface YayinSatirProps {
 }
 
 const GUN_MS = 24 * 60 * 60 * 1000;
+const eclubBilgiPili = "max-w-full rounded-md border border-[#e1e9f3] bg-[#f5f8fc] px-1.5 py-0.5 text-[10px] font-normal leading-tight text-[#405976] sm:text-[8px]";
+const eclubBaremPili = "max-w-full rounded-md border border-[#e1e9f3] bg-[#f5f8fc] px-1.5 py-0.5 text-[9px] font-normal leading-tight text-[#405976] sm:text-[7px]";
 
 /** Sonraki tura kalan tam gün (yukarı yuvarlanır; geçmişse 0). */
 function kalanGun(sonrakiTurTarihi: string): number {
@@ -61,6 +64,7 @@ export function YayinSatir({
 
   if (kartGorunumu) {
     const tur = y.arac_turu ?? "video";
+    const eclubHedefli = yalnizEclubHedefliMi(y.hedef_roller);
     const thumbnail = yayinThumbnailIstemciCoz(y);
     const akordiyonAcik = acikAkordiyon === y.yayin_id;
 
@@ -171,6 +175,32 @@ export function YayinSatir({
             <div className="rounded-lg border border-[#cfe2fa] bg-[#f2f8ff] px-2.5 py-1.5 text-[10px] leading-4 text-[#3974b5]">
               <strong>{tekrarBilgi!.tekrar_periyot_gun} günlük tur</strong>
               <span className="ml-1">· Yeni tur {kalanGun(tekrarBilgi!.sonraki_tur_tarihi!)} gün sonra</span>
+            </div>
+          )}
+
+          {eclubHedefli && (
+            <div className="border-t border-[#e8eef5] pt-2" aria-label="Yayın bilgileri ve koşulları">
+              <div className="flex flex-wrap items-start justify-between gap-1">
+                {y.cek_karsiligi_var_mi === false ? (
+                  <span className={eclubBilgiPili}>Çeksiz Puan · Yalnız lig</span>
+                ) : y.cek_karsiligi_var_mi === true ? (
+                  <>
+                    <span className={eclubBilgiPili}>Çekli Puan</span>
+                    {y.satis_sarti_tipi === "satis_sartli" ? <span className={eclubBilgiPili}>Sipariş zorunlu</span> : y.satis_sarti_tipi === "serbest_siparis" ? <span className={eclubBilgiPili}>Siparişle çek tutarı artar</span> : y.satis_sarti_tipi === "siparissiz_cek" ? <span className={eclubBilgiPili}>Sipariş yok</span> : <span className={eclubBilgiPili}>Sipariş koşulu belirtilmemiş</span>}
+                    {y.satis_sarti_tipi === "serbest_siparis" && y.gizli_sart_katlama_orani != null && <span className={eclubBilgiPili}>Siparişle çek tutarı +%{y.gizli_sart_katlama_orani}</span>}
+                  </>
+                ) : <span className={eclubBilgiPili}>Puan türü belirtilmemiş</span>}
+              </div>
+              {y.cek_karsiligi_var_mi === true && Array.isArray(y.barem_tablosu) && y.barem_tablosu.length > 0 && (
+                <div className="mt-1 grid grid-cols-3 gap-1">
+                  {y.barem_tablosu.map((barem, index) => (
+                    <span key={index} className={`${eclubBaremPili} flex min-w-0 flex-col items-center text-center`} title={`${barem.min_puan.toLocaleString("tr-TR")}–${barem.max_puan.toLocaleString("tr-TR")} puan${y.satis_sarti_tipi === "siparissiz_cek" ? "" : `: ${barem.adet}+${barem.mal_fazlasi}`}`}>
+                      <span>{barem.min_puan.toLocaleString("tr-TR")}–{barem.max_puan.toLocaleString("tr-TR")}p</span>
+                      {y.satis_sarti_tipi !== "siparissiz_cek" && <span>{barem.adet}+{barem.mal_fazlasi}</span>}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>

@@ -72,6 +72,10 @@ export interface Yayin {
   hedef_roller: HedefRoller;
   arac_turu?: "video" | "podcast" | "gorsel" | "flip_pdf" | string;
   video_isleniyor?: boolean | null;
+  cek_karsiligi_var_mi?: boolean | null;
+  satis_sarti_tipi?: SatisSartiTipi | null;
+  gizli_sart_katlama_orani?: number | null;
+  barem_tablosu?: BaremSatiri[] | null;
 }
 
 // Ortak önizleme hedefi (4 öğrenme aracı da desteklenir)

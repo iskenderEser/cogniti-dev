@@ -14,6 +14,7 @@ import { kapakYayinKapisiDogrula } from "@/lib/ogrenmeAraci/sozlesme";
 import { baremTablosuDogrula } from "@/lib/eclub/store/eclubStoreTipler";
 
 const YAYIN_LISTE_ALANLARI = "yayin_id, arac_id, soru_seti_durum_id, durum, yayin_tarihi, durdurma_tarihi, urun_adi, teknik_adi, video_url, thumbnail_url, video_puani, soru_puani, sorular, hedef_roller, talep_no, firma_adi, egitim_turu, arac_turu, arac_kapak_yolu, arac_dosya_yolu, arac_metadata, video_suresi_saniye, arac_metadata_dogrulandi";
+const ECLUB_KOSUL_ALANLARI = "yayin_id, cek_karsiligi_var_mi, satis_sarti_tipi, gizli_sart_katlama_orani, barem_tablosu";
 
 export async function GET() {
   try {
@@ -34,6 +35,19 @@ export async function GET() {
 
     if (error) return hataYaniti("Yayınlar yüklenemedi.", "v_yayin_detay SELECT — üretici filtresi", error);
 
+    const eclubYayinIdleri = (yayinlar ?? [])
+      .filter((y) => yalnizEclubHedefliMi(Array.isArray(y.hedef_roller) ? y.hedef_roller : []))
+      .map((y) => y.yayin_id);
+    const eclubKosullari = new Map<string, Record<string, unknown>>();
+    if (eclubYayinIdleri.length > 0) {
+      const { data: kosullar, error: kosulHatasi } = await adminSupabase
+        .from("yayin_yonetimi")
+        .select(ECLUB_KOSUL_ALANLARI)
+        .in("yayin_id", eclubYayinIdleri);
+      if (kosulHatasi) return hataYaniti("E-Club yayın koşulları yüklenemedi.", "yayin_yonetimi SELECT — üretici yayın koşulları", kosulHatasi);
+      for (const kosul of kosullar ?? []) eclubKosullari.set(kosul.yayin_id, kosul);
+    }
+
     const islenmisYayinlar = (yayinlar ?? []).map((y: Record<string, unknown>) => {
       const kapakli = yayinThumbnailCevabi(y as unknown as YayinKapakGirdisi & Record<string, unknown>);
       const aracTuru = (y.arac_turu as string | undefined) ?? "video";
@@ -42,6 +56,7 @@ export async function GET() {
       const videoIsleniyor = aracTuru === "video" && (!metadataDogrulandi && videoSuresi <= 0);
       return {
         ...kapakli,
+        ...(eclubKosullari.get(String(y.yayin_id)) ?? {}),
         video_isleniyor: videoIsleniyor,
       };
     });
