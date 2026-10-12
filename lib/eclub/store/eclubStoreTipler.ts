@@ -1,4 +1,5 @@
 // Satış şartlı / serbest siparişli puan ve hediye çeki tipleri.
+import type { OgrenmeAraciTuru } from "@/lib/ogrenmeAraci/tipler";
 
 export type SatisSartiTipi = "satis_sartli" | "serbest_siparis" | "siparissiz_cek";
 
@@ -86,6 +87,7 @@ export function cekTalepDurumuMu(deger: unknown): deger is CekTalepDurumu {
 
 export interface EclubEczaneStoreOzetItem {
   talep_no?: number | null;
+  arac_turu?: OgrenmeAraciTuru | null;
   gorunum_testi_mi?: boolean;
   gorunum_testi_etiketi?: string;
   gorunum_testi_kalan_puan?: number;

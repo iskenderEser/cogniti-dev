@@ -23,6 +23,7 @@ import {
 } from "@/components/eclub/EclubKisiSayfa";
 import EclubFirmaCekTalebiSkeleton from "@/components/eclub/EclubFirmaCekTalebiSkeleton";
 import EclubHediyeCekiBilgiPaneli from "@/components/eclub/EclubHediyeCekiBilgiPaneli";
+import EclubCekTalepVitrinKarti from "@/components/eclub/EclubCekTalepVitrinKarti";
 import { useEclubStore } from "./_hooks/useEclubStore";
 import {
   CEK_TALEP_DURUM_META,
@@ -188,7 +189,7 @@ export default function EclubStorePage() {
           aciklama="Eczane çalışanlarınız eğitimleri izleyip soruları yanıtladıkça firmanızın ürünleri ve hak ettiğiniz hediye çekleri burada listelenecektir." />
       )}
         <div className="grid gap-4">
-          {urunGruplari.map((grup) => (
+          {urunGruplari.map((grup, grupIndex) => (
             <section key={grup.anahtar} className="overflow-hidden rounded-2xl border border-[#dfe7f1] bg-white shadow-sm">
               <header className="flex flex-wrap items-center justify-between gap-2 border-b border-[#dfe7f1] bg-[#f5f8fb] px-5 py-4">
                 <div>
@@ -198,7 +199,7 @@ export default function EclubStorePage() {
                 <span className="text-xs font-semibold text-slate-500">{grup.yayinlar.length} yayın</span>
               </header>
               <div className="grid gap-3 p-3 sm:p-4">
-          {grup.yayinlar.map((item) => {
+          {grup.yayinlar.map((item, yayinIndex) => {
             const toplananPuan = item.havuz_toplam_puan ?? item.toplanan_puan ?? 0;
             const bazCek = item.baz_cek_tutari_tl ?? item.hak_edilen_cek_tl ?? 0;
             const katlanmisCek = item.katlanmis_cek_tutari_tl ?? item.katlanmis_cek_tl ?? 0;
@@ -214,8 +215,35 @@ export default function EclubStorePage() {
             const katlamaOrani = item.gizli_sart_katlama_orani ?? 20;
             const minimumPuan = Math.min(...baremler.map((barem) => barem.min_puan));
             const yeterliPuanVarMi = Number.isFinite(minimumPuan) && toplananPuan >= minimumPuan;
+            const ilkKartMi = grupIndex === 0 && yayinIndex === 0;
             const talepPasif = !cekTalebiOlusturabilir || !yeterliPuanVarMi || islemLoading
               || (Boolean(item.gorunum_testi_mi) && !etkilesimliTest) || (!storeAcik && !etkilesimliTest);
+
+            if (ilkKartMi) {
+              return (
+                <EclubCekTalepVitrinKarti
+                  key={`${item.eczane_id}:${item.yayin_id}`}
+                  item={item}
+                  toplananPuan={toplananPuan}
+                  bazCek={bazCek}
+                  katlanmisCek={katlanmisCek}
+                  uygunAdet={uygunAdet}
+                  uygunMf={uygunMf}
+                  minimumPuan={minimumPuan}
+                  yeterliPuanVarMi={yeterliPuanVarMi}
+                  talepPasif={talepPasif}
+                  islemde={islemId === item.yayin_id}
+                  islemLoading={islemLoading}
+                  siparissiz={siparissiz}
+                  isSerbest={isSerbest}
+                  katlamaOrani={katlamaOrani}
+                  etkilesimliTest={etkilesimliTest}
+                  testSiparisSecimi={testSiparisSecimi}
+                  cekTalebiOlusturabilir={cekTalebiOlusturabilir}
+                  onTalepVer={(siparisVerilsinMi) => handleTalepVer(item.yayin_id, siparisVerilsinMi, item.urun_adi)}
+                />
+              );
+            }
 
             return (
               <article

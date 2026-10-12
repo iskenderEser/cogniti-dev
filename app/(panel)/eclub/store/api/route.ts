@@ -54,22 +54,37 @@ export async function GET(request: Request) {
 
     const kapsamliYayinlar = (ozetData ?? []).filter((item: { firma_id: string }) => firmaIdler.has(item.firma_id));
     const yayinIdler = kapsamliYayinlar.map((item: { yayin_id: string }) => item.yayin_id);
-    const { data: kunyeler, error: kunyeError } = yayinIdler.length
-      ? await adminSupabase.from("v_yayin_kunye").select("yayin_id, talep_no").in("yayin_id", yayinIdler)
-      : { data: [], error: null };
+    const uxTestSatirlari = (uxTest.data ?? []) as EclubUxTestSatiri[];
+    const testYayinNumaralari = [...new Set(uxTestSatirlari.map((satir) => satir.veri.talep_no)
+      .filter((no): no is number => typeof no === "number" && Number.isSafeInteger(no)))];
+    const kunyeSorgusu = adminSupabase.from("v_yayin_kunye")
+      .select("yayin_id, firma_id, talep_no, arac_turu").in("firma_id", [...firmaIdler]);
+    const { data: kunyeler, error: kunyeError } = testYayinNumaralari.length
+      ? await kunyeSorgusu.or([
+        ...(yayinIdler.length ? [`yayin_id.in.(${yayinIdler.join(",")})`] : []),
+        `talep_no.in.(${testYayinNumaralari.join(",")})`,
+      ].join(","))
+      : yayinIdler.length
+        ? await kunyeSorgusu.in("yayin_id", yayinIdler)
+        : { data: [], error: null };
     if (kunyeError) return hataYaniti("Yayın bilgileri alınamadı.", "Hediye çeki yayın künyesi", kunyeError);
-    const yayinNumaralari = new Map((kunyeler ?? []).map((yayin) => [yayin.yayin_id, yayin.talep_no]));
+    const yayinBilgileri = new Map((kunyeler ?? []).map((yayin) => [yayin.yayin_id, yayin]));
+    const yayinTurleri = new Map((kunyeler ?? []).map((yayin) => [`${yayin.firma_id}:${yayin.talep_no}`, yayin.arac_turu]));
 
     return NextResponse.json({
       firma: firmaId ? firmaKapsami[0] : null,
       takvim: eclubStoreTakvimDurumu(),
       cek_yayinlar: eclubUxKartlariniBirlestir(kapsamliYayinlar.map((item: { eczane_id: string; yayin_id: string }) => ({
         ...item,
-        talep_no: yayinNumaralari.get(item.yayin_id) ?? null,
+        talep_no: yayinBilgileri.get(item.yayin_id)?.talep_no ?? null,
+        arac_turu: yayinBilgileri.get(item.yayin_id)?.arac_turu ?? null,
         gorunum_testi_mi: testKapsamlari.has(`${item.eczane_id}:${item.yayin_id}`),
-      })), (uxTest.data ?? []) as EclubUxTestSatiri[], {
+      })), uxTestSatirlari, {
         kisiId: erisim.kisi.kisi_id, eczaneIdler: erisim.eczane_idler, firmaIdler: [...firmaIdler],
-      }),
+      }).map((item) => ({
+        ...item,
+        arac_turu: item.arac_turu ?? yayinTurleri.get(`${item.firma_id}:${item.talep_no}`) ?? null,
+      })),
     }, { status: 200 });
   } catch (err) {
     return sunucuHatasi(err, "GET /eclub/store/api");
