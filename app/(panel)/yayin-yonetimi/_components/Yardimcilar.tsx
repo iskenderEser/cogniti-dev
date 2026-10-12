@@ -10,6 +10,7 @@
 import { useState } from "react";
 import { yayinThumbnailIstemciCoz } from "@/lib/ogrenmeAraci/thumbnailIstemci";
 import { AracVarsayilanKapak } from "@/components/ogrenme-araci/AracVarsayilanKapak";
+import { dikeyMi, enBoyOrani } from "@/lib/video/enBoyOrani";
 
 export interface OgrenmeAraciThumbProps {
   video_url?: string | null;
@@ -19,6 +20,7 @@ export interface OgrenmeAraciThumbProps {
   arac_turu?: string | null;
   urun_adi?: string | null;
   arac_id?: string | null;
+  genis?: boolean;
 }
 
 export const OgrenmeAraciThumb = ({
@@ -29,8 +31,10 @@ export const OgrenmeAraciThumb = ({
   arac_turu = "video",
   urun_adi,
   arac_id,
+  genis = false,
 }: OgrenmeAraciThumbProps) => {
   const [hataliUrl, setHataliUrl] = useState<string | null>(null);
+  const [olculenKapak, setOlculenKapak] = useState<{ url: string; genislik: number; yukseklik: number } | null>(null);
   const tur = arac_turu ?? "video";
   const thumb = yayinThumbnailIstemciCoz({ thumbnail_url, video_url, arac_turu: tur });
 
@@ -55,6 +59,11 @@ export const OgrenmeAraciThumb = ({
   };
 
   const resimGoster = Boolean(thumb && hataliUrl !== thumb);
+  const olculenOran = enBoyOrani(
+    olculenKapak?.url === thumb ? olculenKapak.genislik : null,
+    olculenKapak?.url === thumb ? olculenKapak.yukseklik : null,
+  );
+  const dikeyVideo = genis && tur === "video" && resimGoster && dikeyMi(olculenOran);
 
   return (
     <button
@@ -62,20 +71,28 @@ export const OgrenmeAraciThumb = ({
       onClick={handleTikla}
       disabled={!tiklanabilir}
       aria-label={ariaLabel}
-      className="group relative flex h-[72px] w-32 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-[#dbe5f0] bg-[#e8eef5] p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#56aeff] disabled:cursor-default"
+      className={`group relative flex shrink-0 items-center justify-center overflow-hidden rounded-xl border border-[#dbe5f0] bg-[#e8eef5] p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#56aeff] disabled:cursor-default ${dikeyVideo ? "mx-auto h-auto max-w-full" : genis ? "aspect-[1600/693] w-full lg:aspect-[1360/693]" : "h-[72px] w-32"}`}
+      style={dikeyVideo ? { width: `min(100%, ${Math.round(280 * olculenOran)}px)`, aspectRatio: olculenOran } : undefined}
     >
       {resimGoster ? (
         <img
           src={thumb!}
           alt=""
           onError={() => setHataliUrl(thumb)}
-          className="w-full h-full object-cover"
+          onLoad={(event) => {
+            if (!genis || tur !== "video" || !thumb) return;
+            const { naturalWidth, naturalHeight } = event.currentTarget;
+            if (naturalWidth > 0 && naturalHeight > 0) {
+              setOlculenKapak({ url: thumb, genislik: naturalWidth, yukseklik: naturalHeight });
+            }
+          }}
+          className={`absolute inset-0 h-full w-full ${dikeyVideo ? "object-contain" : "object-cover"}`}
         />
       ) : (
-        <AracVarsayilanKapak aracTuru={tur} urunAdi={urun_adi} kucuk className="w-full h-full" />
+        <AracVarsayilanKapak aracTuru={tur} urunAdi={urun_adi} kucuk={!genis} className="absolute inset-0 h-full w-full" />
       )}
       {tiklanabilir && (
-        <div className="absolute w-7 h-7 rounded-full flex items-center justify-center transition-transform group-hover:scale-110" style={{ background: "rgba(0,0,0,0.55)" }}>
+        <div className={`absolute flex items-center justify-center rounded-full transition-transform group-hover:scale-110 ${genis ? "h-11 w-11" : "h-7 w-7"}`} style={{ background: "rgba(0,0,0,0.55)" }}>
           {tur === "podcast" ? (
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
           ) : tur === "gorsel" ? (

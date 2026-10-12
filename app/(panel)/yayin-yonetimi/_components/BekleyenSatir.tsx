@@ -11,7 +11,7 @@
 import { SadeFormSecimi } from "@/components/kontrol/SadeKontroller";
 
 import type { Soru } from "@/app/(panel)/talepler/_types";
-import { HedefRolPilleri } from "@/components/pill";
+import { DurumPill, HedefRolPilleri, NOTR_RENK, Pill, TeknikPill } from "@/components/pill";
 import { ECLUB_KAZANIM_SECENEKLERI, type BaremSatiri, type EclubKazanimModeli } from "@/lib/eclub/store/eclubStoreTipler";
 import { yalnizEclubHedefliMi } from "@/lib/utils/roller";
 import { talepIdGoster } from "@/lib/utils/talepId";
@@ -91,6 +91,10 @@ export function BekleyenSatir({
   // yerine barkod + Karşılık (puan ↔ TL) alanları girilir (U5, K-E3).
   const eczanem = b.hedef_roller.includes("eczanem");
   const eclub = yalnizEclubHedefliMi(b.hedef_roller);
+  const aracEtiketi = b.arac_turu === "podcast" ? "Podcast"
+    : b.arac_turu === "gorsel" ? "Görsel"
+    : b.arac_turu === "flip_pdf" ? "Literatür"
+    : "Video";
 
   // Soru puanlama metrikleri
   const toplamSoru = b.sorular?.length ?? 0;
@@ -126,10 +130,12 @@ export function BekleyenSatir({
 
   return (
     <article className="mb-3 overflow-hidden rounded-2xl border border-[#dfe7f1] bg-white shadow-[0_8px_22px_rgba(31,55,90,0.045)]">
-      <div className="grid grid-cols-1 lg:grid-cols-[minmax(310px,0.7fr)_minmax(0,1.3fr)]">
-      <div className="grid grid-cols-1 gap-3 p-3.5 sm:grid-cols-[128px_minmax(0,1fr)] lg:items-center lg:p-4">
-        <div className="order-2 sm:order-1">
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(264px,0.595fr)_minmax(0,1.405fr)]">
+      <div className="min-w-0 space-y-4 p-4 lg:flex lg:flex-col lg:justify-center lg:p-5">
+        <div>
+          <p className="mb-2 text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#7189a7]">{aracEtiketi} ön izlemesi</p>
           <VideoThumb
+            genis
             video_url={b.video_url}
             thumbnail_url={b.thumbnail_url}
             arac_turu={b.arac_turu}
@@ -145,19 +151,17 @@ export function BekleyenSatir({
             onAc={onVideoAc}
           />
         </div>
-        <div className="order-1 min-w-0 sm:order-2">
-          <span className="block truncate text-base font-extrabold text-[#213754]">{b.urun_adi}</span>
-          <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-[#617590]">
-            <span className="font-mono font-semibold text-[#8494aa]">{talepIdGoster(b.firma_adi, b.talep_no)}</span>
-            {b.turu_adi && <><span className="text-[#c4cfdb]">•</span><span className="font-bold">{b.turu_adi}</span></>}
-            {b.teknik_adi && b.teknik_adi !== "-" && <><span className="text-[#c4cfdb]">•</span><span>{b.teknik_adi}</span></>}
-          </div>
-          <div className="mt-3 flex flex-wrap items-center gap-1.5">
-            <HedefRolPilleri hedefRoller={b.hedef_roller} />
-            <span className={`rounded-full border px-2 py-0.5 text-[10px] font-extrabold ${silmeHatali ? "border-red-200 bg-red-50 text-red-700" : silmeDevamEdiyor ? "border-gray-200 bg-gray-50 text-gray-600" : "border-[#fed7cc] bg-[#fff7ed] text-[#c2410c]"}`}>
-              {silmeHatali ? "Silme tamamlanamadı" : silmeDevamEdiyor ? "Yayın siliniyor" : "Yayın kararı bekliyor"}
-            </span>
-          </div>
+        <div className="flex flex-wrap items-center gap-1.5">
+          <Pill renk={NOTR_RENK} className="max-w-full" sarabilir>
+            <span className="break-words" title={`Ürün: ${b.urun_adi}`}>{b.urun_adi}</span>
+          </Pill>
+          <Pill renk={NOTR_RENK} className="max-w-full" sarabilir>
+            <span className="break-all font-mono" title="Talep kimliği">{talepIdGoster(b.firma_adi, b.talep_no)}</span>
+          </Pill>
+          {b.turu_adi && <Pill renk={NOTR_RENK}>{b.turu_adi}</Pill>}
+          <TeknikPill teknikAdi={b.teknik_adi} />
+          <HedefRolPilleri hedefRoller={b.hedef_roller} />
+          <DurumPill kod={silmeHatali ? "yayin_silme_hatasi" : silmeDevamEdiyor ? "yayin_siliniyor" : "yayin_bekleniyor"} />
         </div>
       </div>
 
@@ -419,14 +423,14 @@ export function BekleyenSatir({
                 </div>
 
                 {/* Dört kazanım hâli, üretim varyantlarındaki gibi tek seçimle açılır. */}
-                <fieldset className="rounded-xl border border-indigo-100 bg-[#fbfbfe] p-3 shadow-sm">
+                <fieldset className="rounded-xl border border-indigo-100 bg-[#fbfbfe] p-2.5 shadow-sm">
                   <legend className="px-1 text-xs font-bold text-slate-800">E-Club kazanım modeli</legend>
-                  <p className="mb-2 text-[11px] text-slate-500">Yayını açmadan önce bir model seçin.</p>
-                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                  <p className="mb-1.5 text-[11px] text-slate-500">Yayını açmadan önce bir model seçin.</p>
+                  <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
                     {ECLUB_KAZANIM_SECENEKLERI.map((secenek) => (
-                      <label key={secenek.model} className={`flex min-h-16 cursor-pointer items-start gap-2.5 rounded-lg border p-2.5 transition ${aktifModel === secenek.model ? "border-indigo-400 bg-indigo-50 shadow-sm" : "border-gray-200 bg-white hover:border-gray-300"}`}>
+                      <label key={secenek.model} className={`flex min-h-12 cursor-pointer items-start gap-2 rounded-lg border px-2.5 py-1.5 transition ${aktifModel === secenek.model ? "border-indigo-400 bg-indigo-50 shadow-sm" : "border-gray-200 bg-white hover:border-gray-300"}`}>
                         <input type="radio" name={`kazanim_modeli_${b.soru_seti_durum_id}`} value={secenek.model} checked={aktifModel === secenek.model} onChange={() => setKazanimModelleri?.((prev) => ({ ...prev, [b.soru_seti_durum_id]: secenek.model }))} className="mt-0.5 size-4 shrink-0 accent-indigo-600" />
-                        <span className="flex flex-col gap-0.5">
+                        <span className="flex min-w-0 flex-col gap-0.5">
                           <span className="text-xs font-bold text-slate-800">{secenek.baslik}</span>
                           <span className="text-[11px] leading-tight text-slate-500">{secenek.aciklama}</span>
                         </span>
