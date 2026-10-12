@@ -16,6 +16,10 @@ import { eclubStoreSiparisAcikMi, eclubStoreTakvimDurumu } from "@/lib/eclub/sto
 import { eclubCekTalebiOlusturabilirMi } from "@/lib/eclub/store/cekTalebiYetkisi";
 import { ECLUB_CEK_KARTI_TEST_PUAN_IDLERI, eclubCekTalebiGorunumTestiMi } from "@/lib/eclub/store/gorunumTesti";
 import { eclubUxTestYayiniMi } from "@/lib/eclub/store/uxGorunumTesti";
+import type { CekTalebi } from "@/lib/eclub/store/cekTakipOnbellek";
+import { cekTalepDurumuMu } from "@/lib/eclub/store/eclubStoreTipler";
+
+const CEK_TAKIP_UX_KISI_ID = "3b0b6c01-428e-4797-a8ad-67d5d2400b5f";
 
 async function kisiCoz(adminSupabase: ReturnType<typeof createAdminClient>, authUserId: string) {
   const { data } = await adminSupabase
@@ -53,8 +57,8 @@ export async function GET(request: NextRequest) {
         talep_id, eczane_id, firma_id, yayin_id, talep_eden_kisi_id,
         toplanan_puan, talep_edilen_cek_tl, siparis_tipi,
         siparis_verildi_mi, siparis_adet, siparis_mal_fazlasi,
-        durum, cek_kodu, cek_gonderim_tarihi, devreden_puan, created_at,
-        v_yayin_kunye ( urun_id ),
+        durum, cek_gonderim_tarihi, devreden_puan, created_at,
+        v_yayin_kunye ( urun_id, talep_no, arac_turu ),
         firmalar ( firma_adi )
       `)
       .in("eczane_id", eczaneIdler)
@@ -62,8 +66,31 @@ export async function GET(request: NextRequest) {
       .order("created_at", { ascending: false });
     if (durum) talepQuery = talepQuery.eq("durum", durum);
 
-    const { data: talepler, error: talepError } = await talepQuery;
+    const [talepSonucu, uxSonucu] = await Promise.all([
+      talepQuery,
+      kisi.kisi_id === CEK_TAKIP_UX_KISI_ID
+        ? adminSupabase.from("eclub_cek_takip_ux_testleri")
+          .select("senaryo_id,kisi_id,eczane_id,firma_id,urun_id,kaynak_yayin_id,sira,etiket,veri")
+          .eq("kisi_id", kisi.kisi_id)
+          .in("eczane_id", eczaneIdler)
+          .in("firma_id", firmaKapsami.map((firma) => firma.firma_id))
+          .order("sira")
+        : Promise.resolve({ data: [], error: null }),
+    ]);
+    const { data: talepler, error: talepError } = talepSonucu;
     if (talepError) return hataYaniti("Çek talepleri alınamadı.", "eclub_store_cek_talepleri SELECT", talepError);
+    if (uxSonucu.error && !["42P01", "PGRST205"].includes(uxSonucu.error.code)) {
+      return hataYaniti("Çek Takibi UX örnekleri alınamadı.", "eclub_cek_takip_ux_testleri SELECT", uxSonucu.error);
+    }
+
+    const testYayinIdler = [...new Set((uxSonucu.data ?? []).map((satir) => satir.kaynak_yayin_id))];
+    const { data: testKunyeler, error: testKunyeError } = testYayinIdler.length
+      ? await adminSupabase.from("v_yayin_kunye")
+        .select("yayin_id,talep_no,arac_turu")
+        .in("yayin_id", testYayinIdler)
+      : { data: [], error: null };
+    if (testKunyeError) return hataYaniti("Test yayını bilgileri alınamadı.", "v_yayin_kunye SELECT — çek takibi", testKunyeError);
+    const testKunyeMap = new Map((testKunyeler ?? []).map((kunye) => [kunye.yayin_id, kunye]));
 
     const urunIdler = [...new Set((talepler ?? []).flatMap((talep) => {
       const kunye = Array.isArray(talep.v_yayin_kunye) ? talep.v_yayin_kunye[0] : talep.v_yayin_kunye;
@@ -79,7 +106,7 @@ export async function GET(request: NextRequest) {
       for (const urun of urunler ?? []) urunAdlari.set(urun.urun_id, urun.urun_adi);
     }
 
-    const sonuc = (talepler ?? []).map((talep) => {
+    const sonuc: CekTalebi[] = (talepler ?? []).map((talep) => {
       const kunye = Array.isArray(talep.v_yayin_kunye) ? talep.v_yayin_kunye[0] : talep.v_yayin_kunye;
       const firma = Array.isArray(talep.firmalar) ? talep.firmalar[0] : talep.firmalar;
       return {
@@ -89,6 +116,8 @@ export async function GET(request: NextRequest) {
         firma_id: talep.firma_id,
         firma_adi: firma?.firma_adi ?? "Firma",
         yayin_id: talep.yayin_id,
+        talep_no: kunye?.talep_no ?? null,
+        arac_turu: kunye?.arac_turu ?? null,
         urun_id: kunye?.urun_id ?? null,
         urun_adi: (kunye?.urun_id ? urunAdlari.get(kunye.urun_id) : null) ?? "Migros Hediye Çeki",
         talep_eden_kisi_id: talep.talep_eden_kisi_id,
@@ -99,14 +128,42 @@ export async function GET(request: NextRequest) {
         siparis_adet: talep.siparis_adet ?? 0,
         siparis_mal_fazlasi: talep.siparis_mal_fazlasi ?? 0,
         durum: talep.durum,
-        cek_kodu: talep.cek_kodu,
+        cek_kodu: null,
         cek_gonderim_tarihi: talep.cek_gonderim_tarihi,
         devreden_puan: talep.devreden_puan ?? 0,
         created_at: talep.created_at,
       };
     });
 
-    return NextResponse.json({ firma: firmaId ? firmaKapsami[0] : null, talepler: sonuc }, { status: 200 });
+    const uxTalepler: CekTalebi[] = (uxSonucu.data ?? []).flatMap((satir) => {
+      if (!eclubCekTalebiGorunumTestiMi(satir.senaryo_id)
+        || satir.kisi_id !== kisi.kisi_id
+        || !eczaneIdler.includes(satir.eczane_id)
+        || !firmaKapsami.some((firma) => firma.firma_id === satir.firma_id)) return [];
+      const veri = satir.veri as Partial<CekTalebi>;
+      if (!veri || typeof veri !== "object" || !cekTalepDurumuMu(veri.durum)
+        || typeof veri.created_at !== "string" || typeof veri.firma_adi !== "string"
+        || typeof veri.urun_adi !== "string" || !Number.isFinite(veri.toplanan_puan)
+        || !Number.isFinite(veri.talep_edilen_cek_tl)
+        || typeof veri.siparis_verildi_mi !== "boolean") return [];
+      return [{
+        ...veri,
+        cek_kodu: null,
+        talep_id: satir.senaryo_id,
+        gorunum_testi_mi: true,
+        gorunum_testi_etiketi: `Test ${String(satir.sira).padStart(2, "0")} · ${satir.etiket}`,
+        talep_no: testKunyeMap.get(satir.kaynak_yayin_id)?.talep_no ?? null,
+        arac_turu: testKunyeMap.get(satir.kaynak_yayin_id)?.arac_turu ?? null,
+        firma_id: satir.firma_id,
+        urun_id: satir.urun_id,
+        talep_eden_kisi_id: satir.kisi_id,
+      } as CekTalebi];
+    });
+
+    return NextResponse.json({
+      firma: firmaId ? firmaKapsami[0] : null,
+      talepler: [...uxTalepler.filter((talep) => !durum || talep.durum === durum), ...sonuc],
+    }, { status: 200 });
   } catch (err) {
     return sunucuHatasi(err, "GET /eclub/api/cek-talepleri");
   }

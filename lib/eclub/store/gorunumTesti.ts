@@ -17,5 +17,6 @@ export const ECLUB_CEK_TALEBI_TEST_IDLERI = [
 ] as const;
 
 export function eclubCekTalebiGorunumTestiMi(talepId: string): boolean {
-  return (ECLUB_CEK_TALEBI_TEST_IDLERI as readonly string[]).includes(talepId);
+  return (ECLUB_CEK_TALEBI_TEST_IDLERI as readonly string[]).includes(talepId)
+    || /^e1500000-0000-4000-8000-0000000000(0[1-9]|1[01])$/i.test(talepId);
 }

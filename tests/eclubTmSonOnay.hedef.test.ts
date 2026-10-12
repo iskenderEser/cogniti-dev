@@ -10,7 +10,8 @@ const adminApi = oku("app/admin/eclub-cek-teslimat/api/cek-talepleri/route.ts");
 test("TM onayı kanonik talep durumlarına eklendi", () => {
   assert.ok(CEK_TALEP_DURUMLARI.includes("tm_onayinda"));
   assert.equal(CEK_TALEP_DURUM_META.tm_onayinda.etiket, "TM Onayında");
-  assert.equal(CEK_TALEP_DURUM_META.onaylandi.etiket, "TM Onayladı / Kod Bekliyor");
+  assert.equal(CEK_TALEP_DURUM_META.onaylandi.etiket, "TM Onayladı");
+  assert.equal(CEK_TALEP_DURUM_META.teslimat_bekliyor.etiket, "TM Onayladı");
 });
 
 test("Faz 2C SQL şema alanlarını transaction içinde ekler", () => {

@@ -30,6 +30,9 @@ function firmaIyelik(firmaAdi: string): string {
   return `${firmaAdi}'${kaynastirma}${ek}`;
 }
 
+const bilgi = "max-w-full rounded-md border border-[#e1e9f3] bg-[#f5f8fc] px-1.5 py-0.5 text-[10px] font-normal leading-tight text-[#405976] sm:text-[8px]";
+const satisSartiBilgi = "max-w-full rounded-md border border-[#e1e9f3] bg-[#f5f8fc] px-1.5 py-0.5 text-[9px] font-normal leading-tight text-[#405976] sm:text-[7px]";
+
 export function EclubVideoKarti({
   oneri,
   onSec,
@@ -52,6 +55,7 @@ export function EclubVideoKarti({
     : oneri.oneri_durumu === "suresi_gecmis"
       ? "Süresi Geçti"
       : `${oneri.kalan_gun} gün`;
+  const cekli = oneri.cek_karsiligi_var_mi === true;
 
   const kartJSX = (
     <YayinKarti
@@ -76,6 +80,31 @@ export function EclubVideoKarti({
             <Play size={14} fill="currentColor" />
           </span>
         </span>
+      }
+      altEkIcerik={
+        <div className="mt-2 border-t border-[#e8eef5] pt-2" aria-label="Yayın bilgileri ve koşulları">
+          <div className="flex flex-wrap items-start justify-between gap-1">
+            {oneri.cek_karsiligi_var_mi === false ? (
+              <span className={bilgi}>Çeksiz Puan · Yalnız lig</span>
+            ) : cekli ? (
+              <>
+                <span className={bilgi}>Çekli Puan</span>
+                {oneri.satis_sarti_tipi === "satis_sartli" ? <span className={bilgi}>Sipariş zorunlu</span> : oneri.satis_sarti_tipi === "serbest_siparis" ? <span className={bilgi}>Siparişle çek tutarı artar</span> : oneri.satis_sarti_tipi === "siparissiz_cek" ? <span className={bilgi}>Sipariş yok</span> : <span className={bilgi}>Sipariş koşulu belirtilmemiş</span>}
+                {oneri.satis_sarti_tipi === "serbest_siparis" && oneri.gizli_sart_katlama_orani != null && <span className={bilgi}>Siparişle çek tutarı +%{oneri.gizli_sart_katlama_orani}</span>}
+              </>
+            ) : <span className={bilgi}>Puan türü belirtilmemiş</span>}
+          </div>
+          {cekli && Array.isArray(oneri.barem_tablosu) && oneri.barem_tablosu.length > 0 && (
+            <div className="mt-1 grid grid-cols-3 gap-1">
+              {oneri.barem_tablosu.map((barem, index) => (
+                <span key={index} className={`${satisSartiBilgi} flex min-w-0 flex-col items-center text-center`} title={`${barem.min_puan.toLocaleString("tr-TR")}–${barem.max_puan.toLocaleString("tr-TR")} puan${oneri.satis_sarti_tipi === "siparissiz_cek" ? "" : `: ${barem.adet}+${barem.mal_fazlasi}`}`}>
+                  <span>{barem.min_puan.toLocaleString("tr-TR")}–{barem.max_puan.toLocaleString("tr-TR")}p</span>
+                  {oneri.satis_sarti_tipi !== "siparissiz_cek" && <span>{barem.adet}+{barem.mal_fazlasi}</span>}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
       }
     />
   );

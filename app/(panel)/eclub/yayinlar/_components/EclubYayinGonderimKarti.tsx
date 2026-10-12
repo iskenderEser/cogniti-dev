@@ -41,7 +41,8 @@ export function EclubYayinGonderimKarti({ yayin, yeni, secili, secilebilir, gond
       className={`h-full ${secili ? "border-[#237ac8] ring-2 ring-[#237ac8]/20" : ""}`}
       durumGoster={yeni}
       solUstRozet={yeni ? <span className="font-extrabold text-blue-600">Yeni</span> : undefined}
-      etkilesimGoster={false}
+      etkilesimGoster
+      etkilesimAktif={false}
       tarihGoster
       izlenmeGoster={false}
       puanGoster

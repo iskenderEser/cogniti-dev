@@ -24,6 +24,9 @@ import {
 import EclubFirmaCekTalebiSkeleton from "@/components/eclub/EclubFirmaCekTalebiSkeleton";
 import EclubHediyeCekiBilgiPaneli from "@/components/eclub/EclubHediyeCekiBilgiPaneli";
 import EclubCekTalepVitrinKarti from "@/components/eclub/EclubCekTalepVitrinKarti";
+import EclubHaftalikPuanBirikimi from "@/components/eclub/EclubHaftalikPuanBirikimi";
+import type { PerformansVerisi } from "@/lib/eclub/performans";
+import { performansVerisiniIste } from "@/lib/eclub/performansOnbellek";
 import { useEclubStore } from "./_hooks/useEclubStore";
 import {
   CEK_TALEP_DURUM_META,
@@ -59,7 +62,18 @@ export default function EclubStorePage() {
 
   const [islemId, setIslemId] = useState<string | null>(null);
   const [testSiparisSecimleri, setTestSiparisSecimleri] = useState<Record<string, boolean>>({});
+  const [haftalikYenileme, setHaftalikYenileme] = useState(0);
+  const [haftalikPerformans, setHaftalikPerformans] = useState<{
+    kapsam: string;
+    veriler: Record<string, PerformansVerisi>;
+  } | null>(null);
   const islemLoading = Boolean(islemId) || yenileniyor;
+  const gorunenYayinlar = secim.gomulu ? eclubUrunIcerigi(cekYayinlar, secim.urunId) : cekYayinlar;
+  const urunGruplari = eclubUrunGruplari(gorunenYayinlar);
+  const haftalikKapsamlar = JSON.stringify([...new Map(gorunenYayinlar
+    .filter((item) => !item.gorunum_testi_mi)
+    .map((item) => [`${item.firma_id}:${item.urun_id}`, { firmaId: item.firma_id, urunId: item.urun_id }])).values()]);
+  const haftalikKapsam = `${kullanici?.id ?? ""}:${haftalikKapsamlar}`;
   useEffect(() => {
     if (authYukleniyor) return;
     if (!kullanici) {
@@ -69,10 +83,37 @@ export default function EclubStorePage() {
     if (!eclubKisi) router.replace("/ana-sayfa");
   }, [authYukleniyor, kullanici, eclubKisi, router]);
 
-  if (authYukleniyor || !kullanici || loading) return secim.gomulu ? <EclubFirmaCekTalebiSkeleton /> : <EclubKisiYukleniyor />;
+  useEffect(() => {
+    if (authYukleniyor || loading || !eclubKisi || !kullanici?.id) return;
+    const urunler = JSON.parse(haftalikKapsamlar) as { firmaId: string; urunId: string }[];
+    if (!urunler.length) return;
+    let aktif = true;
+    let istekSirasi = 0;
+    const yenile = async () => {
+      const istek = ++istekSirasi;
+      const sonuclar = await Promise.allSettled(urunler.map(async ({ firmaId, urunId }) => ({
+        anahtar: `${firmaId}:${urunId}`,
+        veri: await performansVerisiniIste(kullanici.id, firmaId, urunId),
+      })));
+      if (!aktif || istek !== istekSirasi) return;
+      const veriler: Record<string, PerformansVerisi> = {};
+      for (const sonuc of sonuclar) if (sonuc.status === "fulfilled") {
+        veriler[sonuc.value.anahtar] = sonuc.value.veri;
+      }
+      setHaftalikPerformans({ kapsam: haftalikKapsam, veriler });
+    };
+    void yenile();
+    const gorunurYenile = () => { if (document.visibilityState === "visible") void yenile(); };
+    const zamanlayici = window.setInterval(gorunurYenile, 60_000);
+    window.addEventListener("focus", gorunurYenile);
+    return () => {
+      aktif = false;
+      window.clearInterval(zamanlayici);
+      window.removeEventListener("focus", gorunurYenile);
+    };
+  }, [authYukleniyor, loading, eclubKisi, kullanici?.id, haftalikKapsamlar, haftalikKapsam, haftalikYenileme]);
 
-  const gorunenYayinlar = secim.gomulu ? eclubUrunIcerigi(cekYayinlar, secim.urunId) : cekYayinlar;
-  const urunGruplari = eclubUrunGruplari(gorunenYayinlar);
+  if (authYukleniyor || !kullanici || loading) return secim.gomulu ? <EclubFirmaCekTalebiSkeleton /> : <EclubKisiYukleniyor />;
 
   const handleTalepVer = async (
     yayinId: string,
@@ -110,6 +151,7 @@ export default function EclubStorePage() {
   const tumunuYenile = async () => {
     setTestSiparisSecimleri({});
     await Promise.all([yenile(), takvimYenile()]);
+    setHaftalikYenileme((eski) => eski + 1);
   };
 
   const toplamHavuzPuani = cekYayinlar.reduce(
@@ -200,6 +242,13 @@ export default function EclubStorePage() {
               </header>
               <div className="grid gap-3 p-3 sm:p-4">
           {grup.yayinlar.map((item, yayinIndex) => {
+            const performans = haftalikPerformans?.kapsam === haftalikKapsam
+              ? haftalikPerformans.veriler[`${item.firma_id}:${item.urun_id}`]
+              : undefined;
+            const haftalikPuanlar = performans?.yayinHaftalikBirikim?.[item.yayin_id];
+            const haftalikBirikim = haftalikPuanlar?.length === 8 && performans
+              ? { donemAdi: performans.donem.ad, aktifHafta: performans.donem.aktifHafta, puanlar: haftalikPuanlar }
+              : undefined;
             const toplananPuan = item.havuz_toplam_puan ?? item.toplanan_puan ?? 0;
             const bazCek = item.baz_cek_tutari_tl ?? item.hak_edilen_cek_tl ?? 0;
             const katlanmisCek = item.katlanmis_cek_tutari_tl ?? item.katlanmis_cek_tl ?? 0;
@@ -219,11 +268,13 @@ export default function EclubStorePage() {
             const talepPasif = !cekTalebiOlusturabilir || !yeterliPuanVarMi || islemLoading
               || (Boolean(item.gorunum_testi_mi) && !etkilesimliTest) || (!storeAcik && !etkilesimliTest);
 
-            if (ilkKartMi) {
+            if (ilkKartMi || eclubUxTestYayiniMi(item.yayin_id) || (isSerbest && !item.talep_durumu)) {
               return (
                 <EclubCekTalepVitrinKarti
                   key={`${item.eczane_id}:${item.yayin_id}`}
+                  platformStili
                   item={item}
+                  haftalikBirikim={haftalikBirikim}
                   toplananPuan={toplananPuan}
                   bazCek={bazCek}
                   katlanmisCek={katlanmisCek}
@@ -422,6 +473,7 @@ export default function EclubStorePage() {
                     )}
                   </div>
                 </div>
+                <EclubHaftalikPuanBirikimi birikim={haftalikBirikim} />
               </article>
             );
           })}

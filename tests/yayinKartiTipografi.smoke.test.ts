@@ -303,6 +303,10 @@ test("E-Club: video kartı durum etiketi 11px (text-[11px]) ve sm:text-[9px] uyg
     izlendi_mi: false,
     oneri_durumu: "aktif",
     kalan_gun: 5,
+    cek_karsiligi_var_mi: true,
+    satis_sarti_tipi: "serbest_siparis",
+    gizli_sart_katlama_orani: 10,
+    barem_tablosu: [{ min_puan: 300, max_puan: 500, adet: 10, mal_fazlasi: 1 }],
   };
 
   const html = renderToStaticMarkup(
@@ -316,6 +320,10 @@ test("E-Club: video kartı durum etiketi 11px (text-[11px]) ve sm:text-[9px] uyg
   );
 
   assert.match(html, /text-\[11px\] font-extrabold text-white backdrop-blur-sm sm:text-\[9px\]/);
+  assert.match(html, /Çekli Puan/);
+  assert.match(html, /Siparişle çek tutarı \+%10/);
+  assert.match(html, /300–500p/);
+  assert.match(html, /10\+1/);
 });
 
 test("UTT Ana Sayfa: kart altı izleme metni 12px (text-xs) ve sm:text-[10px] uygulanır", async () => {

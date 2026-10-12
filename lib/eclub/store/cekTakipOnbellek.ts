@@ -5,6 +5,9 @@ import type { CekTalepDurumu } from "./eclubStoreTipler";
 
 export interface CekTalebi {
   gorunum_testi_mi?: boolean;
+  gorunum_testi_etiketi?: string;
+  talep_no?: number | null;
+  arac_turu?: string | null;
   firma_id: string;
   talep_id: string;
   firma_adi: string;
@@ -13,6 +16,7 @@ export interface CekTalebi {
   talep_eden_kisi_id: string;
   toplanan_puan: number;
   talep_edilen_cek_tl: number;
+  siparis_tipi?: string | null;
   siparis_verildi_mi: boolean;
   siparis_adet: number;
   siparis_mal_fazlasi: number;

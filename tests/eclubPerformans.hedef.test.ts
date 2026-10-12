@@ -26,6 +26,21 @@ test("tamamlamalar doğru haftaya bir kez yazılır; izleme, cevap ve ileri sarm
   assert.equal(sonuc.satirlar[0].haftalar[0].puan, 0);
   assert.deepEqual(sonuc.satirlar[0].haftalar[1].uyeler[0], { kisi_id: "k1", ad: "Adil", soyad: "Güçlü", tamamlanan: 1, tamamlamaPuani: 100, dogruCevapPuani: 40, kayipPuani: 20, puan: 120 });
 });
+test("aynı net puan yayın bazında sekiz haftaya birikimli aktarılır", () => {
+  const ilk = izleme("ilk", donem.haftalar[0].baslangic);
+  const ucuncu = izleme("ucuncu", donem.haftalar[2].baslangic);
+  const baskaYayin = izleme("baska", donem.haftalar[2].baslangic, { yayin_id: "y2" });
+  const sonuc = eclubPerformansiHesapla({
+    donem, izlemeler: [ilk, ucuncu, baskaYayin],
+    puanlar: [puan("p1", "ilk", 100), puan("p2", "ucuncu", 60), puan("p3", "baska", 50, { yayin_id: "y2" })],
+    kayiplar: [{ kayit_id: "k1", izleme_id: "ilk", kisi_id: "k1", yayin_id: "y1", kaybedilen_puan: 20 }],
+    baglar: [bag], uyeler: [{ kisi_id: "k1", ad: "Adil", soyad: "Güçlü" }],
+    eczaneIdler: ["e1"], yayinIdler: ["y1", "y2"],
+  });
+  assert.deepEqual(sonuc.yayinHaftalikBirikim?.y1, [80, 80, 140, 140, 140, 140, 140, 140]);
+  assert.deepEqual(sonuc.yayinHaftalikBirikim?.y2, [0, 0, 50, 50, 50, 50, 50, 50]);
+  assert.equal(sonuc.ozet.puan, 190);
+});
 test("eczane, ürün ve üye kimlikleri birbirine karışmaz; üyenin yeni eczanesi geçmiş puanı taşımaz", () => {
   const sonuc = hesapla([izleme("biz", donem.haftalar[1].baslangic), izleme("diger", donem.haftalar[1].baslangic), izleme("yabanci-urun", donem.haftalar[1].baslangic, { yayin_id: "y2" })],
     [puan("p1", "biz", 80), puan("p2", "diger", 500, { eczane_id: "e2" }), puan("p3", "yabanci-urun", 700, { yayin_id: "y2" }), puan("p4", "biz", 900, { kisi_id: "k2" })], [], []);

@@ -5,18 +5,30 @@ import vm from "node:vm";
 import ts from "typescript";
 import { eclubFirmaKapsami } from "@/lib/eclub/firmaGezinme";
 const firmaId = "10000000-0000-4000-8000-000000000001";
-function api({ auth = true, allowed = true, kisi = true, fail = false } = {}) {
+const uxKisiId = "3b0b6c01-428e-4797-a8ad-67d5d2400b5f";
+const uxTalepId = "e1500000-0000-4000-8000-000000000001";
+function api({ auth = true, allowed = true, kisi = true, fail = false, ux = false, delivery = false } = {}) {
   const reads: string[] = [];
   let erisimSayisi = 0;
   const rows = [
-    { talep_id: "t", eczane_id: "e", firma_id: firmaId, v_yayin_kunye: { urun_id: "u" }, firmalar: { firma_adi: "Firma" }, durum: "beklemede", toplanan_puan: 100 },
+    { talep_id: "t", eczane_id: "e", firma_id: firmaId, v_yayin_kunye: { urun_id: "u", talep_no: 30075, arac_turu: "video" }, firmalar: { firma_adi: "Firma" }, durum: "beklemede", toplanan_puan: 100 },
     { talep_id: "foreign", eczane_id: "baska-eczane", firma_id: firmaId },
     { talep_id: "foreign-firma", eczane_id: "e", firma_id: "baska-firma" },
   ];
+  if (delivery) rows.push(
+    { talep_id: "queued", eczane_id: "e", firma_id: firmaId, v_yayin_kunye: { urun_id: "u", talep_no: 30075, arac_turu: "video" }, firmalar: { firma_adi: "Firma" }, durum: "teslimat_bekliyor", cek_kodu: "KUYRUK-KODU", toplanan_puan: 400 },
+    { talep_id: "sent", eczane_id: "e", firma_id: firmaId, v_yayin_kunye: { urun_id: "u", talep_no: 30075, arac_turu: "video" }, firmalar: { firma_adi: "Firma" }, durum: "cek_kodlari_gonderildi", cek_kodu: "GONDERILEN-KOD", toplanan_puan: 400 },
+  );
+  const uxRows = [
+    { senaryo_id: uxTalepId, kisi_id: uxKisiId, eczane_id: "e", firma_id: firmaId, urun_id: "u", kaynak_yayin_id: "y", sira: 1, etiket: "UTT bekliyor · siparişsiz", veri: { firma_adi: "Firma", urun_adi: "Ürün", durum: "beklemede", created_at: "2026-10-11T12:00:00Z", toplanan_puan: 400, talep_edilen_cek_tl: 200, siparis_tipi: "siparissiz_cek", siparis_verildi_mi: false, siparis_adet: 0, siparis_mal_fazlasi: 0, cek_kodu: null } },
+    { senaryo_id: "e1500000-0000-4000-8000-000000000002", kisi_id: uxKisiId, eczane_id: "baska-eczane", firma_id: firmaId, urun_id: "u", sira: 2, etiket: "Kapsam dışı", veri: {} },
+  ];
   const admin = { from(table: string) {
     reads.push(table);
-    assert.ok(["eclub_store_cek_talepleri", "urunler"].includes(table), "kişi ve üyelik tekrar okunmamalı");
-    let data: Record<string, unknown>[] = table === "urunler" ? [{ urun_id: "u", urun_adi: "Ürün" }] : [...rows];
+    assert.ok(["eclub_store_cek_talepleri", "eclub_cek_takip_ux_testleri", "v_yayin_kunye", "urunler"].includes(table), "kişi ve üyelik tekrar okunmamalı");
+    let data: Record<string, unknown>[] = table === "urunler" ? [{ urun_id: "u", urun_adi: "Ürün" }]
+      : table === "v_yayin_kunye" ? [{ yayin_id: "y", talep_no: 30075, arac_turu: "video" }]
+        : table === "eclub_cek_takip_ux_testleri" ? [...uxRows] : [...rows];
     const query = {
       select() { return query; }, order() { return query; },
       in(key: string, ids: unknown[]) { data = data.filter(r => ids.includes(r[key])); return query; },
@@ -31,13 +43,15 @@ function api({ auth = true, allowed = true, kisi = true, fail = false } = {}) {
   const modules: Record<string, unknown> = {
     "next/server": { NextResponse: Response },
     "@/lib/supabase/server": { createClient: async () => ({ auth: { getUser: async () => ({ data: { user: auth ? { id: "auth" } : null } }) } }), createAdminClient: () => admin },
-    "@/lib/eclub/kisiErisim": { eclubKisiErisimi: async () => { erisimSayisi++; return { kisi: kisi ? { kisi_id: "k", rol: "eczaci" } : null, eczane_idler: ["e"], firmalar: allowed ? [{ firma_id: firmaId, firma_adi: "Firma", aktif: true, eclub_aktif: true, eclub_store_aktif: true }] : [] }; } },
+    "@/lib/eclub/kisiErisim": { eclubKisiErisimi: async () => { erisimSayisi++; return { kisi: kisi ? { kisi_id: ux ? uxKisiId : "k", rol: "eczaci" } : null, eczane_idler: ["e"], firmalar: allowed ? [{ firma_id: firmaId, firma_adi: "Firma", aktif: true, eclub_aktif: true, eclub_store_aktif: true }] : [] }; } },
     "@/lib/eclub/firmaGezinme": { eclubFirmaKapsami },
     "@/lib/uretim/rpc": { uuidGecerliMi: (s: string) => /^[a-f0-9-]{36}$/i.test(s) },
     "@/lib/utils/roller": { ECLUB_TUKETICI_ROLLERI: ["eczaci"] },
     "@/lib/utils/hataIsle": { yetkiHatasi: () => json("Yetkisiz", 401), rolHatasi: (s: string) => json(s, 403), validasyonHatasi: (s: string) => json(s, 400), hataYaniti: () => json("Hata", 500), sunucuHatasi: () => json("Hata", 500) },
     "@/lib/eclub/store/takvim": {}, "@/lib/eclub/store/cekTalebiYetkisi": {},
-    "@/lib/eclub/store/gorunumTesti": { eclubCekTalebiGorunumTestiMi: () => false },
+    "@/lib/eclub/store/gorunumTesti": { eclubCekTalebiGorunumTestiMi: (id: string) => id === uxTalepId },
+    "@/lib/eclub/store/uxGorunumTesti": { eclubUxTestYayiniMi: () => false },
+    "@/lib/eclub/store/eclubStoreTipler": { cekTalepDurumuMu: (durum: unknown) => typeof durum === "string" },
   };
   const compiled = ts.transpileModule(readFileSync("app/(panel)/eclub/api/cek-talepleri/route.ts", "utf8"), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText;
   const exports: { GET?: (r: Request) => Promise<Response> } = {};
@@ -54,6 +68,26 @@ test("çek takibi erişimi bir kez çözülür; ürün ve eczane/firma kapsamı 
   assert.equal(data.talepler[0].urun_adi, "Ürün");
   assert.equal(page.erisimSayisi(), 1);
   assert.deepEqual(page.reads, ["eclub_store_cek_talepleri", "urunler"]);
+});
+test("çek takibi UX örnekleri yalnız hedef test hesabında ve yetkili eczanede görünür", async () => {
+  const page = api({ ux: true });
+  const response = await page.get();
+  assert.equal(response.status, 200);
+  const data = await response.json();
+  assert.equal(data.talepler.length, 2);
+  assert.equal(data.talepler[0].talep_id, uxTalepId);
+  assert.equal(data.talepler[0].gorunum_testi_mi, true);
+  assert.match(data.talepler[0].gorunum_testi_etiketi, /^Test 01/);
+  assert.equal(data.talepler[0].talep_no, 30075);
+  assert.equal(data.talepler[0].arac_turu, "video");
+  assert.deepEqual(page.reads, ["eclub_store_cek_talepleri", "eclub_cek_takip_ux_testleri", "v_yayin_kunye", "urunler"]);
+});
+test("çek kodu durumdan bağımsız olarak ortak takip API yanıtına girmez", async () => {
+  const response = await api({ delivery: true }).get();
+  assert.equal(response.status, 200);
+  const { talepler } = await response.json();
+  assert.equal(talepler.find((talep: { talep_id: string }) => talep.talep_id === "queued")?.cek_kodu, null);
+  assert.equal(talepler.find((talep: { talep_id: string }) => talep.talep_id === "sent")?.cek_kodu, null);
 });
 test("oturum, firma ve geçersiz parametreler reddedilir; okuma hatası boş başarı değildir", async () => {
   for (const [options, status] of [[{ auth: false }, 401], [{ allowed: false }, 403], [{ kisi: false }, 403]] as const) {

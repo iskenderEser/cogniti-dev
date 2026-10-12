@@ -3,6 +3,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { panelOnbelleginiOku, panelOnbellegineYaz, panelOnbelleginiSil, panelVerisiniIste, type PanelVerisi } from "@/lib/eclub/anaSayfaPanelOnbellek";
+import type { BaremSatiri, SatisSartiTipi } from "@/lib/eclub/store/eclubStoreTipler";
 
 export interface PanelOneri {
   oneri_id: string;
@@ -22,6 +23,10 @@ export interface PanelOneri {
   video_puani: number;
   soru_puani: number;
   soru_sayisi: number;
+  cek_karsiligi_var_mi?: boolean | null;
+  satis_sarti_tipi?: SatisSartiTipi | null;
+  gizli_sart_katlama_orani?: number | null;
+  barem_tablosu?: BaremSatiri[] | null;
   kazanilan_izleme_puani: number;
   kazanilan_cevaplama_puani: number;
   ileri_sarma_kaybi: number;

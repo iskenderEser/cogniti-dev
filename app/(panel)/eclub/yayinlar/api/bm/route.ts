@@ -8,6 +8,7 @@ import { gecerliTurBaslangiclari } from "@/lib/tclub/tur/kayit";
 import { hataYaniti, rolHatasi, sunucuHatasi, yetkiHatasi } from "@/lib/utils/hataIsle";
 import type { BaremSatiri, SatisSartiTipi } from "@/lib/eclub/store/eclubStoreTipler";
 import type { OgrenmeAraciTuru } from "@/lib/ogrenmeAraci/tipler";
+import { eclubYayinEtkilesimSayilari } from "@/lib/eclub/yayinEtkilesimleri";
 
 interface SatisSartiSatiri { yayin_id: string; cek_karsiligi_var_mi: boolean | null; karsilik_puan: number | null; karsilik_tl: number | null; satis_sarti_tipi: SatisSartiTipi | null; gizli_sart_katlama_orani: number | null; barem_tablosu: BaremSatiri[] | null; }
 interface OneriSatiri { oneri_id: string; yayin_id: string; arac_id: string; arac_turu: OgrenmeAraciTuru; kisi_id: string; oneri_baslangic: string; oneri_bitis: string; izlendi_mi: boolean | null; created_at: string | null; eclub_kisiler?: { ad: string | null; soyad: string | null; rol: string | null } | { ad: string | null; soyad: string | null; rol: string | null }[] | null; }
@@ -51,13 +52,16 @@ export async function GET(request: NextRequest) {
     const soruMap = new Map<string, number>();
     const sartMap = new Map<string, SatisSartiSatiri>();
     const tamamlananIncelemeler = new Set<string>();
+    let etkilesimler = { begeniler: new Map<string, number>(), favoriler: new Map<string, number>() };
     if (yayinIdler.length > 0) {
-      const [sorular, sartlar, incelemeler, turler] = await Promise.all([
+      const [sorular, sartlar, incelemeler, turler, eclubEtkilesimleri] = await Promise.all([
         admin.from("v_yayin_detay").select("yayin_id, video_basi_soru_sayisi").in("yayin_id", yayinIdler),
         admin.from("yayin_yonetimi").select("yayin_id, cek_karsiligi_var_mi, karsilik_puan, karsilik_tl, satis_sarti_tipi, gizli_sart_katlama_orani, barem_tablosu").in("yayin_id", yayinIdler),
         admin.from("eclub_utt_yayin_incelemeleri").select("yayin_id, arac_id, tur_baslangici, tamamlandi_at").eq("utt_id", seciliUtt.utt_id).in("yayin_id", yayinIdler).not("tamamlandi_at", "is", null),
         gecerliTurBaslangiclari(admin, yayinIdler, true),
+        eclubYayinEtkilesimSayilari(admin, yayinIdler),
       ]);
+      etkilesimler = eclubEtkilesimleri;
       if (sorular.error) return hataYaniti("Yayın soru sayıları alınamadı.", "v_yayin_detay SELECT — BM", sorular.error);
       if (sartlar.error) return hataYaniti("Yayın koşulları alınamadı.", "yayin_yonetimi SELECT — BM", sartlar.error);
       if (incelemeler.error) return hataYaniti("Gönderim incelemeleri alınamadı.", "eclub_utt_yayin_incelemeleri SELECT — BM", incelemeler.error);
@@ -72,7 +76,7 @@ export async function GET(request: NextRequest) {
     }
     const yayinlar = eclubYayinlari.map((yayin) => {
       const sart = sartMap.get(yayin.yayin_id);
-      return { ...yayin, arac_id: yayin.arac_id!, arac_turu: yayin.arac_turu!, soru_sayisi: soruMap.get(yayin.yayin_id) ?? 0, cek_karsiligi_var_mi: sart?.cek_karsiligi_var_mi ?? null, karsilik_puan: sart?.karsilik_puan ?? null, karsilik_tl: sart?.karsilik_tl ?? null, satis_sarti_tipi: sart?.satis_sarti_tipi ?? null, gizli_sart_katlama_orani: sart?.gizli_sart_katlama_orani ?? null, barem_tablosu: sart?.barem_tablosu ?? null, gonderim_incelemesi_tamamlandi: tamamlananIncelemeler.has(yayin.yayin_id) };
+      return { ...yayin, arac_id: yayin.arac_id!, arac_turu: yayin.arac_turu!, soru_sayisi: soruMap.get(yayin.yayin_id) ?? 0, begeni_sayisi: etkilesimler.begeniler.get(yayin.yayin_id) ?? 0, favori_sayisi: etkilesimler.favoriler.get(yayin.yayin_id) ?? 0, cek_karsiligi_var_mi: sart?.cek_karsiligi_var_mi ?? null, karsilik_puan: sart?.karsilik_puan ?? null, karsilik_tl: sart?.karsilik_tl ?? null, satis_sarti_tipi: sart?.satis_sarti_tipi ?? null, gizli_sart_katlama_orani: sart?.gizli_sart_katlama_orani ?? null, barem_tablosu: sart?.barem_tablosu ?? null, gonderim_incelemesi_tamamlandi: tamamlananIncelemeler.has(yayin.yayin_id) };
     });
 
     const firmaBaglari = baglar.filter((bag) => bag.firmaId === kullanici.firma_id);

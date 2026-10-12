@@ -8,6 +8,7 @@ const bildirimApi = oku("app/bildirimler/api/route.ts");
 const panelLayout = oku("app/(panel)/layout.tsx");
 const panelNav = oku("components/panel/panelNav.config.ts");
 const ceklerim = oku("app/(panel)/eclub/cek-taleplerim/page.tsx");
+const cekTakipKarti = oku("components/eclub/EclubCekTakipVitrinKarti.tsx");
 const bildirimGosterimi = oku("components/panel/YayinSonucBildirimi.tsx");
 
 test("çek kaydıyla uygulama bildirimi aynı transaction içinde oluşur", () => {
@@ -43,5 +44,5 @@ test("çek bildirimi oturum içinde gösterilir ve Firmalar rozetine yansır", (
 test("Hediye Çeki Takibi açılınca çek bildirimleri görüldü yapılır", () => {
   assert.match(ceklerim, /fetch\("\/bildirimler\/api"[\s\S]*?method: "PUT"[\s\S]*?kayit_turu: "cek"/);
   assert.match(ceklerim, /bildirimRozetleriniYenile\(\)/);
-  assert.match(ceklerim, /CEK_KODU_GORUNUR_DURUMLARI[\s\S]*?CEK_KODU_GORUNUR_DURUMLARI\.includes\(talep\.durum\)[\s\S]*?talep\.cek_kodu/);
+  assert.doesNotMatch(cekTakipKarti, /talep\.cek_kodu|onKodKopyala|Migros Hediye Çeki Kodunuz/);
 });

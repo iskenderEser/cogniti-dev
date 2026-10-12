@@ -31,6 +31,7 @@ function panelApi(failed = "", authenticated = true) {
     v_yayin_detay: [{ yayin_id: "y1", firma_id: "f1", urun_adi: "Ürün", arac_turu: "gorsel", durum: "yayinda" },
       { yayin_id: "y2", firma_id: "foreign", urun_adi: "Başka firma", arac_turu: "gorsel", durum: "yayinda" }],
     v_yayin_kunye: [{ yayin_id: "y1", urun_id: "u1" }],
+    yayin_yonetimi: [{ yayin_id: "y1", cek_karsiligi_var_mi: true, satis_sarti_tipi: "serbest_siparis", gizli_sart_katlama_orani: 10, barem_tablosu: [{ min_puan: 300, max_puan: 500, adet: 10, mal_fazlasi: 1 }] }],
     urunler: [{ urun_id: "u1", gorunen_urun_id: "30-001" }],
     eclub_video_begeniler: [{ yayin_id: "y1", kisi_id: "k1" }],
     eclub_video_favoriler: [{ yayin_id: "y1", kisi_id: "other" }],
@@ -85,8 +86,13 @@ test("panel puan, ürün ve etkileşim verisini korur; sorgular paralel ve ürü
   assert.equal(data.oneriler[0].begeni_mi, true);
   assert.equal(data.oneriler[0].favori_mi, false);
   assert.equal(data.oneriler[0].favori_sayisi, 1);
+  assert.equal(data.oneriler[0].cek_karsiligi_var_mi, true);
+  assert.equal(data.oneriler[0].satis_sarti_tipi, "serbest_siparis");
+  assert.equal(data.oneriler[0].gizli_sart_katlama_orani, 10);
+  assert.equal(data.oneriler[0].barem_tablosu[0].adet, 10);
   assert.equal(data.ozet.toplam_kazanilan_puan, 100);
   assert.equal(api.events.filter(e => e === "start:v_yayin_kunye").length, 1);
+  assert.equal(api.events.filter(e => e === "start:yayin_yonetimi").length, 1);
   assert.ok(api.events.indexOf("start:eclub_izleme_kayitlari") < api.events.indexOf("end:eclub_oneri_kayitlari"));
   assert.ok(api.events.indexOf("start:eclub_video_begeniler") < api.events.indexOf("end:v_yayin_kunye"));
 });
@@ -95,7 +101,7 @@ test("oturumsuz erişim reddedilir; ürün ve etkileşim sorgusu hataları başa
   const noAuth = panelApi("", false);
   assert.equal((await noAuth.get()).status, 401);
   assert.equal(noAuth.events.length, 0);
-  for (const name of ["eclub_oneri_kayitlari", "v_yayin_kunye", "urunler", "eclub_video_begeniler", "eclub_video_favoriler"]) {
+  for (const name of ["eclub_oneri_kayitlari", "v_yayin_kunye", "yayin_yonetimi", "urunler", "eclub_video_begeniler", "eclub_video_favoriler"]) {
     assert.equal((await panelApi(name).get()).status, 500, name);
   }
 });

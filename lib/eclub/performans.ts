@@ -31,7 +31,7 @@ export interface PerformansKaybi { kayit_id: string; izleme_id: string; kisi_id:
 export interface PerformansBagi { kisi_id: string; eczane_id: string; baslangic_tarihi: string | null; bitis_tarihi: string | null; created_at: string | null; aktif_mi: boolean }
 export interface UyeKatkisi extends PerformansUyesi { tamamlanan: number; tamamlamaPuani: number; dogruCevapPuani: number; kayipPuani: number; puan: number }
 export interface HaftalikKatki { hafta: number; puan: number; tamamlanan: number; uyeler: UyeKatkisi[] }
-export interface PerformansVerisi { donem: PerformansDonemi; satirlar: { tur: PerformansTuru; haftalar: HaftalikKatki[] }[]; ozet: { puan: number; tamamlanan: number; uye: number } }
+export interface PerformansVerisi { donem: PerformansDonemi; satirlar: { tur: PerformansTuru; haftalar: HaftalikKatki[] }[]; ozet: { puan: number; tamamlanan: number; uye: number }; yayinHaftalikBirikim?: Record<string, number[]> }
 
 export function eclubPerformansiHesapla({ donem, izlemeler, puanlar, kayiplar, uyeler, baglar, eczaneIdler, yayinIdler }: {
   donem: PerformansDonemi; izlemeler: PerformansIzlemesi[]; puanlar: PerformansPuani[]; kayiplar: PerformansKaybi[];
@@ -49,6 +49,7 @@ export function eclubPerformansiHesapla({ donem, izlemeler, puanlar, kayiplar, u
     const liste = kayipMap.get(k.izleme_id) ?? []; liste.push(k); kayipMap.set(k.izleme_id, liste);
   }
   const satirlar = ECLUB_PERFORMANS_TURLERI.map(t => ({ tur: t.tur, haftalar: donem.haftalar.map(h => ({ hafta: h.hafta, puan: 0, tamamlanan: 0, uyeler: [] as UyeKatkisi[] })) }));
+  const yayinHaftalikPuanlar: Record<string, number[]> = Object.fromEntries(yayinIdler.map(id => [id, Array<number>(8).fill(0)]));
   const katkicilar = new Set<string>(); let toplamPuan = 0, toplamTamamlanan = 0;
   for (const izleme of new Map(izlemeler.map(i => [i.izleme_id, i])).values()) {
     if (!izleme.tamamlandi_mi || !izleme.izleme_bitis || !yayinlar.has(izleme.yayin_id) || izleme.ilerleme_durumu?.gorunum_testi) continue;
@@ -75,8 +76,13 @@ export function eclubPerformansiHesapla({ donem, izlemeler, puanlar, kayiplar, u
     if (!katki) { katki = { ...kisi, puan: 0, tamamlanan: 0, tamamlamaPuani: 0, dogruCevapPuani: 0, kayipPuani: 0 }; hucre.uyeler.push(katki); }
     katki.tamamlamaPuani += tamamlamaPuani; katki.dogruCevapPuani += dogruCevapPuani; katki.kayipPuani += kayip;
     katki.puan += net; katki.tamamlanan++; hucre.puan += net; hucre.tamamlanan++;
+    yayinHaftalikPuanlar[izleme.yayin_id][hafta.hafta - 1] += net;
     toplamPuan += net; toplamTamamlanan++; katkicilar.add(kisi.kisi_id);
   }
   for (const satir of satirlar) for (const h of satir.haftalar) h.uyeler.sort((a,b) => b.puan - a.puan || a.ad.localeCompare(b.ad, "tr"));
-  return { donem, satirlar, ozet: { puan: toplamPuan, tamamlanan: toplamTamamlanan, uye: katkicilar.size } };
+  const yayinHaftalikBirikim = Object.fromEntries(Object.entries(yayinHaftalikPuanlar).map(([yayinId, haftalar]) => {
+    let biriken = 0;
+    return [yayinId, haftalar.map(puan => (biriken += puan))];
+  }));
+  return { donem, satirlar, ozet: { puan: toplamPuan, tamamlanan: toplamTamamlanan, uye: katkicilar.size }, yayinHaftalikBirikim };
 }

@@ -3,12 +3,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Check, CheckCircle2, Clock3, Copy, Gift, Store, XCircle } from "lucide-react";
+import { CheckCircle2, Clock3, Gift, Store, XCircle } from "lucide-react";
 import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { cekTakipOnbellegi, type CekTalebi, type CekTakipVerisi } from "@/lib/eclub/store/cekTakipOnbellek";
 import { vitrinOnbellegi } from "@/lib/eclub/store/vitrinOnbellek";
 import EclubFirmaCekTakibiSkeleton from "@/components/eclub/EclubFirmaCekTakibiSkeleton";
+import EclubCekTakipVitrinKarti from "@/components/eclub/EclubCekTakipVitrinKarti";
 import EclubHediyeCekiBilgiPaneli from "@/components/eclub/EclubHediyeCekiBilgiPaneli";
 import { useEclubFirmaSecimi } from "@/components/eclub/EclubFirmaSecimi";
 import { eclubUrunIcerigi } from "@/lib/eclub/firmaGezinme";
@@ -22,8 +23,6 @@ import {
   EclubKisiYukleniyor,
 } from "@/components/eclub/EclubKisiSayfa";
 import {
-  CEK_KODU_GORUNUR_DURUMLARI,
-  CEK_TALEP_DURUM_META,
   CEK_TALEP_ISLEMDE_DURUMLARI,
 } from "@/lib/eclub/store/eclubStoreTipler";
 
@@ -46,14 +45,6 @@ export default function EclubCekTaleplerimPage() {
   const gorunenTalepler = useMemo(() => secim.gomulu ? eclubUrunIcerigi(talepler, secim.urunId) : talepler, [talepler, secim.gomulu, secim.urunId]);
   const [loading, setLoading] = useState(true);
   const [islemId, setIslemId] = useState<string | null>(null);
-  const [kopyalandiKod, setKopyalandiKod] = useState<string | null>(null);
-
-  const kodKopyala = async (kod: string) => {
-    if (dogrulaniyor) return;
-    await navigator.clipboard.writeText(kod);
-    setKopyalandiKod(kod);
-    setTimeout(() => setKopyalandiKod(null), 2000);
-  };
 
   const talepleriCek = useCallback(async (onbellekten = false) => {
     const istek = ++istekSirasi.current;
@@ -169,48 +160,15 @@ export default function EclubCekTaleplerimPage() {
         <EclubKisiBosDurum ikon={Gift} baslik="Henüz çek talebiniz yok" aciklama="Uygun dönemde oluşturduğunuz hediye çeki talepleri burada görüntülenir." />
       ) : (
         <section className="grid gap-3">
-          {gorunenTalepler.map((talep) => {
-            const durum = CEK_TALEP_DURUM_META[talep.durum];
-            const DurumIcon = talep.durum === "iptal" ? XCircle : talep.durum === "onaylandi" || talep.durum === "cek_kodlari_gonderildi" ? CheckCircle2 : Clock3;
-            const islemSuruyor = islemId === talep.talep_id;
-            return (
-              <article key={talep.talep_id} className="rounded-2xl border border-[#dfe7f1] bg-white p-4 shadow-[0_6px_18px_rgba(31,55,90,0.035)]">
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                  <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700"><Gift size={26} /></span>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-start justify-between gap-2">
-                      <div>
-                        {talep.gorunum_testi_mi && <span className="mb-1 inline-block rounded-md border border-blue-200 bg-blue-50 px-2 py-0.5 text-[10px] font-bold text-blue-800">Test verisi · Salt okunur</span>}
-                        <h2 className="text-sm font-extrabold text-[#203653]">{talep.urun_adi}</h2>
-                        <p className="mt-0.5 text-[10px] font-semibold text-[#8a99aa]">{talep.firma_adi} · {new Date(talep.created_at).toLocaleDateString("tr-TR")}</p>
-                      </div>
-                      <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-extrabold" style={{ color: durum.metin, background: durum.arka }}><DurumIcon size={12} /> {durum.etiket}</span>
-                    </div>
-                    <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
-                      <div className="rounded-xl bg-[#f5f8fb] px-3 py-2"><small className="block text-[9px] font-bold text-[#8190a3]">Kullanılan Puan</small><strong className="text-xs text-[#40556d]">{talep.toplanan_puan.toLocaleString("tr-TR")}</strong></div>
-                      <div className="rounded-xl bg-[#f5f8fb] px-3 py-2"><small className="block text-[9px] font-bold text-[#8190a3]">Çek Tutarı</small><strong className="text-xs text-emerald-700">{talep.talep_edilen_cek_tl.toLocaleString("tr-TR")} TL</strong></div>
-                      <div className="col-span-2 rounded-xl bg-[#f5f8fb] px-3 py-2 sm:col-span-1"><small className="block text-[9px] font-bold text-[#8190a3]">Satış Şartı</small><strong className="text-xs text-[#40556d]">{(talep.siparis_verildi_mi || (talep.gorunum_testi_mi && talep.siparis_adet > 0)) ? `${talep.siparis_adet} adet + ${talep.siparis_mal_fazlasi} MF` : "Siparişsiz"}</strong></div>
-                    </div>
-                    {CEK_KODU_GORUNUR_DURUMLARI.includes(talep.durum) && talep.cek_kodu && (
-                      <div className="mt-2.5 rounded-xl border border-emerald-300 bg-emerald-50 p-3">
-                        <span className="text-[11px] font-extrabold text-emerald-800">Migros Hediye Çeki Kodunuz</span>
-                        <div className="mt-1.5 flex items-center justify-between gap-2">
-                          <span className="font-mono text-base font-black tracking-wider text-emerald-950">{talep.cek_kodu}</span>
-                          <button type="button" onClick={() => void kodKopyala(talep.cek_kodu!)} disabled={dogrulaniyor} className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-extrabold text-white hover:bg-emerald-700">
-                            {kopyalandiKod === talep.cek_kodu ? <Check size={13} /> : <Copy size={13} />}
-                            {kopyalandiKod === talep.cek_kodu ? "Kopyalandı" : "Kopyala"}
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                  {talep.durum === "beklemede" && (
-                    <button type="button" onClick={() => void talepIptal(talep.talep_id)} disabled={dogrulaniyor || islemSuruyor || talep.gorunum_testi_mi} className="rounded-xl border border-[#f1cccc] bg-white px-4 py-2 text-xs font-extrabold text-[#bc4b4b] hover:bg-[#fff7f7] disabled:cursor-not-allowed disabled:opacity-60">{islemSuruyor ? "İşleniyor..." : "Talebi İptal Et"}</button>
-                  )}
-                </div>
-              </article>
-            );
-          })}
+          {gorunenTalepler.map((talep) => (
+            <EclubCekTakipVitrinKarti
+              key={talep.talep_id}
+              talep={talep}
+              iptalEdiliyor={islemId === talep.talep_id}
+              dogrulaniyor={dogrulaniyor}
+              onIptal={() => void talepIptal(talep.talep_id)}
+            />
+          ))}
         </section>
       )}
       <HataMesajiContainer mesajlar={mesajlar} />

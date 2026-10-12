@@ -7,6 +7,7 @@ import { ECLUB_HEDEF_ROLLER, TUKETICI_ROLLER } from "@/lib/utils/roller";
 import { getYayindakiVideolar } from "@/lib/video/yayindakiVideolar";
 import type { SatisSartiTipi } from "@/lib/eclub/store/eclubStoreTipler";
 import { gecerliTurBaslangiclari } from "@/lib/tclub/tur/kayit";
+import { eclubYayinEtkilesimSayilari } from "@/lib/eclub/yayinEtkilesimleri";
 
 interface YayinSartlariSatiri {
   yayin_id: string;
@@ -45,12 +46,22 @@ export async function GET() {
     const soruSayisiMap = new Map<string, number>();
     const satisSartiMap = new Map<string, YayinSartlariSatiri>();
     const tamamlananIncelemeler = new Set<string>();
+    let etkilesimler = { begeniler: new Map<string, number>(), favoriler: new Map<string, number>() };
 
     if (yayinIdler.length > 0) {
-      const { data: soruSayilari, error: soruSayisiError } = await adminSupabase
-        .from("v_yayin_detay")
-        .select("yayin_id, video_basi_soru_sayisi")
-        .in("yayin_id", yayinIdler);
+      const [soruSonucu, satisSonucu, eclubEtkilesimleri] = await Promise.all([
+        adminSupabase
+          .from("v_yayin_detay")
+          .select("yayin_id, video_basi_soru_sayisi")
+          .in("yayin_id", yayinIdler),
+        adminSupabase
+          .from("yayin_yonetimi")
+          .select("yayin_id, cek_karsiligi_var_mi, karsilik_puan, karsilik_tl, satis_sarti_tipi, gizli_sart_katlama_orani, barem_tablosu")
+          .in("yayin_id", yayinIdler),
+        eclubYayinEtkilesimSayilari(adminSupabase, yayinIdler),
+      ]);
+      etkilesimler = eclubEtkilesimleri;
+      const { data: soruSayilari, error: soruSayisiError } = soruSonucu;
 
       if (soruSayisiError) {
         return hataYaniti(
@@ -64,10 +75,7 @@ export async function GET() {
         soruSayisiMap.set(satir.yayin_id, satir.video_basi_soru_sayisi ?? 0);
       }
 
-      const { data: satisSartlari, error: satisSartlariError } = await adminSupabase
-        .from("yayin_yonetimi")
-        .select("yayin_id, cek_karsiligi_var_mi, karsilik_puan, karsilik_tl, satis_sarti_tipi, gizli_sart_katlama_orani, barem_tablosu")
-        .in("yayin_id", yayinIdler);
+      const { data: satisSartlari, error: satisSartlariError } = satisSonucu;
 
       if (satisSartlariError) {
         return hataYaniti("Yayın koşulları alınamadı.", "yayin_yonetimi SELECT — E-Club yayın koşulları", satisSartlariError);
@@ -106,6 +114,8 @@ export async function GET() {
         arac_id: yayin.arac_id!,
         arac_turu: yayin.arac_turu!,
         soru_sayisi: soruSayisiMap.get(yayin.yayin_id) ?? 0,
+        begeni_sayisi: etkilesimler.begeniler.get(yayin.yayin_id) ?? 0,
+        favori_sayisi: etkilesimler.favoriler.get(yayin.yayin_id) ?? 0,
         cek_karsiligi_var_mi: sarti?.cek_karsiligi_var_mi ?? null,
         karsilik_puan: sarti?.karsilik_puan ?? null,
         karsilik_tl: sarti?.karsilik_tl ?? null,

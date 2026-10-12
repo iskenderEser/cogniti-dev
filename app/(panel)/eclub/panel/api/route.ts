@@ -18,6 +18,15 @@ import { ogrenmeAraciBayraklari } from "@/lib/ogrenmeAraci/bayraklar";
 import { gorunenUrunIdHaritasi } from "@/lib/urunler/gorunenId";
 import { eclubKisiErisimi } from "@/lib/eclub/kisiErisim";
 import { yayinThumbnailUrlCoz } from "@/lib/ogrenmeAraci/yayinThumbnail";
+import type { BaremSatiri, SatisSartiTipi } from "@/lib/eclub/store/eclubStoreTipler";
+
+interface EclubYayinKosulu {
+  yayin_id: string;
+  cek_karsiligi_var_mi: boolean | null;
+  satis_sarti_tipi: SatisSartiTipi | null;
+  gizli_sart_katlama_orani: number | null;
+  barem_tablosu: BaremSatiri[] | null;
+}
 
 export async function GET(request: Request) {
   try {
@@ -121,9 +130,12 @@ export async function GET(request: Request) {
       }
     }
     // Ürün bağını bir kez oku; bağımsız etkileşim sorguları aynı anda başlar.
-    const [kunyeSonucu, eclubBegeniSonucu, eclubFavoriSonucu] = await Promise.all([
+    const [kunyeSonucu, kosulSonucu, eclubBegeniSonucu, eclubFavoriSonucu] = await Promise.all([
       yayinMap.size > 0
         ? adminSupabase.from("v_yayin_kunye").select("yayin_id, urun_id").in("yayin_id", [...yayinMap.keys()])
+        : Promise.resolve({ data: [], error: null }),
+      yayinMap.size > 0
+        ? adminSupabase.from("yayin_yonetimi").select("yayin_id, cek_karsiligi_var_mi, satis_sarti_tipi, gizli_sart_katlama_orani, barem_tablosu").in("yayin_id", [...yayinMap.keys()])
         : Promise.resolve({ data: [], error: null }),
       yayinIds.length > 0
         ? adminSupabase.from("eclub_video_begeniler").select("yayin_id, kisi_id").in("yayin_id", yayinIds)
@@ -133,8 +145,11 @@ export async function GET(request: Request) {
         : Promise.resolve({ data: [], error: null }),
     ]);
     if (kunyeSonucu.error) return hataYaniti("Yayın ürünleri alınamadı.", "v_yayin_kunye SELECT — E-Club panel", kunyeSonucu.error);
+    if (kosulSonucu.error) return hataYaniti("Yayın koşulları alınamadı.", "yayin_yonetimi SELECT — E-Club panel", kosulSonucu.error);
     if (eclubBegeniSonucu.error) return hataYaniti("Beğeni bilgileri alınamadı.", "eclub_video_begeniler SELECT — E-Club panel", eclubBegeniSonucu.error);
     if (eclubFavoriSonucu.error) return hataYaniti("Favori bilgileri alınamadı.", "eclub_video_favoriler SELECT — E-Club panel", eclubFavoriSonucu.error);
+    const kosullar = new Map<string, EclubYayinKosulu>();
+    for (const kosul of (kosulSonucu.data ?? []) as EclubYayinKosulu[]) kosullar.set(kosul.yayin_id, kosul);
     const urunIdleri = new Map<string, string>();
     for (const kunye of kunyeSonucu.data ?? []) urunIdleri.set(kunye.yayin_id, kunye.urun_id);
     const gorunenUrunler = await gorunenUrunIdHaritasi(adminSupabase, [...urunIdleri.values()]);
@@ -192,6 +207,7 @@ export async function GET(request: Request) {
       if (!y || !yayinTuketiciRoluneAcikMi(y, kisi.rol) || y.durum !== "yayinda") return [];
       const kazanilan = oneriPerformansi.get(oo.oneri_id) ?? { izleme: 0, cevaplama: 0, kayip: 0, dogru: 0, yanlis: 0 };
       const izleme = izlemeDetayHaritasi.get(oo.oneri_id);
+      const kosul = kosullar.get(oo.yayin_id);
       return [{
         oneri_id: oo.oneri_id,
         yayin_id: oo.yayin_id,
@@ -210,6 +226,10 @@ export async function GET(request: Request) {
         video_puani: Number(y?.video_puani ?? 0),
         soru_puani: Number(y?.soru_puani ?? 0),
         soru_sayisi: Number(y?.video_basi_soru_sayisi ?? 0),
+        cek_karsiligi_var_mi: kosul?.cek_karsiligi_var_mi ?? null,
+        satis_sarti_tipi: kosul?.satis_sarti_tipi ?? null,
+        gizli_sart_katlama_orani: kosul?.gizli_sart_katlama_orani ?? null,
+        barem_tablosu: kosul?.barem_tablosu ?? null,
         kazanilan_izleme_puani: kazanilan.izleme,
         kazanilan_cevaplama_puani: kazanilan.cevaplama,
         ileri_sarma_kaybi: kazanilan.kayip,

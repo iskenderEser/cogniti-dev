@@ -40,11 +40,13 @@ test("işlem, admin ve kod görünürlüğü durum kümeleri açıktır", () => 
 test("eczane ve admin ekranları ortak sözleşmeyi tüketir", () => {
   const eczaneStore = oku("app/(panel)/eclub/store/page.tsx");
   const eczaneTalepleri = oku("app/(panel)/eclub/cek-taleplerim/page.tsx");
+  const eczaneTalepKarti = oku("components/eclub/EclubCekTakipVitrinKarti.tsx");
   const adminApi = oku("app/admin/eclub-cek-teslimat/api/cek-talepleri/route.ts");
   const adminTablo = oku("app/admin/eclub-cek-teslimat/_components/EclubStoreSiparislerSekmesi.tsx");
 
   assert.match(eczaneStore, /CEK_TALEP_DURUM_META/);
-  assert.match(eczaneTalepleri, /CEK_TALEP_DURUM_META/);
+  assert.match(eczaneTalepleri, /EclubCekTakipVitrinKarti/);
+  assert.match(eczaneTalepKarti, /CEK_TALEP_DURUM_META/);
   assert.match(adminApi, /CEK_TALEP_ADMIN_DURUMLARI/);
   assert.match(adminTablo, /CEK_TALEP_ADMIN_DURUMLARI/);
   for (const kaynak of [eczaneStore, eczaneTalepleri, adminApi, adminTablo]) {
