@@ -39,3 +39,7 @@ Hediye Takibi görünüm testi için oluşturulan test verileri henüz silinmemi
 ## Zorunlu ölçüm zamanı standardı
 
 HapBilgi’de günlük ölçüm yoktur. Kullanıcıya sunulan ölçüm zamanı seçenekleri yalnızca **Haftalık, Aylık, Dönemlik ve Yıllık** olabilir. Ana sayfa, rapor ve takip ekranlarında `lib/utils/raporUtils.ts` içindeki `PERIYOTLAR` ortak kaynağını kullan; ayrı bir günlük seçenek listesi oluşturma. BM ve TM ana sayfaları haftalık seçimle başlar. Teknik tarih hesaplarında gün sınırının bulunması, günlük ölçüm seçeneği sunulmasına gerekçe değildir. Yeni geliştirmelerde ve incelemelerde bu kuralı uygula.
+
+## Çek Talebi toplam puan kontrolü
+
+Çek Talebi sayfasındaki **Toplam Puan** değerinin haftalık kayıt ve birikim durumunu kontrol et. Yayın Tamamlama Performansı verileriyle yayın ve dönem bazında karşılaştır; 1–8. haftalarda kazanılan net puanın doğru biriktiğini doğrula.
