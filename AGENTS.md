@@ -43,3 +43,101 @@ HapBilgi’de günlük ölçüm yoktur. Kullanıcıya sunulan ölçüm zamanı s
 ## Çek Talebi toplam puan kontrolü
 
 Çek Talebi sayfasındaki **Toplam Puan** değerinin haftalık kayıt ve birikim durumunu kontrol et. Yayın Tamamlama Performansı verileriyle yayın ve dönem bazında karşılaştır; 1–8. haftalarda kazanılan net puanın doğru biriktiğini doğrula.
+
+
+## Zorunlu hatırlatma: Tüm rollerde yazılım testi
+
+**Tüm rollerde yazılım testi yapılacak.**
+
+Test yöntemi, aşağıdaki metnin aynısıdır:
+
+Testi şu yöntemle yaptım:
+
+1. **Ayrı bir yerel PostgreSQL kurdum.** `/tmp` altında çalıştı; Supabase’e bağlanmadı. Yalnız yerel Unix socket bağlantısı kullanıldı.
+
+2. **Sahte test verileri hazırladım.** UTT, üye, ürün, yayın, gönderim ve plan kayıtlarını temsil eden tablolar oluşturdum. Gerçek kullanıcı verisi kullanılmadı.
+
+3. **Repodaki SQL’leri değiştirmeden çalıştırdım.** Gönderim, kota kontrolü, plan kaydı ve plan işleyicisini bu ortamda kurdum.
+
+4. **Her senaryo için başlangıç durumunu hazırladım.** Örneğin iki gönderim bulunan durumda üçüncüyü denedim; üç gönderim bulunan durumda dördüncünün reddedildiğini kontrol ettim. Tarih, dönem ve 15 gün sınırlarında da beklenen sonuçla gerçek sonucu karşılaştırdım.
+
+5. **Yarışları iki bağımsız bağlantıyla sınadım.** Aynı kotayı tüketmeye çalışan işlemleri birlikte çalıştırdım. Bir işlem kilidi tutarken diğerinin beklediğini ve ilk işlem tamamlandıktan sonra güncel kotayı gördüğünü doğruladım.
+
+6. **Planın gerçekleşme zincirini çalıştırdım.** Plan oluşturdum, hedef zamanını bekledim, işleyiciyi çağırdım. Tek öneri oluştuğunu, sürenin gerçek gönderimden başladığını ve tekrar çalıştırmanın ikinci öneri üretmediğini kontrol ettim.
+
+7. **Uygulama testlerini ayrıca çalıştırdım.** API ve React bileşenlerini sahte bağımlılıklarla; tarih ve uygunluk yardımcılarını doğrudan test ettim. TypeScript ve lint kontrollerini de yaptım.
+
+Sonuçları kaydettim ve yerel PostgreSQL’i durdurdum. **Bu yöntem canlı sistemin bütün şemasını veya tarayıcıdan gerçek kullanıcı deneyimini doğrulamaz; test edilen kod ve SQL davranışlarını doğrular.**
+
+Mevcut E-Club Adım 11 test sonuçları (`docs/ECLUB_GONDERIM_ADIM11_TEST_SONUCLARI.json`):
+
+```json
+{
+  "postgres": "17.10",
+  "passed": 41,
+  "tests": [
+    "Beş migration gerçek PostgreSQL’de kurulur ve tekrar kurulabilir",
+    "Haftalık üçüncü izinli, dördüncü reddedilir; farklı ürün ayrı sayılır",
+    "Haftalık kota üye bazlıdır, diğer üye etkilenmez",
+    "Gerçek gönderimler ile bekleyen planların haftalık toplamı üçtür",
+    "İlk gönderim ve iki tekrar izinli; üçüncü tekrar reddedilir",
+    "Önceki dönemden gelen yayın hedef dönemde iki tekrar hakkını kullanır",
+    "15 günün bir milisaniye öncesi kapalı; tam sınır ve sonrası açık",
+    "Sonraki planla 15 gün korunur; önceki plan da hesaba katılır",
+    "Dönem sınırında 15 günlük bekleme kaybolmaz",
+    "Hafta sonu gönderim hedefi kapalı; hafta sonundan gelecek hafta planı açık",
+    "Takip eden haftanın son iş günü izinli; ikinci ileri hafta kapalı",
+    "Takip eden hafta mevcut dönemi aşamaz; yıl geçişi de kapalı",
+    "Türkiye gece yarısı dönem ve hafta hesabında kullanılır",
+    "Plan geçmişe/şimdiki ana yapılamaz",
+    "Çoklu önizleme birlikte kota hesaplar ve hiç kayıt yazmaz",
+    "Çoklu anlık gönderimde aynı ürünün dördüncüsü atlanır, diğer ürün geçer",
+    "Gerçek gönderim süresi 15 gündür; eski RPC istemci tarihini/aracını kullanmaz",
+    "Plan kaydı rezervasyon oluşturur; öneri oluşturmaz; tekrar anahtarı tekildir",
+    "Plan kimliği/zamanı ve gerçekleşmiş gönderim süresi değiştirilemez",
+    "İki bağımsız oturumda üçüncü/dördüncü yarışını kilit sınırlar",
+    "Eş zamanlı anlık gönderim ve plan aynı haftalık kotayı aşamaz",
+    "Ters alıcı sıralı eş zamanlı toplu planlar deadlock oluşturmaz",
+    "Planın gerçekleşmesi rezervasyonu iki kere saymaz; plan başına tek öneri",
+    "Aynı planı iki eş zamanlı işleyici ikinci kez gönderemez",
+    "Henüz gelmemiş plan ve aktif lease sahiplenilmez; süresi bitmiş lease işlenir",
+    "Planın günü geçtiğinde gönderim yapılmaz ve tarih kaydırılmaz",
+    "Yayın durduğunda, yetki kalktığında veya araç kapandığında plan gerçekleşmez",
+    "Transaction iptalinde öneri ve gerçekleşme birlikte geri alınır; yeniden işlenebilir",
+    "Anon/authenticated plan tablosuna veya yeni gönderim RPC’sine erişemez",
+    "Gerçek plan oluşturma → zamanı gelmesi → tek öneri/15 günlük süre zinciri",
+    "Aynı yayın iki eş zamanlı seçimde ikinci kez gönderilemez",
+    "İki eş zamanlı aynı anahtarlı plan isteği tek kayıt oluşturur",
+    "Gerçekleşmeyen plan rezervasyonu kota tüketmez",
+    "Doğrudan INSERT de kota kapısından geçer; RPC atlanarak dördüncü kayıt açılamaz",
+    "Aynı üyenin diğer UTT gönderimleri ilk UTT kotasını tüketmez",
+    "UTT incelemesi tamamlanmamış yayın gönderilemez veya planlanamaz",
+    "Alıcının aktif eczane bağı kalkınca plan gönderilmez",
+    "Üyenin dört araçtaki tamamlaması mevcut RPC ile puan ve soru üretir",
+    "İleri sarma mevcut davranışını korur: oransal kayıp ve soru hakkının kapanması",
+    "Yanlış cevap sıfır kayıp, doğru cevap puan; aynı izleme tekrar cevaplanamaz",
+    "15 günlük süresi geçmiş öneri tamamlanır; puan ve sorular açılmaz"
+  ],
+  "scope": "Yalnız yerel Unix socket, sahte temel tablolar, değiştirilmemiş gönderim SQLleri",
+  "yerel_regresyon": {
+    "toplam": 64,
+    "basarili": 64,
+    "basarisiz": 0
+  },
+  "typecheck": "npm run typecheck:build: başarılı",
+  "lint": {
+    "hata": 0,
+    "uyari": 3,
+    "neden": "Gönderim RPCleri sema.json snapshotında yok; DB bağlantısıyla şema çekilmedi."
+  },
+  "sql_sha256": {
+    "eclub_yayin_gonderim_planlari.sql": "5306017dd973818f2dd5bc6df5dc3d6f99ab2c4c2696013a894c9fbf2b1b25ca",
+    "eclub_gonderim_kota_ve_tarih_kontrolu.sql": "d8c3fd0f14a3f073d66c2bf2589b7e510a1a89193e89b279c7090bcee0a0ce7a",
+    "eclub_gonderim_rpc_yeni_kurgu.sql": "c08002115cc7a6957b0d2cebce3dc30e5d1bbbbf1df2ebfe6b7c677824d3ef6f",
+    "eclub_gonderim_api_toplu.sql": "7c97e09ecb44c69f90ce39d685944b36da53f4023ec900e878d0bdc793a05372",
+    "eclub_planlanan_gonderim_isleyici.sql": "a7f59609fd1fa17d0ff5a50468a9eff9262bb5a88f87784f5c264dff7643a67f",
+    "eclub_puan_yazma_fonksiyonlari_eczane.sql": "3fac690e848043cd24beabf607619817a2d3db07af770ce3a39bf9e6abb6c67c",
+    "eclub_ileri_sarma_kurali.sql": "ac01e3be055ade07fd2cd4e100867a858730abb87633f4bf8d642e3040d56a66"
+  }
+}
+```
