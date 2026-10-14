@@ -2,22 +2,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { hataYaniti, sunucuHatasi, yetkiHatasi, rolHatasi, validasyonHatasi, isKuraluHatasi } from "@/lib/utils/hataIsle";
-import {
-  ayniAracTekrarAcikZamani,
-  eclubAyniVideoTekrarBeklemeGun,
-  oneriBitisHesapla,
-  eclubOneriGecerlilikGun,
-} from "@/lib/eclub/oneriLimit";
+import { GONDERIM_LIMITLERI, gonderimIsteginiOku, planTarihiniRpcGirdisineCevir, planTarihAdaylari, sayfalamaOku } from "@/lib/eclub/gonderimApi";
+import type { GonderimKontrolSonucu } from "@/lib/eclub/gonderimPlanTipleri";
 import { eclubBildirimOlustur } from "@/lib/utils/eclubBildirim";
 import { rolCozucu } from "@/lib/utils/rolCozucu";
-import { ECLUB_HEDEF_ROLLER, TUKETICI_ROLLER, eclubKisiHedefRolu, hedefRolleriOku, type HedefRoller } from "@/lib/utils/roller";
+import { TUKETICI_ROLLER, hedefRolleriOku, type HedefRoller } from "@/lib/utils/roller";
 import { eclubYayinKapsamindaMi } from "@/lib/eclub/oneriKapsam";
 import { yayinAraciKullanimaAcikMi } from "@/lib/ogrenmeAraci/bayraklar";
 import type { OgrenmeAraciTuru } from "@/lib/ogrenmeAraci/tipler";
-import { uttEczaneFirmaBaglari } from "@/lib/eclub/uttEczane";
-import { gecerliTurBaslangiclari } from "@/lib/tclub/tur/kayit";
-
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 interface KisiEczaneBagSatiri {
   kisi_id: string;
@@ -49,14 +41,6 @@ interface YayinAdiSatiri {
   firma_adi: string | null;
   hedef_roller: unknown;
 }
-interface EclubKisiSatiri { kisi_id: string; rol: string; auth_user_id: string | null; }
-interface AtomikOneriSatiri {
-  oneri_id: string | null;
-  kaydedildi: boolean;
-  sebep: string | null;
-  yeniden_gonderilebilir_at: string | null;
-}
-
 function tekilIliski<T>(deger: T | T[] | null | undefined): T | null {
   if (!deger) return null;
   return Array.isArray(deger) ? (deger[0] ?? null) : deger;
@@ -152,26 +136,47 @@ export async function GET(request: NextRequest) {
     if (!TUKETICI_ROLLER.includes(rol)) return rolHatasi("Bu sayfaya yalnız UTT/KD_UTT erişebilir.");
 
     if (request.nextUrl.searchParams.get("yalniz_limit") === "1") {
-      const [gecerlilikGun, tekrarBeklemeGun] = await Promise.all([
-        eclubOneriGecerlilikGun(adminSupabase),
-        eclubAyniVideoTekrarBeklemeGun(adminSupabase),
-      ]);
-      return NextResponse.json({
-        limitler: { gecerlilik_gun: gecerlilikGun, ayni_video_tekrar_bekleme_gun: tekrarBeklemeGun },
-      }, { status: 200 });
+      return NextResponse.json({ limitler: GONDERIM_LIMITLERI });
     }
-
+    let sayfalama;
+    try { sayfalama = sayfalamaOku(request.nextUrl.searchParams); }
+    catch (error) { return validasyonHatasi(error instanceof Error ? error.message : 'Geçersiz sayfalama.'); }
+    const { sayfa, sayfa_boyutu, baslangic } = sayfalama;
+    if (request.nextUrl.searchParams.get('kaynak') === 'planlar') {
+      const { data: planlar, count, error } = await adminSupabase.from('eclub_yayin_gonderim_planlari')
+        .select('plan_id, kisi_id, yayin_id, urun_id, hedef_gonderim_at, durum, oneri_id, gerceklesti_at, son_hata_kodu, created_at, eclub_kisiler(ad, soyad, rol)', { count: 'exact' })
+        .eq('utt_id', user.id).order('created_at', { ascending: false }).order('plan_id', { ascending: false })
+        .range(baslangic, baslangic + sayfa_boyutu - 1);
+      if (error) return hataYaniti('Planlar alınamadı.', 'eclub_yayin_gonderim_planlari SELECT', error);
+      const yayinIdler = [...new Set((planlar ?? []).map(p => p.yayin_id))];
+      const { data: yayinlar, error: yayinHatasi } = yayinIdler.length ? await adminSupabase.from('v_yayin_detay')
+        .select('yayin_id, urun_adi, firma_adi, talep_no, hedef_roller, arac_turu').in('yayin_id', yayinIdler) : { data: [], error: null };
+      if (yayinHatasi) return hataYaniti('Plan yayın bilgileri alınamadı.', 'v_yayin_detay SELECT — planlar', yayinHatasi);
+      const yayinMap = new Map((yayinlar ?? []).map(y => [y.yayin_id, y]));
+      const planSonucu = (planlar ?? []).map(p => {
+        const kisi = tekilIliski(p.eclub_kisiler as OneriKisiKimlik | OneriKisiKimlik[] | null);
+        const yayin = yayinMap.get(p.yayin_id);
+        const { eclub_kisiler: kimlik, hedef_gonderim_at: hedef_gonderim_tarihi, ...plan } = p;
+        void kimlik;
+        return { ...plan, hedef_gonderim_tarihi, kisi_ad: kisi?.ad ?? '-', kisi_soyad: kisi?.soyad ?? '-', kisi_rol: kisi?.rol ?? null,
+          urun_adi: yayin?.urun_adi ?? 'Yayın bilgisi alınamadı', firma_adi: yayin?.firma_adi ?? null,
+          talep_no: yayin?.talep_no ?? null, hedef_roller: yayin ? hedefRolleriOku(yayin) : [], arac_turu: yayin?.arac_turu ?? null };
+      });
+      return NextResponse.json({ planlar: planSonucu, limitler: GONDERIM_LIMITLERI,
+        sayfalama: { sayfa, sayfa_boyutu, toplam: count, devam_var: baslangic + sayfa_boyutu < (count ?? 0) } });
+    }
     // UTT'nin gönderdiği öneriler + alıcı (eclub_kisiler) temel bilgisi.
     // Eczane adı ayrı sorgu+Map ile çözülür (eczane bağı eclub_kisiler'de değil,
     // eclub_kisi_eczane → eclub_eczaneler → eclub_eczane_master zincirindedir).
-    const { data: oneriler, error } = await adminSupabase
+    const { data: oneriler, count, error } = await adminSupabase
       .from("eclub_oneri_kayitlari")
       .select(`
         oneri_id, yayin_id, arac_id, arac_turu, kisi_id, oneri_baslangic, oneri_bitis, izlendi_mi, created_at,
         eclub_kisiler ( ad, soyad, rol )
-      `)
+      `, { count: "exact" })
       .eq("oneren_id", user.id)
-      .order("created_at", { ascending: false });
+      .order("created_at", { ascending: false }).order("oneri_id", { ascending: false })
+      .range(baslangic, baslangic + sayfa_boyutu - 1);
 
     if (error) return hataYaniti("Öneri geçmişi çekilemedi.", "eclub_oneri_kayitlari SELECT — oneren_id filtresi", error);
 
@@ -225,244 +230,91 @@ export async function GET(request: NextRequest) {
       };
     });
 
-    const [gecerlilikGun, tekrarBeklemeGun] = await Promise.all([
-      eclubOneriGecerlilikGun(adminSupabase),
-      eclubAyniVideoTekrarBeklemeGun(adminSupabase),
-    ]);
-    const simdi = Date.now();
-    const tekrarEngeliMap = new Map<string, { arac_id: string; kisi_id: string; yeniden_gonderilebilir_at: string }>();
-    for (const oneri of sonuc) {
-      const yenidenGonderilebilirAt = ayniAracTekrarAcikZamani(new Date(oneri.oneri_bitis), tekrarBeklemeGun).toISOString();
-      if (new Date(yenidenGonderilebilirAt).getTime() <= simdi) continue;
-      const anahtar = `${oneri.arac_id}:${oneri.kisi_id}`;
-      const mevcut = tekrarEngeliMap.get(anahtar);
-      if (!mevcut || mevcut.yeniden_gonderilebilir_at < yenidenGonderilebilirAt) {
-        tekrarEngeliMap.set(anahtar, {
-          arac_id: oneri.arac_id,
-          kisi_id: oneri.kisi_id,
-          yeniden_gonderilebilir_at: yenidenGonderilebilirAt,
-        });
-      }
-    }
-
     return NextResponse.json({
-      oneriler: sonuc,
-      tekrar_engelleri: [...tekrarEngeliMap.values()],
-      limitler: { gecerlilik_gun: gecerlilikGun, ayni_video_tekrar_bekleme_gun: tekrarBeklemeGun },
-    }, { status: 200 });
+      oneriler: sonuc, limitler: GONDERIM_LIMITLERI,
+      sayfalama: { sayfa, sayfa_boyutu, toplam: count, devam_var: baslangic + sayfa_boyutu < (count ?? 0) },
+    });
 
   } catch (err) {
     return sunucuHatasi(err, "GET /eclub/oneriler/api");
   }
 }
 
-// ─── POST: tek video → çok kişi, atla-raporla ────────────────────────────────
+// POST: anlık gönderim, plan kaydı veya aynı seçimin salt okunur uygunluk kontrolü.
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient();
     const adminSupabase = createAdminClient();
-
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) return yetkiHatasi();
-
     const rol = await rolCozucu(adminSupabase, user.id);
-    if (!TUKETICI_ROLLER.includes(rol)) return rolHatasi("Sadece UTT/KD_UTT öneri gönderebilir.");
-
-    const body = await request.json();
-    const { yayin_id, kisi_idler } = body;
-
-    if (!yayin_id || typeof yayin_id !== "string") return validasyonHatasi("yayin_id zorunludur.", ["yayin_id"]);
-    if (!kisi_idler || !Array.isArray(kisi_idler) || kisi_idler.length === 0)
-      return validasyonHatasi("En az bir kişi seçilmelidir.", ["kisi_idler"]);
-    if (kisi_idler.length > 100)
-      return validasyonHatasi("Tek işlemde en fazla 100 kişi seçilebilir.", ["kisi_idler"]);
-    if (kisi_idler.some((k: unknown) => typeof k !== "string" || !UUID_RE.test(k)))
-      return validasyonHatasi("Geçersiz kişi kimliği gönderildi.", ["kisi_idler"]);
-    if (!UUID_RE.test(yayin_id)) return validasyonHatasi("Geçersiz yayın kimliği gönderildi.", ["yayin_id"]);
-
-    const benzersizKisiler: string[] = [...new Set(kisi_idler as string[])];
-
-    const { data: utt, error: uttError } = await adminSupabase
-      .from("kullanicilar")
-      .select("firma_id, takim_id")
-      .eq("kullanici_id", user.id)
-      .maybeSingle();
-
-    if (uttError || !utt?.firma_id)
-      return hataYaniti("UTT yayın kapsamı alınamadı.", "kullanicilar SELECT — E-Club öneri kapsamı", uttError, 404);
-
-    // 3. Yayın geçerli mi (yayında + en az bir E-Club hedef rolü)
-    const { data: yayin, error: yayinError } = await adminSupabase
-      .from("v_yayin_detay")
-      .select("yayin_id, durum, hedef_roller, urun_adi, firma_id, takim_id, arac_id, arac_turu")
-      .eq("yayin_id", yayin_id)
-      .maybeSingle();
-
-    if (yayinError) return hataYaniti("Yayın sorgulanamadı.", "v_yayin_detay SELECT — yayin_id", yayinError);
-    if (!yayin) return hataYaniti("Yayın bulunamadı.", "v_yayin_detay — yayin_id yok", null, 404);
-    if (yayin.durum !== "yayinda") return isKuraluHatasi(`Bu yayın şu an yayında değil. Durum: ${yayin.durum}`);
-    const yayinHedefRolleri = hedefRolleriOku(yayin);
-    if (!yayinHedefRolleri.some((hedefRol) => ECLUB_HEDEF_ROLLER.includes(hedefRol)))
-      return isKuraluHatasi("Bu yayın E-Club için uygun değil (hedef rol eczacı/teknisyen değil).");
-    if (!eclubYayinKapsamindaMi(utt, yayin))
-      return isKuraluHatasi("Yayın, UTT'nin erişebildiği firma/takım kataloğu kapsamında değil.");
-    if (!yayinAraciKullanimaAcikMi(yayin.arac_turu))
-      return isKuraluHatasi("Bu öğrenme aracı kullanıma kapalı.");
-    if (!yayin.arac_id)
-      return hataYaniti("Yayının öğrenme aracı kimliği çözülemedi.", "v_yayin_detay — arac_id yok", null, 500);
-
-    // Arayüz atlanarak doğrudan POST yapılmasını da engelle.
-    const turler = await gecerliTurBaslangiclari(adminSupabase, [yayin_id], true);
-    const { data: yonetim, error: yonetimError } = await adminSupabase.from("yayin_yonetimi")
-      .select("yayin_tarihi").eq("yayin_id", yayin_id).single();
-    if (yonetimError || !yonetim) return hataYaniti("Yayın turu doğrulanamadı.", "yayin_yonetimi SELECT", yonetimError);
-    const turBaslangici = turler[yayin_id]?.baslangic_tarihi ?? yonetim.yayin_tarihi;
-    const { data: inceleme, error: incelemeError } = await adminSupabase.from("eclub_utt_yayin_incelemeleri")
-      .select("inceleme_id").eq("utt_id", user.id).eq("yayin_id", yayin_id).eq("arac_id", yayin.arac_id)
-      .gte("tamamlandi_at", turBaslangici).limit(1).maybeSingle();
-    if (incelemeError) return hataYaniti("Gönderim öncesi inceleme doğrulanamadı.", "eclub_utt_yayin_incelemeleri SELECT", incelemeError);
-    if (!inceleme) return isKuraluHatasi("Göndermek için yayını önce tamamlayın.");
-
-    // 4+5. Kişileri çek: rol, aktif kişi-eczane bağı ve UTT'nin bağımsız
-    // eczane üyeliği ayrı kaynaklardan doğrulanır.
-
-    // 4a. Kişilerin rol bilgisi
-    const { data: kisilerRol, error: kisiRolError } = await adminSupabase
-      .from("eclub_kisiler")
-      .select("kisi_id, rol, auth_user_id")
-      .in("kisi_id", benzersizKisiler);
-
-    if (kisiRolError) return hataYaniti("Kişiler sorgulanamadı.", "eclub_kisiler SELECT — kisi_idler", kisiRolError);
-
-    const kimlikMap = new Map<string, { rol: string; auth_user_id: string | null }>();
-    for (const k of (kisilerRol ?? []) as EclubKisiSatiri[]) {
-      kimlikMap.set(k.kisi_id, {
-        rol: k.rol,
-        auth_user_id: k.auth_user_id ?? null,
-      });
+    if (!TUKETICI_ROLLER.includes(rol)) return rolHatasi('Bu işlemi yalnız UTT/KD_UTT yapabilir.');
+    let secim;
+    let tarihleriHesapla = true;
+    try {
+      const body = await request.json();
+      secim = gonderimIsteginiOku(body);
+      if (body.tarihleri_hesapla !== undefined && typeof body.tarihleri_hesapla !== 'boolean') throw new Error('Tarih kontrolü seçeneği geçersiz.');
+      tarihleriHesapla = body.tarihleri_hesapla !== false;
     }
+    catch (error) { return validasyonHatasi(error instanceof Error ? error.message : 'Geçersiz istek.'); }
 
-    // 4b. Aktif kişi-eczane bağları (kisi_id → eczane_id)
-    const { data: baglar, error: bagError } = await adminSupabase
-      .from("eclub_kisi_eczane")
-      .select("kisi_id, eczane_id")
-      .in("kisi_id", benzersizKisiler)
-      .eq("aktif_mi", true);
-
-    if (bagError) return hataYaniti("Kişi-eczane bağları sorgulanamadı.", "eclub_kisi_eczane SELECT — kisi_idler", bagError);
-
-    const kisiEczaneMap = new Map<string, string>(); // kisi_id → eczane_id
-    const aktifBaglar = (baglar ?? []) as KisiEczaneBagSatiri[];
-    for (const b of aktifBaglar) kisiEczaneMap.set(b.kisi_id, b.eczane_id);
-
-    // 4c. Bu UTT'nin bağımsız E-Club listesine aldığı eczaneler.
-    const eczaneIdler = [...new Set(aktifBaglar.map((b) => b.eczane_id))];
-    const uttBaglari = await uttEczaneFirmaBaglari(adminSupabase, user.id);
-    const adayEczaneSet = new Set(eczaneIdler);
-    const sahipOlunanEczaneler = new Set(
-      uttBaglari.filter((bag) => adayEczaneSet.has(bag.eczaneId)).map((bag) => bag.eczaneId)
-    );
-
-    // kisiMap: kişi başına rol, giriş hesabı, aktif bağ ve bu UTT'nin sahipliği.
-    const atlanan: { kisi_id: string; sebep: string; yeniden_gonderilebilir_at?: string }[] = [];
-    const kisiMap = new Map<string, { rol: string; auth_var: boolean; aktif_mi: boolean; sahip_mi: boolean }>();
-    for (const kid of benzersizKisiler) {
-      const kimlik = kimlikMap.get(kid);
-      if (!kimlik) continue; // kişi hiç yok → aşağıda "bulunamadi"
-      const eczaneId = kisiEczaneMap.get(kid); // aktif bağ varsa eczane_id
-      kisiMap.set(kid, {
-        rol: kimlik.rol,
-        auth_var: !!kimlik.auth_user_id,
-        aktif_mi: eczaneId !== undefined, // aktif kişi-eczane bağı var mı
-        sahip_mi: !!eczaneId && sahipOlunanEczaneler.has(eczaneId),
-      });
+    const { data: utt, error: uttError } = await adminSupabase.from('kullanicilar')
+      .select('firma_id, takim_id').eq('kullanici_id', user.id).maybeSingle();
+    if (uttError || !utt?.firma_id) return hataYaniti('UTT kapsamı alınamadı.', 'kullanicilar SELECT', uttError);
+    const { data: yayinlar, error: yayinError } = await adminSupabase.from('v_yayin_detay')
+      .select('yayin_id, firma_id, takim_id, arac_turu, urun_adi').in('yayin_id', secim.yayin_idler);
+    if (yayinError) return hataYaniti('Yayın bilgileri alınamadı.', 'v_yayin_detay SELECT', yayinError);
+    const yayinMap = new Map((yayinlar ?? []).map(y => [y.yayin_id as string, y]));
+    for (const id of secim.yayin_idler) {
+      const yayin = yayinMap.get(id);
+      if (!yayin || !eclubYayinKapsamindaMi(utt, yayin)) return isKuraluHatasi('Seçilen yayınlardan biri erişim kapsamınızda değil.');
+      if (!yayinAraciKullanimaAcikMi(yayin.arac_turu)) return isKuraluHatasi('Seçilen öğrenme araçlarından biri kullanıma kapalı.');
     }
+    const parametreler = {
+      p_utt_id: user.id, p_kisi_idler: secim.kisi_idler, p_yayin_idler: secim.yayin_idler,
+      p_hedef_at: secim.hedef_gonderim_tarihi ? planTarihiniRpcGirdisineCevir(secim.hedef_gonderim_tarihi) : null,
+      p_islem_anahtari: secim.islem_anahtari,
+      p_onizleme: secim.islem === 'kontrol',
+    };
+    const { data, error } = await adminSupabase.rpc('eclub_yayin_toplu_islem', parametreler);
+    if (error || !data) return hataYaniti('Gönderim işlemi tamamlanamadı.', 'eclub_yayin_toplu_islem RPC', error);
+    const sonuc = data as { sonuclar: GonderimKontrolSonucu[] };
+    if (!Array.isArray(sonuc.sonuclar)) throw new Error('Toplu gönderim sonucu okunamadı.');
 
-    // Aday listesi: her kişi için sahiplik + aktiflik + rol uyumu
-    const adaylar: string[] = [];
-    for (const kid of benzersizKisiler) {
-      const k = kisiMap.get(kid);
-      if (!k) { atlanan.push({ kisi_id: kid, sebep: "bulunamadi" }); continue; }
-      if (!k.aktif_mi) { atlanan.push({ kisi_id: kid, sebep: "pasif" }); continue; }
-      if (!k.sahip_mi) { atlanan.push({ kisi_id: kid, sebep: "sahiplik_yok" }); continue; }
-      const hedefRol = eclubKisiHedefRolu(k.rol);
-      if (!hedefRol || !yayinHedefRolleri.includes(hedefRol)) { atlanan.push({ kisi_id: kid, sebep: "rol_uyumsuz" }); continue; }
-      if (!k.auth_var) { atlanan.push({ kisi_id: kid, sebep: "giris_hesabi_yok" }); continue; }
-      adaylar.push(kid);
-    }
-
-    // Aynı UTT'nin aynı yayını daha önce gönderdiği kişileri yeniden önerme.
-    let gonderilecekAdaylar = adaylar;
-    if (adaylar.length > 0) {
-      const { data: oncekiGonderimler, error: oncekiGonderimError } = await adminSupabase
-        .from("eclub_oneri_kayitlari")
-        .select("kisi_id")
-        .eq("oneren_id", user.id)
-        .eq("yayin_id", yayin_id)
-        .in("kisi_id", adaylar);
-      if (oncekiGonderimError) return hataYaniti("Önceki gönderimler doğrulanamadı.", "eclub_oneri_kayitlari SELECT — aynı yayın ve alıcı", oncekiGonderimError);
-      const dahaOnceGonderilenler = new Set((oncekiGonderimler ?? []).map((kayit) => kayit.kisi_id));
-      gonderilecekAdaylar = adaylar.filter((kid) => {
-        if (!dahaOnceGonderilenler.has(kid)) return true;
-        atlanan.push({ kisi_id: kid, sebep: "zaten_gonderildi" });
-        return false;
-      });
-    }
-
-    // Atomik kayıt: yalnız aynı UTT + aynı kişi + aynı gerçek öğrenme aracının tekrarını engeller.
-    const gonderilen: string[] = [];
-    const now = new Date();
-    const gecerlilikGun = await eclubOneriGecerlilikGun(adminSupabase);
-    const bitis = oneriBitisHesapla(now, gecerlilikGun);
-    for (const kid of gonderilecekAdaylar) {
-      const { data: rpcSonucu, error: insertError } = await adminSupabase
-        .rpc("eclub_oneri_atomik_kaydet", {
-          p_yayin_id: yayin_id,
-          p_oneren_id: user.id,
-          p_kisi_id: kid,
-          p_arac_id: yayin.arac_id,
-          p_oneri_baslangic: now.toISOString(),
-          p_oneri_bitis: bitis.toISOString(),
-        })
-        .single();
-      if (insertError || !rpcSonucu) {
-        atlanan.push({ kisi_id: kid, sebep: "kayit_hatasi" });
-        continue;
-      }
-      const atomikSonuc = rpcSonucu as AtomikOneriSatiri;
-      if (!atomikSonuc.kaydedildi || !atomikSonuc.oneri_id) {
-        atlanan.push({
-          kisi_id: kid,
-          sebep: atomikSonuc.sebep ?? "kayit_hatasi",
-          ...(atomikSonuc.yeniden_gonderilebilir_at
-            ? { yeniden_gonderilebilir_at: atomikSonuc.yeniden_gonderilebilir_at }
-            : {}),
+    // Gün bazında, bütün seçimler için birlikte uygun olan tarihler.
+    const uygunTarihler: string[] = [];
+    if (secim.islem === 'kontrol' && secim.hedef_gonderim_tarihi && tarihleriHesapla) {
+      for (const hedef of planTarihAdaylari()) {
+        const { data: aday, error: adayError } = await adminSupabase.rpc('eclub_yayin_toplu_islem', {
+          ...parametreler, p_hedef_at: planTarihiniRpcGirdisineCevir(hedef), p_onizleme: true,
         });
-        continue;
+        if (adayError || !aday) return hataYaniti('Uygun tarihler hesaplanamadı.', 'eclub_yayin_toplu_islem önizleme', adayError);
+        const sonuclar = (aday as { sonuclar: GonderimKontrolSonucu[] }).sonuclar;
+        if (!Array.isArray(sonuclar)) throw new Error('Tarih kontrolü okunamadı.');
+        if (sonuclar.length && sonuclar.every(s => s.uygun)) uygunTarihler.push(hedef);
       }
-      gonderilen.push(kid);
-
-      // İŞ 2.7: kişiye uygulama-içi bildirim (eclub_bildirimler). Öneri kaydı
-      // başarılıysa gönderilir; bildirim hatası öneriyi geçersiz kılmaz (helper içinde loglanır).
-      await eclubBildirimOlustur({
-        adminSupabase,
-        alici_kisi_id: kid,
-        firma_id: yayin.firma_id,
-        gonderen_id: user.id,
-        kayit_turu: "oneri",
-        kayit_id: atomikSonuc.oneri_id,
-        mesaj: `Size yeni bir öğrenme içeriği önerildi: ${yayin.urun_adi}`,
-      });
     }
-
+    const kaydedilenler = sonuc.sonuclar.filter(s => s.kaydedildi);
+    // Plan oluştururken bildirim yoktur; yalnız gerçek öneri kayıtları bildirilir.
+    if (secim.islem === 'gonder') {
+      for (const kayit of kaydedilenler) {
+        if (!kayit.oneri_id) throw new Error('Gönderimin öneri kimliği eksik.');
+        const yayin = yayinMap.get(kayit.yayin_id)!;
+        await eclubBildirimOlustur({ adminSupabase, alici_kisi_id: kayit.kisi_id,
+          firma_id: yayin.firma_id, gonderen_id: user.id, kayit_turu: 'oneri', kayit_id: kayit.oneri_id,
+          mesaj: `Size yeni bir öğrenme içeriği önerildi: ${yayin.urun_adi}` });
+      }
+    }
     return NextResponse.json({
-      mesaj: `${gonderilen.length} öneri gönderildi.`,
-      gonderilen_sayisi: gonderilen.length,
-      gonderilen,
-      atlanan,
-    }, { status: 201 });
-
-  } catch (err) {
-    return sunucuHatasi(err, "POST /eclub/oneriler/api");
-  }
+      ...data, limitler: GONDERIM_LIMITLERI, uygun_tarihler: uygunTarihler,
+      mesaj: secim.islem === 'kontrol' ? 'Gönderim uygunluğu kontrol edildi.'
+        : `${kaydedilenler.length} ${secim.islem === 'planla' ? 'gönderim planlandı' : 'yayın gönderildi'}.`,
+      gonderilen_sayisi: secim.islem === 'gonder' ? kaydedilenler.length : 0,
+      planlanan_sayisi: secim.islem === 'planla' ? kaydedilenler.length : 0,
+      gonderilen: secim.islem === 'gonder' ? kaydedilenler.map(s => s.kisi_id) : [],
+      atlanan: sonuc.sonuclar.filter(s => s.sebep).map(s => ({ kisi_id: s.kisi_id, yayin_id: s.yayin_id,
+        sebep: s.sebep, yeniden_gonderilebilir_at: s.yeniden_gonderilebilir_at ?? undefined })),
+    }, { status: secim.islem === 'kontrol' ? 200 : 201 });
+  } catch (err) { return sunucuHatasi(err, 'POST /eclub/oneriler/api'); }
 }

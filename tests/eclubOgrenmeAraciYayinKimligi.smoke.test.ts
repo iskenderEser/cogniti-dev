@@ -21,13 +21,17 @@ test("E-Club öneri kataloğu legacy video zinciri olmadan ortak araç kimliğin
   assert.match(oneriTipleri, /arac_turu: OgrenmeAraciTuru/);
 });
 
-test("E-Club atomik öneri akışı tekrar kuralını arac_id ekseninde uygular", () => {
+test("E-Club gönderimi yayın kimliğiyle çalışır; araç yayından çözülür", () => {
   assert.match(oneriApi, /oneri_id, yayin_id, arac_id, arac_turu/);
-  assert.match(oneriApi, /p_arac_id: yayin\.arac_id/);
+  assert.match(oneriApi, /eclub_yayin_toplu_islem/);
+  assert.match(oneriApi, /p_yayin_idler: secim\.yayin_idler/);
+  assert.doesNotMatch(oneriApi, /p_arac_id:/);
   assert.doesNotMatch(oneriApi, /p_video_id|\.from\("video_durumu"\)/);
   assert.match(kimlikMigration, /ADD COLUMN IF NOT EXISTS arac_id uuid/);
   assert.match(kimlikMigration, /ALTER COLUMN video_id DROP NOT NULL/);
-  assert.match(kimlikMigration, /AND o\.arac_id = p_arac_id/);
+  const yeniRpc = oku("scripts/sql/eclub_gonderim_rpc_yeni_kurgu.sql");
+  assert.match(yeniRpc, /SELECT \* FROM public\.eclub_yayin_gonder\(p_oneren_id, p_kisi_id, p_yayin_id, NULL\)/);
+  assert.match(yeniRpc, /y\.arac_id, y\.arac_turu, oa\.legacy_video_id/);
   assert.match(kimlikMigration, /FOREIGN KEY \(arac_id\)[\s\S]*REFERENCES public\.ogrenme_araclari\(arac_id\)/);
 });
 

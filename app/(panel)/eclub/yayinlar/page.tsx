@@ -1,6 +1,7 @@
 "use client";
 
-import { SadeKisiCokluSecimi } from "@/components/kontrol/KisiKontroller";
+import EclubGonderimPaneli from "./_components/EclubGonderimPaneli";
+import EclubPlanlananlar from "./_components/EclubPlanlananlar";
 
 import { HEDEF_ROL_TASARIM } from "@/app/(panel)/talepler/_types";
 import { useAuth } from "@/app/providers/AuthProvider";
@@ -12,7 +13,7 @@ import { PeriyotButonlari } from "@/components/ui/periyot-butonlari";
 import { YenileButonu } from "@/components/ui/yenile-butonu";
 import MobilYayinAkisi from "@/components/yayin/MobilYayinAkisi";
 import { UttYayinTuruToggle } from "@/components/yayin/UttYayinListeOrtaklari";
-import { yayinAlicisiBekliyor, yayinAlicisiUygun, yayinGonderimListeleri, type GonderimFiltresi } from "@/lib/eclub/yayinGonderimFiltreleri";
+import { yayinAlicisiUygun, yayinGonderimListeleri, type GonderimFiltresi } from "@/lib/eclub/yayinGonderimFiltreleri";
 import { ECLUB_GOREN_ROLLER } from "@/lib/utils/roller";
 import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -31,7 +32,7 @@ const HEDEF_GRUPLARI: { anahtar: HedefGrubu; etiket: string; aciklama: string; r
   { anahtar: "ortak", etiket: "Eczacı ve Eczane Teknisyeni", aciklama: "Her iki hedef kitleye uygun", renk: "#5367c7" },
 ];
 
-const hedefGrubu = (video: OneriYayin): HedefGrubu => {
+const hedefGrubu = (video: Pick<OneriYayin, "hedef_roller">): HedefGrubu => {
   const eczaci = video.hedef_roller.includes("eczaci");
   const teknisyen = video.hedef_roller.includes("eczane_teknisyeni");
   if (eczaci && teknisyen) return "ortak";
@@ -52,17 +53,12 @@ function UttEclubVideolarimPage() {
   const { mesajlar, hata, basari } = useHataMesaji();
   const rolUygun = !!kullanici && ECLUB_GOREN_ROLLER.includes((kullanici.rol ?? "").toLowerCase());
   const hazir = !authYukleniyor && rolUygun;
-  const { yayinlar, kisiler, tekrarEngelleri, gonderilenYayinIdleri, gonderilenKisiler, gonderimGecmisi, loading, yenileniyor, gonderLoading, veriCek, oneriGonder } = useEclubOneriler({ hazir, hata, basari });
+  const { yayinlar, kisiler, planlar, veriSurumu, gonderilenYayinIdleri, gonderilenKisiler, gonderimGecmisi, loading, yenileniyor, gonderLoading, veriCek, uygunluguKontrolEt, topluKaydet } = useEclubOneriler({ hazir, hata, basari });
   const [aktifHedef, setAktifHedef] = useState<HedefGrubu>("eczaci");
   const [gonderimFiltresi, setGonderimFiltresi] = useState<GonderimFiltresi>("tumu");
   const [aktifYayinTuru, setAktifYayinTuru] = useState<YayinTuruFiltreDegeri>("tumu");
   const [aktifVideo, setAktifVideo] = useState<OneriYayin | null>(null);
   const [seciliYayinIdleri, setSeciliYayinIdleri] = useState<string[]>([]);
-  const [seciliKisiIdleri, setSeciliKisiIdleri] = useState<string[]>([]);
-
-  const [topluGonderiliyor, setTopluGonderiliyor] = useState(false);
-  const [gonderimOzeti, setGonderimOzeti] = useState<string | null>(null);
-  const [engelZamani, setEngelZamani] = useState(() => Date.now());
   const [gonderimDurumZamani, setGonderimDurumZamani] = useState(() => Date.now());
   const [acikDetayYayinId, setAcikDetayYayinId] = useState<string | null>(null);
 
@@ -80,17 +76,6 @@ function UttEclubVideolarimPage() {
   const gonderilenYayinlar = useMemo(() => new Set(gonderilenYayinIdleri), [gonderilenYayinIdleri]);
   useEffect(() => {
     const simdi = Date.now();
-    const siradakiBitis = tekrarEngelleri.reduce((enYakin, engel) => {
-      const bitis = new Date(engel.yeniden_gonderilebilir_at).getTime();
-      return bitis > simdi ? Math.min(enYakin, bitis) : enYakin;
-    }, Infinity);
-    if (!Number.isFinite(siradakiBitis)) return;
-    const zamanlayici = window.setTimeout(() => setEngelZamani(Date.now()), Math.min(siradakiBitis - simdi + 100, 2_147_483_647));
-    return () => window.clearTimeout(zamanlayici);
-  }, [tekrarEngelleri, engelZamani]);
-
-  useEffect(() => {
-    const simdi = Date.now();
     const siradakiBitis = gonderimGecmisi
       .filter((kayit) => !kayit.izlendi_mi)
       .map((kayit) => new Date(kayit.oneri_bitis).getTime())
@@ -101,17 +86,10 @@ function UttEclubVideolarimPage() {
     return () => window.clearTimeout(zamanlayici);
   }, [gonderimGecmisi, gonderimDurumZamani]);
 
-  const tekrarEngeliMap = useMemo(() => {
-    const map = new Map<string, Map<string, string>>();
-    for (const engel of tekrarEngelleri) {
-      if (new Date(engel.yeniden_gonderilebilir_at).getTime() <= engelZamani) continue;
-      const aracMap = map.get(engel.arac_id) ?? new Map<string, string>();
-      aracMap.set(engel.kisi_id, engel.yeniden_gonderilebilir_at);
-      map.set(engel.arac_id, aracMap);
-    }
-    return map;
-  }, [tekrarEngelleri, engelZamani]);
-
+  const hedefPlanlar = planlar.filter(p => hedefGrubu(p) === aktifHedef);
+  const bekleyenPlanlar = hedefPlanlar.filter(p => p.durum === "bekliyor" || p.durum === "isleniyor");
+  const planYayinlari = [...new Map(bekleyenPlanlar.map(p => [p.yayin_id, p])).values()];
+  const gorunenPlanlar = hedefPlanlar.filter(p => p.durum !== "gerceklesti" && (aktifYayinTuru === "tumu" || p.arac_turu === aktifYayinTuru));
   const listeler = useMemo(() => yayinGonderimListeleri(gruplar[aktifHedef], kisiler, gonderilenKisiler),
     [gruplar, aktifHedef, kisiler, gonderilenKisiler]);
   const durumFiltreliYayinlar = listeler[gonderimFiltresi];
@@ -123,56 +101,23 @@ function UttEclubVideolarimPage() {
   const gorunenYayinlar = aktifYayinTuru === "tumu"
     ? durumFiltreliYayinlar
     : durumFiltreliYayinlar.filter((yayin) => yayin.arac_turu === aktifYayinTuru);
-  const gonderilebilirIdler = useMemo(() => new Set(listeler.gonderilebilir.filter((yayin) => yayin.gonderim_incelemesi_tamamlandi && kisiler.some((kisi) =>
-    yayinAlicisiBekliyor(kisi, yayin, gonderilenKisiler) && !tekrarEngeliMap.get(yayin.arac_id)?.has(kisi.kisi_id)
-  )).map((yayin) => yayin.yayin_id)), [listeler, kisiler, gonderilenKisiler, tekrarEngeliMap]);
-  const seciliYayinlar = gorunenYayinlar.filter((yayin) => seciliYayinIdleri.includes(yayin.yayin_id) && gonderilebilirIdler.has(yayin.yayin_id));
-  const ortakUygunKisiler = seciliYayinlar.length === 0 ? [] : kisiler
-    .filter((kisi) => seciliYayinlar.every((yayin) => yayinAlicisiBekliyor(kisi, yayin, gonderilenKisiler)))
-    .sort((a, b) => (a.eczane_adi ?? "").localeCompare(b.eczane_adi ?? "", "tr") || `${a.ad} ${a.soyad}`.localeCompare(`${b.ad} ${b.soyad}`, "tr"));
-  const ortakSecilebilirKisiler = ortakUygunKisiler.filter((kisi) => seciliYayinlar.every((yayin) => !tekrarEngeliMap.get(yayin.arac_id)?.has(kisi.kisi_id)));
-  const ortakSecilebilirIdler = new Set(ortakSecilebilirKisiler.map((kisi) => kisi.kisi_id));
-  const gecerliSeciliKisiIdleri = seciliKisiIdleri.filter((id) => ortakSecilebilirIdler.has(id));
-
+  const gonderilebilirIdler = new Set(listeler.gonderilebilir.map(y => y.yayin_id));
+  const seciliYayinlar = gruplar[aktifHedef].filter(y => seciliYayinIdleri.includes(y.yayin_id) && gonderilebilirIdler.has(y.yayin_id));
   const secimSifirla = () => {
     setSeciliYayinIdleri([]);
-    setSeciliKisiIdleri([]);
     setAcikDetayYayinId(null);
   };
 
   const yayinSecimiDegistir = (yayinId: string) => {
+    if (!seciliYayinIdleri.includes(yayinId) && seciliYayinIdleri.length >= 20) { hata("Tek işlemde en fazla 20 yayın seçebilirsiniz."); return; }
     setSeciliYayinIdleri((onceki) => onceki.includes(yayinId) ? onceki.filter((id) => id !== yayinId) : [...onceki, yayinId]);
-    setGonderimOzeti(null);
-  };
-
-  const gonder = async () => {
-    if (seciliYayinlar.length === 0 || gecerliSeciliKisiIdleri.length === 0 || topluGonderiliyor) return;
-    setTopluGonderiliyor(true);
-    let gonderilenYayin = 0;
-    let gonderilenKisi = 0;
-    let atlanan = 0;
-    try {
-      for (const yayin of seciliYayinlar) {
-        const sonuc = await oneriGonder(yayin.yayin_id, gecerliSeciliKisiIdleri);
-        if (!sonuc) break;
-        if (sonuc.gonderilen_sayisi > 0) gonderilenYayin += 1;
-        gonderilenKisi += sonuc.gonderilen_sayisi;
-        atlanan += sonuc.atlanan.length;
-      }
-      setGonderimOzeti(`${gonderilenYayin} yayın, ${gonderilenKisi} kişiye gönderildi${atlanan ? ` · ${atlanan} gönderim atlandı` : ""}.`);
-      if (gonderilenYayin > 0) {
-        secimSifirla();
-      }
-    } finally {
-      setTopluGonderiliyor(false);
-    }
   };
 
   const yayinKarti = (video: OneriYayin) => {
     const hedefKisiler = kisiler.filter((kisi) => yayinAlicisiUygun(kisi, video));
     const gonderilenler = new Set(gonderilenKisiler[video.yayin_id] ?? []);
     const gonderilenSayisi = hedefKisiler.filter((kisi) => gonderilenler.has(kisi.kisi_id)).length;
-    return <EclubYayinGonderimKarti key={video.yayin_id} yayin={video} yeni={!gonderilenYayinlar.has(video.yayin_id)} secili={seciliYayinIdleri.includes(video.yayin_id)} secilebilir={gonderilebilirIdler.has(video.yayin_id) && !topluGonderiliyor} gonderilenSayisi={gonderilenSayisi} hedefKisiSayisi={hedefKisiler.length} gonderilecekGoster={gonderimFiltresi === "gonderilebilir" || (gonderimFiltresi === "tumu" && gonderilenSayisi < hedefKisiler.length)} gonderimDetayiGoster={gonderimFiltresi === "gonderilen"} gonderimDetayiAcik={acikDetayYayinId === video.yayin_id} gonderimKayitlari={gonderimGecmisiMap.get(video.yayin_id) ?? []} simdi={gonderimDurumZamani} onSecim={() => yayinSecimiDegistir(video.yayin_id)} onOnizle={() => setAktifVideo(video)} onGonderimDetayiAc={() => setAcikDetayYayinId(video.yayin_id)} onGonderimDetayiKapat={() => setAcikDetayYayinId(null)} />;
+    return <EclubYayinGonderimKarti key={video.yayin_id} yayin={video} yeni={!gonderilenYayinlar.has(video.yayin_id)} secili={seciliYayinIdleri.includes(video.yayin_id)} secilebilir={gonderilebilirIdler.has(video.yayin_id) && !gonderLoading && !yenileniyor} gonderilenSayisi={gonderilenSayisi} hedefKisiSayisi={hedefKisiler.length} gonderilecekGoster={false} gonderimDetayiGoster={gonderimFiltresi === "gonderilen"} gonderimDetayiAcik={acikDetayYayinId === video.yayin_id} gonderimKayitlari={gonderimGecmisiMap.get(video.yayin_id) ?? []} simdi={gonderimDurumZamani} onSecim={() => { if (!gonderLoading) yayinSecimiDegistir(video.yayin_id); }} onOnizle={() => setAktifVideo(video)} onGonderimDetayiAc={() => setAcikDetayYayinId(video.yayin_id)} onGonderimDetayiKapat={() => setAcikDetayYayinId(null)} />;
   };
 
   if (authYukleniyor || !kullanici || loading) {
@@ -201,7 +146,7 @@ function UttEclubVideolarimPage() {
   }
 
   return (
-    <div className="min-h-full bg-gray-50" style={{ fontFamily: "'Nunito', sans-serif" }}>
+    <div className="min-h-full bg-gray-50 pb-20" style={{ fontFamily: "'Nunito', sans-serif" }}>
       <div className="mx-auto flex max-w-[1480px] flex-col gap-5 px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
         <SayfaYenileBasligi className="flex flex-wrap items-end justify-between gap-4"
           baslik={<div className="inline-flex items-center">
@@ -210,7 +155,7 @@ function UttEclubVideolarimPage() {
           </div>}
 
           aciklama={<><p className="mt-1 max-w-3xl text-sm leading-5 text-[#6b7f9b]">Uygun öğrenme içeriğini seçerek, eczacılara ve eczane teknisyenlerine gönderebilirsiniz.</p></>}
-          aksiyon={<YenileButonu yenileniyor={yenileniyor} onYenile={() => veriCek()} />}
+          aksiyon={<YenileButonu yenileniyor={yenileniyor} onYenile={() => { if (!gonderLoading) void veriCek(); }} />}
 
         />
 
@@ -221,7 +166,7 @@ function UttEclubVideolarimPage() {
             const ortakSinif = "bg-white border border-gray-200 border-l-[3px] [border-left-color:var(--stat-renk)] rounded-xl p-3 text-left md:p-5 transition-all";
             const stil = { "--stat-renk": grup.renk, boxShadow: secili ? `0 0 0 2px ${grup.renk}22` : "none" } as CSSProperties;
             return (
-              <button type="button" key={grup.anahtar} onClick={() => { setAktifHedef(grup.anahtar); secimSifirla(); setGonderimOzeti(null); }} aria-pressed={secili} className={`${ortakSinif} cursor-pointer hover:-translate-y-0.5 hover:shadow-md`} style={stil}>
+              <button type="button" key={grup.anahtar} disabled={gonderLoading} onClick={() => { setAktifHedef(grup.anahtar); secimSifirla(); }} aria-pressed={secili} className={`${ortakSinif} cursor-pointer hover:-translate-y-0.5 hover:shadow-md`} style={stil}>
                 <div className="mb-2 text-xs font-bold uppercase tracking-wide text-gray-400">{grup.etiket}</div>
                 <div className="text-2xl font-extrabold leading-none text-gray-900 md:text-3xl">{gruplar[grup.anahtar].length.toLocaleString("tr-TR")}</div>
                 <div className="mt-1.5 hidden text-xs text-gray-500 md:block">Yayındaki toplam yayın · {gonderilen} yayın gönderdiniz</div>
@@ -235,44 +180,37 @@ function UttEclubVideolarimPage() {
           secenekler={[
             { key: "tumu", label: `Tümü ${listeler.tumu.length}` },
             { key: "gonderilebilir", label: `Gönderime Hazır ${listeler.gonderilebilir.length}` },
+            { key: "planlanan", label: `Planlananlar ${planYayinlari.length}` },
             { key: "gonderilen", label: `Gönderilenler ${listeler.gonderilen.length}` },
           ]}
           deger={gonderimFiltresi}
-          onDegistir={(filtre) => { setGonderimFiltresi(filtre); secimSifirla(); setGonderimOzeti(null); }}
+          onDegistir={(filtre) => { if (!gonderLoading) setGonderimFiltresi(filtre); }}
           ariaLabel="Gönderim durumu"
           className="w-fit flex-none"
         />
-        <div className="grid w-full min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-2 sm:ml-auto sm:w-auto sm:grid-cols-[auto_minmax(140px,160px)_auto]">
-          <span className="col-span-2 px-2 text-[11px] font-bold text-[#405976] sm:col-span-1">
-            <span className="lg:hidden">{seciliYayinlar.length} yayın</span>
-            <span className="hidden lg:inline">Gönderilecek: {seciliYayinlar.length} yayın</span>
-          </span>
-          <SadeKisiCokluSecimi key={seciliYayinIdleri.join(",")} className="w-full min-w-0"
- baslik="Alıcılar" kisiler={ortakUygunKisiler.map((kisi) => ({ deger: kisi.kisi_id, adSoyad: `${kisi.ad} ${kisi.soyad}`, rol: kisi.rol, altBilgi: (kisi.eczane_adi || "Eczane bilgisi yok") + (ortakSecilebilirIdler.has(kisi.kisi_id) ? "" : " · Tekrar gönderim süresi dolmadı"), disabled: !ortakSecilebilirIdler.has(kisi.kisi_id) }))}
- degerler={gecerliSeciliKisiIdleri} onDegistir={setSeciliKisiIdleri} disabled={seciliYayinlar.length === 0 || topluGonderiliyor || gonderLoading}
-/>
-          <button type="button" onClick={() => void gonder()} disabled={seciliYayinlar.length === 0 || gecerliSeciliKisiIdleri.length === 0 || topluGonderiliyor || gonderLoading} className="h-[30px] rounded-[10px] bg-[#237ac8] px-3 text-[11px] font-bold text-white hover:bg-[#1d68ad] disabled:cursor-not-allowed disabled:bg-[#9fc4e5]">
-            {topluGonderiliyor ? "Gönderiliyor…" : "Gönder"}
-          </button>
         </div>
-        </div>
-        {gonderimOzeti && <p role="status" className="text-xs font-bold text-[#2b668f]">{gonderimOzeti}</p>}
+        <EclubGonderimPaneli
+          yayinlar={seciliYayinlar} kisiler={kisiler} veriSurumu={veriSurumu}
+          disabled={yenileniyor} kaydediliyor={gonderLoading}
+          kontrolEt={uygunluguKontrolEt} kaydet={topluKaydet} onBasarili={secimSifirla}
+          onSecimTemizle={secimSifirla} bantGoster={gonderimFiltresi !== "planlanan"}
+        />
 
         <section>
           <div className="mb-3">
-            <UttYayinTuruToggle
-              yayinlar={durumFiltreliYayinlar}
+            <UttYayinTuruToggle<{ arac_turu?: string | null }>
+              yayinlar={gonderimFiltresi === "planlanan" ? planYayinlari : durumFiltreliYayinlar}
               deger={aktifYayinTuru}
-              onDegistir={(tur) => { setAktifYayinTuru(tur); secimSifirla(); setGonderimOzeti(null); }}
+              onDegistir={(tur) => { if (!gonderLoading) setAktifYayinTuru(tur); }}
               className="w-fit flex-none"
             />
           </div>
           <div className="mb-3">
             <h2 className="text-base font-extrabold text-[#203653]">{HEDEF_GRUPLARI.find((grup) => grup.anahtar === aktifHedef)?.etiket} İçin Öğrenme İçerikleri</h2>
-            <p className="mt-0.5 text-[11px] font-semibold text-[#7b8da5]">{gorunenYayinlar.length} yayın gösteriliyor</p>
+            <p className="mt-0.5 text-[11px] font-semibold text-[#7b8da5]">{gonderimFiltresi === "planlanan" ? new Set(gorunenPlanlar.map(p => p.yayin_id)).size : gorunenYayinlar.length} yayın gösteriliyor</p>
           </div>
-          {gorunenYayinlar.length === 0 ? (
-            <div className="rounded-2xl border border-[#dfe7f1] bg-white px-4 py-14 text-center text-sm font-semibold text-[#8090a4]">{aktifYayinTuru !== "tumu" ? "Seçilen yayın türünde bu listede yayın bulunmuyor." : gonderimFiltresi === "gonderilebilir" ? "Şu anda gönderim yapabileceğiniz uygun alıcısı olan yayın bulunmuyor." : gonderimFiltresi === "gonderilen" ? "Henüz gönderilmiş yayın bulunmuyor." : "Bu hedef kitle için yayında öğrenme içeriği bulunmuyor."}</div>
+          {gonderimFiltresi === "planlanan" ? <EclubPlanlananlar planlar={gorunenPlanlar} kisiler={kisiler} /> : gorunenYayinlar.length === 0 ? (
+            <div className="rounded-2xl border border-[#dfe7f1] bg-white px-4 py-14 text-center text-sm font-semibold text-[#8090a4]">{aktifYayinTuru !== "tumu" ? "Seçilen yayın türünde bu listede yayın bulunmuyor." : gonderimFiltresi === "gonderilebilir" ? "İncelemesini tamamladığınız yayın bulunmuyor." : gonderimFiltresi === "gonderilen" ? "Henüz gönderilmiş yayın bulunmuyor." : "Bu hedef kitle için yayında öğrenme içeriği bulunmuyor."}</div>
           ) : <MobilYayinAkisi
             kayitlar={[...gorunenYayinlar].sort((a, b) => new Date(b.yayin_tarihi).getTime() - new Date(a.yayin_tarihi).getTime())}
             kayitAnahtari={(video) => video.yayin_id}

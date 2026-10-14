@@ -170,6 +170,7 @@ export default function EclubPanelPage() {
             <EclubKisiBosDurum ikon={Video} baslik="Firma içeriği bulunmuyor" aciklama="Firmanız size öğrenme içeriği gönderdiğinde burada görüntülenecek." />
           ) : (
             <EclubFirmaVideoKatalogu
+              playButonuGoster={kisi?.rol !== "eczaci"}
               ilkKapakOncelikli={pathname === "/eclub/ana-sayfa" || (secim.gomulu && pathname.endsWith("/yayinlar"))}
               key={aktifFirmaId}
               oneriler={gorunenOneriler}

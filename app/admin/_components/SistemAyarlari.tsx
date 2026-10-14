@@ -13,6 +13,7 @@ import { RENK_BORDO, RENK_BORDO_KENAR, RENK_BORDO_ZEMIN } from "../_constants";
 import {
   ECLUB_GONDERI_AYARLARI,
   ECLUB_GONDERI_AYAR_ANAHTARLARI,
+  ECLUB_EMEKLI_GONDERI_ANAHTARLARI,
   eclubGonderiAyariMi,
 } from "@/lib/eclub/gonderiAyarlari";
 
@@ -124,7 +125,8 @@ export default function SistemAyarlari({ hata, basari }: SistemAyarlariProps) {
   const eclubAyarlar = ECLUB_GONDERI_AYARLARI
     .map((tanim) => ({ tanim, ayar: ayarlar.find((ayar) => ayar.anahtar === tanim.anahtar) }))
     .filter((satir): satir is { tanim: typeof ECLUB_GONDERI_AYARLARI[number]; ayar: SistemAyari } => !!satir.ayar);
-  const genelAyarlar = ayarlar.filter((ayar) => !ECLUB_GONDERI_AYAR_ANAHTARLARI.has(ayar.anahtar));
+  const genelAyarlar = ayarlar.filter((ayar) => !ECLUB_GONDERI_AYAR_ANAHTARLARI.has(ayar.anahtar)
+    && !ECLUB_EMEKLI_GONDERI_ANAHTARLARI.has(ayar.anahtar));
 
   return (
     <div>
@@ -200,16 +202,14 @@ export default function SistemAyarlari({ hata, basari }: SistemAyarlariProps) {
         }}
       >
         <h3 style={{ margin: 0, fontSize: "15px", fontWeight: 800, color: "#111" }}>
-          E-Club Video Gönderim Ayarları
+          E-Club Yayın Gönderim Kuralları
         </h3>
         <p style={{ margin: "4px 0 14px", fontSize: "12px", color: "#737373" }}>
-          Öneri izleme süresi ve aynı videonun aynı kişiye tekrar gönderim süresi tüm firmalar için buradan yönetilir.
+          Yayın tamamlama süresi yeni kurguda 15 gündür. Gönderim kotaları ve tekrar aralığı ortak kurallarla uygulanır.
         </p>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "10px" }}>
           {eclubAyarlar.map(({ tanim, ayar }) => {
-            const degisti = degerMetni(ayar.deger) !== (duzenlenen[ayar.anahtar] ?? "");
-            const kaydediliyor = kaydeden === ayar.anahtar;
             return (
               <div
                 key={ayar.anahtar}
@@ -237,31 +237,14 @@ export default function SistemAyarlari({ hata, basari }: SistemAyarlariProps) {
                       min={1}
                       step={1}
                       inputMode="numeric"
-                      value={duzenlenen[ayar.anahtar] ?? ""}
-                      onChange={(e) => setDuzenlenen((prev) => ({ ...prev, [ayar.anahtar]: e.target.value }))}
+                      value={tanim.varsayilan}
+                      readOnly
                       style={{ minWidth: 0, width: "100%", border: "none", outline: "none", padding: "7px 9px", fontSize: "13px", fontWeight: 700, color: "#111", fontFamily: "'Nunito', sans-serif" }}
                     />
                     <span style={{ padding: "0 9px", fontSize: "11px", color: "#737373", borderLeft: "0.5px solid #e5e7eb" }}>
                       {tanim.birim}
                     </span>
                   </div>
-                  <button
-                    onClick={() => handleKaydet(ayar)}
-                    disabled={kaydediliyor || !degisti}
-                    style={{
-                      padding: "7px 12px",
-                      border: "none",
-                      borderRadius: "7px",
-                      fontSize: "12px",
-                      fontWeight: 700,
-                      background: degisti ? RENK_BORDO : "#f3f4f6",
-                      color: degisti ? "white" : "#9ca3af",
-                      cursor: degisti ? "pointer" : "not-allowed",
-                      fontFamily: "'Nunito', sans-serif",
-                    }}
-                  >
-                    {kaydediliyor ? "..." : "Kaydet"}
-                  </button>
                 </div>
               </div>
             );

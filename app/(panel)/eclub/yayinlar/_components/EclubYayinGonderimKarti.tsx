@@ -48,15 +48,9 @@ export function EclubYayinGonderimKarti({ yayin, yeni, secili, secilebilir, gond
       puanGoster
       extraPuanGoster={false}
       talepNoGoster={false}
-      baslikSagAksiyon={yayin.talep_no != null ? <span className="shrink-0 font-mono text-xs text-[#bc2d0d] sm:text-[10px]">{talepIdGoster(yayin.firma_adi, yayin.talep_no)}</span> : undefined}
+      tarihSatiriSagAksiyon={yayin.talep_no != null ? <span className="shrink-0 font-mono text-xs text-[#bc2d0d] sm:text-[10px]">{talepIdGoster(yayin.firma_adi, yayin.talep_no)}</span> : undefined}
       donguGoster={false}
       thumbnailAltBant={!incelemeTamamlandi ? <span className="block w-full rounded-md bg-[#fff3f1] px-1.5 py-0.5 text-center text-[9px] font-medium leading-3 text-[#ad625c]">Göndermek için yayını tamamlayın</span> : undefined}
-      tarihSatiriSagAksiyon={secimGoster && (secilebilir || gonderilecekGoster) ? (
-        <label onClick={(event) => event.stopPropagation()} className={`inline-flex shrink-0 items-center gap-1 text-xs font-normal sm:text-[10px] ${secili ? "text-[#1d65aa]" : "text-[#526780]"} ${secilebilir ? "cursor-pointer" : "cursor-not-allowed opacity-50"}`}>
-          <input type="checkbox" checked={secili} disabled={!secilebilir} onChange={onSecim} aria-label={`${yayin.urun_adi} yayınını gönderim için seç`} className="size-3 accent-[#237ac8]" />
-          Göndermek için seçin
-        </label>
-      ) : undefined}
       puanSatiriSagAksiyon={<span className="inline-flex shrink-0 rounded-md border border-[#dce7f2] bg-[#f2f7fc] px-1.5 py-0.5 text-[10px] font-normal leading-tight text-[#405976] sm:text-[9px]">{gonderilecekGoster ? hedefKisiSayisi - gonderilenSayisi : gonderilenSayisi}/{hedefKisiSayisi} {gonderilecekGoster ? "Gönderilecek" : "Gönderilen"}</span>}
       altEkIcerik={
         <div className="mt-2 border-t border-[#e8eef5] pt-2" aria-label="Yayın bilgileri ve koşulları">
@@ -81,6 +75,15 @@ export function EclubYayinGonderimKarti({ yayin, yeni, secili, secilebilir, gond
               ))}
             </div>
           )}
+          {secimGoster && <div className="mt-2 flex gap-1.5 border-t border-[#e8eef5] pt-2" onClick={event => event.stopPropagation()}>
+            <button type="button" onClick={onOnizle} className="min-w-0 flex-1 rounded-lg border border-[#dbe4ef] bg-white px-2 py-1.5 text-xs font-bold text-[#526780] hover:bg-[#f5f8fc] sm:text-[10px]">
+              Önizle
+            </button>
+            <button type="button" onClick={onSecim} disabled={!secilebilir} aria-pressed={secili} aria-label={`${yayin.urun_adi} yayınını gönderim için ${secili ? "seçimden çıkar" : "seç"}`}
+              className={`min-w-0 flex-1 rounded-lg border px-2 py-1.5 text-xs font-extrabold sm:text-[10px] ${secili ? "border-[#237ac8] bg-[#eaf3fd] text-[#1d65aa]" : "border-[#237ac8] bg-[#237ac8] text-white"} disabled:cursor-not-allowed disabled:border-[#dbe4ef] disabled:bg-[#f2f5f8] disabled:text-[#8a9bad]`}>
+              {secili ? "✓ Seçildi" : "Seç"}
+            </button>
+          </div>}
         </div>
       }
     />

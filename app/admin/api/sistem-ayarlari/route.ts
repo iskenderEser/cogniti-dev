@@ -13,7 +13,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/server";
 import { hataYaniti, sunucuHatasi, validasyonHatasi } from "@/lib/utils/hataIsle";
 import { adminGirisKontrol } from "@/lib/utils/adminGirisKontrol";
-import { eclubGonderiAyariMi } from "@/lib/eclub/gonderiAyarlari";
+import { ECLUB_EMEKLI_GONDERI_ANAHTARLARI, eclubGonderiAyariMi, eclubGonderiAyariDegeriGecerliMi } from "@/lib/eclub/gonderiAyarlari";
 
 async function adminKontrol(): Promise<NextResponse | null> {
   // B-26: tek bekçi — adminGirisKontrol (yerel kopya kaldırıldı).
@@ -62,11 +62,14 @@ export async function PUT(request: NextRequest) {
     const { anahtar, deger } = body;
 
     if (!anahtar || typeof anahtar !== "string") return validasyonHatasi("anahtar zorunludur.", ["anahtar"]);
+    if (ECLUB_EMEKLI_GONDERI_ANAHTARLARI.has(anahtar)) {
+      return validasyonHatasi("Bu eski E-Club gönderim ayarı artık kullanılmıyor.", ["anahtar"]);
+    }
     if (!degerGecerliMi(deger)) {
       return validasyonHatasi("deger pozitif bir sayı ya da pozitif sayılardan oluşan bir dizi olmalıdır.", ["deger"]);
     }
-    if (eclubGonderiAyariMi(anahtar) && (typeof deger !== "number" || !Number.isInteger(deger))) {
-      return validasyonHatasi("E-Club gönderi ayarları pozitif tam sayı olmalıdır.", ["deger"]);
+    if (eclubGonderiAyariMi(anahtar) && !eclubGonderiAyariDegeriGecerliMi(anahtar, deger)) {
+      return validasyonHatasi("Yeni E-Club kurgusunda yayın tamamlama süresi 15 gündür.", ["deger"]);
     }
 
     // Yalnızca mevcut anahtar güncellenir (yeni anahtar = migration işi).

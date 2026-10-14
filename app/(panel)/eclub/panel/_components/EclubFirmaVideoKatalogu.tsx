@@ -8,6 +8,7 @@ import MobilYayinAkisi from "@/components/yayin/MobilYayinAkisi";
 
 interface Props {
   ilkKapakOncelikli?: boolean;
+  playButonuGoster?: boolean;
   oneriler: PanelOneri[];
   seciliFirmaId: string | null;
   seciliFirmaAdi: string | null;
@@ -41,6 +42,7 @@ export function EclubVideoKarti({
   etkilesimAktif,
   mobilMi = false,
   kapakOncelikli = false,
+  playButonuGoster = true,
 }: {
   oneri: PanelOneri;
   onSec: () => void;
@@ -49,6 +51,7 @@ export function EclubVideoKarti({
   etkilesimAktif: boolean;
   mobilMi?: boolean;
   kapakOncelikli?: boolean;
+  playButonuGoster?: boolean;
 }) {
   const durumMetni = oneri.izlendi_mi
     ? "Tamamlandı"
@@ -74,13 +77,13 @@ export function EclubVideoKarti({
           {durumMetni}
         </span>
       }
-      hoverOverlay={
+      hoverOverlay={playButonuGoster ? (
         <span className="absolute inset-0 flex items-center justify-center">
           <span className="flex h-10 w-10 items-center justify-center rounded-full border border-white/45 bg-[#10233a]/65 text-white shadow-lg backdrop-blur-sm transition-transform group-hover:scale-105">
             <Play size={14} fill="currentColor" />
           </span>
         </span>
-      }
+      ) : null}
       altEkIcerik={
         <div className="mt-2 border-t border-[#e8eef5] pt-2" aria-label="Yayın bilgileri ve koşulları">
           <div className="flex flex-wrap items-start justify-between gap-1">
@@ -125,6 +128,7 @@ export function VideoRafi({
   etkilesimAktif,
   sifirlamaAnahtari,
   ilkKapakOncelikli = false,
+  playButonuGoster = true,
 }: {
   baslik: string;
   videolar: PanelOneri[];
@@ -134,6 +138,7 @@ export function VideoRafi({
   etkilesimAktif: boolean;
   sifirlamaAnahtari?: string | number;
   ilkKapakOncelikli?: boolean;
+  playButonuGoster?: boolean;
 }) {
   const raf = useRef<HTMLDivElement>(null);
   const kaydir = (yon: number) => raf.current?.scrollBy({ left: yon * raf.current.clientWidth * 0.85, behavior: "smooth" });
@@ -154,6 +159,7 @@ export function VideoRafi({
             key={oneri.oneri_id}
             oneri={oneri}
             kapakOncelikli={ilkKapakOncelikli && index === 0}
+            playButonuGoster={playButonuGoster}
             onSec={() => onVideoSec(oneri)}
             onBegeni={() => onBegeni(oneri.yayin_id)}
             onFavori={() => onFavori(oneri.yayin_id)}
@@ -180,6 +186,7 @@ export function VideoRafi({
         <EclubVideoKarti
           oneri={oneri}
           kapakOncelikli={ilkKapakOncelikli && index === 0}
+          playButonuGoster={playButonuGoster}
           onSec={() => onVideoSec(oneri)}
           onBegeni={() => onBegeni(oneri.yayin_id)}
           onFavori={() => onFavori(oneri.yayin_id)}
@@ -200,7 +207,7 @@ export function VideoRafi({
   );
 }
 
-export default function EclubFirmaVideoKatalogu({ oneriler, seciliFirmaId, seciliFirmaAdi, seciliUrunAdi, onVideoSec, onBegeni, onFavori, ilkKapakOncelikli = false }: Props) {
+export default function EclubFirmaVideoKatalogu({ oneriler, seciliFirmaId, seciliFirmaAdi, seciliUrunAdi, onVideoSec, onBegeni, onFavori, ilkKapakOncelikli = false, playButonuGoster = true }: Props) {
   const firmaVideolari = useMemo(
     () => seciliFirmaId ? oneriler.filter((oneri) => oneri.firma_id === seciliFirmaId) : oneriler,
     [oneriler, seciliFirmaId],
@@ -220,6 +227,7 @@ export default function EclubFirmaVideoKatalogu({ oneriler, seciliFirmaId, secil
     <div className="flex flex-col gap-6">
       <VideoRafi
         ilkKapakOncelikli={ilkKapakOncelikli}
+        playButonuGoster={playButonuGoster}
         baslik={seciliUrunAdi ? `${seciliUrunAdi} Yayınları` : firmaBasligi ? `${firmaBasligi} Tüm İçerikleri` : "Tüm Firmaların İçerikleri"}
         videolar={firmaVideolari}
         onVideoSec={onVideoSec}
@@ -229,6 +237,7 @@ export default function EclubFirmaVideoKatalogu({ oneriler, seciliFirmaId, secil
         sifirlamaAnahtari={`${sifirlamaKapsami}-tumu`}
       />
       <VideoRafi
+        playButonuGoster={playButonuGoster}
         baslik={seciliUrunAdi ? `${seciliUrunAdi} En Çok Beğenilenler` : firmaBasligi ? `${firmaBasligi} En Çok Beğenilenleri` : "En Çok Beğenilenler"}
         videolar={enCokBegenilen}
         onVideoSec={onVideoSec}
@@ -238,6 +247,7 @@ export default function EclubFirmaVideoKatalogu({ oneriler, seciliFirmaId, secil
         sifirlamaAnahtari={`${sifirlamaKapsami}-begenilen`}
       />
       <VideoRafi
+        playButonuGoster={playButonuGoster}
         baslik={seciliUrunAdi ? `${seciliUrunAdi} En Çok Favorilenenler` : firmaBasligi ? `${firmaBasligi} En Çok Favorilenenleri` : "En Çok Favorilenenler"}
         videolar={enCokFavorilenen}
         onVideoSec={onVideoSec}

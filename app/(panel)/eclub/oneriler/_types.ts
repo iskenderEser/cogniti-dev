@@ -1,5 +1,6 @@
 // app/eclub/oneriler/_types.ts
 
+import type { GONDERIM_LIMITLERI } from "@/lib/eclub/gonderimApi";
 import type { YayindakiVideo } from "@/lib/video/yayindakiVideolar";
 import type { OgrenmeAraciTuru } from "@/lib/ogrenmeAraci/tipler";
 import { ECLUB_KISI_ROL_ETIKETLERI, type EclubKisiRol } from "@/lib/utils/roller";
@@ -33,16 +34,7 @@ export interface OneriKisi {
   auth_user_id: string | null;
 }
 
-export interface OneriLimitler {
-  gecerlilik_gun?: number;
-  ayni_video_tekrar_bekleme_gun?: number;
-}
-
-export interface OneriTekrarEngeli {
-  arac_id: string;
-  kisi_id: string;
-  yeniden_gonderilebilir_at: string;
-}
+export type OneriLimitler = typeof GONDERIM_LIMITLERI;
 
 export interface OneriGecmisKaydi {
   oneri_id: string;
@@ -69,7 +61,7 @@ export interface OneriGecmisKaydi {
 export interface OneriGonderSonuc {
   gonderilen_sayisi: number;
   gonderilen: string[];
-  atlanan: { kisi_id: string; sebep: string; yeniden_gonderilebilir_at?: string }[];
+  atlanan: { yayin_id: string; kisi_id: string; sebep: string; yeniden_gonderilebilir_at?: string }[];
 }
 
 export const ROL_ETIKETLERI: Record<EclubHedefRol | EclubKisiRol, string> = {
@@ -87,3 +79,18 @@ export const ATLANMA_SEBEP_ETIKETLERI: Record<string, string> = {
   zaten_gonderildi: "Bu yayın kişiye daha önce gönderildi",
   kayit_hatasi: "Kayıt sırasında hata oluştu",
 };
+
+export interface GonderimPlanKaydi {
+  plan_id: string; kisi_id: string; yayin_id: string; urun_id: string;
+  hedef_gonderim_tarihi: string; durum: import('@/lib/eclub/gonderimPlanTipleri').EclubGonderimPlanDurumu;
+  oneri_id: string | null; gerceklesti_at: string | null; son_hata_kodu: string | null; created_at: string;
+  kisi_ad: string; kisi_soyad: string; kisi_rol: string | null;
+  urun_adi: string; firma_adi: string | null; talep_no: number | null;
+  hedef_roller: EclubHedefRol[]; arac_turu: OgrenmeAraciTuru | null;
+}
+export interface TopluGonderimSonucu extends OneriGonderSonuc {
+  mesaj: string; planlanan_sayisi: number;
+  sonuclar: import('@/lib/eclub/gonderimPlanTipleri').GonderimKontrolSonucu[];
+  haftalik_ozet: { kisi_id: string; urun_id: string; haftalik_kalan: number; haftalik_kullanilan: number }[];
+  uygun_tarihler: string[];
+}

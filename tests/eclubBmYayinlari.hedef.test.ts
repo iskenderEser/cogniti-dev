@@ -51,5 +51,6 @@ test("BM yayın ve alıcı gönderemez; ortak kart UTT'de varsayılan davranış
   assert.match(bm, /secimGoster=\{false\}/);
   assert.doesNotMatch(bm, /oneriGonder|Gönderiliyor|method:\s*"POST"/);
   assert.match(kart, /secimGoster = true/);
-  assert.match(kart, /secimGoster && \(secilebilir \|\| gonderilecekGoster\)/);
+  assert.match(kart, /secimGoster && <div/);
+  assert.match(kart, /disabled=\{!secilebilir\}/);
 });

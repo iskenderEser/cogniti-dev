@@ -42,3 +42,10 @@ test("sınır: geri/taşan sarma reddedilir; süresi geçen öneride puan kaybı
   assert.equal(eclubIleriSarmaKaybiHesapla({ videoPuani: 40, videoSuresi: 120, atlananSure: 30, puanli: false }), 0);
   assert.equal(yalnizEclubHedefliMi(["utt", "eczaci"]), false);
 });
+
+test('15 günlük pencerede hafta sonu öğrenme açıktır; bitişten hemen sonra puan/soru kapanır', () => {
+ const bas='2026-10-01T10:00:00+03:00', bit='2026-10-16T10:00:00+03:00';
+ for(const t of ['2026-10-03T10:00:00+03:00','2026-10-04T10:00:00+03:00','2026-10-16T10:00:00+03:00'])
+  assert.deepEqual(eclubIzlemeHaklari(bas,bit,new Date(t)),{durum:'aktif',izlenebilir:true,puanli:true,soruGoster:true});
+ assert.deepEqual(eclubIzlemeHaklari(bas,bit,new Date('2026-10-16T10:00:00.001+03:00')),{durum:'suresi_gecmis',izlenebilir:true,puanli:false,soruGoster:false});
+});

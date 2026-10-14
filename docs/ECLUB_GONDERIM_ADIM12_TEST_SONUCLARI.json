@@ -1,0 +1,316 @@
+{
+  "postgres": "17.10",
+  "passed": 46,
+  "tests": [
+    "Beş migration gerçek PostgreSQL’de kurulur ve tekrar kurulabilir",
+    "Haftalık üçüncü izinli, dördüncü reddedilir; farklı ürün ayrı sayılır",
+    "Haftalık kota üye bazlıdır, diğer üye etkilenmez",
+    "Gerçek gönderimler ile bekleyen planların haftalık toplamı üçtür",
+    "İlk gönderim ve iki tekrar izinli; üçüncü tekrar reddedilir",
+    "Önceki dönemden gelen yayın hedef dönemde iki tekrar hakkını kullanır",
+    "15 günün bir milisaniye öncesi kapalı; tam sınır ve sonrası açık",
+    "Sonraki planla 15 gün korunur; önceki plan da hesaba katılır",
+    "Dönem sınırında 15 günlük bekleme kaybolmaz",
+    "Hafta sonu gönderim hedefi kapalı; hafta sonundan gelecek hafta planı açık",
+    "Takip eden haftanın son iş günü izinli; ikinci ileri hafta kapalı",
+    "Takip eden hafta mevcut dönemi aşamaz; yıl geçişi de kapalı",
+    "Türkiye gece yarısı dönem ve hafta hesabında kullanılır",
+    "Plan geçmişe/şimdiki ana yapılamaz",
+    "Çoklu önizleme birlikte kota hesaplar ve hiç kayıt yazmaz",
+    "Çoklu anlık gönderimde aynı ürünün dördüncüsü atlanır, diğer ürün geçer",
+    "Gerçek gönderim süresi 15 gündür; eski RPC istemci tarihini/aracını kullanmaz",
+    "Plan kaydı rezervasyon oluşturur; öneri oluşturmaz; tekrar anahtarı tekildir",
+    "Plan kimliği/zamanı ve gerçekleşmiş gönderim süresi değiştirilemez",
+    "İki bağımsız oturumda üçüncü/dördüncü yarışını kilit sınırlar",
+    "Eş zamanlı anlık gönderim ve plan aynı haftalık kotayı aşamaz",
+    "Ters alıcı sıralı eş zamanlı toplu planlar deadlock oluşturmaz",
+    "Planın gerçekleşmesi rezervasyonu iki kere saymaz; plan başına tek öneri",
+    "Aynı planı iki eş zamanlı işleyici ikinci kez gönderemez",
+    "Henüz gelmemiş plan ve aktif lease sahiplenilmez; süresi bitmiş lease işlenir",
+    "Planın günü geçtiğinde gönderim yapılmaz ve tarih kaydırılmaz",
+    "Yayın durduğunda, yetki kalktığında veya araç kapandığında plan gerçekleşmez",
+    "Transaction iptalinde öneri ve gerçekleşme birlikte geri alınır; yeniden işlenebilir",
+    "Anon/authenticated plan tablosuna veya yeni gönderim RPC’sine erişemez",
+    "Gerçek plan oluşturma → zamanı gelmesi → tek öneri/15 günlük süre zinciri",
+    "Aynı yayın iki eş zamanlı seçimde ikinci kez gönderilemez",
+    "İki eş zamanlı aynı anahtarlı plan isteği tek kayıt oluşturur",
+    "Gerçekleşmeyen plan rezervasyonu kota tüketmez",
+    "Doğrudan INSERT de kota kapısından geçer; RPC atlanarak dördüncü kayıt açılamaz",
+    "Aynı üyenin diğer UTT gönderimleri ilk UTT kotasını tüketmez",
+    "UTT incelemesi tamamlanmamış yayın gönderilemez veya planlanamaz",
+    "Alıcının aktif eczane bağı kalkınca plan gönderilmez",
+    "Üyenin dört araçtaki tamamlaması mevcut RPC ile puan ve soru üretir",
+    "İleri sarma mevcut davranışını korur: oransal kayıp ve soru hakkının kapanması",
+    "Yanlış cevap sıfır kayıp, doğru cevap puan; aynı izleme tekrar cevaplanamaz",
+    "15 günlük süresi geçmiş öneri tamamlanır; puan ve sorular açılmaz",
+    "Adım 12 salt okunur kurulum kontrolünde tüm koşullar sağlanır",
+    "Cron doğrudan UPDATE yetkisi olmadan alter_job ile pasif kurulur",
+    "Canlı durum kontrolü salt okunurdur ve anahtar değerini döndürmez",
+    "Cron etkinleştirme/durdurma tekrar çalışır, kayıt silmez ve doğrudan UPDATE gerektirmez",
+    "Eksik Vault kaydı etkinleştirmeyi reddeder ve cron pasif kalır"
+  ],
+  "scope": "Yalnız yerel Unix socket, sahte temel tablolar, değiştirilmemiş gönderim SQLleri",
+  "operasyon_testleri": [
+    "Adım 12 salt okunur kurulum kontrolünde tüm koşullar sağlanır",
+    "Cron doğrudan UPDATE yetkisi olmadan alter_job ile pasif kurulur",
+    "Canlı durum kontrolü salt okunurdur ve anahtar değerini döndürmez",
+    "Cron etkinleştirme/durdurma tekrar çalışır, kayıt silmez ve doğrudan UPDATE gerektirmez",
+    "Eksik Vault kaydı etkinleştirmeyi reddeder ve cron pasif kalır"
+  ],
+  "operasyon_test_siniri": "Cron/Vault şemaları ve API işlevleri yerel taklittir; gerçek Supabase uzantısı veya HTTP çağrısı değildir.",
+  "sql_sha256": {
+    "eclub_gonderim_kurulum_kontrol.sql": "aa05805cc63b213629fbeef3579c6da8b67d5528615c2ae9db8cdfe79c02f112",
+    "eclub_gonderim_canli_durum_kontrol.sql": "549f36edb29241585561910de4591c67b168eae67fccb387f37207b606829bc6",
+    "eclub_planlanan_gonderim_cron_etkinlestir.sql": "cb121089fd4c46a9474a7426271bdb171c7ab4292090d85b21102ead786d647c",
+    "eclub_planlanan_gonderim_cron_durdur.sql": "abb7bbc083ef697d2206673d5a2a90de024e5f0c9fc9ed72e33a2451628f8000"
+  },
+  "canli": {
+    "db_baglantisi_yapildi": false,
+    "deployment_yapildi": false,
+    "cron_etkinlestirildi": true,
+    "cron_etkinlestirme_kaynagi": "14 Ekim 2026 kullanıcı tarafından paylaşılan Supabase SQL Editor cron.job sorgu sonucu: jobid 14, schedule * * * * *, active true. sema.json 29 Eylül 2026 tarihli ve cron şemasını kapsamaz.",
+    "cron_guncel_durum": {
+      "jobid": 14,
+      "jobname": "hapbilgi_eclub_yayin_gonderim_planlari",
+      "schedule": "* * * * *",
+      "active": true,
+      "kaynak": "Kullanıcının 14 Ekim 2026 tarihli Supabase SQL Editor çıktısı"
+    },
+    "son_kontrol": "Yapısal kurulum 40/40 ve önceki cron/Vault/veri durum kontrolü kullanıcı tarafından doğrulandı. Güncel cron.job çıktısında jobid 14, dakikalık ve aktif. Plan kuyruğu önceki kontrolde boştu. Production deployment ve gerçek plan işlenmesi doğrulanmadı.",
+    "kurulum_yapisal_kontrol": {
+      "kaynak": "Kullanıcının Supabase SQL Editor çıktısı",
+      "toplam": 40,
+      "basarili": 40,
+      "sonuclar": [
+        {
+          "kod": "eski_21_ayari_yok",
+          "uygun": true,
+          "aciklama": "Eski araç tekrar bekleme ayarı kaldırılmış"
+        },
+        {
+          "kod": "eski_rpc_yeni_yaziciya_bagli",
+          "uygun": true,
+          "aciklama": "Eski araç/tarih girdileri yeni kuralları aşamaz"
+        },
+        {
+          "kod": "gecerlilik_15_gun",
+          "uygun": true,
+          "aciklama": "Yeni gerçek gönderimde 15 günlük süre ayarı"
+        },
+        {
+          "kod": "hafta_ve_donem_sinirlari",
+          "uygun": true,
+          "aciklama": "Takip eden hafta ve mevcut iki aylık dönem kontrolleri birlikte mevcut"
+        },
+        {
+          "kod": "nesne:public.eclub_eczane_firma",
+          "uygun": true,
+          "aciklama": "Eczane–firma bağı"
+        },
+        {
+          "kod": "nesne:public.eclub_kisi_eczane",
+          "uygun": true,
+          "aciklama": "Üye–eczane üyeliği"
+        },
+        {
+          "kod": "nesne:public.eclub_kisiler",
+          "uygun": true,
+          "aciklama": "Üye kimlikleri"
+        },
+        {
+          "kod": "nesne:public.eclub_oneri_kayitlari",
+          "uygun": true,
+          "aciklama": "Gerçek gönderimler"
+        },
+        {
+          "kod": "nesne:public.eclub_utt_eczane",
+          "uygun": true,
+          "aciklama": "UTT portföy bağı"
+        },
+        {
+          "kod": "nesne:public.eclub_utt_yayin_incelemeleri",
+          "uygun": true,
+          "aciklama": "UTT gönderim öncesi inceleme"
+        },
+        {
+          "kod": "nesne:public.eclub_yayin_gonderim_planlari",
+          "uygun": true,
+          "aciklama": "Ayrı plan rezervasyonu"
+        },
+        {
+          "kod": "nesne:public.firmalar",
+          "uygun": true,
+          "aciklama": "Firma/modül durumu"
+        },
+        {
+          "kod": "nesne:public.kullanicilar",
+          "uygun": true,
+          "aciklama": "UTT kimlik ve kapsamı"
+        },
+        {
+          "kod": "nesne:public.ogrenme_araclari",
+          "uygun": true,
+          "aciklama": "Araç bilgisi"
+        },
+        {
+          "kod": "nesne:public.sistem_ayarlari",
+          "uygun": true,
+          "aciklama": "Geçerlilik ayarı"
+        },
+        {
+          "kod": "nesne:public.urunler",
+          "uygun": true,
+          "aciklama": "Ürün kimlikleri"
+        },
+        {
+          "kod": "nesne:public.v_yayin_detay",
+          "uygun": true,
+          "aciklama": "Yayın/araç/kapsam görünümü"
+        },
+        {
+          "kod": "nesne:public.v_yayin_kunye",
+          "uygun": true,
+          "aciklama": "Yayının ürün bağlantısı"
+        },
+        {
+          "kod": "nesne:public.yayin_tekrar_kayitlari",
+          "uygun": true,
+          "aciklama": "Yayın tur geçmişi"
+        },
+        {
+          "kod": "nesne:public.yayin_yonetimi",
+          "uygun": true,
+          "aciklama": "Mühürlü yayın ve tur başlangıcı"
+        },
+        {
+          "kod": "ozel_hesap_service_role_kapali",
+          "uygun": true,
+          "aciklama": "Test saati alan özel hesap dış çağrıya kapalı"
+        },
+        {
+          "kod": "plan_istemciye_kapali",
+          "uygun": true,
+          "aciklama": "Anon ve authenticated plan tablosuna doğrudan erişemez"
+        },
+        {
+          "kod": "plan_rls",
+          "uygun": true,
+          "aciklama": "Plan tablosunun satır güvenliği açık"
+        },
+        {
+          "kod": "rpc_istemciye_kapali",
+          "uygun": true,
+          "aciklama": "Gönderim/plan RPC çağrıları istemciye kapalı"
+        },
+        {
+          "kod": "rpc:public.eclub_gonderim_kontrol_hesapla(uuid,uuid,uuid,timestamptz,text,uuid,timestamptz)",
+          "uygun": true,
+          "aciklama": "Ortak kota/tarih hesabı"
+        },
+        {
+          "kod": "rpc:public.eclub_gonderim_uygunlugu(uuid,uuid,uuid,timestamptz)",
+          "uygun": true,
+          "aciklama": "Uygunluk RPC"
+        },
+        {
+          "kod": "rpc:public.eclub_oneri_atomik_kaydet(uuid,uuid,uuid,uuid,timestamptz,timestamptz)",
+          "uygun": true,
+          "aciklama": "Eski RPC girişinin korunması"
+        },
+        {
+          "kod": "rpc:public.eclub_planlanan_gonderimi_isle(text[])",
+          "uygun": true,
+          "aciklama": "Plan gerçekleştirme işleyicisi"
+        },
+        {
+          "kod": "rpc:public.eclub_yayin_gonder(uuid,uuid,uuid,uuid)",
+          "uygun": true,
+          "aciklama": "Yeni gerçek gönderim yazıcısı"
+        },
+        {
+          "kod": "rpc:public.eclub_yayin_toplu_islem(uuid,uuid[],uuid[],timestamptz,uuid,boolean)",
+          "uygun": true,
+          "aciklama": "Toplu gönderim/plan/önizleme"
+        },
+        {
+          "kod": "service_role_yazicilari",
+          "uygun": true,
+          "aciklama": "API/worker kanonik RPCleri çalıştırabilir"
+        },
+        {
+          "kod": "sure_trigger_15_gun",
+          "uygun": true,
+          "aciklama": "Yazım kapısı yeni gönderimin bitişini gerçek başlangıçtan hesaplıyor"
+        },
+        {
+          "kod": "tekillik:public.eclub_gonderim_plan_islem_uq",
+          "uygun": true,
+          "aciklama": "Tekil, geçerli ve hazır indeks"
+        },
+        {
+          "kod": "tekillik:public.eclub_gonderim_plan_oneri_uq",
+          "uygun": true,
+          "aciklama": "Tekil, geçerli ve hazır indeks"
+        },
+        {
+          "kod": "tekillik:public.eclub_oneri_plan_uq",
+          "uygun": true,
+          "aciklama": "Tekil, geçerli ve hazır indeks"
+        },
+        {
+          "kod": "trigger:trg_eclub_gonderim_oneri_kapisi",
+          "uygun": true,
+          "aciklama": "Aktif yazım kapısı"
+        },
+        {
+          "kod": "trigger:trg_eclub_gonderim_plan_kapisi",
+          "uygun": true,
+          "aciklama": "Aktif yazım kapısı"
+        },
+        {
+          "kod": "trigger:trg_eclub_gonderim_sure_kapisi",
+          "uygun": true,
+          "aciklama": "Aktif yazım kapısı"
+        },
+        {
+          "kod": "trigger:trg_eclub_oneri_plan_sonuc",
+          "uygun": true,
+          "aciklama": "Aktif ve commit sonunda karşılıklı sonuç kontrolü"
+        },
+        {
+          "kod": "trigger:trg_eclub_plan_oneri_sonuc",
+          "uygun": true,
+          "aciklama": "Aktif ve commit sonunda karşılıklı sonuç kontrolü"
+        }
+      ]
+    },
+    "cron_vault_veri_kontrol": {
+      "kaynak": "Kullanıcının etkinleştirme öncesi Supabase SQL Editor çıktısı; cron_aktif=false tarihsel sonuçtur",
+      "sonuclar": {
+        "bekleyen_plan": 0,
+        "cron_aktif": false,
+        "cron_dakikalik": true,
+        "cron_dogru_endpoint": true,
+        "cron_tek_kayit": true,
+        "gerceklesmeyen_plan": 0,
+        "gerceklesmis_plan": 0,
+        "isleniyor_plan": 0,
+        "planli_oneri_15_gun_uyusmazligi": 0,
+        "sonuc_bagi_uyusmazligi": 0,
+        "vault_base_url_hazir": true,
+        "vault_secret_hazir": true,
+        "zamani_gelmis_bekleyen_plan": 0
+      }
+    }
+  },
+  "production_build": {
+    "komut": "npm run build",
+    "sonuc": "Başarılı",
+    "next": "16.2.0",
+    "derleyici": "Turbopack",
+    "derleme_saniye": 35.3,
+    "statik_sayfa": 212,
+    "cron_endpoint_derlendi": true,
+    "deployment_yapildi": false
+  }
+}

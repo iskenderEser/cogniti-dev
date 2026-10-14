@@ -1,103 +1,89 @@
-// app/eclub/oneriler/_hooks/useEclubOneriler.ts
 "use client";
+import { useCallback, useEffect, useRef, useState } from 'react';
+import type { OneriYayin, OneriKisi, OneriLimitler, OneriGecmisKaydi, GonderimPlanKaydi, TopluGonderimSonucu } from '../_types';
+import { bildirimRozetleriniYenile } from '@/lib/bildirimler/rozet';
 
-import { useCallback, useEffect, useState } from "react";
-import type { OneriYayin, OneriKisi, OneriGonderSonuc, OneriLimitler, OneriGecmisKaydi, OneriTekrarEngeli } from "../_types";
-import { bildirimRozetleriniYenile } from "@/lib/bildirimler/rozet";
-
-interface UseArgs {
-  hazir: boolean;
-  hata: (mesaj: string, adim?: string, detay?: string) => void;
-  basari: (mesaj: string) => void;
+interface UseArgs { hazir: boolean; hata: (mesaj: string, adim?: string, detay?: string) => void; basari: (mesaj: string) => void }
+async function oku(url: string) {
+  const res = await fetch(url, { cache: 'no-store' });
+  const veri = await res.json();
+  if (!res.ok) throw new Error(veri.hata ?? veri.error ?? 'Gönderim verileri alınamadı.');
+  return veri;
 }
-
+async function sayfalariOku<T>(kaynak: 'oneriler' | 'planlar'): Promise<{ kayitlar: T[]; limitler: OneriLimitler }> {
+  const ek = kaynak === 'planlar' ? 'kaynak=planlar&' : '';
+  const kayitlar: T[] = [];
+  let sayfa = 1;
+  let limitler: OneriLimitler;
+  for (;;) {
+    const veri = await oku(`/eclub/oneriler/api?${ek}sayfa=${sayfa}&sayfa_boyutu=100`);
+    if (!Array.isArray(veri[kaynak])) throw new Error('Gönderim listesi doğrulanamadı.');
+    kayitlar.push(...veri[kaynak]); limitler = veri.limitler;
+    if (!veri.sayfalama?.devam_var) break;
+    sayfa++;
+  }
+  return { kayitlar, limitler };
+}
 export function useEclubOneriler({ hazir, hata, basari }: UseArgs) {
   const [yayinlar, setYayinlar] = useState<OneriYayin[]>([]);
   const [kisiler, setKisiler] = useState<OneriKisi[]>([]);
   const [limitler, setLimitler] = useState<OneriLimitler | null>(null);
-  const [tekrarEngelleri, setTekrarEngelleri] = useState<OneriTekrarEngeli[]>([]);
-  const [gonderilenYayinIdleri, setGonderilenYayinIdleri] = useState<string[]>([]);
-  const [gonderilenKisiler, setGonderilenKisiler] = useState<Record<string, string[]>>({});
   const [gonderimGecmisi, setGonderimGecmisi] = useState<OneriGecmisKaydi[]>([]);
+  const [planlar, setPlanlar] = useState<GonderimPlanKaydi[]>([]);
   const [loading, setLoading] = useState(true);
   const [yenileniyor, setYenileniyor] = useState(false);
   const [gonderLoading, setGonderLoading] = useState(false);
-
+  const [veriSurumu, setVeriSurumu] = useState(0);
+  const istekSirasi = useRef(0);
   const veriCek = useCallback(async (ilkYukleme = false) => {
-    if (ilkYukleme) setLoading(true);
-    else setYenileniyor(true);
+    const sira = ++istekSirasi.current;
+    if (ilkYukleme) setLoading(true); else setYenileniyor(true);
     try {
-      const [yayinRes, kisiRes, gecmisRes] = await Promise.all([
-        fetch("/eclub/oneriler/api/yayinlar"),
-        fetch("/eclub/listem/api/kisiler"),
-        fetch("/eclub/oneriler/api"),
+      const [yayin, kisi, gecmis, plan] = await Promise.all([
+        oku('/eclub/oneriler/api/yayinlar'), oku('/eclub/listem/api/kisiler'),
+        sayfalariOku<OneriGecmisKaydi>('oneriler'), sayfalariOku<GonderimPlanKaydi>('planlar'),
       ]);
-      const yayinData = await yayinRes.json();
-      const kisiData = await kisiRes.json();
-      const gecmisData = await gecmisRes.json();
-
-      if (!yayinRes.ok) hata(yayinData.hata ?? "Yayınlar yüklenemedi.", yayinData.adim, yayinData.detay);
-      else setYayinlar(yayinData.videolar ?? []);
-
-      if (!kisiRes.ok) hata(kisiData.hata ?? "Kişiler yüklenemedi.", kisiData.adim, kisiData.detay);
-      else setKisiler(kisiData.kisiler ?? []);
-
-      if (!gecmisRes.ok) hata(gecmisData.hata ?? "Öneri geçmişi yüklenemedi.", gecmisData.adim, gecmisData.detay);
-      else {
-        setLimitler(gecmisData.limitler ?? null);
-        setTekrarEngelleri(gecmisData.tekrar_engelleri ?? []);
-        const gecmis = (gecmisData.oneriler ?? []) as OneriGecmisKaydi[];
-        setGonderimGecmisi(gecmis);
-        const benzersizYayinlar = [...new Set(gecmis.map((oneri) => oneri.yayin_id))];
-        setGonderilenYayinIdleri(benzersizYayinlar);
-        const kisiMap = new Map<string, Set<string>>();
-        for (const oneri of gecmis) {
-          const kisiler = kisiMap.get(oneri.yayin_id) ?? new Set<string>();
-          kisiler.add(oneri.kisi_id);
-          kisiMap.set(oneri.yayin_id, kisiler);
-        }
-        setGonderilenKisiler(Object.fromEntries([...kisiMap].map(([yayinId, kisiler]) => [yayinId, [...kisiler]])));
-      }
-    } catch (err: unknown) {
-      hata("Veri yüklenirken hata oluştu.", "useEclubOneriler veriCek", err instanceof Error ? err.message : undefined);
-    } finally {
-      if (ilkYukleme) setLoading(false);
-      else setYenileniyor(false);
-    }
+      if (sira !== istekSirasi.current) return;
+      setYayinlar(yayin.videolar ?? []);
+      setKisiler([...new Map<string, OneriKisi>((kisi.kisiler as OneriKisi[]).map(k => [k.kisi_id, k])).values()]);
+      setGonderimGecmisi([...new Map(gecmis.kayitlar.map(k => [k.oneri_id, k])).values()]);
+      setPlanlar([...new Map(plan.kayitlar.map(k => [k.plan_id, k])).values()]);
+      setLimitler(gecmis.limitler); setVeriSurumu(v => v + 1);
+    } catch (err) { if (sira === istekSirasi.current) hata('Gönderim verileri yüklenemedi.', 'E-Club yayınları', err instanceof Error ? err.message : undefined); }
+    finally { if (sira === istekSirasi.current) { setLoading(false); setYenileniyor(false); } }
   }, [hata]);
+  useEffect(() => { if (hazir) void veriCek(true); }, [hazir, veriCek]);
 
-  useEffect(() => {
-    if (hazir) void veriCek(true);
-  }, [hazir, veriCek]);
-
-  // Tek video → çok kişi. Dönüş: sonuç (atla-raporla) ya da null (hata).
-  const oneriGonder = useCallback(async (
-    yayin_id: string,
-    kisi_idler: string[],
-  ): Promise<OneriGonderSonuc | null> => {
+  const uygunluguKontrolEt = useCallback(async (yayinIdler: string[], kisiIdler: string[], hedef: string | null, signal?: AbortSignal, tarihleriHesapla = false): Promise<TopluGonderimSonucu> => {
+    const res = await fetch('/eclub/oneriler/api', { method: 'POST', signal,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ islem: 'kontrol', yayin_idler: yayinIdler, kisi_idler: kisiIdler, hedef_gonderim_tarihi: hedef, tarihleri_hesapla: tarihleriHesapla }),
+    });
+    const veri = await res.json();
+    if (!res.ok) throw new Error(veri.hata ?? 'Gönderim uygunluğu alınamadı.');
+    if (!Array.isArray(veri.sonuclar) || veri.sonuclar.length !== yayinIdler.length * kisiIdler.length)
+      throw new Error('Gönderim uygunluk sonucu eksik.');
+    return veri as TopluGonderimSonucu;
+  }, []);
+  const topluKaydet = useCallback(async (yayinIdler: string[], kisiIdler: string[], hedef: string | null, islemAnahtari: string): Promise<TopluGonderimSonucu | null> => {
     setGonderLoading(true);
     try {
-      const res = await fetch("/eclub/oneriler/api", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ yayin_id, kisi_idler }),
+      const res = await fetch('/eclub/oneriler/api', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ islem: hedef ? 'planla' : 'gonder', yayin_idler: yayinIdler, kisi_idler: kisiIdler, hedef_gonderim_tarihi: hedef, islem_anahtari: islemAnahtari }),
       });
-      const d = await res.json();
-      if (!res.ok) {
-        hata(d.hata ?? "Öneri gönderilemedi.", d.adim, d.detay);
-        return null;
-      }
-      basari(d.mesaj ?? `${d.gonderilen_sayisi} öneri gönderildi.`);
-      await veriCek();
-      if (d.gonderilen_sayisi > 0) bildirimRozetleriniYenile();
-      return d as OneriGonderSonuc;
-    } catch (err: unknown) {
-      hata("Öneri gönderilirken hata oluştu.", "oneriGonder", err instanceof Error ? err.message : undefined);
-      return null;
-    } finally {
-      setGonderLoading(false);
-    }
+      const veri = await res.json();
+      if (!res.ok) { hata(veri.hata ?? 'İşlem kaydedilemedi.', veri.adim, veri.detay); return null; }
+      basari(veri.mesaj); await veriCek();
+      if (veri.gonderilen_sayisi > 0) bildirimRozetleriniYenile();
+      return veri as TopluGonderimSonucu;
+    } catch (err) { hata('Gönderim işlemi tamamlanamadı.', 'Toplu gönderim', err instanceof Error ? err.message : undefined); return null; }
+    finally { setGonderLoading(false); }
   }, [hata, basari, veriCek]);
-
-  return { yayinlar, kisiler, limitler, tekrarEngelleri, gonderilenYayinIdleri, gonderilenKisiler, gonderimGecmisi, loading, yenileniyor, gonderLoading, veriCek, oneriGonder };
+  const gonderilenKisiler: Record<string, string[]> = {};
+  for (const kayit of gonderimGecmisi) {
+    const onceki = gonderilenKisiler[kayit.yayin_id] ?? [];
+    if (!onceki.includes(kayit.kisi_id)) gonderilenKisiler[kayit.yayin_id] = [...onceki, kayit.kisi_id];
+  }
+  return { yayinlar, kisiler, limitler, planlar, gonderilenKisiler, gonderilenYayinIdleri: Object.keys(gonderilenKisiler),
+    gonderimGecmisi, loading, yenileniyor, gonderLoading, veriSurumu, veriCek, uygunluguKontrolEt, topluKaydet };
 }
