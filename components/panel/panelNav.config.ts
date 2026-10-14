@@ -212,14 +212,14 @@ export function eclubKisiNavOlustur(firmalar: EclubGezinmeFirmasi[]): NavGrup[] 
   return [
   {
     baslik: "E-Club",
-    oglar: [{ etiket: "Firmalar", path: "/eclub/firmalar", badgeKey: "cek", aktifYollar: ["/eclub/firma"], gate: (c) => c.eclubAcik && firmalar.length > 0 }],
+    oglar: [{ etiket: "Firmalar ve Yayınları", path: "/eclub/firmalar", badgeKey: "cek", aktifYollar: ["/eclub/firma"], gate: (c) => c.eclubAcik && firmalar.length > 0 }],
   },
   {
     baslik: "Eczanem",
     oglar: [
-      { etiket: "Müşterilerim",     path: "/eczanem/eczane/musterilerim", gate: (c) => c.eczanemAcik },
-      { etiket: "Video Dağıtımı",   path: "/eczanem/eczane/dagitim", badgeKey: "eczanem_video_gonderilecek", gate: (c) => c.eczanemAcik },
-      { etiket: "Sipariş Onayı",    path: "/eczanem/eczane/siparisler", badgeKey: "eczanem_siparis_bekleyen", gate: (c) => c.eczanemAcik },
+      { etiket: "Danışanlarım",     path: "/eczanem/eczane/danisanlarim", gate: (c) => c.eczanemAcik },
+      { etiket: "Danışan Yayınları", path: "/eczanem/eczane/danisan-yayinlari", badgeKey: "eczanem_video_gonderilecek", gate: (c) => c.eczanemAcik },
+      { etiket: "İndirim Onayı",    path: "/eczanem/eczane/inidirm-onayi", badgeKey: "eczanem_siparis_bekleyen", gate: (c) => c.eczanemAcik },
     ],
   },
   ];

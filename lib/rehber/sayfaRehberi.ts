@@ -296,11 +296,11 @@ export const SAYFA_REHBERLERI: Record<string, SayfaRehberBilgisi> = {
       },
       {
         baslik: "Yayını İnceleyin",
-        aciklama: "Tümü, Gönderime Hazır veya Gönderilenler seçeneğiyle rafı daraltın. Kapağa tıklayarak içeriği açın; göndereceklerinizi kartlardan işaretleyin.",
+        aciklama: "Tümü, Gönderime Hazır, Planlananlar ve Gönderilenler ile rafı daraltın. Gönderime Hazır, incelemesini tamamladığınız yayınlardır. Bir yayın birden fazla listede bulunabilir.",
       },
       {
         baslik: "Alıcıları Seçip Gönderin",
-        aciklama: "Üstteki ortak alıcı listesinden kişileri seçin. Gönder'e tıklayarak işaretlediğiniz yayınları seçtiğiniz kişilere önerin.",
+        aciklama: "İncelediğiniz yayınları işaretleyin; uygunluğu ve kalan hakları gösterilen alıcıları seçin. Şimdi gönder veya Planla seçeneğinde özeti inceleyip onaylayın. Plan için yalnız tarih seçin: Pazartesi–Cuma, en fazla takip eden hafta ve yalnız mevcut iki aylık dönem.",
       },
     ],
   },
@@ -457,26 +457,26 @@ export const SAYFA_REHBERLERI: Record<string, SayfaRehberBilgisi> = {
     maddeler: [],
   },
 
-  // ─── 29. ECZANEM MÜŞTERİLERİM (ECZANE) ────────────────────────────────────
+  // ─── 29. ECZANEM DANIŞANLARIM (ECZANE) ────────────────────────────────────
   "eczanem-eczane-musterilerim": {
     anahtar: "eczanem-eczane-musterilerim",
-    baslik: "Müşterilerim",
+    baslik: "Danışanlarım",
     ozet: "Eczanenize kayıtlı müşterilerinizi yönetmenizi, yeni müşteri eklemenizi ve mevcut Eczanem kullanıcılarını eczanenize bağlamanızı sağlar.",
     maddeler: [],
   },
 
-  // ─── 30. ECZANEM VİDEO DAĞITIMI (ECZANE) ──────────────────────────────────
+  // ─── 30. ECZANEM DANIŞAN YAYINLARI (ECZANE) ────────────────────────────────
   "eczanem-eczane-dagitim": {
     anahtar: "eczanem-eczane-dagitim",
-    baslik: "Video Dağıtımı",
-    ozet: "Firmalardan eczanenize gelen videoları müşterilerinize iletmenizi ve video izleme/indirim dönüşümlerini takip etmenizi sağlar.",
+    baslik: "Danışan Yayınları",
+    ozet: "Eczanenize gelen Eczanem yayınlarını seçip aktif danışanlarınıza göndermenizi sağlar.",
     maddeler: [],
   },
 
-  // ─── 31. ECZANEM SİPARİŞ ONAYI (ECZANE) ───────────────────────────────────
+  // ─── 31. ECZANEM İNDİRİM ONAYI (ECZANE) ────────────────────────────────────
   "eczanem-eczane-siparisler": {
     anahtar: "eczanem-eczane-siparisler",
-    baslik: "Sipariş Onayı",
+    baslik: "İndirim Onayı",
     ozet: "Danışanlarınızın video izleyerek kazandığı ürün indirimlerini eczanenizde kullandığı anda gelen satış ve indirim onay kuyruğunu yönetmenizi sağlar.",
     maddeler: [],
   },

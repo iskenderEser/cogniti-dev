@@ -49,15 +49,15 @@ test("BM ve TM E-Club Takımım, Yayınları ve ligi; diğer üst roller yalnız
   assert.equal(tclub.oglar.some((oge) => oge.etiket === "E-Club Ligi"), false);
 });
 
-test("eczane sidebarı firma sayısından bağımsız tek Firmalar bağlantısı gösterir", async () => {
+test("eczane sidebarı firma sayısından bağımsız tek Firmalar ve Yayınları bağlantısı gösterir", async () => {
   const { eclubKisiNavOlustur } = await import("@/components/panel/panelNav.config");
   const firmalar = Array.from({ length: 10 }, (_, i) => ({ firma_id: `f${i}`, firma_adi: `Firma ${i}`, eclub_store_aktif: i % 2 === 0 }));
   const nav = eclubKisiNavOlustur(firmalar);
   assert.deepEqual(nav.map((g) => g.baslik), ["E-Club", "Eczanem"]);
-  assert.deepEqual(nav[0].oglar.map((o) => [o.etiket, o.path]), [["Firmalar", "/eclub/firmalar"]]);
+  assert.deepEqual(nav[0].oglar.map((o) => [o.etiket, o.path]), [["Firmalar ve Yayınları", "/eclub/firmalar"]]);
   assert.equal(nav[0].oglar[0].altOglar, undefined);
   assert.equal(nav[0].oglar[0].badgeKey, "cek");
   assert.deepEqual(nav[0].oglar[0].aktifYollar, ["/eclub/firma"]);
   assert.equal(nav[0].oglar[0].gate({ ...uttBaglami, eclubAcik: false }), false);
-  assert.deepEqual(nav[1].oglar.filter((o) => o.gate(uttBaglami)).map((o) => o.etiket), ["Müşterilerim", "Video Dağıtımı", "Sipariş Onayı"]);
+  assert.deepEqual(nav[1].oglar.filter((o) => o.gate(uttBaglami)).map((o) => [o.etiket, o.path]), [["Danışanlarım", "/eczanem/eczane/danisanlarim"], ["Danışan Yayınları", "/eczanem/eczane/danisan-yayinlari"], ["İndirim Onayı", "/eczanem/eczane/inidirm-onayi"]]);
 });

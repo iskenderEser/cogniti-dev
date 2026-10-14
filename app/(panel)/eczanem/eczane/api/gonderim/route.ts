@@ -8,7 +8,7 @@ import { sunucuHatasi, yetkiHatasi, rolHatasi, validasyonHatasi, isKuraluHatasi 
 import { rolCozucu } from "@/lib/utils/rolCozucu";
 import { ECLUB_TUKETICI_ROLLERI } from "@/lib/utils/roller";
 import { eczaciAktifEczanesi } from "@/lib/eczanem/eczaci";
-import { eczaneGelenVideolar, eczaneAktifUyeler, eczaneVideoGonderimOzetleri, musteriyeGonder } from "@/lib/eczanem/gonderim";
+import { eczaneGelenVideolar, eczaneAktifUyeler, eczaneUyeGonderimDurumlari, eczaneVideoGonderimOzetleri, musteriyeGonder } from "@/lib/eczanem/gonderim";
 
 const UUID_DESENI = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -28,6 +28,28 @@ export async function GET(request: NextRequest) {
 
     const yayinId = request.nextUrl.searchParams.get("yayin_id") ?? undefined;
     if (yayinId && !UUID_DESENI.test(yayinId)) return validasyonHatasi("Geçersiz yayın kimliği.", ["yayin_id"]);
+
+    const yayinIdlerParam = request.nextUrl.searchParams.get("yayin_idler");
+    if (yayinIdlerParam !== null) {
+      const yayinIdler = [...new Set(yayinIdlerParam.split(","))];
+      if (request.nextUrl.searchParams.get("sadece_uyeler") !== "1" || yayinId ||
+        yayinIdler.length === 0 || yayinIdler.length > 100 ||
+        yayinIdler.some((id) => !UUID_DESENI.test(id))) {
+        return validasyonHatasi("En fazla 100 geçerli yayın seçilmelidir.", ["yayin_idler"]);
+      }
+      const { data: gelenler, error: gelenHatasi } = await adminSupabase
+        .from("eczanem_eczane_gonderimleri")
+        .select("yayin_id")
+        .eq("eczane_id", eden.eczaneId!)
+        .in("yayin_id", yayinIdler);
+      if (gelenHatasi) throw new Error("Eczaneye gelen yayınlar doğrulanamadı.");
+      if (new Set((gelenler ?? []).map((kayit) => kayit.yayin_id)).size !== yayinIdler.length) {
+        return validasyonHatasi("Seçilen yayınlardan biri eczanenize ulaşmamış.", ["yayin_idler"]);
+      }
+      const uyeler = await eczaneAktifUyeler(adminSupabase, eden.eczaneId!);
+      const gonderimler = await eczaneUyeGonderimDurumlari(adminSupabase, eden.eczaneId!, yayinIdler, uyeler);
+      return NextResponse.json({ uyeler, gonderimler }, { status: 200 });
+    }
 
     // "Müşterileri Yönet" açılışı: yalnız seçili videonun üyeleri getirilir.
     // Videolar (v_yayin_detay) ve özetler sayfa açılışında bir kez yüklendi ve

@@ -37,7 +37,7 @@ test("çek bildirimi oturum içinde gösterilir ve Firmalar rozetine yansır", (
   assert.match(bildirimGosterimi, /b\.kayit_turu === "cek"[\s\S]*?basari\(b\.mesaj\)/);
   assert.match(panelLayout, /\["\/bildirimler\/api", "\/eczanem\/eczane\/api\/rozet"\]/);
   assert.match(panelLayout, /setInterval\([\s\S]*?bildirimRozetleriniYenile\(\)[\s\S]*?30000/);
-  assert.match(panelNav, /etiket: "Firmalar"[\s\S]*?badgeKey: "cek"/);
+  assert.match(panelNav, /etiket: "Firmalar ve Yayınları"[\s\S]*?badgeKey: "cek"/);
   assert.match(bildirimApi, /eclubQuery = eclubQuery\.in\("kayit_id", cekler\.map\(\(t\) => t\.talep_id\)\)/);
 });
 

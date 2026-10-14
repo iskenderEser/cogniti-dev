@@ -3,35 +3,43 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
 const oku = (yol: string) => readFileSync(yol, "utf8");
-
-const sayfa = oku("app/(panel)/eczanem/eczane/dagitim/page.tsx");
-const satir = oku("app/(panel)/eczanem/eczane/_components/EczanemVideoGonderimSatiri.tsx");
+const sayfa = oku("app/(panel)/eczanem/eczane/danisan-yayinlari/page.tsx");
+const kart = oku("app/(panel)/eczanem/eczane/danisan-yayinlari/_components/EczaneDanisanYayinKarti.tsx");
+const panel = oku("app/(panel)/eczanem/eczane/danisan-yayinlari/_components/EczaneDanisanGonderimPaneli.tsx");
 const api = oku("app/(panel)/eczanem/eczane/api/gonderim/route.ts");
 const gonderim = oku("lib/eczanem/gonderim.ts");
-const ortakOnizleme = oku("components/ogrenme-araci/OgrenmeAraciOnizleme.tsx");
 
-test("mutlu: eczacı dağıtımı UTT ile aynı satır içi yönetim ve önizleme akışını kullanır", () => {
-  assert.match(sayfa, /Müşterilere Gönderilecek Öğrenme İçerikleri/);
-  assert.match(sayfa, /<EczanemVideoGonderimSatiri/);
-  assert.match(satir, /<Collapsible open=\{acik\}/);
-  assert.match(satir, /Müşterileri Yönet/);
-  assert.match(satir, /<Progress value=\{oran\}/);
-  assert.match(satir, /onVideoAc\(video\)/);
-  assert.doesNotMatch(satir, /<Play/);
-  assert.match(sayfa, /<OgrenmeAraciOnizleme/);
-  assert.match(ortakOnizleme, /yalnizPlayButonu/);
-  assert.match(sayfa, /onBitti=\{\(\) => setAktifVideo\(null\)\}/);
+test("eczacı sayfası HOYK seçimi ve iki aşamalı danışan gönderimi kullanır", () => {
+  assert.match(sayfa, /<MobilYayinAkisi/);
+  assert.match(sayfa, /<EczaneDanisanYayinKarti/);
+  assert.match(kart, /<YayinKarti/);
+  assert.match(kart, /puanGoster\s/);
+  assert.match(kart, /baslikSagAksiyon=\{yayin\.talep_no/);
+  assert.match(kart, /tarihSatiriSagAksiyon=/);
+  assert.match(kart, /puanSatiriSagAksiyon=/);
+  assert.match(kart, /Göndermek için seçin/);
+  assert.match(kart, /Gönderim detayları/);
+  assert.match(sayfa, /sadece_uyeler: "1", yayin_id: yayinId/);
+  assert.match(panel, /Gönderim oluştur/);
+  assert.match(panel, /Danışanlar/);
+  assert.match(panel, /Özet/);
+  assert.match(panel, /Tüm seçili yayınlar için uygun/);
+  assert.doesNotMatch(sayfa, /EczanemVideoGonderimSatiri|AlertDialog/);
 });
 
-test("mutlu: bütün video satırlarının gönderim özeti tek API yanıtında sağlanır", () => {
-  assert.match(api, /eczaneVideoGonderimOzetleri/);
-  assert.match(api, /video_ozetleri: videoOzetleri/);
+test("çoklu yayın uygunluğu danışan ve yayın çiftiyle okunur; POST mevcut RPC yolunu kullanır", () => {
+  assert.match(panel, /yayin_idler: parca\.join\(","\)/);
+  assert.match(panel, /gonderilmis\.has\(`\$\{yayin\.yayin_id\}::\$\{danisan\.musteri_id\}`\)/);
+  assert.match(api, /eczaneUyeGonderimDurumlari/);
   assert.match(gonderim, /\.from\("eczanem_gonderimler"\)/);
-  assert.match(gonderim, /aktifMusteriIdleri\.has\(gonderim\.musteri_id\)/);
-  assert.match(gonderim, /gonderilebilir_uye_sayisi: Math\.max/);
+  assert.match(gonderim, /\.select\("yayin_id, urun_adi, teknik_adi, firma_adi, talep_no, video_puani, icerik_turu/);
+  assert.match(gonderim, /video_puani: ad\?\.video_puani \?\? null/);
+  assert.match(sayfa, /musteri_idler: parca/);
+  assert.match(gonderim, /rpc\("eczanem_musterilere_video_gonder"/);
 });
 
-test("red: önizleme dağıtım veya izleme kaydı yazmaz", () => {
-  const onizlemeBolumu = sayfa.slice(sayfa.indexOf("if (aktifVideo)"), sayfa.indexOf("return (\n    <div className=\"min-h-full"));
-  assert.doesNotMatch(onizlemeBolumu, /fetch\(|videoDagit|\/izle\/api\//);
+test("önizleme gönderim veya izleme kaydı oluşturmaz", () => {
+  const onizleme = sayfa.slice(sayfa.indexOf("if (aktifYayin)"), sayfa.indexOf("return <div className=\"min-h-full bg-gray-50\""));
+  assert.match(onizleme, /<OgrenmeAraciOnizleme/);
+  assert.doesNotMatch(onizleme, /fetch\(|gonder\(|\/izle\/api\//);
 });

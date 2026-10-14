@@ -10,7 +10,7 @@ const siparisRoute = readFileSync("app/(panel)/eczanem/eczane/api/siparisler/rou
 const musteriRoute = readFileSync("app/(panel)/eczanem/eczane/api/musteriler/route.ts", "utf8");
 const gonderim = readFileSync("lib/eczanem/gonderim.ts", "utf8");
 const ortakArayuz = readFileSync("app/(panel)/eczanem/eczane/_components/EczanemEczaneArayuz.tsx", "utf8");
-const musterilerim = readFileSync("app/(panel)/eczanem/eczane/musterilerim/page.tsx", "utf8");
+const musterilerim = readFileSync("app/(panel)/eczanem/eczane/danisanlarim/page.tsx", "utf8");
 
 test("mutlu: personel izi ve ayrılmış sipariş kuyruğu ortak arayüzle kurulur", () => {
   assert.match(sql, /CREATE TABLE IF NOT EXISTS public\.eczanem_personel_islemleri/);

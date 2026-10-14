@@ -124,7 +124,7 @@ export default function EczanemSiparisKuyrugu({ hata, basari }: Props) {
     <>
       <EczanemEczaneBaslik
         ikon={ClipboardList}
-        baslik="Sipariş Onayı"
+        baslik="İndirim Onayı"
         rehberAnahtar="eczanem-eczane-siparisler"
         aciklama="Müşteriden gelen indirim taleplerini inceleyin; onayda puan atomik olarak kullanılır, onaylanmayan talepte müşteri puanı korunur."
       />
