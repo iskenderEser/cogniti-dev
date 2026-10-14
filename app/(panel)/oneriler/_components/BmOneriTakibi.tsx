@@ -184,7 +184,7 @@ export default function BmOneriTakibi({
       </section>
 
       <div className="flex justify-end">
-        <Button type="button" onClick={() => router.push("/yayindaki-videolar")} className="rounded-xl bg-[#2f7fc7] px-5 text-xs font-extrabold shadow-sm hover:bg-[#256daf]">
+        <Button type="button" onClick={() => router.push("/yayindaki-videolar/urun")} className="rounded-xl bg-[#2f7fc7] px-5 text-xs font-extrabold shadow-sm hover:bg-[#256daf]">
           <Plus /> Yayın Öneriniz
         </Button>
       </div>

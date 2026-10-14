@@ -1,8 +1,5 @@
 "use client";
 
-import { SadeKisiSecimi } from "@/components/kontrol/KisiKontroller";
-import { SadeTarihAlani } from "@/components/kontrol/SadeKontroller";
-
 import { useAuth } from "@/app/providers/AuthProvider";
 import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
 import VideoOynatici from "@/components/izle/VideoOynatici";
@@ -10,26 +7,18 @@ import { ListeArama, useListe, type AramaAlani } from "@/components/liste";
 import type { YayinTuruFiltreDegeri } from "@/components/ogrenme-araci/YayinTuruFiltresi";
 import SayfaRehberi from "@/components/rehber/SayfaRehberi";
 import { YenileButonu } from "@/components/ui/yenile-butonu";
+import BmOneriGonderimPaneli, { type BmOneriAlici, type BmOneriLimitler } from "@/components/yayin/BmOneriGonderimPaneli";
 import { useBmOneriSecimi } from "@/components/yayin/BmOneriSecimi";
 import { UttYayinKartIskeletleri, UttYayinListeAkisi, UttYayinTuruToggle } from "@/components/yayin/UttYayinListeOrtaklari";
 import { YayinKarti } from "@/components/yayin/YayinKarti";
+import { oneriTarihKurali } from "@/lib/tclub/oneri/tarihKurali";
 import { talepIdGoster } from "@/lib/utils/talepId";
 import type { UttVideoKategorisi } from "@/lib/video/uttVideoKategorileri";
 import type { YayindakiVideo } from "@/lib/video/yayindakiVideolar";
-import { trGunEkle, trGunu } from "@/lib/zaman/kontrol";
+import { ArrowLeft, Check, X } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
-
-interface Alici {
-  kullanici_id: string;
-  ad: string;
-  soyad: string;
-  haftalik_kalan: number;
-}
-
-interface Limitler {
-  aylik: { kalan: number };
-}
 
 const ARAMA_ALANLARI: AramaAlani<YayindakiVideo>[] = [
   { anahtar: "tumu", etiket: "Tümü", deger: (v) => `${v.urun_adi} ${v.teknik_adi ?? ""}` },
@@ -37,10 +26,16 @@ const ARAMA_ALANLARI: AramaAlani<YayindakiVideo>[] = [
   { anahtar: "teknik", etiket: "Teknik Adı", deger: (v) => v.teknik_adi ?? "" },
 ];
 
+const tarihGoster = (gun: string) => {
+  const [yil, ay, tarih] = gun.split("-").map(Number);
+  return new Intl.DateTimeFormat("tr-TR", { day: "numeric", month: "long", year: "numeric" })
+    .format(new Date(yil, ay - 1, tarih));
+};
+
 export default function BmEgitimYayinlari({ kategoriBilgisi }: { kategoriBilgisi: UttVideoKategorisi }) {
   const { kullanici } = useAuth();
   const bmMi = kullanici?.rol.trim().toLowerCase() === "bm";
-  const { mesajlar, hata, basari } = useHataMesaji();
+  const { mesajlar, hata } = useHataMesaji();
   const hataRef = useRef(hata);
   const [yayinlar, setYayinlar] = useState<YayindakiVideo[]>([]);
   const [loading, setLoading] = useState(true);
@@ -48,13 +43,19 @@ export default function BmEgitimYayinlari({ kategoriBilgisi }: { kategoriBilgisi
   const [yenileTetik, setYenileTetik] = useState(0);
   const [aktifTur, setAktifTur] = useState<YayinTuruFiltreDegeri>("tumu");
   const [aktifYayin, setAktifYayin] = useState<YayindakiVideo | null>(null);
-  const [alicilar, setAlicilar] = useState<Alici[]>([]);
-  const [limitler, setLimitler] = useState<Limitler | null>(null);
+  const [alicilar, setAlicilar] = useState<BmOneriAlici[]>([]);
+  const [limitler, setLimitler] = useState<BmOneriLimitler | null>(null);
+  const [alicilarYukleniyor, setAlicilarYukleniyor] = useState(true);
   const { seciliYayinIdleri, setSeciliYayinIdleri, aliciId, setAliciId, baslangic, setBaslangic, bitis, setBitis } = useBmOneriSecimi();
   const [gonderiliyor, setGonderiliyor] = useState(false);
+  const [panelAcik, setPanelAcik] = useState(false);
+  const [panelHatasi, setPanelHatasi] = useState("");
+  const [sonucBelirsiz, setSonucBelirsiz] = useState(false);
+  const [sonuc, setSonuc] = useState<{ baslik: string; detay: string; kismi: boolean } | null>(null);
 
   useEffect(() => {
     setAktifYayin(null);
+    setAktifTur("tumu");
   }, [kategoriBilgisi.slug]);
 
   useEffect(() => { hataRef.current = hata; }, [hata]);
@@ -68,23 +69,32 @@ export default function BmEgitimYayinlari({ kategoriBilgisi }: { kategoriBilgisi
       .then(async (res) => {
         const data = await res.json();
         if (!res.ok) throw new Error(data.hata ?? "Yayınlar yüklenemedi.");
-        if (acik) setYayinlar(data.videolar ?? []);
+        if (acik) {
+          const guncelYayinlar = (data.videolar ?? []) as YayindakiVideo[];
+          setYayinlar(guncelYayinlar);
+          if (bmMi) {
+            const secilebilirIdler = new Set(guncelYayinlar.filter((yayin) => yayin.hedef_roller.includes("utt")).map((yayin) => yayin.yayin_id));
+            setSeciliYayinIdleri((mevcut) => mevcut.filter((id) => secilebilirIdler.has(id)));
+          }
+        }
       })
       .catch((error) => { if (acik) hataRef.current("Yayınlar yüklenemedi.", "Eğitim Yayınları", error instanceof Error ? error.message : undefined); })
       .finally(() => { if (acik) { setLoading(false); setYenileniyor(false); } });
     return () => { acik = false; };
-  }, [yenileTetik]);
+  }, [bmMi, setSeciliYayinIdleri, yenileTetik]);
 
   useEffect(() => {
     if (!bmMi) return;
     let acik = true;
+    setAlicilarYukleniyor(true);
     void fetch("/oneriler/api/kullanicilar", { cache: "no-store" })
       .then(async (res) => {
         const data = await res.json();
         if (!res.ok) throw new Error(data.hata ?? "UTT listesi yüklenemedi.");
         if (acik) { setAlicilar(data.kullanicilar ?? []); setLimitler(data.limitler ?? null); }
       })
-      .catch((error) => { if (acik) hataRef.current("UTT listesi yüklenemedi.", "Öneri alıcıları", error instanceof Error ? error.message : undefined); });
+      .catch((error) => { if (acik) { setLimitler(null); hataRef.current("UTT listesi yüklenemedi.", "Öneri alıcıları", error instanceof Error ? error.message : undefined); } })
+      .finally(() => { if (acik) setAlicilarYukleniyor(false); });
     return () => { acik = false; };
   }, [bmMi, yenileTetik]);
 
@@ -100,7 +110,7 @@ export default function BmEgitimYayinlari({ kategoriBilgisi }: { kategoriBilgisi
   const limitUygun = seciliYayinlar.length <= (seciliAlici?.haftalik_kalan ?? 0)
     && seciliYayinlar.length <= (limitler?.aylik.kalan ?? 0);
   const gonderilebilir = bmMi && seciliYayinlar.length > 0 && seciliYayinlar.length === seciliYayinIdleri.length
-    && Boolean(aliciId && baslangic && bitis) && limitUygun && !gonderiliyor;
+    && Boolean(aliciId) && oneriTarihKurali(baslangic, bitis).gecerli && limitUygun && !gonderiliyor && !sonucBelirsiz;
   const yayinSec = (yayinId: string) => {
     setSeciliYayinIdleri((mevcut) => {
       if (mevcut.includes(yayinId)) return mevcut.filter((id) => id !== yayinId);
@@ -111,6 +121,7 @@ export default function BmEgitimYayinlari({ kategoriBilgisi }: { kategoriBilgisi
   const gonder = async () => {
     if (!gonderilebilir) return;
     setGonderiliyor(true);
+    setPanelHatasi("");
     try {
       const yanit = await fetch("/oneriler/api", {
         method: "POST",
@@ -123,23 +134,25 @@ export default function BmEgitimYayinlari({ kategoriBilgisi }: { kategoriBilgisi
         })) }),
       });
       const veri = await yanit.json();
-      if (!Array.isArray(veri.oneriler)) { hata(veri.hata ?? "Öneri gönderilemedi.", veri.adim, veri.detay); return; }
+      if (!Array.isArray(veri.oneriler)) { setPanelHatasi(veri.hata ?? "Öneri gönderilemedi."); return; }
       const basariliIdler = new Set<string>(veri.oneriler.map((kayit: { yayin_id: string }) => kayit.yayin_id));
       const basarisizSayisi = seciliYayinlar.length - basariliIdler.size;
+      if (basariliIdler.size === 0) { setPanelHatasi(veri.hata ?? "Önerilerin hiçbiri gönderilemedi. Seçimleriniz korundu."); return; }
       setSeciliYayinIdleri((mevcut) => mevcut.filter((id) => !basariliIdler.has(id)));
-      if (basarisizSayisi > 0) {
-        hata(basariliIdler.size > 0
-          ? `${seciliYayinlar.length} yayından ${basariliIdler.size} tanesi gönderildi, ${basarisizSayisi} tanesi gönderilemedi. Gönderilemeyenler seçili kaldı.`
-          : "Önerilerin hiçbiri gönderilemedi. Seçimler korundu; tekrar deneyin.");
-      } else {
-        basari(`${basariliIdler.size} öneri başarıyla gönderildi.`);
-        setAliciId("");
-        setBaslangic("");
-        setBitis("");
-      }
+      const alici = alicilar.find((kisi) => kisi.kullanici_id === aliciId);
+      setSonuc({
+        baslik: basarisizSayisi > 0 ? `${basariliIdler.size} öneri gönderildi, ${basarisizSayisi} öneri gönderilemedi.` : `${basariliIdler.size} öneri gönderildi.`,
+        detay: `${alici ? `${alici.ad} ${alici.soyad}` : "Temsilci"} · ${tarihGoster(baslangic)} – ${tarihGoster(bitis)}${basarisizSayisi > 0 ? " · Gönderilemeyen yayınlar seçili kaldı." : ""}`,
+        kismi: basarisizSayisi > 0,
+      });
+      setPanelAcik(false);
+      setAliciId("");
+      setBaslangic("");
+      setBitis("");
       setYenileTetik((deger) => deger + 1);
     } catch {
-      hata("Gönderim sonucu doğrulanamadı. Tekrar göndermeden önce Öneri Takibi'ni kontrol edin.");
+      setSonucBelirsiz(true);
+      setPanelHatasi("Gönderim sonucu doğrulanamadı. Yeniden göndermeden önce Öneri Takibi'ni kontrol edin.");
     } finally {
       setGonderiliyor(false);
     }
@@ -162,6 +175,8 @@ export default function BmEgitimYayinlari({ kategoriBilgisi }: { kategoriBilgisi
 
   return (
     <div className="mx-auto max-w-6xl px-3 py-4 pb-20 md:px-6 md:py-5 md:pb-5 lg:px-8 lg:py-7">
+      {bmMi && <Link href="/oneriler" className="mb-3 inline-flex items-center gap-1 text-xs font-extrabold text-[#347eb9] hover:underline"><ArrowLeft className="size-3.5" /> Öneri Takibi</Link>}
+      {bmMi && <div className="mb-1 flex items-center gap-1.5 text-[11px] font-bold text-[#8395aa]"><span>Eğitim Yayınları</span><span aria-hidden="true">›</span><strong className="text-[#39749f]">{kategoriBilgisi.etiket}</strong></div>}
       <SayfaYenileBasligi className="mb-5 flex items-start justify-between gap-3"
         baslik={<div className="inline-flex items-center">
           <h1 className="m-0 text-xl font-extrabold text-gray-900 md:text-2xl">{kategoriBilgisi.etiket}</h1>
@@ -173,32 +188,21 @@ export default function BmEgitimYayinlari({ kategoriBilgisi }: { kategoriBilgisi
 
       />
 
+      {bmMi && <div className="mb-5 flex flex-wrap items-center justify-between gap-2 text-[11px] font-bold text-[#7c8da1]">
+        <span>{kategoriBilgisi.etiket} içindeki yayınlar</span>
+      </div>}
+
+      {sonuc && <div role="status" className={`mb-5 flex items-start gap-3 rounded-xl border border-l-4 px-4 py-3 ${sonuc.kismi ? "border-amber-200 border-l-amber-600 bg-amber-50 text-amber-800" : "border-emerald-200 border-l-emerald-600 bg-emerald-50 text-emerald-800"}`}>
+        <Check className="mt-0.5 size-4 shrink-0" /><div className="min-w-0 flex-1"><strong className="block text-xs">{sonuc.baslik}</strong><p className="mt-1 text-[11px]">{sonuc.detay}</p></div>
+        <button type="button" onClick={() => setSonuc(null)} aria-label="Bilgi notunu kapat" className="shrink-0 rounded p-1 hover:bg-black/5"><X className="size-4" /></button>
+      </div>}
+
       <div className="mb-5 flex min-w-0 flex-wrap items-center justify-between gap-3">
         <UttYayinTuruToggle yayinlar={kategoriYayinlari} deger={aktifTur} onDegistir={setAktifTur} className="min-w-0" />
         <div className="ml-auto flex min-w-0 max-w-full items-center justify-end">
           <ListeArama arama={liste.arama} ipucu="Bu kategoride ara..." genislik="w-48 sm:w-60" yukseklik="secim" />
         </div>
       </div>
-
-      {bmMi && (
-        <div className="mb-5 grid grid-cols-2 items-end gap-3 sm:flex sm:flex-wrap sm:justify-end" aria-label="Yayın önerisi gönderimi">
-          <label className="col-span-2 flex min-w-0 flex-col gap-1.5 text-[11px] font-bold text-[#718198] sm:min-w-36">
-            <span>Temsilciler</span>
-            <SadeKisiSecimi baslik="Temsilciler" kisiler={alicilar.map((alici) => ({ deger: alici.kullanici_id, adSoyad: `${alici.ad} ${alici.soyad}`, altBilgi: `${alici.haftalik_kalan} kalan öneri hakkı` }))} deger={aliciId} onDegistir={setAliciId} className="w-full" />
-          </label>
-          <label className="flex min-w-0 flex-col gap-1.5 text-[11px] font-bold text-[#718198]">
-            Başlangıç
-            <SadeTarihAlani value={baslangic} min={trGunEkle(trGunu(), 1)} onChange={(event) => { setBaslangic(event.target.value); if (bitis && event.target.value >= bitis) setBitis(""); }} className="sm:w-36" />
-          </label>
-          <label className="flex min-w-0 flex-col gap-1.5 text-[11px] font-bold text-[#718198]">
-            Bitiş
-            <SadeTarihAlani value={bitis} min={baslangic ? trGunEkle(baslangic, 1) : trGunEkle(trGunu(), 2)} onChange={(event) => setBitis(event.target.value)} className="sm:w-36" />
-          </label>
-          <button type="button" onClick={() => void gonder()} disabled={!gonderilebilir} className="col-span-2 h-10 rounded-lg bg-[#237ac8] px-3 text-[11px] font-bold text-white hover:bg-[#1d69ae] disabled:cursor-not-allowed disabled:opacity-50">
-            {gonderiliyor ? "Gönderiliyor..." : "Gönder"}
-          </button>
-        </div>
-      )}
 
       {loading ? (
         <UttYayinKartIskeletleri izgaraClassName="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5" />
@@ -212,25 +216,36 @@ export default function BmEgitimYayinlari({ kategoriBilgisi }: { kategoriBilgisi
             etkilesimAktif={false}
             etkilesimGoster={false}
             durumGoster={false}
-            talepNoGoster={false}
-            baslikSagAksiyon={yayin.talep_no != null ? (
-              <span className="shrink-0 font-mono text-xs text-[#bc2d0d] sm:text-[10px]">
-                {talepIdGoster(yayin.firma_adi, yayin.talep_no)}
-              </span>
-            ) : undefined}
+            talepNoGoster={bmMi}
+            baslikSagAksiyon={!bmMi && yayin.talep_no != null ? <span className="shrink-0 font-mono text-xs text-[#bc2d0d] sm:text-[10px]">{talepIdGoster(yayin.firma_adi, yayin.talep_no)}</span> : undefined}
             className={seciliYayinIdleri.includes(yayin.yayin_id) ? "ring-2 ring-[#237ac8]/30" : ""}
-            tarihSatiriSagAksiyon={bmMi ? (
-              <label onClick={(event) => event.stopPropagation()} className="inline-flex cursor-pointer items-center gap-1 text-xs text-[#526780] sm:text-[10px]">
-                <input type="checkbox" checked={seciliYayinIdleri.includes(yayin.yayin_id)} onChange={() => yayinSec(yayin.yayin_id)} aria-label={`${yayin.urun_adi} yayınını öneri için seç`} className="size-3 accent-[#237ac8]" />
-                Öneri için seçin
+            altEkIcerik={bmMi ? <div onClick={(event) => event.stopPropagation()} className="mt-2.5 flex items-center justify-between gap-2 border-t border-[#eef2f6] pt-2">
+              <label className="inline-flex cursor-pointer items-center gap-1.5 text-[10px] font-extrabold text-[#526780]">
+                <input type="checkbox" checked={seciliYayinIdleri.includes(yayin.yayin_id)} onChange={() => yayinSec(yayin.yayin_id)} aria-label={`${yayin.urun_adi} yayınını öneri için seç`} className="size-3.5 accent-[#2f7fc7]" />
+                Öneri için seç
               </label>
-            ) : undefined}
+              <button type="button" onClick={() => setAktifYayin(yayin)} className="text-[10px] font-extrabold text-[#7d8ba0] hover:text-[#2f7fc7]">Önizle ↗</button>
+            </div> : undefined}
           />}
           sifirlamaAnahtari={`${kategoriBilgisi.slug}-${aktifTur}-${liste.arama.alanAnahtari}-${liste.arama.aranan}`}
           bosMesaj={bosMesaj}
           masaustuIzgaraClassName="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
         />
       )}
+      {bmMi && seciliYayinIdleri.length > 0 && <div role="status" className="fixed inset-x-4 bottom-4 z-30 mx-auto flex max-w-[650px] flex-wrap items-center gap-2.5 rounded-2xl bg-[#172b4d] px-3.5 py-3 text-white shadow-[0_16px_40px_rgba(23,43,77,0.3)] max-sm:inset-x-0 max-sm:bottom-0 max-sm:rounded-b-none">
+        <strong className="min-w-0 flex-1 text-[13px]">{seciliYayinIdleri.length} yayın seçildi</strong>
+        <span className="text-[10px] text-[#b8cade] max-sm:order-3 max-sm:w-full">En fazla 3 yayın · tek temsilci</span>
+        <button type="button" onClick={() => setSeciliYayinIdleri([])} className="rounded-lg px-2 py-2.5 text-[11px] font-extrabold text-[#d9e6f3] hover:bg-white/10">Seçimi temizle</button>
+        <button type="button" onClick={() => { setPanelHatasi(""); setPanelAcik(true); }} className="rounded-lg bg-white px-3 py-2.5 text-[11px] font-extrabold text-[#237ac8] hover:bg-[#edf6ff]">Gönderim oluştur →</button>
+      </div>}
+      {bmMi && panelAcik && <BmOneriGonderimPaneli
+        yayinlar={seciliYayinlar} alicilar={alicilar} limitler={limitler} alicilarYukleniyor={alicilarYukleniyor}
+        aliciId={aliciId} onAliciDegistir={setAliciId}
+        baslangic={baslangic} onBaslangicDegistir={(gun) => { setBaslangic(gun); if (bitis && gun >= bitis) setBitis(""); }}
+        bitis={bitis} onBitisDegistir={setBitis}
+        gonderiliyor={gonderiliyor} gonderilebilir={gonderilebilir} hataMesaji={panelHatasi}
+        onGonder={() => void gonder()} onKapat={() => { if (!gonderiliyor) setPanelAcik(false); }}
+      />}
       <HataMesajiContainer mesajlar={mesajlar} />
     </div>
   );
