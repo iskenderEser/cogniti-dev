@@ -22,6 +22,7 @@ export interface UttEczanemYayin {
 export interface UttEczanemEczane {
   eczane_id: string;
   eczane_adi: string;
+  eczaci_ad_soyad: string | null;
   aktif_uye_sayisi: number;
   esik_uygun: boolean;
 }

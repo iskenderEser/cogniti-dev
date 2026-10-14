@@ -86,12 +86,12 @@ async function yayinAdMap(
   adminSupabase: SupabaseClient,
   yayinIdler: string[],
   firmaIdler?: string[],
-): Promise<Map<string, { urun_adi: string; teknik_adi: string; video_url: string | null; thumbnail_url: string | null; yayin_tarihi: string | null; arac_id: string; arac_turu: OgrenmeAraciTuru }>> {
-  const map = new Map<string, { urun_adi: string; teknik_adi: string; video_url: string | null; thumbnail_url: string | null; yayin_tarihi: string | null; arac_id: string; arac_turu: OgrenmeAraciTuru }>();
+): Promise<Map<string, { urun_adi: string; teknik_adi: string; firma_adi: string | null; talep_no: number | null; video_puani: number | null; icerik_turu: string | null; video_url: string | null; thumbnail_url: string | null; yayin_tarihi: string | null; arac_id: string; arac_turu: OgrenmeAraciTuru }>> {
+  const map = new Map<string, { urun_adi: string; teknik_adi: string; firma_adi: string | null; talep_no: number | null; video_puani: number | null; icerik_turu: string | null; video_url: string | null; thumbnail_url: string | null; yayin_tarihi: string | null; arac_id: string; arac_turu: OgrenmeAraciTuru }>();
   if (yayinIdler.length === 0) return map;
   let sorgu = adminSupabase
     .from("v_yayin_detay")
-    .select("yayin_id, urun_adi, teknik_adi, video_url, thumbnail_url, yayin_tarihi, arac_id, arac_turu, arac_kapak_yolu, arac_dosya_yolu, arac_metadata")
+    .select("yayin_id, urun_adi, teknik_adi, firma_adi, talep_no, video_puani, icerik_turu, video_url, thumbnail_url, yayin_tarihi, arac_id, arac_turu, arac_kapak_yolu, arac_dosya_yolu, arac_metadata")
     .in("yayin_id", yayinIdler)
     .in("arac_turu", Object.entries(ogrenmeAraciBayraklari()).filter(([, acik]) => acik).map(([tur]) => tur));
   if (firmaIdler) {
@@ -106,6 +106,10 @@ async function yayinAdMap(
     map.set(y.yayin_id, {
       urun_adi: y.urun_adi ?? "-",
       teknik_adi: y.teknik_adi ?? "-",
+      firma_adi: y.firma_adi ?? null,
+      talep_no: y.talep_no ?? null,
+      video_puani: y.video_puani ?? null,
+      icerik_turu: y.icerik_turu ?? null,
       video_url: y.video_url ?? null,
       thumbnail_url: thumbnail_url ?? null,
       yayin_tarihi: y.yayin_tarihi ?? null,
@@ -195,6 +199,7 @@ export interface UttEczanemYayin {
 export interface UttEczanemEczane {
   eczane_id: string;
   eczane_adi: string;
+  eczaci_ad_soyad: string | null;
   aktif_uye_sayisi: number;
   esik_uygun: boolean;
 }
@@ -341,11 +346,27 @@ export async function uttEczanemVerisi(
   const eczaneIdler = [...new Set(
     uttBaglari.filter((bag) => bag.firmaId === firmaId).map((bag) => bag.eczaneId)
   )];
-  const [adMap, sayiMap, aylikIstatistikler] = await Promise.all([
+  const [adMap, sayiMap, aylikIstatistikler, eczaciBaglari] = await Promise.all([
     eczaneAdMap(adminSupabase, eczaneIdler),
     aktifUyeSayilari(adminSupabase, eczaneIdler),
     uttEczanemAylikIstatistikleri(adminSupabase, uttAuthId, eczaneIdler),
+    eczaneIdler.length
+      ? adminSupabase.from("eclub_kisi_eczane")
+        .select("eczane_id, eclub_kisiler ( rol, ad, soyad )")
+        .in("eczane_id", eczaneIdler)
+        .eq("aktif_mi", true)
+        .order("created_at", { ascending: true })
+      : Promise.resolve({ data: [], error: null }),
   ]);
+  if (eczaciBaglari.error) throw new Error("Eczacı bilgileri okunamadı.");
+  const eczaciAdlari = new Map<string, string>();
+  for (const bag of eczaciBaglari.data ?? []) {
+    const kisiRaw = bag.eclub_kisiler as { rol: string; ad: string; soyad: string } | { rol: string; ad: string; soyad: string }[] | null;
+    const kisi = Array.isArray(kisiRaw) ? kisiRaw[0] : kisiRaw;
+    if (kisi?.rol !== "eczaci" || eczaciAdlari.has(bag.eczane_id)) continue;
+    const adSoyad = `${kisi.ad} ${kisi.soyad}`.trim();
+    if (adSoyad) eczaciAdlari.set(bag.eczane_id, adSoyad);
+  }
 
   const eczaneler: UttEczanemEczane[] = eczaneIdler
     .map((ez) => {
@@ -353,6 +374,7 @@ export async function uttEczanemVerisi(
       return {
         eczane_id: ez,
         eczane_adi: adMap.get(ez) ?? "(isimsiz eczane)",
+        eczaci_ad_soyad: eczaciAdlari.get(ez) ?? null,
         aktif_uye_sayisi: sayi,
         esik_uygun: sayi >= esik,
       };
@@ -408,8 +430,14 @@ export async function eczaneyeGonder(
 
 export interface EczaneGelenVideo {
   yayin_id: string;
+  firma_adi: string | null;
+  talep_no: number | null;
+  video_puani: number | null;
   urun_adi: string;
   teknik_adi: string;
+  icerik_turu: string | null;
+  yayin_tarihi: string | null;
+  gorunen_urun_id: string | null;
   video_url: string | null;
   thumbnail_url: string | null;
   gelis_tarihi: string;
@@ -427,6 +455,11 @@ export interface EczaneVideoGonderimOzeti {
   aktif_uye_sayisi: number;
   gonderilen_uye_sayisi: number;
   gonderilebilir_uye_sayisi: number;
+}
+
+export interface EczaneUyeGonderimDurumu {
+  yayin_id: string;
+  musteri_id: string;
 }
 
 interface EczaneGonderimSatiri { yayin_id: string; created_at: string; }
@@ -450,13 +483,23 @@ export async function eczaneGelenVideolar(
   const rows = (gnd ?? []) as EczaneGonderimSatiri[];
   const erisim = await eczaneEczanemFirmaIdleri(adminSupabase, eczaneId);
   if (!erisim.ok || !erisim.acik) return [];
-  const adMap = await yayinAdMap(adminSupabase, [...new Set(rows.map((gonderim) => gonderim.yayin_id))], erisim.firmaIdler);
+  const yayinIdler = [...new Set(rows.map((gonderim) => gonderim.yayin_id))];
+  const [adMap, gorunenUrunIdleri] = await Promise.all([
+    yayinAdMap(adminSupabase, yayinIdler, erisim.firmaIdler),
+    yayinGorunenUrunIdHaritasi(adminSupabase, yayinIdler),
+  ]);
   return rows.filter((gonderim) => adMap.has(gonderim.yayin_id)).map((gonderim) => {
     const ad = adMap.get(gonderim.yayin_id);
     return {
       yayin_id: gonderim.yayin_id,
+      firma_adi: ad?.firma_adi ?? null,
+      talep_no: ad?.talep_no ?? null,
+      video_puani: ad?.video_puani ?? null,
       urun_adi: ad?.urun_adi ?? "-",
       teknik_adi: ad?.teknik_adi ?? "-",
+      icerik_turu: ad?.icerik_turu ?? null,
+      yayin_tarihi: ad?.yayin_tarihi ?? null,
+      gorunen_urun_id: gorunenUrunIdleri.get(gonderim.yayin_id) ?? null,
       video_url: ad?.video_url ?? null,
       thumbnail_url: ad?.thumbnail_url ?? null,
       gelis_tarihi: gonderim.created_at,
@@ -519,6 +562,41 @@ export async function eczaneAktifUyeler(
     .sort((a, b) => a.ad_soyad.localeCompare(b.ad_soyad, "tr"));
 }
 
+// Çoklu yayın seçiminde yalnız bu eczanenin aktif danışanlarına ait gönderim
+// çiftlerini döndürür. Sayfalama, PostgREST'in satır sınırında eksik uygunluk
+// gösterilmesini önler.
+export async function eczaneUyeGonderimDurumlari(
+  adminSupabase: SupabaseClient,
+  eczaneId: string,
+  yayinIdler: string[],
+  aktifUyeler: EczaneUye[],
+): Promise<EczaneUyeGonderimDurumu[]> {
+  const aktifMusteriIdleri = new Set(aktifUyeler.map((uye) => uye.musteri_id));
+  if (yayinIdler.length === 0 || aktifMusteriIdleri.size === 0) return [];
+
+  const durumlar: EczaneUyeGonderimDurumu[] = [];
+  const sayfaBoyutu = 1000;
+  for (let baslangic = 0; ;) {
+    const { data, error, count } = await adminSupabase
+      .from("eczanem_gonderimler")
+      .select("gonderim_id, yayin_id, musteri_id", { count: "exact" })
+      .eq("eczane_id", eczaneId)
+      .in("yayin_id", yayinIdler)
+      .order("gonderim_id", { ascending: true })
+      .range(baslangic, baslangic + sayfaBoyutu - 1);
+    if (error) throw new Error("Danışan gönderim durumları okunamadı.");
+    const kayitlar = data ?? [];
+    for (const kayit of kayitlar) {
+      if (aktifMusteriIdleri.has(kayit.musteri_id)) {
+        durumlar.push({ yayin_id: kayit.yayin_id, musteri_id: kayit.musteri_id });
+      }
+    }
+    baslangic += kayitlar.length;
+    if (kayitlar.length === 0 || (count != null && baslangic >= count) || (count == null && kayitlar.length < sayfaBoyutu)) break;
+  }
+  return durumlar;
+}
+
 // Eczacı dağıtım listesindeki her video için gönderim ilerlemesi. Aktif üyelikten
 // çıkmış veya E-Club geçişine alınmış müşterilerin eski gönderimleri özeti şişirmez.
 export async function eczaneVideoGonderimOzetleri(
@@ -532,15 +610,11 @@ export async function eczaneVideoGonderimOzetleri(
   const gonderilenler = new Map<string, Set<string>>();
 
   if (yayinIdler.length > 0 && aktifMusteriIdleri.size > 0) {
-    const { data, error } = await adminSupabase
-      .from("eczanem_gonderimler")
-      .select("yayin_id, musteri_id")
-      .eq("eczane_id", eczaneId)
-      .in("yayin_id", yayinIdler);
-    if (error) throw new Error("Müşteri video gönderim özetleri okunamadı.");
-
-    for (const gonderim of data ?? []) {
-      if (!aktifMusteriIdleri.has(gonderim.musteri_id)) continue;
+    const parcalar = Array.from({ length: Math.ceil(yayinIdler.length / 100) }, (_, sira) => yayinIdler.slice(sira * 100, (sira + 1) * 100));
+    const tumGonderimler = (await Promise.all(parcalar.map((parca) =>
+      eczaneUyeGonderimDurumlari(adminSupabase, eczaneId, parca, aktifUyeler)
+    ))).flat();
+    for (const gonderim of tumGonderimler) {
       const musteriler = gonderilenler.get(gonderim.yayin_id) ?? new Set<string>();
       musteriler.add(gonderim.musteri_id);
       gonderilenler.set(gonderim.yayin_id, musteriler);

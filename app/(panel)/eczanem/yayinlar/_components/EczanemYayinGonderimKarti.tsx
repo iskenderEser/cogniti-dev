@@ -53,7 +53,7 @@ export function EczanemYayinGonderimKarti({
           baslikSagAksiyon={yayin.talep_no != null ? <span className="shrink-0 font-mono text-xs text-[#bc2d0d] sm:text-[10px]">{talepIdGoster(yayin.firma_adi, yayin.talep_no)}</span> : undefined}
           donguGoster={false}
           thumbnailAltBant={!yayin.gonderim_incelemesi_tamamlandi ? <span className="block w-full rounded-md bg-[#fff3f1] px-1.5 py-0.5 text-center text-[9px] font-medium leading-3 text-[#ad625c]">Göndermek için yayını tamamlayın</span> : undefined}
-          tarihSatiriSagAksiyon={(secilebilir || gonderilecekGoster) ? (
+          tarihSatiriSagAksiyon={(secilebilir || gonderilecekGoster || !yayin.gonderim_incelemesi_tamamlandi) ? (
             <label onClick={(event) => event.stopPropagation()} className={`inline-flex shrink-0 items-center gap-1 text-xs font-normal sm:text-[10px] ${secili ? "text-[#1d65aa]" : "text-[#526780]"} ${secilebilir ? "cursor-pointer" : "cursor-not-allowed opacity-50"}`}>
               <input type="checkbox" checked={secili} disabled={!secilebilir} onChange={onSecim} aria-label={`${yayin.urun_adi} yayınını gönderim için seç`} className="size-3 accent-[#237ac8]" />
               Göndermek için seçin
@@ -88,7 +88,10 @@ export function EczanemYayinGonderimKarti({
               <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-2">
                 {gonderilenEczaneler.map((gonderim) => (
                   <div key={gonderim.eczane_id} className="mb-1.5 flex items-center justify-between gap-2 rounded-lg border border-[#dfe9f2] bg-white px-2.5 py-2 text-[10px] last:mb-0">
-                    <span className="min-w-0 truncate text-[#2e4663]">{eczaneMap.get(gonderim.eczane_id)?.eczane_adi}</span>
+                    <span className="min-w-0 flex-1 text-[#2e4663]">
+                      {eczaneMap.get(gonderim.eczane_id)?.eczane_adi}
+                      {eczaneMap.get(gonderim.eczane_id)?.eczaci_ad_soyad && <span className="ml-1 text-[#607b96]">Ecz. {eczaneMap.get(gonderim.eczane_id)?.eczaci_ad_soyad}</span>}
+                    </span>
                     <time className="shrink-0 text-[9px] text-[#7b8da5]" dateTime={gonderim.created_at}>{new Date(gonderim.created_at).toLocaleDateString("tr-TR")}</time>
                   </div>
                 ))}

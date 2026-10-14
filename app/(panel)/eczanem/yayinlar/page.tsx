@@ -1,7 +1,5 @@
 "use client";
 
-import { SadeCokluAliciSecimi } from "@/components/kontrol/SadeKontroller";
-
 import UttGonderimIncelemesi from "@/components/eclub/UttGonderimIncelemesi";
 import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
 import OgrenmeAraciOnizleme from "@/components/ogrenme-araci/OgrenmeAraciOnizleme";
@@ -15,6 +13,7 @@ import MobilYayinAkisi from "@/components/yayin/MobilYayinAkisi";
 import { UttYayinTuruToggle } from "@/components/yayin/UttYayinListeOrtaklari";
 import { Building2, ChevronLeft, CircleAlert, Send, UsersRound } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { EczanemGonderimPaneli, type EczanemGonderimSonucu } from "./_components/EczanemGonderimPaneli";
 import { EczanemYayinGonderimKarti } from "./_components/EczanemYayinGonderimKarti";
 import type { UttEczanemGonderim, UttEczanemVeri, UttEczanemYayin } from "./_types";
 import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
@@ -53,10 +52,9 @@ export default function EczanemYayinlariPage() {
   const [gonderimFiltresi, setGonderimFiltresi] = useState<GonderimFiltresi>("tumu");
   const [aktifYayinTuru, setAktifYayinTuru] = useState<YayinTuruFiltreDegeri>("tumu");
   const [seciliYayinIdleri, setSeciliYayinIdleri] = useState<string[]>([]);
-  const [seciliEczaneIdleri, setSeciliEczaneIdleri] = useState<string[]>([]);
 
   const [topluGonderiliyor, setTopluGonderiliyor] = useState(false);
-  const [gonderimOzeti, setGonderimOzeti] = useState<string | null>(null);
+  const [gonderimSonucu, setGonderimSonucu] = useState<EczanemGonderimSonucu | null>(null);
   const [acikDetayYayinId, setAcikDetayYayinId] = useState<string | null>(null);
 
   const veriCek = useCallback(async (ilk = false) => {
@@ -125,7 +123,7 @@ export default function EczanemYayinlariPage() {
   const gonderimMap = useMemo<ReadonlyMap<string, UttEczanemGonderim>>(() => new Map(
     (veri?.gonderimler ?? []).map((gonderim) => [`${gonderim.yayin_id}::${gonderim.eczane_id}`, gonderim]),
   ), [veri?.gonderimler]);
-  const gonderilebilirYayinlar = yayinlar.filter((yayin) => hazirEczaneler.some(
+  const gonderilebilirYayinlar = yayinlar.filter((yayin) => yayin.gonderim_incelemesi_tamamlandi && hazirEczaneler.some(
     (eczane) => !gonderimMap.has(`${yayin.yayin_id}::${eczane.eczane_id}`),
   ));
   const gonderilenYayinlar = yayinlar.filter((yayin) => eczaneler.some(
@@ -140,23 +138,17 @@ export default function EczanemYayinlariPage() {
     ? durumFiltreliYayinlar
     : durumFiltreliYayinlar.filter((yayin) => yayin.arac_turu === aktifYayinTuru))]
     .sort((a, b) => new Date(b.yayin_tarihi ?? 0).getTime() - new Date(a.yayin_tarihi ?? 0).getTime());
-  const gonderilebilirIdler = new Set(gonderilebilirYayinlar.filter((yayin) => yayin.gonderim_incelemesi_tamamlandi).map((yayin) => yayin.yayin_id));
+  const gonderilebilirIdler = new Set(gonderilebilirYayinlar.map((yayin) => yayin.yayin_id));
   const seciliYayinlar = gorunenYayinlar.filter((yayin) => seciliYayinIdleri.includes(yayin.yayin_id) && gonderilebilirIdler.has(yayin.yayin_id));
-  const ortakUygunEczaneler = seciliYayinlar.length === 0 ? [] : eczaneler.filter((eczane) =>
-    seciliYayinlar.every((yayin) => !gonderimMap.has(`${yayin.yayin_id}::${eczane.eczane_id}`)));
-  const ortakSecilebilirEczaneler = ortakUygunEczaneler.filter((eczane) => eczane.esik_uygun);
-  const ortakSecilebilirIdler = new Set(ortakSecilebilirEczaneler.map((eczane) => eczane.eczane_id));
-  const gecerliSeciliEczaneIdleri = seciliEczaneIdleri.filter((id) => ortakSecilebilirIdler.has(id));
 
   const secimSifirla = () => {
     setSeciliYayinIdleri([]);
-    setSeciliEczaneIdleri([]);
     setAcikDetayYayinId(null);
   };
 
   const yayinSecimiDegistir = (yayinId: string) => {
     setSeciliYayinIdleri((onceki) => onceki.includes(yayinId) ? onceki.filter((id) => id !== yayinId) : [...onceki, yayinId]);
-    setGonderimOzeti(null);
+    setGonderimSonucu(null);
   };
 
   const yayinKarti = (yayin: UttEczanemYayin) => {
@@ -179,16 +171,16 @@ export default function EczanemYayinlariPage() {
     />;
   };
 
-  const gonder = async () => {
-    if (seciliYayinlar.length === 0 || gecerliSeciliEczaneIdleri.length === 0 || topluGonderiliyor) return;
+  const gonder = async (eczaneIdleri: string[]): Promise<EczanemGonderimSonucu> => {
+    const sonuc: EczanemGonderimSonucu = { gonderilenKayit: 0, gonderilenYayin: 0, gonderilenEczane: 0, atlanan: 0, hatalar: [] };
+    if (seciliYayinlar.length === 0 || eczaneIdleri.length === 0 || topluGonderiliyor) return sonuc;
     setTopluGonderiliyor(true);
-    let gonderilenYayin = 0;
-    let gonderilenEczane = 0;
-    let atlanan = 0;
+    const basariliYayinlar = new Set<string>();
+    const basariliEczaneler = new Set<string>();
     try {
       for (const yayin of seciliYayinlar) {
-        let yayinGonderildi = false;
-        for (const eczaneId of gecerliSeciliEczaneIdleri) {
+        for (const eczaneId of eczaneIdleri) {
+          const eczaneAdi = eczaneler.find((eczane) => eczane.eczane_id === eczaneId)?.eczane_adi ?? "Eczane";
           try {
             const res = await fetch("/eczanem/yayinlar/api", {
               method: "POST",
@@ -196,31 +188,31 @@ export default function EczanemYayinlariPage() {
               body: JSON.stringify({ yayin_id: yayin.yayin_id, eczane_id: eczaneId }),
             });
             const data = await res.json();
-            if (!res.ok) { atlanan += 1; hata(data.hata ?? data.error ?? "Öğrenme içeriği gönderilemedi.", "Eczanem gönderimi"); continue; }
-            yayinGonderildi = true;
-            gonderilenEczane += 1;
-            setVeri((onceki) => onceki ? {
-              ...onceki,
-              aylikIstatistikler: {
-                ...onceki.aylikIstatistikler,
-                uttGonderimSayisi: onceki.aylikIstatistikler.uttGonderimSayisi + 1,
-              },
-            } : onceki);
+            if (!res.ok) {
+              sonuc.atlanan += 1;
+              sonuc.hatalar.push(`${yayin.urun_adi} · ${eczaneAdi}: ${data.hata ?? data.error ?? "Gönderilemedi."}`);
+              continue;
+            }
+            sonuc.gonderilenKayit += 1;
+            basariliYayinlar.add(yayin.yayin_id);
+            basariliEczaneler.add(eczaneId);
           } catch {
-            atlanan += 1;
-            hata("Öğrenme içeriği gönderilemedi.", "Eczanem gönderimi");
+            sonuc.atlanan += 1;
+            sonuc.hatalar.push(`${yayin.urun_adi} · ${eczaneAdi}: Gönderilemedi.`);
           }
         }
-        if (yayinGonderildi) gonderilenYayin += 1;
       }
-      setGonderimOzeti(`${gonderilenYayin} yayın, ${gonderilenEczane} eczaneye gönderildi${atlanan ? ` · ${atlanan} gönderim atlandı` : ""}.`);
-      if (gonderilenEczane > 0) { basari(`${gonderilenEczane} gönderim tamamlandı.`); secimSifirla(); }
+      sonuc.gonderilenYayin = basariliYayinlar.size;
+      sonuc.gonderilenEczane = basariliEczaneler.size;
+      setGonderimSonucu(sonuc);
+      if (sonuc.gonderilenKayit > 0) basari(`${sonuc.gonderilenKayit} gönderim tamamlandı.`);
       await veriCek();
     } catch {
       hata("Gönderim sonuçları yenilenemedi.", "Eczanem gönderimi");
     } finally {
       setTopluGonderiliyor(false);
     }
+    return sonuc;
   };
 
   if (ilkYukleme) {
@@ -303,33 +295,23 @@ export default function EczanemYayinlariPage() {
                   { key: "gonderilen", label: `Gönderilenler ${gonderilenYayinlar.length}` },
                 ]}
                 deger={gonderimFiltresi}
-                onDegistir={(filtre) => { setGonderimFiltresi(filtre); secimSifirla(); setGonderimOzeti(null); }}
+                onDegistir={(filtre) => { setGonderimFiltresi(filtre); secimSifirla(); setGonderimSonucu(null); }}
                 ariaLabel="Gönderim durumu"
                 className="w-fit flex-none"
               />
-              <div className="grid w-full min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-2 sm:ml-auto sm:w-auto sm:grid-cols-[auto_minmax(140px,160px)_auto]">
-                <span className="col-span-2 px-2 text-[11px] font-bold text-[#405976] sm:col-span-1">
-                  <span className="lg:hidden">{seciliYayinlar.length} yayın</span>
-                  <span className="hidden lg:inline">Gönderilecek: {seciliYayinlar.length} yayın</span>
-                </span>
-                <SadeCokluAliciSecimi key={seciliYayinIdleri.join(",")} className="w-full min-w-0"
- etiket="Eczane" aliciAdi="eczane" placeholder="Eczaneleri seçin"
- secenekler={ortakUygunEczaneler.map((eczane) => ({ deger: eczane.eczane_id, etiket: eczane.eczane_adi, altBilgi: String(eczane.aktif_uye_sayisi) + " aktif üye" + (ortakSecilebilirIdler.has(eczane.eczane_id) ? "" : " · Tekrar gönderim süresi dolmadı"), disabled: !ortakSecilebilirIdler.has(eczane.eczane_id) }))}
- degerler={gecerliSeciliEczaneIdleri} onDegistir={setSeciliEczaneIdleri} disabled={seciliYayinlar.length === 0 || topluGonderiliyor}
-/>
-                <button type="button" onClick={() => void gonder()} disabled={seciliYayinlar.length === 0 || gecerliSeciliEczaneIdleri.length === 0 || topluGonderiliyor} className="h-[30px] rounded-[10px] bg-[#237ac8] px-3 text-[11px] font-bold text-white hover:bg-[#1d68ad] disabled:cursor-not-allowed disabled:bg-[#9fc4e5]">
-                  {topluGonderiliyor ? "Gönderiliyor…" : "Gönder"}
-                </button>
-              </div>
             </div>
-            {gonderimOzeti && <p role="status" className="text-xs font-bold text-[#2b668f]">{gonderimOzeti}</p>}
+            {gonderimSonucu && <div role="status" className={`rounded-xl border px-4 py-3 text-xs ${gonderimSonucu.gonderilenKayit > 0 ? "border-[#c8ead7] bg-[#eff9f4] text-[#276a4d]" : "border-[#f0dbc0] bg-[#fff9ed] text-[#8c5b20]"}`}>
+              <strong>{gonderimSonucu.gonderilenKayit > 0 ? `${gonderimSonucu.gonderilenYayin} yayın, ${gonderimSonucu.gonderilenEczane} eczaneye gönderildi.` : "Gönderim tamamlanamadı."}</strong>
+              <span className="ml-1">{gonderimSonucu.gonderilenKayit} gönderim tamamlandı{gonderimSonucu.atlanan > 0 ? ` · ${gonderimSonucu.atlanan} gönderim atlandı.` : "."}</span>
+              {gonderimSonucu.hatalar.length > 0 && <details className="mt-2"><summary className="cursor-pointer font-bold">Atlanan gönderimlerin nedenleri</summary><ul className="mt-2 list-disc space-y-1 pl-4">{gonderimSonucu.hatalar.map((satir, index) => <li key={`${index}-${satir}`}>{satir}</li>)}</ul></details>}
+            </div>}
 
             <section>
               <div className="mb-3">
                 <UttYayinTuruToggle
                   yayinlar={durumFiltreliYayinlar}
                   deger={aktifYayinTuru}
-                  onDegistir={(tur) => { setAktifYayinTuru(tur); secimSifirla(); setGonderimOzeti(null); }}
+                  onDegistir={(tur) => { setAktifYayinTuru(tur); secimSifirla(); setGonderimSonucu(null); }}
                   className="w-fit flex-none"
                 />
               </div>
@@ -360,6 +342,15 @@ export default function EczanemYayinlariPage() {
           </>
         )}
       </div>
+      <EczanemGonderimPaneli
+        yayinlar={seciliYayinlar}
+        eczaneler={eczaneler}
+        gonderimler={veri?.gonderimler ?? []}
+        esik={esik}
+        gonderiliyor={topluGonderiliyor}
+        onSecimTemizle={secimSifirla}
+        onGonder={gonder}
+      />
       <HataMesajiContainer mesajlar={mesajlar} />
 
     </div>
