@@ -5,9 +5,9 @@ import EclubHediyeCekiGunleriPill from "@/components/eclub/EclubHediyeCekiGunler
 import EclubAnaSayfaSkeleton from "@/components/eclub/EclubAnaSayfaSkeleton";
 import { anaSayfaBannerlariniIste } from "@/lib/eclub/anaSayfaBannerOnbellek";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { CheckCircle2, Clock3, Coins, Sparkles, Trophy, Video } from "lucide-react";
+import { CheckCircle2, Sparkles, Trophy, Video } from "lucide-react";
 import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
 import { useAuth } from "@/app/providers/AuthProvider";
 import {
@@ -24,11 +24,7 @@ import { useEclubFirmaSecimi } from "@/components/eclub/EclubFirmaSecimi";
 import { eclubUrunIcerigi } from "@/lib/eclub/firmaGezinme";
 import { eclubFirmaYolu } from "@/lib/eclub/firmaGezinme";
 import { hbstoreBakiyesiDegistiBildir } from "@/lib/tclub/store/olay";
-
-function videoDurumu(oneri: PanelOneri): "bekleyen" | "tamamlanan" | "suresi_gecmis" {
-  if (oneri.izlendi_mi) return "tamamlanan";
-  return oneri.oneri_durumu === "suresi_gecmis" ? "suresi_gecmis" : "bekleyen";
-}
+import { eclubYeniYayinMi } from "@/lib/eclub/firmaYayinSayilari";
 
 function firmaYonelme(firmaAdi: string): string {
   const kucukAd = firmaAdi.toLocaleLowerCase("tr-TR");
@@ -54,6 +50,7 @@ export default function EclubPanelPage() {
   const { kisi, oneriler, firmaOzetleri, ozet, loading, veriCek, etkilesimGuncelle } = secim.panel ?? kendiPaneli;
   const gorunenOneriler = secim.gomulu ? eclubUrunIcerigi(oneriler, secim.urunId) : oneriler;
   const seciliOneri = gorunenOneriler.find((o) => o.oneri_id === searchParams.get("oneri_id")) ?? null;
+  const [yayinFiltresi, setYayinFiltresi] = useState<"yeni" | "tamamlanan" | null>(null);
 
   useEffect(() => {
     if (!hazir || !kullanici || secim.gomulu || pathname !== "/eclub/ana-sayfa") return;
@@ -88,14 +85,15 @@ export default function EclubPanelPage() {
     ? `${firmaYonelme(aktifFirmaAdi)} Hoş Geldin${kisi ? ` ${kisi.ad}` : ""}`
     : `Merhaba${kisi ? ` ${kisi.ad}` : ""}, 👋`;
   const statOnerileri = aktifFirmaId ? oneriler.filter((oneri) => oneri.firma_id === aktifFirmaId) : oneriler;
-  const bekleyen = statOnerileri.filter((oneri) => videoDurumu(oneri) === "bekleyen").length;
-  const tamamlanan = statOnerileri.filter((oneri) => videoDurumu(oneri) === "tamamlanan").length;
+  const yeniYayinlar = statOnerileri.filter(eclubYeniYayinMi).length;
+  const tamamlanan = statOnerileri.filter((oneri) => oneri.izlendi_mi).length;
+  const katalogOnerileri = secim.gomulu || yayinFiltresi === null ? gorunenOneriler
+    : gorunenOneriler.filter((oneri) => yayinFiltresi === "yeni" ? eclubYeniYayinMi(oneri) : oneri.izlendi_mi);
   const statOzeti = aktifFirmaOzeti
     ? {
         eclub_store_aktif: aktifFirmaOzeti.eclub_store_aktif,
         toplam_kazanilan_puan: aktifFirmaOzeti.kazanilan_puan,
         ileri_sarma_kaybi: aktifFirmaOzeti.kaybedilen_puan,
-        harcanabilir_puan: aktifFirmaOzeti.harcanabilir_puan,
         dogru_cevap: aktifFirmaOzeti.dogru_cevap,
       }
     : ozet;
@@ -138,6 +136,10 @@ export default function EclubPanelPage() {
             video_url: seciliOneri.video_url,
             arac_id: seciliOneri.arac_id,
             arac_turu: seciliOneri.arac_turu,
+            oneri_durumu: seciliOneri.oneri_durumu,
+            oneri_baslangic: seciliOneri.oneri_baslangic,
+            oneri_bitis: seciliOneri.oneri_bitis,
+            izlendi_mi: seciliOneri.izlendi_mi,
           }}
           onKapat={() => { const sorgu = new URLSearchParams(searchParams.toString()); sorgu.delete("oneri_id"); router.push(`${pathname}${sorgu.size ? `?${sorgu}` : ""}`, { scroll: false }); void veriCek(); }}
           onTamamlandi={() => { void veriCek(true); hbstoreBakiyesiDegistiBildir(); }}
@@ -158,22 +160,28 @@ export default function EclubPanelPage() {
             aciklama="Firmaların size ilettiği yayınları izleyin, soruları yanıtlayın ve puan kazanın."
           />
 
-          <section className={`grid gap-3 ${statOzeti.eclub_store_aktif ? "grid-cols-2 lg:grid-cols-4" : "grid-cols-1 sm:grid-cols-3"}`}>
-            <EclubKisiStat ikon={Clock3} etiket="Bekleyen İçerik" deger={bekleyen} detay="Süresi devam eden" renk="#d78022" zemin="#fff6e8" />
-            <EclubKisiStat ikon={CheckCircle2} etiket="Tamamlanan" deger={tamamlanan} detay="Tamamladığınız içerikler" renk="#16865f" zemin="#ebf8f2" />
+          <section className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+            <EclubKisiStat ikon={Sparkles} etiket="Yeni Yayınlar" deger={yeniYayinlar} detay="Üyesi olduğunuz firmaların yeni yayınları" detayKirilsin onClick={() => setYayinFiltresi((mevcut) => mevcut === "yeni" ? null : "yeni")} secili={yayinFiltresi === "yeni"} renk="#d78022" zemin="#fff6e8" />
+            <EclubKisiStat ikon={CheckCircle2} etiket="Tamamlananlar" deger={tamamlanan} detay="Tamamladığınız yayınlar" onClick={() => setYayinFiltresi((mevcut) => mevcut === "tamamlanan" ? null : "tamamlanan")} secili={yayinFiltresi === "tamamlanan"} renk="#16865f" zemin="#ebf8f2" />
             <EclubKisiStat ikon={Trophy} etiket="Net Puan" deger={Math.max(0, statOzeti.toplam_kazanilan_puan - statOzeti.ileri_sarma_kaybi).toLocaleString("tr-TR")} detay={`${statOzeti.dogru_cevap} doğru · ${statOzeti.ileri_sarma_kaybi} ileri sarma kaybı`} renk="#7358c7" zemin="#f2efff" />
-            {statOzeti.eclub_store_aktif && <EclubKisiStat ikon={Coins} etiket="Kullanılabilir Puan" deger={statOzeti.harcanabilir_puan.toLocaleString("tr-TR")} detay="E‑Club Store bakiyesi" />}
           </section>
           </>}
 
           {firmaOzetleri.length === 0 ? (
             <EclubKisiBosDurum ikon={Video} baslik="Firma içeriği bulunmuyor" aciklama="Firmanız size öğrenme içeriği gönderdiğinde burada görüntülenecek." />
           ) : (
+            <>
+            {!secim.gomulu && yayinFiltresi && <div className="flex justify-end">
+              <button type="button" onClick={() => setYayinFiltresi(null)} className="rounded-full border border-[#cdddec] bg-white px-3 py-1.5 text-xs font-bold text-[#237ac8] transition hover:border-[#87bde8] hover:bg-[#f1f7fe] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#237ac8]">Tüm yayınları göster</button>
+            </div>}
             <EclubFirmaVideoKatalogu
               playButonuGoster={kisi?.rol !== "eczaci"}
+              firmaRozetiGoster={!secim.gomulu && pathname === "/eclub/ana-sayfa"}
+              ilkRafRastgele={!secim.gomulu && pathname === "/eclub/ana-sayfa" && !yayinFiltresi}
               ilkKapakOncelikli={pathname === "/eclub/ana-sayfa" || (secim.gomulu && pathname.endsWith("/yayinlar"))}
+              filtreBasligi={!secim.gomulu && yayinFiltresi ? yayinFiltresi === "yeni" ? "Yeni Yayınlar" : "Tamamlananlar" : undefined}
               key={aktifFirmaId}
-              oneriler={gorunenOneriler}
+              oneriler={katalogOnerileri}
               seciliUrunAdi={secim.urunAdi}
               seciliFirmaId={aktifFirmaId}
               seciliFirmaAdi={aktifFirmaAdi}
@@ -181,6 +189,7 @@ export default function EclubPanelPage() {
               onBegeni={(yayinId) => void etkilesimDegistir("begeni", yayinId)}
               onFavori={(yayinId) => void etkilesimDegistir("favori", yayinId)}
             />
+            </>
           )}
         </>
       )}

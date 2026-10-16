@@ -7,9 +7,13 @@ export default function EclubFirmalarSkeleton() {
           <div className="mt-2 h-4 w-96 max-w-full rounded bg-[#e8eef5]" />
           <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {[0, 1, 2, 3].map((i) => (
-              <div key={i} className="flex flex-col items-center gap-4 rounded-2xl border border-[#dfe7f1] bg-white p-5">
-                <div className="h-28 w-full rounded-xl bg-[#e8eef5]" />
-                <div className="h-5 w-28 rounded bg-[#e8eef5]" />
+              <div key={i} className="flex flex-col rounded-[26px] border border-[#dfe7f1] bg-white p-3.5">
+                <div className="aspect-[2.3/1] w-full rounded-[20px] bg-[#e8eef5]" />
+                <div className="my-3 h-6 w-28 self-center rounded bg-[#e8eef5]" />
+                <div className="grid grid-cols-2 gap-2 border-t border-[#dce6f3] pt-3">
+                  <div className="h-24 rounded-2xl bg-[#e8eef5]" />
+                  <div className="h-24 rounded-2xl bg-[#e8eef5]" />
+                </div>
               </div>
             ))}
           </div>

@@ -4,11 +4,12 @@ import { readFileSync } from "node:fs";
 import vm from "node:vm";
 import ts from "typescript";
 import { eclubFirmaKapsami } from "@/lib/eclub/firmaGezinme";
-import { eclubPerformansDonemi, eclubPerformansiHesapla } from "@/lib/eclub/performans";
+import { eclubPerformansDonemi, eclubPerformansDonemKoduGecerliMi, eclubPerformansiHesapla } from "@/lib/eclub/performans";
 
 const f = "10000000-0000-4000-8000-000000000001", u = "20000000-0000-4000-8000-000000000001";
-const d = eclubPerformansDonemi(new Date("2026-10-11T12:00:00Z"));
-function api({ authenticated = true, allowed = true, product = true, count = 1, failed = false } = {}) {
+function api({ authenticated = true, allowed = true, product = true, count = 1, failed = false, kayitDonemi = "2026-P5" } = {}) {
+  const simdi = new Date("2026-10-11T12:00:00Z");
+  const d = eclubPerformansDonemi(simdi, kayitDonemi);
   const tables: Record<string, Record<string, unknown>[]> = {
     urunler: product ? [{ firma_id: f, urun_id: u }] : [],
     eclub_eczane_firma: [{ firma_id: f, eczane_id: "e1", aktif_mi: true }, { firma_id: f, eczane_id: "e2", aktif_mi: true }],
@@ -49,7 +50,7 @@ function api({ authenticated = true, allowed = true, product = true, count = 1, 
     "@/lib/utils/roller": { ECLUB_TUKETICI_ROLLERI: ["eczaci"] },
     "@/lib/uretim/rpc": { uuidGecerliMi: (s: string) => /^[a-f0-9-]{36}$/i.test(s) },
     "@/lib/utils/hataIsle": { rolHatasi: (s: string) => json(s,403), sunucuHatasi: () => json("Sunucu hatası",500), validasyonHatasi: (s: string) => json(s,400), yetkiHatasi: () => json("Yetkisiz",401) },
-    "@/lib/eclub/performans": { eclubPerformansDonemi: () => d, eclubPerformansiHesapla },
+    "@/lib/eclub/performans": { eclubPerformansDonemi: (_: Date, kod?: string) => eclubPerformansDonemi(simdi, kod), eclubPerformansDonemKoduGecerliMi: (kod: string) => eclubPerformansDonemKoduGecerliMi(kod, simdi), eclubPerformansiHesapla },
   };
   const source = readFileSync("app/(panel)/eclub/api/performans/route.ts", "utf8");
   const compiled = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText;
@@ -75,4 +76,27 @@ test("1000 satır sınırı toplamı kırpmaz; okuma hatası sıfır performans 
   const res = await api({ count: 1001 }).get(); const body = await res.json();
   assert.equal(body.ozet.puan,10010); assert.equal(body.ozet.tamamlanan,1001);
   assert.equal((await api({ failed: true }).get()).status,500);
+});
+test("seçilen geçmiş dönem veriyi değiştirir; dönem belirtilmezse güncel dönem kullanılır", async () => {
+  const gecmis = api({ kayitDonemi: "2026-P4" });
+  const normal = await (await gecmis.get()).json();
+  assert.equal(normal.donem.kod, "2026-P5");
+  assert.equal(normal.ozet.tamamlanan, 0);
+  const secilen = await (await gecmis.get(`firma_id=${f}&urun_id=${u}&donem=2026-P4`)).json();
+  assert.equal(secilen.donem.kod, "2026-P4");
+  assert.deepEqual(secilen.ozet, { puan: 10, tamamlanan: 1, uye: 1 });
+});
+test("geçersiz dönemler ve gelecek yıllar veritabanı okunmadan reddedilir", async () => {
+  for (const kod of ["", "2026-P0", "2026-P7", "2027-P1", "yanlis"]) {
+    const testApi = api();
+    assert.equal((await testApi.get(`firma_id=${f}&urun_id=${u}&donem=${kod}`)).status, 400);
+    assert.equal(testApi.reads(), 0);
+  }
+});
+test("henüz başlamayan yıl içi dönem seçilebilir ve boş veri döner", async () => {
+  const res = await api().get(`firma_id=${f}&urun_id=${u}&donem=2026-P6`);
+  assert.equal(res.status, 200);
+  const veri = await res.json();
+  assert.equal(veri.donem.kod, "2026-P6");
+  assert.deepEqual(veri.ozet, { puan: 0, tamamlanan: 0, uye: 0 });
 });

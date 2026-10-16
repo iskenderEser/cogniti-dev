@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>E-Club HOYK · 15 Günlük Süre Çerçevesi</title>
+  <style>
+    :root{font-family:Nunito,Arial,sans-serif;color:#203653;background:#f7f9fc;font-synthesis:none}
+    *{box-sizing:border-box}button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,.hoyk:focus-visible{outline:3px solid #74b4ed;outline-offset:3px}
+    [hidden]{display:none!important}.topbar{height:66px;background:#fff;border-bottom:1px solid #e4eaf2;display:flex;align-items:center;justify-content:space-between;padding:0 28px}.brand{font-size:20px;font-weight:900;color:#237ac8;letter-spacing:-.04em}.brand span{color:#203653}.toplinks{display:flex;align-items:center;gap:12px;color:#64748b;font-size:12px;font-weight:700}.avatar{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#e8f1fb;color:#237ac8}.layout{display:grid;grid-template-columns:220px minmax(0,1fr);min-height:calc(100vh - 66px)}.sidebar{background:#fff;border-right:1px solid #e4eaf2;padding:28px 13px}.side-title{color:#8392a7;font-size:11px;font-weight:900;letter-spacing:.08em;margin:0 12px 12px}.side-link{display:block;padding:11px 13px;border-radius:10px;color:#52677e;font-size:13px;font-weight:700;margin-bottom:3px}.side-link.active{background:#eaf3fd;color:#237ac8}.main{padding:30px clamp(18px,4vw,56px) 80px;min-width:0}.content{max-width:1280px;margin:auto}.crumb{color:#3386c8;font-size:12px;font-weight:800;margin-bottom:12px}.heading{display:flex;justify-content:space-between;align-items:end;gap:18px;margin-bottom:23px}.heading h1{font-size:clamp(23px,3vw,30px);line-height:1.2;margin:0 0 5px;letter-spacing:-.025em}.heading p{font-size:13px;color:#74849a;margin:0;line-height:1.5}.demo-tag{border:1px solid #d8e2ee;border-radius:999px;background:white;color:#6c7f96;font-size:11px;padding:7px 11px;font-weight:800;white-space:nowrap}
+    .workspace{display:grid;grid-template-columns:minmax(290px,360px) minmax(280px,1fr);gap:24px;align-items:start}.stage,.controls,.examples{background:#fff;border:1px solid #e0e7f0;border-radius:17px;box-shadow:0 8px 26px rgba(22,43,70,.04)}.stage{padding:22px}.panel-label{font-size:11px;font-weight:900;letter-spacing:.06em;color:#8b9aab;text-transform:uppercase;margin-bottom:14px}.stage-inner{max-width:280px;margin:auto}.stage-note{margin:15px 2px 0;color:#77899e;font-size:11px;line-height:1.55}.controls{padding:23px 25px}.controls h2{font-size:17px;margin:0 0 5px}.controls p{font-size:12px;color:#74849a;line-height:1.5;margin:0 0 20px}.step-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px}.step-head strong{font-size:24px;color:#203653}.step-head span{font-size:12px;color:#72869b}.range{width:100%;accent-color:#dc2626;margin:0 0 7px}.range-ends{display:flex;justify-content:space-between;color:#8997a8;font-size:10px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:23px}.button{border:1px solid #d5dfeb;border-radius:9px;background:#fff;color:#51677f;padding:10px 14px;font-size:12px;font-weight:800}.button.primary{background:#237ac8;border-color:#237ac8;color:white}.button.danger{background:#fff3f3;border-color:#f1c7c7;color:#b91c1c}.explain{border-top:1px solid #e9eef4;padding-top:17px;margin-top:22px;font-size:12px;color:#5f7287;line-height:1.6}.explain strong{color:#203653}
+    .hoyk{position:relative;isolation:isolate;background:#fff;border:2px solid transparent;border-radius:14px;overflow:hidden;box-shadow:0 3px 10px rgba(23,43,77,.10);cursor:pointer;min-width:0}.hoyk:hover{box-shadow:0 9px 24px rgba(23,43,77,.14)}.hoyk-progress{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5}.cover{position:relative;aspect-ratio:16/9;overflow:hidden;background:linear-gradient(145deg,#d6e3f0 0%,#7890a9 54%,#1d3450 100%)}.cover:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 72% 34%,#ffffff80,transparent 22%),linear-gradient(120deg,transparent 30%,#0e274b86 55%,transparent 76%)}.cover-art{position:absolute;inset:0;display:grid;place-items:center;font-size:31px;font-weight:900;letter-spacing:-.055em;color:#fff;text-shadow:0 3px 10px #0b274985}.cover-art small{display:block;font-size:10px;letter-spacing:.2em;font-weight:700;text-align:center;margin-top:3px}.pill{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;white-space:nowrap}.firm{position:absolute;left:7px;top:7px;background:#1e3a8a;border:1px solid #ffffff66;color:#fff;padding:3px 8px;font-size:9px;font-weight:400;z-index:1}.media-type{position:absolute;right:7px;top:7px;background:#dbeafeeb;border:1px solid #ffffff99;color:#2563eb;padding:3px 8px;font-size:9px;font-weight:400;min-height:20px;z-index:1}.play{position:absolute;inset:0;display:grid;place-items:center}.play span{display:grid;place-items:center;width:37px;height:37px;border-radius:50%;background:#10233ab8;border:1px solid #ffffff88;color:#fff;font-size:13px;padding-left:2px}.card-body{padding:10px}.status-row{margin-bottom:8px;min-height:18px}.status{background:#10233ab3;color:#fff;border:1px solid #ffffff4d;padding:3px 8px;font-size:9px;font-weight:400}.card-title{font-size:13px;font-weight:800;line-height:1.3;margin:0;color:#1d293b}.social{display:flex;gap:8px;align-items:center;font-size:10px;color:#8090a2;margin:5px 0 7px}.meta{display:flex;align-items:center;justify-content:space-between;gap:6px;color:#7d8da0;font-size:10px;margin-bottom:7px}.meta em{font-style:normal;color:#bc2d0d}.score{display:flex;align-items:center;justify-content:space-between;gap:5px;font-size:9px;color:#7d8da0}.points{background:linear-gradient(90deg,#1e3a8a,#2563eb,#3b82f6);color:white;border-radius:5px;padding:4px 6px;font-weight:400}.conditions{border-top:1px solid #e8eef5;margin-top:9px;padding-top:9px;display:flex;gap:4px;flex-wrap:wrap}.condition{border:1px solid #e1e9f3;border-radius:5px;background:#f5f8fc;color:#405976;font-size:8px;padding:3px 5px}.hoyk.expired .status-row{display:none}.hoyk.expired .hoyk-progress{display:none}.hoyk.expired{border-color:#dc2626}
+    .examples{padding:22px;margin-top:25px}.examples h2{font-size:17px;margin:0 0 5px}.examples>p{color:#788a9f;font-size:12px;margin:0 0 17px}.examples-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.example-name{text-align:center;font-size:11px;font-weight:800;color:#657a91;margin-top:10px}.examples .hoyk{max-width:240px;margin:auto}.examples .cover-art{font-size:24px}.examples .cover-art small{font-size:8px}.examples .card-body{padding:9px}.examples .conditions{display:none}
+    .veil{position:fixed;inset:0;background:#10233a91;z-index:20;display:none;align-items:center;justify-content:center;padding:20px}.veil.open{display:flex}.dialog{width:min(620px,100%);background:#fff;border-radius:18px;box-shadow:0 26px 70px #0c203953;overflow:hidden}.dialog-head{padding:20px 22px;border-bottom:1px solid #e7edf4;display:flex;align-items:flex-start;justify-content:space-between;gap:16px}.dialog h2{font-size:18px;margin:0 0 5px}.dialog p{margin:0;color:#8090a2;font-size:12px}.dialog-pill{display:inline-block;max-width:100%;border-radius:999px;border:1px solid #bfdbfe;background:#eff6ff;color:#2563a8;font-size:11px;font-weight:700;padding:7px 10px;margin-top:10px}.dialog-pill.expired{border-color:#fecaca;background:#fef2f2;color:#b91c1c}.dialog-close{width:29px;height:29px;border:0;border-radius:8px;background:#f0f4f8;color:#53677d;font-size:18px}.dialog-body{padding:28px 22px;min-height:140px;display:grid;place-items:center;color:#8292a5;font-size:12px;text-align:center;background:#fbfcfe}
+    @media(max-width:1050px){.examples-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:780px){.layout{display:block}.sidebar{display:none}.main{padding:22px 16px 60px}.workspace{grid-template-columns:1fr}.stage-inner{max-width:280px}.heading{display:block}.demo-tag{display:inline-block;margin-top:12px}}@media(max-width:500px){.examples-grid{gap:12px}.examples{padding:17px}.examples .hoyk{width:100%}.examples .cover-art{font-size:19px}.examples .card-title{font-size:11px}.examples .meta em{font-size:8px}.examples .score{font-size:8px}.examples .condition{display:none}.dialog-head{display:block;position:relative}.dialog-close{position:absolute;right:17px;top:16px}.dialog h2{padding-right:28px}.dialog-pill{border-radius:12px}}
+  </style>
+</head>
+<body>
+  <header class="topbar"><div class="brand">Hap<span>Bilgi</span></div><div class="toplinks"><span>E-Club</span><span class="avatar">FB</span></div></header>
+  <div class="layout">
+    <aside class="sidebar"><div class="side-title">E-CLUB</div><span class="side-link active">Ana Sayfa</span><span class="side-link">Firmalar ve Yayınları</span><span class="side-link">Hediye Çekleri</span><span class="side-link">Çek Talepleri</span></aside>
+    <main class="main"><div class="content">
+      <div class="crumb">E-Club › Ana Sayfa › HOYK süre görünümü</div>
+      <div class="heading"><div><h1>15 günlük süre çerçevesi</h1><p>Yayının süresi HOYK çevresinde her gece bir adım ilerler. Kartın içine tıklayarak açılan görünümü inceleyin.</p></div><span class="demo-tag">Etkileşimli HTML maket</span></div>
+      <div class="workspace">
+        <section class="stage"><div class="panel-label">Canlı örnek · HOYK</div><div class="stage-inner" id="liveSlot"></div><p class="stage-note">Yalnız ilerleyen çizgi görünür; önünde soluk bir kanal bulunmaz. Çizgi her gece çevrenin 1/15’i kadar uzar.</p></section>
+        <section class="controls"><h2>Gece yarısı adımlarını deneyin</h2><p>Kaydırıcıyı ilerletin veya “Bir gece ilerlet” düğmesine basın. Gece değişimini görmek için çizgi kısa bir geçişle uzar.</p><div class="step-head"><strong id="stepLabel">0 / 15</strong><span id="stateLabel">Gönderim günü</span></div><input id="daySlider" class="range" type="range" min="0" max="15" step="1" value="0" aria-label="Geçen gece sayısı"><div class="range-ends"><span>Gönderim günü</span><span>15. gece</span></div><div class="actions"><button class="button primary" id="nextNight" type="button">Bir gece ilerlet →</button><button class="button danger" id="expire" type="button">Süre doldu</button><button class="button" id="reset" type="button">Başa dön</button></div><div class="explain"><strong>Çizim yöntemi:</strong> HOYK çevresindeki 2 px çizgi her gece 1/15 oranında uzar. Çizginin kendi boyunca yeşil, sarı ve kırmızı renkler ara tonlarla birbirine karışır. 15. adımda uçlar birleşince tüm şerit kırmızıya döner.</div></section>
+      </div>
+      <section class="examples"><h2>Farklı günlerde görünüm</h2><p>Aynı HOYK iskeleti ve içerik düzeni korunur.</p><div class="examples-grid" id="examplesGrid"></div></section>
+    </div></main>
+  </div>
+  <div class="veil" id="veil" role="presentation"><div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialogTitle"><div class="dialog-head"><div><h2 id="dialogTitle">Normavas</h2><p>Yayın ayrıntısı</p><span class="dialog-pill" id="dialogPill">Öğrenme İçeriği ve Soru Akışı</span></div><button class="dialog-close" id="dialogClose" type="button" aria-label="Kapat">×</button></div><div class="dialog-body">Bu alan açılan yayın ve soru akışını temsil eder.</div></div></div>
+  <script>
+    const green=[22,163,74],yellow=[217,147,0],red=[220,38,38];
+    const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
+    const mix=(a,b,t)=>a.map((value,index)=>Math.round(value+(b[index]-value)*t));
+    function gradientColor(position,redBlend=0){const t=clamp(position,0,1);const rgb=t<=.5?mix(green,yellow,t*2):mix(yellow,red,(t-.5)*2);return `rgb(${mix(rgb,red,clamp(redBlend,0,1)).join(',')})`}
+    function makeCard(day,expired=false){const card=document.createElement('article');card.className='hoyk';card.tabIndex=0;card.setAttribute('role','button');card.setAttribute('aria-label','Normavas yayınını aç');card.innerHTML=`<canvas class="hoyk-progress" aria-hidden="true"></canvas><div class="cover"><div class="cover-art"><div>NORMAVAS<small>ÜRÜN EĞİTİMİ</small></div></div><span class="pill firm">Hepifarma</span><span class="pill media-type">Video</span><span class="play" aria-hidden="true"><span>▶</span></span></div><div class="card-body"><div class="status-row"><span class="pill status"></span></div><h3 class="card-title">Normavas</h3><div class="social"><span>♥ 0</span><span>★ 0</span></div><div class="meta"><span>13.10.2026</span><em>Hepifarma_30079</em></div><div class="score"><span class="points">70 Puan</span><span>0 izlenme</span></div><div class="conditions"><span class="condition">Çeksiz Puan · Yalnız lig</span></div></div>`;buildProgress(card);setCardDay(card,day,expired);card.addEventListener('click',()=>openDialog(card));card.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();openDialog(card)}});return card}
+    function perimeterPoint(distance,width,height){
+      const edge=1.5,r=Math.min(12,(width-2*edge)/2,(height-2*edge)/2);
+      const right=width-edge,bottom=height-edge,horizontal=width-2*edge-2*r,vertical=height-2*edge-2*r,arc=Math.PI*r/2;
+      let s=distance;
+      if(s<=horizontal)return [edge+r+s,edge];s-=horizontal;
+      if(s<=arc){const a=-Math.PI/2+s/r;return [right-r+r*Math.cos(a),edge+r+r*Math.sin(a)]}s-=arc;
+      if(s<=vertical)return [right,edge+r+s];s-=vertical;
+      if(s<=arc){const a=s/r;return [right-r+r*Math.cos(a),bottom-r+r*Math.sin(a)]}s-=arc;
+      if(s<=horizontal)return [right-r-s,bottom];s-=horizontal;
+      if(s<=arc){const a=Math.PI/2+s/r;return [edge+r+r*Math.cos(a),bottom-r+r*Math.sin(a)]}s-=arc;
+      if(s<=vertical)return [edge,bottom-r-s];s-=vertical;
+      const a=Math.PI+s/r;return [edge+r+r*Math.cos(a),edge+r+r*Math.sin(a)];
+    }
+    function paintProgress(card,value,redBlend=value>=15?1:0){
+      card.dataset.visualDay=String(value);
+      card.dataset.redBlend=String(redBlend);
+      const canvas=card.querySelector('.hoyk-progress'),width=card.clientWidth,height=card.clientHeight;
+      if(width<30||height<30)return;
+      const context=canvas.getContext('2d'),edge=1.5,r=Math.min(12,(width-2*edge)/2,(height-2*edge)/2);
+      const total=2*(width+height-4*edge-4*r)+2*Math.PI*r;
+      context.clearRect(0,0,width,height);
+      const visible=total*clamp(value/15,0,1),step=1;
+      context.lineWidth=2.3;context.lineCap='round';context.lineJoin='round';
+      for(let start=0;start<visible;start+=step){
+        const end=Math.min(start+step,visible),from=perimeterPoint(start,width,height),to=perimeterPoint(end,width,height);
+        context.strokeStyle=gradientColor((start+end)/(2*total),redBlend);
+        context.beginPath();context.moveTo(...from);context.lineTo(...to);context.stroke();
+      }
+    }
+    function buildProgress(card){
+      const canvas=card.querySelector('.hoyk-progress');
+      const resize=()=>{const width=card.clientWidth,height=card.clientHeight;if(width<30||height<30)return;const ratio=window.devicePixelRatio||1;canvas.width=Math.round(width*ratio);canvas.height=Math.round(height*ratio);canvas.getContext('2d').setTransform(ratio,0,0,ratio,0,0);paintProgress(card,Number(card.dataset.visualDay||0),Number(card.dataset.redBlend||0))};
+      new ResizeObserver(resize).observe(card);resize();
+    }
+    function setCardDay(card,day,expired,animate=false){
+      cancelAnimationFrame(card.animationFrame);
+      card.dataset.day=String(day);card.dataset.expired=String(expired);
+      card.classList.toggle('expired',expired);
+      card.querySelector('.status').textContent=`${Math.max(1,15-day)} gün`;
+      if(!animate||expired){paintProgress(card,day);return}
+      const from=Number(card.dataset.visualDay||0),fromRed=Number(card.dataset.redBlend||0);
+      const start=performance.now(),duration=450;
+      const frame=now=>{
+        const t=clamp((now-start)/duration,0,1),ease=1-Math.pow(1-t,3);
+        const blend=day===15?fromRed:fromRed*(1-t);
+        paintProgress(card,from+(day-from)*ease,blend);
+        if(t<1){card.animationFrame=requestAnimationFrame(frame);return}
+        if(day!==15)return;
+        const colorStart=performance.now(),colorDuration=320;
+        const colorFrame=time=>{
+          const colorT=clamp((time-colorStart)/colorDuration,0,1);
+          paintProgress(card,15,fromRed+(1-fromRed)*colorT);
+          if(colorT<1)card.animationFrame=requestAnimationFrame(colorFrame);
+        };
+        card.animationFrame=requestAnimationFrame(colorFrame);
+      };
+      card.animationFrame=requestAnimationFrame(frame);
+    }
+    const liveSlot=document.getElementById('liveSlot');const liveCard=makeCard(0);liveSlot.append(liveCard);const slider=document.getElementById('daySlider');let day=0,expired=false;
+    function render(animate=false){slider.value=String(day);setCardDay(liveCard,day,expired,animate);document.getElementById('stepLabel').textContent=expired?'Süre doldu':`${day} / 15`;document.getElementById('stateLabel').textContent=expired?'Sabit kırmızı çerçeve':day===0?'Gönderim günü':day===15?'Çizgi birleşti · tümü kırmızı':`${day}. gece tamamlandı`;document.getElementById('nextNight').disabled=expired||day>=15;document.getElementById('nextNight').style.opacity=expired||day>=15?'.45':'1'}
+    slider.addEventListener('input',()=>{day=Number(slider.value);expired=false;render(true)});document.getElementById('nextNight').addEventListener('click',()=>{if(day<15){day++;expired=false;render(true)}});document.getElementById('expire').addEventListener('click',()=>{expired=true;render()});document.getElementById('reset').addEventListener('click',()=>{day=0;expired=false;render(true)});
+    const examples=[{day:2,label:'2. gece · yeşil'},{day:8,label:'8. gece · sarıya geçiş'},{day:14,label:'14. gece · kırmızıya geçiş'},{day:15,expired:true,label:'Süresi geçti · düz kırmızı'}];const examplesGrid=document.getElementById('examplesGrid');examples.forEach(example=>{const wrap=document.createElement('div');wrap.append(makeCard(example.day,!!example.expired));const name=document.createElement('div');name.className='example-name';name.textContent=example.label;wrap.append(name);examplesGrid.append(wrap)});
+    const veil=document.getElementById('veil');function openDialog(card){const isExpired=card.dataset.expired==='true';const pill=document.getElementById('dialogPill');pill.textContent=isExpired?'Bu yayının süresi geçti. Puansız izlenebilir.':'Öğrenme İçeriği ve Soru Akışı';pill.classList.toggle('expired',isExpired);veil.classList.add('open');document.getElementById('dialogClose').focus()}function closeDialog(){veil.classList.remove('open')}document.getElementById('dialogClose').addEventListener('click',closeDialog);veil.addEventListener('click',event=>{if(event.target===veil)closeDialog()});document.addEventListener('keydown',event=>{if(event.key==='Escape')closeDialog()});render();
+  </script>
+</body>
+</html>

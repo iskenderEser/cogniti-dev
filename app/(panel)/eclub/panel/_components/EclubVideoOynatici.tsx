@@ -15,6 +15,7 @@ import TuketimOynaticisi from "@/components/ogrenme-araci/TuketimOynaticisi";
 import { ogrenmeAraciIzlemesiniBaslat } from "@/lib/ogrenmeAraci/izlemeIstemci";
 import { IzlemeSoruFormu, IzlemeSoruSonuclari } from "@/components/soru/IzlemeSoruPaneli";
 import type { IzlemeCevapSonucu, IzlemeSorusu } from "@/lib/soru/izlemeTipleri";
+import { eclubHoykSureDurumu, eclubHoykUcRengi, sonrakiTurkiyeGeceYarisi } from "@/lib/eclub/hoykSureCercevesi";
 
 interface OynaticiOneri {
   oneri_id: string;
@@ -24,6 +25,10 @@ interface OynaticiOneri {
   video_url: string | null;
   arac_id?: string | null;
   arac_turu?: "video" | "podcast" | "gorsel" | "flip_pdf";
+  oneri_durumu: "aktif" | "suresi_gecmis";
+  oneri_baslangic: string;
+  oneri_bitis: string;
+  izlendi_mi: boolean;
 }
 
 interface CevapSonucu extends IzlemeCevapSonucu {
@@ -50,6 +55,37 @@ export default function EclubVideoOynatici({ oneri, onKapat, onTamamlandi, hata,
   const [ileriSarmaModal, setIleriSarmaModal] = useState(false);
   const [bekleyenSeekBitis, setBekleyenSeekBitis] = useState<number | null>(null);
   const [ilkOynatmaIstendi, setIlkOynatmaIstendi] = useState(false);
+  const [simdi, setSimdi] = useState(() => Date.now());
+
+  useEffect(() => {
+    const bitis = Date.parse(oneri.oneri_bitis);
+    const sonrakiBitis = bitis > simdi ? bitis : Number.POSITIVE_INFINITY;
+    const sonrakiDegisim = Math.min(sonrakiTurkiyeGeceYarisi(simdi), sonrakiBitis);
+    const zamanlayici = window.setTimeout(() => setSimdi(Date.now()), Math.max(50, sonrakiDegisim - Date.now() + 50));
+    const gorunurlukDegisti = () => { if (!document.hidden) setSimdi(Date.now()); };
+    document.addEventListener("visibilitychange", gorunurlukDegisti);
+    return () => {
+      window.clearTimeout(zamanlayici);
+      document.removeEventListener("visibilitychange", gorunurlukDegisti);
+    };
+  }, [oneri.oneri_bitis, simdi]);
+
+  const sureDurumu = eclubHoykSureDurumu(oneri.oneri_baslangic, oneri.oneri_bitis, simdi);
+  const tamamlandi = oneri.izlendi_mi || izlemeTamamlandi;
+  const suresiGecti = sureDurumu?.suresiGecti ?? oneri.oneri_durumu === "suresi_gecmis";
+  const bilgiMetni = tamamlandi
+    ? "Bu yayını tamamladınız. Dilerseniz yeniden izleyebilirsiniz"
+    : suresiGecti
+      ? "Bu yayının süresi geçti. Puansız izlenebilir."
+      : `Bu yayını tamamlayıp puan kazanabilmeniz kalan süre ${sureDurumu?.kalanGun ?? 0} gündür`;
+  const bilgiRengi = tamamlandi ? "#2563eb" : suresiGecti ? "#dc2626" : eclubHoykUcRengi(sureDurumu?.gecenGun ?? 0);
+  const renkSayilari = bilgiRengi.match(/\d+/g)?.map(Number) ?? [];
+  const dogrusalRenk = renkSayilari.map((deger) => {
+    const oran = deger / 255;
+    return oran <= 0.04045 ? oran / 12.92 : ((oran + 0.055) / 1.055) ** 2.4;
+  });
+  const acikZemin = dogrusalRenk.length === 3
+    && dogrusalRenk[0] * 0.2126 + dogrusalRenk[1] * 0.7152 + dogrusalRenk[2] * 0.0722 > 0.179;
 
   const maxIzlenenRef = useRef<number>(0);
   const izlemeIdRef = useRef<string | null>(null);
@@ -402,7 +438,13 @@ export default function EclubVideoOynatici({ oneri, onKapat, onTamamlandi, hata,
       <div className="overflow-hidden rounded-2xl border border-[#dfe7f1] bg-white shadow-[0_8px_26px_rgba(31,55,90,0.06)]">
         <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#e7edf4] px-4 py-4 md:px-5">
           <div><div className="text-base font-extrabold text-[#203653]">{oneri.urun_adi}</div>{oneri.teknik_adi && <div className="mt-0.5 text-xs font-semibold text-[#8190a3]">{oneri.teknik_adi}</div>}</div>
-          <span className="rounded-full border border-[#bfdbfe] bg-[#eff6ff] px-2.5 py-1 text-[9px] font-extrabold text-[#2563a8]">Öğrenme İçeriği ve Soru Akışı</span>
+          <span
+            aria-live="polite"
+            className="max-w-full rounded-full px-3 py-1 text-center text-xs font-medium leading-snug sm:text-[11px]"
+            style={{ backgroundColor: bilgiRengi, color: acikZemin ? "#172a44" : "#fff" }}
+          >
+            {bilgiMetni}
+          </span>
         </div>
 
         {oneri.arac_turu && oneri.arac_turu !== "video" && oneri.arac_id && <TuketimOynaticisi aracId={oneri.arac_id} yayinId={oneri.yayin_id} aracTuru={oneri.arac_turu} bagId={oneri.oneri_id} urunAdi={oneri.urun_adi} ileriSarmaAcik hata={hata} baslat={handleAracBaslat} bitir={handleAracBitir} onTamamlandi={onTamamlandi} />}

@@ -10,10 +10,18 @@ export type PerformansTuru = typeof ECLUB_PERFORMANS_TURLERI[number]["tur"];
 export interface PerformansHaftasi { hafta: number; baslangic: string; bitisHaric: string }
 export interface PerformansDonemi { kod: string; ad: string; baslangic: string; bitisHaric: string; simdi: string; aktifHafta: number; haftalar: PerformansHaftasi[] }
 
+export function eclubPerformansDonemKoduGecerliMi(kod: string, simdi = new Date()): boolean {
+  const eslesme = /^([1-9]\d{3})-P([1-6])$/.exec(kod);
+  if (!eslesme) return false;
+  return Number(eslesme[1]) <= trZamanParcalari(simdi).yil;
+}
+
 /** İki takvim ayını korur. İlk yedi bölüm 7 gün, son bölüm dönemin sonuna kadardır. */
-export function eclubPerformansDonemi(simdi = new Date()): PerformansDonemi {
-  const { yil, ay } = trZamanParcalari(simdi);
-  const ilkAy = ay % 2 === 1 ? ay : ay - 1;
+export function eclubPerformansDonemi(simdi = new Date(), donemKodu?: string): PerformansDonemi {
+  const tarih = trZamanParcalari(simdi);
+  if (donemKodu !== undefined && !eclubPerformansDonemKoduGecerliMi(donemKodu, simdi)) throw new Error("Geçersiz performans dönemi.");
+  const yil = donemKodu ? Number(donemKodu.slice(0, 4)) : tarih.yil;
+  const ilkAy = donemKodu ? Number(donemKodu.slice(-1)) * 2 - 1 : Math.ceil(tarih.ay / 2) * 2 - 1;
   const baslangic = trZamanUtc(yil, ilkAy, 1), bitis = trZamanUtc(yil, ilkAy + 2, 1);
   const haftalar = Array.from({ length: 8 }, (_, i) => ({ hafta: i + 1,
     baslangic: new Date(baslangic.getTime() + i * 7 * 86400000).toISOString(),
@@ -22,7 +30,16 @@ export function eclubPerformansDonemi(simdi = new Date()): PerformansDonemi {
   const ayAdi = (t: Date) => t.toLocaleDateString("tr-TR", { month: "long", timeZone: "Europe/Istanbul" });
   return { kod: `${yil}-P${(ilkAy + 1) / 2}`, ad: `${ayAdi(baslangic)} – ${ayAdi(trZamanUtc(yil, ilkAy + 1, 1))} ${yil}`,
     baslangic: baslangic.toISOString(), bitisHaric: bitis.toISOString(), simdi: simdi.toISOString(),
-    aktifHafta: haftalar.find(h => simdi.getTime() >= Date.parse(h.baslangic) && simdi.getTime() < Date.parse(h.bitisHaric))?.hafta ?? 8, haftalar };
+    aktifHafta: haftalar.find(h => simdi.getTime() >= Date.parse(h.baslangic) && simdi.getTime() < Date.parse(h.bitisHaric))?.hafta ?? (simdi < baslangic ? 1 : 8), haftalar };
+}
+
+export function eclubPerformansDonemSecenekleri(simdi = new Date()): { kod: string; ad: string }[] {
+  const { yil } = trZamanParcalari(simdi);
+  return Array.from({ length: 6 }, (_, i) => {
+    const kod = `${yil}-P${i + 1}`;
+    const donem = eclubPerformansDonemi(simdi, kod);
+    return { kod, ad: donem.ad.replace(` ${yil}`, "") };
+  });
 }
 export interface PerformansUyesi { kisi_id: string; ad: string; soyad: string }
 export interface PerformansIzlemesi { izleme_id: string; kisi_id: string; yayin_id: string; arac_turu: string; izleme_bitis: string | null; tamamlandi_mi: boolean | null; ilerleme_durumu?: Record<string, unknown> | null }

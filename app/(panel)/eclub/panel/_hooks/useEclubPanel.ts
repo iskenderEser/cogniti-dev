@@ -19,7 +19,6 @@ export interface PanelOneri {
   arac_id: string | null;
   arac_turu: "video" | "podcast" | "gorsel" | "flip_pdf";
   thumbnail_url: string | null;
-  icerik_turu: string | null;
   video_puani: number;
   soru_puani: number;
   soru_sayisi: number;
@@ -84,13 +83,17 @@ interface UseEclubPanelArgs {
 export function useEclubPanel({ hazir, hata, firmaId = null, firmaRotasi, onbellekKullaniciId, acilistaArkaPlandaYenile = false }: UseEclubPanelArgs) {
   const onbellekAnahtari = onbellekKullaniciId ? `${onbellekKullaniciId}:${firmaRotasi ? `firma:${firmaRotasi}` : firmaId ?? "genel"}` : null;
   const istekSirasi = useRef(0);
-  const [yuklenenKapsam, setYuklenenKapsam] = useState<string | null | undefined>(undefined);
-  const [kisi, setKisi] = useState<PanelKisi | null>(null);
-  const [oneriler, setOneriler] = useState<PanelOneri[]>([]);
-  const [firmaOzetleri, setFirmaOzetleri] = useState<PanelFirmaOzeti[]>([]);
-  const [ozet, setOzet] = useState<PanelOzet>({ eclub_store_aktif: false, toplam_kazanilan_puan: 0, ileri_sarma_kaybi: 0, harcanabilir_puan: 0, dogru_cevap: 0 });
-  const [loading, setLoading] = useState(true);
-  const [yuklenenOnbellek, setYuklenenOnbellek] = useState<string | null>(null);
+  const [ilkOnbellek] = useState(() => hazir && onbellekAnahtari
+    ? panelOnbelleginiOku(onbellekAnahtari, acilistaArkaPlandaYenile ? 300_000 : undefined) : null);
+  const [yuklenenKapsam, setYuklenenKapsam] = useState<string | null | undefined>(() => ilkOnbellek ? firmaId : undefined);
+  const [kisi, setKisi] = useState<PanelKisi | null>(() => ilkOnbellek?.kisi ?? null);
+  const [oneriler, setOneriler] = useState<PanelOneri[]>(() => ilkOnbellek?.oneriler ?? []);
+  const [firmaOzetleri, setFirmaOzetleri] = useState<PanelFirmaOzeti[]>(() => ilkOnbellek?.firma_ozetleri ?? []);
+  const [ozet, setOzet] = useState<PanelOzet>(() => ({ eclub_store_aktif: ilkOnbellek?.ozet?.eclub_store_aktif === true,
+    toplam_kazanilan_puan: ilkOnbellek?.ozet?.toplam_kazanilan_puan ?? 0, ileri_sarma_kaybi: ilkOnbellek?.ozet?.ileri_sarma_kaybi ?? 0,
+    harcanabilir_puan: ilkOnbellek?.ozet?.harcanabilir_puan ?? 0, dogru_cevap: ilkOnbellek?.ozet?.dogru_cevap ?? 0 }));
+  const [loading, setLoading] = useState(!ilkOnbellek);
+  const [yuklenenOnbellek, setYuklenenOnbellek] = useState<string | null>(() => ilkOnbellek ? onbellekAnahtari : null);
 
   const veriCek = useCallback(async (sessiz = false, onbellekten = false) => {
     const istek = ++istekSirasi.current;

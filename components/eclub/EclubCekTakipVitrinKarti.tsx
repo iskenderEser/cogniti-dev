@@ -32,7 +32,7 @@ export default function EclubCekTakipVitrinKarti({ talep, iptalEdiliyor, dogrula
           <div className="grid min-w-0 gap-2">
             <div className="min-w-0">
               <span className={baslikClass}>Yayın ID</span>
-              <h2 className={kimlikDegeriClass}>{talepIdGoster(talep.firma_adi, talep.talep_no)}</h2>
+              <h2 className={kimlikDegeriClass}>{talepIdGoster(talep.firma_adi, talep.talep_no)}{talep.gorunum_testi_mi && <> <span className="text-red-600">(F)</span></>}</h2>
             </div>
             <div className="min-w-0">
               <span className={baslikClass}>Yayın türü</span>

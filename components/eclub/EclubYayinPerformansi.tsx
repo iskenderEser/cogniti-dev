@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import { eclubPerformansGrafikSecenegi } from "@/lib/eclub/performansGrafik";
 import type { EChartTiklama } from "@/components/grafik/EChart";
 import { useEclubFirmaSecimi } from "./EclubFirmaSecimi";
-import { ECLUB_PERFORMANS_TURLERI, type PerformansTuru, type PerformansVerisi } from "@/lib/eclub/performans";
+import { ECLUB_PERFORMANS_TURLERI, eclubPerformansDonemi, eclubPerformansDonemSecenekleri, type PerformansTuru, type PerformansVerisi } from "@/lib/eclub/performans";
 import dynamic from "next/dynamic";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { performansOnbelleginiOku, performansVerisiniIste } from "@/lib/eclub/performansOnbellek";
@@ -30,10 +30,13 @@ export default function EclubYayinPerformansi() {
   const params = useParams<{ firma_id: string }>();
   const { urunId, urunAdi, firmaId: seciliFirmaId } = useEclubFirmaSecimi();
   const firmaId = seciliFirmaId ?? params.firma_id;
-  const kapsam = `${kullaniciId}:${firmaId}:${urunId}`;
+  const [seciliDonem, setSeciliDonem] = useState<string | null>(null);
+  const donemKodu = seciliDonem ?? eclubPerformansDonemi().kod;
+  const donemSecenekleri = eclubPerformansDonemSecenekleri();
+  const kapsam = `${kullaniciId}:${firmaId}:${urunId}:${donemKodu}`;
   const mobil = useSyncExternalStore(mobilDinle, mobilOku, sunucuMobilOku);
   const [sonuc, setSonuc] = useState<{ kapsam: string; veri: PerformansVerisi } | null>(() => {
-    const veri = kullaniciId && urunId ? performansOnbelleginiOku(kullaniciId, firmaId, urunId) : null;
+    const veri = kullaniciId && urunId ? performansOnbelleginiOku(kullaniciId, firmaId, urunId, donemKodu) : null;
     return veri ? { kapsam, veri } : null;
   });
   const [hata, setHata] = useState<{ kapsam: string; mesaj: string } | null>(null);
@@ -47,15 +50,15 @@ export default function EclubYayinPerformansi() {
     setYukleniyor(true);
     try {
       if (onbellekten) {
-        const kayit = performansOnbelleginiOku(kullaniciId, firmaId, urunId);
+        const kayit = performansOnbelleginiOku(kullaniciId, firmaId, urunId, donemKodu);
         if (kayit) setSonuc({ kapsam, veri: kayit });
       }
-      const data = await performansVerisiniIste(kullaniciId, firmaId, urunId);
+      const data = await performansVerisiniIste(kullaniciId, firmaId, urunId, donemKodu);
       if (!controller.signal.aborted) { setSonuc({ kapsam, veri: data }); setHata(null); }
     } catch (error) {
       if (!controller.signal.aborted) { setSonuc(null); setHata({ kapsam, mesaj: error instanceof Error ? error.message : "Performans bilgileri yüklenemedi." }); }
     } finally { if (!controller.signal.aborted) setYukleniyor(false); }
-  }, [firmaId, urunId, kapsam, kullaniciId]);
+  }, [firmaId, urunId, kapsam, kullaniciId, donemKodu]);
   useEffect(() => {
     void import("@/components/grafik/EChart").catch(() => undefined);
     void veriCek(true);
@@ -66,7 +69,7 @@ export default function EclubYayinPerformansi() {
   }, [veriCek]);
   const veri = sonuc?.kapsam === kapsam ? sonuc.veri : null;
   const tur = secim?.kapsam === kapsam ? secim.tur : "video";
-  const hafta = secim?.kapsam === kapsam ? secim.hafta : 2;
+  const hafta = secim?.kapsam === kapsam ? secim.hafta : veri?.donem.aktifHafta ?? 1;
   const turBilgisi = ECLUB_PERFORMANS_TURLERI.find(t => t.tur === tur)!;
   const hucre = veri?.satirlar.find(s => s.tur === tur)?.haftalar.find(h => h.hafta === hafta);
   const sec = (yeniTur: PerformansTuru, yeniHafta: number) => setSecim({ kapsam, tur: yeniTur, hafta: yeniHafta });
@@ -77,7 +80,11 @@ export default function EclubYayinPerformansi() {
   };
   return <div className={styles.page}>
     <div className={styles.heading}><div><h2>Yayın Tamamlama Performansı</h2><p className={styles.muted}>Eczanenizin yayınlardan kazandığı puanları haftalara göre takip edin.</p></div>
-      {veri && <div className={styles.period}>{veri.donem.ad}<small>{veri.donem.aktifHafta}. hafta</small></div>}</div>
+      <div className={styles.period}>
+        <select aria-label="Performans dönemi" className={styles.periodSelect} value={donemKodu} onChange={event => setSeciliDonem(event.target.value)}>
+          {donemSecenekleri.map(donem => <option key={donem.kod} value={donem.kod}>{donem.ad}</option>)}
+        </select>
+      </div></div>
     {hata?.kapsam === kapsam && <div role="alert" className={styles.error}>{hata.mesaj} <button type="button" onClick={() => void veriCek()} disabled={yukleniyor}>Tekrar dene</button></div>}
     {!veri ? !hata || hata.kapsam !== kapsam ? <EclubPerformansIcerikSkeleton /> : null : <>
       <section className={styles.stats} aria-label="Dönem performansı">

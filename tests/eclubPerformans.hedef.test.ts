@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { eclubPerformansDonemi, eclubPerformansiHesapla, type PerformansIzlemesi, type PerformansPuani, type PerformansKaybi, type PerformansBagi } from "@/lib/eclub/performans";
+import { eclubPerformansDonemi, eclubPerformansDonemKoduGecerliMi, eclubPerformansDonemSecenekleri, eclubPerformansiHesapla, type PerformansIzlemesi, type PerformansPuani, type PerformansKaybi, type PerformansBagi } from "@/lib/eclub/performans";
 
 const donem = eclubPerformansDonemi(new Date("2026-10-31T20:59:59Z"));
 const bag: PerformansBagi = { kisi_id: "k1", eczane_id: "e1", baslangic_tarihi: "2026-01-01T00:00:00Z", bitis_tarihi: null, created_at: null, aktif_mi: true };
@@ -17,6 +17,30 @@ test("iki aylık takvim Türkiye saatinde başlar; yıl ve artık yıl son günl
   assert.equal(eclubPerformansDonemi(new Date("2026-12-31T21:00:00Z")).kod, "2027-P1");
   assert.equal(eclubPerformansDonemi(new Date("2024-02-29T20:59:59Z")).bitisHaric, "2024-02-29T21:00:00.000Z");
   assert.equal(eclubPerformansDonemi(new Date("2026-10-11T09:00:00Z")).aktifHafta, 6);
+});
+test("geçmiş dönem seçimi gerçek bugünü korur ve o dönemin tamamlamalarını hesaplar", () => {
+  const simdi = new Date("2026-10-15T09:00:00Z");
+  const gecmis = eclubPerformansDonemi(simdi, "2026-P4");
+  assert.equal(gecmis.baslangic, "2026-06-30T21:00:00.000Z");
+  assert.equal(gecmis.bitisHaric, "2026-08-31T21:00:00.000Z");
+  assert.equal(gecmis.simdi, simdi.toISOString());
+  const girdiler = { izlemeler: [izleme("agustos", "2026-08-19T09:00:00Z")], puanlar: [puan("p", "agustos", 50)], kayiplar: [], baglar: [bag], uyeler: [{ kisi_id: "k1", ad: "Ayşe", soyad: "Sağlık" }], eczaneIdler: ["e1"], yayinIdler: ["y1"] };
+  assert.equal(eclubPerformansiHesapla({ ...girdiler, donem: eclubPerformansDonemi(simdi) }).ozet.tamamlanan, 0);
+  assert.deepEqual(eclubPerformansiHesapla({ ...girdiler, donem: gecmis }).ozet, { puan: 50, tamamlanan: 1, uye: 1 });
+});
+test("dönem listesi güncel yılın altı iki aylık dönemini içerir", () => {
+  const simdi = new Date("2027-01-01T00:00:00+03:00");
+  const secenekler = eclubPerformansDonemSecenekleri(simdi);
+  assert.equal(secenekler.length, 6);
+  assert.equal(secenekler[0].kod, "2027-P1");
+  assert.equal(secenekler[5].kod, "2027-P6");
+  assert.deepEqual(secenekler.map(s => s.ad), ["Ocak – Şubat", "Mart – Nisan", "Mayıs – Haziran", "Temmuz – Ağustos", "Eylül – Ekim", "Kasım – Aralık"]);
+  for (const kod of ["", "2026-P0", "2026-P7", "2026-01", "2028-P1"]) {
+    assert.equal(eclubPerformansDonemKoduGecerliMi(kod, simdi), false);
+    assert.throws(() => eclubPerformansDonemi(simdi, kod));
+  }
+  assert.equal(eclubPerformansDonemKoduGecerliMi("2026-P6", simdi), true);
+  assert.equal(eclubPerformansDonemKoduGecerliMi("2027-P6", simdi), true);
 });
 test("tamamlamalar doğru haftaya bir kez yazılır; izleme, cevap ve ileri sarma net hesaplanır", () => {
   const i = izleme("i1", donem.haftalar[1].baslangic);

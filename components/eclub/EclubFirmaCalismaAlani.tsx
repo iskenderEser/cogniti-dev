@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
-import { ArrowLeft, Building2, CheckCircle2, Clock3, Trophy } from "lucide-react";
+import { ArrowLeft, Building2, CheckCircle2, Sparkles, Trophy } from "lucide-react";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { useHataMesaji, HataMesajiContainer } from "@/components/HataMesaji";
 import { EclubKisiSayfa, EclubKisiBaslik, EclubKisiStat, EclubKisiYukleniyor, EclubKisiBosDurum } from "./EclubKisiSayfa";
@@ -16,6 +16,7 @@ import { useEclubPanel } from "@/app/(panel)/eclub/panel/_hooks/useEclubPanel";
 import Yayinlar from "@/app/(panel)/eclub/ana-sayfa/page";
 import { sayfaOkumaOnbellegiOlustur } from "@/lib/panel/sayfaOkumaOnbellegi";
 import { firmaBannerlariniIste } from "@/lib/eclub/firmaBannerOnbellek";
+import { eclubFirmaYayinSayilari } from "@/lib/eclub/firmaYayinSayilari";
 import YayinPerformansi from "./EclubYayinPerformansi";
 import EclubFirmaCekTakibiSkeleton from "./EclubFirmaCekTakibiSkeleton";
 import EclubFirmaCekTalebiSkeleton from "./EclubFirmaCekTalebiSkeleton";
@@ -50,19 +51,14 @@ function FirmaCalismaAlaniIcerigi({ sekme, firmaRotasi, kullaniciId }: { sekme: 
   const sorgu = useSearchParams();
   const { mesajlar, hata } = useHataMesaji();
   const hizliYayinlar = sekme === "yayinlar";
-  const hizliPanel = hizliYayinlar || sekme === "hediye-cekleri" || sekme === "cek-talepleri";
-  const hizliFirma = hizliPanel || sekme === "performans";
   const cacheKey = `${kullaniciId}:${firmaRotasi}`;
   const [veri, setVeri] = useState<FirmaVerisi | null>(() => {
-    const kayit = hizliFirma ? firmaOnbellegi.oku(cacheKey, 300_000) : null;
+    const kayit = firmaOnbellegi.oku(cacheKey, 300_000);
     return kayit?.firmaId === firmaRotasi && kayit.firma?.firma_id && Array.isArray(kayit.urunler) ? kayit : null;
   });
   const firmaId = veri?.firmaId === firmaRotasi ? veri.firma.firma_id : undefined;
-  const panel = useEclubPanel({ hazir: sekme !== "performans" && (hizliPanel || !!firmaId), hata,
-    firmaId: hizliPanel ? undefined : firmaId,
-    firmaRotasi: hizliPanel ? firmaRotasi : undefined,
-    acilistaArkaPlandaYenile: hizliPanel,
-    onbellekKullaniciId: hizliPanel ? kullaniciId : undefined });
+  const panel = useEclubPanel({ hazir: true, hata, firmaRotasi,
+    acilistaArkaPlandaYenile: true, onbellekKullaniciId: kullaniciId });
   const [basarisizFirma, setBasarisizFirma] = useState<string | null>(null);
   const [aksiyonAlani, setAksiyonAlani] = useState<HTMLDivElement | null>(null);
   useEffect(() => {
@@ -77,14 +73,14 @@ function FirmaCalismaAlaniIcerigi({ sekme, firmaRotasi, kullaniciId }: { sekme: 
       if (!data.firma?.firma_id || !Array.isArray(data.urunler)) throw new Error("Firma bilgisi alınamadı.");
       return { firmaId: firmaRotasi, firma: data.firma, urunler: data.urunler ?? [] };
     };
-    const istek = hizliFirma ? firmaOnbellegi.iste(cacheKey, yukle) : yukle();
+    const istek = firmaOnbellegi.iste(cacheKey, yukle);
     void istek.then((sonuc) => {
       if (aktif) setVeri(sonuc);
     }).catch((error) => {
       if (aktif) { setVeri(null); setBasarisizFirma(firmaRotasi); hata(error instanceof Error ? error.message : "Firma yüklenemedi."); }
     });
     return () => { aktif = false; };
-  }, [sekme, hizliFirma, hizliYayinlar, firmaRotasi, hata, kullaniciId, cacheKey]);
+  }, [sekme, hizliYayinlar, firmaRotasi, hata, kullaniciId, cacheKey]);
   const firma = veri?.firmaId === firmaRotasi ? veri.firma : null;
   const secimAnahtari = firma && kullaniciId ? `eclub_firma_urun:${kullaniciId}:${firma.firma_id}` : null;
   const kayitliUrunId = useSyncExternalStore(eclubFirmaUrunSecimineAboneOl, useCallback(() => eclubFirmaUrunSeciminiOku(secimAnahtari), [secimAnahtari]), () => null);
@@ -110,17 +106,22 @@ function FirmaCalismaAlaniIcerigi({ sekme, firmaRotasi, kullaniciId }: { sekme: 
   if (!firma || (sekme !== "performans" && sekme !== "hediye-cekleri" && sekme !== "cek-talepleri" && panel.loading)) return sekme === "cek-talepleri" ? <EclubFirmaCekTakibiSkeleton /> : sekme === "hediye-cekleri" ? <EclubFirmaCekTalebiSkeleton /> : sekme === "performans" ? <EclubFirmaPerformansSkeleton /> : hizliYayinlar ? <EclubFirmaYayinlarSkeleton /> : <EclubKisiYukleniyor />;
   const firmaOzeti = panel.firmaOzetleri.find((ozet) => ozet.firma_id === firmaId);
   const tamamlanan = panel.oneriler.filter((oneri) => oneri.izlendi_mi).length;
-  const bekleyen = panel.oneriler.filter((oneri) => !oneri.izlendi_mi && oneri.oneri_durumu !== "suresi_gecmis").length;
+  const firmaYayinSayilari = eclubFirmaYayinSayilari(panel.oneriler).get(firma.firma_id) ?? { yeni: 0, toplam: 0 };
+  const yeniYayinlar = firmaYayinSayilari.yeni;
   const gorunenSekmeler = SEKMELER.filter((secenek) => ["yayinlar", "performans"].includes(secenek.deger) || firma.eclub_store_aktif);
   return <EclubKisiSayfa>
     <Link href="/eclub/firmalar" className="inline-flex w-fit items-center gap-1.5 text-xs font-bold text-[#237ac8]"><ArrowLeft size={14} /> Firmalara Dön</Link>
     <EclubKisiBaslik ikon={Building2} ustEtiket="" baslik={firma.firma_adi} aciklama="Ürünü seçerek yayınları, tamamlama performansını, hediye çeki talebini ve takibini görüntüleyin."
+      baslikAlti={<div aria-busy={panel.loading} className="mb-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs font-semibold text-[#40556d]">
+        <span>Yeni Yayın <strong className="text-[#203653]">{panel.loading ? "…" : `${firmaYayinSayilari.yeni} adet`}</strong></span>
+        <span>Toplam Yayın <strong className="text-[#203653]">{panel.loading ? "…" : `${firmaYayinSayilari.toplam} adet`}</strong></span>
+      </div>}
       aksiyon={<div ref={setAksiyonAlani} className="ml-auto flex justify-end" />} />
     {sekme !== "performans" && (panel.loading ? <section aria-label="Firma özeti yükleniyor" aria-busy="true" className="grid grid-cols-1 gap-3 sm:grid-cols-3">
       {[0, 1, 2].map(i => <div key={i} className="h-28 animate-pulse rounded-2xl bg-[#e8eef5]" aria-hidden="true" />)}
     </section> : <section aria-label="Firma özeti" className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-      <EclubKisiStat ikon={Clock3} etiket="Bekleyen İçerik" deger={bekleyen} detay="Süresi devam eden" renk="#d78022" zemin="#fff6e8" />
-      <EclubKisiStat ikon={CheckCircle2} etiket="Tamamlanan" deger={tamamlanan} detay="Tamamladığınız içerikler" renk="#16865f" zemin="#ebf8f2" />
+      <EclubKisiStat ikon={Sparkles} etiket="Yeni Yayınlar" deger={yeniYayinlar} detay="Tamamlanmayı bekleyenler" renk="#d78022" zemin="#fff6e8" />
+      <EclubKisiStat ikon={CheckCircle2} etiket="Tamamlananlar" deger={tamamlanan} detay="Tamamladığınız içerikler" renk="#16865f" zemin="#ebf8f2" />
       <EclubKisiStat ikon={Trophy} etiket="Net Puan" deger={Math.max(0, (firmaOzeti?.kazanilan_puan ?? 0) - (firmaOzeti?.kaybedilen_puan ?? 0)).toLocaleString("tr-TR")} detay={`${firmaOzeti?.dogru_cevap ?? 0} doğru · ${firmaOzeti?.kaybedilen_puan ?? 0} ileri sarma kaybı`} renk="#7358c7" zemin="#f2efff" />
     </section>)}
     {veri?.urunler.length ? <>

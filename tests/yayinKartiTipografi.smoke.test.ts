@@ -287,11 +287,15 @@ test("E-Club: video kartı durum etiketi 11px (text-[11px]) ve sm:text-[9px] uyg
     oneri_id: "o-1",
     yayin_id: "y-1",
     urun_adi: "Ürün Eclub",
+    gorunen_urun_id: "30-001",
     teknik_adi: "Teknik Eclub",
     video_url: "https://example.com/v.mp4",
     thumbnail_url: "https://example.com/t.jpg",
     arac_id: "a-1",
     arac_turu: "video" as const,
+    icerik_turu: "urun",
+    video_puani: 60,
+    extra_puan: 10,
     created_at: "2026-09-20",
     oneri_baslangic: "2026-09-20",
     talep_no: 1,
@@ -324,6 +328,69 @@ test("E-Club: video kartı durum etiketi 11px (text-[11px]) ve sm:text-[9px] uyg
   assert.match(html, /Siparişle çek tutarı \+%10/);
   assert.match(html, /300–500p/);
   assert.match(html, /10\+1/);
+  assert.match(html, /Ürün ID: 30-001/);
+  assert.doesNotMatch(html, /font-medium text-gray-600/);
+  assert.doesNotMatch(html, /rgba\(0,0,0,0\.04\)/);
+
+  const anaSayfaHtml = renderToStaticMarkup(
+    createElement(EclubVideoKarti, {
+      oneri: mockOneri as unknown as Parameters<typeof EclubVideoKarti>[0]["oneri"],
+      onSec: () => {},
+      onBegeni: () => {},
+      onFavori: () => {},
+      etkilesimAktif: true,
+      firmaRozetiGoster: true,
+    })
+  );
+
+  assert.match(anaSayfaHtml, /text-\[11px\] font-normal text-white backdrop-blur-sm sm:text-\[9px\]/);
+  assert.match(anaSayfaHtml, /bg-\[#1e3a8a\] px-2 py-0\.5 text-xs font-normal text-white shadow-sm backdrop-blur-sm sm:text-\[9px\]/);
+  assert.match(anaSayfaHtml, /text-xs font-normal text-white shadow-xs sm:px-1\.5 sm:text-\[9px\]/);
+  assert.doesNotMatch(anaSayfaHtml, /font-(?:extrabold|medium)/);
+  assert.doesNotMatch(anaSayfaHtml, /Ürün ID: 30-001/);
+  assert.doesNotMatch(anaSayfaHtml, /font-normal text-gray-600/);
+  assert.doesNotMatch(anaSayfaHtml, /rgba\(0,0,0,0\.04\)/);
+
+  const suresiGecenHtml = renderToStaticMarkup(
+    createElement(EclubVideoKarti, {
+      oneri: { ...mockOneri, oneri_durumu: "suresi_gecmis", kalan_gun: 0 } as unknown as Parameters<typeof EclubVideoKarti>[0]["oneri"],
+      onSec: () => {},
+      onBegeni: () => {},
+      onFavori: () => {},
+      etkilesimAktif: true,
+      firmaRozetiGoster: true,
+    })
+  );
+  assert.match(suresiGecenHtml, /rounded-xl border-2 border-\[#dc2626\]/);
+  assert.doesNotMatch(suresiGecenHtml, /Süresi Geçti|0 gün/);
+});
+
+test("E-Club: süresi geçen yayın açıldığında puansız izleme açıklaması gösterilir", async () => {
+  const { default: EclubVideoOynatici } = await import("@/app/(panel)/eclub/panel/_components/EclubVideoOynatici");
+  const ortakProps = {
+    oneri: {
+      oneri_id: "o-1",
+      yayin_id: "y-1",
+      urun_adi: "Abilon",
+      teknik_adi: null,
+      video_url: null,
+      oneri_durumu: "suresi_gecmis" as const,
+    },
+    onKapat: () => {},
+    onTamamlandi: () => {},
+    hata: () => {},
+    basari: () => {},
+    uyari: () => {},
+  };
+  const suresiGecenHtml = renderToStaticMarkup(createElement(EclubVideoOynatici, ortakProps));
+  assert.match(suresiGecenHtml, /Bu yayının süresi geçti\. Puansız izlenebilir\./);
+  assert.doesNotMatch(suresiGecenHtml, /Öğrenme İçeriği ve Soru Akışı/);
+
+  const aktifHtml = renderToStaticMarkup(createElement(EclubVideoOynatici, {
+    ...ortakProps,
+    oneri: { ...ortakProps.oneri, oneri_durumu: "aktif" as const },
+  }));
+  assert.match(aktifHtml, /Öğrenme İçeriği ve Soru Akışı/);
 });
 
 test("UTT Ana Sayfa: kart altı izleme metni 12px (text-xs) ve sm:text-[10px] uygulanır", async () => {

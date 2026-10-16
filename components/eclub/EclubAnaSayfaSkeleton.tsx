@@ -12,8 +12,8 @@ export default function EclubAnaSayfaSkeleton() {
             <div className="mt-2 h-4 w-96 max-w-full rounded bg-[#e8eef5]" />
           </div>
           <div className="aspect-[1932/480] w-full rounded-2xl bg-[#dfe8f2]" />
-          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-            {[0, 1, 2, 3].map((item) => (
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+            {[0, 1, 2].map((item) => (
               <div key={item} className="h-28 rounded-2xl border border-[#dfe7f1] bg-white" />
             ))}
           </div>

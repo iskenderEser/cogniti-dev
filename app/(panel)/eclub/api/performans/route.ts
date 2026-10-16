@@ -5,7 +5,7 @@ import { eclubFirmaKapsami } from "@/lib/eclub/firmaGezinme";
 import { ECLUB_TUKETICI_ROLLERI } from "@/lib/utils/roller";
 import { uuidGecerliMi } from "@/lib/uretim/rpc";
 import { rolHatasi, sunucuHatasi, validasyonHatasi, yetkiHatasi } from "@/lib/utils/hataIsle";
-import { eclubPerformansDonemi, eclubPerformansiHesapla, type PerformansBagi, type PerformansIzlemesi, type PerformansPuani, type PerformansKaybi, type PerformansUyesi } from "@/lib/eclub/performans";
+import { eclubPerformansDonemi, eclubPerformansDonemKoduGecerliMi, eclubPerformansiHesapla, type PerformansBagi, type PerformansIzlemesi, type PerformansPuani, type PerformansKaybi, type PerformansUyesi } from "@/lib/eclub/performans";
 
 type Sorgu<T> = { range: (ilk: number, son: number) => PromiseLike<{ data: T[] | null; error: { message: string } | null }> };
 /** PostgREST'in satır sınırı nedeniyle dönem verisi eksik toplanmamalı. */
@@ -35,6 +35,10 @@ export async function GET(request: Request) {
     const sorgu = new URL(request.url).searchParams;
     const firmaId = sorgu.get("firma_id"), urunId = sorgu.get("urun_id");
     if (!uuidGecerliMi(firmaId ?? "") || !uuidGecerliMi(urunId ?? "")) return validasyonHatasi("Geçersiz firma veya ürün.", ["firma_id", "urun_id"]);
+    const donemKodu = sorgu.get("donem");
+    const simdi = new Date();
+    if (donemKodu !== null && !eclubPerformansDonemKoduGecerliMi(donemKodu, simdi)) return validasyonHatasi("Geçersiz performans dönemi.", ["donem"]);
+    const donem = eclubPerformansDonemi(simdi, donemKodu ?? undefined);
     if (eclubFirmaKapsami(erisim.firmalar, firmaId).length === 0) return rolHatasi("Bu firmaya erişiminiz bulunmuyor.");
     const { data: urun, error: urunHatasi } = await admin.from("urunler").select("urun_id").eq("firma_id", firmaId!).eq("urun_id", urunId!).maybeSingle();
     if (urunHatasi) throw new Error(urunHatasi.message);
@@ -45,7 +49,6 @@ export async function GET(request: Request) {
     ]);
     const eczaneIdler = [...new Set(firmaBaglari.map(b => b.eczane_id))];
     if (!eczaneIdler.length) return rolHatasi("Aktif eczane–firma bağlantısı bulunamadı.");
-    const donem = eclubPerformansDonemi();
     const yayinIdler = [...new Set(yayinlar.map(y => y.yayin_id))];
     const bosVeri = () => eclubPerformansiHesapla({ donem, izlemeler: [], puanlar: [], kayiplar: [], uyeler: [], baglar: [], eczaneIdler, yayinIdler });
     if (!yayinIdler.length) return NextResponse.json(bosVeri(), { headers: { "Cache-Control": "private, no-store" } });

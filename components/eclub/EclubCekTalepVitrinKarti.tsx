@@ -2,6 +2,7 @@
 
 import { ArrowRight, Coins, Gift } from "lucide-react";
 import { talepIdGoster } from "@/lib/utils/talepId";
+import { eclubUxTestYayiniMi } from "@/lib/eclub/store/uxGorunumTesti";
 import { YAYIN_TURU_SUNUMU } from "@/lib/ogrenmeAraci/turSunumu";
 import EclubHaftalikPuanBirikimi, { type HaftalikPuanBirikimi } from "./EclubHaftalikPuanBirikimi";
 import {
@@ -72,7 +73,7 @@ export default function EclubCekTalepVitrinKarti({
         <div className="grid min-w-0 grid-cols-2 items-start gap-2 @[660px]:col-span-2 @[900px]:col-span-1 @[900px]:grid-cols-1">
           <div className="min-w-0">
             <span className={baslikClass}>Yayın ID</span>
-            <h3 className={kimlikDegeriClass}>{yayinNo}</h3>
+            <h3 className={kimlikDegeriClass}>{yayinNo}{item.gorunum_testi_mi && eclubUxTestYayiniMi(item.yayin_id) && <> <span className="text-red-600">(F)</span></>}</h3>
           </div>
           <div className="min-w-0">
             <span className={baslikClass}>Yayın türü</span>

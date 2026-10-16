@@ -449,6 +449,13 @@ export const SAYFA_REHBERLERI: Record<string, SayfaRehberBilgisi> = {
     maddeler: [],
   },
 
+  "eclub-firmalar": {
+    anahtar: "eclub-firmalar",
+    baslik: "Firmalar ve Yayınları",
+    ozet: "Üyesi olduğunuz firmaların yayınlarını takip edebilir, tamamlanan yayınlardan ödül kazanabilirsiniz.",
+    maddeler: [],
+  },
+
   // ─── 28. E-CLUB HEDİYE ÇEKİ (KİŞİ / ECZACI & TEKNİSYEN) ───────────────────
   "eclub-store-magaza": {
     anahtar: "eclub-store-magaza",
@@ -457,19 +464,19 @@ export const SAYFA_REHBERLERI: Record<string, SayfaRehberBilgisi> = {
     maddeler: [],
   },
 
-  // ─── 29. ECZANEM DANIŞANLARIM (ECZANE) ────────────────────────────────────
+  // ─── 29. ECZANEM ÜYELER (ECZANE) ───────────────────────────────────────────
   "eczanem-eczane-musterilerim": {
     anahtar: "eczanem-eczane-musterilerim",
-    baslik: "Danışanlarım",
-    ozet: "Eczanenize kayıtlı müşterilerinizi yönetmenizi, yeni müşteri eklemenizi ve mevcut Eczanem kullanıcılarını eczanenize bağlamanızı sağlar.",
+    baslik: "Üyeler",
+    ozet: "Üyelikleri yönetmenizi, yeni üye eklemenizi veya kayıtlı üyeyi seçebilmeyi bu sayfadaki tablo ile gerçekleştirebilirsiniz.",
     maddeler: [],
   },
 
   // ─── 30. ECZANEM DANIŞAN YAYINLARI (ECZANE) ────────────────────────────────
   "eczanem-eczane-dagitim": {
     anahtar: "eczanem-eczane-dagitim",
-    baslik: "Danışan Yayınları",
-    ozet: "Eczanenize gelen Eczanem yayınlarını seçip aktif danışanlarınıza göndermenizi sağlar.",
+    baslik: "Üye Yayınları",
+    ozet: "Bu sayfada üyelere ileteceğiniz yayınları görebilir ve üyelere iletebilirsiniz.",
     maddeler: [],
   },
 
@@ -477,7 +484,7 @@ export const SAYFA_REHBERLERI: Record<string, SayfaRehberBilgisi> = {
   "eczanem-eczane-siparisler": {
     anahtar: "eczanem-eczane-siparisler",
     baslik: "İndirim Onayı",
-    ozet: "Danışanlarınızın video izleyerek kazandığı ürün indirimlerini eczanenizde kullandığı anda gelen satış ve indirim onay kuyruğunu yönetmenizi sağlar.",
+    ozet: "Üyeler tamamladıkları yayınlardan kazandıkları puanları, ürünleri satın alırken indirim olarak kullanılabilir. Size iletilen indirim taleplerini bu sayfada yönetebilir ve işlem geçmişlerinizi görebilirsiniz.",
     maddeler: [],
   },
 

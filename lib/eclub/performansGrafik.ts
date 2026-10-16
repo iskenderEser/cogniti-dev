@@ -19,7 +19,7 @@ export function eclubPerformansGrafikSecenegi(veri: PerformansVerisi, tur: Perfo
       series: [
         ...ECLUB_PERFORMANS_TURLERI.map((t,i) => ({ id: `${t.tur}-cizgi`, type: "line", data: veri.donem.haftalar.map(h => [h.hafta,i]), symbol: "none", silent: true, z: 1,
           lineStyle: { color: t.renk, opacity: .17, width: 3 },
-          ...(i === 0 ? { markLine: { silent: true, symbol: "none", lineStyle: { color: "#9eb6d3", type: "dashed", width: 1.5 },
+          ...(i === 0 && Date.parse(veri.donem.simdi) >= Date.parse(veri.donem.baslangic) && Date.parse(veri.donem.simdi) < Date.parse(veri.donem.bitisHaric) ? { markLine: { silent: true, symbol: "none", lineStyle: { color: "#9eb6d3", type: "dashed", width: 1.5 },
             label: { show: true, formatter: "Bu hafta", position: "end", color: "#6f89aa", fontSize: 10 }, data: [{ xAxis: veri.donem.aktifHafta }] } } : {}) })),
         ...ECLUB_PERFORMANS_TURLERI.map((t,i) => ({ id: t.tur, type: "scatter", z: 3,
           data: veri.satirlar.find(s => s.tur === t.tur)!.haftalar.map(h => ({ value: [h.hafta,i,h.puan], symbolSize: tur === t.tur && hafta === h.hafta ? 17 : h.puan ? 11 : 7,

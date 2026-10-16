@@ -23,6 +23,7 @@ export function EclubKisiBaslik({
   ikon: Icon,
   baslik,
   aciklama,
+  baslikAlti,
   aksiyon,
   altAksiyon,
   ekKontroller,
@@ -33,6 +34,7 @@ export function EclubKisiBaslik({
   ikon: LucideIcon;
   baslik: string;
   aciklama: string;
+  baslikAlti?: ReactNode;
   aksiyon?: ReactNode;
   altAksiyon?: ReactNode;
   ekKontroller?: ReactNode;
@@ -50,7 +52,10 @@ export function EclubKisiBaslik({
         <h1 className={baslikClassName}>{baslik}</h1>
         {rehberAnahtar && <SayfaRehberi anahtar={rehberAnahtar} className="ml-1.5 -translate-y-1" />}
       </div>}
-      aciklama={<p className="mt-1 max-w-2xl text-xs font-semibold leading-5 text-[#8190a3]">{aciklama}</p>}
+      aciklama={<div className="mt-1 max-w-2xl">
+        {baslikAlti}
+        <p className="text-xs font-semibold leading-5 text-[#8190a3]">{aciklama}</p>
+      </div>}
       aksiyon={aksiyon}
       altAksiyon={altAksiyon}
       ekKontroller={ekKontroller}
@@ -65,6 +70,9 @@ export function EclubKisiStat({
   etiket,
   deger,
   detay,
+  detayKirilsin = false,
+  onClick,
+  secili = false,
   renk = "#237ac8",
   zemin = "#edf6fd",
 }: {
@@ -72,23 +80,27 @@ export function EclubKisiStat({
   etiket: string;
   deger: string | number;
   detay?: string;
+  detayKirilsin?: boolean;
+  onClick?: () => void;
+  secili?: boolean;
   renk?: string;
   zemin?: string;
 }) {
-  return (
-    <article className="rounded-2xl border border-[#dfe7f1] bg-white p-3.5 shadow-[0_5px_16px_rgba(31,55,90,0.035)]">
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <div className="text-[10px] font-extrabold uppercase tracking-[0.05em] text-[#8190a3]">{etiket}</div>
-          <div className="mt-1 text-2xl font-black tabular-nums" style={{ color: renk }}>{deger}</div>
-          {detay && <div className="mt-0.5 truncate text-[10px] font-semibold text-[#8796a8]">{detay}</div>}
-        </div>
-        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl" style={{ color: renk, background: zemin }}>
-          <Icon size={16} />
-        </span>
+  const icerik = (
+    <div className="flex items-start justify-between gap-3">
+      <div className="min-w-0">
+        <div className="text-[10px] font-extrabold uppercase tracking-[0.05em] text-[#8190a3]">{etiket}</div>
+        <div className="mt-1 text-2xl font-black tabular-nums" style={{ color: renk }}>{deger}</div>
+        {detay && <div className={`mt-0.5 text-[10px] font-semibold text-[#8796a8] ${detayKirilsin ? "break-words" : "truncate"}`}>{detay}</div>}
       </div>
-    </article>
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl" style={{ color: renk, background: zemin }}>
+        <Icon size={16} />
+      </span>
+    </div>
   );
+  const className = `w-full rounded-2xl border bg-white p-3.5 shadow-[0_5px_16px_rgba(31,55,90,0.035)] ${secili ? "border-[#237ac8] ring-2 ring-[#237ac8]/20" : "border-[#dfe7f1]"}`;
+  if (onClick) return <button type="button" onClick={onClick} aria-pressed={secili} className={`${className} cursor-pointer text-left transition hover:border-[#87bde8] hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#237ac8]`}>{icerik}</button>;
+  return <article className={className}>{icerik}</article>;
 }
 
 export function EclubKisiBosDurum({ ikon: Icon, baslik, aciklama }: {

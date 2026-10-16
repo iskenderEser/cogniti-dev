@@ -23,7 +23,14 @@ globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 const { createRoot } = await import("react-dom/client");
 const noopIcon = () => React.createElement("span");
 const donem = performans.eclubPerformansDonemi(new Date("2026-10-11T12:00:00Z"));
-const data = performans.eclubPerformansiHesapla({ donem, izlemeler: [{ izleme_id: "i", kisi_id: "k", yayin_id: "y", arac_turu: "podcast", izleme_bitis: donem.haftalar[1].baslangic, tamamlandi_mi: true }], puanlar: [{ kazanilan_puan_id: "p", izleme_id: "i", kisi_id: "k", yayin_id: "y", eczane_id: "e", puan_turu: "izleme", puan: 60 }, { kazanilan_puan_id: "c", izleme_id: "i", kisi_id: "k", yayin_id: "y", eczane_id: "e", puan_turu: "cevaplama", puan: 20 }], kayiplar: [], baglar: [], eczaneIdler: ["e"], yayinIdler: ["y"], uyeler: [{ kisi_id: "k", ad: "Ayşe", soyad: "Yılmaz" }] });
+const data = performans.eclubPerformansiHesapla({ donem, izlemeler: [{ izleme_id: "i", kisi_id: "k", yayin_id: "y", arac_turu: "podcast", izleme_bitis: donem.haftalar[1].baslangic, tamamlandi_mi: true }, { izleme_id: "i2", kisi_id: "k", yayin_id: "y", arac_turu: "video", izleme_bitis: donem.haftalar[5].baslangic, tamamlandi_mi: true }], puanlar: [{ kazanilan_puan_id: "p", izleme_id: "i", kisi_id: "k", yayin_id: "y", eczane_id: "e", puan_turu: "izleme", puan: 60 }, { kazanilan_puan_id: "c", izleme_id: "i", kisi_id: "k", yayin_id: "y", eczane_id: "e", puan_turu: "cevaplama", puan: 20 }, { kazanilan_puan_id: "p2", izleme_id: "i2", kisi_id: "k", yayin_id: "y", eczane_id: "e", puan_turu: "izleme", puan: 50 }], kayiplar: [], baglar: [], eczaneIdler: ["e"], yayinIdler: ["y"], uyeler: [{ kisi_id: "k", ad: "Ayşe", soyad: "Yılmaz" }] });
+const gecmisDonem = performans.eclubPerformansDonemi(new Date("2026-10-11T12:00:00Z"), "2026-P4");
+const gecmisData = performans.eclubPerformansiHesapla({
+  donem: gecmisDonem,
+  izlemeler: ["k", "k2"].map((kisi_id, i) => ({ izleme_id: `eski${i}`, kisi_id, yayin_id: "y", arac_turu: "podcast", izleme_bitis: gecmisDonem.haftalar[1].baslangic, tamamlandi_mi: true })),
+  puanlar: ["k", "k2"].map((kisi_id, i) => ({ kazanilan_puan_id: `eski-p${i}`, izleme_id: `eski${i}`, kisi_id, yayin_id: "y", eczane_id: "e", puan_turu: "izleme" as const, puan: i ? 30 : 20 })),
+  kayiplar: [], baglar: [], eczaneIdler: ["e"], yayinIdler: ["y"], uyeler: [{ kisi_id: "k", ad: "Ayşe", soyad: "Yılmaz" }, { kisi_id: "k2", ad: "Adil", soyad: "Güçlü" }],
+});
 
 test("grafik seçimi üye katkısını açar; otomatik güncelleme seçimleri korur ve ürün değişiminde eski veri gizlenir", async () => {
   const portal = document.createElement("div"), container = document.createElement("div"); document.body.append(portal,container);
@@ -31,7 +38,8 @@ test("grafik seçimi üye katkısını açar; otomatik güncelleme seçimleri ko
   const oldFetch = globalThis.fetch;
   globalThis.fetch = (async (url: string) => {
     calls++; assert.ok(url.includes(`urun_id=${urunId}`));
-    return Response.json(fail ? { hata: "Okuma başarısız" } : data, { status: fail ? 500 : 200 });
+    const seciliDonem = new URL(url, "http://localhost").searchParams.get("donem");
+    return Response.json(fail ? { hata: "Okuma başarısız" } : seciliDonem === "2026-P4" ? gecmisData : data, { status: fail ? 500 : 200 });
   }) as typeof fetch;
   const modules: Record<string, unknown> = {
     react: React, "react/jsx-runtime": jsxRuntime, "react-dom": ReactDOM,
@@ -58,10 +66,13 @@ test("grafik seçimi üye katkısını açar; otomatik güncelleme seçimleri ko
   const draw = () => root.render(React.createElement(exports.default!));
   try {
     await React.act(async () => { draw(); });
-    assert.match(container.textContent!,/Bu dönemde kazanılan puan80/);
-    assert.equal(container.querySelector("select, [role=combobox]"),null);
+    assert.match(container.textContent!,/Bu dönemde kazanılan puan130/);
+    assert.ok(container.querySelector('select[aria-label="Performans dönemi"]'));
+    assert.equal(container.querySelectorAll('select[aria-label="Performans dönemi"] option').length, 6);
     assert.equal(container.textContent!.includes("Yayın türü"),false);
-    assert.match(container.querySelector("h3")!.textContent!,/Video · 2. Hafta/);
+    assert.match(container.querySelector("h3")!.textContent!,/Video · 6. Hafta/);
+    assert.match(container.querySelector('[role="rowgroup"]')!.textContent!,/Ayşe Yılmaz/);
+    assert.match(container.querySelector('[role="rowgroup"]')!.textContent!,/50 puan/);
     await React.act(async () => { [...container.querySelectorAll("button")].find(b => b.textContent === "Podcast noktasını seç")!.click(); });
     assert.match(container.querySelector("h3")!.textContent!,/Podcast · 2. Hafta/);
     assert.match(container.querySelector('[role="rowgroup"]')!.textContent!,/Ayşe Yılmaz/);
@@ -77,6 +88,19 @@ test("grafik seçimi üye katkısını açar; otomatik güncelleme seçimleri ko
     assert.match(container.querySelector("h3")!.textContent!,/Podcast · 2. Hafta/);
     assert.equal(calls,2);
     assert.equal(portal.querySelector("button"),null);
+    const donemiSec = async (kod: string) => React.act(async () => {
+      const liste = container.querySelector('select[aria-label="Performans dönemi"]') as HTMLSelectElement;
+      liste.value = kod;
+      liste.dispatchEvent(new win.Event("change", { bubbles: true }));
+    });
+    await donemiSec("2026-P4");
+    assert.deepEqual([...container.querySelectorAll('[aria-label="Dönem performansı"] strong')].map(el => el.textContent), ["50", "2", "2"]);
+    await React.act(async () => { [...container.querySelectorAll("button")].find(b => b.textContent === "Podcast noktasını seç")!.click(); });
+    assert.equal(container.querySelectorAll('[role="rowgroup"] [role="row"]').length, 2);
+    assert.equal(performansOnbellek.performansOnbelleginiOku("performans-arayuz", "f", "u1", "2026-P4")?.ozet.puan, 50);
+    assert.equal(performansOnbellek.performansOnbelleginiOku("performans-arayuz", "f", "u1", "2026-P5")?.ozet.puan, 130);
+    await donemiSec("2026-P5");
+    assert.deepEqual([...container.querySelectorAll('[aria-label="Dönem performansı"] strong')].map(el => el.textContent), ["130", "2", "1"]);
     fail = true; urunId = "u2";
     await React.act(async () => { draw(); });
     assert.equal(container.querySelector('[role="rowgroup"] [role="row"]'),null);
@@ -84,7 +108,7 @@ test("grafik seçimi üye katkısını açar; otomatik güncelleme seçimleri ko
     fail = false;
     await React.act(async () => { [...container.querySelectorAll("button")].find(b => b.textContent === "Tekrar dene")!.click(); });
     assert.equal(container.querySelector('[role="alert"]'),null);
-    assert.match(container.querySelector("h3")!.textContent!,/Video · 2. Hafta/);
+    assert.match(container.querySelector("h3")!.textContent!,/Video · 6. Hafta/);
     await React.act(async () => root.render(null));
     const eskiSaat = Date.now;
     const donusSaati = eskiSaat() + 61_000;
@@ -93,7 +117,7 @@ test("grafik seçimi üye katkısını açar; otomatik güncelleme seçimleri ko
     globalThis.fetch = (() => new Promise<Response>(r => { tamamla = r; })) as typeof fetch;
     try {
       await React.act(async () => draw());
-      assert.match(container.textContent!, /Bu dönemde kazanılan puan80/);
+      assert.match(container.textContent!, /Bu dönemde kazanılan puan130/);
       assert.equal(performansOnbellek.performansOnbelleginiOku("diger", "f", "u2"), null);
       assert.equal(performansOnbellek.performansOnbelleginiOku("performans-arayuz", "baska-firma", "u2"), null);
       assert.equal(performansOnbellek.performansOnbelleginiOku("performans-arayuz", "f", "baska-urun"), null);

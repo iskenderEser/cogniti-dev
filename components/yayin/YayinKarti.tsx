@@ -8,6 +8,7 @@ import { talepIdGoster } from "@/lib/utils/talepId";
 import type { OgrenmeAraciTuru } from "@/lib/ogrenmeAraci/tipler";
 import { AracVarsayilanKapak } from "@/components/ogrenme-araci/AracVarsayilanKapak";
 import { YayinTuruPill } from "@/components/ogrenme-araci/YayinTuruPill";
+import { EclubHoykSureCercevesi } from "@/components/eclub/EclubHoykSureCercevesi";
 
 export type YayinKartiDurumu = "yeni" | "devam" | "tamamlanan" | string;
 
@@ -45,6 +46,7 @@ export interface YayinKartiProps {
 
   // Slot ve Ek Rozetler
   solUstRozet?: ReactNode;
+  thumbnailSolUstRozet?: ReactNode;
   sagUstEkRozet?: ReactNode;
   puanYaniRozet?: ReactNode;
   baslikSagAksiyon?: ReactNode;
@@ -69,6 +71,11 @@ export interface YayinKartiProps {
   className?: string;
   ariaLabel?: string;
   kapakOncelikli?: boolean;
+  pillMetniNormal?: boolean;
+  kapsulZeminiGoster?: boolean;
+  uyariCercevesi?: boolean;
+  tamamlandiCercevesi?: boolean;
+  eclubGecenGun?: number;
 }
 
 const GUN_MS = 24 * 60 * 60 * 1000;
@@ -118,6 +125,7 @@ export function YayinKarti({
   etkilesimAktif = true,
 
   solUstRozet,
+  thumbnailSolUstRozet,
   sagUstEkRozet,
   puanYaniRozet,
   baslikSagAksiyon,
@@ -141,6 +149,11 @@ export function YayinKarti({
   className = "",
   ariaLabel,
   kapakOncelikli = false,
+  pillMetniNormal = false,
+  kapsulZeminiGoster = true,
+  uyariCercevesi = false,
+  tamamlandiCercevesi = false,
+  eclubGecenGun,
 }: YayinKartiProps) {
   const thumbnail = yayinThumbnailIstemciCoz(yayin);
 
@@ -154,19 +167,19 @@ export function YayinKarti({
       );
     } else if (yayin.durum === "yeni") {
       kapsulSegmentleri.push(
-        <span key="durum" className="font-extrabold text-blue-600">
+        <span key="durum" className={`${pillMetniNormal ? "font-normal" : "font-extrabold"} text-blue-600`}>
           Yeni
         </span>
       );
     } else if (yayin.durum === "devam") {
       kapsulSegmentleri.push(
-        <span key="durum" className="font-extrabold text-amber-600">
+        <span key="durum" className={`${pillMetniNormal ? "font-normal" : "font-extrabold"} text-amber-600`}>
           Yarım Kaldı
         </span>
       );
     } else if (yayin.durum === "tamamlanan") {
       kapsulSegmentleri.push(
-        <span key="durum" className="font-bold text-gray-700">
+        <span key="durum" className={`${pillMetniNormal ? "font-normal" : "font-bold"} text-gray-700`}>
           ✓ İzlendi
         </span>
       );
@@ -177,7 +190,7 @@ export function YayinKarti({
     kapsulSegmentleri.push(
       <span
         key="dongu"
-        className="flex items-center gap-0.5 font-bold text-[#1e3a8a]"
+        className={`flex items-center gap-0.5 ${pillMetniNormal ? "font-normal" : "font-bold"} text-[#1e3a8a]`}
         title={`${kalanGun(yayin.sonraki_tur_tarihi)} gün sonra yeniden puanlı`}
       >
         <RotateCcw className="h-2.5 w-2.5" />
@@ -188,20 +201,28 @@ export function YayinKarti({
 
   if (icerikTuruGoster && yayin.icerik_turu) {
     kapsulSegmentleri.push(
-      <span key="icerik" className="font-medium text-gray-600">
+      <span key="icerik" className={`${pillMetniNormal ? "font-normal" : "font-medium"} text-gray-600`}>
         {formatIcerikTuruKisa(yayin.icerik_turu)}
       </span>
     );
   }
 
+  const kapsulIcerigi = kapsulSegmentleri.map((seg, idx) => (
+    <React.Fragment key={idx}>
+      {idx > 0 && <span className="mx-1.5 text-gray-300 select-none">|</span>}
+      {seg}
+    </React.Fragment>
+  ));
+
   return (
     <div
-      className={`group cursor-pointer overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md ${className}`}
+      className={`group relative cursor-pointer rounded-xl ${eclubGecenGun !== undefined ? "overflow-visible" : "overflow-hidden"} ${uyariCercevesi ? "border-[2px] border-[#dc2626]" : tamamlandiCercevesi ? "border-[2px] border-[#2563eb]" : eclubGecenGun !== undefined ? "border border-transparent" : "border border-gray-200"} bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md ${className}`}
       onClick={() => onClick?.(yayin)}
       aria-label={ariaLabel}
     >
+      {eclubGecenGun !== undefined && <EclubHoykSureCercevesi gecenGun={eclubGecenGun} />}
       {/* ─── Medya Alanı (16:9 Thumbnail) ─── */}
-      <div className="relative aspect-video overflow-hidden bg-gray-100">
+      <div className={`relative aspect-video overflow-hidden bg-gray-100 ${eclubGecenGun !== undefined ? "rounded-t-xl" : ""}`}>
         {thumbnail ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -218,12 +239,19 @@ export function YayinKarti({
           />
         )}
 
+        {thumbnailSolUstRozet && (
+          <div className="pointer-events-none absolute left-1.5 top-1.5 z-10 max-w-[65%]">
+            {thumbnailSolUstRozet}
+          </div>
+        )}
+
         {/* Sağ Üst: Yayın Türü (Öğrenme Aracı) & Varsa Harici Ek Rozet */}
         <div className="absolute right-1.5 top-1.5 flex items-center gap-1 pointer-events-none">
           {yayinTuruGoster && (
             <YayinTuruPill
               tur={(yayin.arac_turu as OgrenmeAraciTuru) ?? "video"}
               boyut="kart"
+              fontNormal={pillMetniNormal}
             />
           )}
           {sagUstEkRozet}
@@ -240,22 +268,17 @@ export function YayinKarti({
         {/* Birleşik Kapsül (Durum · Döngü · İçerik Türü) */}
         {kapsulSegmentleri.length > 0 && (
           <div className="mb-2">
-            <div
-              className="inline-flex items-center rounded-full leading-tight select-none py-0.5 px-3 sm:px-2.5 text-[11px] sm:text-[9px]"
-              style={{
-                background: "rgba(0,0,0,0.04)",
-                boxShadow: "inset 0 0 0 0.5px rgba(0,0,0,0.08)",
-              }}
-            >
-              {kapsulSegmentleri.map((seg, idx) => (
-                <React.Fragment key={idx}>
-                  {idx > 0 && (
-                    <span className="mx-1.5 text-gray-300 select-none">|</span>
-                  )}
-                  {seg}
-                </React.Fragment>
-              ))}
-            </div>
+            {kapsulZeminiGoster ? (
+              <div
+                className="inline-flex items-center rounded-full leading-tight select-none py-0.5 px-3 sm:px-2.5 text-[11px] sm:text-[9px]"
+                style={{
+                  background: "rgba(0,0,0,0.04)",
+                  boxShadow: "inset 0 0 0 0.5px rgba(0,0,0,0.08)",
+                }}
+              >
+                {kapsulIcerigi}
+              </div>
+            ) : kapsulIcerigi}
           </div>
         )}
 
@@ -351,7 +374,7 @@ export function YayinKarti({
             <div className="flex shrink-0 items-center gap-1">
               {puanGoster && yayin.video_puani != null && (
                 <span
-                  className="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-extrabold text-white shadow-xs sm:px-1.5 sm:text-[9px]"
+                  className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs ${pillMetniNormal ? "font-normal" : "font-extrabold"} text-white shadow-xs sm:px-1.5 sm:text-[9px]`}
                   style={{
                     background: "linear-gradient(to right, #1e3a8a 0%, #2563eb 55%, #3b82f6 100%)",
                   }}
@@ -363,7 +386,7 @@ export function YayinKarti({
               )}
               {puanGoster && extraPuanGoster && !!yayin.extra_puan && yayin.extra_puan > 0 && (
                 <span
-                  className="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-extrabold text-white shadow-xs sm:px-1.5 sm:text-[9px]"
+                  className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs ${pillMetniNormal ? "font-normal" : "font-extrabold"} text-white shadow-xs sm:px-1.5 sm:text-[9px]`}
                   style={{
                     background: "linear-gradient(to right, #267d39 0%, #2e9143 55%, #3db856 100%)",
                   }}
