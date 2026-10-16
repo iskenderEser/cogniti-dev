@@ -13,7 +13,7 @@ export default function EczanemIndirimOnayiPage() {
   return (
     <EczanemEczaneSayfa>
       <HataMesajiContainer mesajlar={mesajlar} />
-      <EczanemSiparisKuyrugu hata={hata} basari={basari} />
+      <EczanemSiparisKuyrugu hata={hata} basari={basari} gorunumTesti={process.env.NODE_ENV === "development"} />
     </EczanemEczaneSayfa>
   );
 }

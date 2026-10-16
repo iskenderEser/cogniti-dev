@@ -3,9 +3,9 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
 const oku = (yol: string) => readFileSync(yol, "utf8");
-const sayfa = oku("app/(panel)/eczanem/eczane/danisan-yayinlari/page.tsx");
-const kart = oku("app/(panel)/eczanem/eczane/danisan-yayinlari/_components/EczaneDanisanYayinKarti.tsx");
-const panel = oku("app/(panel)/eczanem/eczane/danisan-yayinlari/_components/EczaneDanisanGonderimPaneli.tsx");
+const sayfa = oku("app/(panel)/eczanem/eczane/uye-yayinlari/page.tsx");
+const kart = oku("app/(panel)/eczanem/eczane/uye-yayinlari/_components/EczaneDanisanYayinKarti.tsx");
+const panel = oku("app/(panel)/eczanem/eczane/uye-yayinlari/_components/EczaneDanisanGonderimPaneli.tsx");
 const api = oku("app/(panel)/eczanem/eczane/api/gonderim/route.ts");
 const gonderim = oku("lib/eczanem/gonderim.ts");
 

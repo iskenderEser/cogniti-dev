@@ -66,9 +66,10 @@ test("Seçim yalnız yerel önizleme oluşturur; yayınlama, vazgeçme ve hata m
     assert.equal(container.querySelectorAll("article").length, 1);
     assert.equal(postSayisi, 0);
     assert.equal(kart().querySelector("img")?.getAttribute("src"), "/mevcut.png");
-    assert.equal(buton("Yayınla").disabled, true);
+    assert.equal(buton("Yayınlandı").disabled, true);
     await sec();
     assert.equal(postSayisi, 0);
+    assert.equal(buton("Yayınla").disabled, false);
     assert.match(kart().textContent!, /Henüz yayınlanmadı/);
     assert.match(kart().querySelector("img")!.getAttribute("src")!, /^blob:/);
     await act(async () => { buton("Vazgeç").click(); });
@@ -88,7 +89,7 @@ test("Seçim yalnız yerel önizleme oluşturur; yayınlama, vazgeçme ve hata m
     assert.equal(postSayisi, 2);
     assert.equal(kart().querySelector("img")?.getAttribute("src"), "/yeni.png");
     assert.match(container.textContent!, /Birinci Banner yayınlandı/);
-    assert.equal(buton("Yayınla").disabled, true);
+    assert.equal(buton("Yayınlandı").disabled, true);
     await sec();
     const sonTaslak = kart().querySelector("img")!.getAttribute("src")!;
     await act(async () => { root.render(createElement(BannerYonetimi, { key: "hapbilgi", firmaId: "firma-h", firmaAdi: "Hapbilgi" })); });

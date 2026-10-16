@@ -59,5 +59,5 @@ test("eczane sidebarı firma sayısından bağımsız tek Firmalar ve Yayınlar�
   assert.equal(nav[0].oglar[0].badgeKey, "cek");
   assert.deepEqual(nav[0].oglar[0].aktifYollar, ["/eclub/firma"]);
   assert.equal(nav[0].oglar[0].gate({ ...uttBaglami, eclubAcik: false }), false);
-  assert.deepEqual(nav[1].oglar.filter((o) => o.gate(uttBaglami)).map((o) => [o.etiket, o.path]), [["Danışanlarım", "/eczanem/eczane/danisanlarim"], ["Danışan Yayınları", "/eczanem/eczane/danisan-yayinlari"], ["İndirim Onayı", "/eczanem/eczane/inidirm-onayi"]]);
+  assert.deepEqual(nav[1].oglar.filter((o) => o.gate(uttBaglami)).map((o) => [o.etiket, o.path]), [["Üyeler", "/eczanem/eczane/uyeler"], ["Üye Yayınları", "/eczanem/eczane/uye-yayinlari"], ["İndirim Onayı", "/eczanem/eczane/inidirm-onayi"]]);
 });

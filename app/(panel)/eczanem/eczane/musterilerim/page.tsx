@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
 export default function EskiMusterilerimYolu() {
-  redirect("/eczanem/eczane/danisanlarim");
+  redirect("/eczanem/eczane/uyeler");
 }

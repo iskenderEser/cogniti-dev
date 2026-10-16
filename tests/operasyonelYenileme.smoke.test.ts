@@ -9,8 +9,8 @@ const sayfalar = [
   oku("app/(panel)/eczanem/yayinlar/page.tsx"),
   oku("app/(panel)/eclub/yayinlar/page.tsx"),
   oku("app/(panel)/eclub/eczanelerim/page.tsx"),
-  oku("app/(panel)/eczanem/eczane/danisan-yayinlari/page.tsx"),
-  oku("app/(panel)/eczanem/eczane/danisanlarim/page.tsx"),
+  oku("app/(panel)/eczanem/eczane/uye-yayinlari/page.tsx"),
+  oku("app/(panel)/eczanem/eczane/uyeler/page.tsx"),
 ];
 
 test("mutlu: operasyon sayfaları ortak, pasiflenebilir ve durum koruyan yenileme kullanır", () => {

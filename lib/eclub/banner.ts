@@ -29,3 +29,15 @@ export async function bannerDosyaUzantisi(dosya: File): Promise<string | null> {
 export function bannerKurulumuEksik(hata: { code?: string } | null): boolean {
   return hata?.code === "42P01" || hata?.code === "PGRST205";
 }
+
+export const ECZANEM_BANNER_TABLO = "eczanem_sayfa_bannerlari";
+export const ECZANEM_BANNER_ALANLARI = {
+  uyeler: "Üyeler Sayfası Bannerı",
+  "uye-yayinlari": "Üye Yayınları Sayfası Bannerı",
+  "indirim-onayi": "İndirim Onayı Sayfası Bannerı",
+} as const;
+export type BannerAlani = "firma" | keyof typeof ECZANEM_BANNER_ALANLARI;
+
+export function bannerAlaniGecerli(alan: string): alan is BannerAlani {
+  return alan === "firma" || Object.hasOwn(ECZANEM_BANNER_ALANLARI, alan);
+}

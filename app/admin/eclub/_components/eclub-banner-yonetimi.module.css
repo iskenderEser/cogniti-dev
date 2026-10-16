@@ -7,7 +7,7 @@
 .panel button:disabled { opacity: .5; cursor: default !important; }
 .kart { min-width: 0; padding: 14px; border: 1px solid #e5e7eb; border-radius: 10px; background: #f9fafb; }
 .kart h3 { margin: 0 0 12px; font-size: 13px; font-weight: 700; color: #374151; }
-.onizleme { aspect-ratio: 1932 / 480; min-height: 70px; display: grid; place-items: center; overflow: hidden; border: 1px dashed #d1d5db; border-radius: 8px; background: white; color: #9ca3af; font-size: 12px; }
+.onizleme { aspect-ratio: 1930 / 300; display: grid; place-items: center; overflow: hidden; border: 1px dashed #d1d5db; border-radius: 8px; background: white; color: #9ca3af; font-size: 12px; }
 .onizleme img { width: 100%; height: 100%; object-fit: contain; }
 .aksiyonlar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 .aksiyonlar label { position: relative; overflow: hidden; display: inline-flex; align-items: center; }

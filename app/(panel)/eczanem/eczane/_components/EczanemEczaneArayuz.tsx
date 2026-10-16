@@ -17,18 +17,19 @@ export function EczanemEczaneSayfa({ children }: { children: ReactNode }) {
   );
 }
 
-export function EczanemEczaneBaslik({ ikon: Icon, baslik, aciklama, aksiyon, rehberAnahtar }: {
+export function EczanemEczaneBaslik({ ikon: Icon, baslik, aciklama, aksiyon, rehberAnahtar, ustBilgiGoster = true }: {
   ikon: LucideIcon;
   baslik: string;
   aciklama: string;
   aksiyon?: ReactNode;
   rehberAnahtar?: string;
+  ustBilgiGoster?: boolean;
 }) {
   return (
     <SayfaYenileBasligi
-      ustBilgi={<p className="flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-[0.18em] text-[#4f7fb7]">
+      ustBilgi={ustBilgiGoster ? <p className="flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-[0.18em] text-[#4f7fb7]">
         <Icon className="size-3.5" /> Eczanem
-      </p>}
+      </p> : undefined}
       baslik={<div className="inline-flex items-center">
         <h1 className="mt-1 text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]">{baslik}</h1>
         {rehberAnahtar && <SayfaRehberi anahtar={rehberAnahtar} className="ml-1.5 -translate-y-1.5" />}

@@ -3,7 +3,7 @@
   width: 100%;
   min-width: 0;
   flex-shrink: 0;
-  aspect-ratio: 1932 / 480;
+  aspect-ratio: 1930 / 300;
   overflow: hidden;
   border: 1px solid rgba(148, 163, 184, 0.2);
   border-radius: 18px;
@@ -17,7 +17,7 @@
   height: 100%;
   background: #f7f9fc;
 }
-.gorsel img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.gorsel img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .cizgiler { display: flex; justify-content: center; gap: 6px; }
 .secim { display: grid; place-items: center; width: 44px; height: 28px; padding: 0; background: transparent; border: 0; cursor: pointer; }
 .secim span { width: 32px; height: 3px; border-radius: 9999px; background: #cbd5e1; transition: background 150ms ease; }
@@ -26,5 +26,3 @@
 .secim:focus-visible { outline: 2px solid #237ac8; outline-offset: -2px; border-radius: 6px; }
 @media (max-width: 767px) { .secim { height: 44px; } }
 @media (prefers-reduced-motion: reduce) { .serit, .secim span { transition: none; } }
-/* HBLigi: geniş ekranda 1932×480 görsel alanının 2/3 genişliği dış yüksekliği belirler. */
-@media (min-width: 768px) { .banner { aspect-ratio: 1932 / 320; } }

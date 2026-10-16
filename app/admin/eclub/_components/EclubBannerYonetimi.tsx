@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { logoGorseliniOptimizeEt } from "@/lib/firma/logoOptimizasyonIstemci";
-import { bannerAdedi, hapbilgiBannerFirmasi, type EclubBanner } from "@/lib/eclub/banner";
+import { bannerAdedi, hapbilgiBannerFirmasi, ECZANEM_BANNER_ALANLARI, type BannerAlani, type EclubBanner } from "@/lib/eclub/banner";
 import { btnBase, RENK_BORDO } from "../../_constants";
 import styles from "./eclub-banner-yonetimi.module.css";
 
@@ -10,7 +10,7 @@ const BASLIKLAR = ["Birinci Banner", "İkinci Banner", "Üçüncü Banner", "Dö
 const bannerButonu = { ...btnBase, height: 32, padding: "0 12px" };
 type BannerTaslagi = { dosya: File; url: string };
 
-export default function EclubBannerYonetimi({ firmaId, firmaAdi }: { firmaId: string; firmaAdi: string }) {
+export default function EclubBannerYonetimi({ firmaId, firmaAdi, alan = "firma" }: { firmaId: string; firmaAdi: string; alan?: BannerAlani }) {
   const [bannerlar, setBannerlar] = useState<EclubBanner[]>([]);
   const [hazir, setHazir] = useState(false);
   const [islem, setIslem] = useState<number | null>(null);
@@ -20,7 +20,8 @@ export default function EclubBannerYonetimi({ firmaId, firmaAdi }: { firmaId: st
   const [taslaklar, setTaslaklar] = useState<Record<number, BannerTaslagi>>({});
   const [acikAlanlar, setAcikAlanlar] = useState<number[]>([]);
   const taslakRef = useRef<Record<number, BannerTaslagi>>({});
-  const azamiAdet = bannerAdedi(firmaAdi);
+  const azamiAdet = alan === "firma" ? bannerAdedi(firmaAdi) : 3;
+  const baslik = alan === "firma" ? (hapbilgiBannerFirmasi(firmaAdi) ? "E-Club Ana Sayfa Bannerları" : `${firmaAdi} · E-Club · Firma ve Yayınlar Bannerı`) : `${firmaAdi} · Eczanem · ${ECZANEM_BANNER_ALANLARI[alan]}`;
   const gorunenSiralar = [...new Set([...bannerlar.map((b) => b.sira), ...acikAlanlar])].sort((a, b) => a - b);
   const bosAlanVar = gorunenSiralar.length < azamiAdet;
 
@@ -64,7 +65,7 @@ export default function EclubBannerYonetimi({ firmaId, firmaAdi }: { firmaId: st
 
   useEffect(() => {
     const controller = new AbortController();
-    void fetch(`/admin/api/eclub/bannerlar?firma_id=${encodeURIComponent(firmaId)}`, { signal: controller.signal, cache: "no-store" })
+    void fetch(`/admin/api/eclub/bannerlar?firma_id=${encodeURIComponent(firmaId)}&alan=${alan}`, { signal: controller.signal, cache: "no-store" })
       .then(async (res) => {
         const veri = await res.json();
         if (!res.ok) throw new Error(veri.hata ?? "Bannerlar yüklenemedi.");
@@ -77,7 +78,7 @@ export default function EclubBannerYonetimi({ firmaId, firmaAdi }: { firmaId: st
         if (!controller.signal.aborted) { setMesaj(err.message); setHata(true); }
       });
     return () => controller.abort();
-  }, [firmaId, deneme]);
+  }, [firmaId, alan, deneme]);
 
   async function yayinla(sira: number) {
     const taslak = taslakRef.current[sira];
@@ -85,9 +86,10 @@ export default function EclubBannerYonetimi({ firmaId, firmaAdi }: { firmaId: st
     setIslem(sira);
     setMesaj("");
     try {
-      const optimize = await logoGorseliniOptimizeEt(taslak.dosya, { maxWidth: 1932, maxHeight: 480, kalite: 0.9 });
+      const optimize = await logoGorseliniOptimizeEt(taslak.dosya, { maxWidth: 1930, maxHeight: 300, kalite: 0.9 });
       const form = new FormData();
       form.append("firma_id", firmaId);
+      form.append("alan", alan);
       form.append("sira", String(sira));
       form.append("dosya", optimize);
       const res = await fetch("/admin/api/eclub/bannerlar", { method: "POST", body: form });
@@ -105,7 +107,7 @@ export default function EclubBannerYonetimi({ firmaId, firmaAdi }: { firmaId: st
     setIslem(sira);
     setMesaj("");
     try {
-      const res = await fetch(`/admin/api/eclub/bannerlar?firma_id=${encodeURIComponent(firmaId)}&sira=${sira}`, { method: "DELETE" });
+      const res = await fetch(`/admin/api/eclub/bannerlar?firma_id=${encodeURIComponent(firmaId)}&alan=${alan}&sira=${sira}`, { method: "DELETE" });
       const veri = await res.json();
       if (!res.ok) throw new Error(veri.hata ?? "Banner kaldırılamadı.");
       setBannerlar((onceki) => onceki.filter((b) => b.sira !== sira));
@@ -115,16 +117,16 @@ export default function EclubBannerYonetimi({ firmaId, firmaAdi }: { firmaId: st
     finally { setIslem(null); }
   }
 
-  return <section className={styles.panel} aria-label={`${firmaAdi} E-Club banner yönetimi`}>
-    <h2>{firmaAdi} · E-Club Bannerları</h2>
-    <p>Görseli seçip önizlemeyi kontrol edin. Yalnız Yayınla butonuna bastığınızda {firmaAdi} firma sayfasında{hapbilgiBannerFirmasi(firmaAdi) ? " ve E-Club ana sayfasında" : ""} görünür.</p>
+  return <section className={styles.panel} aria-label={baslik}>
+    <h2>{baslik}</h2>
+    <p>{alan !== "firma" ? "Görseli seçip önizlemeyi kontrol edin. Bu sayfanın bannerını kaydetmek için Yayınla butonunu kullanın." : <>Görseli seçip önizlemeyi kontrol edin. Yalnız Yayınla butonuna bastığınızda {firmaAdi} firma sayfasında{hapbilgiBannerFirmasi(firmaAdi) ? " ve E-Club ana sayfasında" : ""} görünür.</>}</p>
     <div className={styles.kartlar}>
       {gorunenSiralar.map((sira) => {
         const baslik = BASLIKLAR[sira - 1];
         const banner = bannerlar.find((b) => b.sira === sira);
         const taslak = taslaklar[sira];
         const onizlemeUrl = taslak?.url ?? banner?.url;
-        const id = `eclub-banner-${firmaId}-${sira}`;
+        const id = `eclub-banner-${firmaId}-${alan}-${sira}`;
         return <article key={sira} className={styles.kart}>
           <h3>{baslik}</h3>
           <div className={styles.onizleme}>
@@ -139,7 +141,7 @@ export default function EclubBannerYonetimi({ firmaId, firmaAdi }: { firmaId: st
                 onChange={(event) => { const dosya = event.target.files?.[0]; if (dosya) gorselSec(sira, dosya); event.target.value = ""; }} />
             </label>
             <button type="button" style={{ ...bannerButonu, background: RENK_BORDO, color: "white" }}
-              disabled={!hazir || !taslak || islem !== null} onClick={() => void yayinla(sira)}>{islem === sira ? "İşleniyor…" : "Yayınla"}</button>
+              disabled={!hazir || !taslak || islem !== null} onClick={() => void yayinla(sira)}>{islem === sira ? "İşleniyor…" : banner && !taslak ? "Yayınlandı" : "Yayınla"}</button>
             {(taslak || !banner) && <button type="button" style={bannerButonu} disabled={islem !== null} onClick={() => taslagiSil(sira)}>Vazgeç</button>}
             {banner && !taslak && <button type="button" style={bannerButonu} disabled={islem !== null} onClick={() => void kaldir(sira)}>Kaldır</button>}
           </div>
@@ -150,7 +152,7 @@ export default function EclubBannerYonetimi({ firmaId, firmaAdi }: { firmaId: st
       <button type="button" style={{ ...bannerButonu, color: RENK_BORDO }} disabled={!hazir || islem !== null || !bosAlanVar} onClick={yeniAlanAc}>Banner Ekle</button>
       <span>En fazla {azamiAdet} banner</span>
     </div>
-    <p className={styles.not}>Önerilen görsel ölçüsü: En 1932 px × Boy 480 px</p>
+    <p className={styles.not}>Önerilen görsel ölçüsü: En 1930 px × Boy 300 px</p>
     <p className={styles.not}>PNG, JPEG veya WebP · Görseller yüklenirken küçültülür · En fazla 5 MB</p>
     {mesaj && <p role={hata ? "alert" : "status"} className={hata ? styles.hata : styles.basari}>{mesaj}</p>}
     {!hazir && hata && <button type="button" style={bannerButonu} onClick={() => setDeneme((n) => n + 1)}>Tekrar Dene</button>}

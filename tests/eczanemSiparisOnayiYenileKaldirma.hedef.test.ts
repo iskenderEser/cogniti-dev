@@ -21,7 +21,7 @@ const { createRoot } = await import("react-dom/client");
 const { default: SiparisKuyrugu } = await import("@/app/(panel)/eczanem/eczane/_components/EczanemSiparisKuyrugu");
 
 const siparis = {
-  siparis_id: "test-siparis", musteri_maskeli: "••• ••• 1234", urun_adi: "Test Ürünü",
+  siparis_id: "test-siparis", musteri_bas_harfleri: "T. M.", musteri_maskeli: "••• ••• 1234", urun_adi: "Test Ürünü",
   adet: 1, kullanilan_puan: 100, indirim_tl: 10, satis_fiyati: 50, indirimli_fiyat: 40,
   durum: "bekliyor", islem_kodu: null, onay_tarihi: null, karar_tarihi: null,
   islem_yapan: null, sonuc_durumu: "bekliyor", created_at: "2026-10-10T10:00:00Z",
@@ -36,7 +36,7 @@ const veri = (tamamlandi = false) => ({
   },
 });
 
-async function kur(onFetch: typeof fetch) {
+async function kur(onFetch: typeof fetch, gorunumTesti = false) {
   const oncekiFetch = globalThis.fetch;
   const oncekiInterval = win.setInterval;
   const oncekiClear = win.clearInterval;
@@ -57,6 +57,7 @@ async function kur(onFetch: typeof fetch) {
     await act(async () => root.render(createElement(SiparisKuyrugu, {
       hata: (mesaj: string) => { hatalar.push(mesaj); },
       basari: (mesaj: string) => { basarilar.push(mesaj); },
+      gorunumTesti,
     })));
   } catch (error) {
     await act(async () => root.unmount()); host.remove();
@@ -68,6 +69,11 @@ async function kur(onFetch: typeof fetch) {
     async tikla(metin: string) {
       const buton = [...document.querySelectorAll("button")].find((b) => b.textContent?.replace(/\s+/g, "") === metin.replace(/\s+/g, ""));
       assert.ok(buton, `Buton bulunamadı: ${metin}. Mevcut: ${[...document.querySelectorAll("button")].map((b) => b.textContent).join(" | ")}`);
+      await act(async () => buton.click());
+    },
+    async sonButonaTikla(metin: string) {
+      const buton = [...document.querySelectorAll("button")].filter((b) => b.textContent?.replace(/\s+/g, "") === metin.replace(/\s+/g, "")).at(-1);
+      assert.ok(buton, `Buton bulunamadı: ${metin}`);
       await act(async () => buton.click());
     },
     async otomatikYenile() { assert.ok(otomatik); await act(async () => otomatik!()); },
@@ -97,7 +103,7 @@ test("Yenile olmadan onay doğru POST'u gönderir, listeyi günceller ve otomati
   });
   try {
     assert.ok(![...ekran.host.querySelectorAll("button")].some((b) => b.textContent?.trim() === "Yenile"));
-    await ekran.tikla("Onayla");
+    await ekran.tikla("Onay");
     assert.equal(istekler.filter((i) => i === "POST").length, 0, "Onay penceresi açılması işlem yapmamalı.");
     await ekran.tikla("Siparişi onayla");
     assert.deepEqual(istekler, ["GET", "POST", "GET"]);
@@ -121,7 +127,7 @@ test("Onay hatasında sipariş korunur; okuma hatası Tekrar dene ile giderilir"
     return Response.json(veri());
   });
   try {
-    await ekran.tikla("Onayla"); await ekran.tikla("Siparişi onayla");
+    await ekran.tikla("Onay"); await ekran.tikla("Siparişi onayla");
     assert.deepEqual(ekran.hatalar, ["Onay reddedildi."]);
     assert.equal(ekran.basarilar.length, 0);
     assert.match(ekran.host.textContent ?? "", /Test Ürünü/);
@@ -132,5 +138,39 @@ test("Onay hatasında sipariş korunur; okuma hatası Tekrar dene ile giderilir"
     await ekran.tikla("Tekrar dene");
     assert.doesNotMatch(ekran.host.textContent ?? "", /Liste alınamadı/);
     assert.match(ekran.host.textContent ?? "", /Test Ürünü/);
+  } finally { await ekran.kapat(); }
+});
+
+test("(F) örnekleri onaylamak veya reddetmek gerçek sipariş isteği göndermez", async () => {
+  const istekler: string[] = [];
+  const ekran = await kur(async (_url, init) => {
+    istekler.push(init?.method ?? "GET");
+    return Response.json(veri(true));
+  }, true);
+  try {
+    assert.match(ekran.host.textContent ?? "", /Örnek Ürün A\s*\(F\)/);
+    assert.match(ekran.host.textContent ?? "", /Örnek Ürün D\s*\(F\)/);
+    assert.match(ekran.host.textContent ?? "", /Örnek Ürün E\s*\(F\)/);
+    assert.match(ekran.host.textContent ?? "", /Örnek Ürün F\s*\(F\)/);
+    assert.match(ekran.host.textContent ?? "", /gerçek sipariş veya puan oluşturmaz/);
+    const basliklar = [...ekran.host.querySelectorAll("thead th")].map((baslik) => baslik.textContent?.trim());
+    assert.deepEqual(basliklar, ["Ürün adı", "Satış fiyatı", "ÜYE", "Satış tarihi", "Satılan kutu adedi", "Toplam tutar", "Kullanılan puan", "İndirim tutarı", "İndirimli satış fiyatı", "İşlem"]);
+    const ornekSatir = [...ekran.host.querySelectorAll("tbody tr")].find((satir) => satir.textContent?.includes("Örnek Ürün A"));
+    assert.ok(ornekSatir);
+    assert.match(ornekSatir.textContent ?? "", /A\. Y\..*0101/);
+    assert.match(ornekSatir.textContent ?? "", /360,00/);
+    assert.match(ornekSatir.textContent ?? "", /320,00/);
+    await ekran.tikla("Onay");
+    await ekran.tikla("Siparişi onayla");
+    assert.deepEqual(istekler, ["GET"]);
+    assert.match(ekran.host.textContent ?? "", /Onay Bekleyenler 3/);
+    await ekran.tikla("Geçmiş");
+    assert.match(ekran.host.textContent ?? "", /ORNEK-001/);
+    await ekran.tikla("Örnekleri sıfırla");
+    await ekran.tikla("Onay Bekleyenler 4");
+    await ekran.tikla("İptal");
+    await ekran.sonButonaTikla("Talebi iptal et");
+    assert.deepEqual(istekler, ["GET"]);
+    assert.equal(ekran.hatalar.length, 0);
   } finally { await ekran.kapat(); }
 });

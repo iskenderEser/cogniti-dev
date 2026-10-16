@@ -237,6 +237,11 @@ export default function AdminPanel() {
                     m4NotuGoster={false}
                   />
                   <EclubBannerYonetimi key={f.firma_id} firmaId={f.firma_id} firmaAdi={f.firma_adi} />
+                  {f.firma_adi.trim().toLowerCase() !== "hapbilgi" && <>
+                    <EclubBannerYonetimi key={`${f.firma_id}-uyeler`} firmaId={f.firma_id} firmaAdi={f.firma_adi} alan="uyeler" />
+                    <EclubBannerYonetimi key={`${f.firma_id}-uye-yayinlari`} firmaId={f.firma_id} firmaAdi={f.firma_adi} alan="uye-yayinlari" />
+                    <EclubBannerYonetimi key={`${f.firma_id}-indirim-onayi`} firmaId={f.firma_id} firmaAdi={f.firma_adi} alan="indirim-onayi" />
+                  </>}
                   <EclubYonetimPaneli hata={admin.hata} basari={admin.basari} />
                 </div>
               )}

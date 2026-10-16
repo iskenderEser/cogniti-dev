@@ -1022,13 +1022,13 @@ Bu envanter; bağımlılıkları (`node_modules`), derleme ve önbellek çıktı
 |---|:---:|---|
 | `route.ts` | API / Route Handler | `/eczanem/eczane/api/siparisler` uç noktasında GET, POST isteklerini işler; Eczanem için eczane siparişler sürecini gerekli kimlik, yetki ve girdi doğrulamalarıyla yürütür. |
 
-### 📁 app/(panel)/eczanem/eczane/danisan-yayinlari/
+### 📁 app/(panel)/eczanem/eczane/uye-yayinlari/
 
 | Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
 |---|:---:|---|
-| `page.tsx` | UI / React | `/eczanem/eczane/danisan-yayinlari` rotasında danışanlara yayın gönderim arayüzünü sunan Next.js sayfa bileşenidir. |
+| `page.tsx` | UI / React | `/eczanem/eczane/uye-yayinlari` rotasında üyelere yayın gönderim arayüzünü sunan Next.js sayfa bileşenidir. |
 
-### 📁 app/(panel)/eczanem/eczane/danisanlarim/
+### 📁 app/(panel)/eczanem/eczane/uyeler/
 
 | Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
 |---|:---:|---|

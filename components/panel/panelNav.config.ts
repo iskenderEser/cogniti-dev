@@ -217,8 +217,8 @@ export function eclubKisiNavOlustur(firmalar: EclubGezinmeFirmasi[]): NavGrup[] 
   {
     baslik: "Eczanem",
     oglar: [
-      { etiket: "Danışanlarım",     path: "/eczanem/eczane/danisanlarim", gate: (c) => c.eczanemAcik },
-      { etiket: "Danışan Yayınları", path: "/eczanem/eczane/danisan-yayinlari", badgeKey: "eczanem_video_gonderilecek", gate: (c) => c.eczanemAcik },
+      { etiket: "Üyeler",          path: "/eczanem/eczane/uyeler", gate: (c) => c.eczanemAcik },
+      { etiket: "Üye Yayınları",    path: "/eczanem/eczane/uye-yayinlari", badgeKey: "eczanem_video_gonderilecek", gate: (c) => c.eczanemAcik },
       { etiket: "İndirim Onayı",    path: "/eczanem/eczane/inidirm-onayi", badgeKey: "eczanem_siparis_bekleyen", gate: (c) => c.eczanemAcik },
     ],
   },

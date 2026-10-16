@@ -171,8 +171,8 @@ test("E-Club: VideoRafi mobilde 2 kartla başlar, 7 karta açılır, firma deği
   assert.equal(baslangicKartlari.length, 2, "Mobilde başlangıçta 2 kart olmalı");
   assert.match(baslangicKartlari[0].className, /w-full/, "Mobilde kart w-full olmalı");
 
-  // 2. Kalan gün ve oynat rozetleri görünmeli
-  assert.match(mobilKapsayici.textContent ?? "", /10 gün/, "Öneri kalan gün rozeti görünmeli");
+  // 2. Kalan gün bilgisi HOYK üzerinde gösterilmemeli.
+  assert.doesNotMatch(mobilKapsayici.textContent ?? "", /10 gün/, "Kalan gün rozeti HOYK üzerinde görünmemeli");
 
   // 3. Daha Fazla Göster ile 7 karta açılmalı
   const devamBtn = Array.from(mobilKapsayici.querySelectorAll("button")).find((b) =>
