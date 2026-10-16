@@ -131,7 +131,7 @@ export function YayinOnayModal({ bekleyen, onIptal, onYayinla }: {
             style={{ fontFamily: "'Nunito', sans-serif" }}>İptal</button>
           <button type="button" onClick={onYayinla}
             className="px-4 py-2 rounded-lg border-none text-white text-xs font-semibold cursor-pointer"
-            style={{ background: "#56aeff", fontFamily: "'Nunito', sans-serif" }}>Yayınla</button>
+            style={{ background: "#237ac8", fontFamily: "'Nunito', sans-serif" }}>Yayınla</button>
         </div>
       </div>
     </div>

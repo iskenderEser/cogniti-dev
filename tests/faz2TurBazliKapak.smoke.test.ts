@@ -40,7 +40,7 @@ test("Faz 2 dağıtım ve öneri yüzeyleri ortak çözümleyici ile tür bazlı
 
   const dosyalar = [
     "app/(panel)/eczanem/yayinlar/_components/EczanemYayinGonderimKarti.tsx",
-    "app/(panel)/eczanem/eczane/danisan-yayinlari/_components/EczaneDanisanYayinKarti.tsx",
+    "app/(panel)/eczanem/eczane/uye-yayinlari/_components/EczaneDanisanYayinKarti.tsx",
     "app/(panel)/oneriler/_components/BmOneriTakibi.tsx",
     "app/(panel)/oneriler/_components/TmOneriTakibi.tsx",
     "components/ana-sayfa/SahaVideoRaflari.tsx",

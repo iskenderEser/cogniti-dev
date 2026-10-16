@@ -75,7 +75,7 @@ export function HazirVideoYukleme({ yuzde, onYukle, ogrenmeAraciTuru }: Props) {
           disabled={!bekleyen || yukleniyor}
           className="text-white border-none rounded-lg px-5 py-2 text-xs font-semibold cursor-pointer"
           style={{
-            background: "#56aeff",
+            background: "#237ac8",
             opacity: !bekleyen || yukleniyor ? 0.5 : 1,
             fontFamily: "'Nunito', sans-serif",
           }}

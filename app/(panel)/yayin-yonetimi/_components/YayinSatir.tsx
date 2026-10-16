@@ -209,7 +209,7 @@ export function YayinSatir({
           {planlandi && onPlanIslem ? (
             <div className="grid gap-2">
               <button type="button" onClick={() => onPlanIslem(y.yayin_id, "hemen_yayinla")} disabled={islemLoading === y.yayin_id}
-                className="w-full rounded-lg bg-[#56aeff] px-3 py-2 text-[11px] font-extrabold text-white disabled:opacity-60">
+                className="w-full rounded-lg bg-[#237ac8] px-3 py-2 text-[11px] font-extrabold text-white disabled:opacity-60">
                 {islemLoading === y.yayin_id ? "..." : "Hemen Yayınla"}
               </button>
               <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-1.5">
@@ -344,7 +344,7 @@ export function YayinSatir({
             <div className="flex w-full flex-col items-end gap-1.5">
               <button onClick={() => onPlanIslem(y.yayin_id, "hemen_yayinla")} disabled={islemLoading === y.yayin_id}
                 className="cursor-pointer rounded-lg border-none px-3 py-1.5 text-xs font-extrabold"
-                style={{ background: "#56aeff", color: "white", fontFamily: "'Nunito', sans-serif" }}>
+                style={{ background: "#237ac8", color: "white", fontFamily: "'Nunito', sans-serif" }}>
                 {islemLoading === y.yayin_id ? "..." : "Hemen Yayınla"}
               </button>
               <div className="flex items-center gap-1">
@@ -376,7 +376,7 @@ export function YayinSatir({
             <button type="button" onClick={() => onDurumDegistir(y.yayin_id, y.durum)} disabled={islemLoading === y.yayin_id}
               className="cursor-pointer rounded-lg px-3 py-1.5 text-xs font-extrabold"
               style={{
-                background: yayinda ? "white" : "#56aeff",
+                background: yayinda ? "white" : "#237ac8",
                 color: yayinda ? "#b91c1c" : "white",
                 border: yayinda ? "0.5px solid #fecaca" : "none",
                 fontFamily: "'Nunito', sans-serif",

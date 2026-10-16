@@ -76,7 +76,7 @@ export function TalepOnayModal({ acik, sonrakiAdim, ozet, onEvet, onHayir }: Tal
 
         <div className="flex justify-end gap-2.5">
           <button type="button" onClick={iptalEt} className="cursor-pointer rounded-lg border border-gray-200 bg-white px-5 py-2 text-xs font-bold text-gray-700">İptal</button>
-          <button type="button" onClick={onayla} className="cursor-pointer rounded-lg border-none bg-[#56aeff] px-5 py-2 text-xs font-bold text-white">
+          <button type="button" onClick={onayla} className="cursor-pointer rounded-lg border-none bg-[#237ac8] px-5 py-2 text-xs font-bold text-white">
             {sonrakiAdim === "yayin_yonetimi"
               ? "Onayla ve Yayın Yönetimine Gönder"
               : "Onayla ve İçerik Üreticisine Gönder"}

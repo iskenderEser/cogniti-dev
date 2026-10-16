@@ -150,7 +150,7 @@ export function UrunTeknikSecici({
                   disabled={!yeniUrunAdi.trim() || urunEkleniyor || takimZorunluAmaSecilmedi}
                   className="text-white border-none rounded-lg px-3 py-1.5 text-xs font-semibold cursor-pointer whitespace-nowrap"
                   style={{
-                    background: "#56aeff",
+                    background: "#237ac8",
                     opacity:
                       !yeniUrunAdi.trim() || urunEkleniyor || takimZorunluAmaSecilmedi ? 0.6 : 1,
                     fontFamily: "'Nunito', sans-serif",
@@ -206,7 +206,7 @@ export function UrunTeknikSecici({
                 disabled={!yeniTeknikAdi.trim() || teknikEkleniyor}
                 className="text-white border-none rounded-lg px-3 py-1.5 text-xs font-semibold cursor-pointer whitespace-nowrap"
                 style={{
-                  background: "#56aeff",
+                  background: "#237ac8",
                   opacity: !yeniTeknikAdi.trim() || teknikEkleniyor ? 0.6 : 1,
                   fontFamily: "'Nunito', sans-serif",
                 }}
