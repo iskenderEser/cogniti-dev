@@ -4,6 +4,16 @@
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
 <!-- END:nextjs-agent-rules -->
 
+## Zorunlu çalışma kuralı: Dar kapsam ve doğrudan teslim
+
+1. **Doğrulanmış bulgudan devam et.** Yeni bir çelişki veya somut kanıt eksikliği yoksa tamamlanan araştırmayı tekrarlama.
+2. **İstenen kapsamı koru.** Kullanıcı, eczane, ürün, dönem veya kayıt kapsamını kendiliğinden genişletme. Kapsam değişikliği gerekiyorsa gerekçeyi ve önerilen kapsamı kullanıcıya bildir; onay gelmeden genişletme.
+3. **Şemayı doğrula.** Tablo ve kolon adlarını varsayarak sorgu yazma. Daha önce doğrulanan şema bilgisini kullan; eksik alanları sorguyu hazırlamadan önce doğrula.
+4. **Sorunu çözen en küçük düzeltmeyi hazırla.** Yalnız somut hata risklerini karşılayan kontroller ekle; görev dışı düzenleme ve yeni özellik ekleme.
+5. **Doğrulamayı hedefli yap.** Değişikliğin doğruluğunu sınayan gerekli testleri çalıştır. İlgisiz incelemeleri ve geniş test çalışmalarını teslim şartına dönüştürme. Yeterli doğrulama sağlandığında teslim et.
+6. **Hazır sonucu geciktirmeden ilet.** Kullanıcı dosyayı istediğinde mevcut dosya bağlantısını hemen paylaş; test ve uygulanma durumunu açıkça belirt. Tamamlanmamış ek kontrolleri gizleme veya sonucu teslim etmek için ilgisiz işlerin bitmesini bekleme.
+7. **Tamamlanmamış işi tamamlandı diye bildirme.** Hazırlama, test ve veritabanında uygulama durumlarını ayrı raporla. Kullanıcının çalıştıracağını belirttiği SQL'i kendin veritabanında çalıştırma; başarı sonucu görülmeden uygulanmış kabul etme.
+
 ## Zorunlu KVKK yurt dışı veri aktarımı kontrolü
 
 Her yeni çalışma oturumunun başında `docs/hukuki/KVKK_YURTDISI_VERI_AKTARIMI_TAKIP.md` dosyasını oku. Dosyadaki durum `TAMAMLANDI` değilse kullanıcıya bir kez şu soruyu yönelt: “Supabase ile Türkiye KVKK Standart Sözleşme-2 sürecinde yeni bir gelişme var mı?” Kullanıcının verdiği güncel bilgiyi takip dosyasına işle. İmzalı sözleşme ve KVKK bildirim kaydı görülmeden durumu `TAMAMLANDI` olarak değiştirme. Bu kontrol, kullanıcının asıl talebi üzerindeki çalışmayı engellemez.
@@ -19,6 +29,10 @@ Her yeni çalışma oturumunda `docs/ECLUB_CANLI_DOGRULAMA_TAKIBI.md` dosyasınd
 ## Zorunlu hatırlatma: Hediye Takibi test verilerinin silinmesi
 
 Hediye Takibi görünüm testi için oluşturulan test verileri henüz silinmemiştir. Bu veriler, kullanıcı açıkça temizlik işlemini başlatana kadar korunacak; iş tamamlandığında `scripts/sql/eclub_hediye_takip_test_verisi_temizle.sql` çalıştırılarak silinecektir. Temizlik SQL'inin başarıyla çalıştırıldığı kullanıcı tarafından doğrulanmadan test verilerini silinmiş kabul etme. Hediye Takibi ile ilgili her geliştirme ve incelemede kullanıcıya “Hediye Takibi test verileri silinecek.” zorunlu hatırlatmasını yap.
+
+## Eczanem İndirim Onayı test verisi hatırlatması
+
+Eczanem>İndirim Onayı sekmesindeki (F) veriler silinecek
 
 ## Üçüncü zorunlu kural: Video Mimarisi ve Öğrenme Araçları Ayrımı
 
