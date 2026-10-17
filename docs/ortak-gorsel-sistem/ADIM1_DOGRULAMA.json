@@ -1,0 +1,43 @@
+{
+  "tarih": "2026-10-17",
+  "durum": "KAYNAK_DOGRULANDI_EKRAN_KONTROLLERI_KISMI",
+  "kaynakSayisi": 1205,
+  "kaynakImzaFarki": [],
+  "ASTAyrismaHatasi": 0,
+  "baslangicTesti": {
+    "komut": "node --import ./tests/_alias.mjs --test tests/sadeKontroller.hedef.test.ts",
+    "ortam": "Happy DOM ve sahte bileşen verileri",
+    "basarili": 17,
+    "basarisiz": 0,
+    "atlanan": 0,
+    "sinir": "Mevcut Sade Kontrol davranışlarının hedef testidir; tüm rollerin gerçek tarayıcı testi değildir."
+  },
+  "CSS": {
+    "bildirim": 221,
+    "durum": "Kaynak değerleri olduğu gibi kaydedildi; hesaplanmış DOM stili ölçümü tamamlanmadı."
+  },
+  "ekranlar": [
+    {
+      "dosya": "docs/ortak-gorsel-sistem/referanslar/utt-urun-egitimleri-1440x1000.jpg",
+      "bayt": 184695,
+      "sha256": "be36af7cf72276f140298462e59be858e33015594434f8f853e9b87f1404d6f9",
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "dosya": "docs/ortak-gorsel-sistem/referanslar/utt-urun-egitimleri-baslangic.jpg",
+      "bayt": 59048,
+      "sha256": "7b3747a582d8b4c95eef430885595abec53d23c1b56cfa34c1bcc748bf95405d",
+      "width": 651,
+      "height": 773
+    }
+  ],
+  "bekleyen": [
+    "Mobil referans görüntüsü",
+    "Hesaplanmış DOM stil/ölçü kaydı",
+    "Kullanıcıyla gerekli ekran referansı kontrolü",
+    "Bağlantısı kesilen geçici tarayıcı sekmesinin/viewport ayarının temizleme teyidi"
+  ],
+  "uygulamaDegisikligi": false,
+  "veritabaniIslemi": false
+}

@@ -1,0 +1,78 @@
+{
+  "checked": 6024,
+  "kapsanmayanKullanim": 0,
+  "yorumlar": [
+    {
+      "dosya": "app/(panel)/talepler/_types.ts",
+      "satir": 129,
+      "renk": "#e30a17",
+      "neden": "Yorum satırı/bloku; konum elle de doğrulandı"
+    },
+    {
+      "dosya": "app/(panel)/talepler/_types.ts",
+      "satir": 130,
+      "renk": "#10304a",
+      "neden": "Yorum satırı/bloku; konum elle de doğrulandı"
+    },
+    {
+      "dosya": "app/(panel)/talepler/_types.ts",
+      "satir": 130,
+      "renk": "#7ed957",
+      "neden": "Yorum satırı/bloku; konum elle de doğrulandı"
+    },
+    {
+      "dosya": "app/login/page.tsx",
+      "satir": 5,
+      "renk": "#bc2d0d",
+      "neden": "Yorum satırı/bloku; konum elle de doğrulandı"
+    },
+    {
+      "dosya": "app/login/page.tsx",
+      "satir": 20,
+      "renk": "#f3f4f7",
+      "neden": "Yorum satırı/bloku; konum elle de doğrulandı"
+    },
+    {
+      "dosya": "app/login/page.tsx",
+      "satir": 20,
+      "renk": "#737373",
+      "neden": "Yorum satırı/bloku; konum elle de doğrulandı"
+    },
+    {
+      "dosya": "app/login/page.tsx",
+      "satir": 21,
+      "renk": "#ffffff",
+      "neden": "Yorum satırı/bloku; konum elle de doğrulandı"
+    },
+    {
+      "dosya": "app/login/page.tsx",
+      "satir": 203,
+      "renk": "#f3f4f7",
+      "neden": "Yorum satırı/bloku; konum elle de doğrulandı"
+    },
+    {
+      "dosya": "app/login/page.tsx",
+      "satir": 204,
+      "renk": "#737373",
+      "neden": "Yorum satırı/bloku; konum elle de doğrulandı"
+    },
+    {
+      "dosya": "app/login/page.tsx",
+      "satir": 241,
+      "renk": "#ffffff",
+      "neden": "Yorum satırı/bloku; konum elle de doğrulandı"
+    },
+    {
+      "dosya": "components/ana-sayfa/UreticiAnaSayfa.tsx",
+      "satir": 137,
+      "renk": "#eff6ff",
+      "neden": "Yorum satırı/bloku; konum elle de doğrulandı"
+    },
+    {
+      "dosya": "components/pill/AsamaPill.tsx",
+      "satir": 7,
+      "renk": "#eff6ff",
+      "neden": "Yorum satırı/bloku; konum elle de doğrulandı"
+    }
+  ]
+}

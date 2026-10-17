@@ -1,0 +1,727 @@
+{
+  "ogrenmeAraciPilleri": [
+    {
+      "tur": "video",
+      "etiket": "Video",
+      "cogulEtiket": "Videolar",
+      "renk": "#1d4ed8",
+      "zemin": "#dbeafe",
+      "uygulananZemin": "#dbeafee8",
+      "kenar": "white/60",
+      "alpha": 0.9098039215686274
+    },
+    {
+      "tur": "podcast",
+      "etiket": "Podcast",
+      "cogulEtiket": "Podcastler",
+      "renk": "#7e22ce",
+      "zemin": "#f3e8ff",
+      "uygulananZemin": "#f3e8ffe8",
+      "kenar": "white/60",
+      "alpha": 0.9098039215686274
+    },
+    {
+      "tur": "gorsel",
+      "etiket": "Dijital Broşür",
+      "cogulEtiket": "Dijital Broşürler",
+      "renk": "#047857",
+      "zemin": "#d1fae5",
+      "uygulananZemin": "#d1fae5e8",
+      "kenar": "white/60",
+      "alpha": 0.9098039215686274
+    },
+    {
+      "tur": "flip_pdf",
+      "etiket": "Literatür",
+      "cogulEtiket": "Literatürler",
+      "renk": "#b45309",
+      "zemin": "#fef3c7",
+      "uygulananZemin": "#fef3c7e8",
+      "kenar": "white/60",
+      "alpha": 0.9098039215686274
+    }
+  ],
+  "hedefRoller": {
+    "utt": {
+      "bg": "#eff6ff",
+      "renk": "#1d4ed8",
+      "border": "#bfdbfe",
+      "tamEtiket": "Ürün Tanıtım Temsilcileri",
+      "kisaEtiket": "UTT"
+    },
+    "bm": {
+      "bg": "#fef2f2",
+      "renk": "#bc2d0d",
+      "border": "#fecaca",
+      "tamEtiket": "Bölge Müdürleri",
+      "kisaEtiket": "BM"
+    },
+    "eczaci": {
+      "bg": "#fff5f5",
+      "renk": "#e30a17",
+      "border": "#e30a17",
+      "tamEtiket": "Eczacılar",
+      "kisaEtiket": "Eczacı"
+    },
+    "eczane_teknisyeni": {
+      "bg": "#eaf7e4",
+      "renk": "#10304a",
+      "border": "#7ed957",
+      "tamEtiket": "Eczane Teknisyenleri",
+      "kisaEtiket": "Ecz. Tek."
+    },
+    "eczanem": {
+      "bg": "#fffbeb",
+      "renk": "#b45309",
+      "border": "#fde68a",
+      "tamEtiket": "Eczane Müşterileri",
+      "kisaEtiket": "Eczanem"
+    }
+  },
+  "dosyaTipleri": [
+    {
+      "uzanti": "pdf",
+      "etiket": "PDF",
+      "bg": "#fef2f2",
+      "renk": "#bc2d0d"
+    },
+    {
+      "uzanti": "docx",
+      "etiket": "DOC",
+      "bg": "#eff6ff",
+      "renk": "#1d4ed8"
+    },
+    {
+      "uzanti": "pptx",
+      "etiket": "PPT",
+      "bg": "#fff7ed",
+      "renk": "#c2410c"
+    },
+    {
+      "uzanti": "xlsx",
+      "etiket": "XLS",
+      "bg": "#f0fdf4",
+      "renk": "#15803d"
+    },
+    {
+      "uzanti": "txt",
+      "etiket": "TXT",
+      "bg": "#f9fafb",
+      "renk": "#374151"
+    },
+    {
+      "uzanti": "png",
+      "etiket": "IMG",
+      "bg": "#fdf4ff",
+      "renk": "#7e22ce"
+    },
+    {
+      "uzanti": "mp4",
+      "etiket": "VID",
+      "bg": "#f0fdf4",
+      "renk": "#16a34a"
+    },
+    {
+      "uzanti": "mp3",
+      "etiket": "POD",
+      "bg": "#f5f3ff",
+      "renk": "#6d28d9"
+    },
+    {
+      "uzanti": "bilinmeyen",
+      "etiket": "BILINMEYEN",
+      "bg": "#f9fafb",
+      "renk": "#737373"
+    }
+  ],
+  "uretimDurumlari": [
+    {
+      "kod": "talep_olusturuldu",
+      "uretici": {
+        "metin": "Talep Oluşturuldu",
+        "top": "kapali",
+        "renk": {
+          "bg": "#f0fdf4",
+          "text": "#16a34a",
+          "border": "#bbf7d0"
+        }
+      },
+      "iu": {
+        "metin": "Talep Oluşturuldu",
+        "top": "kapali",
+        "renk": {
+          "bg": "#f0fdf4",
+          "text": "#16a34a",
+          "border": "#bbf7d0"
+        }
+      }
+    },
+    {
+      "kod": "iu_iletildi",
+      "uretici": {
+        "metin": "Üreticinize İletildi",
+        "top": "icerik_ureticisi",
+        "renk": {
+          "bg": "#f9fafb",
+          "text": "#737373",
+          "border": "#e5e7eb"
+        }
+      },
+      "iu": {
+        "metin": "Senaryo Yazmanız Bekleniyor",
+        "top": "icerik_ureticisi",
+        "renk": {
+          "bg": "#fff1f0",
+          "text": "#bc2d0d",
+          "border": "#fecaca"
+        }
+      }
+    },
+    {
+      "kod": "iu_hazirliyor",
+      "uretici": {
+        "metin": "Üreticiniz Hazırlıyor",
+        "top": "icerik_ureticisi",
+        "renk": {
+          "bg": "#f9fafb",
+          "text": "#737373",
+          "border": "#e5e7eb"
+        }
+      },
+      "iu": {
+        "metin": "Senaryo Yazmanız Bekleniyor",
+        "top": "icerik_ureticisi",
+        "renk": {
+          "bg": "#fff1f0",
+          "text": "#bc2d0d",
+          "border": "#fecaca"
+        }
+      }
+    },
+    {
+      "kod": "iu_duzeltiyor",
+      "uretici": {
+        "metin": "Üreticiniz Düzenliyor",
+        "top": "icerik_ureticisi",
+        "renk": {
+          "bg": "#fefce8",
+          "text": "#854d0e",
+          "border": "#fde68a"
+        }
+      },
+      "iu": {
+        "metin": "Senaryo Revizyonu Bekleniyor",
+        "top": "icerik_ureticisi",
+        "renk": {
+          "bg": "#fefce8",
+          "text": "#854d0e",
+          "border": "#fde68a"
+        }
+      }
+    },
+    {
+      "kod": "onay_bekleniyor",
+      "uretici": {
+        "metin": "Onayınız Bekleniyor",
+        "top": "uretici",
+        "renk": {
+          "bg": "#fff1f0",
+          "text": "#bc2d0d",
+          "border": "#fecaca"
+        }
+      },
+      "iu": {
+        "metin": "Talep Sahibi İnceliyor",
+        "top": "uretici",
+        "renk": {
+          "bg": "#f9fafb",
+          "text": "#737373",
+          "border": "#e5e7eb"
+        }
+      }
+    },
+    {
+      "kod": "video_bekleniyor",
+      "uretici": {
+        "metin": "Öğrenme Aracınızı İletiniz",
+        "top": "uretici",
+        "renk": {
+          "bg": "#fff1f0",
+          "text": "#bc2d0d",
+          "border": "#fecaca"
+        }
+      },
+      "iu": {
+        "metin": "Talep Sahibi Öğrenme Aracını Yüklüyor",
+        "top": "uretici",
+        "renk": {
+          "bg": "#f9fafb",
+          "text": "#737373",
+          "border": "#e5e7eb"
+        }
+      }
+    },
+    {
+      "kod": "video_isleniyor",
+      "uretici": {
+        "metin": "Videonuz İşleniyor",
+        "top": "sistem",
+        "renk": {
+          "bg": "#f9fafb",
+          "text": "#737373",
+          "border": "#e5e7eb"
+        }
+      },
+      "iu": {
+        "metin": "Video İşleniyor",
+        "top": "sistem",
+        "renk": {
+          "bg": "#f9fafb",
+          "text": "#737373",
+          "border": "#e5e7eb"
+        }
+      }
+    },
+    {
+      "kod": "hazir_video",
+      "uretici": {
+        "metin": "Hazır Video",
+        "top": "kapali",
+        "renk": {
+          "bg": "#f0fdf4",
+          "text": "#16a34a",
+          "border": "#bbf7d0"
+        }
+      },
+      "iu": {
+        "metin": "Talep Sahibi Videoyu İletti",
+        "top": "kapali",
+        "renk": {
+          "bg": "#f0fdf4",
+          "text": "#16a34a",
+          "border": "#bbf7d0"
+        }
+      }
+    },
+    {
+      "kod": "hazir_arac_iletildi",
+      "uretici": {
+        "metin": "Öğrenme Aracınızı İlettiniz",
+        "top": "kapali",
+        "renk": {
+          "bg": "#f0fdf4",
+          "text": "#16a34a",
+          "border": "#bbf7d0"
+        }
+      },
+      "iu": {
+        "metin": "Talep Sahibi Öğrenme Aracını İletti",
+        "top": "kapali",
+        "renk": {
+          "bg": "#f0fdf4",
+          "text": "#16a34a",
+          "border": "#bbf7d0"
+        }
+      }
+    },
+    {
+      "kod": "hazir_soru_seti",
+      "uretici": {
+        "metin": "Hazır Soru Seti",
+        "top": "kapali",
+        "renk": {
+          "bg": "#f0fdf4",
+          "text": "#16a34a",
+          "border": "#bbf7d0"
+        }
+      },
+      "iu": {
+        "metin": "Hazır Soru Seti",
+        "top": "kapali",
+        "renk": {
+          "bg": "#f0fdf4",
+          "text": "#16a34a",
+          "border": "#bbf7d0"
+        }
+      }
+    },
+    {
+      "kod": "yayin_bekleniyor",
+      "uretici": {
+        "metin": "Yayına Alınız",
+        "top": "uretici",
+        "renk": {
+          "bg": "#fff1f0",
+          "text": "#bc2d0d",
+          "border": "#fecaca"
+        }
+      },
+      "iu": {
+        "metin": "Talep Sahibi Yayına Alacak",
+        "top": "uretici",
+        "renk": {
+          "bg": "#f9fafb",
+          "text": "#737373",
+          "border": "#e5e7eb"
+        }
+      }
+    },
+    {
+      "kod": "onaylandi",
+      "uretici": {
+        "metin": "Onayladınız",
+        "top": "kapali",
+        "renk": {
+          "bg": "#f0fdf4",
+          "text": "#16a34a",
+          "border": "#bbf7d0"
+        }
+      },
+      "iu": {
+        "metin": "Talep Sahibi Onayladı",
+        "top": "kapali",
+        "renk": {
+          "bg": "#f0fdf4",
+          "text": "#16a34a",
+          "border": "#bbf7d0"
+        }
+      }
+    },
+    {
+      "kod": "planlandi",
+      "uretici": {
+        "metin": "Yayınını Planladınız",
+        "top": "sistem",
+        "renk": {
+          "bg": "#f5f3ff",
+          "text": "#6d28d9",
+          "border": "#ddd6fe"
+        }
+      },
+      "iu": {
+        "metin": "Yayın Planlandı",
+        "top": "sistem",
+        "renk": {
+          "bg": "#f5f3ff",
+          "text": "#6d28d9",
+          "border": "#ddd6fe"
+        }
+      }
+    },
+    {
+      "kod": "yayinda",
+      "uretici": {
+        "metin": "Yayına Aldınız",
+        "top": "kapali",
+        "renk": {
+          "bg": "#eff6ff",
+          "text": "#1d4ed8",
+          "border": "#bfdbfe"
+        }
+      },
+      "iu": {
+        "metin": "Yayında",
+        "top": "kapali",
+        "renk": {
+          "bg": "#eff6ff",
+          "text": "#1d4ed8",
+          "border": "#bfdbfe"
+        }
+      }
+    },
+    {
+      "kod": "yayin_durduruldu",
+      "uretici": {
+        "metin": "Yayını Durdurdunuz",
+        "top": "uretici",
+        "renk": {
+          "bg": "#fef2f2",
+          "text": "#bc2d0d",
+          "border": "#fecaca"
+        }
+      },
+      "iu": {
+        "metin": "Yayın Durduruldu",
+        "top": "uretici",
+        "renk": {
+          "bg": "#fef2f2",
+          "text": "#bc2d0d",
+          "border": "#fecaca"
+        }
+      }
+    },
+    {
+      "kod": "yayin_siliniyor",
+      "uretici": {
+        "metin": "Yayın Siliniyor",
+        "top": "sistem",
+        "renk": {
+          "bg": "#f9fafb",
+          "text": "#737373",
+          "border": "#e5e7eb"
+        }
+      },
+      "iu": {
+        "metin": "Yayın Siliniyor",
+        "top": "sistem",
+        "renk": {
+          "bg": "#f9fafb",
+          "text": "#737373",
+          "border": "#e5e7eb"
+        }
+      }
+    },
+    {
+      "kod": "yayin_silme_hatasi",
+      "uretici": {
+        "metin": "Silme Tamamlanamadı",
+        "top": "uretici",
+        "renk": {
+          "bg": "#fef2f2",
+          "text": "#bc2d0d",
+          "border": "#fecaca"
+        }
+      },
+      "iu": {
+        "metin": "Silme Tamamlanamadı",
+        "top": "uretici",
+        "renk": {
+          "bg": "#fef2f2",
+          "text": "#bc2d0d",
+          "border": "#fecaca"
+        }
+      }
+    },
+    {
+      "kod": "yayin_oncesi_silindi",
+      "uretici": {
+        "metin": "Yayın Öncesi Silindi",
+        "top": "kapali",
+        "renk": {
+          "bg": "#f9fafb",
+          "text": "#737373",
+          "border": "#e5e7eb"
+        }
+      },
+      "iu": {
+        "metin": "Yayın Öncesi Silindi",
+        "top": "kapali",
+        "renk": {
+          "bg": "#f9fafb",
+          "text": "#737373",
+          "border": "#e5e7eb"
+        }
+      }
+    },
+    {
+      "kod": "iptal",
+      "uretici": {
+        "metin": "İptal Ettiniz",
+        "top": "kapali",
+        "renk": {
+          "bg": "#f9fafb",
+          "text": "#737373",
+          "border": "#e5e7eb"
+        }
+      },
+      "iu": {
+        "metin": "Talep Sahibi İptal Etti",
+        "top": "kapali",
+        "renk": {
+          "bg": "#f9fafb",
+          "text": "#737373",
+          "border": "#e5e7eb"
+        }
+      }
+    },
+    {
+      "kod": "sistem_hatasi",
+      "uretici": {
+        "metin": "Sistem Hatası",
+        "top": "sistem",
+        "renk": {
+          "bg": "#fef2f2",
+          "text": "#bc2d0d",
+          "border": "#fecaca"
+        }
+      },
+      "iu": {
+        "metin": "Sistem Hatası",
+        "top": "sistem",
+        "renk": {
+          "bg": "#fef2f2",
+          "text": "#bc2d0d",
+          "border": "#fecaca"
+        }
+      }
+    }
+  ],
+  "cekDurumlari": {
+    "beklemede": {
+      "etiket": "Beklemede (UTT)",
+      "metin": "#854d0e",
+      "arka": "#fefce8",
+      "kenar": "#fde68a"
+    },
+    "bm_onayinda": {
+      "etiket": "BM Onayında",
+      "metin": "#b45309",
+      "arka": "#fff7ed",
+      "kenar": "#fed7aa"
+    },
+    "tm_onayinda": {
+      "etiket": "TM Onayında",
+      "metin": "#6d28d9",
+      "arka": "#f5f3ff",
+      "kenar": "#ddd6fe"
+    },
+    "onaylandi": {
+      "etiket": "TM Onayladı",
+      "metin": "#065f46",
+      "arka": "#ecfdf5",
+      "kenar": "#a7f3d0"
+    },
+    "teslimat_bekliyor": {
+      "etiket": "TM Onayladı",
+      "metin": "#0f766e",
+      "arka": "#f0fdfa",
+      "kenar": "#99f6e4"
+    },
+    "cek_kodlari_gonderildi": {
+      "etiket": "Çek Kodu Gönderildi",
+      "metin": "#237ac8",
+      "arka": "#edf6fd",
+      "kenar": "#b6d9f5"
+    },
+    "iptal": {
+      "etiket": "İptal Edildi",
+      "metin": "#bc2d0d",
+      "arka": "#fef2f2",
+      "kenar": "#fecaca"
+    }
+  },
+  "performansTurleri": [
+    {
+      "tur": "video",
+      "ad": "Video",
+      "renk": "#237ac8",
+      "zemin": "#edf5ff"
+    },
+    {
+      "tur": "podcast",
+      "ad": "Podcast",
+      "renk": "#8c65c9",
+      "zemin": "#f3effa"
+    },
+    {
+      "tur": "gorsel",
+      "ad": "Görsel",
+      "renk": "#d99438",
+      "zemin": "#fff6e8"
+    },
+    {
+      "tur": "flip_pdf",
+      "ad": "Literatür",
+      "renk": "#23947a",
+      "zemin": "#edf8f4"
+    }
+  ],
+  "hoykIlerlemeGunleri": [
+    {
+      "gun": 0,
+      "uc": "rgb(22,163,74)",
+      "hex": "#16a34a",
+      "cerceveYuzdesi": 0
+    },
+    {
+      "gun": 1,
+      "uc": "rgb(48,161,64)",
+      "hex": "#30a140",
+      "cerceveYuzdesi": 6.666666666666667
+    },
+    {
+      "gun": 2,
+      "uc": "rgb(74,159,54)",
+      "hex": "#4a9f36",
+      "cerceveYuzdesi": 13.333333333333334
+    },
+    {
+      "gun": 3,
+      "uc": "rgb(100,157,44)",
+      "hex": "#649d2c",
+      "cerceveYuzdesi": 20
+    },
+    {
+      "gun": 4,
+      "uc": "rgb(126,154,35)",
+      "hex": "#7e9a23",
+      "cerceveYuzdesi": 26.666666666666668
+    },
+    {
+      "gun": 5,
+      "uc": "rgb(152,152,25)",
+      "hex": "#989819",
+      "cerceveYuzdesi": 33.33333333333333
+    },
+    {
+      "gun": 6,
+      "uc": "rgb(178,150,15)",
+      "hex": "#b2960f",
+      "cerceveYuzdesi": 40
+    },
+    {
+      "gun": 7,
+      "uc": "rgb(204,148,5)",
+      "hex": "#cc9405",
+      "cerceveYuzdesi": 46.666666666666664
+    },
+    {
+      "gun": 8,
+      "uc": "rgb(217,140,3)",
+      "hex": "#d98c03",
+      "cerceveYuzdesi": 53.333333333333336
+    },
+    {
+      "gun": 9,
+      "uc": "rgb(218,125,8)",
+      "hex": "#da7d08",
+      "cerceveYuzdesi": 60
+    },
+    {
+      "gun": 10,
+      "uc": "rgb(218,111,13)",
+      "hex": "#da6f0d",
+      "cerceveYuzdesi": 66.66666666666666
+    },
+    {
+      "gun": 11,
+      "uc": "rgb(218,96,18)",
+      "hex": "#da6012",
+      "cerceveYuzdesi": 73.33333333333333
+    },
+    {
+      "gun": 12,
+      "uc": "rgb(219,82,23)",
+      "hex": "#db5217",
+      "cerceveYuzdesi": 80
+    },
+    {
+      "gun": 13,
+      "uc": "rgb(219,67,28)",
+      "hex": "#db431c",
+      "cerceveYuzdesi": 86.66666666666667
+    },
+    {
+      "gun": 14,
+      "uc": "rgb(220,53,33)",
+      "hex": "#dc3521",
+      "cerceveYuzdesi": 93.33333333333333
+    },
+    {
+      "gun": 15,
+      "uc": "rgb(220,38,38)",
+      "hex": "#dc2626",
+      "cerceveYuzdesi": 100
+    }
+  ]
+}

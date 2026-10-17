@@ -1,0 +1,2005 @@
+{
+  "kaynak": "components/kontrol/sade-kontroller.module.css",
+  "sha256": "277b81fc85d63a3d8785c0034679cfbc0b82addbb7e2f4f4e3a0bd37c7ea5127",
+  "bildirimler": [
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 2,
+      "secici": ".trigger, .menu, .capsule, .tabs, .field, .date",
+      "kosullar": [],
+      "ozellik": "--surface",
+      "deger": "#fff",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 3,
+      "secici": ".trigger, .menu, .capsule, .tabs, .field, .date",
+      "kosullar": [],
+      "ozellik": "--text",
+      "deger": "#203653",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 4,
+      "secici": ".trigger, .menu, .capsule, .tabs, .field, .date",
+      "kosullar": [],
+      "ozellik": "--muted",
+      "deger": "#718198",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 5,
+      "secici": ".trigger, .menu, .capsule, .tabs, .field, .date",
+      "kosullar": [],
+      "ozellik": "--line",
+      "deger": "#dbe5ef",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 6,
+      "secici": ".trigger, .menu, .capsule, .tabs, .field, .date",
+      "kosullar": [],
+      "ozellik": "--blue",
+      "deger": "#237ac8",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 7,
+      "secici": ".trigger, .menu, .capsule, .tabs, .field, .date",
+      "kosullar": [],
+      "ozellik": "--hover",
+      "deger": "#edf6ff",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 8,
+      "secici": ".trigger, .menu, .capsule, .tabs, .field, .date",
+      "kosullar": [],
+      "ozellik": "--selection-height",
+      "deger": "40px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 9,
+      "secici": ".trigger, .menu, .capsule, .tabs, .field, .date",
+      "kosullar": [],
+      "ozellik": "font-family",
+      "deger": "var(--font-nunito), Nunito, system-ui, sans-serif",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 10,
+      "secici": ".trigger, .menu, .capsule, .tabs, .field, .date",
+      "kosullar": [],
+      "ozellik": "box-sizing",
+      "deger": "border-box",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 13,
+      "secici": ".trigger",
+      "kosullar": [],
+      "ozellik": "display",
+      "deger": "inline-flex",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 13,
+      "secici": ".trigger",
+      "kosullar": [],
+      "ozellik": "height",
+      "deger": "var(--selection-height)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 13,
+      "secici": ".trigger",
+      "kosullar": [],
+      "ozellik": "min-width",
+      "deger": "min(160px, 100%)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 13,
+      "secici": ".trigger",
+      "kosullar": [],
+      "ozellik": "max-width",
+      "deger": "100%",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 14,
+      "secici": ".trigger",
+      "kosullar": [],
+      "ozellik": "align-items",
+      "deger": "center",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 14,
+      "secici": ".trigger",
+      "kosullar": [],
+      "ozellik": "justify-content",
+      "deger": "space-between",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 14,
+      "secici": ".trigger",
+      "kosullar": [],
+      "ozellik": "gap",
+      "deger": "14px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 15,
+      "secici": ".trigger",
+      "kosullar": [],
+      "ozellik": "border",
+      "deger": "1px solid var(--line)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 15,
+      "secici": ".trigger",
+      "kosullar": [],
+      "ozellik": "border-radius",
+      "deger": "14px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 15,
+      "secici": ".trigger",
+      "kosullar": [],
+      "ozellik": "background",
+      "deger": "var(--surface)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 16,
+      "secici": ".trigger",
+      "kosullar": [],
+      "ozellik": "padding",
+      "deger": "0 12px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 16,
+      "secici": ".trigger",
+      "kosullar": [],
+      "ozellik": "color",
+      "deger": "var(--blue)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 16,
+      "secici": ".trigger",
+      "kosullar": [],
+      "ozellik": "font-size",
+      "deger": "11px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 16,
+      "secici": ".trigger",
+      "kosullar": [],
+      "ozellik": "font-weight",
+      "deger": "800",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 17,
+      "secici": ".trigger",
+      "kosullar": [],
+      "ozellik": "text-align",
+      "deger": "left",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 17,
+      "secici": ".trigger",
+      "kosullar": [],
+      "ozellik": "cursor",
+      "deger": "pointer",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 17,
+      "secici": ".trigger",
+      "kosullar": [],
+      "ozellik": "box-shadow",
+      "deger": "0 6px 22px rgba(36,64,98,.05)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 19,
+      "secici": ".trigger[data-variant=table]",
+      "kosullar": [],
+      "ozellik": "border-radius",
+      "deger": "10px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 19,
+      "secici": ".trigger[data-variant=table]",
+      "kosullar": [],
+      "ozellik": "min-width",
+      "deger": "min(146px, 100%)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 21,
+      "secici": ".trigger[data-variant=form]",
+      "kosullar": [],
+      "ozellik": "width",
+      "deger": "100%",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 21,
+      "secici": ".trigger[data-variant=form]",
+      "kosullar": [],
+      "ozellik": "min-width",
+      "deger": "0",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 21,
+      "secici": ".trigger[data-variant=form]",
+      "kosullar": [],
+      "ozellik": "border-radius",
+      "deger": "12px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 21,
+      "secici": ".trigger[data-variant=form]",
+      "kosullar": [],
+      "ozellik": "color",
+      "deger": "var(--text)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 21,
+      "secici": ".trigger[data-variant=form]",
+      "kosullar": [],
+      "ozellik": "box-shadow",
+      "deger": "none",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 24,
+      "secici": ".trigger:disabled, .native:disabled, .option:disabled, .option[aria-disabled=true], .capsule button:disabled, .tabs button:disabled",
+      "kosullar": [],
+      "ozellik": "opacity",
+      "deger": ".5",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 24,
+      "secici": ".trigger:disabled, .native:disabled, .option:disabled, .option[aria-disabled=true], .capsule button:disabled, .tabs button:disabled",
+      "kosullar": [],
+      "ozellik": "cursor",
+      "deger": "not-allowed",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 28,
+      "secici": ".trigger:focus-visible, .option:focus-visible, .search:focus-visible,\n.capsule button:focus-visible, .tabs button:focus-visible, .native:focus-visible",
+      "kosullar": [],
+      "ozellik": "outline",
+      "deger": "2px solid #237ac8",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 28,
+      "secici": ".trigger:focus-visible, .option:focus-visible, .search:focus-visible,\n.capsule button:focus-visible, .tabs button:focus-visible, .native:focus-visible",
+      "kosullar": [],
+      "ozellik": "outline-offset",
+      "deger": "2px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 30,
+      "secici": ".name",
+      "kosullar": [],
+      "ozellik": "display",
+      "deger": "block",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 30,
+      "secici": ".name",
+      "kosullar": [],
+      "ozellik": "overflow",
+      "deger": "hidden",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 30,
+      "secici": ".name",
+      "kosullar": [],
+      "ozellik": "text-overflow",
+      "deger": "ellipsis",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 30,
+      "secici": ".name",
+      "kosullar": [],
+      "ozellik": "white-space",
+      "deger": "nowrap",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 30,
+      "secici": ".name",
+      "kosullar": [],
+      "ozellik": "line-height",
+      "deger": "14px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 31,
+      "secici": ".value",
+      "kosullar": [],
+      "ozellik": "min-width",
+      "deger": "0",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 31,
+      "secici": ".value",
+      "kosullar": [],
+      "ozellik": "overflow",
+      "deger": "hidden",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 32,
+      "secici": ".sub",
+      "kosullar": [],
+      "ozellik": "display",
+      "deger": "block",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 32,
+      "secici": ".sub",
+      "kosullar": [],
+      "ozellik": "color",
+      "deger": "var(--muted)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 32,
+      "secici": ".sub",
+      "kosullar": [],
+      "ozellik": "font-size",
+      "deger": "11px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 32,
+      "secici": ".sub",
+      "kosullar": [],
+      "ozellik": "font-weight",
+      "deger": "600",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 32,
+      "secici": ".sub",
+      "kosullar": [],
+      "ozellik": "line-height",
+      "deger": "12px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 34,
+      "secici": ".arrow",
+      "kosullar": [],
+      "ozellik": "display",
+      "deger": "block",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 34,
+      "secici": ".arrow",
+      "kosullar": [],
+      "ozellik": "flex-shrink",
+      "deger": "0",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 34,
+      "secici": ".arrow",
+      "kosullar": [],
+      "ozellik": "width",
+      "deger": "7px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 34,
+      "secici": ".arrow",
+      "kosullar": [],
+      "ozellik": "height",
+      "deger": "7px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 34,
+      "secici": ".arrow",
+      "kosullar": [],
+      "ozellik": "box-sizing",
+      "deger": "border-box",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 35,
+      "secici": ".arrow",
+      "kosullar": [],
+      "ozellik": "border-right",
+      "deger": "1.5px solid #718198",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 35,
+      "secici": ".arrow",
+      "kosullar": [],
+      "ozellik": "border-bottom",
+      "deger": "1.5px solid #718198",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 36,
+      "secici": ".arrow",
+      "kosullar": [],
+      "ozellik": "transform",
+      "deger": "translateY(-2px) rotate(45deg)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 39,
+      "secici": ".menu",
+      "kosullar": [],
+      "ozellik": "z-index",
+      "deger": "50",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 39,
+      "secici": ".menu",
+      "kosullar": [],
+      "ozellik": "width",
+      "deger": "260px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 39,
+      "secici": ".menu",
+      "kosullar": [],
+      "ozellik": "max-width",
+      "deger": "calc(100vw - 24px)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 40,
+      "secici": ".menu",
+      "kosullar": [],
+      "ozellik": "max-height",
+      "deger": "var(--radix-popover-content-available-height, 80vh)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 41,
+      "secici": ".menu",
+      "kosullar": [],
+      "ozellik": "overflow-y",
+      "deger": "auto",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 41,
+      "secici": ".menu",
+      "kosullar": [],
+      "ozellik": "padding",
+      "deger": "8px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 41,
+      "secici": ".menu",
+      "kosullar": [],
+      "ozellik": "border",
+      "deger": "1px solid var(--line)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 41,
+      "secici": ".menu",
+      "kosullar": [],
+      "ozellik": "border-radius",
+      "deger": "16px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 42,
+      "secici": ".menu",
+      "kosullar": [],
+      "ozellik": "background",
+      "deger": "var(--surface)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 42,
+      "secici": ".menu",
+      "kosullar": [],
+      "ozellik": "color",
+      "deger": "var(--text)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 42,
+      "secici": ".menu",
+      "kosullar": [],
+      "ozellik": "box-shadow",
+      "deger": "0 12px 28px rgba(31,74,111,.16)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 45,
+      "secici": ".search",
+      "kosullar": [],
+      "ozellik": "box-sizing",
+      "deger": "border-box",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 45,
+      "secici": ".search",
+      "kosullar": [],
+      "ozellik": "width",
+      "deger": "100%",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 45,
+      "secici": ".search",
+      "kosullar": [],
+      "ozellik": "height",
+      "deger": "36px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 45,
+      "secici": ".search",
+      "kosullar": [],
+      "ozellik": "margin-bottom",
+      "deger": "6px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 46,
+      "secici": ".search",
+      "kosullar": [],
+      "ozellik": "border",
+      "deger": "1px solid var(--line)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 46,
+      "secici": ".search",
+      "kosullar": [],
+      "ozellik": "border-radius",
+      "deger": "9px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 46,
+      "secici": ".search",
+      "kosullar": [],
+      "ozellik": "padding",
+      "deger": "0 10px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 47,
+      "secici": ".search",
+      "kosullar": [],
+      "ozellik": "font-family",
+      "deger": "inherit",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 47,
+      "secici": ".search",
+      "kosullar": [],
+      "ozellik": "font-size",
+      "deger": "13px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 47,
+      "secici": ".search",
+      "kosullar": [],
+      "ozellik": "background",
+      "deger": "var(--surface)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 47,
+      "secici": ".search",
+      "kosullar": [],
+      "ozellik": "color",
+      "deger": "var(--text)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 49,
+      "secici": ".options",
+      "kosullar": [],
+      "ozellik": "max-height",
+      "deger": "256px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 49,
+      "secici": ".options",
+      "kosullar": [],
+      "ozellik": "overflow-y",
+      "deger": "auto",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 51,
+      "secici": ".option",
+      "kosullar": [],
+      "ozellik": "box-sizing",
+      "deger": "border-box",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 51,
+      "secici": ".option",
+      "kosullar": [],
+      "ozellik": "width",
+      "deger": "100%",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 51,
+      "secici": ".option",
+      "kosullar": [],
+      "ozellik": "display",
+      "deger": "flex",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 51,
+      "secici": ".option",
+      "kosullar": [],
+      "ozellik": "align-items",
+      "deger": "center",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 52,
+      "secici": ".option",
+      "kosullar": [],
+      "ozellik": "justify-content",
+      "deger": "space-between",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 52,
+      "secici": ".option",
+      "kosullar": [],
+      "ozellik": "gap",
+      "deger": "8px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 52,
+      "secici": ".option",
+      "kosullar": [],
+      "ozellik": "padding",
+      "deger": "9px 10px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 52,
+      "secici": ".option",
+      "kosullar": [],
+      "ozellik": "border",
+      "deger": "0",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 53,
+      "secici": ".option",
+      "kosullar": [],
+      "ozellik": "border-radius",
+      "deger": "9px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 53,
+      "secici": ".option",
+      "kosullar": [],
+      "ozellik": "background",
+      "deger": "transparent",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 53,
+      "secici": ".option",
+      "kosullar": [],
+      "ozellik": "text-align",
+      "deger": "left",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 54,
+      "secici": ".option",
+      "kosullar": [],
+      "ozellik": "font-family",
+      "deger": "inherit",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 54,
+      "secici": ".option",
+      "kosullar": [],
+      "ozellik": "font-size",
+      "deger": "13px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 54,
+      "secici": ".option",
+      "kosullar": [],
+      "ozellik": "font-weight",
+      "deger": "700",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 54,
+      "secici": ".option",
+      "kosullar": [],
+      "ozellik": "color",
+      "deger": "var(--text)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 54,
+      "secici": ".option",
+      "kosullar": [],
+      "ozellik": "cursor",
+      "deger": "pointer",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 56,
+      "secici": ".option:hover, .option[aria-pressed=true], .option[aria-selected=true], .option[data-state=checked]",
+      "kosullar": [],
+      "ozellik": "background",
+      "deger": "var(--hover)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 56,
+      "secici": ".option:hover, .option[aria-pressed=true], .option[aria-selected=true], .option[data-state=checked]",
+      "kosullar": [],
+      "ozellik": "color",
+      "deger": "var(--blue)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 57,
+      "secici": ".check",
+      "kosullar": [],
+      "ozellik": "justify-content",
+      "deger": "flex-start",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 57,
+      "secici": ".check",
+      "kosullar": [],
+      "ozellik": "font-weight",
+      "deger": "400",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 58,
+      "secici": ".check input",
+      "kosullar": [],
+      "ozellik": "flex-shrink",
+      "deger": "0",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 58,
+      "secici": ".check input",
+      "kosullar": [],
+      "ozellik": "accent-color",
+      "deger": "var(--blue)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 58,
+      "secici": ".check input",
+      "kosullar": [],
+      "ozellik": "width",
+      "deger": "16px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 58,
+      "secici": ".check input",
+      "kosullar": [],
+      "ozellik": "height",
+      "deger": "16px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 59,
+      "secici": ".empty",
+      "kosullar": [],
+      "ozellik": "padding",
+      "deger": "9px 10px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 59,
+      "secici": ".empty",
+      "kosullar": [],
+      "ozellik": "font-size",
+      "deger": "12px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 59,
+      "secici": ".empty",
+      "kosullar": [],
+      "ozellik": "color",
+      "deger": "var(--muted)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 61,
+      "secici": ".capsule",
+      "kosullar": [],
+      "ozellik": "display",
+      "deger": "inline-flex",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 61,
+      "secici": ".capsule",
+      "kosullar": [],
+      "ozellik": "align-items",
+      "deger": "center",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 61,
+      "secici": ".capsule",
+      "kosullar": [],
+      "ozellik": "gap",
+      "deger": "4px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 61,
+      "secici": ".capsule",
+      "kosullar": [],
+      "ozellik": "max-width",
+      "deger": "100%",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 62,
+      "secici": ".capsule",
+      "kosullar": [],
+      "ozellik": "overflow-x",
+      "deger": "auto",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 62,
+      "secici": ".capsule",
+      "kosullar": [],
+      "ozellik": "padding",
+      "deger": "4px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 62,
+      "secici": ".capsule",
+      "kosullar": [],
+      "ozellik": "border",
+      "deger": "1px solid var(--line)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 62,
+      "secici": ".capsule",
+      "kosullar": [],
+      "ozellik": "border-radius",
+      "deger": "14px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 63,
+      "secici": ".capsule",
+      "kosullar": [],
+      "ozellik": "background",
+      "deger": "var(--surface)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 66,
+      "secici": ".capsule button",
+      "kosullar": [],
+      "ozellik": "flex-shrink",
+      "deger": "0",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 66,
+      "secici": ".capsule button",
+      "kosullar": [],
+      "ozellik": "height",
+      "deger": "30px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 66,
+      "secici": ".capsule button",
+      "kosullar": [],
+      "ozellik": "box-sizing",
+      "deger": "border-box",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 66,
+      "secici": ".capsule button",
+      "kosullar": [],
+      "ozellik": "border",
+      "deger": "0",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 66,
+      "secici": ".capsule button",
+      "kosullar": [],
+      "ozellik": "border-radius",
+      "deger": "10px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 67,
+      "secici": ".capsule button",
+      "kosullar": [],
+      "ozellik": "padding",
+      "deger": "0 12px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 67,
+      "secici": ".capsule button",
+      "kosullar": [],
+      "ozellik": "font-family",
+      "deger": "inherit",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 67,
+      "secici": ".capsule button",
+      "kosullar": [],
+      "ozellik": "font-size",
+      "deger": "11px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 67,
+      "secici": ".capsule button",
+      "kosullar": [],
+      "ozellik": "font-weight",
+      "deger": "800",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 68,
+      "secici": ".capsule button",
+      "kosullar": [],
+      "ozellik": "background",
+      "deger": "transparent",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 68,
+      "secici": ".capsule button",
+      "kosullar": [],
+      "ozellik": "color",
+      "deger": "var(--muted)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 68,
+      "secici": ".capsule button",
+      "kosullar": [],
+      "ozellik": "white-space",
+      "deger": "nowrap",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 68,
+      "secici": ".capsule button",
+      "kosullar": [],
+      "ozellik": "cursor",
+      "deger": "pointer",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 70,
+      "secici": ".capsule button:hover",
+      "kosullar": [],
+      "ozellik": "background",
+      "deger": "var(--hover)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 72,
+      "secici": ".capsule button[aria-pressed=true], .capsule button[aria-selected=true], .capsule button[aria-checked=true]",
+      "kosullar": [],
+      "ozellik": "background",
+      "deger": "var(--blue)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 72,
+      "secici": ".capsule button[aria-pressed=true], .capsule button[aria-selected=true], .capsule button[aria-checked=true]",
+      "kosullar": [],
+      "ozellik": "color",
+      "deger": "#fff",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 72,
+      "secici": ".capsule button[aria-pressed=true], .capsule button[aria-selected=true], .capsule button[aria-checked=true]",
+      "kosullar": [],
+      "ozellik": "box-shadow",
+      "deger": "0 5px 14px rgba(35,122,200,.2)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 74,
+      "secici": ".tabs",
+      "kosullar": [],
+      "ozellik": "display",
+      "deger": "flex",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 74,
+      "secici": ".tabs",
+      "kosullar": [],
+      "ozellik": "flex-wrap",
+      "deger": "wrap",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 74,
+      "secici": ".tabs",
+      "kosullar": [],
+      "ozellik": "gap",
+      "deger": "24px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 74,
+      "secici": ".tabs",
+      "kosullar": [],
+      "ozellik": "border-bottom",
+      "deger": "1px solid var(--line)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 76,
+      "secici": ".tabs button",
+      "kosullar": [],
+      "ozellik": "border",
+      "deger": "0",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 76,
+      "secici": ".tabs button",
+      "kosullar": [],
+      "ozellik": "border-bottom",
+      "deger": "2px solid transparent",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 76,
+      "secici": ".tabs button",
+      "kosullar": [],
+      "ozellik": "background",
+      "deger": "transparent",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 77,
+      "secici": ".tabs button",
+      "kosullar": [],
+      "ozellik": "color",
+      "deger": "var(--muted)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 77,
+      "secici": ".tabs button",
+      "kosullar": [],
+      "ozellik": "font-family",
+      "deger": "inherit",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 77,
+      "secici": ".tabs button",
+      "kosullar": [],
+      "ozellik": "font-size",
+      "deger": "13px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 77,
+      "secici": ".tabs button",
+      "kosullar": [],
+      "ozellik": "font-weight",
+      "deger": "800",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 78,
+      "secici": ".tabs button",
+      "kosullar": [],
+      "ozellik": "padding",
+      "deger": "10px 2px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 78,
+      "secici": ".tabs button",
+      "kosullar": [],
+      "ozellik": "margin-bottom",
+      "deger": "-1px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 78,
+      "secici": ".tabs button",
+      "kosullar": [],
+      "ozellik": "cursor",
+      "deger": "pointer",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 80,
+      "secici": ".tabs button[data-state=active], .tabs button[aria-selected=true], .tabs button[aria-pressed=true]",
+      "kosullar": [],
+      "ozellik": "border-bottom-color",
+      "deger": "var(--blue)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 80,
+      "secici": ".tabs button[data-state=active], .tabs button[aria-selected=true], .tabs button[aria-pressed=true]",
+      "kosullar": [],
+      "ozellik": "color",
+      "deger": "var(--blue)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 81,
+      "secici": ".controlButton",
+      "kosullar": [],
+      "ozellik": "display",
+      "deger": "inline-flex",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 81,
+      "secici": ".controlButton",
+      "kosullar": [],
+      "ozellik": "align-items",
+      "deger": "center",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 81,
+      "secici": ".controlButton",
+      "kosullar": [],
+      "ozellik": "justify-content",
+      "deger": "center",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 81,
+      "secici": ".controlButton",
+      "kosullar": [],
+      "ozellik": "gap",
+      "deger": "6px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 81,
+      "secici": ".controlButton",
+      "kosullar": [],
+      "ozellik": "flex-shrink",
+      "deger": "0",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 82,
+      "secici": ".controlButton svg",
+      "kosullar": [],
+      "ozellik": "width",
+      "deger": "14px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 82,
+      "secici": ".controlButton svg",
+      "kosullar": [],
+      "ozellik": "height",
+      "deger": "14px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 82,
+      "secici": ".controlButton svg",
+      "kosullar": [],
+      "ozellik": "flex-shrink",
+      "deger": "0",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 83,
+      "secici": ".hiddenSelect",
+      "kosullar": [],
+      "ozellik": "display",
+      "deger": "none",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 84,
+      "secici": ".year",
+      "kosullar": [],
+      "ozellik": "display",
+      "deger": "flex",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 84,
+      "secici": ".year",
+      "kosullar": [],
+      "ozellik": "align-items",
+      "deger": "center",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 84,
+      "secici": ".year",
+      "kosullar": [],
+      "ozellik": "justify-content",
+      "deger": "space-between",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 84,
+      "secici": ".year",
+      "kosullar": [],
+      "ozellik": "margin-bottom",
+      "deger": "8px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 84,
+      "secici": ".year",
+      "kosullar": [],
+      "ozellik": "font-size",
+      "deger": "13px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 84,
+      "secici": ".year",
+      "kosullar": [],
+      "ozellik": "font-weight",
+      "deger": "800",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 85,
+      "secici": ".year button",
+      "kosullar": [],
+      "ozellik": "border",
+      "deger": "0",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 85,
+      "secici": ".year button",
+      "kosullar": [],
+      "ozellik": "background",
+      "deger": "transparent",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 85,
+      "secici": ".year button",
+      "kosullar": [],
+      "ozellik": "color",
+      "deger": "var(--blue)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 85,
+      "secici": ".year button",
+      "kosullar": [],
+      "ozellik": "padding",
+      "deger": "8px 12px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 85,
+      "secici": ".year button",
+      "kosullar": [],
+      "ozellik": "cursor",
+      "deger": "pointer",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 86,
+      "secici": ".year button:disabled",
+      "kosullar": [],
+      "ozellik": "opacity",
+      "deger": ".4",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 86,
+      "secici": ".year button:disabled",
+      "kosullar": [],
+      "ozellik": "cursor",
+      "deger": "not-allowed",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 87,
+      "secici": ".months",
+      "kosullar": [],
+      "ozellik": "display",
+      "deger": "grid",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 87,
+      "secici": ".months",
+      "kosullar": [],
+      "ozellik": "grid-template-columns",
+      "deger": "repeat(3, minmax(0, 1fr))",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 87,
+      "secici": ".months",
+      "kosullar": [],
+      "ozellik": "gap",
+      "deger": "4px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 88,
+      "secici": ".months .option",
+      "kosullar": [],
+      "ozellik": "justify-content",
+      "deger": "center",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 89,
+      "secici": ".field",
+      "kosullar": [],
+      "ozellik": "min-width",
+      "deger": "0",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 89,
+      "secici": ".field",
+      "kosullar": [],
+      "ozellik": "color",
+      "deger": "var(--text)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 90,
+      "secici": ".label",
+      "kosullar": [],
+      "ozellik": "display",
+      "deger": "block",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 90,
+      "secici": ".label",
+      "kosullar": [],
+      "ozellik": "font-size",
+      "deger": "12px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 90,
+      "secici": ".label",
+      "kosullar": [],
+      "ozellik": "font-weight",
+      "deger": "700",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 90,
+      "secici": ".label",
+      "kosullar": [],
+      "ozellik": "margin-bottom",
+      "deger": "7px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 91,
+      "secici": ".fieldControl",
+      "kosullar": [],
+      "ozellik": "position",
+      "deger": "relative",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 93,
+      "secici": ".native",
+      "kosullar": [],
+      "ozellik": "box-sizing",
+      "deger": "border-box",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 93,
+      "secici": ".native",
+      "kosullar": [],
+      "ozellik": "appearance",
+      "deger": "none",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 93,
+      "secici": ".native",
+      "kosullar": [],
+      "ozellik": "width",
+      "deger": "100%",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 93,
+      "secici": ".native",
+      "kosullar": [],
+      "ozellik": "height",
+      "deger": "var(--selection-height)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 94,
+      "secici": ".native",
+      "kosullar": [],
+      "ozellik": "border",
+      "deger": "1px solid var(--line)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 94,
+      "secici": ".native",
+      "kosullar": [],
+      "ozellik": "border-radius",
+      "deger": "12px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 94,
+      "secici": ".native",
+      "kosullar": [],
+      "ozellik": "padding",
+      "deger": "0 32px 0 10px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 95,
+      "secici": ".native",
+      "kosullar": [],
+      "ozellik": "font-family",
+      "deger": "inherit",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 95,
+      "secici": ".native",
+      "kosullar": [],
+      "ozellik": "font-size",
+      "deger": "11px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 95,
+      "secici": ".native",
+      "kosullar": [],
+      "ozellik": "font-weight",
+      "deger": "800",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 96,
+      "secici": ".native",
+      "kosullar": [],
+      "ozellik": "color",
+      "deger": "var(--text)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 96,
+      "secici": ".native",
+      "kosullar": [],
+      "ozellik": "background",
+      "deger": "var(--surface)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 98,
+      "secici": ".fieldControl > .arrow",
+      "kosullar": [],
+      "ozellik": "position",
+      "deger": "absolute",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 98,
+      "secici": ".fieldControl > .arrow",
+      "kosullar": [],
+      "ozellik": "right",
+      "deger": "13px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 98,
+      "secici": ".fieldControl > .arrow",
+      "kosullar": [],
+      "ozellik": "top",
+      "deger": "50%",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 98,
+      "secici": ".fieldControl > .arrow",
+      "kosullar": [],
+      "ozellik": "margin-top",
+      "deger": "-3.5px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 98,
+      "secici": ".fieldControl > .arrow",
+      "kosullar": [],
+      "ozellik": "pointer-events",
+      "deger": "none",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 100,
+      "secici": ".date",
+      "kosullar": [],
+      "ozellik": "display",
+      "deger": "block",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 100,
+      "secici": ".date",
+      "kosullar": [],
+      "ozellik": "width",
+      "deger": "100%",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 100,
+      "secici": ".date",
+      "kosullar": [],
+      "ozellik": "min-width",
+      "deger": "0",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 100,
+      "secici": ".date",
+      "kosullar": [],
+      "ozellik": "height",
+      "deger": "var(--selection-height)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 101,
+      "secici": ".date",
+      "kosullar": [],
+      "ozellik": "border",
+      "deger": "1px solid var(--line)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 101,
+      "secici": ".date",
+      "kosullar": [],
+      "ozellik": "border-radius",
+      "deger": "14px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 101,
+      "secici": ".date",
+      "kosullar": [],
+      "ozellik": "padding",
+      "deger": "0 12px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 102,
+      "secici": ".date",
+      "kosullar": [],
+      "ozellik": "background",
+      "deger": "var(--surface)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 102,
+      "secici": ".date",
+      "kosullar": [],
+      "ozellik": "color",
+      "deger": "var(--blue)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 102,
+      "secici": ".date",
+      "kosullar": [],
+      "ozellik": "font-size",
+      "deger": "11px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 102,
+      "secici": ".date",
+      "kosullar": [],
+      "ozellik": "font-weight",
+      "deger": "800",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 103,
+      "secici": ".date",
+      "kosullar": [],
+      "ozellik": "text-transform",
+      "deger": "none",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 103,
+      "secici": ".date",
+      "kosullar": [],
+      "ozellik": "letter-spacing",
+      "deger": "normal",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 103,
+      "secici": ".date",
+      "kosullar": [],
+      "ozellik": "box-shadow",
+      "deger": "0 6px 22px rgba(36,64,98,.05)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 105,
+      "secici": ".date:focus-visible",
+      "kosullar": [],
+      "ozellik": "outline",
+      "deger": "2px solid #237ac8",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 105,
+      "secici": ".date:focus-visible",
+      "kosullar": [],
+      "ozellik": "outline-offset",
+      "deger": "2px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 107,
+      "secici": ".trigger",
+      "kosullar": [
+        "@media (max-width: 480px)"
+      ],
+      "ozellik": "min-width",
+      "deger": "min(140px, 100%)",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 108,
+      "secici": ".trigger[data-variant=form]",
+      "kosullar": [
+        "@media (max-width: 480px)"
+      ],
+      "ozellik": "min-width",
+      "deger": "0",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 109,
+      "secici": ".tabs",
+      "kosullar": [
+        "@media (max-width: 480px)"
+      ],
+      "ozellik": "gap",
+      "deger": "16px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 112,
+      "secici": ".option",
+      "kosullar": [
+        "@media (pointer: coarse)"
+      ],
+      "ozellik": "min-height",
+      "deger": "44px",
+      "important": false
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "satir": 113,
+      "secici": ".search, .native, .trigger[data-variant=form]",
+      "kosullar": [
+        "@media (pointer: coarse)"
+      ],
+      "ozellik": "font-size",
+      "deger": "16px",
+      "important": false
+    }
+  ]
+}
