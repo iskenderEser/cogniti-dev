@@ -17,7 +17,7 @@ interface Props {
 
 export function SenaryoMetniGoster({ mevcut, onceki }: Props) {
   if (!onceki) {
-    return <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap m-0">{mevcut}</p>;
+    return <p className="text-sm text-[var(--tema-yerel-uretim-ana-metin-03)] leading-relaxed whitespace-pre-wrap m-0">{mevcut}</p>;
   }
 
   const parcalar = senaryoDiffHesapla(onceki, mevcut);
@@ -27,19 +27,19 @@ export function SenaryoMetniGoster({ mevcut, onceki }: Props) {
       {parcalar.map((parca, i) => {
         if (parca.tur === "ekle") {
           return (
-            <span key={i} style={{ background: "#fee2e2", color: "#991b1b", borderRadius: 3, padding: "0 2px" }}>
+            <span key={i} style={{ background: "var(--tema-yerel-uretim-islevsel-zemin-30)", color: "var(--tema-yerel-uretim-islevsel-metin-40)", borderRadius: 3, padding: "0 2px" }}>
               {parca.metin}
             </span>
           );
         }
         if (parca.tur === "cikar") {
           return (
-            <span key={i} style={{ textDecoration: "line-through", color: "#9ca3af" }}>
+            <span key={i} style={{ textDecoration: "line-through", color: "var(--tema-yerel-uretim-yardimci-metin-03)" }}>
               {parca.metin}
             </span>
           );
         }
-        return <span key={i} className="text-gray-700">{parca.metin}</span>;
+        return <span key={i} className="text-[var(--tema-yerel-uretim-ana-metin-03)]">{parca.metin}</span>;
       })}
     </p>
   );

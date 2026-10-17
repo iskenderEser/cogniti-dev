@@ -36,22 +36,22 @@ interface Props {
 }
 
 const Bos = ({ metin }: { metin: string }) => (
-  <p className="text-sm text-gray-400 m-0">{metin}</p>
+  <p className="text-sm text-[var(--tema-yerel-uretim-yardimci-metin-02)] m-0">{metin}</p>
 );
 
 // Şık rozetinin iki hâli. Pill ÖLÇÜYÜ sahiplenir, renk buradan gelir — sözlükte
 // "doğru şık" diye bir kavram yok, bu yüzden renk merkezden değil buradan verilir.
-const SIK_DOGRU: PillRenk = { bg: "#e6f1fb", metin: "#56aeff", kenar: "#56aeff" };
-const SIK_NORMAL: PillRenk = { bg: "#ffffff", metin: "#737373", kenar: "#e5e7eb" };
+const SIK_DOGRU: PillRenk = { bg: "var(--tema-yerel-uretim-secim-zemin-01)", metin: "var(--tema-yerel-uretim-eylem-metin-01)", kenar: "var(--tema-yerel-uretim-cizgi-04)" };
+const SIK_NORMAL: PillRenk = { bg: "var(--tema-yerel-uretim-kart-02)", metin: "var(--tema-yerel-uretim-yardimci-metin-04)", kenar: "var(--tema-yerel-uretim-cizgi-05)" };
 
 function RevizyonNotlari({ notlar, formatTarih }: { notlar: RevizyonNotu[]; formatTarih: (t: string | null) => string }) {
   if (notlar.length === 0) return null;
   return (
     <div className="mt-3 flex flex-col gap-1">
-      <span className="text-xs font-semibold text-gray-500">Revizyon notları</span>
+      <span className="text-xs font-semibold text-[var(--tema-yerel-uretim-yardimci-metin-01)]">Revizyon notları</span>
       {notlar.map((n, i) => (
-        <div key={i} className="text-xs text-gray-700 bg-white border border-gray-200 rounded-lg px-3 py-2">
-          {n.notlar} <span className="text-gray-400">— {formatTarih(n.created_at)}</span>
+        <div key={i} className="text-xs text-[var(--tema-yerel-uretim-ana-metin-03)] bg-[var(--tema-yerel-uretim-kart-01)] border border-[var(--tema-yerel-uretim-cizgi-01)] rounded-lg px-3 py-2">
+          {n.notlar} <span className="text-[var(--tema-yerel-uretim-yardimci-metin-02)]">— {formatTarih(n.created_at)}</span>
         </div>
       ))}
     </div>
@@ -63,9 +63,9 @@ function RevizyonNotlari({ notlar, formatTarih }: { notlar: RevizyonNotu[]; form
 function KunyeParametreleri({ talep }: { talep: TalepSatiri }) {
   const metin = ogrenmeAraciMetinleri(talep.ogrenme_araci_turu);
   const kutular = [
-    { etiket: "Soru seti", deger: `${talep.soru_seti_buyuklugu} soru`, bg: "#eff6ff", renk: "#1d4ed8", kenar: "#bfdbfe" },
-    { etiket: "Seçenek", deger: `${talep.secenek_sayisi} seçenek`, bg: "#fffbeb", renk: "#b45309", kenar: "#fde68a" },
-    { etiket: `${metin.ad} başı`, deger: `${talep.video_basi_soru_sayisi} soru`, bg: "#f0fdf4", renk: "#15803d", kenar: "#bbf7d0" },
+    { etiket: "Soru seti", deger: `${talep.soru_seti_buyuklugu} soru`, bg: "var(--tema-yerel-uretim-secim-zemin-02)", renk: "var(--tema-yerel-uretim-eylem-metin-02)", kenar: "var(--tema-yerel-uretim-cizgi-06)" },
+    { etiket: "Seçenek", deger: `${talep.secenek_sayisi} seçenek`, bg: "var(--tema-yerel-uretim-islevsel-zemin-01)", renk: "var(--tema-yerel-uretim-islevsel-metin-03)", kenar: "var(--tema-yerel-uretim-islevsel-cizgi-01)" },
+    { etiket: `${metin.ad} başı`, deger: `${talep.video_basi_soru_sayisi} soru`, bg: "var(--tema-yerel-uretim-islevsel-zemin-02)", renk: "var(--tema-yerel-uretim-islevsel-metin-04)", kenar: "var(--tema-yerel-uretim-islevsel-cizgi-02)" },
   ];
   return (
     <div className="flex items-center gap-2 flex-wrap">
@@ -97,7 +97,7 @@ export function AdimIcerigi({
       return (
         <div className="flex flex-col gap-3">
           {talep.aciklama
-            ? <p className="text-sm text-gray-700 leading-relaxed m-0 whitespace-pre-wrap">{talep.aciklama}</p>
+            ? <p className="text-sm text-[var(--tema-yerel-uretim-ana-metin-03)] leading-relaxed m-0 whitespace-pre-wrap">{talep.aciklama}</p>
             : <Bos metin="Açıklama girilmedi." />}
           {dosyalar.length > 0 && <DosyaGoruntuleListesi dosyalar={dosyalar} onHata={onHata} />}
           <KunyeParametreleri talep={talep} />
@@ -123,8 +123,8 @@ export function AdimIcerigi({
       const metin = ogrenmeAraciMetinleri(talep.ogrenme_araci_turu);
       if (videoIsleniyor) {
         return (
-          <div className="rounded-lg border border-blue-200 bg-blue-50 px-3 py-3">
-            <p className="m-0 text-sm font-semibold text-blue-800">{metin.ad} işleniyor</p>
+          <div className="rounded-lg border border-[var(--tema-yerel-uretim-cizgi-07)] bg-[var(--tema-yerel-uretim-secim-zemin-03)] px-3 py-3">
+            <p className="m-0 text-sm font-semibold text-[var(--tema-yerel-uretim-eylem-metin-03)]">{metin.ad} işleniyor</p>
           </div>
         );
       }
@@ -152,7 +152,7 @@ export function AdimIcerigi({
           );
         }
         return (
-          <div className="aspect-video rounded-lg border border-gray-200 bg-gray-50 flex flex-col items-center justify-center gap-2 text-gray-400">
+          <div className="aspect-video rounded-lg border border-[var(--tema-yerel-uretim-cizgi-01)] bg-[var(--tema-yerel-uretim-sayfa-zemini-01)] flex flex-col items-center justify-center gap-2 text-[var(--tema-yerel-uretim-yardimci-metin-02)]">
             <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
               <rect x="3" y="6" width="18" height="12" rx="2" />
               <path d="M10 9.5 L15 12 L10 14.5 Z" fill="currentColor" stroke="none" />
@@ -163,7 +163,7 @@ export function AdimIcerigi({
       }
 
       if (!v || !v.video_url) return (
-        <div className="aspect-video rounded-lg border border-gray-200 bg-gray-50 flex flex-col items-center justify-center gap-2 text-gray-400">
+        <div className="aspect-video rounded-lg border border-[var(--tema-yerel-uretim-cizgi-01)] bg-[var(--tema-yerel-uretim-sayfa-zemini-01)] flex flex-col items-center justify-center gap-2 text-[var(--tema-yerel-uretim-yardimci-metin-02)]">
           <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
             <rect x="3" y="6" width="18" height="12" rx="2" />
             <path d="M10 9.5 L15 12 L10 14.5 Z" fill="currentColor" stroke="none" />
@@ -174,22 +174,22 @@ export function AdimIcerigi({
       return (
         <div>
           {bunnyIslemeDurumu === "isleniyor" && (
-            <div className="mb-2.5 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2">
-              <p className="text-xs text-blue-800 m-0">
+            <div className="mb-2.5 bg-[var(--tema-yerel-uretim-secim-zemin-03)] border border-[var(--tema-yerel-uretim-cizgi-07)] rounded-lg px-3 py-2">
+              <p className="text-xs text-[var(--tema-yerel-uretim-eylem-metin-03)] m-0">
                 {metin.ad} işleniyor
               </p>
             </div>
           )}
           {bunnyIslemeDurumu === "hatali" && (
-            <div className="mb-2.5 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
-              <p className="text-xs text-red-700 m-0">
+            <div className="mb-2.5 bg-[var(--tema-yerel-uretim-islevsel-zemin-03)] border border-[var(--tema-yerel-uretim-islevsel-cizgi-03)] rounded-lg px-3 py-2">
+              <p className="text-xs text-[var(--tema-yerel-uretim-islevsel-metin-05)] m-0">
                 {metin.ad} işlenemedi — dosya bozuk olabilir.
               </p>
             </div>
           )}
           <VideoOnizleme
             videoUrl={v.video_url}
-            className="rounded-lg border border-gray-200"
+            className="rounded-lg border border-[var(--tema-yerel-uretim-cizgi-01)]"
             ariaLabel={`${metin.ad} oynat`}
           />
           <RevizyonNotlari notlar={v.notlar} formatTarih={formatTarih} />
@@ -205,8 +205,8 @@ export function AdimIcerigi({
         <div>
           <div className="flex flex-col gap-2 max-h-80 overflow-auto">
             {ss.sorular.map((soru, i) => (
-              <div key={i} className="px-3 py-2.5 bg-white rounded-lg border border-gray-200">
-                <p className="text-xs text-gray-700 font-semibold m-0 mb-1.5">{i + 1}. {soru.soru_metni}</p>
+              <div key={i} className="px-3 py-2.5 bg-[var(--tema-yerel-uretim-kart-01)] rounded-lg border border-[var(--tema-yerel-uretim-cizgi-01)]">
+                <p className="text-xs text-[var(--tema-yerel-uretim-ana-metin-03)] font-semibold m-0 mb-1.5">{i + 1}. {soru.soru_metni}</p>
                 {/* Ölçü pill merkezinden (27.07 kararı): yazı boyu, dolgu, kenar
                     ve satır yüksekliği burada YAZILMAZ. sarabilir: şık metni uzun
                     olabilir, tek satırda kalıp taşmasın. */}

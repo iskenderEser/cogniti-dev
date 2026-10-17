@@ -165,25 +165,25 @@ export default function EczanemSiparisKuyrugu({ hata, basari, gorunumTesti = fal
       <EczanemSayfaBanner alan="indirim-onayi" />
 
     {veriHazir && <section className="grid grid-cols-1 gap-3 md:grid-cols-3">
-      <EczanemOzetKarti ikon={Clock3} etiket="Onay bekleyen" deger={veri.ozet.bekleyen + ornekBekleyen.length} detay="En eski talep önce" renk="#b7791f" zemin="#fff7e8" />
-      <EczanemOzetKarti ikon={ClipboardCheck} etiket="Bugün onaylanan" deger={veri.ozet.bugun_onaylanan + ornekSiparisler.filter((siparis) => siparis.durum === "onaylandi").length} detay="Kesinleşen işlem" renk="#16865f" zemin="#edf9f4" />
-      <EczanemOzetKarti ikon={History} etiket="İşlem geçmişi" deger={veri.ozet.gecmis + ornekGecmis.length} detay="Seçili durum kapsamı" renk="#6550b9" zemin="#f2effc" />
+      <EczanemOzetKarti ikon={Clock3} etiket="Onay bekleyen" deger={veri.ozet.bekleyen + ornekBekleyen.length} detay="En eski talep önce" renk="var(--tema-yerel-eczanem-islevsel-metin-03)" zemin="var(--tema-yerel-eczanem-islevsel-zemin-05)" />
+      <EczanemOzetKarti ikon={ClipboardCheck} etiket="Bugün onaylanan" deger={veri.ozet.bugun_onaylanan + ornekSiparisler.filter((siparis) => siparis.durum === "onaylandi").length} detay="Kesinleşen işlem" renk="var(--tema-yerel-eczanem-islevsel-metin-02)" zemin="var(--tema-yerel-eczanem-islevsel-zemin-06)" />
+      <EczanemOzetKarti ikon={History} etiket="İşlem geçmişi" deger={veri.ozet.gecmis + ornekGecmis.length} detay="Seçili durum kapsamı" renk="var(--tema-yerel-eczanem-islevsel-metin-05)" zemin="var(--tema-yerel-eczanem-islevsel-zemin-07)" />
     </section>}
 
-    {gorunumTesti && veriHazir && <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-xs font-semibold text-red-800"><span><strong>(F)</strong> ile işaretli altı kayıt yalnız ekran örneğidir; gerçek sipariş veya puan oluşturmaz.</span><Button type="button" size="sm" variant="outline" onClick={() => setOrnekSiparisler(ornekSiparisleriOlustur())} className="h-7 border-red-200 bg-white text-xs text-red-700 hover:bg-red-100">Örnekleri sıfırla</Button></div>}
+    {gorunumTesti && veriHazir && <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-[var(--tema-yerel-eczanem-islevsel-cizgi-02)] bg-[var(--tema-yerel-eczanem-islevsel-zemin-08)] px-4 py-2 text-xs font-semibold text-[var(--tema-yerel-eczanem-islevsel-metin-06)]"><span><strong>(F)</strong> ile işaretli altı kayıt yalnız ekran örneğidir; gerçek sipariş veya puan oluşturmaz.</span><Button type="button" size="sm" variant="outline" onClick={() => setOrnekSiparisler(ornekSiparisleriOlustur())} className="h-7 border-[var(--tema-yerel-eczanem-islevsel-cizgi-02)] bg-[var(--tema-yerel-eczanem-kart-01)] text-xs text-[var(--tema-yerel-eczanem-islevsel-metin-07)] hover:bg-[var(--tema-yerel-eczanem-islevsel-zemin-09)]">Örnekleri sıfırla</Button></div>}
 
     <EczanemPanel>
-      {veriHatasi && veriHazir && <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#f1d3d3] bg-[#fff7f7] px-4 py-3 text-[#a74646] md:px-5"><div className="flex min-w-0 items-start gap-2"><CircleAlert className="mt-0.5 size-4 shrink-0" /><div><p className="text-xs font-extrabold">Güncel sipariş verisi alınamadı; son başarılı kayıtlar gösteriliyor.</p><p className="mt-0.5 text-[10px] font-semibold opacity-80">{veriHatasi.mesaj}{veriHatasi.adim ? ` · ${veriHatasi.adim}` : ""}</p></div></div><Button type="button" size="sm" variant="outline" onClick={() => void cek(true)} disabled={yenileniyor || isliyor} className="h-8 border-[#e8bcbc] bg-white text-xs font-extrabold text-[#a74646] hover:bg-[#fff1f1] hover:text-[#913737]">Tekrar dene</Button></div>}
-        {veriHazir && <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#e7edf4] bg-[#fbfcfe] p-2">
-        <SadeKontrolGrubu tur="sekme"><SadeKontrolButonu type="button" onClick={() => setSekme("bekleyen")} aria-pressed={sekme === "bekleyen"}><Clock3 /> Onay Bekleyenler <Badge className="ml-1 bg-white/20 text-white">{veri.ozet.bekleyen + ornekBekleyen.length}</Badge></SadeKontrolButonu><SadeKontrolButonu type="button" onClick={() => setSekme("gecmis")} aria-pressed={sekme === "gecmis"}><History /> Sipariş Geçmişleri</SadeKontrolButonu></SadeKontrolGrubu>
+      {veriHatasi && veriHazir && <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--tema-yerel-eczanem-islevsel-cizgi-03)] bg-[var(--tema-yerel-eczanem-islevsel-zemin-10)] px-4 py-3 text-[var(--tema-yerel-eczanem-islevsel-metin-08)] md:px-5"><div className="flex min-w-0 items-start gap-2"><CircleAlert className="mt-0.5 size-4 shrink-0" /><div><p className="text-xs font-extrabold">Güncel sipariş verisi alınamadı; son başarılı kayıtlar gösteriliyor.</p><p className="mt-0.5 text-[10px] font-semibold opacity-80">{veriHatasi.mesaj}{veriHatasi.adim ? ` · ${veriHatasi.adim}` : ""}</p></div></div><Button type="button" size="sm" variant="outline" onClick={() => void cek(true)} disabled={yenileniyor || isliyor} className="h-8 border-[var(--tema-yerel-eczanem-islevsel-cizgi-04)] bg-[var(--tema-yerel-eczanem-kart-01)] text-xs font-extrabold text-[var(--tema-yerel-eczanem-islevsel-metin-08)] hover:bg-[var(--tema-yerel-eczanem-islevsel-zemin-11)] hover:text-[var(--tema-yerel-eczanem-islevsel-metin-09)]">Tekrar dene</Button></div>}
+        {veriHazir && <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--tema-yerel-eczanem-cizgi-07)] bg-[var(--tema-yerel-eczanem-sayfa-zemini-07)] p-2">
+        <SadeKontrolGrubu tur="sekme"><SadeKontrolButonu type="button" onClick={() => setSekme("bekleyen")} aria-pressed={sekme === "bekleyen"}><Clock3 /> Onay Bekleyenler <Badge className="ml-1 bg-[var(--tema-yerel-eczanem-kart-01)]/20 text-[var(--tema-yerel-eczanem-ters-metin-01)]">{veri.ozet.bekleyen + ornekBekleyen.length}</Badge></SadeKontrolButonu><SadeKontrolButonu type="button" onClick={() => setSekme("gecmis")} aria-pressed={sekme === "gecmis"}><History /> Sipariş Geçmişleri</SadeKontrolButonu></SadeKontrolGrubu>
       </div>}
 
-      {ilkYukleme ? <EczanemYukleniyor metin="Siparişler yükleniyor…" /> : !veriHazir && veriHatasi ? <div className="px-5 py-12 text-center"><span className="mx-auto flex size-11 items-center justify-center rounded-2xl bg-[#fff0f0] text-[#b84444]"><CircleAlert className="size-5" /></span><h3 className="mt-3 text-sm font-extrabold text-[#8f3636]">Sipariş kuyruğu görüntülenemedi</h3><p className="mx-auto mt-1 max-w-lg text-xs font-semibold leading-5 text-[#9a6969]">{veriHatasi.mesaj}</p>{veriHatasi.adim && <p className="mt-1 text-[10px] font-bold text-[#ad7b7b]">Adım: {veriHatasi.adim}</p>}<Button type="button" size="sm" onClick={() => void cek(true)} disabled={yenileniyor} className="mt-4 bg-[#237ac8] text-xs font-extrabold hover:bg-[#1d69ad]">Tekrar dene</Button></div> : sekme === "bekleyen" ? <>
+      {ilkYukleme ? <EczanemYukleniyor metin="Siparişler yükleniyor…" /> : !veriHazir && veriHatasi ? <div className="px-5 py-12 text-center"><span className="mx-auto flex size-11 items-center justify-center rounded-2xl bg-[var(--tema-yerel-eczanem-islevsel-zemin-12)] text-[var(--tema-yerel-eczanem-islevsel-metin-10)]"><CircleAlert className="size-5" /></span><h3 className="mt-3 text-sm font-extrabold text-[var(--tema-yerel-eczanem-islevsel-metin-11)]">Sipariş kuyruğu görüntülenemedi</h3><p className="mx-auto mt-1 max-w-lg text-xs font-semibold leading-5 text-[var(--tema-yerel-eczanem-islevsel-metin-12)]">{veriHatasi.mesaj}</p>{veriHatasi.adim && <p className="mt-1 text-[10px] font-bold text-[var(--tema-yerel-eczanem-islevsel-metin-13)]">Adım: {veriHatasi.adim}</p>}<Button type="button" size="sm" onClick={() => void cek(true)} disabled={yenileniyor} className="mt-4 bg-[var(--tema-yerel-eczanem-eylem-zemin-01)] text-xs font-extrabold hover:bg-[var(--tema-yerel-eczanem-eylem-zemin-02)]">Tekrar dene</Button></div> : sekme === "bekleyen" ? <>
         {bekleyen.length === 0 ? (
           <EczanemBosDurum ikon={CheckCircle2} baslik="Onay bekleyen sipariş yok" aciklama="Yeni bir kasa talebi geldiğinde otomatik olarak bu listede görünecek." />
         ) : (
-          <Table className="tabular-nums [&_th]:px-4 [&_th]:py-3 [&_th]:text-[10px] [&_th]:font-extrabold [&_th]:uppercase [&_th]:tracking-wide [&_th]:text-[#8090a4]">
-              <TableHeader className="bg-[#f6f9fc] text-[10px] font-extrabold uppercase tracking-wide text-[#8090a4]">
+          <Table className="tabular-nums [&_th]:px-4 [&_th]:py-3 [&_th]:text-[10px] [&_th]:font-extrabold [&_th]:uppercase [&_th]:tracking-wide [&_th]:text-[var(--tema-yerel-eczanem-yardimci-metin-05)]">
+              <TableHeader className="bg-[var(--tema-yerel-eczanem-sayfa-zemini-08)] text-[10px] font-extrabold uppercase tracking-wide text-[var(--tema-yerel-eczanem-yardimci-metin-05)]">
                 <TableRow>
                   <TableHead scope="col" className="px-4 py-3">Ürün adı</TableHead>
                   <TableHead scope="col" className="px-4 py-3 text-center">Satış fiyatı</TableHead>
@@ -197,22 +197,22 @@ export default function EczanemSiparisKuyrugu({ hata, basari, gorunumTesti = fal
                   <TableHead scope="col" className="px-4 py-3 text-center">İşlem</TableHead>
                 </TableRow>
               </TableHeader>
-              <TableBody className="divide-y divide-[#e7edf4]">
+              <TableBody className="divide-y divide-[var(--tema-yerel-eczanem-cizgi-07)]">
                 {bekleyen.map((siparis) => {
                   const toplamTutar = siparis.satis_fiyati == null ? null : Math.round(siparis.adet * siparis.satis_fiyati * 100) / 100;
                   const indirimliSatisFiyati = toplamTutar == null ? null : Math.max(0, Math.round((toplamTutar - siparis.indirim_tl) * 100) / 100);
                   return (
-                    <TableRow key={siparis.siparis_id} className="text-xs text-[#405976]">
-                      <TableCell className="px-4 py-4 align-middle whitespace-normal"><strong className="break-words text-sm text-[#263e5b]">{siparis.urun_adi}{siparis.gorunum_testi_mi && <span className="ml-1 font-black text-red-600">(F)</span>}</strong></TableCell>
+                    <TableRow key={siparis.siparis_id} className="text-xs text-[var(--tema-yerel-eczanem-ana-metin-01)]">
+                      <TableCell className="px-4 py-4 align-middle whitespace-normal"><strong className="break-words text-sm text-[var(--tema-yerel-eczanem-ana-metin-05)]">{siparis.urun_adi}{siparis.gorunum_testi_mi && <span className="ml-1 font-black text-[var(--tema-yerel-eczanem-islevsel-metin-14)]">(F)</span>}</strong></TableCell>
                       <TableCell className="px-4 py-4 align-middle font-bold text-center">{siparis.satis_fiyati == null ? "—" : paraYaz(siparis.satis_fiyati)}</TableCell>
-                      <TableCell className="px-4 py-4 align-middle text-center"><strong className="block text-[#263e5b]">{siparis.musteri_bas_harfleri ?? "Müşteri"}</strong><span className="mt-1 block whitespace-nowrap text-[11px] text-[#71859d]">{siparis.musteri_maskeli}</span></TableCell>
-                      <TableCell className="px-4 py-4 align-middle font-semibold text-[#71859d] text-center">{tarihYaz(siparis.created_at)}</TableCell>
+                      <TableCell className="px-4 py-4 align-middle text-center"><strong className="block text-[var(--tema-yerel-eczanem-ana-metin-05)]">{siparis.musteri_bas_harfleri ?? "Müşteri"}</strong><span className="mt-1 block whitespace-nowrap text-[11px] text-[var(--tema-yerel-eczanem-yardimci-metin-12)]">{siparis.musteri_maskeli}</span></TableCell>
+                      <TableCell className="px-4 py-4 align-middle font-semibold text-[var(--tema-yerel-eczanem-yardimci-metin-12)] text-center">{tarihYaz(siparis.created_at)}</TableCell>
                       <TableCell className="px-4 py-4 align-middle font-bold text-center">{siparis.adet}</TableCell>
                       <TableCell className="px-4 py-4 align-middle font-bold text-center">{toplamTutar == null ? "—" : paraYaz(toplamTutar)}</TableCell>
                       <TableCell className="px-4 py-4 align-middle font-bold text-center">{siparis.kullanilan_puan.toLocaleString("tr-TR")}</TableCell>
-                      <TableCell className="px-4 py-4 align-middle font-bold text-[#16865f] text-center">{paraYaz(siparis.indirim_tl)}</TableCell>
-                      <TableCell className="px-4 py-4 align-middle font-extrabold text-[#263e5b] text-center">{indirimliSatisFiyati == null ? "—" : paraYaz(indirimliSatisFiyati)}</TableCell>
-                      <TableCell className="px-4 py-4 align-middle"><div className="flex justify-center gap-2"><Button type="button" size="sm" disabled={isliyor} onClick={() => setOnayHedefi({ siparis, aksiyon: "onayla" })} className="bg-[#16865f] px-2.5 text-xs font-extrabold hover:bg-[#116d4d]">Onay</Button><Button type="button" size="sm" variant="outline" disabled={isliyor} onClick={() => setOnayHedefi({ siparis, aksiyon: "reddet" })} className="border-[#efd1d1] px-2.5 text-xs font-extrabold text-[#b84444] hover:bg-[#fff5f5] hover:text-[#a33434]">İptal</Button></div></TableCell>
+                      <TableCell className="px-4 py-4 align-middle font-bold text-[var(--tema-yerel-eczanem-islevsel-metin-02)] text-center">{paraYaz(siparis.indirim_tl)}</TableCell>
+                      <TableCell className="px-4 py-4 align-middle font-extrabold text-[var(--tema-yerel-eczanem-ana-metin-05)] text-center">{indirimliSatisFiyati == null ? "—" : paraYaz(indirimliSatisFiyati)}</TableCell>
+                      <TableCell className="px-4 py-4 align-middle"><div className="flex justify-center gap-2"><Button type="button" size="sm" disabled={isliyor} onClick={() => setOnayHedefi({ siparis, aksiyon: "onayla" })} className="bg-[var(--tema-yerel-eczanem-islevsel-zemin-13)] px-2.5 text-xs font-extrabold hover:bg-[var(--tema-yerel-eczanem-islevsel-zemin-14)]">Onay</Button><Button type="button" size="sm" variant="outline" disabled={isliyor} onClick={() => setOnayHedefi({ siparis, aksiyon: "reddet" })} className="border-[var(--tema-yerel-eczanem-islevsel-cizgi-05)] px-2.5 text-xs font-extrabold text-[var(--tema-yerel-eczanem-islevsel-metin-10)] hover:bg-[var(--tema-yerel-eczanem-islevsel-zemin-15)] hover:text-[var(--tema-yerel-eczanem-islevsel-metin-15)]">İptal</Button></div></TableCell>
                     </TableRow>
                   );
                 })}
@@ -221,8 +221,8 @@ export default function EczanemSiparisKuyrugu({ hata, basari, gorunumTesti = fal
         )}
         <EczanemSayfalama sayfa={veri.sayfalama.bekleyen.sayfa} toplamSayfa={veri.sayfalama.bekleyen.toplam_sayfa} onDegistir={setBekleyenSayfa} disabled={yenileniyor || isliyor} />
       </> : <>
-          <Table className="tabular-nums [&_th]:px-4 [&_th]:py-3 [&_th]:text-[10px] [&_th]:font-extrabold [&_th]:uppercase [&_th]:tracking-wide [&_th]:text-[#8090a4]">
-              <TableHeader className="bg-[#f6f9fc] text-[10px] font-extrabold uppercase tracking-wide text-[#8090a4]">
+          <Table className="tabular-nums [&_th]:px-4 [&_th]:py-3 [&_th]:text-[10px] [&_th]:font-extrabold [&_th]:uppercase [&_th]:tracking-wide [&_th]:text-[var(--tema-yerel-eczanem-yardimci-metin-05)]">
+              <TableHeader className="bg-[var(--tema-yerel-eczanem-sayfa-zemini-08)] text-[10px] font-extrabold uppercase tracking-wide text-[var(--tema-yerel-eczanem-yardimci-metin-05)]">
                 <TableRow>
                   <TableHead scope="col" className="px-4 py-3">Ürün adı</TableHead>
                   <TableHead scope="col" className="px-4 py-3 text-center">Satış fiyatı</TableHead>
@@ -236,7 +236,7 @@ export default function EczanemSiparisKuyrugu({ hata, basari, gorunumTesti = fal
                   <TableHead scope="col" className="px-4 py-3 text-center">Onay veren</TableHead>
                   <TableHead scope="col" className="px-4 py-3 text-center">
                     <Select value={durum} onValueChange={(deger) => { setDurum(deger); setGecmisSayfa(1); }}>
-                      <SelectTrigger aria-label="Sonuç filtresi" className="mx-auto h-auto w-auto gap-1 border-0 bg-transparent p-0 text-[10px] font-extrabold uppercase tracking-wide text-[#8090a4] shadow-none">Sonuç</SelectTrigger>
+                      <SelectTrigger aria-label="Sonuç filtresi" className="mx-auto h-auto w-auto gap-1 border-0 bg-transparent p-0 text-[10px] font-extrabold uppercase tracking-wide text-[var(--tema-yerel-eczanem-yardimci-metin-05)] shadow-none">Sonuç</SelectTrigger>
                       <SelectContent>
                         <SelectItem value="tumu">Tümü</SelectItem>
                         <SelectItem value="onaylandi">Onay</SelectItem>
@@ -246,27 +246,27 @@ export default function EczanemSiparisKuyrugu({ hata, basari, gorunumTesti = fal
                   </TableHead>
                 </TableRow>
               </TableHeader>
-              <TableBody className="divide-y divide-[#e7edf4]">
+              <TableBody className="divide-y divide-[var(--tema-yerel-eczanem-cizgi-07)]">
                 {gecmis.length === 0 && <TableRow><TableCell colSpan={11} className="p-0"><EczanemBosDurum ikon={History} baslik="İşlem geçmişi bulunamadı" aciklama="Seçtiğiniz duruma ait sonuç bulunmuyor." /></TableCell></TableRow>}
                 {gecmis.map((siparis) => {
                   const toplamTutar = siparis.satis_fiyati == null ? null : Math.round(siparis.adet * siparis.satis_fiyati * 100) / 100;
                   const indirimliSatisFiyati = toplamTutar == null ? null : Math.max(0, Math.round((toplamTutar - siparis.indirim_tl) * 100) / 100);
                   return (
-                    <TableRow key={siparis.siparis_id} className="text-xs text-[#405976]">
-                      <TableCell className="px-4 py-4 align-middle whitespace-normal"><strong className="break-words text-sm text-[#263e5b]">{siparis.urun_adi}{siparis.gorunum_testi_mi && <span className="ml-1 font-black text-red-600">(F)</span>}</strong></TableCell>
+                    <TableRow key={siparis.siparis_id} className="text-xs text-[var(--tema-yerel-eczanem-ana-metin-01)]">
+                      <TableCell className="px-4 py-4 align-middle whitespace-normal"><strong className="break-words text-sm text-[var(--tema-yerel-eczanem-ana-metin-05)]">{siparis.urun_adi}{siparis.gorunum_testi_mi && <span className="ml-1 font-black text-[var(--tema-yerel-eczanem-islevsel-metin-14)]">(F)</span>}</strong></TableCell>
                       <TableCell className="px-4 py-4 align-middle font-bold text-center">{siparis.satis_fiyati == null ? "—" : paraYaz(siparis.satis_fiyati)}</TableCell>
-                      <TableCell className="px-4 py-4 align-middle text-center"><strong className="block text-[#263e5b]">{siparis.musteri_bas_harfleri ?? "Müşteri"}</strong><span className="mt-1 block whitespace-nowrap text-[11px] text-[#71859d]">{siparis.musteri_maskeli}</span></TableCell>
-                      <TableCell className="px-4 py-4 align-middle font-semibold text-[#71859d] text-center">{tarihYaz(siparis.created_at)}</TableCell>
+                      <TableCell className="px-4 py-4 align-middle text-center"><strong className="block text-[var(--tema-yerel-eczanem-ana-metin-05)]">{siparis.musteri_bas_harfleri ?? "Müşteri"}</strong><span className="mt-1 block whitespace-nowrap text-[11px] text-[var(--tema-yerel-eczanem-yardimci-metin-12)]">{siparis.musteri_maskeli}</span></TableCell>
+                      <TableCell className="px-4 py-4 align-middle font-semibold text-[var(--tema-yerel-eczanem-yardimci-metin-12)] text-center">{tarihYaz(siparis.created_at)}</TableCell>
                       <TableCell className="px-4 py-4 align-middle font-bold text-center">{siparis.adet}</TableCell>
                       <TableCell className="px-4 py-4 align-middle font-bold text-center">{toplamTutar == null ? "—" : paraYaz(toplamTutar)}</TableCell>
                       <TableCell className="px-4 py-4 align-middle font-bold text-center">{siparis.kullanilan_puan.toLocaleString("tr-TR")}</TableCell>
-                      <TableCell className="px-4 py-4 align-middle font-bold text-[#16865f] text-center">{paraYaz(siparis.indirim_tl)}</TableCell>
-                      <TableCell className="px-4 py-4 align-middle font-extrabold text-[#263e5b] text-center">{indirimliSatisFiyati == null ? "—" : paraYaz(indirimliSatisFiyati)}</TableCell>
+                      <TableCell className="px-4 py-4 align-middle font-bold text-[var(--tema-yerel-eczanem-islevsel-metin-02)] text-center">{paraYaz(siparis.indirim_tl)}</TableCell>
+                      <TableCell className="px-4 py-4 align-middle font-extrabold text-[var(--tema-yerel-eczanem-ana-metin-05)] text-center">{indirimliSatisFiyati == null ? "—" : paraYaz(indirimliSatisFiyati)}</TableCell>
                       <TableCell className="px-4 py-4 align-middle text-center font-semibold">{siparis.islem_yapan ?? (siparis.sonuc_durumu === "iptal_edildi" ? "Müşteri" : "—")}</TableCell>
                       <TableCell className="px-4 py-4 align-middle text-center">
                         {siparis.sonuc_durumu === "onaylandi"
-                          ? <Badge className="border border-[#bde5d5] bg-[#edf9f4] font-bold text-[#157254]"><CheckCircle2 /> Onay</Badge>
-                          : <Badge variant="outline" className="border-[#efd1d1] bg-[#fff5f5] font-bold text-[#a74646]"><XCircle /> İptal</Badge>}
+                          ? <Badge className="border border-[var(--tema-yerel-eczanem-islevsel-cizgi-06)] bg-[var(--tema-yerel-eczanem-islevsel-zemin-06)] font-bold text-[var(--tema-yerel-eczanem-islevsel-metin-16)]"><CheckCircle2 /> Onay</Badge>
+                          : <Badge variant="outline" className="border-[var(--tema-yerel-eczanem-islevsel-cizgi-05)] bg-[var(--tema-yerel-eczanem-islevsel-zemin-15)] font-bold text-[var(--tema-yerel-eczanem-islevsel-metin-08)]"><XCircle /> İptal</Badge>}
                       </TableCell>
                     </TableRow>
                   );
@@ -277,7 +277,7 @@ export default function EczanemSiparisKuyrugu({ hata, basari, gorunumTesti = fal
       </>}
     </EczanemPanel>
 
-    <AlertDialog open={!!onayHedefi} onOpenChange={(acik) => { if (!acik && !isliyor) setOnayHedefi(null); }}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>{onayHedefi?.aksiyon === "onayla" ? "Siparişi onaylamak istediğinize emin misiniz?" : "İndirim talebini iptal etmek istediğinize emin misiniz?"}</AlertDialogTitle><AlertDialogDescription>{onayHedefi?.siparis.urun_adi ?? "Sipariş"} için {onayHedefi?.siparis.adet ?? 0} kutu ve {paraYaz(onayHedefi?.siparis.indirim_tl ?? 0)} indirim talebi. {onayHedefi?.siparis.gorunum_testi_mi ? "Bu yalnız ekran örneğidir; gerçek sipariş ve puan değişmez." : onayHedefi?.aksiyon === "onayla" ? "Onayla birlikte müşterinin kullanılabilir puanı atomik olarak düşer ve fiş kesinleşir." : "Talep iptal edilir; müşterinin puanı değişmeden kalır."}</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Vazgeç</AlertDialogCancel><AlertDialogAction onClick={(event) => { event.preventDefault(); void islem(); }} className={onayHedefi?.aksiyon === "onayla" ? "bg-[#16865f] hover:bg-[#116d4d]" : "bg-[#b84444] hover:bg-[#9f3636]"}>{onayHedefi?.aksiyon === "onayla" ? <CheckCircle2 /> : <XCircle />} {onayHedefi?.aksiyon === "onayla" ? "Siparişi onayla" : "Talebi iptal et"}</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
+    <AlertDialog open={!!onayHedefi} onOpenChange={(acik) => { if (!acik && !isliyor) setOnayHedefi(null); }}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>{onayHedefi?.aksiyon === "onayla" ? "Siparişi onaylamak istediğinize emin misiniz?" : "İndirim talebini iptal etmek istediğinize emin misiniz?"}</AlertDialogTitle><AlertDialogDescription>{onayHedefi?.siparis.urun_adi ?? "Sipariş"} için {onayHedefi?.siparis.adet ?? 0} kutu ve {paraYaz(onayHedefi?.siparis.indirim_tl ?? 0)} indirim talebi. {onayHedefi?.siparis.gorunum_testi_mi ? "Bu yalnız ekran örneğidir; gerçek sipariş ve puan değişmez." : onayHedefi?.aksiyon === "onayla" ? "Onayla birlikte müşterinin kullanılabilir puanı atomik olarak düşer ve fiş kesinleşir." : "Talep iptal edilir; müşterinin puanı değişmeden kalır."}</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Vazgeç</AlertDialogCancel><AlertDialogAction onClick={(event) => { event.preventDefault(); void islem(); }} className={onayHedefi?.aksiyon === "onayla" ? "bg-[var(--tema-yerel-eczanem-islevsel-zemin-13)] hover:bg-[var(--tema-yerel-eczanem-islevsel-zemin-14)]" : "bg-[var(--tema-yerel-eczanem-islevsel-zemin-16)] hover:bg-[var(--tema-yerel-eczanem-islevsel-zemin-17)]"}>{onayHedefi?.aksiyon === "onayla" ? <CheckCircle2 /> : <XCircle />} {onayHedefi?.aksiyon === "onayla" ? "Siparişi onayla" : "Talebi iptal et"}</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
     </>
   );
 }

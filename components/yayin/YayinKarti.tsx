@@ -167,19 +167,19 @@ export function YayinKarti({
       );
     } else if (yayin.durum === "yeni") {
       kapsulSegmentleri.push(
-        <span key="durum" className={`${pillMetniNormal ? "font-normal" : "font-extrabold"} text-blue-600`}>
+        <span key="durum" className={`${pillMetniNormal ? "font-normal" : "font-extrabold"} text-[var(--tema-hoyk-durum-yeni)]`}>
           Yeni
         </span>
       );
     } else if (yayin.durum === "devam") {
       kapsulSegmentleri.push(
-        <span key="durum" className={`${pillMetniNormal ? "font-normal" : "font-extrabold"} text-amber-600`}>
+        <span key="durum" className={`${pillMetniNormal ? "font-normal" : "font-extrabold"} text-[var(--tema-hoyk-durum-devam)]`}>
           Yarım Kaldı
         </span>
       );
     } else if (yayin.durum === "tamamlanan") {
       kapsulSegmentleri.push(
-        <span key="durum" className={`${pillMetniNormal ? "font-normal" : "font-bold"} text-gray-700`}>
+        <span key="durum" className={`${pillMetniNormal ? "font-normal" : "font-bold"} text-[var(--tema-hoyk-durum-izlendi)]`}>
           ✓ İzlendi
         </span>
       );
@@ -190,7 +190,7 @@ export function YayinKarti({
     kapsulSegmentleri.push(
       <span
         key="dongu"
-        className={`flex items-center gap-0.5 ${pillMetniNormal ? "font-normal" : "font-bold"} text-[#1e3a8a]`}
+        className={`flex items-center gap-0.5 ${pillMetniNormal ? "font-normal" : "font-bold"} text-[var(--tema-hoyk-dongu-metni)]`}
         title={`${kalanGun(yayin.sonraki_tur_tarihi)} gün sonra yeniden puanlı`}
       >
         <RotateCcw className="h-2.5 w-2.5" />
@@ -201,7 +201,7 @@ export function YayinKarti({
 
   if (icerikTuruGoster && yayin.icerik_turu) {
     kapsulSegmentleri.push(
-      <span key="icerik" className={`${pillMetniNormal ? "font-normal" : "font-medium"} text-gray-600`}>
+      <span key="icerik" className={`${pillMetniNormal ? "font-normal" : "font-medium"} text-[var(--tema-hoyk-aciklama-metni)]`}>
         {formatIcerikTuruKisa(yayin.icerik_turu)}
       </span>
     );
@@ -209,20 +209,22 @@ export function YayinKarti({
 
   const kapsulIcerigi = kapsulSegmentleri.map((seg, idx) => (
     <React.Fragment key={idx}>
-      {idx > 0 && <span className="mx-1.5 text-gray-300 select-none">|</span>}
+      {idx > 0 && <span className="mx-1.5 text-[var(--tema-hoyk-ayirici)] select-none">|</span>}
       {seg}
     </React.Fragment>
   ));
 
   return (
     <div
-      className={`group relative cursor-pointer rounded-xl ${eclubGecenGun !== undefined ? "overflow-visible" : "overflow-hidden"} ${uyariCercevesi ? "border-[2px] border-[#dc2626]" : tamamlandiCercevesi ? "border-[2px] border-[#2563eb]" : eclubGecenGun !== undefined ? "border border-transparent" : "border border-gray-200"} bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md ${className}`}
+      data-hoyk-kart
+      className={`group relative cursor-pointer rounded-xl ${eclubGecenGun !== undefined ? "overflow-visible" : "overflow-hidden"} ${uyariCercevesi ? "border-[2px] border-[var(--tema-hoyk-sure-doldu)]" : tamamlandiCercevesi ? "border-[2px] border-[var(--tema-hoyk-tamamlandi)]" : eclubGecenGun !== undefined ? "border border-transparent" : "border border-[var(--tema-hoyk-cizgi)]"} bg-[var(--tema-hoyk-zemin)] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md ${className}`}
+      style={{ backgroundColor: "var(--hoyk-kart-zemini, var(--tema-hoyk-zemin))" }}
       onClick={() => onClick?.(yayin)}
       aria-label={ariaLabel}
     >
       {eclubGecenGun !== undefined && <EclubHoykSureCercevesi gecenGun={eclubGecenGun} />}
       {/* ─── Medya Alanı (16:9 Thumbnail) ─── */}
-      <div className={`relative aspect-video overflow-hidden bg-gray-100 ${eclubGecenGun !== undefined ? "rounded-t-xl" : ""}`}>
+      <div data-hoyk-kapak className={`relative aspect-video overflow-hidden bg-[var(--tema-hoyk-kapak-zemini)] ${eclubGecenGun !== undefined ? "rounded-t-xl" : ""}`}>
         {thumbnail ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -246,7 +248,7 @@ export function YayinKarti({
         )}
 
         {/* Sağ Üst: Yayın Türü (Öğrenme Aracı) & Varsa Harici Ek Rozet */}
-        <div className="absolute right-1.5 top-1.5 flex items-center gap-1 pointer-events-none">
+        <div data-hoyk-arac className="absolute right-1.5 top-1.5 flex items-center gap-1 pointer-events-none">
           {yayinTuruGoster && (
             <YayinTuruPill
               tur={(yayin.arac_turu as OgrenmeAraciTuru) ?? "video"}
@@ -270,10 +272,11 @@ export function YayinKarti({
           <div className="mb-2">
             {kapsulZeminiGoster ? (
               <div
+                data-hoyk-kapsul
                 className="inline-flex items-center rounded-full leading-tight select-none py-0.5 px-3 sm:px-2.5 text-[11px] sm:text-[9px]"
                 style={{
-                  background: "rgba(0,0,0,0.04)",
-                  boxShadow: "inset 0 0 0 0.5px rgba(0,0,0,0.08)",
+                  background: "var(--tema-hoyk-kapsul-zemini)",
+                  boxShadow: "inset 0 0 0 0.5px var(--tema-hoyk-kapsul-cizgi)",
                 }}
               >
                 {kapsulIcerigi}
@@ -286,13 +289,13 @@ export function YayinKarti({
         <div className="flex items-start justify-between gap-1.5">
           <div className="min-w-0 flex-1">
             <h3
-              className="line-clamp-2 text-base font-bold leading-[22px] text-gray-900 sm:text-xs sm:leading-normal"
+              className="line-clamp-2 text-base font-bold leading-[22px] text-[var(--tema-hoyk-baslik)] sm:text-xs sm:leading-normal"
               title={yayin.urun_adi}
             >
               {yayin.urun_adi}
             </h3>
             {yayin.gorunen_urun_id && (
-              <span className="block text-[10px] font-normal leading-4 text-gray-400" aria-label={`Ürün ID: ${yayin.gorunen_urun_id}`}>
+              <span className="block text-[10px] font-normal leading-4 text-[var(--tema-hoyk-soluk-metin)]" aria-label={`Ürün ID: ${yayin.gorunen_urun_id}`}>
                 {yayin.gorunen_urun_id}
               </span>
             )}
@@ -300,7 +303,7 @@ export function YayinKarti({
 
           {baslikSagAksiyon}
           {etkilesimGoster && (
-            <div className="flex flex-shrink-0 items-center gap-1 text-xs text-gray-500 sm:text-[10px]">
+            <div className="flex flex-shrink-0 items-center gap-1 text-xs text-[var(--tema-hoyk-ikincil-metin)] sm:text-[10px]">
               <button
                 type="button"
                 disabled={!etkilesimAktif}
@@ -311,14 +314,14 @@ export function YayinKarti({
                 aria-label="Beğen"
                 className={`flex cursor-pointer items-center gap-0.5 rounded-full p-0.5 transition-colors ${
                   !etkilesimAktif
-                    ? "cursor-default text-red-500"
+                    ? "cursor-default text-[var(--tema-hoyk-begeni)]"
                     : yayin.begeni_mi
-                      ? "text-red-500"
-                      : "text-gray-400 hover:text-gray-600"
+                      ? "text-[var(--tema-hoyk-begeni)]"
+                      : "text-[var(--tema-hoyk-soluk-metin)] hover:text-[var(--tema-hoyk-etkilesim-hover)]"
                 }`}
               >
                 <Heart
-                  className={`h-4 w-4 sm:h-3.5 sm:w-3.5 ${yayin.begeni_mi ? "fill-current text-red-500" : ""}`}
+                  className={`h-4 w-4 sm:h-3.5 sm:w-3.5 ${yayin.begeni_mi ? "fill-current text-[var(--tema-hoyk-begeni)]" : ""}`}
                 />
                 <span>{yayin.begeni_sayisi ?? 0}</span>
               </button>
@@ -333,15 +336,15 @@ export function YayinKarti({
                 aria-label="Favoriye ekle"
                 className={`flex cursor-pointer items-center gap-0.5 rounded-full p-0.5 transition-colors ${
                   !etkilesimAktif
-                    ? "cursor-default text-blue-500"
+                    ? "cursor-default text-[var(--tema-hoyk-favori)]"
                     : yayin.favori_mi
-                      ? "text-blue-500"
-                      : "text-gray-400 hover:text-blue-500"
+                      ? "text-[var(--tema-hoyk-favori)]"
+                      : "text-[var(--tema-hoyk-soluk-metin)] hover:text-[var(--tema-hoyk-favori)]"
                 }`}
               >
                 <Star
                   className={`h-4 w-4 sm:h-3.5 sm:w-3.5 ${
-                    yayin.favori_mi ? "fill-[#2563eb] text-[#2563eb]" : ""
+                    yayin.favori_mi ? "fill-[var(--tema-hoyk-favori-dolgu)] text-[var(--tema-hoyk-favori-simge)]" : ""
                   }`}
                 />
                 <span>{yayin.favori_sayisi ?? 0}</span>
@@ -352,14 +355,14 @@ export function YayinKarti({
 
         {/* 2. Satır: Yayın Tarihi & Talep Kimliği */}
         {(tarihGoster || talepNoGoster || tarihSatiriSagAksiyon) && (
-          <div className="mt-1.5 flex items-center justify-between gap-1 text-xs text-gray-500 sm:text-[10px]">
+          <div className="mt-1.5 flex items-center justify-between gap-1 text-xs text-[var(--tema-hoyk-ikincil-metin)] sm:text-[10px]">
             {tarihGoster ? (
               <span className="truncate">{formatTarihUzun(yayin.yayin_tarihi)}</span>
             ) : (
               <span />
             )}
             {tarihSatiriSagAksiyon ?? (talepNoGoster && yayin.talep_no != null ? (
-              <span className="shrink-0 font-mono text-xs text-[#bc2d0d] sm:text-[10px]">
+              <span className="shrink-0 font-mono text-xs text-[var(--tema-hoyk-talep-metni)] sm:text-[10px]">
                 {talepIdGoster(yayin.firma_adi, yayin.talep_no)}
               </span>
             ) : (
@@ -374,9 +377,10 @@ export function YayinKarti({
             <div className="flex shrink-0 items-center gap-1">
               {puanGoster && yayin.video_puani != null && (
                 <span
-                  className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs ${pillMetniNormal ? "font-normal" : "font-extrabold"} text-white shadow-xs sm:px-1.5 sm:text-[9px]`}
+                  data-hoyk-puan
+                  className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs ${pillMetniNormal ? "font-normal" : "font-extrabold"} text-[var(--tema-puan-metni)] shadow-xs sm:px-1.5 sm:text-[9px]`}
                   style={{
-                    background: "linear-gradient(to right, #1e3a8a 0%, #2563eb 55%, #3b82f6 100%)",
+                    background: "var(--hoyk-puan-zemini, var(--tema-puan-zemini))",
                   }}
                 >
                   {yayin.video_puani}{" "}
@@ -386,9 +390,10 @@ export function YayinKarti({
               )}
               {puanGoster && extraPuanGoster && !!yayin.extra_puan && yayin.extra_puan > 0 && (
                 <span
-                  className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs ${pillMetniNormal ? "font-normal" : "font-extrabold"} text-white shadow-xs sm:px-1.5 sm:text-[9px]`}
+                  data-hoyk-ek-puan
+                  className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs ${pillMetniNormal ? "font-normal" : "font-extrabold"} text-[var(--tema-ek-puan-metni)] shadow-xs sm:px-1.5 sm:text-[9px]`}
                   style={{
-                    background: "linear-gradient(to right, #267d39 0%, #2e9143 55%, #3db856 100%)",
+                    background: "var(--tema-ek-puan-zemini)",
                   }}
                 >
                   +{yayin.extra_puan} Extra
@@ -400,7 +405,7 @@ export function YayinKarti({
             {(izlenmeGoster || puanSatiriSagAksiyon) && (
               <div className="flex shrink-0 items-center gap-1">
                 {izlenmeGoster && (
-                  <span className="text-xs text-gray-500 sm:text-[10px]">
+                  <span className="text-xs text-[var(--tema-hoyk-ikincil-metin)] sm:text-[10px]">
                     {yayin.izlenme_sayisi ?? 0} izlenme
                   </span>
                 )}
@@ -412,7 +417,7 @@ export function YayinKarti({
 
         {/* 4. Satır: Devam Eden Yayın İçin Baştan İzle Butonu */}
         {donguGoster && yayin.durum === "devam" && (
-          <div className="mt-2 flex items-center justify-between rounded-lg bg-amber-50 px-2 py-1.5 text-xs font-bold text-amber-700 sm:text-[10px]">
+          <div className="mt-2 flex items-center justify-between rounded-lg bg-[var(--tema-hoyk-yeniden-zemin)] px-2 py-1.5 text-xs font-bold text-[var(--tema-hoyk-yeniden-metin)] sm:text-[10px]">
             <span>Baştan İzle</span>
             <span aria-hidden="true">→</span>
           </div>

@@ -105,12 +105,12 @@ export default function HayaletTanburSecici({ bolumler, seciliId, onSec }: Props
           type="button"
           onClick={() => setAcik((prev) => !prev)}
           aria-label={acik ? "Bölüm tanburunu kapat" : "Bölüm tanburunu aç"}
-          className={`fixed right-0 top-1/2 z-50 flex -translate-y-1/2 cursor-pointer items-center justify-center rounded-l-xl border-y border-l border-white/25 bg-slate-900/85 px-1.5 py-3 text-white shadow-xl backdrop-blur-md transition-all active:scale-90 hover:bg-slate-900 sm:hidden ${
-            acik ? "translate-x-0 bg-slate-800" : ""
+          className={`fixed right-0 top-1/2 z-50 flex -translate-y-1/2 cursor-pointer items-center justify-center rounded-l-xl border-y border-l border-[var(--tema-yerel-ortak-sayfa-cizgi-09)]/25 bg-[var(--tema-yerel-ortak-sayfa-eylem-zemin-05)]/85 px-1.5 py-3 text-[var(--tema-yerel-ortak-sayfa-ters-metin-01)] shadow-xl backdrop-blur-md transition-all active:scale-90 hover:bg-[var(--tema-yerel-ortak-sayfa-eylem-zemin-06)] sm:hidden ${
+            acik ? "translate-x-0 bg-[var(--tema-yerel-ortak-sayfa-eylem-zemin-07)]" : ""
           }`}
         >
           <svg
-            className={`h-4 w-4 text-white/90 transition-transform duration-200 ${
+            className={`h-4 w-4 text-[var(--tema-yerel-ortak-sayfa-ters-metin-01)]/90 transition-transform duration-200 ${
               acik ? "rotate-180" : ""
             }`}
             fill="none"
@@ -135,7 +135,7 @@ export default function HayaletTanburSecici({ bolumler, seciliId, onSec }: Props
       {/* 3. SADECE TANBUR BÖLGESİ (Sol ekran tamamen net ve aydınlık kalır, yalnızca sağ kenarda yumuşak buğu) */}
       {acik && (
         <div
-          className="pointer-events-none fixed inset-y-0 right-0 z-40 w-64 max-w-[75vw] bg-gradient-to-l from-black/20 via-black/10 to-transparent backdrop-blur-[3px] transition-opacity duration-200 sm:hidden"
+          className="pointer-events-none fixed inset-y-0 right-0 z-40 w-64 max-w-[75vw] bg-gradient-to-l from-[var(--tema-yerel-ortak-sayfa-ortu-01)]/20 via-[var(--tema-yerel-ortak-sayfa-ortu-01)]/10 to-transparent backdrop-blur-[3px] transition-opacity duration-200 sm:hidden"
           aria-hidden="true"
         />
       )}
@@ -156,8 +156,8 @@ export default function HayaletTanburSecici({ bolumler, seciliId, onSec }: Props
           onWheel={handleWheel}
         >
           {/* Ortadaki Aktif Alana İnce Kılavuz Çizgiler (Kutu Yok, Sadece Odak Kılavuzu) */}
-          <div className="pointer-events-none absolute inset-x-2 top-1/2 -translate-y-[22px] h-[1px] bg-gradient-to-r from-transparent via-black/25 to-transparent" />
-          <div className="pointer-events-none absolute inset-x-2 top-1/2 translate-y-[22px] h-[1px] bg-gradient-to-r from-transparent via-black/25 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-2 top-1/2 -translate-y-[22px] h-[1px] bg-gradient-to-r from-transparent via-[var(--tema-yerel-ortak-sayfa-ortu-01)]/25 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-2 top-1/2 translate-y-[22px] h-[1px] bg-gradient-to-r from-transparent via-[var(--tema-yerel-ortak-sayfa-ortu-01)]/25 to-transparent" />
 
           {/* 3D Silindirik Çark */}
           <div
@@ -181,21 +181,21 @@ export default function HayaletTanburSecici({ bolumler, seciliId, onSec }: Props
               const olcek = Math.max(0.7, 1 - mutlakUzaklik * 0.08);
 
               // Görünürlük ve Tipografi
-              let stil = "text-slate-400 opacity-0 pointer-events-none";
+              let stil = "text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-15)] opacity-0 pointer-events-none";
               let yaziGolgesi = "";
               if (mutlakUzaklik === 0) {
                 // Ortadaki aktif sekme: Simsiyah, ekstra kalın, her fonda (açık/koyu) parlayan çok katmanlı beyaz ışık aurası
-                stil = "text-black font-black text-[15px] opacity-100 cursor-pointer";
+                stil = "text-[var(--tema-yerel-ortak-sayfa-metin-01)] font-black text-[15px] opacity-100 cursor-pointer";
                 yaziGolgesi =
-                  "0 0 2px #ffffff, 0 0 5px #ffffff, 0 0 12px rgba(255,255,255,0.95), 0 0 22px rgba(255,255,255,0.85)";
+                  "var(--tema-tanbur-yazi-golge-secili)";
               } else if (mutlakUzaklik === 1) {
                 // Bir üst / alt sekmeler: Yarı saydam, yumuşak ışık aurası
-                stil = "text-slate-950 font-bold text-[12px] opacity-55 cursor-pointer";
-                yaziGolgesi = "0 0 3px #ffffff, 0 0 8px rgba(255,255,255,0.85)";
+                stil = "text-[var(--tema-yerel-ortak-sayfa-ana-metin-14)] font-bold text-[12px] opacity-55 cursor-pointer";
+                yaziGolgesi = "var(--tema-tanbur-yazi-golge-yakin)";
               } else if (mutlakUzaklik === 2) {
                 // İki üst / alt sekmeler: Hayalet gibi soluk
-                stil = "text-slate-800 font-medium text-[11px] opacity-25 cursor-pointer";
-                yaziGolgesi = "0 0 2px rgba(255,255,255,0.7)";
+                stil = "text-[var(--tema-yerel-ortak-sayfa-ana-metin-15)] font-medium text-[11px] opacity-25 cursor-pointer";
+                yaziGolgesi = "var(--tema-tanbur-yazi-golge-uzak)";
               }
 
               return (
@@ -218,8 +218,8 @@ export default function HayaletTanburSecici({ bolumler, seciliId, onSec }: Props
                     <span
                       className={`ml-1.5 rounded-full px-1.5 py-0.5 text-[9px] font-bold transition-colors ${
                         mutlakUzaklik === 0
-                          ? "bg-black text-white shadow-[0_0_8px_rgba(255,255,255,0.9)] border border-white/50"
-                          : "bg-black/20 text-black border border-white/30"
+                          ? "bg-[var(--tema-yerel-ortak-sayfa-ortu-01)] text-[var(--tema-yerel-ortak-sayfa-ters-metin-01)] shadow-[0_0_8px_var(--tema-yerel-ortak-sayfa-golge-03)] border border-[var(--tema-yerel-ortak-sayfa-cizgi-09)]/50"
+                          : "bg-[var(--tema-yerel-ortak-sayfa-ortu-01)]/20 text-[var(--tema-yerel-ortak-sayfa-metin-01)] border border-[var(--tema-yerel-ortak-sayfa-cizgi-09)]/30"
                       }`}
                     >
                       {bolum.sayi}

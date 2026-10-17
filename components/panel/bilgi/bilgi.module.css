@@ -101,12 +101,12 @@
   border: 1px solid var(--bilgi-cizgi);
   border-radius: 50%;
   background: var(--bilgi-zemin);
-  box-shadow: 0 8px 24px #25252508;
+  box-shadow: 0 8px 24px var(--tema-yerel-ortak-sayfa-golge-04);
   transition: transform .35s ease, background .35s, color .35s, box-shadow .35s;
 }
 
 .halka > span { font-size: 28px; font-weight: 800; letter-spacing: -1px; }
-.dugum[aria-pressed="true"] .halka { color: var(--bilgi-vurgu); border-color: var(--bilgi-vurgu); box-shadow: 0 0 0 8px var(--bilgi-acik-vurgu), 0 10px 30px #bc2d0d10; transform: translateY(-6px); }
+.dugum[aria-pressed="true"] .halka { color: var(--bilgi-vurgu); border-color: var(--bilgi-vurgu); box-shadow: 0 0 0 8px var(--bilgi-acik-vurgu), 0 10px 30px var(--tema-yerel-ortak-sayfa-islevsel-golge-03); transform: translateY(-6px); }
 .dugum:hover .halka { transform: translateY(-6px); }
 .dugum strong { display: block; margin: 0 0 3px; color: var(--bilgi-metin); font-size: 14px; font-weight: 800; }
 .dugum small { display: block; font-size: 11px; line-height: 1.4; }
@@ -172,7 +172,7 @@
 .bilgiEtiketi { top: 0; left: 50%; transform: translateX(-50%); }
 .katilimEtiketi { right: -2px; bottom: 22%; }
 .sureklilikEtiketi { left: -3px; bottom: 22%; }
-.ornek { width: 100%; max-width: 360px; min-height: 180px; margin-inline: auto; overflow: hidden; border: 1px solid var(--bilgi-cizgi); border-radius: 14px; background: var(--bilgi-zemin); box-shadow: 0 14px 40px #282c3309; }
+.ornek { width: 100%; max-width: 360px; min-height: 180px; margin-inline: auto; overflow: hidden; border: 1px solid var(--bilgi-cizgi); border-radius: 14px; background: var(--bilgi-zemin); box-shadow: 0 14px 40px var(--tema-yerel-ortak-sayfa-golge-05); }
 .ornekUst { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 12px 15px; border-bottom: 1px solid var(--bilgi-cizgi); color: var(--bilgi-ikincil); font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
 .pencereNoktalari { display: flex; flex-shrink: 0; gap: 4px; }
 .pencereNoktalari i { width: 4px; height: 4px; border-radius: 50%; background: var(--bilgi-cizgi); }

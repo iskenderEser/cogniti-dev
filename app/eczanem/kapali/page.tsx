@@ -36,13 +36,13 @@ export default function EczanemKapaliPage() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-50 px-4 py-16">
+    <main className="min-h-screen bg-[var(--tema-yerel-eczanem-sayfa-zemini-05)] px-4 py-16">
       <div className="mx-auto max-w-md">
       <EclubGecisKarti hata={(mesaj) => setHata(mesaj)} basari={(mesaj) => setBilgi(mesaj)} />
-      {bilgi && <p className="mb-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-xs font-semibold text-emerald-800">{bilgi}</p>}
-      <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-        <h1 className="text-lg font-bold text-gray-900">Eczanem şu anda kapalı</h1>
-        <p className="mt-2 text-sm leading-6 text-gray-600">
+      {bilgi && <p className="mb-3 rounded-xl border border-[var(--tema-yerel-eczanem-islevsel-cizgi-13)] bg-[var(--tema-yerel-eczanem-islevsel-zemin-27)] px-4 py-3 text-xs font-semibold text-[var(--tema-yerel-eczanem-islevsel-metin-27)]">{bilgi}</p>}
+      <section className="rounded-2xl border border-[var(--tema-yerel-eczanem-cizgi-06)] bg-[var(--tema-yerel-eczanem-kart-01)] p-6 shadow-sm">
+        <h1 className="text-lg font-bold text-[var(--tema-yerel-eczanem-ana-metin-02)]">Eczanem şu anda kapalı</h1>
+        <p className="mt-2 text-sm leading-6 text-[var(--tema-yerel-eczanem-ana-metin-16)]">
           Eczanem, bağlı olduğunuz firmalar için şu anda kullanıma açık değildir.
         </p>
 
@@ -50,23 +50,23 @@ export default function EczanemKapaliPage() {
           <button
             type="button"
             onClick={() => cikisYap()}
-            className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50"
+            className="rounded-lg border border-[var(--tema-yerel-eczanem-cizgi-27)] px-3 py-2 text-sm font-semibold text-[var(--tema-yerel-eczanem-ana-metin-13)] hover:bg-[var(--tema-yerel-eczanem-sayfa-zemini-05)]"
           >
             Çıkış yap
           </button>
           <button
             type="button"
             onClick={() => setSilmeAcik((acik) => !acik)}
-            className="rounded-lg border border-red-200 px-3 py-2 text-sm font-semibold text-red-700 hover:bg-red-50"
+            className="rounded-lg border border-[var(--tema-yerel-eczanem-islevsel-cizgi-02)] px-3 py-2 text-sm font-semibold text-[var(--tema-yerel-eczanem-islevsel-metin-07)] hover:bg-[var(--tema-yerel-eczanem-islevsel-zemin-08)]"
           >
             Hesabımı sil
           </button>
         </div>
 
         {silmeAcik && (
-          <form onSubmit={hesabimiSil} className="mt-5 rounded-xl border border-red-100 bg-red-50 p-4">
-            <p className="text-sm font-semibold text-red-900">Hesabınız ve kişisel verileriniz kalıcı olarak silinecek.</p>
-            <label className="mt-3 block text-xs font-semibold text-gray-700" htmlFor="kapali-silme-sifre">
+          <form onSubmit={hesabimiSil} className="mt-5 rounded-xl border border-[var(--tema-yerel-eczanem-islevsel-cizgi-20)] bg-[var(--tema-yerel-eczanem-islevsel-zemin-08)] p-4">
+            <p className="text-sm font-semibold text-[var(--tema-yerel-eczanem-islevsel-metin-38)]">Hesabınız ve kişisel verileriniz kalıcı olarak silinecek.</p>
+            <label className="mt-3 block text-xs font-semibold text-[var(--tema-yerel-eczanem-ana-metin-13)]" htmlFor="kapali-silme-sifre">
               Onaylamak için şifrenizi girin
             </label>
             <input
@@ -74,14 +74,14 @@ export default function EczanemKapaliPage() {
               type="password"
               value={sifre}
               onChange={(event) => setSifre(event.target.value)}
-              className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none focus:border-red-400"
+              className="mt-1 w-full rounded-lg border border-[var(--tema-yerel-eczanem-cizgi-27)] bg-[var(--tema-yerel-eczanem-kart-01)] px-3 py-2 text-sm outline-none focus:border-[var(--tema-yerel-eczanem-islevsel-cizgi-21)]"
               required
             />
-            {hata && <p className="mt-2 text-xs text-red-700">{hata}</p>}
+            {hata && <p className="mt-2 text-xs text-[var(--tema-yerel-eczanem-islevsel-metin-07)]">{hata}</p>}
             <button
               type="submit"
               disabled={siliniyor || !sifre}
-              className="mt-3 w-full rounded-lg bg-red-700 px-3 py-2 text-sm font-bold text-white disabled:opacity-50"
+              className="mt-3 w-full rounded-lg bg-[var(--tema-yerel-eczanem-islevsel-zemin-30)] px-3 py-2 text-sm font-bold text-[var(--tema-yerel-eczanem-ters-metin-01)] disabled:opacity-50"
             >
               {siliniyor ? "Siliniyor…" : "Evet, hesabımı kalıcı olarak sil"}
             </button>

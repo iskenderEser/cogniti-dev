@@ -1,0 +1,660 @@
+{
+  "tarih": "2026-10-17",
+  "dosyalar": [
+    {
+      "path": "components/ui/button.tsx",
+      "degisen_renk_ifadesi": 1,
+      "renk_disi_fark": 0,
+      "once_sha256": "1660582ed1a21f582f5b76f5a858d5445843322947d67f0033c25af50f2fd185",
+      "sonra_sha256": "02db4fa04976b0109d8792a9361ec87fc716980bf63a7e5e5e09510cd0d67711"
+    },
+    {
+      "path": "components/ui/yenile-butonu.tsx",
+      "degisen_renk_ifadesi": 4,
+      "renk_disi_fark": 0,
+      "once_sha256": "a1588d86519aa87806f6d134f87896b4e04b57d4b2132be71489ce188542dc38",
+      "sonra_sha256": "78cf9164527a1f8e728c14512dc79f513bd6fcc4c684ca700498ca5738882bed"
+    },
+    {
+      "path": "components/ui/input.tsx",
+      "degisen_renk_ifadesi": 0,
+      "sha256": "7fb8fd1b47d83ec4d564275a1cb76505d0a6a07601580bd616e9a2d755f8d92d"
+    },
+    {
+      "path": "components/ui/label.tsx",
+      "degisen_renk_ifadesi": 0,
+      "sha256": "e08fbedde0d09e0ceea0ec76f0f5c767fbdbfd81dc6e9a47a940bddd1c8fa9c6"
+    },
+    {
+      "path": "components/ui/sayfa-yenile.module.css",
+      "degisen_renk_ifadesi": 0,
+      "sha256": "37cf67d5b6acc6ed0ec6705d851aa5a2e31b914708a72d4e19d58ee365df41c6"
+    },
+    {
+      "path": "app/globals.css",
+      "degisen_renk_ifadesi": 0,
+      "sha256": "1a25ec68e051b4ae550e8d4ab0ee193e2e14e092935f5abe421ff692cf63fff4"
+    },
+    {
+      "path": "app/layout.tsx",
+      "degisen_renk_ifadesi": 0,
+      "sha256": "66294dc260a7bed696f7737e0444764ec49fd96f1124405301dfe6956dd161d6"
+    }
+  ],
+  "eslemeler": {
+    "components/ui/button.tsx": {
+      "text-white": "text-destructive-foreground"
+    },
+    "components/ui/yenile-butonu.tsx": {
+      "border-[#d8e3ee]": "border-[var(--tema-yenile-cizgi)]",
+      "bg-white": "bg-[var(--tema-yenile-yuzey)]",
+      "text-[#58708b]": "text-[var(--tema-yenile-metin)]",
+      "hover:bg-[#f4f8fb]": "hover:bg-[var(--tema-yenile-hover)]"
+    }
+  },
+  "korunan_onceki_tema_bildirimi": 157,
+  "eklenen_tema_bildirimi": 8,
+  "eklenen_degisken": 4,
+  "eklenen_tanimlar": [
+    {
+      "selector": ":root,\n[data-tema=\"mavi\"]",
+      "prop": "--tema-yenile-yuzey",
+      "value": "#fff",
+      "important": false
+    },
+    {
+      "selector": ":root,\n[data-tema=\"mavi\"]",
+      "prop": "--tema-yenile-cizgi",
+      "value": "#d8e3ee",
+      "important": false
+    },
+    {
+      "selector": ":root,\n[data-tema=\"mavi\"]",
+      "prop": "--tema-yenile-metin",
+      "value": "#58708b",
+      "important": false
+    },
+    {
+      "selector": ":root,\n[data-tema=\"mavi\"]",
+      "prop": "--tema-yenile-hover",
+      "value": "#f4f8fb",
+      "important": false
+    },
+    {
+      "selector": "[data-tema=\"yesil\"]",
+      "prop": "--tema-yenile-yuzey",
+      "value": "var(--tema-yuzey)",
+      "important": false
+    },
+    {
+      "selector": "[data-tema=\"yesil\"]",
+      "prop": "--tema-yenile-cizgi",
+      "value": "var(--tema-cizgi)",
+      "important": false
+    },
+    {
+      "selector": "[data-tema=\"yesil\"]",
+      "prop": "--tema-yenile-metin",
+      "value": "var(--tema-ikincil-metin)",
+      "important": false
+    },
+    {
+      "selector": "[data-tema=\"yesil\"]",
+      "prop": "--tema-yenile-hover",
+      "value": "var(--tema-secili)",
+      "important": false
+    }
+  ],
+  "degisen_renk_ifadesi": 5,
+  "mavi_deger_farki": 0,
+  "renk_disi_fark": 0,
+  "tuketiciler": {
+    "toplam": 44,
+    "ayni": 43,
+    "degisen": [
+      "components/ui/yenile-butonu.tsx"
+    ],
+    "dosyalar": [
+      {
+        "path": "components/challenge-club/ChallengeGonderPaneli.tsx",
+        "imports": [
+          "@/components/ui/button"
+        ],
+        "sha256": "10ea5790aa16839f00ca8326fcd561968eb9c8f94f150948c58f910894774b56",
+        "sonra_sha256": "10ea5790aa16839f00ca8326fcd561968eb9c8f94f150948c58f910894774b56",
+        "degisti": false
+      },
+      {
+        "path": "app/(panel)/cc-ligi/page.tsx",
+        "imports": [
+          "@/components/ui/yenile-butonu"
+        ],
+        "sha256": "6a972f02bc118323af21c0738c80ef4fab867335fe9f153ae372490be552e0b7",
+        "sonra_sha256": "6a972f02bc118323af21c0738c80ef4fab867335fe9f153ae372490be552e0b7",
+        "degisti": false
+      },
+      {
+        "path": "components/ui/yenile-butonu.tsx",
+        "imports": [
+          "@/components/ui/button"
+        ],
+        "sha256": "a1588d86519aa87806f6d134f87896b4e04b57d4b2132be71489ce188542dc38",
+        "sonra_sha256": "78cf9164527a1f8e728c14512dc79f513bd6fcc4c684ca700498ca5738882bed",
+        "degisti": true
+      },
+      {
+        "path": "components/ui/alert-dialog.tsx",
+        "imports": [
+          "@/components/ui/button"
+        ],
+        "sha256": "670196d287f96b346f761928b0d0cb544734752c94d6b66313878e381ec16b43",
+        "sonra_sha256": "670196d287f96b346f761928b0d0cb544734752c94d6b66313878e381ec16b43",
+        "degisti": false
+      },
+      {
+        "path": "components/uretim/UretimGorevListesi.tsx",
+        "imports": [
+          "@/components/ui/yenile-butonu"
+        ],
+        "sha256": "b4c17eef2bf08f684cb6aeace059160c471d881c71a65d4b335ec65bb2931627",
+        "sonra_sha256": "b4c17eef2bf08f684cb6aeace059160c471d881c71a65d4b335ec65bb2931627",
+        "degisti": false
+      },
+      {
+        "path": "app/(panel)/store/siparislerim/page.tsx",
+        "imports": [
+          "@/components/ui/yenile-butonu"
+        ],
+        "sha256": "19c5980a8f4f250c95e669a04bb2bd343d102b2c2ae807af295f93c23fb8f8d7",
+        "sonra_sha256": "19c5980a8f4f250c95e669a04bb2bd343d102b2c2ae807af295f93c23fb8f8d7",
+        "degisti": false
+      },
+      {
+        "path": "app/(panel)/store/page.tsx",
+        "imports": [
+          "@/components/ui/yenile-butonu"
+        ],
+        "sha256": "93521db51be91a05f63b8b68cc441fe6ddc15938d9d562ebdbec8f170abad992",
+        "sonra_sha256": "93521db51be91a05f63b8b68cc441fe6ddc15938d9d562ebdbec8f170abad992",
+        "degisti": false
+      },
+      {
+        "path": "components/panel/bilgi/OgrenmeDongusu.tsx",
+        "imports": [
+          "@/components/ui/button"
+        ],
+        "sha256": "7742adecbe039dc315fa5164fc50eab51e9117fcba93457fd4073972eed905ca",
+        "sonra_sha256": "7742adecbe039dc315fa5164fc50eab51e9117fcba93457fd4073972eed905ca",
+        "degisti": false
+      },
+      {
+        "path": "app/(panel)/store/siparisler/page.tsx",
+        "imports": [
+          "@/components/ui/yenile-butonu"
+        ],
+        "sha256": "f3720ea0672111c7ac3d56b65e629653b286624437d77cbf7462245cf81a768c",
+        "sonra_sha256": "f3720ea0672111c7ac3d56b65e629653b286624437d77cbf7462245cf81a768c",
+        "degisti": false
+      },
+      {
+        "path": "components/raporlar/DavranisRaporu.tsx",
+        "imports": [
+          "@/components/ui/yenile-butonu"
+        ],
+        "sha256": "1213bd9ebd969bb4552770b4e8f5d148c96f53d98da94fbc8583e87ae74847bc",
+        "sonra_sha256": "1213bd9ebd969bb4552770b4e8f5d148c96f53d98da94fbc8583e87ae74847bc",
+        "degisti": false
+      },
+      {
+        "path": "components/yayin/katalog/UreticiYayinKatalogu.tsx",
+        "imports": [
+          "@/components/ui/yenile-butonu"
+        ],
+        "sha256": "24277b47b916f1ab3e70ffcc142a6355a43898ea29ecd7dda00edf49e0a6accf",
+        "sonra_sha256": "24277b47b916f1ab3e70ffcc142a6355a43898ea29ecd7dda00edf49e0a6accf",
+        "degisti": false
+      },
+      {
+        "path": "components/yayin/BmEgitimYayinlari.tsx",
+        "imports": [
+          "@/components/ui/yenile-butonu"
+        ],
+        "sha256": "1a2f66ad2805843229d5a0864f8f32e7470ea0b063ded7368edb4039bf676e35",
+        "sonra_sha256": "1a2f66ad2805843229d5a0864f8f32e7470ea0b063ded7368edb4039bf676e35",
+        "degisti": false
+      },
+      {
+        "path": "app/eczanem/page.tsx",
+        "imports": [
+          "@/components/ui/yenile-butonu",
+          "@/components/ui/button",
+          "@/components/ui/input"
+        ],
+        "sha256": "c90402c64f95df82cd56a8fad6a4037db6219ad1feb273688e9376d25646fda0",
+        "sonra_sha256": "c90402c64f95df82cd56a8fad6a4037db6219ad1feb273688e9376d25646fda0",
+        "degisti": false
+      },
+      {
+        "path": "app/admin/eczanem/_components/EczanemUyeYonetimi.tsx",
+        "imports": [
+          "@/components/ui/button",
+          "@/components/ui/input"
+        ],
+        "sha256": "cbacd4e1339739269bc2b278279afb135bdf740b11d81e63998ae7ee31b50a91",
+        "sonra_sha256": "cbacd4e1339739269bc2b278279afb135bdf740b11d81e63998ae7ee31b50a91",
+        "degisti": false
+      },
+      {
+        "path": "app/(panel)/oneriler/_components/BmOneriTakibi.tsx",
+        "imports": [
+          "@/components/ui/button",
+          "@/components/ui/yenile-butonu"
+        ],
+        "sha256": "f8da3bfd07b8e335233b272bb27e8bcd91862302b8791a7c1ad966c742ee3ccd",
+        "sonra_sha256": "f8da3bfd07b8e335233b272bb27e8bcd91862302b8791a7c1ad966c742ee3ccd",
+        "degisti": false
+      },
+      {
+        "path": "app/(panel)/oneriler/_components/TmOneriTakibi.tsx",
+        "imports": [
+          "@/components/ui/yenile-butonu"
+        ],
+        "sha256": "b46aec402011e1c6cec0019bea5c9ed9aab26f25198c8e59b7db26ef43f5984c",
+        "sonra_sha256": "b46aec402011e1c6cec0019bea5c9ed9aab26f25198c8e59b7db26ef43f5984c",
+        "degisti": false
+      },
+      {
+        "path": "app/(panel)/oneriler/_components/UyeOnerilerGorunumu.tsx",
+        "imports": [
+          "@/components/ui/yenile-butonu"
+        ],
+        "sha256": "b55fd09ea248d8191fbe825bef072db997b588e8c721ef38da7dd96ed68f349b",
+        "sonra_sha256": "b55fd09ea248d8191fbe825bef072db997b588e8c721ef38da7dd96ed68f349b",
+        "degisti": false
+      },
+      {
+        "path": "app/(panel)/kullanicilar/page.tsx",
+        "imports": [
+          "@/components/ui/yenile-butonu"
+        ],
+        "sha256": "b10467eb3246fcde96840fd92db44fbd1916a9db6afd790356ecb775e59a03d4",
+        "sonra_sha256": "b10467eb3246fcde96840fd92db44fbd1916a9db6afd790356ecb775e59a03d4",
+        "degisti": false
+      },
+      {
+        "path": "app/eczanem/_components/EczanemPuanlarim.tsx",
+        "imports": [
+          "@/components/ui/button"
+        ],
+        "sha256": "5bcddc1236c263f4d1371d740b676360fc035369844e2735e026b89978364625",
+        "sonra_sha256": "5bcddc1236c263f4d1371d740b676360fc035369844e2735e026b89978364625",
+        "degisti": false
+      },
+      {
+        "path": "app/eczanem/_components/EczanemVideoOynatici.tsx",
+        "imports": [
+          "@/components/ui/button"
+        ],
+        "sha256": "9a978a434b2061d9e7a552ef1ee248f9c2b9de10c0d70551347cefe8d0bc1260",
+        "sonra_sha256": "9a978a434b2061d9e7a552ef1ee248f9c2b9de10c0d70551347cefe8d0bc1260",
+        "degisti": false
+      },
+      {
+        "path": "app/(panel)/raporlar/uretici/page.tsx",
+        "imports": [
+          "@/components/ui/yenile-butonu"
+        ],
+        "sha256": "6cdfd36ad82f40ebf40421e5010dc82b8d77278ceb09bbac807673ce289826a8",
+        "sonra_sha256": "6cdfd36ad82f40ebf40421e5010dc82b8d77278ceb09bbac807673ce289826a8",
+        "degisti": false
+      },
+      {
+        "path": "app/(panel)/raporlar/yayin-raporlari/page.tsx",
+        "imports": [
+          "@/components/ui/yenile-butonu"
+        ],
+        "sha256": "9f1f22bd39c70426a20aa18cdc77f4d319ff293c87b13d3f1029903ade58099c",
+        "sonra_sha256": "9f1f22bd39c70426a20aa18cdc77f4d319ff293c87b13d3f1029903ade58099c",
+        "degisti": false
+      },
+      {
+        "path": "app/(panel)/raporlar/tclub-uretici/page.tsx",
+        "imports": [
+          "@/components/ui/yenile-butonu"
+        ],
+        "sha256": "440e06e350d393c4a505d1659ae8cd5f8ddcddc64c1a99f896d0db908cbc1ddc",
+        "sonra_sha256": "440e06e350d393c4a505d1659ae8cd5f8ddcddc64c1a99f896d0db908cbc1ddc",
+        "degisti": false
+      },
+      {
+        "path": "app/eczanem/puanlarim/page.tsx",
+        "imports": [
+          "@/components/ui/yenile-butonu"
+        ],
+        "sha256": "51f248c451b69d1ed4c0d2b856c59b1bfa52a06f498d0319a77219bb4e0530e0",
+        "sonra_sha256": "51f248c451b69d1ed4c0d2b856c59b1bfa52a06f498d0319a77219bb4e0530e0",
+        "degisti": false
+      },
+      {
+        "path": "app/(panel)/eczanem/yayinlar/page.tsx",
+        "imports": [
+          "@/components/ui/button",
+          "@/components/ui/yenile-butonu"
+        ],
+        "sha256": "d69c08e7949c8a246b8c54b94454ab75ed743b71d6d1d0736f9b091993c05604",
+        "sonra_sha256": "d69c08e7949c8a246b8c54b94454ab75ed743b71d6d1d0736f9b091993c05604",
+        "degisti": false
+      },
+      {
+        "path": "app/(panel)/eczanem/eczane/_components/EczanemEczaneArayuz.tsx",
+        "imports": [
+          "@/components/ui/button"
+        ],
+        "sha256": "c61438849b5efcc4be3339778b3567326f013d896ac8ab5f8cf79c73894a917e",
+        "sonra_sha256": "c61438849b5efcc4be3339778b3567326f013d896ac8ab5f8cf79c73894a917e",
+        "degisti": false
+      },
+      {
+        "path": "app/(panel)/eczanem/eczane/_components/EczanemSiparisKuyrugu.tsx",
+        "imports": [
+          "@/components/ui/button"
+        ],
+        "sha256": "29609181a35506fa93dc4df0eb9f41d70187f8c7eb96affef548b350fadf4ee2",
+        "sonra_sha256": "29609181a35506fa93dc4df0eb9f41d70187f8c7eb96affef548b350fadf4ee2",
+        "degisti": false
+      },
+      {
+        "path": "app/(panel)/eczanem/eczane/uye-yayinlari/page.tsx",
+        "imports": [
+          "@/components/ui/button",
+          "@/components/ui/yenile-butonu"
+        ],
+        "sha256": "c87fb88e808a57044a7ad7b2aca7a0c2f9ca907dd96a8e900247770899b88467",
+        "sonra_sha256": "c87fb88e808a57044a7ad7b2aca7a0c2f9ca907dd96a8e900247770899b88467",
+        "degisti": false
+      },
+      {
+        "path": "app/(panel)/eczanem/eczane/uyeler/page.tsx",
+        "imports": [
+          "@/components/ui/button",
+          "@/components/ui/input",
+          "@/components/ui/label",
+          "@/components/ui/yenile-butonu"
+        ],
+        "sha256": "3a488170552aba5accd0a8ef6f13ab9cfdd8bc804372810a863478107d4befe5",
+        "sonra_sha256": "3a488170552aba5accd0a8ef6f13ab9cfdd8bc804372810a863478107d4befe5",
+        "degisti": false
+      },
+      {
+        "path": "app/(panel)/eczanem/utt/mutabakat/page.tsx",
+        "imports": [
+          "@/components/ui/button",
+          "@/components/ui/yenile-butonu"
+        ],
+        "sha256": "3704415df270610e6d2b98c43e1dfb82a6701b1d0f5d20a968b9f01923d10c3b",
+        "sonra_sha256": "3704415df270610e6d2b98c43e1dfb82a6701b1d0f5d20a968b9f01923d10c3b",
+        "degisti": false
+      },
+      {
+        "path": "app/(panel)/talepler/_components/UreticiRolGorunum.tsx",
+        "imports": [
+          "@/components/ui/yenile-butonu"
+        ],
+        "sha256": "7711eb5bff6be6398987c91e6997f1068872605430f3b8908b5c618b7785f074",
+        "sonra_sha256": "7711eb5bff6be6398987c91e6997f1068872605430f3b8908b5c618b7785f074",
+        "degisti": false
+      },
+      {
+        "path": "app/(panel)/eczanem/_components/MutabakatExcelButonu.tsx",
+        "imports": [
+          "@/components/ui/button"
+        ],
+        "sha256": "bc30db7eec780cec2df4eedef57dec4389c50fa384108bca98bd57fb26248cdf",
+        "sonra_sha256": "bc30db7eec780cec2df4eedef57dec4389c50fa384108bca98bd57fb26248cdf",
+        "degisti": false
+      },
+      {
+        "path": "app/(panel)/eczanem/_components/MutabakatIslemTablosu.tsx",
+        "imports": [
+          "@/components/ui/button"
+        ],
+        "sha256": "271808778bc8b8a2c1a479c40091e6cfbb3cde9742ed4d6e3be95de65d1c4f97",
+        "sonra_sha256": "271808778bc8b8a2c1a479c40091e6cfbb3cde9742ed4d6e3be95de65d1c4f97",
+        "degisti": false
+      },
+      {
+        "path": "app/(panel)/t-club-ligi/page.tsx",
+        "imports": [
+          "@/components/ui/yenile-butonu"
+        ],
+        "sha256": "883c0e33fe8bbbc6653dd86860a9730a666b25deda685877c7a1171d1cc7b525",
+        "sonra_sha256": "883c0e33fe8bbbc6653dd86860a9730a666b25deda685877c7a1171d1cc7b525",
+        "degisti": false
+      },
+      {
+        "path": "app/(panel)/eczanem/bm/mutabakat/_components/BmMutabakatTakipClient.tsx",
+        "imports": [
+          "@/components/ui/button",
+          "@/components/ui/yenile-butonu"
+        ],
+        "sha256": "309d25887e405fd99c4489729aad948c2536ce1fb9cf706fcf0a8d28b781671a",
+        "sonra_sha256": "309d25887e405fd99c4489729aad948c2536ce1fb9cf706fcf0a8d28b781671a",
+        "degisti": false
+      },
+      {
+        "path": "app/(panel)/yayin-yonetimi/page.tsx",
+        "imports": [
+          "@/components/ui/yenile-butonu"
+        ],
+        "sha256": "bd091740f5644196d66b38812c1908958cc9fb312e57b13c41e14aa784c310a5",
+        "sonra_sha256": "bd091740f5644196d66b38812c1908958cc9fb312e57b13c41e14aa784c310a5",
+        "degisti": false
+      },
+      {
+        "path": "app/(panel)/onaylanan-talepler/page.tsx",
+        "imports": [
+          "@/components/ui/yenile-butonu"
+        ],
+        "sha256": "6ebce129a1faa94a3be63776369761518a684e742b8f1446ffb4be2419726b0a",
+        "sonra_sha256": "6ebce129a1faa94a3be63776369761518a684e742b8f1446ffb4be2419726b0a",
+        "degisti": false
+      },
+      {
+        "path": "app/(panel)/eclub/yayinlar/page.tsx",
+        "imports": [
+          "@/components/ui/yenile-butonu"
+        ],
+        "sha256": "704073d06c5b807e58bcae7d76ee1b11c51ffe73350d5376433086afcaad2b94",
+        "sonra_sha256": "704073d06c5b807e58bcae7d76ee1b11c51ffe73350d5376433086afcaad2b94",
+        "degisti": false
+      },
+      {
+        "path": "app/(panel)/eclub/store/page.tsx",
+        "imports": [
+          "@/components/ui/yenile-butonu"
+        ],
+        "sha256": "7173ec0dc2921c6162602ae8cec5dd84b6ed2cf54c4876a6d924ed0250e3d3f4",
+        "sonra_sha256": "7173ec0dc2921c6162602ae8cec5dd84b6ed2cf54c4876a6d924ed0250e3d3f4",
+        "degisti": false
+      },
+      {
+        "path": "app/(panel)/eclub/ligi/page.tsx",
+        "imports": [
+          "@/components/ui/yenile-butonu"
+        ],
+        "sha256": "bcf980f3609f0918a1f0793d59fb955612237a0382264bf90421243612ecf386",
+        "sonra_sha256": "bcf980f3609f0918a1f0793d59fb955612237a0382264bf90421243612ecf386",
+        "degisti": false
+      },
+      {
+        "path": "app/(panel)/eclub/listem/_components/EczaneBlogu.tsx",
+        "imports": [
+          "@/components/ui/button",
+          "@/components/ui/input",
+          "@/components/ui/label"
+        ],
+        "sha256": "2063844b2d890053a3d7cc96415f5483b577deb0c9960cc168ca771fa90aae4b",
+        "sonra_sha256": "2063844b2d890053a3d7cc96415f5483b577deb0c9960cc168ca771fa90aae4b",
+        "degisti": false
+      },
+      {
+        "path": "app/(panel)/eclub/eczanelerim/page.tsx",
+        "imports": [
+          "@/components/ui/button",
+          "@/components/ui/input",
+          "@/components/ui/label",
+          "@/components/ui/yenile-butonu"
+        ],
+        "sha256": "d7b83c444d3ffabdfd66421c40297fe59afa1de215eec82fa4980aa5f8d64052",
+        "sonra_sha256": "d7b83c444d3ffabdfd66421c40297fe59afa1de215eec82fa4980aa5f8d64052",
+        "degisti": false
+      },
+      {
+        "path": "app/(panel)/eclub/yayinlar/_components/BmEclubYayinlari.tsx",
+        "imports": [
+          "@/components/ui/yenile-butonu"
+        ],
+        "sha256": "533a42fe90f841b744162bd41ec8b50048917c1dc8a20762a5d9ee38e1febd0a",
+        "sonra_sha256": "533a42fe90f841b744162bd41ec8b50048917c1dc8a20762a5d9ee38e1febd0a",
+        "degisti": false
+      },
+      {
+        "path": "app/(panel)/eclub/eczanelerim/_components/BmEclubTakimim.tsx",
+        "imports": [
+          "@/components/ui/yenile-butonu",
+          "@/components/ui/button"
+        ],
+        "sha256": "ea5408c9369937de483451a98712a2b2b97b42ba41bb36a920c8056b207f6fca",
+        "sonra_sha256": "ea5408c9369937de483451a98712a2b2b97b42ba41bb36a920c8056b207f6fca",
+        "degisti": false
+      }
+    ]
+  },
+  "ssr_korunumu": {
+    "button": 48,
+    "yenile": 8,
+    "fark": 0
+  },
+  "css_derlemesi": {
+    "basarili": true,
+    "uyari": 0,
+    "mavi_eslemeler": [
+      {
+        "once": "text-white",
+        "sonra": "text-destructive-foreground",
+        "cozulmus_mavi": "UTILITY {\n    color: #ffffff;\n}"
+      },
+      {
+        "once": "border-[#d8e3ee]",
+        "sonra": "border-[var(--tema-yenile-cizgi)]",
+        "cozulmus_mavi": "UTILITY {\n    border-color: #d8e3ee;\n}"
+      },
+      {
+        "once": "bg-white",
+        "sonra": "bg-[var(--tema-yenile-yuzey)]",
+        "cozulmus_mavi": "UTILITY {\n    background-color: #ffffff;\n}"
+      },
+      {
+        "once": "text-[#58708b]",
+        "sonra": "text-[var(--tema-yenile-metin)]",
+        "cozulmus_mavi": "UTILITY {\n    color: #58708b;\n}"
+      },
+      {
+        "once": "hover:bg-[#f4f8fb]",
+        "sonra": "hover:bg-[var(--tema-yenile-hover)]",
+        "cozulmus_mavi": "UTILITY {\n    &:hover {\n        @media (hover: hover) {\n            background-color: #f4f8fb;\n        }\n    }\n}"
+      }
+    ],
+    "korunan_durum_kurallari": [
+      "bg-primary",
+      "text-primary-foreground",
+      "hover:bg-primary/90",
+      "bg-destructive",
+      "hover:bg-destructive/90",
+      "border-input",
+      "bg-background",
+      "hover:bg-accent",
+      "hover:text-accent-foreground",
+      "bg-secondary",
+      "text-secondary-foreground",
+      "hover:bg-secondary/80",
+      "text-primary",
+      "placeholder:text-muted-foreground",
+      "focus-visible:border-ring",
+      "focus-visible:ring-[3px]",
+      "focus-visible:ring-ring/50",
+      "aria-invalid:border-destructive",
+      "aria-invalid:ring-destructive/20",
+      "disabled:opacity-50"
+    ],
+    "mevcut_serilestirme_bulgusu": {
+      "kaynak": "docs/renk-envanteri/renk-katalogu.html",
+      "oncesi_sonrasi_ayni": true,
+      "once": {
+        "parse": false,
+        "reason": "Missed semicolon",
+        "fragment": "color: 1…</pre></li><li><code>app/eczanem/ components/EczanemPuanlarim.tsx:33:279</code><b>className</b><span>normal</span><pre>…5f5;"
+      },
+      "sonra": {
+        "parse": false,
+        "reason": "Missed semicolon",
+        "fragment": "color: 1…</pre></li><li><code>app/eczanem/ components/EczanemPuanlarim.tsx:33:279</code><b>className</b><span>normal</span><pre>…5f5;"
+      }
+    }
+  },
+  "durum": "TAMAMLANDI",
+  "testler": {
+    "form_tema_renkleri": {
+      "basarili": 3,
+      "basarisiz": 0
+    },
+    "tema_altyapisi": {
+      "basarili": 6,
+      "basarisiz": 0
+    },
+    "operasyonel_yenileme": {
+      "basarili": 2,
+      "basarisiz": 0
+    },
+    "rapor_lig_katalog_yenileme": {
+      "basarili": 3,
+      "basarisiz": 0
+    },
+    "yonetim_yenileme": {
+      "basarili": 2,
+      "basarisiz": 0
+    },
+    "toplam": {
+      "basarili": 16,
+      "basarisiz": 0
+    }
+  },
+  "typecheck": {
+    "komut": "npm run typecheck:build",
+    "basarili": true
+  },
+  "lint": {
+    "basarili": true,
+    "hata": 0,
+    "uyari": 0,
+    "dosyalar": [
+      "components/ui/button.tsx",
+      "components/ui/yenile-butonu.tsx",
+      "components/ui/input.tsx",
+      "components/ui/label.tsx",
+      "tests/formTemaRenkleri.hedef.test.ts"
+    ]
+  },
+  "test_kaynak_imzasi": "11cffb98d9f9c9a0aec1ac0ff4eac242550c8f930c205d5060a48d7afb18efcb",
+  "sinirlar": {
+    "gercek_tarayici_kontrolu": false,
+    "canli_dagitim": false,
+    "veritabani_islemi": false,
+    "tum_gercek_rol_oturumlari_testi": false,
+    "happy_dom": "Katman/nesting yerine gerçek hedef utility kuralları katmansız yüklendi; hover bildirimi bir stil probunda çözüldü.",
+    "genel_css_yeniden_ayristirma_temiz": false,
+    "mevcut_css_bulgusu_cozuldu": false,
+    "sayfa_yerel_renkleri": "İş planı 9. adımında izlenir",
+    "adim5_baslatildi": false
+  }
+}

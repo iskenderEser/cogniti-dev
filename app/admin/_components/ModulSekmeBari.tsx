@@ -33,7 +33,7 @@ export default function ModulSekmeBari(p: ModulSekmeBariProps) {
         {kapali && (
           <span
             title="Modül bu firmada kapalı"
-            style={{ width: 6, height: 6, borderRadius: "50%", background: "#d1d5db", display: "inline-block" }}
+            style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--tema-yerel-yonetim-sayfa-zemini-01)", display: "inline-block" }}
           />
         )}
       </SadeKontrolButonu>
@@ -47,7 +47,7 @@ export default function ModulSekmeBari(p: ModulSekmeBariProps) {
         fontWeight: 700,
         letterSpacing: "0.8px",
         textTransform: "uppercase",
-        color: "#b3b3b3",
+        color: "var(--tema-yerel-yonetim-yardimci-metin-05)",
         margin: "0 2px 4px 14px",
         fontFamily: "'Nunito', sans-serif",
       }}

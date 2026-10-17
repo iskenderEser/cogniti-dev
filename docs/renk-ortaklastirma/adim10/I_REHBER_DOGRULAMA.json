@@ -1,0 +1,29 @@
+{
+  "tarih": "2026-10-17",
+  "kapsam": "SayfaRehberi ortak i düğmesi, body portalı ve kendi iç detay görünümü",
+  "renk_kullanimi": 54,
+  "degisken": 24,
+  "renk_disi_kaynak_farki": 0,
+  "mavi_etkin_derlenmis_karsilastirma": 53,
+  "mavi_fark": 0,
+  "portal_tema_gecis_ve_kapanma_kontrolu": 10,
+  "hedef_rehberler": [
+    "talep-merkezi",
+    "tclub-ligi-saha"
+  ],
+  "yeni_lint_bulgusu": 0,
+  "mevcut_lint": [
+    [
+      "@typescript-eslint/no-unused-vars",
+      1,
+      "'RehberMadde' is defined but never used.",
+      8
+    ]
+  ],
+  "typecheck": "npm run typecheck:build: BASARILI",
+  "gercek_tarayıcı": "YAPILMADI",
+  "uygulama_kodu_degisen_dosyalar": [
+    "components/rehber/SayfaRehberi.tsx",
+    "app/tema.css"
+  ]
+}

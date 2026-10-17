@@ -40,8 +40,8 @@ interface YayinSatirProps {
 }
 
 const GUN_MS = 24 * 60 * 60 * 1000;
-const eclubBilgiPili = "max-w-full rounded-md border border-[#e1e9f3] bg-[#f5f8fc] px-1.5 py-0.5 text-[10px] font-normal leading-tight text-[#405976] sm:text-[8px]";
-const eclubBaremPili = "max-w-full rounded-md border border-[#e1e9f3] bg-[#f5f8fc] px-1.5 py-0.5 text-[9px] font-normal leading-tight text-[#405976] sm:text-[7px]";
+const eclubBilgiPili = "max-w-full rounded-md border border-[var(--tema-yerel-uretim-cizgi-46)] bg-[var(--tema-yerel-uretim-sayfa-zemini-11)] px-1.5 py-0.5 text-[10px] font-normal leading-tight text-[var(--tema-yerel-uretim-ana-metin-25)] sm:text-[8px]";
+const eclubBaremPili = "max-w-full rounded-md border border-[var(--tema-yerel-uretim-cizgi-46)] bg-[var(--tema-yerel-uretim-sayfa-zemini-11)] px-1.5 py-0.5 text-[9px] font-normal leading-tight text-[var(--tema-yerel-uretim-ana-metin-25)] sm:text-[7px]";
 
 /** Sonraki tura kalan tam gün (yukarı yuvarlanır; geçmişse 0). */
 function kalanGun(sonrakiTurTarihi: string): number {
@@ -93,13 +93,13 @@ export function YayinSatir({
     const resimGoster = Boolean(thumbnail && hataliThumbnail !== thumbnail);
 
     return (
-      <article className="self-start overflow-hidden rounded-xl border border-[#dfe7f1] bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#b9d5f0] hover:shadow-[0_10px_24px_rgba(31,55,90,0.10)]">
+      <article className="self-start overflow-hidden rounded-xl border border-[var(--tema-yerel-uretim-cizgi-36)] bg-[var(--tema-yerel-uretim-kart-01)] shadow-sm transition-all hover:-translate-y-0.5 hover:border-[var(--tema-yerel-uretim-cizgi-47)] hover:shadow-[0_10px_24px_var(--tema-yerel-uretim-golge-08)]">
         <button
           type="button"
           onClick={handleOnizle}
           disabled={!tiklanabilir}
           aria-label={tiklanabilir ? `${y.urun_adi} ${etiket.toLowerCase()} önizle` : "Önizleme bulunmuyor"}
-          className="group relative block aspect-video w-full overflow-hidden bg-[#e8eef5] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#56aeff] disabled:cursor-default"
+          className="group relative block aspect-video w-full overflow-hidden bg-[var(--tema-yerel-uretim-secim-zemin-14)] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--tema-yerel-uretim-odak-01)] disabled:cursor-default"
         >
           {resimGoster ? (
             <img
@@ -111,10 +111,10 @@ export function YayinSatir({
           ) : (
             <AracVarsayilanKapak aracTuru={tur} urunAdi={y.urun_adi} className="h-full w-full" />
           )}
-          <span className="absolute inset-0 bg-gradient-to-t from-[#10233a]/55 via-transparent to-[#10233a]/10" />
+          <span className="absolute inset-0 bg-gradient-to-t from-[var(--tema-yerel-uretim-dekoratif-zemin-01)]/55 via-transparent to-[var(--tema-yerel-uretim-dekoratif-zemin-01)]/10" />
           {y.video_isleniyor ? (
-            <span className="absolute left-2 top-2 inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-2 py-1 text-[9px] font-extrabold text-amber-800 shadow-sm">
-              <svg className="animate-spin h-2.5 w-2.5 text-amber-700" fill="none" viewBox="0 0 24 24">
+            <span className="absolute left-2 top-2 inline-flex items-center gap-1 rounded-full border border-[var(--tema-yerel-uretim-islevsel-cizgi-06)] bg-[var(--tema-yerel-uretim-islevsel-zemin-04)] px-2 py-1 text-[9px] font-extrabold text-[var(--tema-yerel-uretim-islevsel-metin-25)] shadow-sm">
+              <svg className="animate-spin h-2.5 w-2.5 text-[var(--tema-yerel-uretim-islevsel-metin-07)]" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
               </svg>
@@ -131,7 +131,7 @@ export function YayinSatir({
           </span>
           {tiklanabilir && (
             <span className="absolute inset-0 flex items-center justify-center">
-              <span className="flex h-10 w-10 items-center justify-center rounded-full border border-white/45 bg-[#10233a]/65 text-white shadow-lg backdrop-blur-sm transition-transform group-hover:scale-105">
+              <span className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--tema-yerel-uretim-cizgi-48)]/45 bg-[var(--tema-yerel-uretim-eylem-zemin-11)]/65 text-[var(--tema-yerel-uretim-ters-metin-01)] shadow-lg backdrop-blur-sm transition-transform group-hover:scale-105">
                 {tur === "podcast" ? (
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                 ) : tur === "gorsel" ? (
@@ -144,42 +144,42 @@ export function YayinSatir({
               </span>
             </span>
           )}
-          <span className="absolute bottom-2 left-2 rounded-full border border-white/25 bg-[#10233a]/70 px-2 py-1 text-[9px] font-extrabold uppercase tracking-[0.1em] text-white backdrop-blur-sm">
+          <span className="absolute bottom-2 left-2 rounded-full border border-[var(--tema-yerel-uretim-cizgi-48)]/25 bg-[var(--tema-yerel-uretim-eylem-zemin-11)]/70 px-2 py-1 text-[9px] font-extrabold uppercase tracking-[0.1em] text-[var(--tema-yerel-uretim-ters-metin-01)] backdrop-blur-sm">
             Önizle
           </span>
         </button>
 
         <div className="flex flex-col gap-2.5 p-3">
           <div className="min-w-0">
-            <h3 className="truncate text-sm font-extrabold text-[#243957]">{y.urun_adi}</h3>
-            <p className="mt-1 truncate text-[10px] font-bold text-[#4d79aa]">
+            <h3 className="truncate text-sm font-extrabold text-[var(--tema-yerel-uretim-ana-metin-18)]">{y.urun_adi}</h3>
+            <p className="mt-1 truncate text-[10px] font-bold text-[var(--tema-yerel-uretim-eylem-metin-17)]">
               {[y.turu_adi, y.teknik_adi && y.teknik_adi !== "-" ? y.teknik_adi : null].filter(Boolean).join(" · ") || "İçerik bilgisi belirtilmedi"}
             </p>
           </div>
 
-          <div className="flex items-center justify-between gap-2 text-[10px] text-[#8190a3]">
-            <span className="truncate font-mono text-[#bc2d0d]">{talepIdGoster(y.firma_adi, y.talep_no)}</span>
+          <div className="flex items-center justify-between gap-2 text-[10px] text-[var(--tema-yerel-uretim-yardimci-metin-36)]">
+            <span className="truncate font-mono text-[var(--tema-yerel-uretim-vurgu-metin-01)]">{talepIdGoster(y.firma_adi, y.talep_no)}</span>
             <span className="shrink-0">{formatTarih(y.yayin_tarihi)}</span>
           </div>
 
-          <div className="grid grid-cols-2 gap-1 rounded-lg bg-[#f7f9fc] px-2 py-1.5">
-            <span className="flex items-center justify-center gap-1 text-[10px] text-[#70849d]">
-              Öğrenme aracı puanı <b className="text-[#314a68]">{y.video_puani ?? "—"}</b>
+          <div className="grid grid-cols-2 gap-1 rounded-lg bg-[var(--tema-yerel-uretim-sayfa-zemini-12)] px-2 py-1.5">
+            <span className="flex items-center justify-center gap-1 text-[10px] text-[var(--tema-yerel-uretim-yardimci-metin-37)]">
+              Öğrenme aracı puanı <b className="text-[var(--tema-yerel-uretim-ana-metin-26)]">{y.video_puani ?? "—"}</b>
             </span>
-            <span className="flex items-center justify-center gap-1 border-l border-[#e2e9f1] text-[10px] text-[#70849d]">
-              Soru <b className="text-[#314a68]">{y.sorular?.length ?? 0}</b>
+            <span className="flex items-center justify-center gap-1 border-l border-[var(--tema-yerel-uretim-cizgi-49)] text-[10px] text-[var(--tema-yerel-uretim-yardimci-metin-37)]">
+              Soru <b className="text-[var(--tema-yerel-uretim-ana-metin-26)]">{y.sorular?.length ?? 0}</b>
             </span>
           </div>
 
           {tekrarli && (
-            <div className="rounded-lg border border-[#cfe2fa] bg-[#f2f8ff] px-2.5 py-1.5 text-[10px] leading-4 text-[#3974b5]">
+            <div className="rounded-lg border border-[var(--tema-yerel-uretim-cizgi-50)] bg-[var(--tema-yerel-uretim-secim-zemin-16)] px-2.5 py-1.5 text-[10px] leading-4 text-[var(--tema-yerel-uretim-eylem-metin-18)]">
               <strong>{tekrarBilgi!.tekrar_periyot_gun} günlük tur</strong>
               <span className="ml-1">· Yeni tur {kalanGun(tekrarBilgi!.sonraki_tur_tarihi!)} gün sonra</span>
             </div>
           )}
 
           {eclubHedefli && (
-            <div className="border-t border-[#e8eef5] pt-2" aria-label="Yayın bilgileri ve koşulları">
+            <div className="border-t border-[var(--tema-yerel-uretim-cizgi-10)] pt-2" aria-label="Yayın bilgileri ve koşulları">
               <div className="flex flex-wrap items-start justify-between gap-1">
                 {y.cek_karsiligi_var_mi === false ? (
                   <span className={eclubBilgiPili}>Çeksiz Puan · Yalnız lig</span>
@@ -205,23 +205,23 @@ export function YayinSatir({
           )}
         </div>
 
-        <div className="border-t border-[#edf1f6] p-2.5">
+        <div className="border-t border-[var(--tema-yerel-uretim-cizgi-13)] p-2.5">
           {planlandi && onPlanIslem ? (
             <div className="grid gap-2">
               <button type="button" onClick={() => onPlanIslem(y.yayin_id, "hemen_yayinla")} disabled={islemLoading === y.yayin_id}
-                className="w-full rounded-lg bg-[#237ac8] px-3 py-2 text-[11px] font-extrabold text-white disabled:opacity-60">
+                className="w-full rounded-lg bg-[var(--tema-yerel-uretim-eylem-zemin-01)] px-3 py-2 text-[11px] font-extrabold text-[var(--tema-yerel-uretim-ters-metin-01)] disabled:opacity-60">
                 {islemLoading === y.yayin_id ? "..." : "Hemen Yayınla"}
               </button>
               <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-1.5">
                 <input type="date" value={yeniGun} min={bugun} onChange={(e) => setYeniGun(e.target.value)} aria-label="Yeni yayın günü"
-                  className="min-w-0 rounded-lg border border-[#dbe5ef] bg-white px-2 py-1.5 text-[10px] text-[#40556d]" />
+                  className="min-w-0 rounded-lg border border-[var(--tema-yerel-uretim-cizgi-33)] bg-[var(--tema-yerel-uretim-kart-01)] px-2 py-1.5 text-[10px] text-[var(--tema-yerel-uretim-ana-metin-27)]" />
                 <button type="button" onClick={() => yeniGun && onPlanIslem(y.yayin_id, "tarih_degistir", yeniGun)} disabled={!yeniGun || islemLoading === y.yayin_id}
-                  className="rounded-lg border border-[#bfdbfe] px-2 py-1.5 text-[10px] font-bold text-[#1d4ed8] disabled:border-[#e5e7eb] disabled:text-[#9ca3af]">
+                  className="rounded-lg border border-[var(--tema-yerel-uretim-cizgi-06)] px-2 py-1.5 text-[10px] font-bold text-[var(--tema-yerel-uretim-eylem-metin-02)] disabled:border-[var(--tema-yerel-uretim-cizgi-05)] disabled:text-[var(--tema-yerel-uretim-yardimci-metin-03)]">
                   Değiştir
                 </button>
               </div>
               <button type="button" onClick={() => onPlanIslem(y.yayin_id, "plan_iptal")} disabled={islemLoading === y.yayin_id}
-                className="w-full rounded-lg border border-[#fecaca] px-3 py-1.5 text-[10px] font-bold text-[#b91c1c] disabled:opacity-60">
+                className="w-full rounded-lg border border-[var(--tema-yerel-uretim-islevsel-cizgi-07)] px-3 py-1.5 text-[10px] font-bold text-[var(--tema-yerel-uretim-islevsel-metin-39)] disabled:opacity-60">
                 Planı İptal
               </button>
             </div>
@@ -232,12 +232,12 @@ export function YayinSatir({
                 aria-expanded={akordiyonAcik}
                 onClick={() => setAcikAkordiyon(akordiyonAcik ? null : y.yayin_id)}
                 disabled={!y.sorular?.length}
-                className="rounded-lg border border-[#dbe5ef] bg-white px-2.5 py-2 text-[11px] font-extrabold text-[#536984] disabled:cursor-default disabled:opacity-50"
+                className="rounded-lg border border-[var(--tema-yerel-uretim-cizgi-33)] bg-[var(--tema-yerel-uretim-kart-01)] px-2.5 py-2 text-[11px] font-extrabold text-[var(--tema-yerel-uretim-yardimci-metin-38)] disabled:cursor-default disabled:opacity-50"
               >
                 Soru Seti ({y.sorular?.length ?? 0})
               </button>
               <button type="button" onClick={() => onDurumDegistir(y.yayin_id, y.durum)} disabled={islemLoading === y.yayin_id}
-                className="rounded-lg border border-[#fecaca] bg-white px-3 py-2 text-[11px] font-extrabold text-[#b91c1c] disabled:opacity-60">
+                className="rounded-lg border border-[var(--tema-yerel-uretim-islevsel-cizgi-07)] bg-[var(--tema-yerel-uretim-kart-01)] px-3 py-2 text-[11px] font-extrabold text-[var(--tema-yerel-uretim-islevsel-metin-39)] disabled:opacity-60">
                 {islemLoading === y.yayin_id ? "..." : yayinda ? "Durdur" : "Başlat"}
               </button>
             </div>
@@ -245,8 +245,8 @@ export function YayinSatir({
         </div>
 
         {y.video_isleniyor && (
-          <div className="border-t border-amber-200/80 bg-amber-50/70 px-3 py-2 text-[11px] leading-relaxed text-amber-900 flex items-center gap-1.5">
-            <span className="font-bold text-amber-700 select-none">ℹ️</span>
+          <div className="border-t border-[var(--tema-yerel-uretim-islevsel-cizgi-06)]/80 bg-[var(--tema-yerel-uretim-islevsel-zemin-04)]/70 px-3 py-2 text-[11px] leading-relaxed text-[var(--tema-yerel-uretim-islevsel-metin-06)] flex items-center gap-1.5">
+            <span className="font-bold text-[var(--tema-yerel-uretim-islevsel-metin-07)] select-none">ℹ️</span>
             <span>Videonuz işleniyor. Yayın kapak görseliniz ve önizlemeniz, videonuzun büyüklüğüne uygun olarak en kısa sürede hazır olacaktır.</span>
           </div>
         )}
@@ -260,7 +260,7 @@ export function YayinSatir({
   }
 
   return (
-    <article className="mb-2.5 overflow-hidden rounded-2xl border border-[#dfe7f1] bg-white shadow-[0_6px_18px_rgba(31,55,90,0.035)]">
+    <article className="mb-2.5 overflow-hidden rounded-2xl border border-[var(--tema-yerel-uretim-cizgi-36)] bg-[var(--tema-yerel-uretim-kart-01)] shadow-[0_6px_18px_var(--tema-yerel-uretim-golge-07)]">
       <div className="grid grid-cols-1 gap-3 p-3.5 sm:grid-cols-[128px_minmax(0,1fr)] lg:grid-cols-[128px_minmax(0,1fr)_minmax(190px,auto)] lg:items-center lg:p-4">
         <div className="order-2 sm:order-1">
           <VideoThumb
@@ -282,11 +282,11 @@ export function YayinSatir({
 
         <div className="order-1 min-w-0 sm:order-2">
           <div className="flex flex-wrap items-center gap-1.5">
-            <span className="truncate text-base font-extrabold text-[#213754]">{y.urun_adi}</span>
+            <span className="truncate text-base font-extrabold text-[var(--tema-yerel-uretim-ana-metin-28)]">{y.urun_adi}</span>
             <HedefRolPilleri hedefRoller={y.hedef_roller} />
             {y.video_isleniyor ? (
-              <span className="inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[10px] font-bold leading-tight text-amber-800">
-                <svg className="animate-spin h-2.5 w-2.5 text-amber-700" fill="none" viewBox="0 0 24 24">
+              <span className="inline-flex items-center gap-1 rounded-full border border-[var(--tema-yerel-uretim-islevsel-cizgi-06)] bg-[var(--tema-yerel-uretim-islevsel-zemin-04)] px-2 py-0.5 text-[10px] font-bold leading-tight text-[var(--tema-yerel-uretim-islevsel-metin-25)]">
+                <svg className="animate-spin h-2.5 w-2.5 text-[var(--tema-yerel-uretim-islevsel-metin-07)]" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                 </svg>
@@ -299,12 +299,12 @@ export function YayinSatir({
               </span>
             )}
           </div>
-          <span className="mt-1 block text-[11px] font-semibold text-[#8494aa]">{talepIdGoster(y.firma_adi, y.talep_no)}</span>
-          <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-[#617590]">
+          <span className="mt-1 block text-[11px] font-semibold text-[var(--tema-yerel-uretim-yardimci-metin-10)]">{talepIdGoster(y.firma_adi, y.talep_no)}</span>
+          <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-[var(--tema-yerel-uretim-yardimci-metin-32)]">
             {y.turu_adi && <span className="font-bold">{y.turu_adi}</span>}
-            {y.teknik_adi && y.teknik_adi !== "-" && <><span className="text-[#c4cfdb]">•</span><span>{y.teknik_adi}</span></>}
+            {y.teknik_adi && y.teknik_adi !== "-" && <><span className="text-[var(--tema-yerel-uretim-yardimci-metin-39)]">•</span><span>{y.teknik_adi}</span></>}
           </div>
-          <span className="mt-1.5 block text-[11px] text-[#8796aa]">
+          <span className="mt-1.5 block text-[11px] text-[var(--tema-yerel-uretim-yardimci-metin-33)]">
             {yayinda ? `Yayın: ${formatTarih(y.yayin_tarihi)}`
               : planlandi ? `Planlanan yayın: ${formatTarih(y.yayin_tarihi)}`
               : `Durdurma: ${y.durdurma_tarihi ? formatTarih(y.durdurma_tarihi) : "-"}`}
@@ -312,15 +312,15 @@ export function YayinSatir({
         </div>
 
         <div className="order-3 flex flex-col gap-2 sm:col-span-2 sm:grid sm:grid-cols-[1fr_auto] sm:items-center lg:col-span-1 lg:flex lg:items-stretch">
-          <div className="flex flex-wrap items-center gap-2 rounded-xl bg-[#f6f9fc] px-3 py-2">
-            <span className="text-[10px] font-bold text-[#8797ac]">Öğrenme aracı puanı</span>
-            <strong className="text-sm text-[#2b405c]">{y.video_puani ?? "—"}</strong>
-            <span className="h-4 w-px bg-[#dde5ee]" />
-            <span className="text-[10px] font-bold text-[#8797ac]">Soru</span>
-            <strong className="text-sm text-[#2b405c]">{y.sorular?.length ?? 0}</strong>
+          <div className="flex flex-wrap items-center gap-2 rounded-xl bg-[var(--tema-yerel-uretim-sayfa-zemini-23)] px-3 py-2">
+            <span className="text-[10px] font-bold text-[var(--tema-yerel-uretim-yardimci-metin-40)]">Öğrenme aracı puanı</span>
+            <strong className="text-sm text-[var(--tema-yerel-uretim-ana-metin-16)]">{y.video_puani ?? "—"}</strong>
+            <span className="h-4 w-px bg-[var(--tema-yerel-uretim-secim-zemin-17)]" />
+            <span className="text-[10px] font-bold text-[var(--tema-yerel-uretim-yardimci-metin-40)]">Soru</span>
+            <strong className="text-sm text-[var(--tema-yerel-uretim-ana-metin-16)]">{y.sorular?.length ?? 0}</strong>
           </div>
           {tekrarli && (
-            <div className="rounded-xl border border-[#cfe2fa] bg-[#f2f8ff] px-3 py-2 text-[10px] leading-4 text-[#3974b5]">
+            <div className="rounded-xl border border-[var(--tema-yerel-uretim-cizgi-50)] bg-[var(--tema-yerel-uretim-secim-zemin-16)] px-3 py-2 text-[10px] leading-4 text-[var(--tema-yerel-uretim-eylem-metin-18)]">
               <strong>{tekrarBilgi!.tekrar_periyot_gun} günlük tur</strong>
               <span className="block">Yeni tur {kalanGun(tekrarBilgi!.sonraki_tur_tarihi!)} gün sonra</span>
             </div>
@@ -331,7 +331,7 @@ export function YayinSatir({
               type="button"
               aria-expanded={acikAkordiyon === y.yayin_id}
               onClick={() => setAcikAkordiyon(acikAkordiyon === y.yayin_id ? null : y.yayin_id)}
-              className="flex cursor-pointer items-center gap-1 rounded-lg border border-[#dbe5ef] bg-white px-2.5 py-1.5 text-xs font-bold text-[#536984]"
+              className="flex cursor-pointer items-center gap-1 rounded-lg border border-[var(--tema-yerel-uretim-cizgi-33)] bg-[var(--tema-yerel-uretim-kart-01)] px-2.5 py-1.5 text-xs font-bold text-[var(--tema-yerel-uretim-yardimci-metin-38)]"
               style={{ fontFamily: "'Nunito', sans-serif" }}>
               Soru Seti ({y.sorular.length})
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
@@ -344,22 +344,22 @@ export function YayinSatir({
             <div className="flex w-full flex-col items-end gap-1.5">
               <button onClick={() => onPlanIslem(y.yayin_id, "hemen_yayinla")} disabled={islemLoading === y.yayin_id}
                 className="cursor-pointer rounded-lg border-none px-3 py-1.5 text-xs font-extrabold"
-                style={{ background: "#237ac8", color: "white", fontFamily: "'Nunito', sans-serif" }}>
+                style={{ background: "var(--tema-yerel-uretim-eylem-zemin-01)", color: "var(--tema-yerel-uretim-ters-metin-02)", fontFamily: "'Nunito', sans-serif" }}>
                 {islemLoading === y.yayin_id ? "..." : "Hemen Yayınla"}
               </button>
               <div className="flex items-center gap-1">
                 <input type="date" value={yeniGun} min={bugun}
                   onChange={(e) => setYeniGun(e.target.value)}
                   aria-label="Yeni yayın günü"
-                  className="rounded-lg border border-gray-200 bg-white px-2 py-1 text-xs text-gray-900"
+                  className="rounded-lg border border-[var(--tema-yerel-uretim-cizgi-01)] bg-[var(--tema-yerel-uretim-kart-01)] px-2 py-1 text-xs text-[var(--tema-yerel-uretim-ana-metin-01)]"
                   style={{ fontFamily: "'Nunito', sans-serif" }} />
                 <button onClick={() => yeniGun && onPlanIslem(y.yayin_id, "tarih_degistir", yeniGun)}
                   disabled={!yeniGun || islemLoading === y.yayin_id}
                   className="px-2 py-1 rounded-lg text-xs font-semibold"
                   style={{
-                    background: yeniGun ? "white" : "#f3f4f6",
-                    color: yeniGun ? "#1d4ed8" : "#9ca3af",
-                    border: yeniGun ? "0.5px solid #bfdbfe" : "0.5px solid #e5e7eb",
+                    background: yeniGun ? "var(--tema-yerel-uretim-kart-04)" : "var(--tema-yerel-uretim-sayfa-zemini-24)",
+                    color: yeniGun ? "var(--tema-yerel-uretim-eylem-metin-02)" : "var(--tema-yerel-uretim-yardimci-metin-03)",
+                    border: yeniGun ? "0.5px solid var(--tema-yerel-uretim-cizgi-06)" : "0.5px solid var(--tema-yerel-uretim-cizgi-05)",
                     cursor: yeniGun ? "pointer" : "not-allowed",
                     fontFamily: "'Nunito', sans-serif",
                   }}>
@@ -368,7 +368,7 @@ export function YayinSatir({
               </div>
               <button onClick={() => onPlanIslem(y.yayin_id, "plan_iptal")} disabled={islemLoading === y.yayin_id}
                 className="px-2.5 py-1 rounded-lg text-xs font-semibold cursor-pointer"
-                style={{ background: "white", color: "#b91c1c", border: "0.5px solid #fecaca", fontFamily: "'Nunito', sans-serif" }}>
+                style={{ background: "var(--tema-yerel-uretim-kart-04)", color: "var(--tema-yerel-uretim-islevsel-metin-39)", border: "0.5px solid var(--tema-yerel-uretim-islevsel-cizgi-07)", fontFamily: "'Nunito', sans-serif" }}>
                 Planı İptal
               </button>
             </div>
@@ -376,9 +376,9 @@ export function YayinSatir({
             <button type="button" onClick={() => onDurumDegistir(y.yayin_id, y.durum)} disabled={islemLoading === y.yayin_id}
               className="cursor-pointer rounded-lg px-3 py-1.5 text-xs font-extrabold"
               style={{
-                background: yayinda ? "white" : "#237ac8",
-                color: yayinda ? "#b91c1c" : "white",
-                border: yayinda ? "0.5px solid #fecaca" : "none",
+                background: yayinda ? "var(--tema-yerel-uretim-kart-04)" : "var(--tema-yerel-uretim-eylem-zemin-01)",
+                color: yayinda ? "var(--tema-yerel-uretim-islevsel-metin-39)" : "var(--tema-yerel-uretim-ters-metin-02)",
+                border: yayinda ? "0.5px solid var(--tema-yerel-uretim-islevsel-cizgi-07)" : "none",
                 fontFamily: "'Nunito', sans-serif",
               }}>
               {islemLoading === y.yayin_id ? "..." : yayinda ? "Durdur" : "Başlat"}
@@ -388,8 +388,8 @@ export function YayinSatir({
         </div>
       </div>
       {y.video_isleniyor && (
-        <div className="border-t border-amber-200/80 bg-amber-50/70 px-4 py-2 text-[11px] leading-relaxed text-amber-900 flex items-center gap-1.5">
-          <span className="font-bold text-amber-700 select-none">ℹ️</span>
+        <div className="border-t border-[var(--tema-yerel-uretim-islevsel-cizgi-06)]/80 bg-[var(--tema-yerel-uretim-islevsel-zemin-04)]/70 px-4 py-2 text-[11px] leading-relaxed text-[var(--tema-yerel-uretim-islevsel-metin-06)] flex items-center gap-1.5">
+          <span className="font-bold text-[var(--tema-yerel-uretim-islevsel-metin-07)] select-none">ℹ️</span>
           <span>Videonuz işleniyor. Yayın kapak görseliniz ve önizlemeniz, videonuzun büyüklüğüne uygun olarak en kısa sürede hazır olacaktır.</span>
         </div>
       )}

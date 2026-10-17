@@ -45,25 +45,25 @@ export function YeniTalepAkordiyonu({ onTalepOlusturuldu }: Props) {
         içeride olsaydı başarı bildirimi kapanışla birlikte kaybolurdu. */}
     <HataMesajiContainer mesajlar={formu.mesajlar} />
 
-    <div className="overflow-hidden rounded-2xl border border-[#dce7f4] bg-white shadow-[0_10px_30px_rgba(31,55,90,0.05)]">
+    <div className="overflow-hidden rounded-2xl border border-[var(--tema-yerel-uretim-cizgi-30)] bg-[var(--tema-yerel-uretim-kart-01)] shadow-[0_10px_30px_var(--tema-yerel-uretim-golge-05)]">
       <button
         type="button"
         aria-expanded={acik}
         aria-controls="yeni-talep-formu"
         onClick={() => setAcik((a) => !a)}
-        className="group flex w-full items-center justify-between gap-4 px-4 py-4 text-left transition-colors hover:bg-[#f8fbff] md:px-5"
+        className="group flex w-full items-center justify-between gap-4 px-4 py-4 text-left transition-colors hover:bg-[var(--tema-yerel-uretim-sayfa-zemini-03)] md:px-5"
       >
         <span className="flex min-w-0 items-center gap-3">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#eaf4ff] text-[#2483e2] transition-colors group-hover:bg-[#ddecff]">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--tema-yerel-uretim-secim-zemin-09)] text-[var(--tema-yerel-uretim-eylem-metin-06)] transition-colors group-hover:bg-[var(--tema-yerel-uretim-secim-zemin-10)]">
             <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5">
               <path d="M12 5v14M5 12h14" />
             </svg>
           </span>
           <span className="min-w-0">
-            <span className="block text-sm font-extrabold text-[#203653]">Yeni Yayın Oluştur</span>
+            <span className="block text-sm font-extrabold text-[var(--tema-yerel-uretim-ana-metin-05)]">Yeni Yayın Oluştur</span>
           </span>
         </span>
-        <span className="flex shrink-0 items-center gap-2 text-xs font-bold text-[#3989d7]">
+        <span className="flex shrink-0 items-center gap-2 text-xs font-bold text-[var(--tema-yerel-uretim-eylem-metin-09)]">
           <span className="hidden sm:inline">{acik ? "Formu kapat" : "Yayın oluştur"}</span>
           <svg
             aria-hidden="true"
@@ -80,7 +80,7 @@ export function YeniTalepAkordiyonu({ onTalepOlusturuldu }: Props) {
       </button>
 
       {acik && (
-        <div id="yeni-talep-formu" className="border-t border-[#e8eef6] bg-[#fbfdff] p-4 md:p-5">
+        <div id="yeni-talep-formu" className="border-t border-[var(--tema-yerel-uretim-cizgi-31)] bg-[var(--tema-yerel-uretim-sayfa-zemini-15)] p-4 md:p-5">
           <YeniTalepFormV2 formu={formu} />
         </div>
       )}

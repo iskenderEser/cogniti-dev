@@ -90,38 +90,38 @@ export default function FirmaErisimModal({ urun, onKapat, hata, basari }: FirmaE
       aria-modal="true"
       aria-labelledby="firma-erisim-baslik"
       style={{
-        position: "fixed", inset: 0, zIndex: 80, background: "rgba(17,24,39,.45)",
+        position: "fixed", inset: 0, zIndex: 80, background: "var(--tema-yerel-yonetim-eylem-zemin-02)",
         display: "flex", alignItems: "center", justifyContent: "center", padding: "16px",
       }}
       onMouseDown={(event) => { if (event.target === event.currentTarget) onKapat(); }}
     >
       <div style={{
         width: "min(640px, 100%)", maxHeight: "min(720px, 86vh)", overflow: "hidden",
-        background: "white", borderRadius: "12px", boxShadow: "0 20px 50px rgba(0,0,0,.18)",
+        background: "var(--tema-yerel-yonetim-kart-01)", borderRadius: "12px", boxShadow: "0 20px 50px var(--tema-yerel-yonetim-golge-03)",
         display: "flex", flexDirection: "column", fontFamily: "'Nunito', sans-serif",
       }}>
-        <div style={{ padding: "16px 18px", borderBottom: "1px solid #e5e7eb", display: "flex", gap: "12px", justifyContent: "space-between" }}>
+        <div style={{ padding: "16px 18px", borderBottom: "1px solid var(--tema-yerel-yonetim-cizgi-01)", display: "flex", gap: "12px", justifyContent: "space-between" }}>
           <div>
-            <h3 id="firma-erisim-baslik" style={{ margin: 0, fontSize: "15px", color: "#111827" }}>Firma Erişimi</h3>
-            <p style={{ margin: "3px 0 0", fontSize: "12px", color: "#737373" }}>
+            <h3 id="firma-erisim-baslik" style={{ margin: 0, fontSize: "15px", color: "var(--tema-yerel-yonetim-ana-metin-04)" }}>Firma Erişimi</h3>
+            <p style={{ margin: "3px 0 0", fontSize: "12px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)" }}>
               {urun.ad} · Katalog globaldir; yalnız kapatmak istediğiniz firmaları seçin.
             </p>
           </div>
-          <button type="button" onClick={onKapat} aria-label="Kapat" style={{ border: 0, background: "transparent", color: "#737373", fontSize: "20px", cursor: "pointer" }}>×</button>
+          <button type="button" onClick={onKapat} aria-label="Kapat" style={{ border: 0, background: "transparent", color: "var(--tema-yerel-yonetim-yardimci-metin-01)", fontSize: "20px", cursor: "pointer" }}>×</button>
         </div>
 
         <div style={{ overflowY: "auto", padding: "10px 18px 18px" }}>
           {yukleniyor ? (
-            <div style={{ padding: "28px", textAlign: "center", color: "#737373", fontSize: "12px" }}>Firmalar yükleniyor...</div>
+            <div style={{ padding: "28px", textAlign: "center", color: "var(--tema-yerel-yonetim-yardimci-metin-01)", fontSize: "12px" }}>Firmalar yükleniyor...</div>
           ) : firmalar.length === 0 ? (
-            <div style={{ padding: "28px", textAlign: "center", color: "#737373", fontSize: "12px" }}>Firma bulunamadı.</div>
+            <div style={{ padding: "28px", textAlign: "center", color: "var(--tema-yerel-yonetim-yardimci-metin-01)", fontSize: "12px" }}>Firma bulunamadı.</div>
           ) : firmalar.map((firma) => {
             const islemde = guncellenenFirmaId === firma.firma_id;
             return (
-              <div key={firma.firma_id} style={{ minHeight: "52px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", borderBottom: "1px solid #f3f4f6" }}>
+              <div key={firma.firma_id} style={{ minHeight: "52px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", borderBottom: "1px solid var(--tema-yerel-yonetim-cizgi-05)" }}>
                 <div style={{ minWidth: 0 }}>
-                  <div style={{ color: "#111827", fontWeight: 700, fontSize: "12px" }}>{firma.firma_adi}</div>
-                  <div style={{ color: "#737373", fontSize: "10px", marginTop: "2px" }}>
+                  <div style={{ color: "var(--tema-yerel-yonetim-ana-metin-04)", fontWeight: 700, fontSize: "12px" }}>{firma.firma_adi}</div>
+                  <div style={{ color: "var(--tema-yerel-yonetim-yardimci-metin-01)", fontSize: "10px", marginTop: "2px" }}>
                     {!firma.aktif ? "Firma pasif" : firma.hbstore_aktif ? "HBStore açık" : "HBStore kapalı"}
                   </div>
                 </div>
@@ -134,9 +134,9 @@ export default function FirmaErisimModal({ urun, onKapat, hata, basari }: FirmaE
                   onClick={() => erisimDegistir(firma)}
                   style={{
                     width: "88px", padding: "6px 10px", borderRadius: "999px", cursor: islemde ? "wait" : "pointer",
-                    border: `1px solid ${firma.urun_aktif_mi ? "#86efac" : "#fecaca"}`,
-                    background: firma.urun_aktif_mi ? "#dcfce7" : "#fee2e2",
-                    color: firma.urun_aktif_mi ? "#166534" : "#991b1b",
+                    border: `1px solid ${firma.urun_aktif_mi ? "var(--tema-yerel-yonetim-islevsel-cizgi-08)" : "var(--tema-yerel-yonetim-islevsel-cizgi-02)"}`,
+                    background: firma.urun_aktif_mi ? "var(--tema-yerel-yonetim-islevsel-zemin-05)" : "var(--tema-yerel-yonetim-islevsel-zemin-06)",
+                    color: firma.urun_aktif_mi ? "var(--tema-yerel-yonetim-islevsel-metin-10)" : "var(--tema-yerel-yonetim-islevsel-metin-12)",
                     fontWeight: 700, fontSize: "11px", opacity: islemde ? .55 : 1,
                   }}
                 >

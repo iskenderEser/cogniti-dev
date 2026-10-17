@@ -67,10 +67,10 @@ const DURUM_ETIKETI: Record<TmOneriDurumu, string> = {
 };
 
 const DURUM_GORUNUMU: Record<TmOneriDurumu, { renk: string; zemin: string }> = {
-  planlandi: { renk: "#2f7fc7", zemin: "#eef6ff" },
-  tamamlanan: { renk: "#167453", zemin: "#ecfdf5" },
-  bekleyen: { renk: "#476b96", zemin: "#eef5fd" },
-  suresi_gecmis: { renk: "#bc2d0d", zemin: "#fce8e3" },
+  planlandi: { renk: "var(--tema-yerel-ortak-sayfa-islevsel-metin-01)", zemin: "var(--tema-yerel-ortak-sayfa-islevsel-zemin-02)" },
+  tamamlanan: { renk: "var(--tema-yerel-ortak-sayfa-islevsel-metin-02)", zemin: "var(--tema-yerel-ortak-sayfa-islevsel-zemin-03)" },
+  bekleyen: { renk: "var(--tema-yerel-ortak-sayfa-islevsel-metin-07)", zemin: "var(--tema-yerel-ortak-sayfa-islevsel-zemin-04)" },
+  suresi_gecmis: { renk: "var(--tema-yerel-ortak-sayfa-islevsel-metin-04)", zemin: "var(--tema-yerel-ortak-sayfa-islevsel-zemin-05)" },
 };
 
 const tarihMetni = (deger: string | null) => deger
@@ -141,7 +141,7 @@ export default function TmOneriTakibi({
       key: "toplam",
       label: "Toplam Öneri",
       value: sayilar.toplam,
-      renk: "#2f7fc7",
+      renk: "var(--tema-yerel-ortak-sayfa-islevsel-metin-01)",
       icon: Send,
       aciklama: "Takımdaki tüm öğrenme aracı önerileri",
     },
@@ -149,7 +149,7 @@ export default function TmOneriTakibi({
       key: "tamamlanan",
       label: "Tamamlanan",
       value: sayilar.tamamlanan,
-      renk: "#167453",
+      renk: "var(--tema-yerel-ortak-sayfa-islevsel-metin-02)",
       icon: CheckCircle2,
       aciklama: "UTT’lerin tamamladığı öneriler",
     },
@@ -157,7 +157,7 @@ export default function TmOneriTakibi({
       key: "bekleyen",
       label: "Bekleyen",
       value: sayilar.bekleyen,
-      renk: "#476b96",
+      renk: "var(--tema-yerel-ortak-sayfa-islevsel-metin-07)",
       icon: Clock3,
       aciklama: "Henüz izlenmemiş açık öneriler",
     },
@@ -165,7 +165,7 @@ export default function TmOneriTakibi({
       key: "suresi_gecmis",
       label: "Süresi Geçmiş",
       value: sayilar.suresiGecmis,
-      renk: "#bc2d0d",
+      renk: "var(--tema-yerel-ortak-sayfa-islevsel-metin-04)",
       icon: TriangleAlert,
       aciklama: "Süre bitimine kadar tamamlanmayan",
     },
@@ -201,11 +201,11 @@ export default function TmOneriTakibi({
     <div aria-busy={yenileniyor} className="mx-auto flex max-w-[1480px] flex-col gap-5 px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
       <SayfaYenileBasligi className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"
         baslik={<div className="inline-flex items-center">
-          <h1 className="mt-1 text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]">Öneri Takibi</h1>
+          <h1 className="mt-1 text-2xl font-extrabold tracking-[-0.025em] text-[var(--tema-yerel-ortak-sayfa-ana-metin-01)] md:text-[28px]">Öneri Takibi</h1>
           <SayfaRehberi anahtar="oneriler-tm" className="ml-1.5 -translate-y-1.5" />
         </div>}
 
-        aciklama={<><p className="mt-1 max-w-3xl text-sm leading-5 text-[#6b7f9b]">Takımınızdaki BM’lerin temsilcilere gönderdiği önerileri takip edebilirsiniz</p></>}
+        aciklama={<><p className="mt-1 max-w-3xl text-sm leading-5 text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-01)]">Takımınızdaki BM’lerin temsilcilere gönderdiği önerileri takip edebilirsiniz</p></>}
         aksiyon={onYenile && <YenileButonu yenileniyor={yenileniyor} onYenile={onYenile} />}
         ekKontroller={<><div className="flex items-center gap-2">
           <RaporPeriyotSecici deger={periyot} onDegistir={onPeriyotDegistir} />
@@ -227,23 +227,23 @@ export default function TmOneriTakibi({
               }}
               aria-pressed={acik}
               aria-controls="tm-oneri-detayi"
-              className={`rounded-2xl border bg-white p-3.5 text-left shadow-[0_6px_18px_rgba(31,55,90,0.035)] transition-all hover:-translate-y-0.5 ${acik ? "ring-2 ring-[#b7d7f2]" : "border-[#dfe7f1]"}`}
+              className={`rounded-2xl border bg-[var(--tema-yerel-ortak-sayfa-kart-01)] p-3.5 text-left shadow-[0_6px_18px_var(--tema-yerel-ortak-sayfa-golge-01)] transition-all hover:-translate-y-0.5 ${acik ? "ring-2 ring-[var(--tema-yerel-ortak-sayfa-odak-01)]" : "border-[var(--tema-yerel-ortak-sayfa-cizgi-01)]"}`}
               style={{ borderLeft: `4px solid ${kart.renk}` }}
             >
               <span className="flex items-center justify-between gap-2">
                 <span className="text-[10px] font-extrabold uppercase tracking-[0.1em]" style={{ color: kart.renk }}>{kart.label}</span>
                 <kart.icon size={16} style={{ color: kart.renk }} />
               </span>
-              <strong className="mt-1 block text-2xl font-black text-[#243957]">{kart.value}</strong>
-              <small className="mt-1 hidden text-[11px] font-semibold text-[#7b8ca5] sm:block">{kart.aciklama}</small>
+              <strong className="mt-1 block text-2xl font-black text-[var(--tema-yerel-ortak-sayfa-ana-metin-02)]">{kart.value}</strong>
+              <small className="mt-1 hidden text-[11px] font-semibold text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-05)] sm:block">{kart.aciklama}</small>
             </button>
           );
         })}
       </section>
 
-      <section className="overflow-hidden rounded-2xl border border-[#dfe7f1] bg-white shadow-[0_6px_18px_rgba(31,55,90,0.035)]">
-        <div className="border-b border-[#e5ecf4] px-4 py-3.5">
-          <h2 className="text-base font-extrabold text-[#203653]">Öneri Takip Listesi</h2>
+      <section className="overflow-hidden rounded-2xl border border-[var(--tema-yerel-ortak-sayfa-cizgi-01)] bg-[var(--tema-yerel-ortak-sayfa-kart-01)] shadow-[0_6px_18px_var(--tema-yerel-ortak-sayfa-golge-01)]">
+        <div className="border-b border-[var(--tema-yerel-ortak-sayfa-cizgi-04)] px-4 py-3.5">
+          <h2 className="text-base font-extrabold text-[var(--tema-yerel-ortak-sayfa-ana-metin-03)]">Öneri Takip Listesi</h2>
         </div>
 
         <div id="tm-oneri-detayi">
@@ -255,10 +255,10 @@ export default function TmOneriTakibi({
                 const gorunenOneriler = seciliTemsilciId ? bm.oneriler.filter((oneri) => oneri.kullanici_id === seciliTemsilciId) : bm.oneriler;
                 const basHarfler = bm.bm_adi.split(" ").filter(Boolean).slice(0, 2).map((parca) => parca.charAt(0)).join("");
                 return (
-                  <article key={bm.bm_id} className="overflow-hidden rounded-xl border border-[#e0e8f1] bg-white">
+                  <article key={bm.bm_id} className="overflow-hidden rounded-xl border border-[var(--tema-yerel-ortak-sayfa-cizgi-05)] bg-[var(--tema-yerel-ortak-sayfa-kart-01)]">
                     <button
                       type="button"
-                      className="flex w-full items-center gap-3 px-3 py-3 text-left transition-colors hover:bg-[#fbfcfe]"
+                      className="flex w-full items-center gap-3 px-3 py-3 text-left transition-colors hover:bg-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-03)]"
                       onClick={() => {
                         setAcikBm(bmAcik ? null : bm.bm_id);
                         setTemsilciSecimi(null);
@@ -266,52 +266,52 @@ export default function TmOneriTakibi({
                       aria-expanded={bmAcik}
                       aria-controls={`tm-oneri-bm-mobil-${bm.bm_id}`}
                     >
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#d9e8f7] text-xs font-black text-[#2f7fc7]">{basHarfler}</span>
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--tema-yerel-ortak-sayfa-secim-zemin-01)] text-xs font-black text-[var(--tema-yerel-ortak-sayfa-eylem-metin-01)]">{basHarfler}</span>
                       <span className="min-w-0 flex-1">
-                        <strong className="block truncate text-sm text-[#263e5b]">{bm.bm_adi}</strong>
-                        <small className="mt-0.5 block truncate text-[10px] font-semibold text-[#7a8da5]">{bm.bolge_adi}</small>
+                        <strong className="block truncate text-sm text-[var(--tema-yerel-ortak-sayfa-ana-metin-04)]">{bm.bm_adi}</strong>
+                        <small className="mt-0.5 block truncate text-[10px] font-semibold text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-06)]">{bm.bolge_adi}</small>
                       </span>
-                      <span className="shrink-0 rounded-full bg-[#eef6ff] px-2.5 py-1 text-[10px] font-extrabold text-[#2f7fc7]">{bm.oneriler.length} öneri</span>
-                      <ChevronDown size={15} className={`shrink-0 text-[#7d8fa5] transition-transform ${bmAcik ? "rotate-180" : ""}`} />
+                      <span className="shrink-0 rounded-full bg-[var(--tema-yerel-ortak-sayfa-secim-zemin-02)] px-2.5 py-1 text-[10px] font-extrabold text-[var(--tema-yerel-ortak-sayfa-eylem-metin-01)]">{bm.oneriler.length} öneri</span>
+                      <ChevronDown size={15} className={`shrink-0 text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-07)] transition-transform ${bmAcik ? "rotate-180" : ""}`} />
                     </button>
 
                     {bmAcik && (
-                      <div id={`tm-oneri-bm-mobil-${bm.bm_id}`} className="grid gap-2.5 border-t border-[#e5ecf4] bg-[#f7f9fc] p-2.5">
-                          <div className="rounded-lg bg-white px-2.5 py-2"><TemsilciFiltresi temsilciler={temsilciler} deger={seciliTemsilciId} onDegistir={(uttId) => setTemsilciSecimi({ bmId: bm.bm_id, uttId })} /></div>
+                      <div id={`tm-oneri-bm-mobil-${bm.bm_id}`} className="grid gap-2.5 border-t border-[var(--tema-yerel-ortak-sayfa-cizgi-04)] bg-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-04)] p-2.5">
+                          <div className="rounded-lg bg-[var(--tema-yerel-ortak-sayfa-islevsel-zemin-06)] px-2.5 py-2"><TemsilciFiltresi temsilciler={temsilciler} deger={seciliTemsilciId} onDegistir={(uttId) => setTemsilciSecimi({ bmId: bm.bm_id, uttId })} /></div>
                           {gorunenOneriler.length > 0 ? gorunenOneriler.map((oneri) => {
                           const kayitDurumuDegeri = kayitDurumu(oneri);
                           const durum = DURUM_GORUNUMU[kayitDurumuDegeri];
                           const kapak = yayinThumbnailIstemciCoz(oneri);
                           const videoOynatilabilir = (oneri.arac_turu ?? "video") === "video" && !!oneri.video_url;
                           return (
-                            <article key={oneri.oneri_id} className="rounded-xl border border-[#e0e8f1] bg-white p-3">
+                            <article key={oneri.oneri_id} className="rounded-xl border border-[var(--tema-yerel-ortak-sayfa-cizgi-05)] bg-[var(--tema-yerel-ortak-sayfa-kart-01)] p-3">
                               <div className="flex items-start gap-3">
                                 <button
                                   type="button"
                                   disabled={!videoOynatilabilir}
                                   onClick={() => videoOynatilabilir && setAcikVideo(oneri.video_url!)}
                                   aria-label={videoOynatilabilir ? `${oneri.urun_adi ?? "Öneri"} videosunu aç` : `${oneri.urun_adi ?? "Öneri"} kapağı`}
-                                  className="group relative h-14 w-24 shrink-0 overflow-hidden rounded-lg bg-[#d9e8f7] disabled:cursor-default"
+                                  className="group relative h-14 w-24 shrink-0 overflow-hidden rounded-lg bg-[var(--tema-yerel-ortak-sayfa-secim-zemin-01)] disabled:cursor-default"
                                 >
                                   {kapak ? <span className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${kapak})` }} /> : <AracVarsayilanKapak aracTuru={oneri.arac_turu} urunAdi={oneri.urun_adi} kucuk />}
-                                  {videoOynatilabilir && <span className="absolute inset-0 flex items-center justify-center bg-[#10233a]/25"><span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#10233a]/70 text-white transition-transform group-hover:scale-105"><svg aria-hidden="true" width="8" height="10" viewBox="0 0 10 12" fill="currentColor"><path d="M0 0l10 6-10 6z" /></svg></span></span>}
+                                  {videoOynatilabilir && <span className="absolute inset-0 flex items-center justify-center bg-[var(--tema-yerel-ortak-sayfa-eylem-zemin-03)]/25"><span className="flex h-7 w-7 items-center justify-center rounded-full bg-[var(--tema-yerel-ortak-sayfa-eylem-zemin-03)]/70 text-[var(--tema-yerel-ortak-sayfa-ters-metin-01)] transition-transform group-hover:scale-105"><svg aria-hidden="true" width="8" height="10" viewBox="0 0 10 12" fill="currentColor"><path d="M0 0l10 6-10 6z" /></svg></span></span>}
                                 </button>
                                 <span className="min-w-0 flex-1">
-                                  <strong className="block truncate text-sm text-[#263e5b]">{oneri.utt_ad} {oneri.utt_soyad}</strong>
-                                  <small className="mt-1 block truncate text-[11px] font-semibold text-[#71859d]">{oneri.urun_adi ?? "Ürün dışı eğitim"} · {oneri.teknik_adi ?? "Teknik belirtilmemiş"}</small>
-                                  <small className="mt-1 block truncate text-[11px] font-semibold text-[#71859d]">{kategoriAdi(oneri.icerik_turu)}</small>
-                                  <small className="mt-1 block truncate text-[11px] font-semibold text-[#71859d]">{ogrenmeAraciAdi(oneri.arac_turu)}</small>
+                                  <strong className="block truncate text-sm text-[var(--tema-yerel-ortak-sayfa-ana-metin-04)]">{oneri.utt_ad} {oneri.utt_soyad}</strong>
+                                  <small className="mt-1 block truncate text-[11px] font-semibold text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-08)]">{oneri.urun_adi ?? "Ürün dışı eğitim"} · {oneri.teknik_adi ?? "Teknik belirtilmemiş"}</small>
+                                  <small className="mt-1 block truncate text-[11px] font-semibold text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-08)]">{kategoriAdi(oneri.icerik_turu)}</small>
+                                  <small className="mt-1 block truncate text-[11px] font-semibold text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-08)]">{ogrenmeAraciAdi(oneri.arac_turu)}</small>
                                 </span>
                               </div>
                               <div className="mt-3 grid grid-cols-2 gap-2">
-                                <div className="col-span-2 rounded-lg bg-[#f7f9fc] px-2.5 py-2"><small className="block text-[9px] font-bold uppercase text-[#8a9bb0]">Gönderi Tarihi</small><strong className="text-[11px] text-[#536a84]">{tarihMetni(oneri.created_at)}</strong></div>
-                                <div className="rounded-lg bg-[#f7f9fc] px-2.5 py-2"><small className="block text-[9px] font-bold uppercase text-[#8a9bb0]">Başlangıç Tarihi</small><strong className="block text-[11px] text-[#536a84]">{tarihMetni(oneri.oneri_baslangic)}</strong></div>
-                                <div className="rounded-lg bg-[#f7f9fc] px-2.5 py-2"><small className="block text-[9px] font-bold uppercase text-[#8a9bb0]">Bitiş Tarihi</small><strong className="block text-[11px] text-[#536a84]">{tarihMetni(oneri.oneri_bitis)}</strong></div>
+                                <div className="col-span-2 rounded-lg bg-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-04)] px-2.5 py-2"><small className="block text-[9px] font-bold uppercase text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-09)]">Gönderi Tarihi</small><strong className="text-[11px] text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-10)]">{tarihMetni(oneri.created_at)}</strong></div>
+                                <div className="rounded-lg bg-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-04)] px-2.5 py-2"><small className="block text-[9px] font-bold uppercase text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-09)]">Başlangıç Tarihi</small><strong className="block text-[11px] text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-10)]">{tarihMetni(oneri.oneri_baslangic)}</strong></div>
+                                <div className="rounded-lg bg-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-04)] px-2.5 py-2"><small className="block text-[9px] font-bold uppercase text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-09)]">Bitiş Tarihi</small><strong className="block text-[11px] text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-10)]">{tarihMetni(oneri.oneri_bitis)}</strong></div>
                               </div>
-                              <div className="mt-2 flex items-center gap-2"><span className="rounded-full px-2 py-0.5 text-[9px] font-extrabold" style={{ color: durum.renk, backgroundColor: durum.zemin }}>{DURUM_ETIKETI[kayitDurumuDegeri]}</span>{kayitDurumuDegeri === "tamamlanan" && <small className="text-[10px] text-[#71859d]">{tarihMetni(oneri.izleme_tarihi)}</small>}</div>
+                              <div className="mt-2 flex items-center gap-2"><span className="rounded-full px-2 py-0.5 text-[9px] font-extrabold" style={{ color: durum.renk, backgroundColor: durum.zemin }}>{DURUM_ETIKETI[kayitDurumuDegeri]}</span>{kayitDurumuDegeri === "tamamlanan" && <small className="text-[10px] text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-08)]">{tarihMetni(oneri.izleme_tarihi)}</small>}</div>
                             </article>
                           );
-                        }) : <div className="px-3 py-8 text-center text-xs font-semibold text-[#8090a4]">{seciliTemsilciId ? "Seçili temsilci" : "Bu BM"} için {seciliBaslik?.toLocaleLowerCase("tr-TR")} bulunmuyor.</div>}
+                        }) : <div className="px-3 py-8 text-center text-xs font-semibold text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-03)]">{seciliTemsilciId ? "Seçili temsilci" : "Bu BM"} için {seciliBaslik?.toLocaleLowerCase("tr-TR")} bulunmuyor.</div>}
                       </div>
                     )}
                   </article>
@@ -321,7 +321,7 @@ export default function TmOneriTakibi({
 
             <div className="hidden overflow-x-auto md:block">
               <div className="min-w-[760px] text-xs">
-                <div className="grid grid-cols-[minmax(260px,1fr)_minmax(150px,.55fr)_120px_44px] bg-[#f7f9fc] text-[10px] font-extrabold uppercase tracking-[0.08em] text-[#7d8fa5]">
+                <div className="grid grid-cols-[minmax(260px,1fr)_minmax(150px,.55fr)_120px_44px] bg-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-04)] text-[10px] font-extrabold uppercase tracking-[0.08em] text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-07)]">
                   <span className="px-4 py-3">BM</span><span className="px-4 py-3">Bölge</span><span className="px-4 py-3">Öneri</span><span className="px-4 py-3" />
                 </div>
                 {seciliBmOnerileri.map((bm) => {
@@ -331,10 +331,10 @@ export default function TmOneriTakibi({
                   const gorunenOneriler = seciliTemsilciId ? bm.oneriler.filter((oneri) => oneri.kullanici_id === seciliTemsilciId) : bm.oneriler;
                   const basHarfler = bm.bm_adi.split(" ").filter(Boolean).slice(0, 2).map((parca) => parca.charAt(0)).join("");
                   return (
-                    <article key={bm.bm_id} className="border-t border-[#edf1f6]">
+                    <article key={bm.bm_id} className="border-t border-[var(--tema-yerel-ortak-sayfa-cizgi-03)]">
                       <button
                         type="button"
-                        className="grid w-full grid-cols-[minmax(260px,1fr)_minmax(150px,.55fr)_120px_44px] items-center text-left transition-colors hover:bg-[#fbfcfe]"
+                        className="grid w-full grid-cols-[minmax(260px,1fr)_minmax(150px,.55fr)_120px_44px] items-center text-left transition-colors hover:bg-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-03)]"
                         onClick={() => {
                           setAcikBm(bmAcik ? null : bm.bm_id);
                           setTemsilciSecimi(null);
@@ -342,17 +342,17 @@ export default function TmOneriTakibi({
                         aria-expanded={bmAcik}
                         aria-controls={`tm-oneri-bm-masaustu-${bm.bm_id}`}
                       >
-                        <span className="flex min-w-0 items-center gap-3 px-4 py-3"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#d9e8f7] text-xs font-black text-[#2f7fc7]">{basHarfler}</span><strong className="truncate text-xs text-[#2d4562]">{bm.bm_adi}</strong></span>
-                        <span className="px-4 py-3 font-semibold text-[#718198]">{bm.bolge_adi}</span>
-                        <span className="px-4 py-3"><span className="rounded-full bg-[#eef6ff] px-2.5 py-1 text-[10px] font-extrabold text-[#2f7fc7]">{bm.oneriler.length}</span></span>
-                        <span className="px-4 py-3"><ChevronDown size={15} className={`text-[#7d8fa5] transition-transform ${bmAcik ? "rotate-180" : ""}`} /></span>
+                        <span className="flex min-w-0 items-center gap-3 px-4 py-3"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--tema-yerel-ortak-sayfa-secim-zemin-01)] text-xs font-black text-[var(--tema-yerel-ortak-sayfa-eylem-metin-01)]">{basHarfler}</span><strong className="truncate text-xs text-[var(--tema-yerel-ortak-sayfa-ana-metin-05)]">{bm.bm_adi}</strong></span>
+                        <span className="px-4 py-3 font-semibold text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-04)]">{bm.bolge_adi}</span>
+                        <span className="px-4 py-3"><span className="rounded-full bg-[var(--tema-yerel-ortak-sayfa-secim-zemin-02)] px-2.5 py-1 text-[10px] font-extrabold text-[var(--tema-yerel-ortak-sayfa-eylem-metin-01)]">{bm.oneriler.length}</span></span>
+                        <span className="px-4 py-3"><ChevronDown size={15} className={`text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-07)] transition-transform ${bmAcik ? "rotate-180" : ""}`} /></span>
                       </button>
 
                       {bmAcik && (
-                        <div id={`tm-oneri-bm-masaustu-${bm.bm_id}`} className="border-t border-[#e5ecf4] bg-[#f7f9fc] p-3">
+                        <div id={`tm-oneri-bm-masaustu-${bm.bm_id}`} className="border-t border-[var(--tema-yerel-ortak-sayfa-cizgi-04)] bg-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-04)] p-3">
                           {bm.oneriler.length > 0 || seciliTemsilciId ? (
-                            <div className="mx-auto w-full max-w-[1280px] overflow-x-auto rounded-xl border border-[#e0e8f1] bg-white">
-                              <div className="grid min-w-[1120px] grid-cols-[180px_200px_repeat(6,minmax(120px,1fr))] items-center bg-[#f7f9fc] text-[9px] font-extrabold uppercase tracking-[0.08em] text-[#7d8fa5]">
+                            <div className="mx-auto w-full max-w-[1280px] overflow-x-auto rounded-xl border border-[var(--tema-yerel-ortak-sayfa-cizgi-05)] bg-[var(--tema-yerel-ortak-sayfa-kart-01)]">
+                              <div className="grid min-w-[1120px] grid-cols-[180px_200px_repeat(6,minmax(120px,1fr))] items-center bg-[var(--tema-yerel-ortak-sayfa-islevsel-zemin-07)] text-[9px] font-extrabold uppercase tracking-[0.08em] text-[var(--tema-yerel-ortak-sayfa-islevsel-metin-08)]">
                                 <div className="px-3 py-2.5"><TemsilciFiltresi temsilciler={temsilciler} deger={seciliTemsilciId} onDegistir={(uttId) => setTemsilciSecimi({ bmId: bm.bm_id, uttId })} /></div><span className="px-3 py-2.5">Yayın</span><span className="px-3 py-2.5">Kategori</span><span className="px-3 py-2.5">Öğrenme Aracı</span><span className="px-3 py-2.5">Gönderi Tarihi</span><span className="px-3 py-2.5">Başlangıç Tarihi</span><span className="px-3 py-2.5">Bitiş Tarihi</span><span className="px-3 py-2.5">Durum</span>
                               </div>
                               {gorunenOneriler.map((oneri) => {
@@ -361,8 +361,8 @@ export default function TmOneriTakibi({
                                 const kapak = yayinThumbnailIstemciCoz(oneri);
                                 const videoOynatilabilir = (oneri.arac_turu ?? "video") === "video" && !!oneri.video_url;
                                 return (
-                                  <div key={oneri.oneri_id} className="grid min-w-[1120px] grid-cols-[180px_200px_repeat(6,minmax(120px,1fr))] items-center border-t border-[#edf1f6] hover:bg-[#fbfcfe]">
-                                    <strong className="px-3 py-3 text-xs text-[#405873]">{oneri.utt_ad} {oneri.utt_soyad}</strong>
+                                  <div key={oneri.oneri_id} className="grid min-w-[1120px] grid-cols-[180px_200px_repeat(6,minmax(120px,1fr))] items-center border-t border-[var(--tema-yerel-ortak-sayfa-cizgi-03)] hover:bg-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-03)]">
+                                    <strong className="px-3 py-3 text-xs text-[var(--tema-yerel-ortak-sayfa-ana-metin-06)]">{oneri.utt_ad} {oneri.utt_soyad}</strong>
                                     <button
                                       type="button"
                                       disabled={!videoOynatilabilir}
@@ -370,24 +370,24 @@ export default function TmOneriTakibi({
                                       aria-label={videoOynatilabilir ? `${oneri.urun_adi ?? "Öneri"} videosunu aç` : `${oneri.urun_adi ?? "Öneri"} kapağı`}
                                       className="group flex min-w-0 items-center gap-3 px-3 py-2.5 text-left disabled:cursor-default"
                                     >
-                                      <span className="relative h-10 w-16 shrink-0 overflow-hidden rounded-lg bg-[#d9e8f7]">
+                                      <span className="relative h-10 w-16 shrink-0 overflow-hidden rounded-lg bg-[var(--tema-yerel-ortak-sayfa-secim-zemin-01)]">
                                         {kapak ? <span className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${kapak})` }} /> : <AracVarsayilanKapak aracTuru={oneri.arac_turu} urunAdi={oneri.urun_adi} kucuk />}
-                                        {videoOynatilabilir && <span className="absolute inset-0 flex items-center justify-center bg-[#10233a]/25"><span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#10233a]/70 text-white transition-transform group-hover:scale-105"><svg aria-hidden="true" width="7" height="9" viewBox="0 0 10 12" fill="currentColor"><path d="M0 0l10 6-10 6z" /></svg></span></span>}
+                                        {videoOynatilabilir && <span className="absolute inset-0 flex items-center justify-center bg-[var(--tema-yerel-ortak-sayfa-eylem-zemin-03)]/25"><span className="flex h-6 w-6 items-center justify-center rounded-full bg-[var(--tema-yerel-ortak-sayfa-eylem-zemin-03)]/70 text-[var(--tema-yerel-ortak-sayfa-ters-metin-01)] transition-transform group-hover:scale-105"><svg aria-hidden="true" width="7" height="9" viewBox="0 0 10 12" fill="currentColor"><path d="M0 0l10 6-10 6z" /></svg></span></span>}
                                       </span>
-                                      <span className="min-w-0"><strong className="block truncate text-xs text-[#2d4562]">{oneri.urun_adi ?? "Ürün dışı eğitim"}</strong><small className="mt-0.5 block truncate text-[10px] text-[#7a8da5]">{oneri.teknik_adi ?? "Teknik belirtilmemiş"}</small></span>
+                                      <span className="min-w-0"><strong className="block truncate text-xs text-[var(--tema-yerel-ortak-sayfa-ana-metin-05)]">{oneri.urun_adi ?? "Ürün dışı eğitim"}</strong><small className="mt-0.5 block truncate text-[10px] text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-06)]">{oneri.teknik_adi ?? "Teknik belirtilmemiş"}</small></span>
                                     </button>
-                                    <span className="px-3 py-3 text-[10px] font-semibold text-[#718198]">{kategoriAdi(oneri.icerik_turu)}</span>
-                                    <span className="px-3 py-3 text-[10px] font-semibold text-[#718198]">{ogrenmeAraciAdi(oneri.arac_turu)}</span>
-                                    <span className="px-3 py-3 text-[10px] font-semibold text-[#718198]">{tarihMetni(oneri.created_at)}</span>
-                                    <span className="px-3 py-3 text-[10px] font-semibold text-[#718198]">{tarihMetni(oneri.oneri_baslangic)}</span>
-                                    <span className="px-3 py-3 text-[10px] font-semibold text-[#718198]">{tarihMetni(oneri.oneri_bitis)}</span>
-                                    <span className="px-3 py-3"><span className="rounded-full px-2.5 py-1 text-[10px] font-extrabold" style={{ color: durum.renk, backgroundColor: durum.zemin }}>{DURUM_ETIKETI[kayitDurumuDegeri]}</span>{kayitDurumuDegeri === "tamamlanan" && <small className="mt-1 block text-[10px] text-[#718198]">{tarihMetni(oneri.izleme_tarihi)}</small>}</span>
+                                    <span className="px-3 py-3 text-[10px] font-semibold text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-04)]">{kategoriAdi(oneri.icerik_turu)}</span>
+                                    <span className="px-3 py-3 text-[10px] font-semibold text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-04)]">{ogrenmeAraciAdi(oneri.arac_turu)}</span>
+                                    <span className="px-3 py-3 text-[10px] font-semibold text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-04)]">{tarihMetni(oneri.created_at)}</span>
+                                    <span className="px-3 py-3 text-[10px] font-semibold text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-04)]">{tarihMetni(oneri.oneri_baslangic)}</span>
+                                    <span className="px-3 py-3 text-[10px] font-semibold text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-04)]">{tarihMetni(oneri.oneri_bitis)}</span>
+                                    <span className="px-3 py-3"><span className="rounded-full px-2.5 py-1 text-[10px] font-extrabold" style={{ color: durum.renk, backgroundColor: durum.zemin }}>{DURUM_ETIKETI[kayitDurumuDegeri]}</span>{kayitDurumuDegeri === "tamamlanan" && <small className="mt-1 block text-[10px] text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-04)]">{tarihMetni(oneri.izleme_tarihi)}</small>}</span>
                                   </div>
                                 );
                               })}
-                              {gorunenOneriler.length === 0 && <div className="px-3 py-8 text-center text-xs font-semibold text-[#8090a4]">Seçili temsilci için {seciliBaslik?.toLocaleLowerCase("tr-TR")} bulunmuyor.</div>}
+                              {gorunenOneriler.length === 0 && <div className="px-3 py-8 text-center text-xs font-semibold text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-03)]">Seçili temsilci için {seciliBaslik?.toLocaleLowerCase("tr-TR")} bulunmuyor.</div>}
                             </div>
-                          ) : <div className="px-3 py-8 text-center text-xs font-semibold text-[#8090a4]">{seciliTemsilciId ? "Seçili temsilci" : "Bu BM"} için {seciliBaslik?.toLocaleLowerCase("tr-TR")} bulunmuyor.</div>}
+                          ) : <div className="px-3 py-8 text-center text-xs font-semibold text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-03)]">{seciliTemsilciId ? "Seçili temsilci" : "Bu BM"} için {seciliBaslik?.toLocaleLowerCase("tr-TR")} bulunmuyor.</div>}
                         </div>
                       )}
                     </article>
@@ -399,11 +399,11 @@ export default function TmOneriTakibi({
       </section>
 
       {acikVideo && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4" onClick={() => setAcikVideo(null)}>
-          <div role="dialog" aria-modal="true" aria-labelledby="tm-video-onizleme-baslik" className="w-full max-w-3xl overflow-hidden rounded-2xl bg-white shadow-2xl" onClick={(event) => event.stopPropagation()}>
-            <div className="flex items-center justify-between border-b border-[#edf1f6] px-4 py-3">
-              <strong id="tm-video-onizleme-baslik" className="text-sm font-extrabold text-[#243957]">Video Önizleme</strong>
-              <button type="button" onClick={() => setAcikVideo(null)} aria-label="Video önizlemeyi kapat" className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#f2f5f9] text-[#718198]"><X size={16} /></button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--tema-yerel-ortak-sayfa-ortu-01)]/70 p-4" onClick={() => setAcikVideo(null)}>
+          <div role="dialog" aria-modal="true" aria-labelledby="tm-video-onizleme-baslik" className="w-full max-w-3xl overflow-hidden rounded-2xl bg-[var(--tema-yerel-ortak-sayfa-kart-01)] shadow-2xl" onClick={(event) => event.stopPropagation()}>
+            <div className="flex items-center justify-between border-b border-[var(--tema-yerel-ortak-sayfa-cizgi-03)] px-4 py-3">
+              <strong id="tm-video-onizleme-baslik" className="text-sm font-extrabold text-[var(--tema-yerel-ortak-sayfa-ana-metin-02)]">Video Önizleme</strong>
+              <button type="button" onClick={() => setAcikVideo(null)} aria-label="Video önizlemeyi kapat" className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-02)] text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-04)]"><X size={16} /></button>
             </div>
             <VideoOnizleme videoUrl={acikVideo} ariaLabel="Video önizlemeyi oynat" />
           </div>

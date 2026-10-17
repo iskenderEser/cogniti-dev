@@ -97,7 +97,7 @@ export default function TopluTekilSilModal({ acik, onKapat, hata, basari }: Prop
 
   const kutu = (arkaplan: string): React.CSSProperties => ({
     padding: "10px 14px", borderRadius: "8px", background: arkaplan,
-    border: "1px solid #e5e5e5", fontSize: "13px", cursor: "pointer", textAlign: "left",
+    border: "1px solid var(--tema-yerel-yonetim-cizgi-06)", fontSize: "13px", cursor: "pointer", textAlign: "left",
     fontFamily: "'Nunito', sans-serif",
   });
 
@@ -105,7 +105,7 @@ export default function TopluTekilSilModal({ acik, onKapat, hata, basari }: Prop
     <div
       onClick={kapat}
       style={{
-        position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 1000,
+        position: "fixed", inset: 0, background: "var(--tema-yerel-yonetim-ortu-01)", zIndex: 1000,
         display: "flex", alignItems: "center", justifyContent: "center", padding: "16px",
       }}
     >
@@ -113,16 +113,16 @@ export default function TopluTekilSilModal({ acik, onKapat, hata, basari }: Prop
         onClick={(e) => e.stopPropagation()}
         style={{
           width: "100%", maxWidth: "460px", maxHeight: "90vh", overflow: "auto",
-          background: "white", borderRadius: "12px", padding: "20px",
-          fontFamily: "'Nunito', sans-serif", boxShadow: "0 10px 40px rgba(0,0,0,0.25)",
+          background: "var(--tema-yerel-yonetim-kart-01)", borderRadius: "12px", padding: "20px",
+          fontFamily: "'Nunito', sans-serif", boxShadow: "0 10px 40px var(--tema-yerel-yonetim-golge-01)",
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
-          <span style={{ fontSize: "15px", fontWeight: 800, color: "#111" }}>Toplu / Tekil Sil</span>
-          <button onClick={kapat} style={{ background: "transparent", border: "none", fontSize: "18px", cursor: "pointer", color: "#737373" }}>×</button>
+          <span style={{ fontSize: "15px", fontWeight: 800, color: "var(--tema-yerel-yonetim-ana-metin-01)" }}>Toplu / Tekil Sil</span>
+          <button onClick={kapat} style={{ background: "transparent", border: "none", fontSize: "18px", cursor: "pointer", color: "var(--tema-yerel-yonetim-yardimci-metin-01)" }}>×</button>
         </div>
 
-        <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: "8px", padding: "8px 12px", marginBottom: "14px" }}>
+        <div style={{ background: "var(--tema-yerel-yonetim-islevsel-zemin-01)", border: "1px solid var(--tema-yerel-yonetim-islevsel-cizgi-02)", borderRadius: "8px", padding: "8px 12px", marginBottom: "14px" }}>
           <span style={{ fontSize: "12px", color: RENK_BORDO }}>
             Yalnız test ortamı. Üretilen veri silinir; kimlik, ürün içeriği ve bitmiş siparişler korunur. <b>Geri alınamaz.</b>
           </span>
@@ -131,11 +131,11 @@ export default function TopluTekilSilModal({ acik, onKapat, hata, basari }: Prop
         {/* 1) Tip seçimi */}
         <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "14px" }}>
           <button onClick={() => { setTip("tum"); setOnizleme(null); setOnayMetni(""); }}
-            style={{ ...kutu(tip === "tum" ? "#fef2f2" : "#fafafa"), borderColor: tip === "tum" ? "#fca5a5" : "#e5e5e5" }}>
+            style={{ ...kutu(tip === "tum" ? "#fef2f2" : "#fafafa"), borderColor: tip === "tum" ? "var(--tema-yerel-yonetim-islevsel-cizgi-03)" : "var(--tema-yerel-yonetim-cizgi-06)" }}>
             <b>Tüm Veriler</b> — tüm firmaların üretilen verisi
           </button>
           <button onClick={() => { setTip("tekil"); setOnizleme(null); }}
-            style={{ ...kutu(tip === "tekil" ? "#eff6ff" : "#fafafa"), borderColor: tip === "tekil" ? "#93c5fd" : "#e5e5e5" }}>
+            style={{ ...kutu(tip === "tekil" ? "#eff6ff" : "#fafafa"), borderColor: tip === "tekil" ? "var(--tema-yerel-yonetim-cizgi-07)" : "var(--tema-yerel-yonetim-cizgi-06)" }}>
             <b>Tek Talep</b> — ekranda görünen talep numarasıyla
           </button>
         </div>
@@ -146,30 +146,30 @@ export default function TopluTekilSilModal({ acik, onKapat, hata, basari }: Prop
             value={gorunenTalepId}
             onChange={(e) => { setGorunenTalepId(e.target.value); setOnizleme(null); }}
             placeholder="Görünen talep no (ör. hepifarma_30058)"
-            style={{ width: "100%", boxSizing: "border-box", padding: "8px 10px", fontSize: "13px", border: "1px solid #e5e5e5", borderRadius: "8px", marginBottom: "12px", fontFamily: "'Nunito', sans-serif" }}
+            style={{ width: "100%", boxSizing: "border-box", padding: "8px 10px", fontSize: "13px", border: "1px solid var(--tema-yerel-yonetim-cizgi-06)", borderRadius: "8px", marginBottom: "12px", fontFamily: "'Nunito', sans-serif" }}
           />
         )}
 
         {/* 3) Önizle */}
         {tip && (
           <button onClick={onizle} disabled={loading || !tekilGecerli}
-            style={{ padding: "8px 14px", borderRadius: "8px", border: "1px solid #d4d4d4", background: "white", fontSize: "13px", fontWeight: 700, color: "#111", cursor: loading || !tekilGecerli ? "not-allowed" : "pointer", opacity: loading || !tekilGecerli ? 0.5 : 1, marginBottom: "14px", fontFamily: "'Nunito', sans-serif" }}>
+            style={{ padding: "8px 14px", borderRadius: "8px", border: "1px solid var(--tema-yerel-yonetim-cizgi-03)", background: "var(--tema-yerel-yonetim-kart-01)", fontSize: "13px", fontWeight: 700, color: "var(--tema-yerel-yonetim-ana-metin-01)", cursor: loading || !tekilGecerli ? "not-allowed" : "pointer", opacity: loading || !tekilGecerli ? 0.5 : 1, marginBottom: "14px", fontFamily: "'Nunito', sans-serif" }}>
             {loading ? "…" : "Önizle (kaç kayıt?)"}
           </button>
         )}
 
         {/* 4) Önizleme sonucu + son onay + Sil */}
         {onizleme && (
-          <div style={{ borderTop: "1px solid #eee", paddingTop: "12px" }}>
+          <div style={{ borderTop: "1px solid var(--tema-yerel-yonetim-cizgi-04)", paddingTop: "12px" }}>
             <div style={{ display: "grid", gridTemplateColumns: "1fr auto", rowGap: "4px", columnGap: "10px", fontSize: "12.5px", marginBottom: "10px" }}>
               {SATIRLAR.map(([k, etiket]) => (
                 <div key={k} style={{ display: "contents" }}>
-                  <span style={{ color: "#525252" }}>{etiket}</span>
-                  <span style={{ textAlign: "right", fontWeight: 700, color: "#111" }}>{onizleme[k]}</span>
+                  <span style={{ color: "var(--tema-yerel-yonetim-ana-metin-02)" }}>{etiket}</span>
+                  <span style={{ textAlign: "right", fontWeight: 700, color: "var(--tema-yerel-yonetim-ana-metin-01)" }}>{onizleme[k]}</span>
                 </div>
               ))}
-              <span style={{ color: "#16a34a" }}>Korunacak sipariş</span>
-              <span style={{ textAlign: "right", fontWeight: 700, color: "#16a34a" }}>{onizleme.siparis_korunacak}</span>
+              <span style={{ color: "var(--tema-yerel-yonetim-islevsel-metin-07)" }}>Korunacak sipariş</span>
+              <span style={{ textAlign: "right", fontWeight: 700, color: "var(--tema-yerel-yonetim-islevsel-metin-07)" }}>{onizleme.siparis_korunacak}</span>
             </div>
 
             {tip === "tum" && (
@@ -177,12 +177,12 @@ export default function TopluTekilSilModal({ acik, onKapat, hata, basari }: Prop
                 value={onayMetni}
                 onChange={(e) => setOnayMetni(e.target.value)}
                 placeholder={`Onay için "${ONAY_KELIMESI}" yazın`}
-                style={{ width: "100%", boxSizing: "border-box", padding: "8px 10px", fontSize: "13px", border: "1px solid #fca5a5", borderRadius: "8px", marginBottom: "10px", fontFamily: "'Nunito', sans-serif" }}
+                style={{ width: "100%", boxSizing: "border-box", padding: "8px 10px", fontSize: "13px", border: "1px solid var(--tema-yerel-yonetim-islevsel-cizgi-03)", borderRadius: "8px", marginBottom: "10px", fontFamily: "'Nunito', sans-serif" }}
               />
             )}
 
             <button onClick={sil} disabled={!silAktif}
-              style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "none", background: RENK_BORDO, color: "white", fontSize: "13px", fontWeight: 800, cursor: silAktif ? "pointer" : "not-allowed", opacity: silAktif ? 1 : 0.5, fontFamily: "'Nunito', sans-serif" }}>
+              style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "none", background: "var(--tema-yerel-yonetim-hata-vurgu)", color: "var(--tema-yerel-yonetim-islevsel-metin-08)", fontSize: "13px", fontWeight: 800, cursor: silAktif ? "pointer" : "not-allowed", opacity: silAktif ? 1 : 0.5, fontFamily: "'Nunito', sans-serif" }}>
               {loading ? "Siliniyor…" : "Kalıcı olarak sil"}
             </button>
           </div>

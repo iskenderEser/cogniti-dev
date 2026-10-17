@@ -31,7 +31,7 @@ export default function OgrenmeAraciOnizleme({
 }: Props) {
   if (aracTuru === "video") {
     if (!videoUrl) {
-      return <div className="rounded-xl bg-gray-50 p-6 text-center text-sm text-gray-500">Video bağlantısı bulunamadı.</div>;
+      return <div className="rounded-xl bg-[var(--tema-oynatici-zemin)] p-6 text-center text-sm text-[var(--tema-oynatici-ikincil-metin)]">Video bağlantısı bulunamadı.</div>;
     }
     return (
       <VideoOnizleme

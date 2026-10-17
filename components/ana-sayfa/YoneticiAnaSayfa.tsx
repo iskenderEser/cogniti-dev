@@ -88,7 +88,7 @@ export default function YoneticiAnaSayfa({ user, rol, adSoyad }: Props) {
   if (loading) {
     return (
       <div className="flex items-center justify-center p-20">
-        <svg className="animate-spin w-6 h-6 text-gray-500" fill="none" viewBox="0 0 24 24">
+        <svg className="animate-spin w-6 h-6 text-[var(--tema-yerel-ana-sayfa-yardimci-metin-03)]" fill="none" viewBox="0 0 24 24">
           <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
           <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
         </svg>
@@ -130,17 +130,17 @@ export default function YoneticiAnaSayfa({ user, rol, adSoyad }: Props) {
       {/* Karşılama */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-2 mb-6">
         <div>
-          <h1 className="text-lg md:text-xl font-extrabold text-gray-900 m-0">Merhaba {ad}, 👋</h1>
-          <p className="text-sm text-gray-500 mt-1">{ROL_ADLARI[rol.toLowerCase()] ?? rol.toUpperCase()}</p>
+          <h1 className="text-lg md:text-xl font-extrabold text-[var(--tema-yerel-ana-sayfa-ana-metin-01)] m-0">Merhaba {ad}, 👋</h1>
+          <p className="text-sm text-[var(--tema-yerel-ana-sayfa-yardimci-metin-03)] mt-1">{ROL_ADLARI[rol.toLowerCase()] ?? rol.toUpperCase()}</p>
         </div>
         <TarihPill />
       </div>
 
       {/* Mobilde Odak Bilgi Alanı */}
       {seciliTanburBolumu !== "tumu" && (
-        <div className="mb-4 flex items-center justify-between rounded-2xl border border-blue-200/80 bg-blue-50/90 px-4 py-2.5 text-xs font-bold text-blue-900 shadow-xs sm:hidden">
+        <div className="mb-4 flex items-center justify-between rounded-2xl border border-[var(--tema-yerel-ana-sayfa-cizgi-06)]/80 bg-[var(--tema-yerel-ana-sayfa-secim-zemin-03)]/90 px-4 py-2.5 text-xs font-bold text-[var(--tema-yerel-ana-sayfa-ana-metin-03)] shadow-xs sm:hidden">
           <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-blue-600 animate-pulse" />
+            <span className="h-2 w-2 rounded-full bg-[var(--tema-yerel-ana-sayfa-eylem-zemin-04)] animate-pulse" />
             <span className="text-xs font-black">
               Odak: {tanburBolumleri.find((b) => b.id === seciliTanburBolumu)?.etiket}
             </span>
@@ -148,7 +148,7 @@ export default function YoneticiAnaSayfa({ user, rol, adSoyad }: Props) {
           <button
             type="button"
             onClick={() => setAktifTanburBolumu("tumu")}
-            className="rounded-lg bg-white px-2.5 py-1 text-[11px] font-extrabold text-blue-600 shadow-xs hover:bg-blue-100 active:scale-95 cursor-pointer"
+            className="rounded-lg bg-[var(--tema-yerel-ana-sayfa-kart-01)] px-2.5 py-1 text-[11px] font-extrabold text-[var(--tema-yerel-ana-sayfa-eylem-metin-04)] shadow-xs hover:bg-[var(--tema-yerel-ana-sayfa-secim-zemin-04)] active:scale-95 cursor-pointer"
           >
             Tümünü Göster
           </button>
@@ -158,29 +158,29 @@ export default function YoneticiAnaSayfa({ user, rol, adSoyad }: Props) {
       {/* Stat kartlar — 6 stat (3+3 grid) */}
       <div className={`grid grid-cols-2 md:grid-cols-3 gap-2 mb-5 ${seciliTanburBolumu !== "tumu" ? "hidden sm:grid" : ""}`}>
         {[
-          { label: "Yayında Toplam Video", value: istat.yayinda_toplam_video, sub: "Tüm üretici roller", renk: "#16a34a", tip: "sayisal" },
-          { label: "Toplam İzleme", value: istat.toplam_izleme_sayisi, sub: "Kendi + öneri + extra", renk: "#56aeff", tip: "sayisal" },
-          { label: "En Çok İzlenen Video", value: istat.en_cok_izlenen_video ?? "—", sub: "Video adı", renk: "#f59e0b", tip: "metin" },
-          { label: "En Çok İzleyen Takım", value: istat.en_cok_izleyen_takim ?? "—", sub: "Tüm videolar", renk: "#a855f7", tip: "metin" },
-          { label: "En Çok İzleyen Bölge", value: istat.en_cok_izleyen_bolge ?? "—", sub: "Tüm videolar", renk: "#0ea5e9", tip: "metin" },
-          { label: "En Çok İzleyen UTT", value: istat.en_cok_izleyen_utt ?? "—", sub: "Bölge / Takım", renk: "#bc2d0d", tip: "metin" },
+          { label: "Yayında Toplam Video", value: istat.yayinda_toplam_video, sub: "Tüm üretici roller", renk: "var(--tema-yerel-ana-sayfa-islevsel-metin-06)", tip: "sayisal" },
+          { label: "Toplam İzleme", value: istat.toplam_izleme_sayisi, sub: "Kendi + öneri + extra", renk: "var(--tema-yerel-ana-sayfa-eylem-metin-03)", tip: "sayisal" },
+          { label: "En Çok İzlenen Video", value: istat.en_cok_izlenen_video ?? "—", sub: "Video adı", renk: "var(--tema-yerel-ana-sayfa-islevsel-metin-07)", tip: "metin" },
+          { label: "En Çok İzleyen Takım", value: istat.en_cok_izleyen_takim ?? "—", sub: "Tüm videolar", renk: "var(--tema-yerel-ana-sayfa-islevsel-metin-16)", tip: "metin" },
+          { label: "En Çok İzleyen Bölge", value: istat.en_cok_izleyen_bolge ?? "—", sub: "Tüm videolar", renk: "var(--tema-yerel-ana-sayfa-eylem-metin-06)", tip: "metin" },
+          { label: "En Çok İzleyen UTT", value: istat.en_cok_izleyen_utt ?? "—", sub: "Bölge / Takım", renk: "var(--tema-yerel-ana-sayfa-vurgu-metin-01)", tip: "metin" },
         ].map((k, idx) => (
           <div
             key={idx}
-            className="bg-white border border-gray-200 rounded-xl p-3 md:p-5"
+            className="bg-[var(--tema-yerel-ana-sayfa-kart-01)] border border-[var(--tema-yerel-ana-sayfa-cizgi-04)] rounded-xl p-3 md:p-5"
             style={{ borderLeft: `3px solid ${k.renk}` }}
           >
-            <div className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">{k.label}</div>
+            <div className="text-xs font-bold text-[var(--tema-yerel-ana-sayfa-yardimci-metin-01)] uppercase tracking-wide mb-2">{k.label}</div>
             <div
               className={
                 k.tip === "sayisal"
-                  ? "text-2xl md:text-3xl font-extrabold text-gray-900 leading-none"
-                  : "text-base md:text-lg font-light text-gray-900 leading-tight"
+                  ? "text-2xl md:text-3xl font-extrabold text-[var(--tema-yerel-ana-sayfa-ana-metin-01)] leading-none"
+                  : "text-base md:text-lg font-light text-[var(--tema-yerel-ana-sayfa-ana-metin-01)] leading-tight"
               }
             >
               {k.value}
             </div>
-            <div className="hidden md:block text-xs text-gray-500 mt-1.5">{k.sub}</div>
+            <div className="hidden md:block text-xs text-[var(--tema-yerel-ana-sayfa-yardimci-metin-03)] mt-1.5">{k.sub}</div>
           </div>
         ))}
       </div>
@@ -188,12 +188,12 @@ export default function YoneticiAnaSayfa({ user, rol, adSoyad }: Props) {
       {/* Haftanın En'leri (full genişlik) */}
       <div className={seciliTanburBolumu !== "tumu" && seciliTanburBolumu !== "haftanin_enleri" ? "hidden sm:block" : ""}>
         <div className="flex items-center justify-between mb-3">
-          <span className="text-sm font-bold text-gray-900">Haftanın En&apos;leri</span>
-          <span className="text-xs text-gray-400">{haftaTarihi()}</span>
+          <span className="text-sm font-bold text-[var(--tema-yerel-ana-sayfa-ana-metin-01)]">Haftanın En&apos;leri</span>
+          <span className="text-xs text-[var(--tema-yerel-ana-sayfa-yardimci-metin-01)]">{haftaTarihi()}</span>
         </div>
-        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+        <div className="bg-[var(--tema-yerel-ana-sayfa-kart-01)] border border-[var(--tema-yerel-ana-sayfa-cizgi-04)] rounded-xl overflow-hidden">
           {haftaninEnleri.length === 0 ? (
-            <div className="p-8 text-center text-sm text-gray-400">
+            <div className="p-8 text-center text-sm text-[var(--tema-yerel-ana-sayfa-yardimci-metin-01)]">
               Bu hafta henüz puan kazanılmadı.
             </div>
           ) : (
@@ -201,26 +201,26 @@ export default function YoneticiAnaSayfa({ user, rol, adSoyad }: Props) {
               <div
                 key={utt.kullanici_id}
                 className="flex items-center gap-3 px-4 py-3"
-                style={{ borderBottom: i < haftaninEnleri.length - 1 ? "1px solid #f3f4f6" : "none" }}
+                style={{ borderBottom: i < haftaninEnleri.length - 1 ? "1px solid var(--tema-yerel-ana-sayfa-cizgi-05)" : "none" }}
               >
-                <div className="w-5 text-xs font-bold text-center" style={{ color: i === 0 ? "#56aeff" : "#9ca3af" }}>{i + 1}</div>
+                <div className="w-5 text-xs font-bold text-center" style={{ color: i === 0 ? "var(--tema-yerel-ana-sayfa-eylem-metin-03)" : "var(--tema-yerel-ana-sayfa-yardimci-metin-06)" }}>{i + 1}</div>
                 {utt.fotograf_url ? (
                   <img src={utt.fotograf_url} alt={utt.ad} className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
                 ) : (
                   <div
                     className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
                     style={{
-                      background: i === 0 ? "#b5d4f4" : "#e5e7eb",
-                      color: i === 0 ? "#1d4ed8" : "#374151",
+                      background: i === 0 ? "var(--tema-yerel-ana-sayfa-secim-zemin-05)" : "var(--tema-yerel-ana-sayfa-sayfa-zemini-04)",
+                      color: i === 0 ? "var(--tema-yerel-ana-sayfa-eylem-metin-02)" : "var(--tema-yerel-ana-sayfa-ana-metin-05)",
                     }}
                   >
                     {utt.ad[0]}{utt.soyad[0]}
                   </div>
                 )}
                 <div className="flex-1">
-                  <div className="text-xs font-semibold text-gray-900">{utt.ad} {utt.soyad}</div>
+                  <div className="text-xs font-semibold text-[var(--tema-yerel-ana-sayfa-ana-metin-01)]">{utt.ad} {utt.soyad}</div>
                 </div>
-                <div className="text-sm font-bold" style={{ color: i === 0 ? "#56aeff" : "#737373" }}>
+                <div className="text-sm font-bold" style={{ color: i === 0 ? "var(--tema-yerel-ana-sayfa-eylem-metin-03)" : "var(--tema-yerel-ana-sayfa-yardimci-metin-02)" }}>
                   {utt.toplam_puan.toLocaleString("tr-TR")} p
                 </div>
               </div>

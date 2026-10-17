@@ -41,12 +41,12 @@ const PERIYOT_BASLIK: Record<Periyot, string> = {
 };
 
 const EGITIM_TURU_RENK: Record<string, string> = {
-  urun_egitimi: '#2f8ed8',
-  satis_teknikleri: '#6f6bdc',
-  yonetim_egitimi: '#0284c7',
-  medikal_egitim: '#24a274',
-  urun_medikal_egitim: '#d58a24',
-  ik_egitimi: '#d95f59',
+  urun_egitimi: 'var(--tema-yerel-rapor-islevsel-metin-15)',
+  satis_teknikleri: 'var(--tema-yerel-rapor-islevsel-metin-16)',
+  yonetim_egitimi: 'var(--tema-yerel-rapor-islevsel-metin-17)',
+  medikal_egitim: 'var(--tema-yerel-rapor-islevsel-metin-18)',
+  urun_medikal_egitim: 'var(--tema-yerel-rapor-islevsel-metin-19)',
+  ik_egitimi: 'var(--tema-yerel-rapor-islevsel-metin-20)',
 };
 
 const VARYANT_ADLARI: Record<string, string> = {
@@ -57,10 +57,10 @@ const VARYANT_ADLARI: Record<string, string> = {
 };
 
 const VARYANT_ROZETLERI: Record<string, { etiket: string; arkaPlan: string; renk: string }> = {
-  normal: { etiket: 'V1', arkaPlan: '#e8f3fc', renk: '#237ac8' },
-  hazir_video: { etiket: 'V2', arkaPlan: '#f0edff', renk: '#6f6bdc' },
-  hazir_set: { etiket: 'V3', arkaPlan: '#e8f7f1', renk: '#16865f' },
-  hazir_ikisi: { etiket: 'V4', arkaPlan: '#fff2df', renk: '#c87412' },
+  normal: { etiket: 'V1', arkaPlan: 'var(--tema-yerel-rapor-islevsel-zemin-14)', renk: 'var(--tema-yerel-rapor-islevsel-metin-21)' },
+  hazir_video: { etiket: 'V2', arkaPlan: 'var(--tema-yerel-rapor-islevsel-zemin-15)', renk: 'var(--tema-yerel-rapor-islevsel-metin-16)' },
+  hazir_set: { etiket: 'V3', arkaPlan: 'var(--tema-yerel-rapor-islevsel-zemin-16)', renk: 'var(--tema-yerel-rapor-islevsel-metin-06)' },
+  hazir_ikisi: { etiket: 'V4', arkaPlan: 'var(--tema-yerel-rapor-islevsel-zemin-17)', renk: 'var(--tema-yerel-rapor-islevsel-metin-22)' },
 };
 
 export default function UretimRaporlariPage() {
@@ -108,17 +108,17 @@ export default function UretimRaporlariPage() {
   return (
     <div className={styles.page} style={{ fontFamily: "'Nunito', sans-serif" }}>
       <div className={styles.container}>
-        <Link href="/ana-sayfa" className="mb-3 inline-flex items-center gap-1.5 text-[11px] font-bold text-[#7890aa] hover:text-[#237ac8]">
+        <Link href="/ana-sayfa" className="mb-3 inline-flex items-center gap-1.5 text-[11px] font-bold text-[var(--tema-yerel-rapor-yardimci-metin-10)] hover:text-[var(--tema-yerel-rapor-eylem-metin-06)]">
           <ArrowLeft className="h-3.5 w-3.5" /> Ana Sayfa
         </Link>
 
         <SayfaYenileBasligi className="mb-4 flex flex-col gap-3 md:flex-row md:items-end md:justify-between md:gap-6"
-          baslik={<h1 className="text-2xl font-extrabold tracking-[-0.03em] text-[#10213d] inline-flex items-center">
+          baslik={<h1 className="text-2xl font-extrabold tracking-[-0.03em] text-[var(--tema-yerel-rapor-ana-metin-07)] inline-flex items-center">
             <span>Yayın Raporları</span>
             <SayfaRehberi anahtar="raporlar-uretim" className="ml-1.5 -translate-y-1.5" />
           </h1>}
 
-          aciklama={<><p className="mt-0.5 text-xs font-semibold text-[#78889d]">
+          aciklama={<><p className="mt-0.5 text-xs font-semibold text-[var(--tema-yerel-rapor-yardimci-metin-11)]">
             Yayınlarınızın üretim, saha etkisi ve öğrenme aracı performansını seçili dönemde görebilirsiniz.
           </p></>}
           aksiyon={<YenileButonu yenileniyor={yenileniyor} onYenile={yenile} className="min-w-[88px] justify-center" />}
@@ -129,15 +129,15 @@ export default function UretimRaporlariPage() {
         />
 
         {error && !data ? (
-          <div className="flex min-h-[300px] items-center justify-center rounded-2xl border border-red-200 bg-white p-6">
-            <div className="text-sm font-bold text-red-600">Hata: {error}</div>
+          <div className="flex min-h-[300px] items-center justify-center rounded-2xl border border-[var(--tema-yerel-rapor-islevsel-cizgi-07)] bg-[var(--tema-yerel-rapor-islevsel-zemin-07)] p-6">
+            <div className="text-sm font-bold text-[var(--tema-yerel-rapor-islevsel-metin-23)]">Hata: {error}</div>
           </div>
         ) : !data ? (
           <div className="flex flex-col gap-4 animate-pulse mt-4">
-            <div className="h-44 rounded-2xl border border-[#dfe7f1] bg-white p-4" />
+            <div className="h-44 rounded-2xl border border-[var(--tema-yerel-rapor-cizgi-28)] bg-[var(--tema-yerel-rapor-kart-04)] p-4" />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="h-44 rounded-2xl border border-[#dfe7f1] bg-white" />
-              <div className="h-44 rounded-2xl border border-[#dfe7f1] bg-white" />
+              <div className="h-44 rounded-2xl border border-[var(--tema-yerel-rapor-cizgi-28)] bg-[var(--tema-yerel-rapor-kart-04)]" />
+              <div className="h-44 rounded-2xl border border-[var(--tema-yerel-rapor-cizgi-28)] bg-[var(--tema-yerel-rapor-kart-04)]" />
             </div>
           </div>
         ) : (
@@ -146,39 +146,39 @@ export default function UretimRaporlariPage() {
         <div className={styles.uretimHeroGrid}>
           <section className={`${styles.panel} p-4 sm:p-5 flex flex-col justify-between`}>
             <div>
-              <h2 className="text-base font-extrabold text-[#20324c]">Yayın Özeti</h2>
-              <p className="mt-0.5 text-xs text-[#718198]">
+              <h2 className="text-base font-extrabold text-[var(--tema-yerel-rapor-ana-metin-06)]">Yayın Özeti</h2>
+              <p className="mt-0.5 text-xs text-[var(--tema-yerel-rapor-yardimci-metin-20)]">
                 Tüm ve farklı zamanlardaki canlı yayın sayılarınız
               </p>
             </div>
 
             <div className="grid grid-cols-2 gap-3 mt-3 sm:mt-4">
               {/* 1. Stat Kart: ŞU ANDA YAYINDA */}
-              <div className="rounded-xl border border-[#e2ebf4] bg-[#f8fbfe] p-3.5">
-                <div className="flex items-center gap-1.5 text-[#16865f] mb-1">
+              <div className="rounded-xl border border-[var(--tema-yerel-rapor-cizgi-29)] bg-[var(--tema-yerel-rapor-sayfa-zemini-01)] p-3.5">
+                <div className="flex items-center gap-1.5 text-[var(--tema-yerel-rapor-islevsel-metin-06)] mb-1">
                   <Radio className="h-4 w-4" />
-                  <span className="text-[10px] font-extrabold uppercase tracking-wide text-[#71859d]">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wide text-[var(--tema-yerel-rapor-yardimci-metin-14)]">
                     ŞU ANDA YAYINDA
                   </span>
                 </div>
-                <div className="text-xl sm:text-2xl font-black tabular-nums text-[#16865f]">
+                <div className="text-xl sm:text-2xl font-black tabular-nums text-[var(--tema-yerel-rapor-islevsel-metin-06)]">
                   {data.uretim.su_an_yayinda}
                 </div>
-                <span className="block text-[10px] text-[#8a9bb0] mt-0.5">Canlı yayın</span>
+                <span className="block text-[10px] text-[var(--tema-yerel-rapor-yardimci-metin-25)] mt-0.5">Canlı yayın</span>
               </div>
 
               {/* 2. Stat Kart: [ZAMAN] YAYINA ALINAN */}
-              <div className="rounded-xl border border-[#e2ebf4] bg-[#f8fbfe] p-3.5">
-                <div className="flex items-center gap-1.5 text-[#237ac8] mb-1">
+              <div className="rounded-xl border border-[var(--tema-yerel-rapor-cizgi-29)] bg-[var(--tema-yerel-rapor-sayfa-zemini-01)] p-3.5">
+                <div className="flex items-center gap-1.5 text-[var(--tema-yerel-rapor-eylem-metin-06)] mb-1">
                   <Calendar className="h-4 w-4" />
-                  <span className="text-[10px] font-extrabold uppercase tracking-wide text-[#71859d]">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wide text-[var(--tema-yerel-rapor-yardimci-metin-14)]">
                     {PERIYOT_BASLIK[periyot]}
                   </span>
                 </div>
-                <div className="text-xl sm:text-2xl font-black tabular-nums text-[#237ac8]">
+                <div className="text-xl sm:text-2xl font-black tabular-nums text-[var(--tema-yerel-rapor-eylem-metin-06)]">
                   {data.uretim.donemde_yayina_alinan}
                 </div>
-                <span className="block text-[10px] text-[#8a9bb0] mt-0.5">Açılan canlı yayın</span>
+                <span className="block text-[10px] text-[var(--tema-yerel-rapor-yardimci-metin-25)] mt-0.5">Açılan canlı yayın</span>
               </div>
             </div>
           </section>
@@ -187,13 +187,13 @@ export default function UretimRaporlariPage() {
           <section className={`${styles.panel} p-4 sm:p-5 flex flex-col justify-between`}>
             <div className="mb-3 flex items-center justify-between">
               <div>
-                <h2 className="text-base font-extrabold text-[#20324c]">Yayın Üretim Yöntemleri (Varyantlar) ve Dağılımları</h2>
-                <p className="mt-0.5 text-xs text-[#718198]">
+                <h2 className="text-base font-extrabold text-[var(--tema-yerel-rapor-ana-metin-06)]">Yayın Üretim Yöntemleri (Varyantlar) ve Dağılımları</h2>
+                <p className="mt-0.5 text-xs text-[var(--tema-yerel-rapor-yardimci-metin-20)]">
                   Yayınlarınızın üretim yöntemleri{" "}
                   <button
                     type="button"
                     onClick={() => setVaryantModalAcik(true)}
-                    className="font-bold text-blue-600 hover:text-blue-800 underline underline-offset-2 cursor-pointer inline"
+                    className="font-bold text-[var(--tema-yerel-rapor-eylem-metin-09)] hover:text-[var(--tema-yerel-rapor-eylem-metin-10)] underline underline-offset-2 cursor-pointer inline"
                   >
                     (varyantları)
                   </button>{" "}
@@ -210,7 +210,7 @@ export default function UretimRaporlariPage() {
                     const yuzde = toplamVaryant > 0 ? Math.round((v.adet / toplamVaryant) * 100) : 0;
                     const rozet = VARYANT_ROZETLERI[v.kod];
                     return (
-                      <div key={v.kod} className="rounded-xl border border-[#e5edf5] bg-[#f8fbfe] p-2.5 flex flex-col justify-between">
+                      <div key={v.kod} className="rounded-xl border border-[var(--tema-yerel-rapor-cizgi-05)] bg-[var(--tema-yerel-rapor-sayfa-zemini-01)] p-2.5 flex flex-col justify-between">
                         <div className="flex items-center gap-2">
                           {rozet && (
                             <span
@@ -222,22 +222,22 @@ export default function UretimRaporlariPage() {
                           )}
                           <span
                             className="block text-[11px] font-bold leading-snug"
-                            style={{ color: rozet?.renk ?? '#71859d' }}
+                            style={{ color: rozet?.renk ?? 'var(--tema-yerel-rapor-yardimci-metin-14)' }}
                           >
                             {VARYANT_ADLARI[v.kod] ?? v.ad}
                           </span>
                         </div>
-                        <div className="flex items-baseline justify-between mt-2 pt-1 border-t border-[#edf3f8]">
+                        <div className="flex items-baseline justify-between mt-2 pt-1 border-t border-[var(--tema-yerel-rapor-cizgi-30)]">
                           <strong
                             className="text-sm sm:text-base font-extrabold"
-                            style={{ color: rozet?.renk ?? '#10213d' }}
+                            style={{ color: rozet?.renk ?? 'var(--tema-yerel-rapor-ana-metin-07)' }}
                           >
                             {v.adet} Yayın
                           </strong>
                           {toplamVaryant > 0 && (
                             <span
                               className="text-[11px] font-extrabold"
-                              style={{ color: rozet?.renk ?? '#237ac8' }}
+                              style={{ color: rozet?.renk ?? 'var(--tema-yerel-rapor-eylem-metin-06)' }}
                             >
                               %{yuzde}
                             </span>
@@ -254,34 +254,34 @@ export default function UretimRaporlariPage() {
 
         {/* Etkileşim İstatistikleri Şeridi */}
         <div className="mb-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div className="rounded-2xl border border-[#e5edf5] bg-white p-4 flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#fdf2f2] text-[#e02424]">
+          <div className="rounded-2xl border border-[var(--tema-yerel-rapor-cizgi-05)] bg-[var(--tema-yerel-rapor-kart-04)] p-4 flex items-center gap-3">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--tema-yerel-rapor-islevsel-zemin-18)] text-[var(--tema-yerel-rapor-islevsel-metin-24)]">
               <Heart className="h-5 w-5" />
             </span>
             <div>
-              <strong className="block text-lg font-black text-[#10213d]">{etkilesim.begeni}</strong>
-              <span className="block text-xs font-bold text-[#8190a3]">Toplam Beğeni</span>
-              <span className="block text-[10px] text-[#9aa7b7]">Tüm araçlar · seçili dönem</span>
+              <strong className="block text-lg font-black text-[var(--tema-yerel-rapor-ana-metin-07)]">{etkilesim.begeni}</strong>
+              <span className="block text-xs font-bold text-[var(--tema-yerel-rapor-yardimci-metin-08)]">Toplam Beğeni</span>
+              <span className="block text-[10px] text-[var(--tema-yerel-rapor-yardimci-metin-26)]">Tüm araçlar · seçili dönem</span>
             </div>
           </div>
-          <div className="rounded-2xl border border-[#e5edf5] bg-white p-4 flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#eef6ff] text-[#2f8ed8]">
+          <div className="rounded-2xl border border-[var(--tema-yerel-rapor-cizgi-05)] bg-[var(--tema-yerel-rapor-kart-04)] p-4 flex items-center gap-3">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--tema-yerel-rapor-secim-zemin-09)] text-[var(--tema-yerel-rapor-eylem-metin-11)]">
               <Star className="h-5 w-5" />
             </span>
             <div>
-              <strong className="block text-lg font-black text-[#10213d]">{etkilesim.favori}</strong>
-              <span className="block text-xs font-bold text-[#8190a3]">Toplam Favori</span>
-              <span className="block text-[10px] text-[#9aa7b7]">Tüm araçlar · seçili dönem</span>
+              <strong className="block text-lg font-black text-[var(--tema-yerel-rapor-ana-metin-07)]">{etkilesim.favori}</strong>
+              <span className="block text-xs font-bold text-[var(--tema-yerel-rapor-yardimci-metin-08)]">Toplam Favori</span>
+              <span className="block text-[10px] text-[var(--tema-yerel-rapor-yardimci-metin-26)]">Tüm araçlar · seçili dönem</span>
             </div>
           </div>
-          <div className="rounded-2xl border border-[#e5edf5] bg-white p-4 flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#f5f3ff] text-[#7c3aed]">
+          <div className="rounded-2xl border border-[var(--tema-yerel-rapor-cizgi-05)] bg-[var(--tema-yerel-rapor-kart-04)] p-4 flex items-center gap-3">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--tema-yerel-rapor-islevsel-zemin-19)] text-[var(--tema-yerel-rapor-islevsel-metin-25)]">
               <Repeat2 className="h-5 w-5" />
             </span>
             <div>
-              <strong className="block text-lg font-black text-[#10213d]">{etkilesim.extra}</strong>
-              <span className="block text-xs font-bold text-[#8190a3]">Toplam Extra İzleme</span>
-              <span className="block text-[10px] text-[#9aa7b7]">Tüm araçlar · seçili dönem</span>
+              <strong className="block text-lg font-black text-[var(--tema-yerel-rapor-ana-metin-07)]">{etkilesim.extra}</strong>
+              <span className="block text-xs font-bold text-[var(--tema-yerel-rapor-yardimci-metin-08)]">Toplam Extra İzleme</span>
+              <span className="block text-[10px] text-[var(--tema-yerel-rapor-yardimci-metin-26)]">Tüm araçlar · seçili dönem</span>
             </div>
           </div>
         </div>
@@ -292,8 +292,8 @@ export default function UretimRaporlariPage() {
             <>
               <div className={styles.sectionHeader}>
                 <div>
-                  <h2 className="text-base font-extrabold text-[#20324c]">Yayın Konusu ve Saha Etkisi</h2>
-                  <p className="mt-0.5 text-[11px] font-medium text-[#8190a3]">
+                  <h2 className="text-base font-extrabold text-[var(--tema-yerel-rapor-ana-metin-06)]">Yayın Konusu ve Saha Etkisi</h2>
+                  <p className="mt-0.5 text-[11px] font-medium text-[var(--tema-yerel-rapor-yardimci-metin-08)]">
                     Yayına alma sayıları ve sahada oluşturduğu tüketim karşılığı
                   </p>
                 </div>
@@ -312,8 +312,8 @@ export default function UretimRaporlariPage() {
                       onClick={() => setSeciliEgitimTuru(secili ? null : tur.ad)}
                       className={`group relative flex flex-col justify-between rounded-2xl p-3 text-left transition-all cursor-pointer border ${
                         secili
-                          ? 'bg-[#edf6fd] border-[#237ac8] shadow-[0_4px_16px_rgba(35,122,200,0.12)] ring-2 ring-[#237ac8]/25'
-                          : 'bg-[#f8fafc] border-transparent hover:bg-[#f1f5f9] hover:border-[#e2ebf4]'
+                          ? 'bg-[var(--tema-yerel-rapor-secim-zemin-01)] border-[var(--tema-yerel-rapor-cizgi-18)] shadow-[0_4px_16px_var(--tema-yerel-rapor-golge-07)] ring-2 ring-[var(--tema-yerel-rapor-odak-01)]/25'
+                          : 'bg-[var(--tema-yerel-rapor-sayfa-zemini-03)] border-transparent hover:bg-[var(--tema-yerel-rapor-sayfa-zemini-21)] hover:border-[var(--tema-yerel-rapor-cizgi-29)]'
                       } w-full min-w-0 sm:w-[190px] sm:min-w-[190px] sm:shrink-0 sm:snap-start lg:w-auto lg:min-w-0 lg:shrink`}
                     >
                       <div className="w-full min-w-0">
@@ -321,23 +321,23 @@ export default function UretimRaporlariPage() {
                           <span
                             className="rounded-md px-2 py-0.5 text-[10px] font-extrabold"
                             style={{
-                              backgroundColor: `${EGITIM_TURU_RENK[tur.kod] ?? '#2f8ed8'}18`,
-                              color: EGITIM_TURU_RENK[tur.kod] ?? '#2f8ed8',
+                              backgroundColor: `color-mix(in srgb, ${EGITIM_TURU_RENK[tur.kod] ?? 'var(--tema-yerel-rapor-eylem-zemin-03)'} 9.411764705882353%, transparent)`,
+                              color: EGITIM_TURU_RENK[tur.kod] ?? 'var(--tema-yerel-rapor-eylem-metin-11)',
                             }}
                           >
                             {tur.adet} Yayın
                           </span>
                         </div>
-                        <strong className={`block text-xs font-extrabold leading-snug truncate ${secili ? 'text-[#10213d]' : 'text-[#334155]'}`}>
+                        <strong className={`block text-xs font-extrabold leading-snug truncate ${secili ? 'text-[var(--tema-yerel-rapor-ana-metin-07)]' : 'text-[var(--tema-yerel-rapor-ana-metin-13)]'}`}>
                           {tur.ad} Yayınları
                         </strong>
                       </div>
 
                       <div className={`mt-3 pt-2 border-t flex items-center justify-between text-[10px] font-bold ${
-                        secili ? 'border-[#d0e3f5] text-[#237ac8]' : 'border-[#e2e8f0] text-[#64748b]'
+                        secili ? 'border-[var(--tema-yerel-rapor-cizgi-31)] text-[var(--tema-yerel-rapor-eylem-metin-06)]' : 'border-[var(--tema-yerel-rapor-cizgi-32)] text-[var(--tema-yerel-rapor-yardimci-metin-27)]'
                       }`}>
                         <span>{etki?.tamamlanan_izleme ?? 0} İzleme</span>
-                        <span className="font-extrabold text-[#16865f]">+{formatPuan(etki?.net_puan ?? 0)} p</span>
+                        <span className="font-extrabold text-[var(--tema-yerel-rapor-islevsel-metin-06)]">+{formatPuan(etki?.net_puan ?? 0)} p</span>
                       </div>
                     </button>
                   );
@@ -355,21 +355,21 @@ export default function UretimRaporlariPage() {
           ).map((egitimDetayi, indeks) => (
             <div
               key={egitimDetayi.egitim_turu}
-              className={ureticiRaporu && indeks === 0 ? '' : 'mt-5 pt-4 border-t border-[#e2edf7]'}
+              className={ureticiRaporu && indeks === 0 ? '' : 'mt-5 pt-4 border-t border-[var(--tema-yerel-rapor-cizgi-33)]'}
             >
               <div className="mb-3 flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2 min-w-0">
                   <span
                     className="h-2.5 w-2.5 rounded-full shrink-0"
                     style={{
-                      backgroundColor: EGITIM_TURU_RENK[egitimDetayi.egitim_turu] ?? '#237ac8',
+                      backgroundColor: EGITIM_TURU_RENK[egitimDetayi.egitim_turu] ?? 'var(--tema-yerel-rapor-eylem-zemin-01)',
                     }}
                   />
-                  <h3 className="text-sm font-extrabold text-[#10213d] truncate">
+                  <h3 className="text-sm font-extrabold text-[var(--tema-yerel-rapor-ana-metin-07)] truncate">
                     {egitimDetayi.egitim_adi} Yayın Performansı
                   </h3>
                   {!ureticiRaporu && (
-                    <span className="hidden sm:inline text-[11px] font-semibold text-[#8190a3]">
+                    <span className="hidden sm:inline text-[11px] font-semibold text-[var(--tema-yerel-rapor-yardimci-metin-08)]">
                       · Seçili konunun dönem performansı
                     </span>
                   )}
@@ -378,7 +378,7 @@ export default function UretimRaporlariPage() {
                   <button
                     type="button"
                     onClick={() => setSeciliEgitimTuru(null)}
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-full text-[#71859d] hover:bg-[#edf2f7] hover:text-[#10213d] transition-colors shrink-0 cursor-pointer"
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-full text-[var(--tema-yerel-rapor-yardimci-metin-14)] hover:bg-[var(--tema-yerel-rapor-sayfa-zemini-22)] hover:text-[var(--tema-yerel-rapor-ana-metin-07)] transition-colors shrink-0 cursor-pointer"
                     aria-label="Detayı kapat"
                     title="Detayı Kapat"
                   >
@@ -392,37 +392,37 @@ export default function UretimRaporlariPage() {
                   (egitimDetayi.urun_dagilimi ?? []).some((u) => u.urun_id != null) ? 'mb-3.5' : 'mb-0'
                 }`}
               >
-                <div className="rounded-xl border border-[#e5edf5] bg-[#f8fbfe] p-3 text-center">
-                  <span className="text-[10px] font-bold text-[#8190a3] uppercase">Yayına Alınan</span>
-                  <strong className="block text-lg font-black text-[#10213d] mt-0.5">{egitimDetayi.donemde_yayina_alinan}</strong>
+                <div className="rounded-xl border border-[var(--tema-yerel-rapor-cizgi-05)] bg-[var(--tema-yerel-rapor-sayfa-zemini-01)] p-3 text-center">
+                  <span className="text-[10px] font-bold text-[var(--tema-yerel-rapor-yardimci-metin-08)] uppercase">Yayına Alınan</span>
+                  <strong className="block text-lg font-black text-[var(--tema-yerel-rapor-ana-metin-07)] mt-0.5">{egitimDetayi.donemde_yayina_alinan}</strong>
                 </div>
-                <div className="rounded-xl border border-[#e5edf5] bg-[#f8fbfe] p-3 text-center">
-                  <span className="text-[10px] font-bold text-[#8190a3] uppercase">Tamamlanan İzleme</span>
-                  <strong className="block text-lg font-black text-[#237ac8] mt-0.5">{egitimDetayi.tamamlanan_izleme}</strong>
+                <div className="rounded-xl border border-[var(--tema-yerel-rapor-cizgi-05)] bg-[var(--tema-yerel-rapor-sayfa-zemini-01)] p-3 text-center">
+                  <span className="text-[10px] font-bold text-[var(--tema-yerel-rapor-yardimci-metin-08)] uppercase">Tamamlanan İzleme</span>
+                  <strong className="block text-lg font-black text-[var(--tema-yerel-rapor-eylem-metin-06)] mt-0.5">{egitimDetayi.tamamlanan_izleme}</strong>
                 </div>
-                <div className="rounded-xl border border-[#e5edf5] bg-[#f8fbfe] p-3 text-center">
-                  <span className="text-[10px] font-bold text-[#8190a3] uppercase">Kazanılan Puan</span>
-                  <strong className="block text-lg font-black text-[#16865f] mt-0.5">+{formatPuan(egitimDetayi.kazanilan_toplam)}</strong>
+                <div className="rounded-xl border border-[var(--tema-yerel-rapor-cizgi-05)] bg-[var(--tema-yerel-rapor-sayfa-zemini-01)] p-3 text-center">
+                  <span className="text-[10px] font-bold text-[var(--tema-yerel-rapor-yardimci-metin-08)] uppercase">Kazanılan Puan</span>
+                  <strong className="block text-lg font-black text-[var(--tema-yerel-rapor-islevsel-metin-06)] mt-0.5">+{formatPuan(egitimDetayi.kazanilan_toplam)}</strong>
                 </div>
-                <div className="rounded-xl border border-[#e5edf5] bg-[#f8fbfe] p-3 text-center">
-                  <span className="text-[10px] font-bold text-[#8190a3] uppercase">Net Puan</span>
-                  <strong className="block text-lg font-black text-[#10213d] mt-0.5">{formatPuan(egitimDetayi.net_puan)} p</strong>
+                <div className="rounded-xl border border-[var(--tema-yerel-rapor-cizgi-05)] bg-[var(--tema-yerel-rapor-sayfa-zemini-01)] p-3 text-center">
+                  <span className="text-[10px] font-bold text-[var(--tema-yerel-rapor-yardimci-metin-08)] uppercase">Net Puan</span>
+                  <strong className="block text-lg font-black text-[var(--tema-yerel-rapor-ana-metin-07)] mt-0.5">{formatPuan(egitimDetayi.net_puan)} p</strong>
                 </div>
               </div>
 
               {(egitimDetayi.urun_dagilimi ?? []).some((u) => u.urun_id != null) && (
-                <div className="rounded-xl border border-[#e8eff6] bg-[#fbfcfe] p-3">
-                  <div className="text-[11px] font-extrabold uppercase tracking-wide text-[#62768d] mb-2">
+                <div className="rounded-xl border border-[var(--tema-yerel-rapor-cizgi-34)] bg-[var(--tema-yerel-rapor-sayfa-zemini-17)] p-3">
+                  <div className="text-[11px] font-extrabold uppercase tracking-wide text-[var(--tema-yerel-rapor-yardimci-metin-28)] mb-2">
                     Ürün Bazlı Puan Dağılımı
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
                     {egitimDetayi.urun_dagilimi.filter((u) => u.urun_id != null).map((u) => (
-                      <div key={u.urun_id ?? u.urun_adi} className="rounded-lg border border-[#e5edf5] bg-white p-2.5 flex items-center justify-between">
-                        <strong className="text-xs font-extrabold text-[#10213d] truncate mr-2">{u.urun_adi}</strong>
+                      <div key={u.urun_id ?? u.urun_adi} className="rounded-lg border border-[var(--tema-yerel-rapor-cizgi-05)] bg-[var(--tema-yerel-rapor-kart-04)] p-2.5 flex items-center justify-between">
+                        <strong className="text-xs font-extrabold text-[var(--tema-yerel-rapor-ana-metin-07)] truncate mr-2">{u.urun_adi}</strong>
                         <div className="flex items-center gap-2 text-xs font-bold shrink-0">
-                          <span className="text-[#16865f]">+{formatPuan(u.kazanilan_toplam)}</span>
-                          <span className="text-[#d44b40]">−{formatPuan(u.kaybedilen_toplam)}</span>
-                          <strong className="text-[#237ac8]">{formatPuan(u.net_puan)} p</strong>
+                          <span className="text-[var(--tema-yerel-rapor-islevsel-metin-06)]">+{formatPuan(u.kazanilan_toplam)}</span>
+                          <span className="text-[var(--tema-yerel-rapor-islevsel-metin-07)]">−{formatPuan(u.kaybedilen_toplam)}</span>
+                          <strong className="text-[var(--tema-yerel-rapor-eylem-metin-06)]">{formatPuan(u.net_puan)} p</strong>
                         </div>
                       </div>
                     ))}

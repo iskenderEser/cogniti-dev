@@ -1,0 +1,15 @@
+{
+  "tarih": "2026-10-17",
+  "konu": "Mobil Tanbur yazı gölgeleri",
+  "dosya": "components/navigasyon/HayaletTanburSecici.tsx",
+  "durum": "TAMAMLANDI",
+  "ortak_golge_tanimi": 3,
+  "iki_temada_beyaz_isik_ve_saydamliklar_korundu": true,
+  "renk_disi_kaynak_farki": 0,
+  "onceki_tema_bildirimleri_korundu": true,
+  "tema_gecis_golge_kaydirma_secim_ve_kapanma_kontrolu": 18,
+  "yeni_lint_bulgusu": 0,
+  "mevcut_lint": [],
+  "typecheck": "npm run typecheck:build: BASARILI",
+  "gercek_tarayıcı": "YAPILMADI"
+}

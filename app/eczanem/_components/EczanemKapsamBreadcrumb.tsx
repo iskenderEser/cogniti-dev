@@ -131,10 +131,10 @@ export default function EczanemKapsamBreadcrumb({
   return (
     <nav
       aria-label="Kapsam Gezintisi"
-      className="flex max-w-full items-center gap-1.5 overflow-x-auto rounded-2xl border border-[#e2e8f0] bg-white px-3.5 py-2.5 text-xs shadow-sm whitespace-nowrap scrollbar-none"
+      className="flex max-w-full items-center gap-1.5 overflow-x-auto rounded-2xl border border-[var(--tema-yerel-eczanem-cizgi-29)] bg-[var(--tema-yerel-eczanem-kart-01)] px-3.5 py-2.5 text-xs shadow-sm whitespace-nowrap scrollbar-none"
       style={{ fontFamily: "'Nunito', sans-serif" }}
     >
-      <Layers className="size-3.5 shrink-0 text-[#bc2d0d]" aria-hidden="true" />
+      <Layers className="size-3.5 shrink-0 text-[var(--tema-yerel-eczanem-vurgu-metin-01)]" aria-hidden="true" />
 
       <ol className="flex min-w-0 items-center gap-1.5">
         {adimlar.map((adim, index) => {
@@ -144,7 +144,7 @@ export default function EczanemKapsamBreadcrumb({
             <li key={adim.anahtar} className="flex items-center gap-1.5">
               {index > 0 && (
                 <ChevronRight
-                  className="size-3 shrink-0 text-[#9ca3af]"
+                  className="size-3 shrink-0 text-[var(--tema-yerel-eczanem-yardimci-metin-29)]"
                   aria-hidden="true"
                 />
               )}
@@ -154,8 +154,8 @@ export default function EczanemKapsamBreadcrumb({
                 aria-current={sonAdim ? "page" : undefined}
                 className={`truncate transition ${
                   sonAdim
-                    ? "font-extrabold text-[#bc2d0d]"
-                    : "font-semibold text-[#4b5563] hover:text-[#111827] hover:underline"
+                    ? "font-extrabold text-[var(--tema-yerel-eczanem-vurgu-metin-01)]"
+                    : "font-semibold text-[var(--tema-yerel-eczanem-ana-metin-17)] hover:text-[var(--tema-yerel-eczanem-ana-metin-18)] hover:underline"
                 }`}
               >
                 {adim.etiket}

@@ -33,7 +33,7 @@ export default function RaporlarPage() {
 
   return (
     <div className="flex justify-center items-center min-h-screen">
-      <div className="text-gray-500">Yönlendiriliyor...</div>
+      <div className="text-[var(--tema-yerel-rapor-yardimci-metin-07)]">Yönlendiriliyor...</div>
     </div>
   );
 }

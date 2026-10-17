@@ -107,33 +107,33 @@ export default function YayinDetayModal({ yayinId, onKapat }: Props) {
   return (
     <div
       onClick={onKapat}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3 backdrop-blur-sm sm:p-5"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--tema-yayin-detay-ortu)] p-3 backdrop-blur-sm sm:p-5"
       role="dialog"
       aria-modal="true"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl border border-[#dbe4ee] animate-in fade-in zoom-in-95 duration-150"
+        className="flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl bg-[var(--tema-yayin-detay-yuzey)] shadow-2xl border border-[var(--tema-yayin-detay-dis-cizgi)] animate-in fade-in zoom-in-95 duration-150"
       >
         {/* Üst Başlık Barı */}
-        <div className="flex items-center justify-between border-b border-[#e9eff5] bg-[#fbfcfd] px-4 py-3 sm:px-6 shrink-0">
+        <div className="flex items-center justify-between border-b border-[var(--tema-yayin-detay-ust-cizgi)] bg-[var(--tema-yayin-detay-ust-zemin)] px-4 py-3 sm:px-6 shrink-0">
           <div className="flex items-center gap-2.5 min-w-0 pr-3">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#eef5fc] text-[#237ac8]">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[var(--tema-yayin-detay-simge-zemini)] text-[var(--tema-yayin-detay-eylem)]">
               <Film className="h-5 w-5" />
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-xs font-extrabold text-[#19335a] truncate">
+                <span className="text-xs font-extrabold text-[var(--tema-yayin-detay-ust-etiket)] truncate">
                   {detay?.talep_no ? `Talep #${detay.talep_no}` : `Yayın: ${yayinId.slice(0, 8)}`}
                 </span>
                 {detay?.arac_turu && <YayinTuruPill tur={detay.arac_turu} />}
                 {detay?.durum && (
-                  <span className="rounded-full bg-[#ecfdf5] px-2 py-0.5 text-[10px] font-bold text-[#167453] border border-[#bbf7d0]">
+                  <span className="rounded-full bg-[var(--tema-yayin-detay-durum-zemin)] px-2 py-0.5 text-[10px] font-bold text-[var(--tema-yayin-detay-durum-metin)] border border-[var(--tema-yayin-detay-durum-cizgi)]">
                     {detay.durum}
                   </span>
                 )}
               </div>
-              <p className="truncate text-sm font-extrabold text-[#0e1e36]">
+              <p className="truncate text-sm font-extrabold text-[var(--tema-yayin-detay-baslik)]">
                 {detay?.urun_adi ?? "Yayın Detayı ve Soru Karnesi"}
               </p>
             </div>
@@ -143,17 +143,17 @@ export default function YayinDetayModal({ yayinId, onKapat }: Props) {
             type="button"
             onClick={onKapat}
             aria-label="Kapat"
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[#e2e8f0] bg-white text-[#64748b] hover:bg-[#f1f5f9] hover:text-[#0f172a] transition-colors"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[var(--tema-yayin-detay-cizgi)] bg-[var(--tema-yayin-detay-yuzey)] text-[var(--tema-yayin-detay-aciklama)] hover:bg-[var(--tema-yayin-detay-kapat-hover)] hover:text-[var(--tema-yayin-detay-kapat-metin-hover)] transition-colors"
           >
             <X className="h-4 w-4" />
           </button>
         </div>
 
         {/* Gövde Alanı */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-[#f8fafc]">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-[var(--tema-yayin-detay-govde-zemin)]">
           {yukleniyor ? (
-            <div className="flex flex-col items-center justify-center py-20 text-[#64748b]">
-              <svg className="h-8 w-8 animate-spin text-[#237ac8]" viewBox="0 0 24 24" fill="none">
+            <div className="flex flex-col items-center justify-center py-20 text-[var(--tema-yayin-detay-aciklama)]">
+              <svg className="h-8 w-8 animate-spin text-[var(--tema-yayin-detay-eylem)]" viewBox="0 0 24 24" fill="none">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
               </svg>
@@ -161,12 +161,12 @@ export default function YayinDetayModal({ yayinId, onKapat }: Props) {
             </div>
           ) : hata ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
-              <AlertCircle className="h-10 w-10 text-red-500 mb-2" />
-              <p className="text-sm font-bold text-red-600">{hata}</p>
+              <AlertCircle className="h-10 w-10 text-[var(--tema-yayin-detay-hata-simge)] mb-2" />
+              <p className="text-sm font-bold text-[var(--tema-yayin-detay-hata-metin)]">{hata}</p>
               <button
                 type="button"
                 onClick={onKapat}
-                className="mt-4 rounded-xl bg-white px-4 py-2 text-xs font-bold text-[#64748b] border border-[#cbd5e1] hover:bg-gray-50"
+                className="mt-4 rounded-xl bg-[var(--tema-yayin-detay-yuzey)] px-4 py-2 text-xs font-bold text-[var(--tema-yayin-detay-aciklama)] border border-[var(--tema-yayin-detay-bos-cizgi)] hover:bg-[var(--tema-yayin-detay-iptal-hover)]"
               >
                 Pencereyi Kapat
               </button>
@@ -175,37 +175,37 @@ export default function YayinDetayModal({ yayinId, onKapat }: Props) {
             <div className="space-y-5">
               {/* Özet Kartları & Meta Bilgiler */}
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                <div className="rounded-xl border border-[#e2e8f0] bg-white p-3 shadow-sm">
-                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#7e8f9f] block">Teknik</span>
-                  <span className="mt-1 block text-xs font-bold text-[#1e293b] truncate">
+                <div className="rounded-xl border border-[var(--tema-yayin-detay-cizgi)] bg-[var(--tema-yayin-detay-yuzey)] p-3 shadow-sm">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-[var(--tema-yayin-detay-alan-etiket)] block">Teknik</span>
+                  <span className="mt-1 block text-xs font-bold text-[var(--tema-yayin-detay-koyu-metin)] truncate">
                     {detay.teknik_adi || "Belirtilmemiş"}
                   </span>
                 </div>
 
-                <div className="rounded-xl border border-[#e2e8f0] bg-white p-3 shadow-sm">
-                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#7e8f9f] block">Puan Skalası</span>
-                  <span className="mt-1 flex items-center gap-1 text-xs font-extrabold text-[#237ac8]">
+                <div className="rounded-xl border border-[var(--tema-yayin-detay-cizgi)] bg-[var(--tema-yayin-detay-yuzey)] p-3 shadow-sm">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-[var(--tema-yayin-detay-alan-etiket)] block">Puan Skalası</span>
+                  <span className="mt-1 flex items-center gap-1 text-xs font-extrabold text-[var(--tema-yayin-detay-eylem)]">
                     <Award className="h-3.5 w-3.5" />
                     <span>Araç: {detay.video_puani ?? "—"} p</span>
-                    {detay.soru_puani ? <span className="text-[#64748b] font-normal">| Soru: ~{detay.soru_puani} p</span> : null}
+                    {detay.soru_puani ? <span className="text-[var(--tema-yayin-detay-aciklama)] font-normal">| Soru: ~{detay.soru_puani} p</span> : null}
                   </span>
                 </div>
 
-                <div className="rounded-xl border border-[#e2e8f0] bg-white p-3 shadow-sm">
-                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#7e8f9f] block">Yayın Tarihi</span>
-                  <span className="mt-1 flex items-center gap-1 text-xs font-semibold text-[#334155]">
-                    <Clock className="h-3.5 w-3.5 text-[#94a3b8]" />
+                <div className="rounded-xl border border-[var(--tema-yayin-detay-cizgi)] bg-[var(--tema-yayin-detay-yuzey)] p-3 shadow-sm">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-[var(--tema-yayin-detay-alan-etiket)] block">Yayın Tarihi</span>
+                  <span className="mt-1 flex items-center gap-1 text-xs font-semibold text-[var(--tema-yayin-detay-tarih)]">
+                    <Clock className="h-3.5 w-3.5 text-[var(--tema-yayin-detay-soluk-metin)]" />
                     <span>{formatTarih(detay.yayin_tarihi)}</span>
                   </span>
                 </div>
 
-                <div className="rounded-xl border border-[#e2e8f0] bg-white p-3 shadow-sm">
-                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#7e8f9f] block">Hedef Kitle</span>
+                <div className="rounded-xl border border-[var(--tema-yayin-detay-cizgi)] bg-[var(--tema-yayin-detay-yuzey)] p-3 shadow-sm">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-[var(--tema-yayin-detay-alan-etiket)] block">Hedef Kitle</span>
                   <div className="mt-1 flex items-center gap-1 flex-wrap">
                     {detay.hedef_roller?.length ? (
                       <HedefRolPilleri hedefRoller={detay.hedef_roller} />
                     ) : (
-                      <span className="text-xs text-[#94a3b8] italic">Tümü</span>
+                      <span className="text-xs text-[var(--tema-yayin-detay-soluk-metin)] italic">Tümü</span>
                     )}
                   </div>
                 </div>
@@ -226,7 +226,7 @@ export default function YayinDetayModal({ yayinId, onKapat }: Props) {
 
               {/* Sekme 1: Öğrenme Aracı */}
               {aktifSekme === "arac" && (
-                <div className="rounded-2xl border border-[#e2e8f0] bg-white p-3.5 sm:p-5 shadow-sm">
+                <div className="rounded-2xl border border-[var(--tema-yayin-detay-cizgi)] bg-[var(--tema-yayin-detay-yuzey)] p-3.5 sm:p-5 shadow-sm">
                   <OgrenmeAraciOnizleme
                     yayinId={detay.yayin_id}
                     aracId={detay.arac_id ?? detay.yayin_id}
@@ -243,7 +243,7 @@ export default function YayinDetayModal({ yayinId, onKapat }: Props) {
               {aktifSekme === "sorular" && (
                 <div className="space-y-3">
                   {sorularDizisi.length === 0 ? (
-                    <div className="rounded-2xl border border-dashed border-[#cbd5e1] bg-white p-8 text-center text-xs text-[#64748b]">
+                    <div className="rounded-2xl border border-dashed border-[var(--tema-yayin-detay-bos-cizgi)] bg-[var(--tema-yayin-detay-yuzey)] p-8 text-center text-xs text-[var(--tema-yayin-detay-aciklama)]">
                       Bu yayına ait kayıtlı soru seti bulunamadı.
                     </div>
                   ) : (
@@ -251,17 +251,17 @@ export default function YayinDetayModal({ yayinId, onKapat }: Props) {
                       return (
                         <div
                           key={idx}
-                          className="rounded-2xl border border-[#e2e8f0] bg-white p-4 sm:p-5 shadow-sm"
+                          className="rounded-2xl border border-[var(--tema-yayin-detay-cizgi)] bg-[var(--tema-yayin-detay-yuzey)] p-4 sm:p-5 shadow-sm"
                         >
                           <div className="flex items-start justify-between gap-3">
-                            <h4 className="text-xs sm:text-sm font-extrabold text-[#1e293b] leading-relaxed">
-                              <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-[#eff6ff] text-[#2563eb] text-[11px] mr-2">
+                            <h4 className="text-xs sm:text-sm font-extrabold text-[var(--tema-yayin-detay-koyu-metin)] leading-relaxed">
+                              <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-[var(--tema-yayin-detay-soru-numara-zemin)] text-[var(--tema-yayin-detay-soru-numara-metin)] text-[11px] mr-2">
                                 {idx + 1}
                               </span>
                               {s.soru_metni}
                             </h4>
                             {s.puan ? (
-                              <span className="shrink-0 rounded-full bg-[#f1f5f9] px-2 py-0.5 text-[10px] font-bold text-[#475569]">
+                              <span className="shrink-0 rounded-full bg-[var(--tema-yayin-detay-soluk-zemin)] px-2 py-0.5 text-[10px] font-bold text-[var(--tema-yayin-detay-secenek-metni)]">
                                 {s.puan} puan
                               </span>
                             ) : null}
@@ -281,22 +281,22 @@ export default function YayinDetayModal({ yayinId, onKapat }: Props) {
                                     key={sIdx}
                                     className={`flex items-center gap-2.5 rounded-xl border p-2.5 text-xs font-semibold transition-colors ${
                                       dogruMu
-                                        ? "border-[#86efac] bg-[#f0fdf4] text-[#166534] font-bold ring-1 ring-[#86efac]"
-                                        : "border-[#f1f5f9] bg-[#f8fafc] text-[#475569]"
+                                        ? "border-[var(--tema-yayin-detay-dogru-cizgi)] bg-[var(--tema-yayin-detay-dogru-zemin)] text-[var(--tema-yayin-detay-dogru-metin)] font-bold ring-1 ring-[var(--tema-yayin-detay-dogru-halka)]"
+                                        : "border-[var(--tema-yayin-detay-secenek-cizgi)] bg-[var(--tema-yayin-detay-govde-zemin)] text-[var(--tema-yayin-detay-secenek-metni)]"
                                     }`}
                                   >
                                     <span
                                       className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-lg text-[10px] font-extrabold ${
                                         dogruMu
-                                          ? "bg-[#22c55e] text-white"
-                                          : "bg-[#e2e8f0] text-[#475569]"
+                                          ? "bg-[var(--tema-yayin-detay-dogru-harf)] text-[var(--tema-yayin-detay-ters-metin)]"
+                                          : "bg-[var(--tema-yayin-detay-secenek-harf-zemin)] text-[var(--tema-yayin-detay-secenek-metni)]"
                                       }`}
                                     >
                                       {sec.harf}
                                     </span>
                                     <span className="flex-1 leading-snug">{sec.metin}</span>
                                     {dogruMu && (
-                                      <span className="shrink-0 text-[10px] font-extrabold text-[#15803d] flex items-center gap-1">
+                                      <span className="shrink-0 text-[10px] font-extrabold text-[var(--tema-yayin-detay-dogru-isaret)] flex items-center gap-1">
                                         <CheckCircle2 className="h-3.5 w-3.5" /> Doğru
                                       </span>
                                     )}
@@ -315,14 +315,14 @@ export default function YayinDetayModal({ yayinId, onKapat }: Props) {
         </div>
 
         {/* Alt Footer */}
-        <div className="flex items-center justify-between border-t border-[#e2e8f0] bg-white px-4 py-2.5 sm:px-6">
-          <span className="text-[11px] font-semibold text-[#64748b]">
+        <div className="flex items-center justify-between border-t border-[var(--tema-yayin-detay-cizgi)] bg-[var(--tema-yayin-detay-yuzey)] px-4 py-2.5 sm:px-6">
+          <span className="text-[11px] font-semibold text-[var(--tema-yayin-detay-aciklama)]">
             Antigravity İçerik ve Soru Analiz Modülü
           </span>
           <button
             type="button"
             onClick={onKapat}
-            className="rounded-xl bg-[#237ac8] px-4 py-1.5 text-xs font-extrabold text-white hover:bg-[#1d69aa] transition-colors shadow-sm"
+            className="rounded-xl bg-[var(--tema-yayin-detay-eylem)] px-4 py-1.5 text-xs font-extrabold text-[var(--tema-yayin-detay-eylem-metni)] hover:bg-[var(--tema-yayin-detay-eylem-hover)] transition-colors shadow-sm"
           >
             Kapat
           </button>

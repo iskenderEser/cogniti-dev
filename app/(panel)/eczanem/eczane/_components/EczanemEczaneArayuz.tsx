@@ -9,7 +9,7 @@ import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 
 export function EczanemEczaneSayfa({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-full bg-[#f7f9fc] pb-20 md:pb-8" style={{ fontFamily: "'Nunito', sans-serif" }}>
+    <div className="min-h-full bg-[var(--tema-yerel-eczanem-sayfa-zemini-06)] pb-20 md:pb-8" style={{ fontFamily: "'Nunito', sans-serif" }}>
       <main className="mx-auto flex w-full max-w-[1480px] flex-col gap-5 px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
         {children}
       </main>
@@ -27,20 +27,20 @@ export function EczanemEczaneBaslik({ ikon: Icon, baslik, aciklama, aksiyon, reh
 }) {
   return (
     <SayfaYenileBasligi
-      ustBilgi={ustBilgiGoster ? <p className="flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-[0.18em] text-[#4f7fb7]">
+      ustBilgi={ustBilgiGoster ? <p className="flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-[0.18em] text-[var(--tema-yerel-eczanem-eylem-metin-03)]">
         <Icon className="size-3.5" /> Eczanem
       </p> : undefined}
       baslik={<div className="inline-flex items-center">
-        <h1 className="mt-1 text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]">{baslik}</h1>
+        <h1 className="mt-1 text-2xl font-extrabold tracking-[-0.025em] text-[var(--tema-yerel-eczanem-ana-metin-04)] md:text-[28px]">{baslik}</h1>
         {rehberAnahtar && <SayfaRehberi anahtar={rehberAnahtar} className="ml-1.5 -translate-y-1.5" />}
       </div>}
-      aciklama={<p className="mt-1 max-w-3xl text-xs font-semibold leading-5 text-[#7b8da3] md:text-sm">{aciklama}</p>}
+      aciklama={<p className="mt-1 max-w-3xl text-xs font-semibold leading-5 text-[var(--tema-yerel-eczanem-yardimci-metin-08)] md:text-sm">{aciklama}</p>}
       aksiyon={aksiyon}
     />
   );
 }
 
-export function EczanemOzetKarti({ ikon: Icon, etiket, deger, detay, renk = "#237ac8", zemin = "#edf6fd" }: {
+export function EczanemOzetKarti({ ikon: Icon, etiket, deger, detay, renk = "var(--tema-yerel-eczanem-eylem-metin-01)", zemin = "var(--tema-yerel-eczanem-secim-zemin-01)" }: {
   ikon: LucideIcon;
   etiket: string;
   deger: string | number;
@@ -49,12 +49,12 @@ export function EczanemOzetKarti({ ikon: Icon, etiket, deger, detay, renk = "#23
   zemin?: string;
 }) {
   return (
-    <Card className="gap-0 border border-gray-200 border-l-[3px] py-0 shadow-sm" style={{ borderLeftColor: renk }}>
+    <Card className="gap-0 border border-[var(--tema-yerel-eczanem-cizgi-06)] border-l-[3px] py-0 shadow-sm" style={{ borderLeftColor: renk }}>
       <CardContent className="flex items-start justify-between gap-3 p-4 md:p-5">
         <div className="min-w-0">
-          <p className="text-[10px] font-extrabold uppercase tracking-[0.08em] text-[#8392a5]">{etiket}</p>
-          <p className="mt-2 text-2xl font-black leading-none tabular-nums text-[#172b4d] md:text-3xl">{deger}</p>
-          <p className="mt-1.5 truncate text-[11px] font-semibold text-[#8796a8]">{detay}</p>
+          <p className="text-[10px] font-extrabold uppercase tracking-[0.08em] text-[var(--tema-yerel-eczanem-yardimci-metin-09)]">{etiket}</p>
+          <p className="mt-2 text-2xl font-black leading-none tabular-nums text-[var(--tema-yerel-eczanem-ana-metin-04)] md:text-3xl">{deger}</p>
+          <p className="mt-1.5 truncate text-[11px] font-semibold text-[var(--tema-yerel-eczanem-yardimci-metin-10)]">{detay}</p>
         </div>
         <span className="flex size-9 shrink-0 items-center justify-center rounded-xl" style={{ color: renk, background: zemin }}>
           <Icon className="size-4.5" />
@@ -72,12 +72,12 @@ export function EczanemPanel({ baslik, aciklama, aksiyon, children, className }:
   className?: string;
 }) {
   return (
-    <Card className={cn("gap-0 overflow-hidden border-gray-200 py-0 shadow-sm", className)}>
+    <Card className={cn("gap-0 overflow-hidden border-[var(--tema-yerel-eczanem-cizgi-06)] py-0 shadow-sm", className)}>
       {(baslik || aciklama || aksiyon) && (
-        <div className="flex flex-wrap items-start justify-between gap-3 border-b border-[#e7edf4] px-4 py-4 md:px-5">
+        <div className="flex flex-wrap items-start justify-between gap-3 border-b border-[var(--tema-yerel-eczanem-cizgi-07)] px-4 py-4 md:px-5">
           <div>
-            {baslik && <h2 className="text-sm font-extrabold text-[#263e5b] md:text-base">{baslik}</h2>}
-            {aciklama && <p className="mt-1 max-w-3xl text-[11px] font-semibold leading-5 text-[#8090a3] md:text-xs">{aciklama}</p>}
+            {baslik && <h2 className="text-sm font-extrabold text-[var(--tema-yerel-eczanem-ana-metin-05)] md:text-base">{baslik}</h2>}
+            {aciklama && <p className="mt-1 max-w-3xl text-[11px] font-semibold leading-5 text-[var(--tema-yerel-eczanem-yardimci-metin-11)] md:text-xs">{aciklama}</p>}
           </div>
           {aksiyon}
         </div>
@@ -89,8 +89,8 @@ export function EczanemPanel({ baslik, aciklama, aksiyon, children, className }:
 
 export function EczanemYukleniyor({ metin = "Veriler yükleniyor…" }: { metin?: string }) {
   return (
-    <div className="flex min-h-52 items-center justify-center gap-2 px-5 py-14 text-sm font-semibold text-[#71859d]">
-      <span className="size-5 animate-spin rounded-full border-2 border-[#d7e4ef] border-t-[#3589d8]" /> {metin}
+    <div className="flex min-h-52 items-center justify-center gap-2 px-5 py-14 text-sm font-semibold text-[var(--tema-yerel-eczanem-yardimci-metin-12)]">
+      <span className="size-5 animate-spin rounded-full border-2 border-[var(--tema-yerel-eczanem-cizgi-08)] border-t-[var(--tema-yerel-eczanem-cizgi-09)]" /> {metin}
     </div>
   );
 }
@@ -102,9 +102,9 @@ export function EczanemBosDurum({ ikon: Icon = Inbox, baslik, aciklama }: {
 }) {
   return (
     <div className="px-5 py-12 text-center">
-      <span className="mx-auto flex size-11 items-center justify-center rounded-2xl bg-[#eef5fb] text-[#6f97ba]"><Icon className="size-5" /></span>
-      <h3 className="mt-3 text-sm font-extrabold text-[#40556d]">{baslik}</h3>
-      <p className="mx-auto mt-1 max-w-md text-xs font-semibold leading-5 text-[#8a99aa]">{aciklama}</p>
+      <span className="mx-auto flex size-11 items-center justify-center rounded-2xl bg-[var(--tema-yerel-eczanem-secim-zemin-04)] text-[var(--tema-yerel-eczanem-yardimci-metin-13)]"><Icon className="size-5" /></span>
+      <h3 className="mt-3 text-sm font-extrabold text-[var(--tema-yerel-eczanem-ana-metin-06)]">{baslik}</h3>
+      <p className="mx-auto mt-1 max-w-md text-xs font-semibold leading-5 text-[var(--tema-yerel-eczanem-yardimci-metin-14)]">{aciklama}</p>
     </div>
   );
 }
@@ -117,12 +117,12 @@ export function EczanemSayfalama({ sayfa, toplamSayfa, onDegistir, disabled = fa
 }) {
   if (toplamSayfa <= 1) return null;
   return (
-    <div className="flex items-center justify-between border-t border-[#e7edf4] px-4 py-3 text-xs font-bold text-[#71859d] md:px-5">
-      <Button type="button" size="sm" variant="outline" disabled={disabled || sayfa <= 1} onClick={() => onDegistir(sayfa - 1)} className="h-8 border-[#d7e1eb]">
+    <div className="flex items-center justify-between border-t border-[var(--tema-yerel-eczanem-cizgi-07)] px-4 py-3 text-xs font-bold text-[var(--tema-yerel-eczanem-yardimci-metin-12)] md:px-5">
+      <Button type="button" size="sm" variant="outline" disabled={disabled || sayfa <= 1} onClick={() => onDegistir(sayfa - 1)} className="h-8 border-[var(--tema-yerel-eczanem-cizgi-10)]">
         <ChevronLeft /> Önceki
       </Button>
       <span>{sayfa} / {toplamSayfa}</span>
-      <Button type="button" size="sm" variant="outline" disabled={disabled || sayfa >= toplamSayfa} onClick={() => onDegistir(sayfa + 1)} className="h-8 border-[#d7e1eb]">
+      <Button type="button" size="sm" variant="outline" disabled={disabled || sayfa >= toplamSayfa} onClick={() => onDegistir(sayfa + 1)} className="h-8 border-[var(--tema-yerel-eczanem-cizgi-10)]">
         Sonraki <ChevronRight />
       </Button>
     </div>

@@ -405,62 +405,62 @@ export function PodcastTranskriptEditoru({
   const aiHata = islemDurumu === "hata" || Boolean(ustHataMesaji);
 
   return (
-    <div className="space-y-3 rounded-xl border border-[#d6e3f2] bg-white p-3.5 shadow-sm">
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-gray-100 pb-2.5">
+    <div className="space-y-3 rounded-xl border border-[var(--tema-yerel-uretim-cizgi-17)] bg-[var(--tema-yerel-uretim-kart-01)] p-3.5 shadow-sm">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--tema-yerel-uretim-cizgi-03)] pb-2.5">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-bold text-[#263b58]">Podcast Transkripti</span>
+          <span className="text-xs font-bold text-[var(--tema-yerel-uretim-ana-metin-04)]">Podcast Transkripti</span>
           {islemDurumu === "taslak_hazirlaniyor" ? (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-0.5 text-[11px] font-semibold text-blue-700 border border-blue-200 animate-pulse">
-              <span className="h-1.5 w-1.5 rounded-full bg-blue-600 animate-ping" />
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--tema-yerel-uretim-secim-zemin-03)] px-2.5 py-0.5 text-[11px] font-semibold text-[var(--tema-yerel-uretim-eylem-metin-07)] border border-[var(--tema-yerel-uretim-cizgi-07)] animate-pulse">
+              <span className="h-1.5 w-1.5 rounded-full bg-[var(--tema-yerel-uretim-eylem-zemin-04)] animate-ping" />
               Taslak hazırlanıyor
             </span>
           ) : islemDurumu === "podcast_yukleniyor" ? (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-0.5 text-[11px] font-semibold text-blue-700 border border-blue-200">
-              <span className="h-1.5 w-1.5 rounded-full bg-blue-600 animate-ping" />
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--tema-yerel-uretim-secim-zemin-03)] px-2.5 py-0.5 text-[11px] font-semibold text-[var(--tema-yerel-uretim-eylem-metin-07)] border border-[var(--tema-yerel-uretim-cizgi-07)]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[var(--tema-yerel-uretim-eylem-zemin-04)] animate-ping" />
               Podcast yükleniyor: %{yuklemeYuzdesi ?? 0}
             </span>
           ) : islemDurumu === "podcast_dogrulaniyor" ? (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-0.5 text-[11px] font-semibold text-blue-700 border border-blue-200 animate-pulse">
-              <span className="h-1.5 w-1.5 rounded-full bg-blue-600 animate-ping" />
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--tema-yerel-uretim-secim-zemin-03)] px-2.5 py-0.5 text-[11px] font-semibold text-[var(--tema-yerel-uretim-eylem-metin-07)] border border-[var(--tema-yerel-uretim-cizgi-07)] animate-pulse">
+              <span className="h-1.5 w-1.5 rounded-full bg-[var(--tema-yerel-uretim-eylem-zemin-04)] animate-ping" />
               Podcast doğrulanıyor
             </span>
           ) : islemDurumu === "ai_kuyrukta" ? (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-0.5 text-[11px] font-semibold text-amber-700 border border-amber-200">
-              <span className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse" />
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--tema-yerel-uretim-islevsel-zemin-04)] px-2.5 py-0.5 text-[11px] font-semibold text-[var(--tema-yerel-uretim-islevsel-metin-07)] border border-[var(--tema-yerel-uretim-islevsel-cizgi-06)]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[var(--tema-yerel-uretim-islevsel-zemin-05)] animate-pulse" />
               AI işi kuyruğa alındı
             </span>
           ) : islemDurumu === "ai_isleniyor" ? (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-0.5 text-[11px] font-semibold text-blue-700 border border-blue-200 animate-pulse">
-              <span className="h-1.5 w-1.5 rounded-full bg-blue-600 animate-ping" />
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--tema-yerel-uretim-secim-zemin-03)] px-2.5 py-0.5 text-[11px] font-semibold text-[var(--tema-yerel-uretim-eylem-metin-07)] border border-[var(--tema-yerel-uretim-cizgi-07)] animate-pulse">
+              <span className="h-1.5 w-1.5 rounded-full bg-[var(--tema-yerel-uretim-eylem-zemin-04)] animate-ping" />
               AI transkripti hazırlanıyor
             </span>
           ) : islemDurumu === "transkript_hazir" ? (
-            <span className="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-700 border border-emerald-200">
+            <span className="inline-flex items-center rounded-full bg-[var(--tema-yerel-uretim-islevsel-zemin-12)] px-2.5 py-0.5 text-[11px] font-semibold text-[var(--tema-yerel-uretim-islevsel-metin-16)] border border-[var(--tema-yerel-uretim-islevsel-cizgi-12)]">
               ✓ Transkript hazır
             </span>
           ) : islemDurumu === "hata" ? (
-            <span className="inline-flex items-center rounded-full bg-red-50 px-2.5 py-0.5 text-[11px] font-semibold text-red-700 border border-red-200">
+            <span className="inline-flex items-center rounded-full bg-[var(--tema-yerel-uretim-islevsel-zemin-03)] px-2.5 py-0.5 text-[11px] font-semibold text-[var(--tema-yerel-uretim-islevsel-metin-05)] border border-[var(--tema-yerel-uretim-islevsel-cizgi-03)]">
               Transkript oluşturulamadı
             </span>
           ) : aracId && (onaylandi || aiDurumu === "onaylandi") ? (
-            <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-0.5 text-[11px] font-semibold text-green-700 border border-green-200">
+            <span className="inline-flex items-center rounded-full bg-[var(--tema-yerel-uretim-islevsel-zemin-13)] px-2 py-0.5 text-[11px] font-semibold text-[var(--tema-yerel-uretim-islevsel-metin-17)] border border-[var(--tema-yerel-uretim-islevsel-cizgi-13)]">
               ✓ Onaylandı
             </span>
           ) : !aracId && onaylandi ? (
-            <span className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-600 border border-slate-200">
+            <span className="inline-flex items-center rounded-full bg-[var(--tema-yerel-uretim-sayfa-zemini-06)] px-2 py-0.5 text-[11px] font-medium text-[var(--tema-yerel-uretim-ana-metin-10)] border border-[var(--tema-yerel-uretim-cizgi-18)]">
               Transkript, talep oluşturulurken kaydedilecek
             </span>
           ) : aiIslemde ? (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-0.5 text-[11px] font-semibold text-blue-700 border border-blue-200 animate-pulse">
-              <span className="h-1.5 w-1.5 rounded-full bg-blue-600 animate-ping" />
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--tema-yerel-uretim-secim-zemin-03)] px-2.5 py-0.5 text-[11px] font-semibold text-[var(--tema-yerel-uretim-eylem-metin-07)] border border-[var(--tema-yerel-uretim-cizgi-07)] animate-pulse">
+              <span className="h-1.5 w-1.5 rounded-full bg-[var(--tema-yerel-uretim-eylem-zemin-04)] animate-ping" />
               AI transkripti hazırlanıyor
             </span>
           ) : aiHata ? (
-            <span className="inline-flex items-center rounded-full bg-red-50 px-2 py-0.5 text-[11px] font-semibold text-red-700 border border-red-200">
+            <span className="inline-flex items-center rounded-full bg-[var(--tema-yerel-uretim-islevsel-zemin-03)] px-2 py-0.5 text-[11px] font-semibold text-[var(--tema-yerel-uretim-islevsel-metin-05)] border border-[var(--tema-yerel-uretim-islevsel-cizgi-03)]">
               Transkript oluşturulamadı
             </span>
           ) : (
-            <span className="inline-flex items-center rounded-full bg-amber-50 px-2.5 py-0.5 text-[11px] font-semibold text-amber-700 border border-amber-200">
+            <span className="inline-flex items-center rounded-full bg-[var(--tema-yerel-uretim-islevsel-zemin-04)] px-2.5 py-0.5 text-[11px] font-semibold text-[var(--tema-yerel-uretim-islevsel-metin-07)] border border-[var(--tema-yerel-uretim-islevsel-cizgi-06)]">
               Taslak (Onay Bekliyor)
             </span>
           )}
@@ -471,7 +471,7 @@ export function PodcastTranskriptEditoru({
               type="button"
               disabled={kaydediliyor}
               onClick={handleIptalEt}
-              className="text-xs font-medium text-red-600 hover:text-red-700 hover:underline cursor-pointer disabled:opacity-50"
+              className="text-xs font-medium text-[var(--tema-yerel-uretim-islevsel-metin-18)] hover:text-[var(--tema-yerel-uretim-islevsel-metin-05)] hover:underline cursor-pointer disabled:opacity-50"
             >
               İptal Et / Transkriptsiz Devam Et
             </button>
@@ -480,13 +480,13 @@ export function PodcastTranskriptEditoru({
       </div>
 
       {hata && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-2 text-xs text-red-700">
+        <div className="rounded-lg border border-[var(--tema-yerel-uretim-islevsel-cizgi-03)] bg-[var(--tema-yerel-uretim-islevsel-zemin-03)] p-2 text-xs text-[var(--tema-yerel-uretim-islevsel-metin-05)]">
           {hata}
         </div>
       )}
 
       {basariMesaji && (
-        <div className="rounded-lg border border-green-200 bg-green-50 p-2 text-xs font-semibold text-green-800">
+        <div className="rounded-lg border border-[var(--tema-yerel-uretim-islevsel-cizgi-13)] bg-[var(--tema-yerel-uretim-islevsel-zemin-13)] p-2 text-xs font-semibold text-[var(--tema-yerel-uretim-islevsel-metin-19)]">
           ✓ {basariMesaji}
         </div>
       )}
@@ -502,8 +502,8 @@ export function PodcastTranskriptEditoru({
             }}
             className={`rounded-lg px-2.5 py-1 text-xs font-semibold ${
               sekme === "ai"
-                ? "bg-[#2483e2] text-white"
-                : "bg-gray-100 text-[#425672] hover:bg-gray-200"
+                ? "bg-[var(--tema-yerel-uretim-eylem-zemin-02)] text-[var(--tema-yerel-uretim-ters-metin-01)]"
+                : "bg-[var(--tema-yerel-uretim-sayfa-zemini-07)] text-[var(--tema-yerel-uretim-ana-metin-07)] hover:bg-[var(--tema-yerel-uretim-sayfa-zemini-08)]"
             }`}
           >
             ✨ AI ile Oluştur (Gemini 3.5)
@@ -516,8 +516,8 @@ export function PodcastTranskriptEditoru({
             }}
             className={`rounded-lg px-2.5 py-1 text-xs font-semibold ${
               sekme === "dosya"
-                ? "bg-[#2483e2] text-white"
-                : "bg-gray-100 text-[#425672] hover:bg-gray-200"
+                ? "bg-[var(--tema-yerel-uretim-eylem-zemin-02)] text-[var(--tema-yerel-uretim-ters-metin-01)]"
+                : "bg-[var(--tema-yerel-uretim-sayfa-zemini-07)] text-[var(--tema-yerel-uretim-ana-metin-07)] hover:bg-[var(--tema-yerel-uretim-sayfa-zemini-08)]"
             }`}
           >
             DOCX / PDF Yükle
@@ -530,8 +530,8 @@ export function PodcastTranskriptEditoru({
             }}
             className={`rounded-lg px-2.5 py-1 text-xs font-semibold ${
               sekme === "metin"
-                ? "bg-[#2483e2] text-white"
-                : "bg-gray-100 text-[#425672] hover:bg-gray-200"
+                ? "bg-[var(--tema-yerel-uretim-eylem-zemin-02)] text-[var(--tema-yerel-uretim-ters-metin-01)]"
+                : "bg-[var(--tema-yerel-uretim-sayfa-zemini-07)] text-[var(--tema-yerel-uretim-ana-metin-07)] hover:bg-[var(--tema-yerel-uretim-sayfa-zemini-08)]"
             }`}
           >
             Doğrudan Metin Yapıştır
@@ -541,65 +541,65 @@ export function PodcastTranskriptEditoru({
 
       {/* AI Modu İçeriği */}
       {sekme === "ai" && (
-        <div className="rounded-lg border border-blue-200 bg-[#f4f8fe] p-3 space-y-2">
+        <div className="rounded-lg border border-[var(--tema-yerel-uretim-cizgi-07)] bg-[var(--tema-yerel-uretim-sayfa-zemini-09)] p-3 space-y-2">
           {islemDurumu === "taslak_hazirlaniyor" ? (
             <div className="flex items-center gap-3">
-              <div className="h-5 w-5 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
+              <div className="h-5 w-5 animate-spin rounded-full border-2 border-[var(--tema-yerel-uretim-cizgi-19)] border-t-transparent" />
               <div>
-                <p className="text-xs font-bold text-blue-900">Taslak hazırlanıyor</p>
-                <p className="text-[11px] text-blue-700">Kalıcı taslak oturumu sunucuda hazırlanıyor...</p>
+                <p className="text-xs font-bold text-[var(--tema-yerel-uretim-ana-metin-11)]">Taslak hazırlanıyor</p>
+                <p className="text-[11px] text-[var(--tema-yerel-uretim-eylem-metin-07)]">Kalıcı taslak oturumu sunucuda hazırlanıyor...</p>
               </div>
             </div>
           ) : islemDurumu === "podcast_yukleniyor" ? (
             <div className="space-y-2">
-              <div className="flex items-center justify-between text-xs font-bold text-blue-900">
+              <div className="flex items-center justify-between text-xs font-bold text-[var(--tema-yerel-uretim-ana-metin-11)]">
                 <span>Podcast yükleniyor: %{yuklemeYuzdesi ?? 0}</span>
               </div>
-              <div className="h-2 w-full overflow-hidden rounded-full bg-blue-100">
+              <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--tema-yerel-uretim-secim-zemin-08)]">
                 <div
-                  className="h-full bg-blue-600 transition-all duration-300"
+                  className="h-full bg-[var(--tema-yerel-uretim-eylem-zemin-04)] transition-all duration-300"
                   style={{ width: `${Math.min(100, Math.max(0, yuklemeYuzdesi ?? 0))}%` }}
                 />
               </div>
-              <p className="text-[11px] text-blue-700">Dosya güvenli Bunny depolama alanına aktarılıyor.</p>
+              <p className="text-[11px] text-[var(--tema-yerel-uretim-eylem-metin-07)]">Dosya güvenli Bunny depolama alanına aktarılıyor.</p>
             </div>
           ) : islemDurumu === "podcast_dogrulaniyor" ? (
             <div className="flex items-center gap-3">
-              <div className="h-5 w-5 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
+              <div className="h-5 w-5 animate-spin rounded-full border-2 border-[var(--tema-yerel-uretim-cizgi-19)] border-t-transparent" />
               <div>
-                <p className="text-xs font-bold text-blue-900">Podcast doğrulanıyor</p>
-                <p className="text-[11px] text-blue-700">Ses kaydı ve depolama bütünlüğü kontrol ediliyor...</p>
+                <p className="text-xs font-bold text-[var(--tema-yerel-uretim-ana-metin-11)]">Podcast doğrulanıyor</p>
+                <p className="text-[11px] text-[var(--tema-yerel-uretim-eylem-metin-07)]">Ses kaydı ve depolama bütünlüğü kontrol ediliyor...</p>
               </div>
             </div>
           ) : islemDurumu === "ai_kuyrukta" ? (
             <div className="flex items-center gap-3">
-              <div className="h-5 w-5 animate-spin rounded-full border-2 border-amber-500 border-t-transparent" />
+              <div className="h-5 w-5 animate-spin rounded-full border-2 border-[var(--tema-yerel-uretim-islevsel-cizgi-14)] border-t-transparent" />
               <div>
-                <p className="text-xs font-bold text-amber-900">AI işi kuyruğa alındı</p>
-                <p className="text-[11px] text-amber-700">
+                <p className="text-xs font-bold text-[var(--tema-yerel-uretim-islevsel-metin-06)]">AI işi kuyruğa alındı</p>
+                <p className="text-[11px] text-[var(--tema-yerel-uretim-islevsel-metin-07)]">
                   İş kalıcı kuyrukta bekliyor. Arka plan worker&apos;ı sırayla işleme alacaktır.
                 </p>
               </div>
             </div>
           ) : islemDurumu === "ai_isleniyor" || aiIslemde ? (
             <div className="flex items-center gap-3">
-              <div className="h-5 w-5 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
+              <div className="h-5 w-5 animate-spin rounded-full border-2 border-[var(--tema-yerel-uretim-cizgi-19)] border-t-transparent" />
               <div>
-                <p className="text-xs font-bold text-blue-900">AI transkripti hazırlanıyor</p>
-                <p className="text-[11px] text-blue-700">Gemini modeli ses kaydını metne dönüştürüyor...</p>
+                <p className="text-xs font-bold text-[var(--tema-yerel-uretim-ana-metin-11)]">AI transkripti hazırlanıyor</p>
+                <p className="text-[11px] text-[var(--tema-yerel-uretim-eylem-metin-07)]">Gemini modeli ses kaydını metne dönüştürüyor...</p>
               </div>
             </div>
           ) : islemDurumu === "transkript_hazir" ? (
-            <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-2.5">
-              <p className="text-xs font-bold text-emerald-900">Transkript hazır</p>
-              <p className="text-[11px] text-emerald-700">
+            <div className="rounded-lg border border-[var(--tema-yerel-uretim-islevsel-cizgi-12)] bg-[var(--tema-yerel-uretim-islevsel-zemin-12)] p-2.5">
+              <p className="text-xs font-bold text-[var(--tema-yerel-uretim-islevsel-metin-20)]">Transkript hazır</p>
+              <p className="text-[11px] text-[var(--tema-yerel-uretim-islevsel-metin-16)]">
                 AI transkripti başarıyla oluşturuldu. Aşağıdaki metni inceleyip onaylayabilirsiniz.
               </p>
             </div>
           ) : islemDurumu === "hata" || aiHata ? (
             <div className="space-y-2">
-              <p className="text-xs font-bold text-red-800">Transkript oluşturulamadı</p>
-              <p className="text-[11px] text-red-600">
+              <p className="text-xs font-bold text-[var(--tema-yerel-uretim-islevsel-metin-21)]">Transkript oluşturulamadı</p>
+              <p className="text-[11px] text-[var(--tema-yerel-uretim-islevsel-metin-18)]">
                 {ustHataMesaji || hata || "AI transkripti oluşturulurken bir hata meydana geldi."}
               </p>
               <div className="flex items-center gap-2">
@@ -607,7 +607,7 @@ export function PodcastTranskriptEditoru({
                   type="button"
                   disabled={aiYukleniyor}
                   onClick={onAiBaslat ?? aiBaslatTekrar}
-                  className="rounded-lg bg-blue-600 px-3 py-1 text-xs font-semibold text-white hover:bg-blue-700 disabled:opacity-50 cursor-pointer"
+                  className="rounded-lg bg-[var(--tema-yerel-uretim-eylem-zemin-04)] px-3 py-1 text-xs font-semibold text-[var(--tema-yerel-uretim-ters-metin-01)] hover:bg-[var(--tema-yerel-uretim-eylem-zemin-05)] disabled:opacity-50 cursor-pointer"
                 >
                   {aiYukleniyor ? "Başlatılıyor..." : "Tekrar Dene"}
                 </button>
@@ -616,7 +616,7 @@ export function PodcastTranskriptEditoru({
                     type="button"
                     disabled={kaydediliyor}
                     onClick={handleIptalEt}
-                    className="text-xs font-medium text-red-600 hover:underline cursor-pointer"
+                    className="text-xs font-medium text-[var(--tema-yerel-uretim-islevsel-metin-18)] hover:underline cursor-pointer"
                   >
                     Transkriptsiz Devam Et
                   </button>
@@ -625,10 +625,10 @@ export function PodcastTranskriptEditoru({
             </div>
           ) : (
             <div>
-              <p className="text-xs font-semibold text-[#203b5b]">
+              <p className="text-xs font-semibold text-[var(--tema-yerel-uretim-ana-metin-12)]">
                 ✨ Gemini 3.5 Transcribe ile Otomatik AI Transkripti
               </p>
-              <p className="mt-1 text-[11px] text-[#425672] leading-relaxed">
+              <p className="mt-1 text-[11px] text-[var(--tema-yerel-uretim-ana-metin-07)] leading-relaxed">
                 Talep oluşturulup podcast sesiniz yüklendikten sonra transkript arka planda otomatik çıkarılacaktır.
                 Sonuç size taslak olarak sunulur; inceleyip onaylamadan yayın süreci başlamaz.
               </p>
@@ -637,7 +637,7 @@ export function PodcastTranskriptEditoru({
                   type="button"
                   disabled={aiYukleniyor}
                   onClick={() => onAiBaslat?.()}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-[#2483e2] bg-[#2483e2] px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-[#1a6ec7] disabled:opacity-50 cursor-pointer shadow-sm"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--tema-yerel-uretim-cizgi-16)] bg-[var(--tema-yerel-uretim-eylem-zemin-02)] px-3.5 py-1.5 text-xs font-semibold text-[var(--tema-yerel-uretim-ters-metin-01)] hover:bg-[var(--tema-yerel-uretim-eylem-zemin-03)] disabled:opacity-50 cursor-pointer shadow-sm"
                 >
                   {aiYukleniyor ? "Başlatılıyor..." : "✨ AI ile Transkript Oluştur"}
                 </button>
@@ -649,9 +649,9 @@ export function PodcastTranskriptEditoru({
 
       {/* Dosya Yükleme Modu */}
       {!iuModu && sekme === "dosya" && (
-        <div className="rounded-lg border border-gray-200 bg-gray-50/50 p-3">
+        <div className="rounded-lg border border-[var(--tema-yerel-uretim-cizgi-01)] bg-[var(--tema-yerel-uretim-sayfa-zemini-01)]/50 p-3">
           <div className="flex flex-wrap items-center gap-3">
-            <label className="cursor-pointer rounded-lg border border-[#56aeff] bg-white px-3 py-1.5 text-xs font-semibold text-[#2483e2] hover:bg-[#f0f7ff]">
+            <label className="cursor-pointer rounded-lg border border-[var(--tema-yerel-uretim-cizgi-04)] bg-[var(--tema-yerel-uretim-kart-01)] px-3 py-1.5 text-xs font-semibold text-[var(--tema-yerel-uretim-eylem-metin-06)] hover:bg-[var(--tema-yerel-uretim-secim-zemin-07)]">
               {yukleniyor ? "Dosya Okunuyor..." : "Dosya Seç (.docx, .pdf, .txt)"}
               <input
                 type="file"
@@ -662,13 +662,13 @@ export function PodcastTranskriptEditoru({
               />
             </label>
             {bekleyenDosya && (
-              <span className="inline-flex max-w-full items-center gap-2 rounded-full border border-gray-200 bg-white px-2.5 py-1 text-xs text-gray-700">
+              <span className="inline-flex max-w-full items-center gap-2 rounded-full border border-[var(--tema-yerel-uretim-cizgi-01)] bg-[var(--tema-yerel-uretim-kart-01)] px-2.5 py-1 text-xs text-[var(--tema-yerel-uretim-ana-metin-03)]">
                 <span className="max-w-56 truncate">{bekleyenDosya.preview.dosya_adi}</span>
-                <span className="text-gray-400">({(bekleyenDosya.preview.boyut / 1024).toFixed(1)} KB)</span>
+                <span className="text-[var(--tema-yerel-uretim-yardimci-metin-02)]">({(bekleyenDosya.preview.boyut / 1024).toFixed(1)} KB)</span>
               </span>
             )}
           </div>
-          <p className="mt-1.5 text-[11px] text-[#7a8ca5]">
+          <p className="mt-1.5 text-[11px] text-[var(--tema-yerel-uretim-yardimci-metin-05)]">
             DOCX veya PDF dosyanızdaki metin otomatik olarak çıkarılıp aşağıdaki düzenleme alanına aktarılır.
           </p>
         </div>
@@ -676,18 +676,18 @@ export function PodcastTranskriptEditoru({
 
       {/* İki Konuşmacı Adlandırma Alanı (Yalnızca AI modunda, işlem bittiğinde ve metinde iki konuşmacı etiketi varsa) */}
       {sekme === "ai" && ikiKonusmaciVar && !aiIslemde && metindeIkiKonusmaciVarMi(metin) && (
-        <div className="rounded-lg border border-blue-100 bg-[#f8fbff] p-3 space-y-2">
+        <div className="rounded-lg border border-[var(--tema-yerel-uretim-cizgi-20)] bg-[var(--tema-yerel-uretim-sayfa-zemini-03)] p-3 space-y-2">
           <div className="flex flex-wrap items-center justify-between gap-1">
-            <span className="text-xs font-semibold text-[#203b5b]">
+            <span className="text-xs font-semibold text-[var(--tema-yerel-uretim-ana-metin-12)]">
               👥 Konuşmacı Adlandırma (İsteğe Bağlı)
             </span>
-            <span className="text-[11px] text-[#7a8ca5]">
+            <span className="text-[11px] text-[var(--tema-yerel-uretim-yardimci-metin-05)]">
               Boş bırakılırsa varsayılan &quot;Konuşmacı 1&quot; ve &quot;Konuşmacı 2&quot; etiketleri korunur.
             </span>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             <div>
-              <label className="block text-[11px] font-medium text-[#425672] mb-1">
+              <label className="block text-[11px] font-medium text-[var(--tema-yerel-uretim-ana-metin-07)] mb-1">
                 Konuşmacı 1 adı
               </label>
               <input
@@ -696,11 +696,11 @@ export function PodcastTranskriptEditoru({
                 value={konusmaci1Input}
                 onChange={handleKonusmaci1Degisti}
                 placeholder="Konuşmacı 1 (Örn. Ahmet)"
-                className="w-full rounded-lg border border-gray-300 bg-white px-2.5 py-1.5 text-xs text-gray-800 placeholder-gray-400 focus:border-[#2483e2] focus:outline-none focus:ring-1 focus:ring-[#2483e2]"
+                className="w-full rounded-lg border border-[var(--tema-yerel-uretim-cizgi-21)] bg-[var(--tema-yerel-uretim-kart-01)] px-2.5 py-1.5 text-xs text-[var(--tema-yerel-uretim-ana-metin-13)] placeholder-[var(--tema-yerel-uretim-yardimci-metin-02)] focus:border-[var(--tema-yerel-uretim-cizgi-16)] focus:outline-none focus:ring-1 focus:ring-[var(--tema-yerel-uretim-odak-02)]"
               />
             </div>
             <div>
-              <label className="block text-[11px] font-medium text-[#425672] mb-1">
+              <label className="block text-[11px] font-medium text-[var(--tema-yerel-uretim-ana-metin-07)] mb-1">
                 Konuşmacı 2 adı
               </label>
               <input
@@ -709,12 +709,12 @@ export function PodcastTranskriptEditoru({
                 value={konusmaci2Input}
                 onChange={handleKonusmaci2Degisti}
                 placeholder="Konuşmacı 2 (Örn. Ayşe)"
-                className="w-full rounded-lg border border-gray-300 bg-white px-2.5 py-1.5 text-xs text-gray-800 placeholder-gray-400 focus:border-[#2483e2] focus:outline-none focus:ring-1 focus:ring-[#2483e2]"
+                className="w-full rounded-lg border border-[var(--tema-yerel-uretim-cizgi-21)] bg-[var(--tema-yerel-uretim-kart-01)] px-2.5 py-1.5 text-xs text-[var(--tema-yerel-uretim-ana-metin-13)] placeholder-[var(--tema-yerel-uretim-yardimci-metin-02)] focus:border-[var(--tema-yerel-uretim-cizgi-16)] focus:outline-none focus:ring-1 focus:ring-[var(--tema-yerel-uretim-odak-02)]"
               />
             </div>
           </div>
           {konusmaciHatasi && (
-            <p className="text-[11px] font-medium text-red-600">{konusmaciHatasi}</p>
+            <p className="text-[11px] font-medium text-[var(--tema-yerel-uretim-islevsel-metin-18)]">{konusmaciHatasi}</p>
           )}
         </div>
       )}
@@ -723,18 +723,18 @@ export function PodcastTranskriptEditoru({
       <div>
         <div className="mb-1.5 flex items-center justify-between text-xs">
           <div className="flex items-center gap-2">
-            <label className="font-semibold text-[#425672]">
+            <label className="font-semibold text-[var(--tema-yerel-uretim-ana-metin-07)]">
               Transkript Metni {gorunumModu === "onizleme" && !aiIslemde && metin.trim().length > 0 ? "(Okuma Görünümü)" : "(Düzenlenebilir)"}
             </label>
             {metin.trim().length > 0 && !aiIslemde && (
-              <div className="inline-flex rounded-md border border-gray-200 bg-gray-100 p-0.5">
+              <div className="inline-flex rounded-md border border-[var(--tema-yerel-uretim-cizgi-01)] bg-[var(--tema-yerel-uretim-sayfa-zemini-07)] p-0.5">
                 <button
                   type="button"
                   onClick={() => setGorunumModu("onizleme")}
                   className={`flex items-center gap-1 rounded px-2 py-0.5 text-[11px] font-medium transition cursor-pointer ${
                     gorunumModu === "onizleme"
-                      ? "bg-white text-[#2483e2] shadow-sm font-semibold"
-                      : "text-gray-600 hover:text-gray-900"
+                      ? "bg-[var(--tema-yerel-uretim-kart-01)] text-[var(--tema-yerel-uretim-eylem-metin-06)] shadow-sm font-semibold"
+                      : "text-[var(--tema-yerel-uretim-ana-metin-02)] hover:text-[var(--tema-yerel-uretim-ana-metin-01)]"
                   }`}
                 >
                   <span>👁️</span> Önizleme
@@ -744,8 +744,8 @@ export function PodcastTranskriptEditoru({
                   onClick={() => setGorunumModu("duzenle")}
                   className={`flex items-center gap-1 rounded px-2 py-0.5 text-[11px] font-medium transition cursor-pointer ${
                     gorunumModu === "duzenle"
-                      ? "bg-white text-[#2483e2] shadow-sm font-semibold"
-                      : "text-gray-600 hover:text-gray-900"
+                      ? "bg-[var(--tema-yerel-uretim-kart-01)] text-[var(--tema-yerel-uretim-eylem-metin-06)] shadow-sm font-semibold"
+                      : "text-[var(--tema-yerel-uretim-ana-metin-02)] hover:text-[var(--tema-yerel-uretim-ana-metin-01)]"
                   }`}
                 >
                   <span>✏️</span> Düzenle
@@ -753,16 +753,16 @@ export function PodcastTranskriptEditoru({
               </div>
             )}
           </div>
-          <span className="text-[#7a8ca5]">{aiIslemde ? 0 : metin.length} / 100.000 karakter</span>
+          <span className="text-[var(--tema-yerel-uretim-yardimci-metin-05)]">{aiIslemde ? 0 : metin.length} / 100.000 karakter</span>
         </div>
 
         {gorunumModu === "onizleme" && !aiIslemde && metin.trim().length > 0 && (
           <div
             onClick={() => setGorunumModu("duzenle")}
             title="Metni doğrudan düzenlemek için tıklayın"
-            className="group relative min-h-[140px] resize-y cursor-text overflow-y-auto rounded-lg border border-gray-300 bg-white p-3 text-xs leading-relaxed text-gray-800 transition hover:border-[#2483e2]"
+            className="group relative min-h-[140px] resize-y cursor-text overflow-y-auto rounded-lg border border-[var(--tema-yerel-uretim-cizgi-21)] bg-[var(--tema-yerel-uretim-kart-01)] p-3 text-xs leading-relaxed text-[var(--tema-yerel-uretim-ana-metin-13)] transition hover:border-[var(--tema-yerel-uretim-cizgi-16)]"
           >
-            <div className="pointer-events-none absolute right-2.5 top-2.5 rounded bg-gray-100 px-1.5 py-0.5 text-[10px] text-gray-500 opacity-70 group-hover:opacity-100 group-hover:bg-blue-50 group-hover:text-[#2483e2]">
+            <div className="pointer-events-none absolute right-2.5 top-2.5 rounded bg-[var(--tema-yerel-uretim-sayfa-zemini-07)] px-1.5 py-0.5 text-[10px] text-[var(--tema-yerel-uretim-yardimci-metin-01)] opacity-70 group-hover:opacity-100 group-hover:bg-[var(--tema-yerel-uretim-secim-zemin-03)] group-hover:text-[var(--tema-yerel-uretim-eylem-metin-06)]">
               Düzenlemek için tıkla ✏️
             </div>
             {metin.split("\n").map((satir, idx) => {
@@ -774,7 +774,7 @@ export function PodcastTranskriptEditoru({
                 const baslik = match[1].replace(/\*\*/g, "");
                 return (
                   <div key={idx} className="py-0.5">
-                    <strong className="font-bold text-gray-900">{baslik}</strong>
+                    <strong className="font-bold text-[var(--tema-yerel-uretim-ana-metin-01)]">{baslik}</strong>
                     <span> {match[2]}</span>
                   </div>
                 );
@@ -805,7 +805,7 @@ export function PodcastTranskriptEditoru({
               ? "AI transkripti tamamlandığında metin buraya aktarılacaktır..."
               : "Transkript metnini buraya yapıştırın veya yukarıdan DOCX/PDF dosyası seçin..."
           }
-          className={`w-full min-h-[140px] resize-y rounded-lg border border-gray-300 p-2.5 text-xs leading-relaxed text-gray-800 focus:border-[#2483e2] focus:outline-none focus:ring-1 focus:ring-[#2483e2] disabled:bg-gray-50 disabled:text-gray-400 ${
+          className={`w-full min-h-[140px] resize-y rounded-lg border border-[var(--tema-yerel-uretim-cizgi-21)] p-2.5 text-xs leading-relaxed text-[var(--tema-yerel-uretim-ana-metin-13)] focus:border-[var(--tema-yerel-uretim-cizgi-16)] focus:outline-none focus:ring-1 focus:ring-[var(--tema-yerel-uretim-odak-02)] disabled:bg-[var(--tema-yerel-uretim-sayfa-zemini-01)] disabled:text-[var(--tema-yerel-uretim-yardimci-metin-02)] ${
             gorunumModu === "onizleme" && !aiIslemde && metin.trim().length > 0 ? "hidden" : ""
           }`}
         />
@@ -813,7 +813,7 @@ export function PodcastTranskriptEditoru({
 
       {/* Onay Butonları */}
       <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
-        <p className="text-[11px] text-[#7a8ca5]">
+        <p className="text-[11px] text-[var(--tema-yerel-uretim-yardimci-metin-05)]">
           {aracId && (onaylandi || aiDurumu === "onaylandi")
             ? "Metin onaylanmıştır. Değişiklik yaparsanız yeniden onaylamanız gerekir."
             : !aracId && onaylandi
@@ -822,11 +822,11 @@ export function PodcastTranskriptEditoru({
         </p>
         <div>
           {aracId && (onaylandi || aiDurumu === "onaylandi") ? (
-            <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-green-700">
+            <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--tema-yerel-uretim-islevsel-metin-17)]">
               ✓ Onaylandı
             </span>
           ) : !aracId && onaylandi ? (
-            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-600">
+            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[var(--tema-yerel-uretim-ana-metin-10)]">
               Transkript, talep oluşturulurken kaydedilecek
             </span>
           ) : (
@@ -834,7 +834,7 @@ export function PodcastTranskriptEditoru({
               type="button"
               disabled={kaydediliyor || metin.trim().length < 10 || Boolean(konusmaciHatasi)}
               onClick={handleOnaylaVeKaydet}
-              className="rounded-lg bg-[#2483e2] px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-[#1a6ec7] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              className="rounded-lg bg-[var(--tema-yerel-uretim-eylem-zemin-02)] px-3.5 py-1.5 text-xs font-semibold text-[var(--tema-yerel-uretim-ters-metin-01)] hover:bg-[var(--tema-yerel-uretim-eylem-zemin-03)] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               {kaydediliyor ? "Kaydediliyor..." : "Onayla ve Kaydet"}
             </button>

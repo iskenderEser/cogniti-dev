@@ -30,10 +30,10 @@ interface Props {
 const BOS_KISI: YeniKisiForm = { rol: "", ad: "", soyad: "", eposta: "", telefon: "" };
 const ROL_SIRASI: Record<Kisi["rol"], number> = { eczaci: 0, ikinci_eczaci: 1, yardimci_eczaci: 2, eczane_teknisyeni: 3 };
 const UNVAN_PIL_RENKLERI: Record<Kisi["rol"], string> = {
-  eczaci: "border-red-200 bg-red-50 text-red-700",
-  ikinci_eczaci: "border-blue-200 bg-blue-50 text-blue-700",
-  yardimci_eczaci: "border-violet-200 bg-violet-50 text-violet-700",
-  eczane_teknisyeni: "border-emerald-200 bg-emerald-50 text-emerald-700",
+  eczaci: "border-[var(--tema-yerel-eclub-islevsel-cizgi-01)] bg-[var(--tema-yerel-eclub-islevsel-zemin-04)] text-[var(--tema-yerel-eclub-islevsel-metin-06)]",
+  ikinci_eczaci: "border-[var(--tema-yerel-eclub-islevsel-cizgi-08)] bg-[var(--tema-yerel-eclub-islevsel-zemin-15)] text-[var(--tema-yerel-eclub-islevsel-metin-29)]",
+  yardimci_eczaci: "border-[var(--tema-yerel-eclub-islevsel-cizgi-09)] bg-[var(--tema-yerel-eclub-islevsel-zemin-16)] text-[var(--tema-yerel-eclub-islevsel-metin-30)]",
+  eczane_teknisyeni: "border-[var(--tema-yerel-eclub-islevsel-cizgi-03)] bg-[var(--tema-yerel-eclub-islevsel-zemin-06)] text-[var(--tema-yerel-eclub-islevsel-metin-08)]",
 };
 const KISI_GRID = { gridTemplateColumns: "minmax(180px,1.2fr) minmax(120px,.7fr) minmax(180px,1fr) minmax(110px,.65fr) minmax(170px,.8fr)" };
 
@@ -126,8 +126,8 @@ export function EczaneBlogu({ eczane, kisiler, gecisTalepleri, islemLoading, onL
                 </div>
               </div>
 
-              {davetMesaji && <p role="status" className="text-xs text-[#60758c]">{davetMesaji}</p>}
-              {depoSilmeHatasi && <p role="alert" className="text-xs text-red-700">{depoSilmeHatasi}</p>}
+              {davetMesaji && <p role="status" className="text-xs text-[var(--tema-yerel-eclub-yardimci-metin-28)]">{davetMesaji}</p>}
+              {depoSilmeHatasi && <p role="alert" className="text-xs text-[var(--tema-yerel-eclub-islevsel-metin-06)]">{depoSilmeHatasi}</p>}
               {siraliKisiler.length > 0 ? (
                 <div className={bmStyles.nestedUttWrap}>
                   <div className={bmStyles.nestedUttHeader} style={KISI_GRID}><span>Kişi</span><span>Unvan</span><span>E‑posta</span><span>Telefon</span><span>İşlem</span></div>
@@ -142,7 +142,7 @@ export function EczaneBlogu({ eczane, kisiler, gecisTalepleri, islemLoading, onL
                       </div>
                       {duzenlenenKisi === kisi.kisi_id && (
                         <Dialog.Root open onOpenChange={(open) => { if (!open) { setDuzenlenenKisi(null); setDuzenForm({}); } }}>
-                          <Dialog.Portal><Dialog.Overlay className="fixed inset-0 z-50 bg-black/30" /><Dialog.Content aria-describedby={undefined} className="fixed left-1/2 top-1/2 z-50 grid max-h-[85svh] w-[calc(100vw-32px)] max-w-xl -translate-x-1/2 -translate-y-1/2 gap-3 overflow-y-auto rounded-xl border bg-white p-4 sm:grid-cols-2">
+                          <Dialog.Portal><Dialog.Overlay className="fixed inset-0 z-50 bg-[var(--tema-yerel-eclub-ortu-01)]/30" /><Dialog.Content aria-describedby={undefined} className="fixed left-1/2 top-1/2 z-50 grid max-h-[85svh] w-[calc(100vw-32px)] max-w-xl -translate-x-1/2 -translate-y-1/2 gap-3 overflow-y-auto rounded-xl border bg-[var(--tema-yerel-eclub-kart-01)] p-4 sm:grid-cols-2">
                           <Dialog.Title className="text-sm font-bold sm:col-span-2">Kişi bilgilerini düzenle</Dialog.Title>
                           <div><Label>Ad</Label><Input value={duzenForm.ad ?? ""} onChange={(e) => setDuzenForm((form) => ({ ...form, ad: e.target.value }))} /></div>
                           <div><Label>Soyad</Label><Input value={duzenForm.soyad ?? ""} onChange={(e) => setDuzenForm((form) => ({ ...form, soyad: e.target.value }))} /></div>
@@ -157,21 +157,21 @@ export function EczaneBlogu({ eczane, kisiler, gecisTalepleri, islemLoading, onL
               ) : <div className={bmStyles.empty}>Bu eczanede kayıtlı kişi bulunmuyor.</div>}
 
               {gecisTalepleri.length > 0 && (
-                <div className="rounded-xl border border-amber-200 bg-amber-50/70 p-4">
+                <div className="rounded-xl border border-[var(--tema-yerel-eclub-islevsel-cizgi-04)] bg-[var(--tema-yerel-eclub-islevsel-zemin-07)]/70 p-4">
                   <div className="mb-3 flex items-start gap-2">
-                    <Clock3 className="mt-0.5 size-4 shrink-0 text-amber-700" />
+                    <Clock3 className="mt-0.5 size-4 shrink-0 text-[var(--tema-yerel-eclub-islevsel-metin-10)]" />
                     <div>
-                      <h3 className="text-sm font-extrabold text-amber-900">E-Club üyelik geçişi bekleyenler</h3>
-                      <p className="mt-1 text-[11px] font-semibold leading-5 text-amber-800">Bu kayıtlar henüz aktif değildir. Müşteri mevcut puanı için karar verdiğinde aynı giriş hesabıyla E-Club üyeliği etkinleştirilecektir.</p>
+                      <h3 className="text-sm font-extrabold text-[var(--tema-yerel-eclub-islevsel-metin-31)]">E-Club üyelik geçişi bekleyenler</h3>
+                      <p className="mt-1 text-[11px] font-semibold leading-5 text-[var(--tema-yerel-eclub-islevsel-metin-09)]">Bu kayıtlar henüz aktif değildir. Müşteri mevcut puanı için karar verdiğinde aynı giriş hesabıyla E-Club üyeliği etkinleştirilecektir.</p>
                     </div>
                   </div>
                   <div className="grid gap-2">
                     {gecisTalepleri.map((talep) => (
-                      <div key={talep.gecis_id} className="grid gap-2 rounded-lg border border-amber-200 bg-white px-3 py-2.5 md:grid-cols-[minmax(160px,1fr)_minmax(130px,.7fr)_minmax(190px,1fr)_auto] md:items-center">
-                        <div><strong className="block text-xs text-[#30475f]">{talep.ad} {talep.soyad}</strong><span className="text-[10px] font-semibold text-[#8796a8]">{talep.telefon}</span></div>
-                        <Badge variant="outline" className="w-fit border-amber-200 bg-amber-50 text-amber-800">{KISI_ROL_ETIKETLERI[talep.rol]}</Badge>
-                        <span className="truncate text-xs font-semibold text-[#60758c]">{talep.eposta}</span>
-                        <Badge className="w-fit bg-amber-100 text-amber-800 hover:bg-amber-100">{talep.durum === "puan_kullaniliyor" ? "Puan kullanımı bekleniyor" : "Müşteri kararı bekleniyor"}</Badge>
+                      <div key={talep.gecis_id} className="grid gap-2 rounded-lg border border-[var(--tema-yerel-eclub-islevsel-cizgi-04)] bg-[var(--tema-yerel-eclub-kart-01)] px-3 py-2.5 md:grid-cols-[minmax(160px,1fr)_minmax(130px,.7fr)_minmax(190px,1fr)_auto] md:items-center">
+                        <div><strong className="block text-xs text-[var(--tema-yerel-eclub-ana-metin-13)]">{talep.ad} {talep.soyad}</strong><span className="text-[10px] font-semibold text-[var(--tema-yerel-eclub-yardimci-metin-29)]">{talep.telefon}</span></div>
+                        <Badge variant="outline" className="w-fit border-[var(--tema-yerel-eclub-islevsel-cizgi-04)] bg-[var(--tema-yerel-eclub-islevsel-zemin-07)] text-[var(--tema-yerel-eclub-islevsel-metin-09)]">{KISI_ROL_ETIKETLERI[talep.rol]}</Badge>
+                        <span className="truncate text-xs font-semibold text-[var(--tema-yerel-eclub-yardimci-metin-28)]">{talep.eposta}</span>
+                        <Badge className="w-fit bg-[var(--tema-yerel-eclub-islevsel-zemin-17)] text-[var(--tema-yerel-eclub-islevsel-metin-09)] hover:bg-[var(--tema-yerel-eclub-islevsel-zemin-17)]">{talep.durum === "puan_kullaniliyor" ? "Puan kullanımı bekleniyor" : "Müşteri kararı bekleniyor"}</Badge>
                       </div>
                     ))}
                   </div>
@@ -180,7 +180,7 @@ export function EczaneBlogu({ eczane, kisiler, gecisTalepleri, islemLoading, onL
 
               {kisiFormAcik && (
                 <Dialog.Root open onOpenChange={(open) => { if (!open) { setKisiFormAcik(false); setYeniKisi(BOS_KISI); } }}>
-                  <Dialog.Portal><Dialog.Overlay className="fixed inset-0 z-50 bg-black/30" /><Dialog.Content aria-describedby={undefined} className="fixed left-1/2 top-1/2 z-50 max-h-[85svh] w-[calc(100vw-32px)] max-w-2xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-xl border bg-white p-4">
+                  <Dialog.Portal><Dialog.Overlay className="fixed inset-0 z-50 bg-[var(--tema-yerel-eclub-ortu-01)]/30" /><Dialog.Content aria-describedby={undefined} className="fixed left-1/2 top-1/2 z-50 max-h-[85svh] w-[calc(100vw-32px)] max-w-2xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-xl border bg-[var(--tema-yerel-eclub-kart-01)] p-4">
                   <div className="mb-3"><Dialog.Title className="text-sm font-bold">Yeni kişi bilgileri</Dialog.Title><p className="text-[11px] text-muted-foreground">Kişinin bilgilerini girin. Yeni üyeye şifre oluşturma daveti e-postayla gönderilir.</p></div>
                   <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                     <div><Label>Unvan</Label><Select value={yeniKisi.rol} onValueChange={(rol) => setYeniKisi((form) => ({ ...form, rol: rol as YeniKisiForm["rol"] }))}><SelectTrigger className="w-full"><SelectValue placeholder="Unvan seçin" /></SelectTrigger><SelectContent><SelectItem value="eczaci">Eczacı</SelectItem><SelectItem value="ikinci_eczaci">İkinci Eczacı</SelectItem><SelectItem value="yardimci_eczaci">Yardımcı Eczacı</SelectItem><SelectItem value="eczane_teknisyeni">Eczane Teknisyeni</SelectItem></SelectContent></Select></div>

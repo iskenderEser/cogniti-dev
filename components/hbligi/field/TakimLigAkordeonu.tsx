@@ -159,14 +159,14 @@ export default function TakimLigAkordeonu({
     <section className={`${styles.panel} ${styles.section}`}>
       <div className={styles.sectionHeader}>
         <div>
-          <div className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#71859d]">
+          <div className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[var(--tema-akordiyon-hb-ust-etiket)]">
             3 Kademeli Saha Hiyerarşisi
           </div>
-          <h2 className="text-base font-extrabold text-[#20324c] inline-flex items-center gap-1.5">
+          <h2 className="text-base font-extrabold text-[var(--tema-akordiyon-hb-baslik)] inline-flex items-center gap-1.5">
             <span>T-Club Takımlar Ligi</span>
             <SayfaRehberi anahtar="raporlar-yonetici" className="-translate-y-0.5" />
           </h2>
-          <p className="mt-0.5 text-[11px] font-medium text-[#8190a3]">{aciklama}</p>
+          <p className="mt-0.5 text-[11px] font-medium text-[var(--tema-akordiyon-hb-aciklama)]">{aciklama}</p>
         </div>
         <div className={styles.sectionIcon}><Trophy className="h-4 w-4" /></div>
       </div>
@@ -194,43 +194,43 @@ export default function TakimLigAkordeonu({
                   <tr
                     onClick={() => toggleTakim(takim.takim_id)}
                     className={`cursor-pointer transition-colors ${
-                      isTakimAcik ? 'bg-[#edf6fd]' : 'hover:bg-[#f8fafc]'
+                      isTakimAcik ? 'bg-[var(--tema-akordiyon-hb-takim-acik)]' : 'hover:bg-[var(--tema-akordiyon-hb-takim-hover)]'
                     }`}
                   >
                     <td className="text-center">
                       <span className={`inline-flex h-6 w-6 items-center justify-center rounded-lg text-xs font-black ${
-                        takim.sira === 1 ? 'bg-[#fef3c7] text-[#92400e]' :
-                        takim.sira === 2 ? 'bg-[#f1f5f9] text-[#475569]' :
-                        takim.sira === 3 ? 'bg-[#ffedd5] text-[#9a3412]' : 'bg-[#f8fafc] text-[#64748b]'
+                        takim.sira === 1 ? 'bg-[var(--tema-lig-sira-altin-zemin)] text-[var(--tema-lig-sira-hb-altin)]' :
+                        takim.sira === 2 ? 'bg-[var(--tema-lig-sira-gumus-zemin)] text-[var(--tema-lig-sira-gumus-metin)]' :
+                        takim.sira === 3 ? 'bg-[var(--tema-lig-sira-bronz-zemin)] text-[var(--tema-lig-sira-hb-bronz)]' : 'bg-[var(--tema-akordiyon-ic-soluk-zemin)] text-[var(--tema-akordiyon-ikincil-metin)]'
                       }`}>
                         #{takim.sira}
                       </span>
                     </td>
                     <td>
                       <div className="flex items-center gap-2">
-                        <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#e2f0fc] text-[#237ac8]">
+                        <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--tema-akordiyon-hb-takim-simge-zemin)] text-[var(--tema-akordiyon-eylem)]">
                           <Layers className="h-4 w-4" />
                         </span>
                         <div>
-                          <strong className="block text-sm font-extrabold text-[#10213d]">{takim.takim_adi}</strong>
-                          <span className="text-[11px] font-semibold text-[#8190a3]">{takim.bolgeler.length} Bölge</span>
+                          <strong className="block text-sm font-extrabold text-[var(--tema-akordiyon-cc-baslik)]">{takim.takim_adi}</strong>
+                          <span className="text-[11px] font-semibold text-[var(--tema-akordiyon-hb-aciklama)]">{takim.bolgeler.length} Bölge</span>
                         </div>
                       </div>
                     </td>
-                    <td className="text-center text-xs font-bold text-[#475569]">
-                      <span className="font-extrabold text-[#237ac8]">{takim.aktif_utt}</span> / {takim.toplam_utt} UTT
+                    <td className="text-center text-xs font-bold text-[var(--tema-akordiyon-notr-metin)]">
+                      <span className="font-extrabold text-[var(--tema-akordiyon-eylem)]">{takim.aktif_utt}</span> / {takim.toplam_utt} UTT
                     </td>
-                    <td className="text-right text-xs font-extrabold text-[#16865f]">
+                    <td className="text-right text-xs font-extrabold text-[var(--tema-akordiyon-hb-kazanim)]">
                       +{formatPuan(takim.kazanim)}
                     </td>
-                    <td className="text-right text-xs font-extrabold text-[#d44b40]">
+                    <td className="text-right text-xs font-extrabold text-[var(--tema-akordiyon-hb-kayip)]">
                       −{formatPuan(takim.kayip)}
                     </td>
-                    <td className="text-right text-sm font-black text-[#10213d]">
+                    <td className="text-right text-sm font-black text-[var(--tema-akordiyon-cc-baslik)]">
                       {formatPuan(takim.net)} p
                     </td>
-                    <td className="text-center text-[#8190a3]">
-                      {isTakimAcik ? <ChevronDown className="h-4 w-4 mx-auto text-[#237ac8]" /> : <ChevronRight className="h-4 w-4 mx-auto" />}
+                    <td className="text-center text-[var(--tema-akordiyon-hb-aciklama)]">
+                      {isTakimAcik ? <ChevronDown className="h-4 w-4 mx-auto text-[var(--tema-akordiyon-eylem)]" /> : <ChevronRight className="h-4 w-4 mx-auto" />}
                     </td>
                   </tr>
 
@@ -243,37 +243,37 @@ export default function TakimLigAkordeonu({
                         <tr
                           onClick={() => toggleBolge(bolge.bolge_id)}
                           className={`cursor-pointer transition-colors border-l-4 ${
-                            isBolgeAcik ? 'bg-[#f0fdf4] border-l-[#16865f]' : 'bg-[#f8fafc] border-l-[#237ac8] hover:bg-[#f1f5f9]'
+                            isBolgeAcik ? 'bg-[var(--tema-akordiyon-hb-kazanim-zemin)] border-l-[var(--tema-akordiyon-hb-kazanim)]' : 'bg-[var(--tema-akordiyon-ic-soluk-zemin)] border-l-[var(--tema-akordiyon-eylem)] hover:bg-[var(--tema-akordiyon-hb-utt-hover)]'
                           }`}
                         >
-                          <td className="text-center text-xs font-bold text-[#71859d]">
+                          <td className="text-center text-xs font-bold text-[var(--tema-akordiyon-hb-ust-etiket)]">
                             #{bolge.sira}
                           </td>
                           <td className="pl-6">
                             <div className="flex items-center gap-2">
-                              <span className="flex h-6 w-6 items-center justify-center rounded-md bg-[#e6f4ea] text-[#16865f]">
+                              <span className="flex h-6 w-6 items-center justify-center rounded-md bg-[var(--tema-akordiyon-hb-bolge-acik)] text-[var(--tema-akordiyon-hb-kazanim)]">
                                 <MapPin className="h-3.5 w-3.5" />
                               </span>
                               <div>
-                                <strong className="text-xs font-extrabold text-[#20324c]">{bolge.bolge_adi}</strong>
-                                <span className="ml-2 text-[10px] font-bold text-[#8190a3]">{bolge.toplam_utt} UTT</span>
+                                <strong className="text-xs font-extrabold text-[var(--tema-akordiyon-hb-baslik)]">{bolge.bolge_adi}</strong>
+                                <span className="ml-2 text-[10px] font-bold text-[var(--tema-akordiyon-hb-aciklama)]">{bolge.toplam_utt} UTT</span>
                               </div>
                             </div>
                           </td>
-                          <td className="text-center text-xs font-bold text-[#556981]">
+                          <td className="text-center text-xs font-bold text-[var(--tema-akordiyon-hb-bolge-metni)]">
                             {bolge.aktif_utt} / {bolge.toplam_utt}
                           </td>
-                          <td className="text-right text-xs font-bold text-[#16865f]">
+                          <td className="text-right text-xs font-bold text-[var(--tema-akordiyon-hb-kazanim)]">
                             +{formatPuan(bolge.kazanim)}
                           </td>
-                          <td className="text-right text-xs font-bold text-[#d44b40]">
+                          <td className="text-right text-xs font-bold text-[var(--tema-akordiyon-hb-kayip)]">
                             −{formatPuan(bolge.kayip)}
                           </td>
-                          <td className="text-right text-xs font-extrabold text-[#20324c]">
+                          <td className="text-right text-xs font-extrabold text-[var(--tema-akordiyon-hb-baslik)]">
                             {formatPuan(bolge.net)} p
                           </td>
-                          <td className="text-center text-[#8190a3]">
-                            {isBolgeAcik ? <ChevronDown className="h-3.5 w-3.5 mx-auto text-[#16865f]" /> : <ChevronRight className="h-3.5 w-3.5 mx-auto" />}
+                          <td className="text-center text-[var(--tema-akordiyon-hb-aciklama)]">
+                            {isBolgeAcik ? <ChevronDown className="h-3.5 w-3.5 mx-auto text-[var(--tema-akordiyon-hb-kazanim)]" /> : <ChevronRight className="h-3.5 w-3.5 mx-auto" />}
                           </td>
                         </tr>
 
@@ -285,65 +285,65 @@ export default function TakimLigAkordeonu({
                             <Fragment key={utt.kullanici_id}>
                               <tr
                                 onClick={() => toggleUtt(utt.kullanici_id)}
-                                className={`cursor-pointer transition-colors border-l-4 border-l-[#16865f]/40 ${
-                                  isUttAcik ? 'bg-[#fffbeb]' : 'bg-white hover:bg-[#fafafa]'
+                                className={`cursor-pointer transition-colors border-l-4 border-l-[var(--tema-akordiyon-hb-kazanim)]/40 ${
+                                  isUttAcik ? 'bg-[var(--tema-akordiyon-hb-utt-acik)]' : 'bg-[var(--tema-akordiyon-yuzey)] hover:bg-[var(--tema-akordiyon-hb-bolge-hover)]'
                                 }`}
                               >
-                                <td className="text-center text-[11px] font-semibold text-[#94a3b8]">
+                                <td className="text-center text-[11px] font-semibold text-[var(--tema-akordiyon-hb-soluk-metin)]">
                                   {utt.sira}
                                 </td>
                                 <td className="pl-12">
                                   <div className="flex items-center gap-2">
-                                    <span className="flex h-5 w-5 items-center justify-center rounded bg-[#f1f5f9] text-[#64748b]">
+                                    <span className="flex h-5 w-5 items-center justify-center rounded bg-[var(--tema-akordiyon-notr-simge-zemin)] text-[var(--tema-akordiyon-ikincil-metin)]">
                                       <User className="h-3 w-3" />
                                     </span>
                                     <div>
-                                      <span className="text-xs font-bold text-[#1e293b]">{utt.ad}</span>
-                                      <span className="ml-1.5 text-[10px] font-bold text-[#94a3b8]">{utt.rol.toUpperCase()}</span>
+                                      <span className="text-xs font-bold text-[var(--tema-akordiyon-hb-kisi)]">{utt.ad}</span>
+                                      <span className="ml-1.5 text-[10px] font-bold text-[var(--tema-akordiyon-hb-soluk-metin)]">{utt.rol.toUpperCase()}</span>
                                     </div>
                                   </div>
                                 </td>
-                                <td className="text-center text-[11px] font-medium text-[#64748b]">
+                                <td className="text-center text-[11px] font-medium text-[var(--tema-akordiyon-ikincil-metin)]">
                                   {utt.kazanim + utt.kayip > 0 ? (
-                                    <span className="text-[#16865f] font-bold">Aktif</span>
+                                    <span className="text-[var(--tema-akordiyon-hb-kazanim)] font-bold">Aktif</span>
                                   ) : (
-                                    <span className="text-[#94a3b8]">Pasif</span>
+                                    <span className="text-[var(--tema-akordiyon-hb-soluk-metin)]">Pasif</span>
                                   )}
                                 </td>
-                                <td className="text-right text-xs font-bold text-[#16865f]">
+                                <td className="text-right text-xs font-bold text-[var(--tema-akordiyon-hb-kazanim)]">
                                   +{formatPuan(utt.kazanim)}
                                 </td>
-                                <td className="text-right text-xs font-bold text-[#d44b40]">
+                                <td className="text-right text-xs font-bold text-[var(--tema-akordiyon-hb-kayip)]">
                                   −{formatPuan(utt.kayip)}
                                 </td>
-                                <td className="text-right text-xs font-black text-[#0f172a]">
+                                <td className="text-right text-xs font-black text-[var(--tema-akordiyon-hb-net)]">
                                   {formatPuan(utt.toplam_puan)} p
                                 </td>
-                                <td className="text-center text-[#94a3b8]">
-                                  {isUttAcik ? <ChevronDown className="h-3 w-3 mx-auto text-[#d97706]" /> : <ChevronRight className="h-3 w-3 mx-auto" />}
+                                <td className="text-center text-[var(--tema-akordiyon-hb-soluk-metin)]">
+                                  {isUttAcik ? <ChevronDown className="h-3 w-3 mx-auto text-[var(--tema-akordiyon-hb-oneri-kazanimi)]" /> : <ChevronRight className="h-3 w-3 mx-auto" />}
                                 </td>
                               </tr>
 
                               {/* UTT DETAY KARNESİ */}
                               {isUttAcik && (
                                 <tr>
-                                  <td colSpan={7} className="bg-[#fffdf5] p-3 pl-14">
+                                  <td colSpan={7} className="bg-[var(--tema-akordiyon-hb-karne-zemin)] p-3 pl-14">
                                     <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
-                                      <div className="rounded-lg bg-white p-2 border border-[#fef3c7]">
-                                        <span className="text-[10px] font-bold text-[#92400e]">Video İzleme:</span>
-                                        <strong className="block text-sm font-extrabold text-[#16865f]">+{formatPuan(utt.izleme_puani)} p</strong>
+                                      <div className="rounded-lg bg-[var(--tema-akordiyon-yuzey)] p-2 border border-[var(--tema-akordiyon-hb-karne-cizgi)]">
+                                        <span className="text-[10px] font-bold text-[var(--tema-akordiyon-hb-karne-etiket)]">Video İzleme:</span>
+                                        <strong className="block text-sm font-extrabold text-[var(--tema-akordiyon-hb-kazanim)]">+{formatPuan(utt.izleme_puani)} p</strong>
                                       </div>
-                                      <div className="rounded-lg bg-white p-2 border border-[#fef3c7]">
-                                        <span className="text-[10px] font-bold text-[#92400e]">Doğru Cevap:</span>
-                                        <strong className="block text-sm font-extrabold text-[#16865f]">+{formatPuan(utt.cevaplama_puani)} p</strong>
+                                      <div className="rounded-lg bg-[var(--tema-akordiyon-yuzey)] p-2 border border-[var(--tema-akordiyon-hb-karne-cizgi)]">
+                                        <span className="text-[10px] font-bold text-[var(--tema-akordiyon-hb-karne-etiket)]">Doğru Cevap:</span>
+                                        <strong className="block text-sm font-extrabold text-[var(--tema-akordiyon-hb-kazanim)]">+{formatPuan(utt.cevaplama_puani)} p</strong>
                                       </div>
-                                      <div className="rounded-lg bg-white p-2 border border-[#fef3c7]">
-                                        <span className="text-[10px] font-bold text-[#92400e]">İleri Sarma Kaybı:</span>
-                                        <strong className="block text-sm font-extrabold text-[#d44b40]">−{formatPuan(utt.ileri_sarma_kaybi)} p</strong>
+                                      <div className="rounded-lg bg-[var(--tema-akordiyon-yuzey)] p-2 border border-[var(--tema-akordiyon-hb-karne-cizgi)]">
+                                        <span className="text-[10px] font-bold text-[var(--tema-akordiyon-hb-karne-etiket)]">İleri Sarma Kaybı:</span>
+                                        <strong className="block text-sm font-extrabold text-[var(--tema-akordiyon-hb-kayip)]">−{formatPuan(utt.ileri_sarma_kaybi)} p</strong>
                                       </div>
-                                      <div className="rounded-lg bg-white p-2 border border-[#fef3c7]">
-                                        <span className="text-[10px] font-bold text-[#92400e]">Yanlış Cevap Kaybı:</span>
-                                        <strong className="block text-sm font-extrabold text-[#d44b40]">−{formatPuan(utt.yanlis_cevap_kaybi)} p</strong>
+                                      <div className="rounded-lg bg-[var(--tema-akordiyon-yuzey)] p-2 border border-[var(--tema-akordiyon-hb-karne-cizgi)]">
+                                        <span className="text-[10px] font-bold text-[var(--tema-akordiyon-hb-karne-etiket)]">Yanlış Cevap Kaybı:</span>
+                                        <strong className="block text-sm font-extrabold text-[var(--tema-akordiyon-hb-kayip)]">−{formatPuan(utt.yanlis_cevap_kaybi)} p</strong>
                                       </div>
                                     </div>
                                   </td>

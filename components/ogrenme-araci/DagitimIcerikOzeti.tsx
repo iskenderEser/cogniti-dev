@@ -41,24 +41,24 @@ export function DagitimIcerikOzeti({
           type="button"
           onClick={onOnizle}
           disabled={onizlemeDevreDisi}
-          className="group relative flex h-16 w-28 shrink-0 items-center justify-center overflow-hidden rounded-lg border-0 bg-[#d9e8f7] p-0 text-[#237ac8] transition hover:ring-2 hover:ring-[#78b4e7] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#237ac8] disabled:cursor-not-allowed disabled:opacity-45"
+          className="group relative flex h-16 w-28 shrink-0 items-center justify-center overflow-hidden rounded-lg border-0 bg-[var(--tema-yerel-ortak-sayfa-secim-zemin-01)] p-0 text-[var(--tema-yerel-ortak-sayfa-eylem-metin-06)] transition hover:ring-2 hover:ring-[var(--tema-yerel-ortak-sayfa-odak-02)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--tema-yerel-ortak-sayfa-odak-03)] disabled:cursor-not-allowed disabled:opacity-45"
           aria-label={`${icerik.urun_adi} öğrenme içeriğini önizle`}
         >
           {kapak}
-          <span className="pointer-events-none absolute inset-0 bg-[#10233a]/0 transition group-hover:bg-[#10233a]/10" />
+          <span className="pointer-events-none absolute inset-0 bg-[var(--tema-yerel-ortak-sayfa-eylem-zemin-03)]/0 transition group-hover:bg-[var(--tema-yerel-ortak-sayfa-eylem-zemin-08)]/10" />
         </button>
       ) : (
-        <div className="flex h-16 w-28 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[#d9e8f7] text-[#237ac8]">
+        <div className="flex h-16 w-28 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[var(--tema-yerel-ortak-sayfa-secim-zemin-01)] text-[var(--tema-yerel-ortak-sayfa-eylem-metin-06)]">
           {kapak}
         </div>
       )}
 
       <div className="min-w-0 self-center">
         <div className="flex flex-wrap items-center gap-1.5">
-          <strong className="block truncate text-sm text-[#263e5b]">{icerik.urun_adi}</strong>
+          <strong className="block truncate text-sm text-[var(--tema-yerel-ortak-sayfa-ana-metin-04)]">{icerik.urun_adi}</strong>
           {baslikEki}
         </div>
-        <span className="mt-0.5 block truncate text-[11px] font-semibold text-[#71859d]">
+        <span className="mt-0.5 block truncate text-[11px] font-semibold text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-08)]">
           {icerik.teknik_adi || teknikAdiYedegi}
         </span>
         {altIcerik}

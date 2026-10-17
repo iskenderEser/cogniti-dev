@@ -1,0 +1,1654 @@
+{
+  "tarih": "2026-10-17",
+  "yontem": "Mevcut tarayıcının TypeScript AST/PostCSS çözümlemesiyle salt okunur hızlı kaynak taraması; demo, tema kaynağı ve üretilmiş palet hariç",
+  "taranan_dosya": 872,
+  "hatalar": [],
+  "onceki_207_kaynakta": [
+    {
+      "dosya": "components/cc-ligi/CcLigiBanner.tsx",
+      "adet": 18,
+      "ornekler": [
+        {
+          "satir": 17,
+          "deger": "rgba(0,5,18,0.42)",
+          "tur": "css-renk-fonksiyonu"
+        },
+        {
+          "satir": 17,
+          "deger": "rgba(0,5,18,0)",
+          "tur": "css-renk-fonksiyonu"
+        },
+        {
+          "satir": 17,
+          "deger": "rgba(0,5,18,0)",
+          "tur": "css-renk-fonksiyonu"
+        }
+      ]
+    },
+    {
+      "dosya": "app/eczanem/_components/EczanemMusteriNavbar.tsx",
+      "adet": 17,
+      "ornekler": [
+        {
+          "satir": 79,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 159,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 159,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/navigasyon/HayaletTanburSecici.tsx",
+      "adet": 15,
+      "ornekler": [
+        {
+          "satir": 130,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 138,
+          "deger": "to-transparent",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 159,
+          "deger": "from-transparent",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/admin/eclub/_components/EclubYonetimPaneli.tsx",
+      "adet": 12,
+      "ornekler": [
+        {
+          "satir": 76,
+          "deger": "outline-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 82,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 95,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/eclub/listem/_components/EczaneBlogu.tsx",
+      "adet": 11,
+      "ornekler": [
+        {
+          "satir": 92,
+          "deger": "text-destructive",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 92,
+          "deger": "hover:bg-destructive/10",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 92,
+          "deger": "hover:text-destructive",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/yayin-yonetimi/_components/BekleyenSatir.tsx",
+      "adet": 11,
+      "ornekler": [
+        {
+          "satir": 274,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 313,
+          "deger": "outline-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 334,
+          "deger": "outline-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/login/page.tsx",
+      "adet": 11,
+      "ornekler": [
+        {
+          "satir": 268,
+          "deger": "outline-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 282,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 296,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/hapbi/HapbiChatModal.tsx",
+      "adet": 11,
+      "ornekler": [
+        {
+          "satir": 113,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 113,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 371,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/kullanicilar/page.tsx",
+      "adet": 9,
+      "ornekler": [
+        {
+          "satir": 180,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 180,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 188,
+          "deger": "outline-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/talepler/_components/PodcastTranskriptEditoru.tsx",
+      "adet": 7,
+      "ornekler": [
+        {
+          "satir": 547,
+          "deger": "border-t-transparent",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 568,
+          "deger": "border-t-transparent",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 576,
+          "deger": "border-t-transparent",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/panel/bilgi/bilgi.module.css",
+      "adet": 7,
+      "ornekler": [
+        {
+          "satir": 2,
+          "deger": "#fff",
+          "tur": "hex"
+        },
+        {
+          "satir": 3,
+          "deger": "#343434",
+          "tur": "hex"
+        },
+        {
+          "satir": 4,
+          "deger": "#717478",
+          "tur": "hex"
+        }
+      ]
+    },
+    {
+      "dosya": "components/store/AdresModal.tsx",
+      "adet": 7,
+      "ornekler": [
+        {
+          "satir": 155,
+          "deger": "focus:outline-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 167,
+          "deger": "focus:outline-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 181,
+          "deger": "focus:outline-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/talepler/_components/AksiyonSeridi.tsx",
+      "adet": 6,
+      "ornekler": [
+        {
+          "satir": 71,
+          "deger": "outline-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 92,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 101,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/talepler/_components/UrunTeknikSecici.tsx",
+      "adet": 6,
+      "ornekler": [
+        {
+          "satir": 144,
+          "deger": "outline-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 151,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 168,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/talepler/_components/UreticiRolGorunum.tsx",
+      "adet": 5,
+      "ornekler": [
+        {
+          "satir": 73,
+          "deger": "#2563eb",
+          "tur": "hex"
+        },
+        {
+          "satir": 80,
+          "deger": "#c2410c",
+          "tur": "hex"
+        },
+        {
+          "satir": 87,
+          "deger": "#7c3aed",
+          "tur": "hex"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/yayin-yonetimi/_components/Modallar.tsx",
+      "adet": 5,
+      "ornekler": [
+        {
+          "satir": 75,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 130,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 133,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/admin/store/_components/UrunModal.tsx",
+      "adet": 5,
+      "ornekler": [
+        {
+          "satir": 236,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 236,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 261,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/challenge-club/page.tsx",
+      "adet": 4,
+      "ornekler": [
+        {
+          "satir": 376,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 376,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 547,
+          "deger": "to-transparent",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/admin/_components/TopluTekilSilModal.tsx",
+      "adet": 4,
+      "ornekler": [
+        {
+          "satir": 134,
+          "deger": "#fef2f2",
+          "tur": "hex"
+        },
+        {
+          "satir": 134,
+          "deger": "#fafafa",
+          "tur": "hex"
+        },
+        {
+          "satir": 138,
+          "deger": "#eff6ff",
+          "tur": "hex"
+        }
+      ]
+    },
+    {
+      "dosya": "app/admin/store/_components/KategoriModal.tsx",
+      "adet": 4,
+      "ornekler": [
+        {
+          "satir": 130,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 130,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 191,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/admin/store/_components/SiparisYonetimModal.tsx",
+      "adet": 4,
+      "ornekler": [
+        {
+          "satir": 163,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 163,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 245,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/profil/page.tsx",
+      "adet": 3,
+      "ornekler": [
+        {
+          "satir": 318,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 318,
+          "deger": "outline-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 328,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/raporlar/tclub-uretici/page.tsx",
+      "adet": 3,
+      "ornekler": [
+        {
+          "satir": 119,
+          "deger": "green",
+          "tur": "css-anahtar-sozcuk"
+        },
+        {
+          "satir": 119,
+          "deger": "red",
+          "tur": "css-anahtar-sozcuk"
+        },
+        {
+          "satir": 343,
+          "deger": "focus-visible:outline-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/uretim/gorevler/[gorev_id]/page.tsx",
+      "adet": 3,
+      "ornekler": [
+        {
+          "satir": 481,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 500,
+          "deger": "outline-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 631,
+          "deger": "outline-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/yayin-yonetimi/_components/YayinSatir.tsx",
+      "adet": 3,
+      "ornekler": [
+        {
+          "satir": 102,
+          "deger": "focus-visible:outline-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 114,
+          "deger": "via-transparent",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 346,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/admin/_components/FirmaSidebar.tsx",
+      "adet": 3,
+      "ornekler": [
+        {
+          "satir": 159,
+          "deger": "#ffffff",
+          "tur": "hex"
+        },
+        {
+          "satir": 159,
+          "deger": "#fafafa",
+          "tur": "hex"
+        },
+        {
+          "satir": 161,
+          "deger": "#e5e7eb",
+          "tur": "hex"
+        }
+      ]
+    },
+    {
+      "dosya": "app/eczanem/_components/EczanemVideoRafi.tsx",
+      "adet": 3,
+      "ornekler": [
+        {
+          "satir": 35,
+          "deger": "fill-current",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 171,
+          "deger": "to-transparent",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 197,
+          "deger": "to-transparent",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/hbligi/league/LeadershipPath.tsx",
+      "adet": 3,
+      "ornekler": [
+        {
+          "satir": 13,
+          "deger": "bg-primary/10",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 13,
+          "deger": "text-primary",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 41,
+          "deger": "text-muted-foreground",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/hbligi/producer/ProducerLeaguePage.tsx",
+      "adet": 3,
+      "ornekler": [
+        {
+          "satir": 268,
+          "deger": "blue",
+          "tur": "css-anahtar-sozcuk"
+        },
+        {
+          "satir": 269,
+          "deger": "green",
+          "tur": "css-anahtar-sozcuk"
+        },
+        {
+          "satir": 270,
+          "deger": "red",
+          "tur": "css-anahtar-sozcuk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/liste/ListeArama.tsx",
+      "adet": 3,
+      "ornekler": [
+        {
+          "satir": 57,
+          "deger": "outline-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 64,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 64,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/yayin/katalog/UreticiYayinKatalogu.tsx",
+      "adet": 3,
+      "ornekler": [
+        {
+          "satir": 62,
+          "deger": "to-transparent",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 78,
+          "deger": "to-transparent",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 198,
+          "deger": "focus-visible:outline-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/cc-ligi/page.tsx",
+      "adet": 2,
+      "ornekler": [
+        {
+          "satir": 261,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 261,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/eclub/panel/_components/EclubFirmaVideoKatalogu.tsx",
+      "adet": 2,
+      "ornekler": [
+        {
+          "satir": 209,
+          "deger": "to-transparent",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 233,
+          "deger": "to-transparent",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/raporlar/yonetici/_components/TakimBolgeUttAkordeon.tsx",
+      "adet": 2,
+      "ornekler": [
+        {
+          "satir": 215,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 215,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/talepler/_components/IsListesi.tsx",
+      "adet": 2,
+      "ornekler": [
+        {
+          "satir": 104,
+          "deger": "focus-visible:outline-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 159,
+          "deger": "focus-visible:outline-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/yayin-yonetimi/_components/YayinKumandaPaneli.tsx",
+      "adet": 2,
+      "ornekler": [
+        {
+          "satir": 136,
+          "deger": "focus-visible:outline-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 148,
+          "deger": "bg-current/20",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/SoruSetiFormu.tsx",
+      "adet": 2,
+      "ornekler": [
+        {
+          "satir": 110,
+          "deger": "#16a34a",
+          "tur": "hex"
+        },
+        {
+          "satir": 131,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/ana-sayfa/SahaVideoRaflari.tsx",
+      "adet": 2,
+      "ornekler": [
+        {
+          "satir": 82,
+          "deger": "to-transparent",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 92,
+          "deger": "to-transparent",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/hbligi/league/LeadershipProfile.tsx",
+      "adet": 2,
+      "ornekler": [
+        {
+          "satir": 15,
+          "deger": "#16a34a",
+          "tur": "hex"
+        },
+        {
+          "satir": 15,
+          "deger": "#ea580c",
+          "tur": "hex"
+        }
+      ]
+    },
+    {
+      "dosya": "components/hbligi/league/league.module.css",
+      "adet": 2,
+      "ornekler": [
+        {
+          "satir": 401,
+          "deger": "#000",
+          "tur": "hex"
+        },
+        {
+          "satir": 401,
+          "deger": "#000",
+          "tur": "hex"
+        }
+      ]
+    },
+    {
+      "dosya": "components/talep/TalepKlasorleri.tsx",
+      "adet": 2,
+      "ornekler": [
+        {
+          "satir": 119,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 119,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/video/UttVideoKarti.tsx",
+      "adet": 2,
+      "ornekler": [
+        {
+          "satir": 111,
+          "deger": "to-transparent",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 135,
+          "deger": "to-transparent",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/eclub/eczanelerim/page.tsx",
+      "adet": 1,
+      "ornekler": [
+        {
+          "satir": 190,
+          "deger": "outline-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/eclub/yayinlar/_components/EclubGonderimPaneli.tsx",
+      "adet": 1,
+      "ornekler": [
+        {
+          "satir": 131,
+          "deger": "border-transparent",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/eclub/yayinlar/page.tsx",
+      "adet": 1,
+      "ornekler": [
+        {
+          "satir": 130,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/eczanem/eczane/_components/EczanemSiparisKuyrugu.tsx",
+      "adet": 1,
+      "ornekler": [
+        {
+          "satir": 239,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/eczanem/eczane/uye-yayinlari/page.tsx",
+      "adet": 1,
+      "ornekler": [
+        {
+          "satir": 200,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/eczanem/yayinlar/page.tsx",
+      "adet": 1,
+      "ornekler": [
+        {
+          "satir": 225,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/oneriler/_components/UyeOnerilerGorunumu.tsx",
+      "adet": 1,
+      "ornekler": [
+        {
+          "satir": 157,
+          "deger": "fill-current",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/raporlar/yayin-raporlari/page.tsx",
+      "adet": 1,
+      "ornekler": [
+        {
+          "satir": 316,
+          "deger": "border-transparent",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/raporlar/yonetici/yonetici-report.module.css",
+      "adet": 1,
+      "ornekler": [
+        {
+          "satir": 67,
+          "deger": "#2f8ed8",
+          "tur": "hex"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/store/[urun_id]/page.tsx",
+      "adet": 1,
+      "ornekler": [
+        {
+          "satir": 336,
+          "deger": "focus:outline-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/store/page.tsx",
+      "adet": 1,
+      "ornekler": [
+        {
+          "satir": 400,
+          "deger": "focus:outline-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/talepler/_components/HazirVideoYukleme.tsx",
+      "adet": 1,
+      "ornekler": [
+        {
+          "satir": 76,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/talepler/_components/TalepOnayModal.tsx",
+      "adet": 1,
+      "ornekler": [
+        {
+          "satir": 79,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/talepler/_components/UretimSeridi.tsx",
+      "adet": 1,
+      "ornekler": [
+        {
+          "satir": 128,
+          "deger": "focus-visible:outline-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/talepler/_components/YeniTalepFormV2.tsx",
+      "adet": 1,
+      "ornekler": [
+        {
+          "satir": 311,
+          "deger": "outline-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/(panel)/yayin-yonetimi/_components/Yardimcilar.tsx",
+      "adet": 1,
+      "ornekler": [
+        {
+          "satir": 74,
+          "deger": "focus-visible:outline-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/admin/eczanem/_components/EczanemUyeYonetimi.tsx",
+      "adet": 1,
+      "ornekler": [
+        {
+          "satir": 111,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/eczanem/_components/EclubGecisKarti.tsx",
+      "adet": 1,
+      "ornekler": [
+        {
+          "satir": 185,
+          "deger": "outline-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/eczanem/kapali/page.tsx",
+      "adet": 1,
+      "ornekler": [
+        {
+          "satir": 77,
+          "deger": "outline-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/ana-sayfa/IuAnaSayfa.tsx",
+      "adet": 1,
+      "ornekler": [
+        {
+          "satir": 114,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/ana-sayfa/UreticiAnaSayfa.tsx",
+      "adet": 1,
+      "ornekler": [
+        {
+          "satir": 344,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/auth/SifreBelirlemeFormu.tsx",
+      "adet": 1,
+      "ornekler": [
+        {
+          "satir": 24,
+          "deger": "outline-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/cc-ligi/CcLigiTablosu.tsx",
+      "adet": 1,
+      "ornekler": [
+        {
+          "satir": 127,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/eclub/eclub-performans.module.css",
+      "adet": 1,
+      "ornekler": [
+        {
+          "satir": 7,
+          "deger": "#fff",
+          "tur": "hex"
+        }
+      ]
+    },
+    {
+      "dosya": "components/hbligi/league/CompetitorComparison.tsx",
+      "adet": 1,
+      "ornekler": [
+        {
+          "satir": 94,
+          "deger": "outline-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/ogrenme-araci/DagitimIcerikOzeti.tsx",
+      "adet": 1,
+      "ornekler": [
+        {
+          "satir": 44,
+          "deger": "focus-visible:outline-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/raporlar/OgrenmeAraciPerformansi.tsx",
+      "adet": 1,
+      "ornekler": [
+        {
+          "satir": 336,
+          "deger": "focus-visible:outline-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/soru/IzlemeSoruPaneli.tsx",
+      "adet": 1,
+      "ornekler": [
+        {
+          "satir": 52,
+          "deger": "bg-current/10",
+          "tur": "tailwind-renk"
+        }
+      ]
+    }
+  ],
+  "diger_kaynaklarda": [
+    {
+      "dosya": "components/rehber/SayfaRehberi.tsx",
+      "adet": 57,
+      "ornekler": [
+        {
+          "satir": 144,
+          "deger": "text-blue-600",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 144,
+          "deger": "hover:text-blue-800",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 172,
+          "deger": "text-blue-600",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/rehber/rehber.module.css",
+      "adet": 37,
+      "ornekler": [
+        {
+          "satir": 1,
+          "deger": "#253b36",
+          "tur": "hex"
+        },
+        {
+          "satir": 2,
+          "deger": "#b68650",
+          "tur": "hex"
+        },
+        {
+          "satir": 2,
+          "deger": "#b6865017",
+          "tur": "hex"
+        }
+      ]
+    },
+    {
+      "dosya": "components/ui/badge.tsx",
+      "adet": 25,
+      "ornekler": [
+        {
+          "satir": 8,
+          "deger": "border-transparent",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 8,
+          "deger": "focus-visible:border-ring",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 8,
+          "deger": "focus-visible:ring-ring/50",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/hapbi/HapbiMaskot.tsx",
+      "adet": 21,
+      "ornekler": [
+        {
+          "satir": 197,
+          "deger": "bg-gray-900/95",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 197,
+          "deger": "text-white",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 197,
+          "deger": "border-white/10",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/rehber/UretimVaryantlariModal.tsx",
+      "adet": 21,
+      "ornekler": [
+        {
+          "satir": 35,
+          "deger": "bg-black/45",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 43,
+          "deger": "bg-white",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 43,
+          "deger": "border-gray-200",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/ui/button.tsx",
+      "adet": 19,
+      "ornekler": [
+        {
+          "satir": 8,
+          "deger": "outline-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 8,
+          "deger": "focus-visible:border-ring",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 8,
+          "deger": "focus-visible:ring-ring/50",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/admin/_components/AdminUstBar.tsx",
+      "adet": 10,
+      "ornekler": [
+        {
+          "satir": 43,
+          "deger": "white",
+          "tur": "css-anahtar-sozcuk"
+        },
+        {
+          "satir": 57,
+          "deger": "white",
+          "tur": "css-anahtar-sozcuk"
+        },
+        {
+          "satir": 57,
+          "deger": "rgba(255,255,255,0.10)",
+          "tur": "css-renk-fonksiyonu"
+        }
+      ]
+    },
+    {
+      "dosya": "components/panel/MobilDrawer.tsx",
+      "adet": 9,
+      "ornekler": [
+        {
+          "satir": 126,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 171,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 171,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "adet": 8,
+      "ornekler": [
+        {
+          "satir": 16,
+          "deger": "blue",
+          "tur": "css-anahtar-sozcuk"
+        },
+        {
+          "satir": 56,
+          "deger": "blue",
+          "tur": "css-anahtar-sozcuk"
+        },
+        {
+          "satir": 58,
+          "deger": "blue",
+          "tur": "css-anahtar-sozcuk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/ui/avatar.tsx",
+      "adet": 8,
+      "ornekler": [
+        {
+          "satir": 49,
+          "deger": "bg-muted",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 49,
+          "deger": "text-muted-foreground",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 62,
+          "deger": "bg-primary",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/ui/input.tsx",
+      "adet": 8,
+      "ornekler": [
+        {
+          "satir": 10,
+          "deger": "border-input",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 10,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 10,
+          "deger": "outline-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/challenge-club/CcVideoOynatici.tsx",
+      "adet": 6,
+      "ornekler": [
+        {
+          "satir": 409,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 409,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 573,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/panel/PanelNavbar.tsx",
+      "adet": 6,
+      "ornekler": [
+        {
+          "satir": 131,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 229,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 256,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/izle/VideoOynatici.tsx",
+      "adet": 5,
+      "ornekler": [
+        {
+          "satir": 575,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 575,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 646,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/panel/SolListe.tsx",
+      "adet": 5,
+      "ornekler": [
+        {
+          "satir": 125,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 168,
+          "deger": "border-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 168,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/ui/table.tsx",
+      "adet": 5,
+      "ornekler": [
+        {
+          "satir": 47,
+          "deger": "bg-muted/50",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 60,
+          "deger": "hover:bg-muted/50",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 60,
+          "deger": "has-aria-expanded:bg-muted/50",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/ui/select.tsx",
+      "adet": 4,
+      "ornekler": [
+        {
+          "satir": 44,
+          "deger": "outline-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 44,
+          "deger": "aria-invalid:border-destructive",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 102,
+          "deger": "text-muted-foreground",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/video/VideoCercevesi.tsx",
+      "adet": 4,
+      "ornekler": [
+        {
+          "satir": 157,
+          "deger": "focus-visible:outline-none",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 159,
+          "deger": "fill-current",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 168,
+          "deger": "bg-transparent",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/ui/card.tsx",
+      "adet": 3,
+      "ornekler": [
+        {
+          "satir": 10,
+          "deger": "bg-card",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 10,
+          "deger": "text-card-foreground",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 45,
+          "deger": "text-muted-foreground",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/hbligi/league/LeaguePage.tsx",
+      "adet": 2,
+      "ornekler": [
+        {
+          "satir": 75,
+          "deger": "text-foreground/80",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 76,
+          "deger": "text-muted-foreground",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/rehber/YuruyenRehber.tsx",
+      "adet": 2,
+      "ornekler": [
+        {
+          "satir": 208,
+          "deger": "#a16a35",
+          "tur": "hex"
+        },
+        {
+          "satir": 209,
+          "deger": "#a16a35",
+          "tur": "hex"
+        }
+      ]
+    },
+    {
+      "dosya": "components/ui/progress.tsx",
+      "adet": 2,
+      "ornekler": [
+        {
+          "satir": 17,
+          "deger": "bg-primary/20",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 24,
+          "deger": "bg-primary",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/yayin/YayinKarti.tsx",
+      "adet": 2,
+      "ornekler": [
+        {
+          "satir": 220,
+          "deger": "border-transparent",
+          "tur": "tailwind-renk"
+        },
+        {
+          "satir": 324,
+          "deger": "fill-current",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/admin/eclub/_components/EclubBannerYonetimi.tsx",
+      "adet": 1,
+      "ornekler": [
+        {
+          "satir": 143,
+          "deger": "white",
+          "tur": "css-anahtar-sozcuk"
+        }
+      ]
+    },
+    {
+      "dosya": "app/eczanem/_components/EczanemVideoOynatici.tsx",
+      "adet": 1,
+      "ornekler": [
+        {
+          "satir": 288,
+          "deger": "hover:bg-transparent",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/ogrenme-araci/PodcastOynatici.tsx",
+      "adet": 1,
+      "ornekler": [
+        {
+          "satir": 147,
+          "deger": "outline-none",
+          "tur": "tailwind-renk"
+        }
+      ]
+    },
+    {
+      "dosya": "components/ui/alert-dialog.tsx",
+      "adet": 1,
+      "ornekler": [
+        {
+          "satir": 22,
+          "deger": "text-muted-foreground",
+          "tur": "tailwind-renk"
+        }
+      ]
+    }
+  ],
+  "gorsel_kontrol": "Gerçek rol oturumları ve yeşil görünüm açık; bu tarama görsel onay değildir",
+  "sonuc": "Kapanış tamamlandı sayılmaz; adayların kullanım amaçları ayrılmalıdır"
+}

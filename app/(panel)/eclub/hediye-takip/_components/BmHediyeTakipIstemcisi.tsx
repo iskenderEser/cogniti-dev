@@ -25,11 +25,11 @@ export default function BmHediyeTakipIstemcisi({ rol = "bm", ilkTakipTuru = "cek
   const [siparisStatlari, setSiparisStatlari] = useState<SiparisTakipStatlari>();
 
   return (
-    <div className="min-h-full overflow-x-hidden bg-gray-50" style={{ fontFamily: "'Nunito', sans-serif" }}>
+    <div className="min-h-full overflow-x-hidden bg-[var(--tema-yerel-eclub-sayfa-zemini-02)]" style={{ fontFamily: "'Nunito', sans-serif" }}>
       <main className="mx-auto flex max-w-[1480px] flex-col gap-5 px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
         <header>
-          <h1 className="text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]">Hediye Takibi</h1>
-          <p className="mt-1 max-w-3xl text-sm leading-5 text-[#6b7f9b]">{rol === "tm" ? "Takımınızdaki UTT’lerin hediye çeki ve sipariş süreçlerini takip edin." : "Bölgenizdeki UTT’lerin hediye çeki ve sipariş süreçlerini takip edin."}</p>
+          <h1 className="text-2xl font-extrabold tracking-[-0.025em] text-[var(--tema-yerel-eclub-ana-metin-01)] md:text-[28px]">Hediye Takibi</h1>
+          <p className="mt-1 max-w-3xl text-sm leading-5 text-[var(--tema-yerel-eclub-yardimci-metin-01)]">{rol === "tm" ? "Takımınızdaki UTT’lerin hediye çeki ve sipariş süreçlerini takip edin." : "Bölgenizdeki UTT’lerin hediye çeki ve sipariş süreçlerini takip edin."}</p>
         </header>
 
         <TakipStatKartlari takipTuru={takipTuru} cekStatlari={cekStatlari} siparisStatlari={siparisStatlari} />
@@ -133,7 +133,7 @@ function BmCekTakibi({ rol, ilkDurum, uttId, onUttDegistir, uttler, onUttler, on
   useEffect(() => { void yukle(0, false); }, [yukle, yenilemeAnahtari]);
 
   return <div className="grid min-w-0 grid-cols-1 gap-4">
-    {islemHatasi && <p role="alert" className="text-sm text-red-700">{islemHatasi}</p>}
+    {islemHatasi && <p role="alert" className="text-sm text-[var(--tema-yerel-eclub-islevsel-metin-06)]">{islemHatasi}</p>}
     <CekTakipFiltreleri deger={filtreler} secenekler={veri?.filtre_secenekleri ?? BOS_CEK_SECENEKLER} onDegistir={setFiltreler} uttler={uttler} uttId={uttId} onUttDegistir={onUttDegistir} />
     <CekTakipListesi
       talepler={veri?.talepler ?? []} yukleniyor={yukleniyor} hata={hata}
@@ -204,7 +204,7 @@ function BmSiparisTakibi({ rol, ilkDurum, uttId, onUttDegistir, uttler, onUttler
 
   return <div className="grid min-w-0 grid-cols-1 gap-4">
     <SiparisTakipFiltreleri deger={filtreler} secenekler={secenekler} onDegistir={setFiltreler} uttler={uttler} uttId={uttId} onUttDegistir={onUttDegistir} />
-    {veri?.bm_onay_hazir === false && <p role="status" className="text-sm text-[#71859d]">BM sipariş onayı henüz kullanıma açılmadı.</p>}
+    {veri?.bm_onay_hazir === false && <p role="status" className="text-sm text-[var(--tema-yerel-eclub-yardimci-metin-11)]">BM sipariş onayı henüz kullanıma açılmadı.</p>}
     <SiparisTakipListesi
       talepler={veri?.talepler ?? []} yukleniyor={yukleniyor} hata={hata}
       filtreVar={Object.values(filtreler).some(Boolean) || Boolean(uttId)} dahaVar={veri?.sayfalama.sonraki_kayit_var_mi ?? false}

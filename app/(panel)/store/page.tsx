@@ -35,8 +35,8 @@ function StatKarti({
   etiket,
   deger,
   detay,
-  renk = "#237ac8",
-  zemin = "#edf6fd",
+  renk = "var(--tema-yerel-magaza-eylem-metin-01)",
+  zemin = "var(--tema-yerel-magaza-secim-zemin-04)",
 }: {
   ikon: React.ComponentType<{ className?: string; size?: number }>;
   etiket: string;
@@ -47,13 +47,13 @@ function StatKarti({
 }) {
   return (
     <article
-      className="flex items-start justify-between gap-3 rounded-2xl border border-[#dfe7f1] bg-white p-4 shadow-[0_6px_18px_rgba(31,55,90,0.035)]"
+      className="flex items-start justify-between gap-3 rounded-2xl border border-[var(--tema-yerel-magaza-cizgi-01)] bg-[var(--tema-yerel-magaza-kart-01)] p-4 shadow-[0_6px_18px_var(--tema-yerel-magaza-golge-01)]"
       style={{ borderLeft: `4px solid ${renk}` }}
     >
       <div className="min-w-0">
-        <span className="text-[10px] font-extrabold uppercase tracking-[0.08em] text-[#7d8fa5]">{etiket}</span>
-        <strong className="mt-1 block text-2xl font-black tracking-tight text-[#1e3450]">{deger}</strong>
-        <span className="mt-1 block truncate text-xs font-semibold text-[#8292a7]">{detay}</span>
+        <span className="text-[10px] font-extrabold uppercase tracking-[0.08em] text-[var(--tema-yerel-magaza-yardimci-metin-14)]">{etiket}</span>
+        <strong className="mt-1 block text-2xl font-black tracking-tight text-[var(--tema-yerel-magaza-ana-metin-05)]">{deger}</strong>
+        <span className="mt-1 block truncate text-xs font-semibold text-[var(--tema-yerel-magaza-yardimci-metin-15)]">{detay}</span>
       </div>
       <span
         className="flex size-10 shrink-0 items-center justify-center rounded-xl"
@@ -82,10 +82,10 @@ function UrunKarti({
 
   return (
     <article
-      className="group flex flex-col overflow-hidden rounded-2xl border border-[#dfe7f1] bg-white text-left shadow-[0_6px_18px_rgba(31,55,90,0.035)] transition-all duration-200 hover:-translate-y-1 hover:border-[#b7d3f2] hover:shadow-[0_12px_28px_rgba(31,55,90,0.08)]"
+      className="group flex flex-col overflow-hidden rounded-2xl border border-[var(--tema-yerel-magaza-cizgi-01)] bg-[var(--tema-yerel-magaza-kart-01)] text-left shadow-[0_6px_18px_var(--tema-yerel-magaza-golge-01)] transition-all duration-200 hover:-translate-y-1 hover:border-[var(--tema-yerel-magaza-cizgi-10)] hover:shadow-[0_12px_28px_var(--tema-yerel-magaza-golge-02)]"
     >
       {/* Görsel Alanı */}
-      <div className="relative aspect-[4/3] w-full overflow-hidden border-b border-[#edf1f5] bg-[#f8fafc] p-3">
+      <div className="relative aspect-[4/3] w-full overflow-hidden border-b border-[var(--tema-yerel-magaza-cizgi-09)] bg-[var(--tema-yerel-magaza-sayfa-zemini-02)] p-3">
         {urun.gorsel_url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -94,7 +94,7 @@ function UrunKarti({
             className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
           />
         ) : (
-          <div className="flex h-full w-full flex-col items-center justify-center gap-1.5 text-[#9aa9b9]">
+          <div className="flex h-full w-full flex-col items-center justify-center gap-1.5 text-[var(--tema-yerel-magaza-yardimci-metin-05)]">
             <Package size={32} strokeWidth={1.5} />
             <span className="text-[10px] font-bold">Görsel Yok</span>
           </div>
@@ -103,15 +103,15 @@ function UrunKarti({
         {/* Stok Rozetleri */}
         <div className="absolute right-2.5 top-2.5 flex flex-col items-end gap-1">
           {stokYok ? (
-            <span className="rounded-full bg-[#b42318] px-2.5 py-0.5 text-[9px] font-black text-white shadow-sm">
+            <span className="rounded-full bg-[var(--tema-yerel-magaza-islevsel-zemin-01)] px-2.5 py-0.5 text-[9px] font-black text-[var(--tema-yerel-magaza-ters-metin-01)] shadow-sm">
               Tükendi
             </span>
           ) : stokAz ? (
-            <span className="rounded-full bg-[#fef3c7] px-2.5 py-0.5 text-[9px] font-extrabold text-[#92400e] shadow-sm">
+            <span className="rounded-full bg-[var(--tema-yerel-magaza-islevsel-zemin-02)] px-2.5 py-0.5 text-[9px] font-extrabold text-[var(--tema-yerel-magaza-islevsel-metin-01)] shadow-sm">
               Son {urun.stok} Ürün
             </span>
           ) : (
-            <span className="rounded-full bg-[#ecfdf3] px-2.5 py-0.5 text-[9px] font-extrabold text-[#027a48] shadow-sm">
+            <span className="rounded-full bg-[var(--tema-yerel-magaza-islevsel-zemin-03)] px-2.5 py-0.5 text-[9px] font-extrabold text-[var(--tema-yerel-magaza-islevsel-metin-02)] shadow-sm">
               Stokta
             </span>
           )}
@@ -121,20 +121,20 @@ function UrunKarti({
       {/* İçerik Alanı */}
       <div className="flex flex-1 flex-col justify-between p-4">
         <div className="min-w-0">
-          <h3 className="line-clamp-1 text-sm font-extrabold text-[#1a2d42]" title={urun.ad}>
+          <h3 className="line-clamp-1 text-sm font-extrabold text-[var(--tema-yerel-magaza-ana-metin-02)]" title={urun.ad}>
             {urun.ad}
           </h3>
           {urun.aciklama && (
-            <p className="mt-1 line-clamp-2 text-xs font-semibold leading-relaxed text-[#7c8ea5]">
+            <p className="mt-1 line-clamp-2 text-xs font-semibold leading-relaxed text-[var(--tema-yerel-magaza-yardimci-metin-16)]">
               {urun.aciklama}
             </p>
           )}
         </div>
 
-        <div className="mt-4 border-t border-[#edf1f5] pt-3">
+        <div className="mt-4 border-t border-[var(--tema-yerel-magaza-cizgi-09)] pt-3">
           <div className="mb-3 flex items-baseline justify-between gap-2">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#8292a7]">Puan Değeri</span>
-            <strong className={`text-base font-black ${yetersizBakiye ? "text-[#7a8da5]" : "text-[#16865f]"}`}>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--tema-yerel-magaza-yardimci-metin-15)]">Puan Değeri</span>
+            <strong className={`text-base font-black ${yetersizBakiye ? "text-[var(--tema-yerel-magaza-yardimci-metin-01)]" : "text-[var(--tema-yerel-magaza-islevsel-metin-03)]"}`}>
               {urun.puan_fiyati.toLocaleString("tr-TR")} Puan
             </strong>
           </div>
@@ -145,10 +145,10 @@ function UrunKarti({
             disabled={stokYok}
             className={`flex w-full items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-xs font-extrabold transition-colors ${
               stokYok
-                ? "cursor-not-allowed bg-[#e2e8f0] text-[#94a3b8]"
+                ? "cursor-not-allowed bg-[var(--tema-yerel-magaza-secim-zemin-03)] text-[var(--tema-yerel-magaza-yardimci-metin-09)]"
                 : yetersizBakiye
-                ? "bg-[#edf4fc] text-[#237ac8] hover:bg-[#dfeefb]"
-                : "bg-[#237ac8] text-white shadow-sm hover:bg-[#1d69aa]"
+                ? "bg-[var(--tema-yerel-magaza-secim-zemin-05)] text-[var(--tema-yerel-magaza-eylem-metin-01)] hover:bg-[var(--tema-yerel-magaza-secim-zemin-06)]"
+                : "bg-[var(--tema-yerel-magaza-eylem-zemin-01)] text-[var(--tema-yerel-magaza-ters-metin-01)] shadow-sm hover:bg-[var(--tema-yerel-magaza-eylem-zemin-02)]"
             }`}
           >
             {stokYok ? "Tükendi" : storeAcik ? "İncele & Sipariş Ver" : "İncele"}
@@ -263,9 +263,9 @@ export default function StorePage() {
 
   if (authYukleniyor || !yetkili) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#f7f9fc]">
+      <div className="flex min-h-screen items-center justify-center bg-[var(--tema-yerel-magaza-sayfa-zemini-01)]">
         <svg
-          className="h-6 w-6 animate-spin text-[#7a8da5]"
+          className="h-6 w-6 animate-spin text-[var(--tema-yerel-magaza-yardimci-metin-01)]"
           fill="none"
           viewBox="0 0 24 24"
         >
@@ -277,20 +277,20 @@ export default function StorePage() {
   }
 
   return (
-    <div className="min-h-full bg-[#f7f9fc] pb-20 md:pb-8" style={{ fontFamily: "'Nunito', sans-serif" }}>
+    <div className="min-h-full bg-[var(--tema-yerel-magaza-sayfa-zemini-01)] pb-20 md:pb-8" style={{ fontFamily: "'Nunito', sans-serif" }}>
       <HataMesajiContainer mesajlar={mesajlar} />
 
       <main className="mx-auto flex w-full max-w-[1480px] flex-col gap-5 px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
         {/* Header */}
         <SayfaYenileBasligi className="flex flex-wrap items-end justify-between gap-4"
           baslik={<div className="inline-flex items-center">
-            <h1 className="mt-1 text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]">
+            <h1 className="mt-1 text-2xl font-extrabold tracking-[-0.025em] text-[var(--tema-yerel-magaza-ana-metin-06)] md:text-[28px]">
               HBStore
             </h1>
             <SayfaRehberi anahtar="store-magaza" className="ml-1.5 -translate-y-1.5" />
           </div>}
 
-          aciklama={<><p className="mt-1 max-w-3xl text-xs font-semibold leading-5 text-[#7b8da3] md:text-sm">
+          aciklama={<><p className="mt-1 max-w-3xl text-xs font-semibold leading-5 text-[var(--tema-yerel-magaza-yardimci-metin-12)] md:text-sm">
             Kazandığınız puanlarla siparişlerinizi ücretsiz olarak verebilirsiniz
           </p></>}
           aksiyon={<YenileButonu yenileniyor={yenileniyor} onYenile={tumunuYenile} />}
@@ -298,13 +298,13 @@ export default function StorePage() {
 
             <Link
               href="/store/siparislerim"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-[#d7e1ec] bg-white px-3.5 py-2 text-xs font-extrabold text-[#45627f] shadow-sm transition-colors hover:bg-[#f6f9fc]"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--tema-yerel-magaza-cizgi-07)] bg-[var(--tema-yerel-magaza-kart-01)] px-3.5 py-2 text-xs font-extrabold text-[var(--tema-yerel-magaza-ana-metin-07)] shadow-sm transition-colors hover:bg-[var(--tema-yerel-magaza-sayfa-zemini-05)]"
             >
               <Package size={14} /> Siparişlerim
             </Link>
             <Link
               href="/store/adreslerim"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-[#d7e1ec] bg-white px-3.5 py-2 text-xs font-extrabold text-[#45627f] shadow-sm transition-colors hover:bg-[#f6f9fc]"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--tema-yerel-magaza-cizgi-07)] bg-[var(--tema-yerel-magaza-kart-01)] px-3.5 py-2 text-xs font-extrabold text-[var(--tema-yerel-magaza-ana-metin-07)] shadow-sm transition-colors hover:bg-[var(--tema-yerel-magaza-sayfa-zemini-05)]"
             >
               <MapPin size={14} /> Adreslerim
             </Link>
@@ -313,46 +313,46 @@ export default function StorePage() {
 
         {/* HBStore Günleri Takvim Durumu Bannerı */}
         {takvim && (takvim.acik ? (
-          <section aria-label="HBStore Günleri Durumu" className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#a6f4c5] bg-[#ecfdf3] px-4 py-3 shadow-[0_4px_14px_rgba(18,183,106,0.06)]">
+          <section aria-label="HBStore Günleri Durumu" className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[var(--tema-yerel-magaza-islevsel-cizgi-06)] bg-[var(--tema-yerel-magaza-islevsel-zemin-03)] px-4 py-3 shadow-[0_4px_14px_var(--tema-yerel-magaza-islevsel-golge-01)]">
             <div className="flex items-center gap-2.5">
-              <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-[#d1fadf] text-[#027a48]">
+              <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-[var(--tema-yerel-magaza-islevsel-zemin-11)] text-[var(--tema-yerel-magaza-islevsel-metin-02)]">
                 <Sparkles size={16} />
               </span>
               <div>
                 <div className="flex items-center gap-2">
-                  <strong className="text-xs font-black text-[#027a48]">HBStore Günleri Açık</strong>
-                  <span className="rounded-full bg-[#12b76a] px-2 py-0.5 text-[10px] font-extrabold text-white shadow-sm">
+                  <strong className="text-xs font-black text-[var(--tema-yerel-magaza-islevsel-metin-02)]">HBStore Günleri Açık</strong>
+                  <span className="rounded-full bg-[var(--tema-yerel-magaza-islevsel-zemin-12)] px-2 py-0.5 text-[10px] font-extrabold text-[var(--tema-yerel-magaza-ters-metin-01)] shadow-sm">
                     Sipariş Verilebilir
                   </span>
                 </div>
-                <p className="mt-0.5 text-xs font-semibold text-[#05603a]">
+                <p className="mt-0.5 text-xs font-semibold text-[var(--tema-yerel-magaza-islevsel-metin-10)]">
                   Dönem: {takvim.aktifPencere?.etiket} · Kapanışa son <strong>{takvim.kalanSureMetni}</strong> kaldı.
                 </p>
               </div>
             </div>
-            <div className="text-right text-[11px] font-bold text-[#05603a]">
+            <div className="text-right text-[11px] font-bold text-[var(--tema-yerel-magaza-islevsel-metin-10)]">
               Kapanış: {takvim.kapanisMetni}
             </div>
           </section>
         ) : (
-          <section aria-label="HBStore Günleri Durumu" className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#fed7aa] bg-[#fffaf5] px-4 py-3 shadow-[0_4px_14px_rgba(249,115,22,0.05)]">
+          <section aria-label="HBStore Günleri Durumu" className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[var(--tema-yerel-magaza-islevsel-cizgi-02)] bg-[var(--tema-yerel-magaza-islevsel-zemin-04)] px-4 py-3 shadow-[0_4px_14px_var(--tema-yerel-magaza-islevsel-golge-02)]">
             <div className="flex items-center gap-2.5">
-              <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-[#ffedd5] text-[#c2410c]">
+              <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-[var(--tema-yerel-magaza-islevsel-zemin-13)] text-[var(--tema-yerel-magaza-islevsel-metin-06)]">
                 <ShoppingBag size={16} />
               </span>
               <div>
                 <div className="flex items-center gap-2">
-                  <strong className="text-xs font-black text-[#9a3412]">HBStore Günleri Kapalı</strong>
-                  <span className="rounded-full bg-[#f97316] px-2 py-0.5 text-[10px] font-extrabold text-white shadow-sm">
+                  <strong className="text-xs font-black text-[var(--tema-yerel-magaza-islevsel-metin-05)]">HBStore Günleri Kapalı</strong>
+                  <span className="rounded-full bg-[var(--tema-yerel-magaza-islevsel-zemin-14)] px-2 py-0.5 text-[10px] font-extrabold text-[var(--tema-yerel-magaza-ters-metin-01)] shadow-sm">
                     Sonraki: {takvim.sonrakiDonemEtiketi}
                   </span>
                 </div>
-                <p className="mt-0.5 text-xs font-semibold text-[#7c2d12]">
+                <p className="mt-0.5 text-xs font-semibold text-[var(--tema-yerel-magaza-islevsel-metin-07)]">
                   Siparişler yalnızca HBStore Günleri&apos;nde alınır. Açılışa <strong>{takvim.kalanSureMetni}</strong> kaldı. Ürünleri inceleyebilirsiniz.
                 </p>
               </div>
             </div>
-            <div className="text-right text-[11px] font-bold text-[#9a3412]">
+            <div className="text-right text-[11px] font-bold text-[var(--tema-yerel-magaza-islevsel-metin-05)]">
               Açılış: {takvim.acilisMetni}
             </div>
           </section>
@@ -365,43 +365,43 @@ export default function StorePage() {
             etiket={storeAcik ? "Kullanılabilir Puanım" : "Biriken Puanım"}
             deger={bakiye !== null ? `${bakiye.toLocaleString("tr-TR")} P` : "—"}
             detay={takvim?.bakiyeDonemEtiketi ?? (storeAcik ? "Sipariş için harcanabilir bakiye" : "Sonraki dönem için biriken puan")}
-            renk="#16865f"
-            zemin="#edf9f4"
+            renk="var(--tema-yerel-magaza-islevsel-metin-03)"
+            zemin="var(--tema-yerel-magaza-islevsel-zemin-15)"
           />
           <StatKarti
             ikon={ShoppingBag}
             etiket="HBStore Ürünleri"
             deger={urunler.length}
             detay="Aktif siparişe açık ürün çeşidi"
-            renk="#237ac8"
-            zemin="#edf6fd"
+            renk="var(--tema-yerel-magaza-eylem-metin-01)"
+            zemin="var(--tema-yerel-magaza-secim-zemin-04)"
           />
           <StatKarti
             ikon={Layers3}
             etiket="Kategori Çeşitliliği"
             deger={kategoriler.length}
             detay="Farklı ürün grubu"
-            renk="#6550b9"
-            zemin="#f2effc"
+            renk="var(--tema-yerel-magaza-islevsel-metin-11)"
+            zemin="var(--tema-yerel-magaza-islevsel-zemin-16)"
           />
         </section>
 
         {/* Arama ve Kategori Filtre Alanı */}
-        <section className="flex flex-col gap-3 rounded-2xl border border-[#dfe7f1] bg-white p-4 shadow-[0_6px_18px_rgba(31,55,90,0.035)]">
+        <section className="flex flex-col gap-3 rounded-2xl border border-[var(--tema-yerel-magaza-cizgi-01)] bg-[var(--tema-yerel-magaza-kart-01)] p-4 shadow-[0_6px_18px_var(--tema-yerel-magaza-golge-01)]">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             {/* Arama Çubuğu */}
             <div className="relative w-full max-w-sm">
-              <Search className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[#8fa0b5]" />
+              <Search className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[var(--tema-yerel-magaza-yardimci-metin-17)]" />
               <input
                 type="text"
                 value={arama}
                 onChange={(e) => setArama(e.target.value)}
                 placeholder="Ürün adı ara..."
-                className="w-full rounded-xl border border-[#dce5ee] bg-[#f8fafc] py-2 pl-9 pr-3.5 text-xs font-bold text-[#1f334d] placeholder-[#8fa0b5] transition-colors focus:border-[#237ac8] focus:bg-white focus:outline-none"
+                className="w-full rounded-xl border border-[var(--tema-yerel-magaza-cizgi-03)] bg-[var(--tema-yerel-magaza-sayfa-zemini-02)] py-2 pl-9 pr-3.5 text-xs font-bold text-[var(--tema-yerel-magaza-ana-metin-04)] placeholder-[var(--tema-yerel-magaza-yardimci-metin-17)] transition-colors focus:border-[var(--tema-yerel-magaza-cizgi-04)] focus:bg-[var(--tema-yerel-magaza-kart-01)] focus:outline-none"
               />
             </div>
 
-            <span className="text-xs font-extrabold text-[#7b8da5]">
+            <span className="text-xs font-extrabold text-[var(--tema-yerel-magaza-yardimci-metin-08)]">
               {filtrelenmisUrunler.length} ürün listeleniyor
             </span>
           </div>
@@ -421,24 +421,24 @@ export default function StorePage() {
 
         {/* Ürünler Grid */}
         {yukleniyor ? (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-[#dfe7f1] bg-white py-16 text-center shadow-[0_6px_18px_rgba(31,55,90,0.035)]">
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-[var(--tema-yerel-magaza-cizgi-01)] bg-[var(--tema-yerel-magaza-kart-01)] py-16 text-center shadow-[0_6px_18px_var(--tema-yerel-magaza-golge-01)]">
             <svg
-              className="h-7 w-7 animate-spin text-[#237ac8]"
+              className="h-7 w-7 animate-spin text-[var(--tema-yerel-magaza-eylem-metin-01)]"
               fill="none"
               viewBox="0 0 24 24"
             >
               <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
             </svg>
-            <p className="mt-3 text-xs font-extrabold text-[#627791]">Ürünler yükleniyor...</p>
+            <p className="mt-3 text-xs font-extrabold text-[var(--tema-yerel-magaza-yardimci-metin-03)]">Ürünler yükleniyor...</p>
           </div>
         ) : filtrelenmisUrunler.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-[#dfe7f1] bg-white py-16 text-center shadow-[0_6px_18px_rgba(31,55,90,0.035)]">
-            <span className="flex size-12 items-center justify-center rounded-2xl bg-[#f0f4f9] text-[#7a8da5]">
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-[var(--tema-yerel-magaza-cizgi-01)] bg-[var(--tema-yerel-magaza-kart-01)] py-16 text-center shadow-[0_6px_18px_var(--tema-yerel-magaza-golge-01)]">
+            <span className="flex size-12 items-center justify-center rounded-2xl bg-[var(--tema-yerel-magaza-sayfa-zemini-06)] text-[var(--tema-yerel-magaza-yardimci-metin-01)]">
               <Inbox size={24} />
             </span>
-            <h3 className="mt-3 text-sm font-extrabold text-[#203653]">Ürün bulunamadı</h3>
-            <p className="mt-1 max-w-sm text-xs font-semibold text-[#7b8da5]">
+            <h3 className="mt-3 text-sm font-extrabold text-[var(--tema-yerel-magaza-ana-metin-01)]">Ürün bulunamadı</h3>
+            <p className="mt-1 max-w-sm text-xs font-semibold text-[var(--tema-yerel-magaza-yardimci-metin-08)]">
               {arama.trim()
                 ? `"${arama}" aramasına uygun ürün bulunamadı.`
                 : "Seçtiğiniz kategoride şu an aktif ürün bulunmuyor."}

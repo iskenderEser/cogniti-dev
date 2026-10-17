@@ -20,9 +20,9 @@ export function SifreBelirlemeFormu({ baslik, buton, onKaydet }: {
     catch (e) { setHata(e instanceof Error ? e.message : "Şifre kaydedilemedi."); }
     finally { setIslem(false); }
   }}>
-    <div><h2 className="mb-1 text-base font-bold text-gray-900">{baslik}</h2><p className="text-xs leading-relaxed text-gray-500">Hesabınız için en az 6 karakterlik bir şifre belirleyin.</p></div>
-    {[{ label: "Yeni şifre", value: sifre, setter: setSifre }, { label: "Yeni şifre (tekrar)", value: tekrar, setter: setTekrar }].map(({ label, value, setter }) => <label key={label} className="block text-xs font-semibold text-gray-500">{label}<input type="password" autoComplete="new-password" required minLength={6} maxLength={128} disabled={islem} value={value} onChange={(e) => setter(e.target.value)} className="mt-1.5 w-full rounded-xl border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-gray-900 outline-none focus:border-[#bc2d0d]" /></label>)}
-    {hata && <p role="alert" className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs text-[#bc2d0d]">{hata}</p>}
-    <button type="submit" disabled={islem} className="w-full rounded-xl bg-[#bc2d0d] py-3 text-sm font-bold text-white disabled:opacity-60">{islem ? "Kaydediliyor…" : buton}</button>
+    <div><h2 className="mb-1 text-base font-bold text-[var(--tema-yerel-giris-ana-metin-03)]">{baslik}</h2><p className="text-xs leading-relaxed text-[var(--tema-yerel-giris-yardimci-metin-01)]">Hesabınız için en az 6 karakterlik bir şifre belirleyin.</p></div>
+    {[{ label: "Yeni şifre", value: sifre, setter: setSifre }, { label: "Yeni şifre (tekrar)", value: tekrar, setter: setTekrar }].map(({ label, value, setter }) => <label key={label} className="block text-xs font-semibold text-[var(--tema-yerel-giris-yardimci-metin-01)]">{label}<input type="password" autoComplete="new-password" required minLength={6} maxLength={128} disabled={islem} value={value} onChange={(e) => setter(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[var(--tema-yerel-giris-cizgi-03)] bg-[var(--tema-yerel-giris-kart-01)] px-3.5 py-2.5 text-sm text-[var(--tema-yerel-giris-ana-metin-03)] outline-none focus:border-[var(--tema-yerel-giris-vurgu-cizgi-01)]" /></label>)}
+    {hata && <p role="alert" className="rounded-xl border border-[var(--tema-yerel-giris-islevsel-cizgi-01)] bg-[var(--tema-yerel-giris-islevsel-zemin-01)] px-3 py-2 text-xs text-[var(--tema-yerel-giris-islevsel-metin-02)]">{hata}</p>}
+    <button type="submit" disabled={islem} className="w-full rounded-xl bg-[var(--tema-yerel-giris-vurgu-zemin-01)] py-3 text-sm font-bold text-[var(--tema-yerel-giris-ters-metin-01)] disabled:opacity-60">{islem ? "Kaydediliyor…" : buton}</button>
   </form>;
 }

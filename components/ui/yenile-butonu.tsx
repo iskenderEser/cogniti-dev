@@ -31,7 +31,7 @@ export function YenileButonu({
       aria-label={yenileniyor ? "Yenileniyor…" : etiket}
       title={yenileniyor ? "Yenileniyor…" : etiket}
       onClick={() => void onYenile()}
-      className={cn("hb-yenile-butonu border-[#d8e3ee] bg-white font-bold text-[#58708b] hover:bg-[#f4f8fb]", styles.buton, className)}
+      className={cn("hb-yenile-butonu border-[var(--tema-yenile-cizgi)] bg-[var(--tema-yenile-yuzey)] font-bold text-[var(--tema-yenile-metin)] hover:bg-[var(--tema-yenile-hover)]", styles.buton, className)}
     >
       <RefreshCw className={yenileniyor ? "animate-spin" : ""} />
       <span className={cn("hb-yenile-etiket", styles.etiket)}>{yenileniyor ? "Yenileniyor…" : etiket}</span>

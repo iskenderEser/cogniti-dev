@@ -73,8 +73,8 @@ function PdfTuval({
       ref={ref}
       onContextMenu={(event) => event.preventDefault()}
       className={kucuk
-        ? "h-20 max-w-full bg-white object-contain"
-        : "h-auto max-w-full bg-white shadow-md"}
+        ? "h-20 max-w-full bg-[var(--tema-oynatici-pdf-sayfa)] object-contain"
+        : "h-auto max-w-full bg-[var(--tema-oynatici-pdf-sayfa)] shadow-md"}
     />
   );
 }
@@ -197,7 +197,7 @@ export default function FlipPdfOynatici({
 
   if (yukleniyor) {
     return (
-      <div className="rounded-xl bg-slate-50 p-8 text-center text-sm text-slate-500">
+      <div className="rounded-xl bg-[var(--tema-oynatici-pdf-soluk-zemin)] p-8 text-center text-sm text-[var(--tema-oynatici-pdf-ikincil-metin)]">
         Literatür yükleniyor…
       </div>
     );
@@ -208,37 +208,37 @@ export default function FlipPdfOynatici({
   const okunanSayisi = Array.from({ length: belge.numPages }, (_, i) => i + 1).filter((n) => (sayfaSureleri[String(n)] ?? 0) >= 2).length;
 
   return (
-    <div ref={alanRef} className="overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 bg-white px-3 py-2">
+    <div ref={alanRef} className="overflow-hidden rounded-xl border border-[var(--tema-oynatici-pdf-cizgi)] bg-[var(--tema-oynatici-pdf-zemin)]">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--tema-oynatici-pdf-cizgi)] bg-[var(--tema-oynatici-yuzey)] px-3 py-2">
         <div className="flex items-center gap-1">
           <button
             type="button"
             aria-label="Uzaklaştır"
             onClick={() => setOlcek((value) => Math.max(0.6, +(value - 0.1).toFixed(1)))}
-            className="rounded-lg p-2 hover:bg-slate-100"
+            className="rounded-lg p-2 hover:bg-[var(--tema-oynatici-pdf-hover)]"
           >
             <Minus size={16} />
           </button>
-          <span className="w-12 text-center text-xs font-bold text-slate-600">
+          <span className="w-12 text-center text-xs font-bold text-[var(--tema-oynatici-pdf-metin)]">
             %{Math.round(olcek * 100)}
           </span>
           <button
             type="button"
             aria-label="Yakınlaştır"
             onClick={() => setOlcek((value) => Math.min(2, +(value + 0.1).toFixed(1)))}
-            className="rounded-lg p-2 hover:bg-slate-100"
+            className="rounded-lg p-2 hover:bg-[var(--tema-oynatici-pdf-hover)]"
           >
             <Plus size={16} />
           </button>
         </div>
-        <span className="text-xs font-bold text-slate-600">
+        <span className="text-xs font-bold text-[var(--tema-oynatici-pdf-metin)]">
           {sayfa}{cift && sayfa < belge.numPages ? `–${sayfa + 1}` : ""} / {belge.numPages}
         </span>
         <button
           type="button"
           aria-label="Tam ekran"
           onClick={() => void alanRef.current?.requestFullscreen()}
-          className="rounded-lg p-2 hover:bg-slate-100"
+          className="rounded-lg p-2 hover:bg-[var(--tema-oynatici-pdf-hover)]"
         >
           <Maximize2 size={16} />
         </button>
@@ -251,7 +251,7 @@ export default function FlipPdfOynatici({
         )}
       </div>
 
-      <div className="flex items-center justify-between border-y border-slate-200 bg-white px-3 py-2">
+      <div className="flex items-center justify-between border-y border-[var(--tema-oynatici-pdf-cizgi)] bg-[var(--tema-oynatici-yuzey)] px-3 py-2">
         <button
           type="button"
           disabled={sayfa === 1}
@@ -260,7 +260,7 @@ export default function FlipPdfOynatici({
         >
           <ChevronLeft size={16} /> Önceki
         </button>
-        <span className="text-[11px] font-bold text-slate-500">
+        <span className="text-[11px] font-bold text-[var(--tema-oynatici-pdf-ikincil-metin)]">
           {saltGoruntuleme && !inceleme ? "Salt görüntüleme" : `${okunanSayisi}/${belge.numPages} sayfa okundu`}
         </span>
         <button
@@ -273,7 +273,7 @@ export default function FlipPdfOynatici({
         </button>
       </div>
 
-      <div className="flex gap-2 overflow-x-auto bg-slate-50 p-3">
+      <div className="flex gap-2 overflow-x-auto bg-[var(--tema-oynatici-pdf-soluk-zemin)] p-3">
         {Array.from({ length: belge.numPages }, (_, index) => index + 1).map((sayfaNo) => (
           <button
             type="button"
@@ -281,22 +281,22 @@ export default function FlipPdfOynatici({
             onClick={() => sayfayaGit(cift && sayfaNo % 2 === 0 ? sayfaNo - 1 : sayfaNo)}
             className={`w-16 shrink-0 rounded-md border p-1 ${
               sayfaNo === sayfa || (cift && sayfaNo === sayfa + 1)
-                ? "border-[#bc2d0d] bg-red-50"
-                : "border-slate-200 bg-white"
+                ? "border-[var(--tema-oynatici-pdf-secili-cizgi)] bg-[var(--tema-oynatici-pdf-secili-zemin)]"
+                : "border-[var(--tema-oynatici-pdf-cizgi)] bg-[var(--tema-oynatici-yuzey)]"
             }`}
           >
             <PdfTuval belge={belge} sayfa={sayfaNo} olcek={1} kucuk />
-            <span className="mt-1 block text-[10px] font-bold text-slate-500">{sayfaNo}</span>
+            <span className="mt-1 block text-[10px] font-bold text-[var(--tema-oynatici-pdf-ikincil-metin)]">{sayfaNo}</span>
           </button>
         ))}
       </div>
 
-      {(!saltGoruntuleme || inceleme) && <div className="flex justify-end border-t border-slate-200 bg-white p-3">
+      {(!saltGoruntuleme || inceleme) && <div className="flex justify-end border-t border-[var(--tema-oynatici-pdf-cizgi)] bg-[var(--tema-oynatici-yuzey)] p-3">
         <button
           type="button"
           disabled={islem || okunanSayisi < belge.numPages}
           onClick={() => inceleme ? inceleme.tamamla(cift && sayfa < belge.numPages ? [sayfa, sayfa + 1] : [sayfa]) : void tamamla()}
-          className="rounded-lg border-0 bg-[#56aeff] px-5 py-2.5 text-xs font-semibold text-white disabled:opacity-50"
+          className="rounded-lg border-0 bg-[var(--tema-oynatici-eylem)] px-5 py-2.5 text-xs font-semibold text-[var(--tema-oynatici-eylem-metni)] disabled:opacity-50"
         >
           Okumayı tamamla
         </button>

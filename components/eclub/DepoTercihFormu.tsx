@@ -46,20 +46,20 @@ export function DepoTercihFormu({ eczaneId, secili, onChange, onHazir, onVeriYuk
   const konum = katalog.find((k) => k.depo_sube_id === taslakKonum);
 
   const konumBilgisi = (k: DepoKonumu) => <div className="grid gap-2 sm:grid-cols-2">
-    <label className="grid gap-1 text-xs">İl<input readOnly value={k.il} className="rounded border bg-slate-50 p-2" /></label>
-    <label className="grid gap-1 text-xs">İlçe<input readOnly value={k.ilce} className="rounded border bg-slate-50 p-2" /></label>
-    <label className="grid gap-1 text-xs sm:col-span-2">Adres<textarea readOnly value={k.adres} className="rounded border bg-slate-50 p-2" /></label>
+    <label className="grid gap-1 text-xs">İl<input readOnly value={k.il} className="rounded border bg-[var(--tema-yerel-eclub-sayfa-zemini-15)] p-2" /></label>
+    <label className="grid gap-1 text-xs">İlçe<input readOnly value={k.ilce} className="rounded border bg-[var(--tema-yerel-eclub-sayfa-zemini-15)] p-2" /></label>
+    <label className="grid gap-1 text-xs sm:col-span-2">Adres<textarea readOnly value={k.adres} className="rounded border bg-[var(--tema-yerel-eclub-sayfa-zemini-15)] p-2" /></label>
   </div>;
-  return <section className="grid gap-3 rounded-xl border border-slate-200 bg-white p-4">
+  return <section className="grid gap-3 rounded-xl border border-[var(--tema-yerel-eclub-cizgi-27)] bg-[var(--tema-yerel-eclub-kart-01)] p-4">
     <h3 className="text-sm font-bold">Depo Tercihleri (1–3)</h3>
-    {eczaneId && <p className="text-xs text-slate-500">Tercihler bu eczanenin tüm firma temsilcileriyle ortaktır.</p>}
-    {yukleniyor ? <p className="text-xs">Depolar yükleniyor...</p> : hata ? <p role="alert" className="text-xs text-red-700">{hata}</p> : <>
+    {eczaneId && <p className="text-xs text-[var(--tema-yerel-eclub-yardimci-metin-30)]">Tercihler bu eczanenin tüm firma temsilcileriyle ortaktır.</p>}
+    {yukleniyor ? <p className="text-xs">Depolar yükleniyor...</p> : hata ? <p role="alert" className="text-xs text-[var(--tema-yerel-eclub-islevsel-metin-06)]">{hata}</p> : <>
       {secili.map((id) => {
         const k = katalog.find((x) => x.depo_sube_id === id);
         return <div key={id} className="grid gap-2 rounded-lg border p-3">
-          <div className="flex items-start justify-between gap-2"><strong className="text-xs">{k ? konumEtiketi(k) : "Katalogda bulunamayan tercih"}</strong><button type="button" onClick={() => onChange(secili.filter((x) => x !== id))} className="text-xs text-red-700">Kaldır</button></div>
+          <div className="flex items-start justify-between gap-2"><strong className="text-xs">{k ? konumEtiketi(k) : "Katalogda bulunamayan tercih"}</strong><button type="button" onClick={() => onChange(secili.filter((x) => x !== id))} className="text-xs text-[var(--tema-yerel-eclub-islevsel-metin-06)]">Kaldır</button></div>
           {k && konumBilgisi(k)}
-          {k && info && <a href={depoTalepMailto(info, k)} className="text-xs text-blue-700 underline">Bu kayıt için Düzeltme/Ekleme Talebi</a>}
+          {k && info && <a href={depoTalepMailto(info, k)} className="text-xs text-[var(--tema-yerel-eclub-eylem-metin-08)] underline">Bu kayıt için Düzeltme/Ekleme Talebi</a>}
         </div>;
       })}
       {secili.length < 3 && <>
@@ -70,18 +70,18 @@ export function DepoTercihFormu({ eczaneId, secili, onChange, onHazir, onVeriYuk
           setTaslakKonum(!hasSube && adaylar.length === 1 ? adaylar[0].depo_sube_id : "");
         }} aria-label="Seçim" className="w-full"><option value="">Depo seçin</option>{depolar.map(([id, ad]) => <option key={id} value={id}>{ad}</option>)}</SadeFormSecimi></label>
         {taslakDepo && subeli && <label className="grid gap-1 text-xs font-bold">Şube (zorunlu)<SadeFormSecimi value={taslakKonum} onChange={(e) => setTaslakKonum(e.target.value)} aria-label="Seçim" className="w-full"><option value="">Şube seçin</option>{konumlar.map((k) => <option key={k.depo_sube_id} value={k.depo_sube_id}>{k.sube_adi} · {k.il} / {k.ilce}</option>)}</SadeFormSecimi></label>}
-        {taslakDepo && konumlar.length === 0 && <p className="text-xs text-amber-800">Bu deponun konumu belirsiz veya aktif şubesi yok. Düzeltme/Ekleme Talebi gönderebilirsiniz.</p>}
+        {taslakDepo && konumlar.length === 0 && <p className="text-xs text-[var(--tema-yerel-eclub-islevsel-metin-09)]">Bu deponun konumu belirsiz veya aktif şubesi yok. Düzeltme/Ekleme Talebi gönderebilirsiniz.</p>}
         {konum && konumBilgisi(konum)}
-        <button type="button" disabled={!konum || secili.includes(taslakKonum)} onClick={() => { onChange([...secili, taslakKonum]); setTaslakDepo(""); setTaslakKonum(""); }} className="w-fit rounded-lg border border-blue-200 px-3 py-2 text-xs font-bold text-blue-700 disabled:opacity-40">Tercihlere ekle</button>
+        <button type="button" disabled={!konum || secili.includes(taslakKonum)} onClick={() => { onChange([...secili, taslakKonum]); setTaslakDepo(""); setTaslakKonum(""); }} className="w-fit rounded-lg border border-[var(--tema-yerel-eclub-cizgi-28)] px-3 py-2 text-xs font-bold text-[var(--tema-yerel-eclub-eylem-metin-08)] disabled:opacity-40">Tercihlere ekle</button>
       </>}
-      {!uygun && <p className="text-xs text-amber-800">1–3 geçerli depo/şube tercihi kaydedilmelidir.</p>}
+      {!uygun && <p className="text-xs text-[var(--tema-yerel-eclub-islevsel-metin-09)]">1–3 geçerli depo/şube tercihi kaydedilmelidir.</p>}
     </>}
     {info ? <div className="flex flex-wrap gap-3 text-xs">
-      <a href={depoTalepMailto(info, konum)} className="font-bold text-blue-700 underline">Düzeltme/Ekleme Talebi</a>
+      <a href={depoTalepMailto(info, konum)} className="font-bold text-[var(--tema-yerel-eclub-eylem-metin-08)] underline">Düzeltme/Ekleme Talebi</a>
       <button type="button" className="underline" onClick={async () => {
         try { const uri = depoTalepMailto(info, konum); await navigator.clipboard.writeText(`${info}\n${decodeURIComponent(uri.split("body=")[1])}`); setKopya(true); }
         catch { setHata("Talep metni kopyalanamadı. E-posta adresi: " + info); }
       }}>{kopya ? "Kopyalandı" : "E-posta adresini ve talep metnini kopyala"}</button>
-    </div> : <p className="text-xs text-slate-500">Talep e-posta adresi henüz tanımlanmamış.</p>}
+    </div> : <p className="text-xs text-[var(--tema-yerel-eclub-yardimci-metin-30)]">Talep e-posta adresi henüz tanımlanmamış.</p>}
   </section>;
 }

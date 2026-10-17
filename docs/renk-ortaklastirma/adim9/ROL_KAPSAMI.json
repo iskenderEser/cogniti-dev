@@ -1,0 +1,866 @@
+{
+  "tarih": "2026-10-17",
+  "rol_kaynagi": "lib/utils/roller.ts",
+  "menu_kaynagi": "components/panel/panelNav.config.ts",
+  "rol_sayisi": 31,
+  "ic_rol": 26,
+  "eclub_kisi": 4,
+  "musteri": 1,
+  "menu_baglam_degerlendirmesi": 928,
+  "not": "Menü kapıları mevcut kodla bellek içinde değerlendirilir; gerçek yetki/oturum testi yerine geçmez. Ortak otomatik test referansı role özgü bütün sayfa durumlarının görsel onayı değildir.",
+  "roller": [
+    {
+      "rol": "pm",
+      "etiket": "Ürün Müdürü",
+      "kimlik_turu": "kullanici",
+      "ana_kaynak": "components/ana-sayfa/UreticiAnaSayfa.tsx",
+      "ana_yol": "/ana-sayfa",
+      "menu_modul_kombinasyonu": 32,
+      "acik_modul_yollari": [
+        "/yayin-takip",
+        "/yayin-yonetimi",
+        "/sizin-yayinlariniz",
+        "/tum-yayinlar",
+        "/raporlar/yayin-raporlari",
+        "/t-club-ligi",
+        "/raporlar/tclub-uretici",
+        "/cc-ligi",
+        "/eclub/ligi"
+      ],
+      "renk_kaynak_kontrolu": "Renk dışı kaynak korunumu ve iki tema değişken çözümlemesi başarılı",
+      "otomatik_kapsam": "Ortak üst/sol/mobil menü iki tema testi ve rolün mevcut ana sayfa/kapsam testleri",
+      "gercek_rol_oturumu": "DOGRULANMADI",
+      "gercek_gorsel_durumlar": {
+        "mavi": "DOGRULANMADI",
+        "yesil": "DOGRULANMADI"
+      },
+      "acik_kontrol": "Gerçek oturumda role özgü dolu/boş/hata/yüklenme, seçim ve açık pencere görsel kontrolü"
+    },
+    {
+      "rol": "jr_pm",
+      "etiket": "Ürün Müdürü (Jr.)",
+      "kimlik_turu": "kullanici",
+      "ana_kaynak": "components/ana-sayfa/UreticiAnaSayfa.tsx",
+      "ana_yol": "/ana-sayfa",
+      "menu_modul_kombinasyonu": 32,
+      "acik_modul_yollari": [
+        "/yayin-takip",
+        "/yayin-yonetimi",
+        "/sizin-yayinlariniz",
+        "/tum-yayinlar",
+        "/raporlar/yayin-raporlari",
+        "/t-club-ligi",
+        "/raporlar/tclub-uretici",
+        "/cc-ligi",
+        "/eclub/ligi"
+      ],
+      "renk_kaynak_kontrolu": "Renk dışı kaynak korunumu ve iki tema değişken çözümlemesi başarılı",
+      "otomatik_kapsam": "Ortak üst/sol/mobil menü iki tema testi ve rolün mevcut ana sayfa/kapsam testleri",
+      "gercek_rol_oturumu": "DOGRULANMADI",
+      "gercek_gorsel_durumlar": {
+        "mavi": "DOGRULANMADI",
+        "yesil": "DOGRULANMADI"
+      },
+      "acik_kontrol": "Gerçek oturumda role özgü dolu/boş/hata/yüklenme, seçim ve açık pencere görsel kontrolü"
+    },
+    {
+      "rol": "kd_pm",
+      "etiket": "Kıdemli Ürün Müdürü",
+      "kimlik_turu": "kullanici",
+      "ana_kaynak": "components/ana-sayfa/UreticiAnaSayfa.tsx",
+      "ana_yol": "/ana-sayfa",
+      "menu_modul_kombinasyonu": 32,
+      "acik_modul_yollari": [
+        "/yayin-takip",
+        "/yayin-yonetimi",
+        "/sizin-yayinlariniz",
+        "/tum-yayinlar",
+        "/raporlar/yayin-raporlari",
+        "/t-club-ligi",
+        "/raporlar/tclub-uretici",
+        "/cc-ligi",
+        "/eclub/ligi"
+      ],
+      "renk_kaynak_kontrolu": "Renk dışı kaynak korunumu ve iki tema değişken çözümlemesi başarılı",
+      "otomatik_kapsam": "Ortak üst/sol/mobil menü iki tema testi ve rolün mevcut ana sayfa/kapsam testleri",
+      "gercek_rol_oturumu": "DOGRULANMADI",
+      "gercek_gorsel_durumlar": {
+        "mavi": "DOGRULANMADI",
+        "yesil": "DOGRULANMADI"
+      },
+      "acik_kontrol": "Gerçek oturumda role özgü dolu/boş/hata/yüklenme, seçim ve açık pencere görsel kontrolü"
+    },
+    {
+      "rol": "med_md",
+      "etiket": "Medikal Müdür",
+      "kimlik_turu": "kullanici",
+      "ana_kaynak": "components/ana-sayfa/UreticiAnaSayfa.tsx",
+      "ana_yol": "/ana-sayfa",
+      "menu_modul_kombinasyonu": 32,
+      "acik_modul_yollari": [
+        "/yayin-takip",
+        "/yayin-yonetimi",
+        "/sizin-yayinlariniz",
+        "/tum-yayinlar",
+        "/raporlar/yayin-raporlari",
+        "/t-club-ligi",
+        "/raporlar/tclub-uretici",
+        "/cc-ligi",
+        "/eclub/ligi"
+      ],
+      "renk_kaynak_kontrolu": "Renk dışı kaynak korunumu ve iki tema değişken çözümlemesi başarılı",
+      "otomatik_kapsam": "Ortak üst/sol/mobil menü iki tema testi ve rolün mevcut ana sayfa/kapsam testleri",
+      "gercek_rol_oturumu": "DOGRULANMADI",
+      "gercek_gorsel_durumlar": {
+        "mavi": "DOGRULANMADI",
+        "yesil": "DOGRULANMADI"
+      },
+      "acik_kontrol": "Gerçek oturumda role özgü dolu/boş/hata/yüklenme, seçim ve açık pencere görsel kontrolü"
+    },
+    {
+      "rol": "egt_md",
+      "etiket": "Eğitim Müdürü",
+      "kimlik_turu": "kullanici",
+      "ana_kaynak": "components/ana-sayfa/UreticiAnaSayfa.tsx",
+      "ana_yol": "/ana-sayfa",
+      "menu_modul_kombinasyonu": 32,
+      "acik_modul_yollari": [
+        "/yayin-takip",
+        "/yayin-yonetimi",
+        "/sizin-yayinlariniz",
+        "/tum-yayinlar",
+        "/raporlar/yayin-raporlari",
+        "/t-club-ligi",
+        "/raporlar/tclub-uretici",
+        "/cc-ligi",
+        "/eclub/ligi"
+      ],
+      "renk_kaynak_kontrolu": "Renk dışı kaynak korunumu ve iki tema değişken çözümlemesi başarılı",
+      "otomatik_kapsam": "Ortak üst/sol/mobil menü iki tema testi ve rolün mevcut ana sayfa/kapsam testleri",
+      "gercek_rol_oturumu": "DOGRULANMADI",
+      "gercek_gorsel_durumlar": {
+        "mavi": "DOGRULANMADI",
+        "yesil": "DOGRULANMADI"
+      },
+      "acik_kontrol": "Gerçek oturumda role özgü dolu/boş/hata/yüklenme, seçim ve açık pencere görsel kontrolü"
+    },
+    {
+      "rol": "egt_yrd_md",
+      "etiket": "Eğitim Müdür Yardımcısı",
+      "kimlik_turu": "kullanici",
+      "ana_kaynak": "components/ana-sayfa/UreticiAnaSayfa.tsx",
+      "ana_yol": "/ana-sayfa",
+      "menu_modul_kombinasyonu": 32,
+      "acik_modul_yollari": [
+        "/yayin-takip",
+        "/yayin-yonetimi",
+        "/sizin-yayinlariniz",
+        "/tum-yayinlar",
+        "/raporlar/yayin-raporlari",
+        "/t-club-ligi",
+        "/raporlar/tclub-uretici",
+        "/cc-ligi",
+        "/eclub/ligi"
+      ],
+      "renk_kaynak_kontrolu": "Renk dışı kaynak korunumu ve iki tema değişken çözümlemesi başarılı",
+      "otomatik_kapsam": "Ortak üst/sol/mobil menü iki tema testi ve rolün mevcut ana sayfa/kapsam testleri",
+      "gercek_rol_oturumu": "DOGRULANMADI",
+      "gercek_gorsel_durumlar": {
+        "mavi": "DOGRULANMADI",
+        "yesil": "DOGRULANMADI"
+      },
+      "acik_kontrol": "Gerçek oturumda role özgü dolu/boş/hata/yüklenme, seçim ve açık pencere görsel kontrolü"
+    },
+    {
+      "rol": "egt_yon",
+      "etiket": "Eğitim Yöneticisi",
+      "kimlik_turu": "kullanici",
+      "ana_kaynak": "components/ana-sayfa/UreticiAnaSayfa.tsx",
+      "ana_yol": "/ana-sayfa",
+      "menu_modul_kombinasyonu": 32,
+      "acik_modul_yollari": [
+        "/yayin-takip",
+        "/yayin-yonetimi",
+        "/sizin-yayinlariniz",
+        "/tum-yayinlar",
+        "/raporlar/yayin-raporlari",
+        "/t-club-ligi",
+        "/raporlar/tclub-uretici",
+        "/cc-ligi",
+        "/eclub/ligi"
+      ],
+      "renk_kaynak_kontrolu": "Renk dışı kaynak korunumu ve iki tema değişken çözümlemesi başarılı",
+      "otomatik_kapsam": "Ortak üst/sol/mobil menü iki tema testi ve rolün mevcut ana sayfa/kapsam testleri",
+      "gercek_rol_oturumu": "DOGRULANMADI",
+      "gercek_gorsel_durumlar": {
+        "mavi": "DOGRULANMADI",
+        "yesil": "DOGRULANMADI"
+      },
+      "acik_kontrol": "Gerçek oturumda role özgü dolu/boş/hata/yüklenme, seçim ve açık pencere görsel kontrolü"
+    },
+    {
+      "rol": "egt_uz",
+      "etiket": "Eğitim Uzmanı",
+      "kimlik_turu": "kullanici",
+      "ana_kaynak": "components/ana-sayfa/UreticiAnaSayfa.tsx",
+      "ana_yol": "/ana-sayfa",
+      "menu_modul_kombinasyonu": 32,
+      "acik_modul_yollari": [
+        "/yayin-takip",
+        "/yayin-yonetimi",
+        "/sizin-yayinlariniz",
+        "/tum-yayinlar",
+        "/raporlar/yayin-raporlari",
+        "/t-club-ligi",
+        "/raporlar/tclub-uretici",
+        "/cc-ligi",
+        "/eclub/ligi"
+      ],
+      "renk_kaynak_kontrolu": "Renk dışı kaynak korunumu ve iki tema değişken çözümlemesi başarılı",
+      "otomatik_kapsam": "Ortak üst/sol/mobil menü iki tema testi ve rolün mevcut ana sayfa/kapsam testleri",
+      "gercek_rol_oturumu": "DOGRULANMADI",
+      "gercek_gorsel_durumlar": {
+        "mavi": "DOGRULANMADI",
+        "yesil": "DOGRULANMADI"
+      },
+      "acik_kontrol": "Gerçek oturumda role özgü dolu/boş/hata/yüklenme, seçim ve açık pencere görsel kontrolü"
+    },
+    {
+      "rol": "ik_drk",
+      "etiket": "İK Direktörü",
+      "kimlik_turu": "kullanici",
+      "ana_kaynak": "components/ana-sayfa/UreticiAnaSayfa.tsx",
+      "ana_yol": "/ana-sayfa",
+      "menu_modul_kombinasyonu": 32,
+      "acik_modul_yollari": [
+        "/yayin-takip",
+        "/yayin-yonetimi",
+        "/sizin-yayinlariniz",
+        "/tum-yayinlar",
+        "/raporlar/yayin-raporlari",
+        "/t-club-ligi",
+        "/raporlar/tclub-uretici",
+        "/cc-ligi",
+        "/eclub/ligi"
+      ],
+      "renk_kaynak_kontrolu": "Renk dışı kaynak korunumu ve iki tema değişken çözümlemesi başarılı",
+      "otomatik_kapsam": "Ortak üst/sol/mobil menü iki tema testi ve rolün mevcut ana sayfa/kapsam testleri",
+      "gercek_rol_oturumu": "DOGRULANMADI",
+      "gercek_gorsel_durumlar": {
+        "mavi": "DOGRULANMADI",
+        "yesil": "DOGRULANMADI"
+      },
+      "acik_kontrol": "Gerçek oturumda role özgü dolu/boş/hata/yüklenme, seçim ve açık pencere görsel kontrolü"
+    },
+    {
+      "rol": "ik_md",
+      "etiket": "İK Müdürü",
+      "kimlik_turu": "kullanici",
+      "ana_kaynak": "components/ana-sayfa/UreticiAnaSayfa.tsx",
+      "ana_yol": "/ana-sayfa",
+      "menu_modul_kombinasyonu": 32,
+      "acik_modul_yollari": [
+        "/yayin-takip",
+        "/yayin-yonetimi",
+        "/sizin-yayinlariniz",
+        "/tum-yayinlar",
+        "/raporlar/yayin-raporlari",
+        "/t-club-ligi",
+        "/raporlar/tclub-uretici",
+        "/cc-ligi",
+        "/eclub/ligi"
+      ],
+      "renk_kaynak_kontrolu": "Renk dışı kaynak korunumu ve iki tema değişken çözümlemesi başarılı",
+      "otomatik_kapsam": "Ortak üst/sol/mobil menü iki tema testi ve rolün mevcut ana sayfa/kapsam testleri",
+      "gercek_rol_oturumu": "DOGRULANMADI",
+      "gercek_gorsel_durumlar": {
+        "mavi": "DOGRULANMADI",
+        "yesil": "DOGRULANMADI"
+      },
+      "acik_kontrol": "Gerçek oturumda role özgü dolu/boş/hata/yüklenme, seçim ve açık pencere görsel kontrolü"
+    },
+    {
+      "rol": "ik_yrd_md",
+      "etiket": "İK Müdür Yardımcısı",
+      "kimlik_turu": "kullanici",
+      "ana_kaynak": "components/ana-sayfa/UreticiAnaSayfa.tsx",
+      "ana_yol": "/ana-sayfa",
+      "menu_modul_kombinasyonu": 32,
+      "acik_modul_yollari": [
+        "/yayin-takip",
+        "/yayin-yonetimi",
+        "/sizin-yayinlariniz",
+        "/tum-yayinlar",
+        "/raporlar/yayin-raporlari",
+        "/t-club-ligi",
+        "/raporlar/tclub-uretici",
+        "/cc-ligi",
+        "/eclub/ligi"
+      ],
+      "renk_kaynak_kontrolu": "Renk dışı kaynak korunumu ve iki tema değişken çözümlemesi başarılı",
+      "otomatik_kapsam": "Ortak üst/sol/mobil menü iki tema testi ve rolün mevcut ana sayfa/kapsam testleri",
+      "gercek_rol_oturumu": "DOGRULANMADI",
+      "gercek_gorsel_durumlar": {
+        "mavi": "DOGRULANMADI",
+        "yesil": "DOGRULANMADI"
+      },
+      "acik_kontrol": "Gerçek oturumda role özgü dolu/boş/hata/yüklenme, seçim ve açık pencere görsel kontrolü"
+    },
+    {
+      "rol": "ik_uz",
+      "etiket": "İK Uzmanı",
+      "kimlik_turu": "kullanici",
+      "ana_kaynak": "components/ana-sayfa/UreticiAnaSayfa.tsx",
+      "ana_yol": "/ana-sayfa",
+      "menu_modul_kombinasyonu": 32,
+      "acik_modul_yollari": [
+        "/yayin-takip",
+        "/yayin-yonetimi",
+        "/sizin-yayinlariniz",
+        "/tum-yayinlar",
+        "/raporlar/yayin-raporlari",
+        "/t-club-ligi",
+        "/raporlar/tclub-uretici",
+        "/cc-ligi",
+        "/eclub/ligi"
+      ],
+      "renk_kaynak_kontrolu": "Renk dışı kaynak korunumu ve iki tema değişken çözümlemesi başarılı",
+      "otomatik_kapsam": "Ortak üst/sol/mobil menü iki tema testi ve rolün mevcut ana sayfa/kapsam testleri",
+      "gercek_rol_oturumu": "DOGRULANMADI",
+      "gercek_gorsel_durumlar": {
+        "mavi": "DOGRULANMADI",
+        "yesil": "DOGRULANMADI"
+      },
+      "acik_kontrol": "Gerçek oturumda role özgü dolu/boş/hata/yüklenme, seçim ve açık pencere görsel kontrolü"
+    },
+    {
+      "rol": "ik_per",
+      "etiket": "İK Personeli",
+      "kimlik_turu": "kullanici",
+      "ana_kaynak": "components/ana-sayfa/UreticiAnaSayfa.tsx",
+      "ana_yol": "/ana-sayfa",
+      "menu_modul_kombinasyonu": 32,
+      "acik_modul_yollari": [
+        "/yayin-takip",
+        "/yayin-yonetimi",
+        "/sizin-yayinlariniz",
+        "/tum-yayinlar",
+        "/raporlar/yayin-raporlari",
+        "/t-club-ligi",
+        "/raporlar/tclub-uretici",
+        "/cc-ligi",
+        "/eclub/ligi"
+      ],
+      "renk_kaynak_kontrolu": "Renk dışı kaynak korunumu ve iki tema değişken çözümlemesi başarılı",
+      "otomatik_kapsam": "Ortak üst/sol/mobil menü iki tema testi ve rolün mevcut ana sayfa/kapsam testleri",
+      "gercek_rol_oturumu": "DOGRULANMADI",
+      "gercek_gorsel_durumlar": {
+        "mavi": "DOGRULANMADI",
+        "yesil": "DOGRULANMADI"
+      },
+      "acik_kontrol": "Gerçek oturumda role özgü dolu/boş/hata/yüklenme, seçim ve açık pencere görsel kontrolü"
+    },
+    {
+      "rol": "gm",
+      "etiket": "Genel Müdür",
+      "kimlik_turu": "kullanici",
+      "ana_kaynak": "components/ana-sayfa/YoneticiAnaSayfa.tsx",
+      "ana_yol": "/ana-sayfa",
+      "menu_modul_kombinasyonu": 32,
+      "acik_modul_yollari": [
+        "/raporlar/yayin-raporlari",
+        "/yayindaki-videolar",
+        "/yayindaki-videolar/urun",
+        "/yayindaki-videolar/medikal",
+        "/yayindaki-videolar/urun-medikal",
+        "/yayindaki-videolar/satis",
+        "/yayindaki-videolar/yonetim",
+        "/yayindaki-videolar/ik",
+        "/t-club-ligi",
+        "/raporlar/yonetici",
+        "/store/siparisler",
+        "/cc-ligi",
+        "/eclub/ligi"
+      ],
+      "renk_kaynak_kontrolu": "Renk dışı kaynak korunumu ve iki tema değişken çözümlemesi başarılı",
+      "otomatik_kapsam": "Ortak üst/sol/mobil menü iki tema testi ve rolün mevcut ana sayfa/kapsam testleri",
+      "gercek_rol_oturumu": "DOGRULANMADI",
+      "gercek_gorsel_durumlar": {
+        "mavi": "DOGRULANMADI",
+        "yesil": "DOGRULANMADI"
+      },
+      "acik_kontrol": "Gerçek oturumda role özgü dolu/boş/hata/yüklenme, seçim ve açık pencere görsel kontrolü"
+    },
+    {
+      "rol": "gm_yrd",
+      "etiket": "Genel Müdür Yardımcısı",
+      "kimlik_turu": "kullanici",
+      "ana_kaynak": "components/ana-sayfa/YoneticiAnaSayfa.tsx",
+      "ana_yol": "/ana-sayfa",
+      "menu_modul_kombinasyonu": 32,
+      "acik_modul_yollari": [
+        "/raporlar/yayin-raporlari",
+        "/yayindaki-videolar",
+        "/yayindaki-videolar/urun",
+        "/yayindaki-videolar/medikal",
+        "/yayindaki-videolar/urun-medikal",
+        "/yayindaki-videolar/satis",
+        "/yayindaki-videolar/yonetim",
+        "/yayindaki-videolar/ik",
+        "/t-club-ligi",
+        "/raporlar/yonetici",
+        "/store/siparisler",
+        "/cc-ligi",
+        "/eclub/ligi"
+      ],
+      "renk_kaynak_kontrolu": "Renk dışı kaynak korunumu ve iki tema değişken çözümlemesi başarılı",
+      "otomatik_kapsam": "Ortak üst/sol/mobil menü iki tema testi ve rolün mevcut ana sayfa/kapsam testleri",
+      "gercek_rol_oturumu": "DOGRULANMADI",
+      "gercek_gorsel_durumlar": {
+        "mavi": "DOGRULANMADI",
+        "yesil": "DOGRULANMADI"
+      },
+      "acik_kontrol": "Gerçek oturumda role özgü dolu/boş/hata/yüklenme, seçim ve açık pencere görsel kontrolü"
+    },
+    {
+      "rol": "drk",
+      "etiket": "Direktör",
+      "kimlik_turu": "kullanici",
+      "ana_kaynak": "components/ana-sayfa/YoneticiAnaSayfa.tsx",
+      "ana_yol": "/ana-sayfa",
+      "menu_modul_kombinasyonu": 32,
+      "acik_modul_yollari": [
+        "/raporlar/yayin-raporlari",
+        "/yayindaki-videolar",
+        "/yayindaki-videolar/urun",
+        "/yayindaki-videolar/medikal",
+        "/yayindaki-videolar/urun-medikal",
+        "/yayindaki-videolar/satis",
+        "/yayindaki-videolar/yonetim",
+        "/yayindaki-videolar/ik",
+        "/t-club-ligi",
+        "/raporlar/yonetici",
+        "/store/siparisler",
+        "/cc-ligi",
+        "/eclub/ligi"
+      ],
+      "renk_kaynak_kontrolu": "Renk dışı kaynak korunumu ve iki tema değişken çözümlemesi başarılı",
+      "otomatik_kapsam": "Ortak üst/sol/mobil menü iki tema testi ve rolün mevcut ana sayfa/kapsam testleri",
+      "gercek_rol_oturumu": "DOGRULANMADI",
+      "gercek_gorsel_durumlar": {
+        "mavi": "DOGRULANMADI",
+        "yesil": "DOGRULANMADI"
+      },
+      "acik_kontrol": "Gerçek oturumda role özgü dolu/boş/hata/yüklenme, seçim ve açık pencere görsel kontrolü"
+    },
+    {
+      "rol": "paz_md",
+      "etiket": "Pazarlama Müdürü",
+      "kimlik_turu": "kullanici",
+      "ana_kaynak": "components/ana-sayfa/YoneticiAnaSayfa.tsx",
+      "ana_yol": "/ana-sayfa",
+      "menu_modul_kombinasyonu": 32,
+      "acik_modul_yollari": [
+        "/raporlar/yayin-raporlari",
+        "/yayindaki-videolar",
+        "/yayindaki-videolar/urun",
+        "/yayindaki-videolar/medikal",
+        "/yayindaki-videolar/urun-medikal",
+        "/yayindaki-videolar/satis",
+        "/yayindaki-videolar/yonetim",
+        "/yayindaki-videolar/ik",
+        "/t-club-ligi",
+        "/raporlar/yonetici",
+        "/store/siparisler",
+        "/cc-ligi",
+        "/eclub/ligi"
+      ],
+      "renk_kaynak_kontrolu": "Renk dışı kaynak korunumu ve iki tema değişken çözümlemesi başarılı",
+      "otomatik_kapsam": "Ortak üst/sol/mobil menü iki tema testi ve rolün mevcut ana sayfa/kapsam testleri",
+      "gercek_rol_oturumu": "DOGRULANMADI",
+      "gercek_gorsel_durumlar": {
+        "mavi": "DOGRULANMADI",
+        "yesil": "DOGRULANMADI"
+      },
+      "acik_kontrol": "Gerçek oturumda role özgü dolu/boş/hata/yüklenme, seçim ve açık pencere görsel kontrolü"
+    },
+    {
+      "rol": "blm_md",
+      "etiket": "Bölüm Müdürü",
+      "kimlik_turu": "kullanici",
+      "ana_kaynak": "components/ana-sayfa/YoneticiAnaSayfa.tsx",
+      "ana_yol": "/ana-sayfa",
+      "menu_modul_kombinasyonu": 32,
+      "acik_modul_yollari": [
+        "/raporlar/yayin-raporlari",
+        "/yayindaki-videolar",
+        "/yayindaki-videolar/urun",
+        "/yayindaki-videolar/medikal",
+        "/yayindaki-videolar/urun-medikal",
+        "/yayindaki-videolar/satis",
+        "/yayindaki-videolar/yonetim",
+        "/yayindaki-videolar/ik",
+        "/t-club-ligi",
+        "/raporlar/yonetici",
+        "/store/siparisler",
+        "/cc-ligi",
+        "/eclub/ligi"
+      ],
+      "renk_kaynak_kontrolu": "Renk dışı kaynak korunumu ve iki tema değişken çözümlemesi başarılı",
+      "otomatik_kapsam": "Ortak üst/sol/mobil menü iki tema testi ve rolün mevcut ana sayfa/kapsam testleri",
+      "gercek_rol_oturumu": "DOGRULANMADI",
+      "gercek_gorsel_durumlar": {
+        "mavi": "DOGRULANMADI",
+        "yesil": "DOGRULANMADI"
+      },
+      "acik_kontrol": "Gerçek oturumda role özgü dolu/boş/hata/yüklenme, seçim ve açık pencere görsel kontrolü"
+    },
+    {
+      "rol": "grp_pm",
+      "etiket": "Grup Ürün Müdürü",
+      "kimlik_turu": "kullanici",
+      "ana_kaynak": "components/ana-sayfa/YoneticiAnaSayfa.tsx",
+      "ana_yol": "/ana-sayfa",
+      "menu_modul_kombinasyonu": 32,
+      "acik_modul_yollari": [
+        "/raporlar/yayin-raporlari",
+        "/yayindaki-videolar",
+        "/yayindaki-videolar/urun",
+        "/yayindaki-videolar/medikal",
+        "/yayindaki-videolar/urun-medikal",
+        "/yayindaki-videolar/satis",
+        "/yayindaki-videolar/yonetim",
+        "/yayindaki-videolar/ik",
+        "/t-club-ligi",
+        "/raporlar/yonetici",
+        "/store/siparisler",
+        "/cc-ligi",
+        "/eclub/ligi"
+      ],
+      "renk_kaynak_kontrolu": "Renk dışı kaynak korunumu ve iki tema değişken çözümlemesi başarılı",
+      "otomatik_kapsam": "Ortak üst/sol/mobil menü iki tema testi ve rolün mevcut ana sayfa/kapsam testleri",
+      "gercek_rol_oturumu": "DOGRULANMADI",
+      "gercek_gorsel_durumlar": {
+        "mavi": "DOGRULANMADI",
+        "yesil": "DOGRULANMADI"
+      },
+      "acik_kontrol": "Gerçek oturumda role özgü dolu/boş/hata/yüklenme, seçim ve açık pencere görsel kontrolü"
+    },
+    {
+      "rol": "sm",
+      "etiket": "Satış Müdürü",
+      "kimlik_turu": "kullanici",
+      "ana_kaynak": "components/ana-sayfa/YoneticiAnaSayfa.tsx",
+      "ana_yol": "/ana-sayfa",
+      "menu_modul_kombinasyonu": 32,
+      "acik_modul_yollari": [
+        "/raporlar/yayin-raporlari",
+        "/yayindaki-videolar",
+        "/yayindaki-videolar/urun",
+        "/yayindaki-videolar/medikal",
+        "/yayindaki-videolar/urun-medikal",
+        "/yayindaki-videolar/satis",
+        "/yayindaki-videolar/yonetim",
+        "/yayindaki-videolar/ik",
+        "/t-club-ligi",
+        "/raporlar/yonetici",
+        "/store/siparisler",
+        "/cc-ligi",
+        "/eclub/ligi"
+      ],
+      "renk_kaynak_kontrolu": "Renk dışı kaynak korunumu ve iki tema değişken çözümlemesi başarılı",
+      "otomatik_kapsam": "Ortak üst/sol/mobil menü iki tema testi ve rolün mevcut ana sayfa/kapsam testleri",
+      "gercek_rol_oturumu": "DOGRULANMADI",
+      "gercek_gorsel_durumlar": {
+        "mavi": "DOGRULANMADI",
+        "yesil": "DOGRULANMADI"
+      },
+      "acik_kontrol": "Gerçek oturumda role özgü dolu/boş/hata/yüklenme, seçim ve açık pencere görsel kontrolü"
+    },
+    {
+      "rol": "admin",
+      "kimlik_turu": "kullanici",
+      "ana_kaynak": "app/admin/page.tsx",
+      "ana_yol": "/admin",
+      "menu_modul_kombinasyonu": 0,
+      "acik_modul_yollari": [],
+      "renk_kaynak_kontrolu": "Renk dışı kaynak korunumu ve iki tema değişken çözümlemesi başarılı",
+      "otomatik_kapsam": "Gerçek yönetim kartı açık/kapalı/yüklenme testi; sahte callback",
+      "gercek_rol_oturumu": "DOGRULANMADI",
+      "gercek_gorsel_durumlar": {
+        "mavi": "DOGRULANMADI",
+        "yesil": "DOGRULANMADI"
+      },
+      "acik_kontrol": "Gerçek oturumda role özgü dolu/boş/hata/yüklenme, seçim ve açık pencere görsel kontrolü"
+    },
+    {
+      "rol": "tm",
+      "etiket": "Takım Müdürü",
+      "kimlik_turu": "kullanici",
+      "ana_kaynak": "components/ana-sayfa/TmAnaSayfa.tsx",
+      "ana_yol": "/ana-sayfa",
+      "menu_modul_kombinasyonu": 32,
+      "acik_modul_yollari": [
+        "/oneriler",
+        "/yayindaki-videolar",
+        "/yayindaki-videolar/urun",
+        "/yayindaki-videolar/medikal",
+        "/yayindaki-videolar/urun-medikal",
+        "/yayindaki-videolar/satis",
+        "/yayindaki-videolar/yonetim",
+        "/yayindaki-videolar/ik",
+        "/t-club-ligi",
+        "/raporlar/tm",
+        "/store/siparisler",
+        "/cc-ligi",
+        "/eclub/eczanelerim",
+        "/eclub/yayinlar",
+        "/eclub/ligi",
+        "/eczanem/tm/mutabakat"
+      ],
+      "renk_kaynak_kontrolu": "Renk dışı kaynak korunumu ve iki tema değişken çözümlemesi başarılı",
+      "otomatik_kapsam": "Ortak üst/sol/mobil menü iki tema testi ve rolün mevcut ana sayfa/kapsam testleri",
+      "gercek_rol_oturumu": "DOGRULANMADI",
+      "gercek_gorsel_durumlar": {
+        "mavi": "DOGRULANMADI",
+        "yesil": "DOGRULANMADI"
+      },
+      "acik_kontrol": "Gerçek oturumda role özgü dolu/boş/hata/yüklenme, seçim ve açık pencere görsel kontrolü"
+    },
+    {
+      "rol": "bm",
+      "etiket": "Bölge Müdürü",
+      "kimlik_turu": "kullanici",
+      "ana_kaynak": "components/ana-sayfa/BmAnaSayfa.tsx",
+      "ana_yol": "/ana-sayfa",
+      "menu_modul_kombinasyonu": 32,
+      "acik_modul_yollari": [
+        "/oneriler",
+        "/yayindaki-videolar",
+        "/yayindaki-videolar/urun",
+        "/yayindaki-videolar/medikal",
+        "/yayindaki-videolar/urun-medikal",
+        "/yayindaki-videolar/satis",
+        "/yayindaki-videolar/yonetim",
+        "/yayindaki-videolar/ik",
+        "/t-club-ligi",
+        "/raporlar/bm",
+        "/store/siparisler",
+        "/challenge-club",
+        "/cc-ligi",
+        "/eclub/eczanelerim",
+        "/eclub/yayinlar",
+        "/eclub/ligi",
+        "/eczanem/bm/mutabakat",
+        "/store",
+        "/store/siparislerim",
+        "/store/adreslerim"
+      ],
+      "renk_kaynak_kontrolu": "Renk dışı kaynak korunumu ve iki tema değişken çözümlemesi başarılı",
+      "otomatik_kapsam": "Ortak üst/sol/mobil menü iki tema testi ve rolün mevcut ana sayfa/kapsam testleri",
+      "gercek_rol_oturumu": "DOGRULANMADI",
+      "gercek_gorsel_durumlar": {
+        "mavi": "DOGRULANMADI",
+        "yesil": "DOGRULANMADI"
+      },
+      "acik_kontrol": "Gerçek oturumda role özgü dolu/boş/hata/yüklenme, seçim ve açık pencere görsel kontrolü"
+    },
+    {
+      "rol": "utt",
+      "etiket": "Ürün Tanıtım Temsilcisi",
+      "kimlik_turu": "kullanici",
+      "ana_kaynak": "components/ana-sayfa/UttAnaSayfa.tsx",
+      "ana_yol": "/ana-sayfa",
+      "menu_modul_kombinasyonu": 32,
+      "acik_modul_yollari": [
+        "/videolarim/urun",
+        "/videolarim/medikal",
+        "/videolarim/urun-medikal",
+        "/videolarim/satis",
+        "/videolarim/yonetim",
+        "/videolarim/ik",
+        "/oneriler",
+        "/t-club-ligi",
+        "/raporlar/utt",
+        "/eclub/eczanelerim",
+        "/eclub/yayinlar",
+        "/eclub/ligi",
+        "/eczanem/yayinlar",
+        "/eczanem/utt/mutabakat",
+        "/store",
+        "/store/siparislerim",
+        "/store/adreslerim"
+      ],
+      "renk_kaynak_kontrolu": "Renk dışı kaynak korunumu ve iki tema değişken çözümlemesi başarılı",
+      "otomatik_kapsam": "Ortak üst/sol/mobil menü iki tema testi ve rolün mevcut ana sayfa/kapsam testleri",
+      "gercek_rol_oturumu": "DOGRULANMADI",
+      "gercek_gorsel_durumlar": {
+        "mavi": "DOGRULANMADI",
+        "yesil": "DOGRULANMADI"
+      },
+      "acik_kontrol": "Gerçek oturumda role özgü dolu/boş/hata/yüklenme, seçim ve açık pencere görsel kontrolü"
+    },
+    {
+      "rol": "kd_utt",
+      "etiket": "Kıdemli Ürün Tanıtım Temsilcisi",
+      "kimlik_turu": "kullanici",
+      "ana_kaynak": "components/ana-sayfa/UttAnaSayfa.tsx",
+      "ana_yol": "/ana-sayfa",
+      "menu_modul_kombinasyonu": 32,
+      "acik_modul_yollari": [
+        "/videolarim/urun",
+        "/videolarim/medikal",
+        "/videolarim/urun-medikal",
+        "/videolarim/satis",
+        "/videolarim/yonetim",
+        "/videolarim/ik",
+        "/oneriler",
+        "/t-club-ligi",
+        "/raporlar/utt",
+        "/eclub/eczanelerim",
+        "/eclub/yayinlar",
+        "/eclub/ligi",
+        "/eczanem/yayinlar",
+        "/store",
+        "/store/siparislerim",
+        "/store/adreslerim"
+      ],
+      "renk_kaynak_kontrolu": "Renk dışı kaynak korunumu ve iki tema değişken çözümlemesi başarılı",
+      "otomatik_kapsam": "Ortak üst/sol/mobil menü iki tema testi ve rolün mevcut ana sayfa/kapsam testleri",
+      "gercek_rol_oturumu": "DOGRULANMADI",
+      "gercek_gorsel_durumlar": {
+        "mavi": "DOGRULANMADI",
+        "yesil": "DOGRULANMADI"
+      },
+      "acik_kontrol": "Gerçek oturumda role özgü dolu/boş/hata/yüklenme, seçim ve açık pencere görsel kontrolü"
+    },
+    {
+      "rol": "iu",
+      "etiket": "İçerik Üreticisi",
+      "kimlik_turu": "kullanici",
+      "ana_kaynak": "components/ana-sayfa/IuAnaSayfa.tsx",
+      "ana_yol": "/ana-sayfa",
+      "menu_modul_kombinasyonu": 32,
+      "acik_modul_yollari": [
+        "/senaryolar",
+        "/videolar",
+        "/soru-setleri",
+        "/onaylanan-talepler",
+        "/t-club-ligi"
+      ],
+      "renk_kaynak_kontrolu": "Renk dışı kaynak korunumu ve iki tema değişken çözümlemesi başarılı",
+      "otomatik_kapsam": "Ortak üst/sol/mobil menü iki tema testi ve rolün mevcut ana sayfa/kapsam testleri",
+      "gercek_rol_oturumu": "DOGRULANMADI",
+      "gercek_gorsel_durumlar": {
+        "mavi": "DOGRULANMADI",
+        "yesil": "DOGRULANMADI"
+      },
+      "acik_kontrol": "Gerçek oturumda role özgü dolu/boş/hata/yüklenme, seçim ve açık pencere görsel kontrolü"
+    },
+    {
+      "rol": "eczaci",
+      "etiket": "Eczacı",
+      "kimlik_turu": "eclub_kisi",
+      "ana_kaynak": "app/(panel)/eclub/ana-sayfa/page.tsx",
+      "ana_yol": "/eclub/ana-sayfa",
+      "menu_modul_kombinasyonu": 32,
+      "acik_modul_yollari": [
+        "/eclub/firmalar",
+        "/eczanem/eczane/uyeler",
+        "/eczanem/eczane/uye-yayinlari",
+        "/eczanem/eczane/inidirm-onayi"
+      ],
+      "renk_kaynak_kontrolu": "Renk dışı kaynak korunumu ve iki tema değişken çözümlemesi başarılı",
+      "otomatik_kapsam": "Ortak üst/sol/mobil menü iki tema testi ve rolün mevcut ana sayfa/kapsam testleri",
+      "gercek_rol_oturumu": "DOGRULANMADI",
+      "gercek_gorsel_durumlar": {
+        "mavi": "DOGRULANMADI",
+        "yesil": "DOGRULANMADI"
+      },
+      "acik_kontrol": "Gerçek oturumda role özgü dolu/boş/hata/yüklenme, seçim ve açık pencere görsel kontrolü"
+    },
+    {
+      "rol": "ikinci_eczaci",
+      "etiket": "İkinci Eczacı",
+      "kimlik_turu": "eclub_kisi",
+      "ana_kaynak": "app/(panel)/eclub/ana-sayfa/page.tsx",
+      "ana_yol": "/eclub/ana-sayfa",
+      "menu_modul_kombinasyonu": 32,
+      "acik_modul_yollari": [
+        "/eclub/firmalar",
+        "/eczanem/eczane/uyeler",
+        "/eczanem/eczane/uye-yayinlari",
+        "/eczanem/eczane/inidirm-onayi"
+      ],
+      "renk_kaynak_kontrolu": "Renk dışı kaynak korunumu ve iki tema değişken çözümlemesi başarılı",
+      "otomatik_kapsam": "Ortak üst/sol/mobil menü iki tema testi ve rolün mevcut ana sayfa/kapsam testleri",
+      "gercek_rol_oturumu": "DOGRULANMADI",
+      "gercek_gorsel_durumlar": {
+        "mavi": "DOGRULANMADI",
+        "yesil": "DOGRULANMADI"
+      },
+      "acik_kontrol": "Gerçek oturumda role özgü dolu/boş/hata/yüklenme, seçim ve açık pencere görsel kontrolü"
+    },
+    {
+      "rol": "yardimci_eczaci",
+      "etiket": "Yardımcı Eczacı",
+      "kimlik_turu": "eclub_kisi",
+      "ana_kaynak": "app/(panel)/eclub/ana-sayfa/page.tsx",
+      "ana_yol": "/eclub/ana-sayfa",
+      "menu_modul_kombinasyonu": 32,
+      "acik_modul_yollari": [
+        "/eclub/firmalar",
+        "/eczanem/eczane/uyeler",
+        "/eczanem/eczane/uye-yayinlari",
+        "/eczanem/eczane/inidirm-onayi"
+      ],
+      "renk_kaynak_kontrolu": "Renk dışı kaynak korunumu ve iki tema değişken çözümlemesi başarılı",
+      "otomatik_kapsam": "Ortak üst/sol/mobil menü iki tema testi ve rolün mevcut ana sayfa/kapsam testleri",
+      "gercek_rol_oturumu": "DOGRULANMADI",
+      "gercek_gorsel_durumlar": {
+        "mavi": "DOGRULANMADI",
+        "yesil": "DOGRULANMADI"
+      },
+      "acik_kontrol": "Gerçek oturumda role özgü dolu/boş/hata/yüklenme, seçim ve açık pencere görsel kontrolü"
+    },
+    {
+      "rol": "eczane_teknisyeni",
+      "etiket": "Eczane Teknisyeni",
+      "kimlik_turu": "eclub_kisi",
+      "ana_kaynak": "app/(panel)/eclub/ana-sayfa/page.tsx",
+      "ana_yol": "/eclub/ana-sayfa",
+      "menu_modul_kombinasyonu": 32,
+      "acik_modul_yollari": [
+        "/eclub/firmalar",
+        "/eczanem/eczane/uyeler",
+        "/eczanem/eczane/uye-yayinlari",
+        "/eczanem/eczane/inidirm-onayi"
+      ],
+      "renk_kaynak_kontrolu": "Renk dışı kaynak korunumu ve iki tema değişken çözümlemesi başarılı",
+      "otomatik_kapsam": "Ortak üst/sol/mobil menü iki tema testi ve rolün mevcut ana sayfa/kapsam testleri",
+      "gercek_rol_oturumu": "DOGRULANMADI",
+      "gercek_gorsel_durumlar": {
+        "mavi": "DOGRULANMADI",
+        "yesil": "DOGRULANMADI"
+      },
+      "acik_kontrol": "Gerçek oturumda role özgü dolu/boş/hata/yüklenme, seçim ve açık pencere görsel kontrolü"
+    },
+    {
+      "rol": "musteri",
+      "etiket": "Müşteri",
+      "kimlik_turu": "musteri",
+      "ana_kaynak": "app/eczanem/page.tsx",
+      "ana_yol": "/eczanem",
+      "menu_modul_kombinasyonu": 0,
+      "acik_modul_yollari": [],
+      "renk_kaynak_kontrolu": "Renk dışı kaynak korunumu ve iki tema değişken çözümlemesi başarılı",
+      "otomatik_kapsam": "Gerçek müşteri navbar profil/çekmece/çıkış/silme callback testi; sahte bağımlılıklar",
+      "gercek_rol_oturumu": "DOGRULANMADI",
+      "gercek_gorsel_durumlar": {
+        "mavi": "DOGRULANMADI",
+        "yesil": "DOGRULANMADI"
+      },
+      "acik_kontrol": "Gerçek oturumda role özgü dolu/boş/hata/yüklenme, seçim ve açık pencere görsel kontrolü"
+    }
+  ]
+}

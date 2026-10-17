@@ -15,11 +15,11 @@ import { beniHatirlaKaydet } from "@/lib/utils/beniHatirla";
 import { mobilKarsilamaYonlendiricisiOlustur } from "@/lib/auth/mobilKarsilama";
 import GirisAltBilgileri from "./_components/GirisAltBilgileri";
 
-const BORDO = "#bc2d0d";
+const BORDO = "var(--tema-yerel-giris-vurgu-metin-01)";
 // F-04 (18.07.2026): giriş ekranı renk/yerleşim talebi — sol %50 açık zemin
 // (#f3f4f7) + logo sol üst-orta + metin/ikon #737373 (Eczanem kalbi bordo),
 // sağ %50 #ffffff + "Giriş" başlığı. Madde listesi: docs/fiziksel_tespitler_ve_cozumler.md F-04.
-const GRI_METIN = "#737373";
+const GRI_METIN = "var(--tema-yerel-giris-yardimci-metin-03)";
 
 // Sol paneldeki modül tanıtımları — cümleler İskender'le birlikte yazıldı (18.07.2026).
 // Kalıp: "amaç + İÇİN + hedef kitle + yüklem"; değer zinciri sırası temsilci →
@@ -52,7 +52,7 @@ const MODULLER = [
     aciklama: "Ürün bilgisine eczaneden ulaşılması için danışanları teşvik eder",
     // F-04/5: kalbin çizgi rengi bordo — currentColor değil, sabit.
     ikon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#bc2d0d" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--tema-yerel-giris-vurgu-metin-01)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 20s-7-4.4-9.2-8.8C1.5 8.4 3.4 5 6.6 5 8.7 5 10.5 6.3 12 8c1.5-1.7 3.3-3 5.4-3 3.2 0 5.1 3.4 3.8 6.2C19 15.6 12 20 12 20z" />
       </svg>
     ),
@@ -203,7 +203,7 @@ export default function LoginPage() {
         {/* Sol panel — marka anlatısı (F-04): %50 genişlik, açık zemin #f3f4f7,
             logo sol üst-orta, metin ve ikonlar #737373 (Eczanem kalbi bordo) */}
         <div className="md:w-1/2 flex items-center justify-center px-6 py-10 md:px-12 lg:px-16"
-          style={{ background: "#f3f4f7" }}>
+          style={{ background: "var(--tema-yerel-giris-sayfa-zemini-02)" }}>
           {/* F-04 hizalama: masaüstünde sol blok 3cm yukarı, sağ blok 3cm aşağı —
               metin alanının orta çizgisi giriş alanının ekseniyle çakışır (İskender, ekran görseliyle) */}
           <div className="max-w-md w-full md:-translate-y-[75px]">
@@ -222,8 +222,8 @@ export default function LoginPage() {
                 <span className="flex-shrink-0 flex items-center justify-center rounded-lg"
                   style={{
                     width: 38, height: 38,
-                    background: "rgba(115,115,115,0.08)",
-                    border: "1px solid rgba(115,115,115,0.22)",
+                    background: "var(--tema-yerel-giris-eylem-zemin-01)",
+                    border: "1px solid var(--tema-yerel-giris-cizgi-02)",
                     color: GRI_METIN,
                   }}>
                   {m.ikon}
@@ -241,7 +241,7 @@ export default function LoginPage() {
       {/* Sağ panel — giriş (F-04): %50 genişlik, zemin #ffffff, logo sola taşındı,
           form bloğunun üstünde sola yaslı bold "Giriş" başlığı */}
       <div className="md:w-1/2 flex flex-col items-center justify-center px-6 py-10 md:py-6"
-        style={{ background: "#ffffff" }}>
+        style={{ background: "var(--tema-yerel-giris-kart-02)" }}>
         <div className="w-full max-w-sm md:translate-y-[60px]">
           {!sifirlamaAcik && (
             <h2 className="text-xl font-bold text-left mb-6" style={{ color: GRI_METIN }}>Giriş</h2>
@@ -251,13 +251,13 @@ export default function LoginPage() {
           /* F-03/A: şifre sıfırlama görünümü — giriş formuyla yer değiştirir */
           <form onSubmit={handleSifirlamaGonder} className="flex flex-col gap-4">
             <div>
-              <h2 className="text-base font-bold text-gray-900 m-0 mb-1">Şifre Sıfırlama</h2>
-              <p className="text-xs text-gray-500 m-0 leading-relaxed">
+              <h2 className="text-base font-bold text-[var(--tema-yerel-giris-ana-metin-03)] m-0 mb-1">Şifre Sıfırlama</h2>
+              <p className="text-xs text-[var(--tema-yerel-giris-yardimci-metin-01)] m-0 leading-relaxed">
                 Kayıtlı e-posta adresinizi girin; şifre sıfırlama bağlantısı gönderelim.
               </p>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-gray-500 mb-1.5">E-posta</label>
+              <label className="block text-xs font-semibold text-[var(--tema-yerel-giris-yardimci-metin-01)] mb-1.5">E-posta</label>
               <input
                 type="email"
                 value={sifirlamaEmail}
@@ -265,21 +265,21 @@ export default function LoginPage() {
                 required
                 autoComplete="email"
                 placeholder="ornek@sirket.com"
-                className="w-full border border-gray-300 rounded-xl px-3.5 py-2.5 text-sm bg-white text-gray-900 outline-none box-border transition-shadow focus:border-[#bc2d0d] focus:ring-2 focus:ring-[#bc2d0d]/15"
+                className="w-full border border-[var(--tema-yerel-giris-cizgi-03)] rounded-xl px-3.5 py-2.5 text-sm bg-[var(--tema-yerel-giris-kart-01)] text-[var(--tema-yerel-giris-ana-metin-03)] outline-none box-border transition-shadow focus:border-[var(--tema-yerel-giris-vurgu-cizgi-01)] focus:ring-2 focus:ring-[var(--tema-yerel-giris-vurgu-odak-01)]/15"
                 style={{ fontFamily: "'Nunito', sans-serif" }}
               />
             </div>
 
             {sifirlamaMesaj && (
-              <div className="bg-gray-50 border border-gray-200 rounded-xl px-3 py-2">
-                <p className="text-xs text-gray-700 m-0 leading-relaxed">{sifirlamaMesaj}</p>
+              <div className="bg-[var(--tema-yerel-giris-sayfa-zemini-03)] border border-[var(--tema-yerel-giris-cizgi-04)] rounded-xl px-3 py-2">
+                <p className="text-xs text-[var(--tema-yerel-giris-ana-metin-04)] m-0 leading-relaxed">{sifirlamaMesaj}</p>
               </div>
             )}
 
             <button
               type="submit"
               disabled={sifirlamaGonderiliyor}
-              className="w-full text-white font-bold rounded-xl py-3 text-sm border-none transition-opacity hover:opacity-90"
+              className="w-full text-[var(--tema-yerel-giris-ters-metin-01)] font-bold rounded-xl py-3 text-sm border-none transition-opacity hover:opacity-90"
               style={{
                 background: BORDO,
                 cursor: sifirlamaGonderiliyor ? "not-allowed" : "pointer",
@@ -302,7 +302,7 @@ export default function LoginPage() {
           ) : (
           <form onSubmit={handleLogin} className="flex flex-col gap-4">
             <div>
-              <label className="block text-xs font-semibold text-gray-500 mb-1.5">E-posta veya Cep Telefonu</label>
+              <label className="block text-xs font-semibold text-[var(--tema-yerel-giris-yardimci-metin-01)] mb-1.5">E-posta veya Cep Telefonu</label>
               <input
                 type="text"
                 value={email}
@@ -310,13 +310,13 @@ export default function LoginPage() {
                 required
                 autoComplete="username"
                 placeholder="E-posta ya da cep telefon numarası"
-                className="w-full border border-gray-300 rounded-xl px-3.5 py-2.5 text-sm bg-white text-gray-900 outline-none box-border transition-shadow focus:border-[#bc2d0d] focus:ring-2 focus:ring-[#bc2d0d]/15"
+                className="w-full border border-[var(--tema-yerel-giris-cizgi-03)] rounded-xl px-3.5 py-2.5 text-sm bg-[var(--tema-yerel-giris-kart-01)] text-[var(--tema-yerel-giris-ana-metin-03)] outline-none box-border transition-shadow focus:border-[var(--tema-yerel-giris-vurgu-cizgi-01)] focus:ring-2 focus:ring-[var(--tema-yerel-giris-vurgu-odak-01)]/15"
                 style={{ fontFamily: "'Nunito', sans-serif" }}
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-gray-500 mb-1.5">Şifre</label>
+              <label className="block text-xs font-semibold text-[var(--tema-yerel-giris-yardimci-metin-01)] mb-1.5">Şifre</label>
               <div className="relative">
                 <input
                   type={sifreGoster ? "text" : "password"}
@@ -325,14 +325,14 @@ export default function LoginPage() {
                   required
                   autoComplete="current-password"
                   placeholder="••••••••"
-                  className="w-full border border-gray-300 rounded-xl pl-3.5 pr-10 py-2.5 text-sm bg-white text-gray-900 outline-none box-border transition-shadow focus:border-[#bc2d0d] focus:ring-2 focus:ring-[#bc2d0d]/15"
+                  className="w-full border border-[var(--tema-yerel-giris-cizgi-03)] rounded-xl pl-3.5 pr-10 py-2.5 text-sm bg-[var(--tema-yerel-giris-kart-01)] text-[var(--tema-yerel-giris-ana-metin-03)] outline-none box-border transition-shadow focus:border-[var(--tema-yerel-giris-vurgu-cizgi-01)] focus:ring-2 focus:ring-[var(--tema-yerel-giris-vurgu-odak-01)]/15"
                   style={{ fontFamily: "'Nunito', sans-serif" }}
                 />
                 <button
                   type="button"
                   onClick={() => setSifreGoster(!sifreGoster)}
                   aria-label={sifreGoster ? "Şifreyi gizle" : "Şifreyi göster"}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 bg-transparent border-none p-0 cursor-pointer text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 bg-transparent border-none p-0 cursor-pointer text-[var(--tema-yerel-giris-yardimci-metin-02)] hover:text-[var(--tema-yerel-giris-ana-metin-01)]"
                 >
                   {sifreGoster ? (
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -351,7 +351,7 @@ export default function LoginPage() {
             </div>
 
             <div className="flex items-center justify-between">
-              <label className="flex items-center gap-1.5 text-xs text-gray-500 cursor-pointer">
+              <label className="flex items-center gap-1.5 text-xs text-[var(--tema-yerel-giris-yardimci-metin-01)] cursor-pointer">
                 <input
                   type="checkbox"
                   checked={beniHatirla}
@@ -373,18 +373,18 @@ export default function LoginPage() {
             </div>
 
             {hata && (
-              <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-xl px-3 py-2">
-                <svg className="w-3 h-3 flex-shrink-0" style={{ color: BORDO }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="flex items-center gap-2 bg-[var(--tema-yerel-giris-islevsel-zemin-01)] border border-[var(--tema-yerel-giris-islevsel-cizgi-01)] rounded-xl px-3 py-2">
+                <svg className="w-3 h-3 flex-shrink-0" style={{ color: "var(--tema-yerel-giris-hata-metni)" }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <p className="text-xs m-0" style={{ color: BORDO }}>{hata}</p>
+                <p className="text-xs m-0" style={{ color: "var(--tema-yerel-giris-hata-metni)" }}>{hata}</p>
               </div>
             )}
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full text-white font-bold rounded-xl py-3 text-sm border-none flex items-center justify-center gap-1.5 transition-opacity hover:opacity-90"
+              className="w-full text-[var(--tema-yerel-giris-ters-metin-01)] font-bold rounded-xl py-3 text-sm border-none flex items-center justify-center gap-1.5 transition-opacity hover:opacity-90"
               style={{
                 background: BORDO,
                 cursor: loading ? "not-allowed" : "pointer",

@@ -82,13 +82,13 @@ export function DepoAramaliSecim({ eczaneId, onKayitliTercihler, className, ref 
         if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); setAktif((v) => Math.max(0, Math.min(sonuclar.length - 1, v + (e.key === "ArrowDown" ? 1 : -1)))); }
         if (e.key === "Enter" && sonuclar[aktif]) { e.preventDefault(); void ekle(sonuclar[aktif]); }
       }} />
-      {hata && <p role="alert" className="mt-2 text-xs text-red-700">{hata}</p>}
+      {hata && <p role="alert" className="mt-2 text-xs text-[var(--tema-yerel-eclub-islevsel-metin-06)]">{hata}</p>}
       <div id={listeId} role="listbox" aria-label="Depo ve şube sonuçları" className="mt-2 max-h-64 overflow-y-auto">
-        {arama.trim().length < 3 ? null : !sonuclar.length ? <p className="p-2 text-xs text-slate-500">Sonuç yok.</p> : sonuclar.map((k, i) => <SadeSecimSecenegi role="option" aria-selected={i === aktif} id={`${listeId}-${i}`} key={k.depo_sube_id} tabIndex={-1} disabled={islem} onMouseDown={(e) => e.preventDefault()} onClick={() => void ekle(k)} title={`${k.depo_adi} · ${k.il} / ${k.ilce} · ${k.adres}`}>
-          <strong className="block text-xs text-slate-800">{depoOzetEtiketi(k)}</strong>
+        {arama.trim().length < 3 ? null : !sonuclar.length ? <p className="p-2 text-xs text-[var(--tema-yerel-eclub-yardimci-metin-30)]">Sonuç yok.</p> : sonuclar.map((k, i) => <SadeSecimSecenegi role="option" aria-selected={i === aktif} id={`${listeId}-${i}`} key={k.depo_sube_id} tabIndex={-1} disabled={islem} onMouseDown={(e) => e.preventDefault()} onClick={() => void ekle(k)} title={`${k.depo_adi} · ${k.il} / ${k.ilce} · ${k.adres}`}>
+          <strong className="block text-xs text-[var(--tema-yerel-eclub-ana-metin-21)]">{depoOzetEtiketi(k)}</strong>
         </SadeSecimSecenegi>)}
       </div>
-      {islem && <p role="status" className="mt-2 text-xs text-blue-700">Kaydediliyor…</p>}
+      {islem && <p role="status" className="mt-2 text-xs text-[var(--tema-yerel-eclub-eylem-metin-08)]">Kaydediliyor…</p>}
     </SadeSecimMenusu></Popover.Portal>
   </Popover.Root>;
 }

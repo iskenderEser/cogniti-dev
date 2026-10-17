@@ -44,18 +44,18 @@ interface PanelProps {
 export default function ChallengeGonderPaneli({ videolar, kalanKota, hata, onGonder }: PanelProps) {
   if (videolar.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-[#d8e2ec] bg-white px-5 py-12 text-center">
-        <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-2xl bg-[#f1f6fa] text-[#8ba0b5]"><BookOpen size={20} /></span>
-        <h2 className="mt-3 text-sm font-extrabold text-[#40556d]">Henüz tamamladığınız yayın yok.</h2>
-        <p className="mx-auto mt-1 max-w-md text-xs font-semibold leading-5 text-[#8a99aa]">Bir Challenge Club yayınını tamamladığınızda burada listelenir.</p>
+      <div className="rounded-2xl border border-dashed border-[var(--tema-yerel-lig-cizgi-04)] bg-[var(--tema-yerel-lig-kart-01)] px-5 py-12 text-center">
+        <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--tema-yerel-lig-sayfa-zemini-02)] text-[var(--tema-yerel-lig-yardimci-metin-06)]"><BookOpen size={20} /></span>
+        <h2 className="mt-3 text-sm font-extrabold text-[var(--tema-yerel-lig-ana-metin-05)]">Henüz tamamladığınız yayın yok.</h2>
+        <p className="mx-auto mt-1 max-w-md text-xs font-semibold leading-5 text-[var(--tema-yerel-lig-yardimci-metin-09)]">Bir Challenge Club yayınını tamamladığınızda burada listelenir.</p>
       </div>
     );
   }
   return (
-    <section className="overflow-visible rounded-2xl border border-[#dfe7f1] bg-white shadow-[0_6px_18px_rgba(31,55,90,0.035)]">
-      <div className="border-b border-[#e5ecf4] px-4 py-3.5">
-        <h2 className="text-base font-extrabold text-[#203653]">Gönderilecek Yayınlar</h2>
-        <p className="mt-0.5 text-[11px] font-semibold text-[#7b8da5]">{videolar.length} yayın · {kalanKota} gönderim hakkı kaldı</p>
+    <section className="overflow-visible rounded-2xl border border-[var(--tema-yerel-lig-islevsel-cizgi-10)] bg-[var(--tema-yerel-lig-islevsel-zemin-14)] shadow-[0_6px_18px_var(--tema-yerel-lig-islevsel-golge-01)]">
+      <div className="border-b border-[var(--tema-yerel-lig-cizgi-07)] px-4 py-3.5">
+        <h2 className="text-base font-extrabold text-[var(--tema-yerel-lig-ana-metin-04)]">Gönderilecek Yayınlar</h2>
+        <p className="mt-0.5 text-[11px] font-semibold text-[var(--tema-yerel-lig-yardimci-metin-10)]">{videolar.length} yayın · {kalanKota} gönderim hakkı kaldı</p>
       </div>
       {videolar.map((video) => (
         <ChallengeGonderSatiri key={video.yayin_id} video={video} hata={hata} onGonder={onGonder} />
@@ -97,15 +97,15 @@ function ChallengeGonderSatiri({ video, hata, onGonder }: { video: GonderVideo; 
   };
 
   return (
-    <article className="border-b border-[#e7edf4] p-3 last:border-b-0 md:p-4">
+    <article className="border-b border-[var(--tema-yerel-lig-cizgi-08)] p-3 last:border-b-0 md:p-4">
       <div className="grid gap-3 lg:grid-cols-[minmax(220px,1.4fr)_minmax(120px,0.55fr)_minmax(240px,1fr)] lg:items-center">
         {/* Video */}
         <DagitimIcerikOzeti icerik={video} />
 
         {/* Bilgi */}
         <div className="min-w-0">
-          <span className="block text-[9px] font-bold uppercase tracking-wide text-[#8a99aa]">Yayın puanı</span>
-          <strong className="mt-1 block text-[11px] text-[#405976]">{video.video_puani == null ? "—" : `${video.video_puani} puan`}</strong>
+          <span className="block text-[9px] font-bold uppercase tracking-wide text-[var(--tema-yerel-lig-yardimci-metin-09)]">Yayın puanı</span>
+          <strong className="mt-1 block text-[11px] text-[var(--tema-yerel-lig-ana-metin-07)]">{video.video_puani == null ? "—" : `${video.video_puani} puan`}</strong>
         </div>
 
         {/* Alıcı seçimi + Gönder */}
@@ -117,11 +117,11 @@ function ChallengeGonderSatiri({ video, hata, onGonder }: { video: GonderVideo; 
  degerler={secililer} onDegistir={(ids) => { setSecililer(ids); setSonuc(null); }}
  onAcikDegistir={acKapat} yukleniyor={aliciLoading} disabled={gonderiliyor}
 />
-            <Button type="button" onClick={() => void gonder()} disabled={secililer.length === 0 || gonderiliyor} className="w-full shrink-0 bg-[#237ac8] text-xs font-extrabold hover:bg-[#1d69aa] sm:w-auto">
+            <Button type="button" onClick={() => void gonder()} disabled={secililer.length === 0 || gonderiliyor} className="w-full shrink-0 bg-[var(--tema-yerel-lig-eylem-zemin-02)] text-xs font-extrabold hover:bg-[var(--tema-yerel-lig-eylem-zemin-03)] sm:w-auto">
               {gonderiliyor ? "Gönderiliyor…" : `${secililer.length || ""} ${secililer.length ? "BM'ye Gönder" : "Gönder"}`}
             </Button>
           </div>
-          {sonuc && <p className="mt-1.5 text-[10px] font-semibold text-[#617894]">{sonuc.gonderilen_sayisi} gönderildi{sonuc.atlanan.length > 0 ? ` · ${sonuc.atlanan.length} atlandı` : ""}.</p>}
+          {sonuc && <p className="mt-1.5 text-[10px] font-semibold text-[var(--tema-yerel-lig-yardimci-metin-11)]">{sonuc.gonderilen_sayisi} gönderildi{sonuc.atlanan.length > 0 ? ` · ${sonuc.atlanan.length} atlandı` : ""}.</p>}
         </div>
       </div>
     </article>

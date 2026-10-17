@@ -41,15 +41,15 @@ const ARAC_TURU_ETIKET: Record<EczanemAracTuru, string> = {
 function AracIkonu({ tur }: { tur: EczanemAracTuru }) {
   switch (tur) {
     case "video":
-      return <Video className="size-3.5 shrink-0 text-[#bc2d0d]" />;
+      return <Video className="size-3.5 shrink-0 text-[var(--tema-yerel-eczanem-vurgu-metin-01)]" />;
     case "podcast":
-      return <Headphones className="size-3.5 shrink-0 text-[#8250df]" />;
+      return <Headphones className="size-3.5 shrink-0 text-[var(--tema-yerel-eczanem-islevsel-metin-29)]" />;
     case "gorsel":
-      return <ImageIcon className="size-3.5 shrink-0 text-[#1a7f37]" />;
+      return <ImageIcon className="size-3.5 shrink-0 text-[var(--tema-yerel-eczanem-islevsel-metin-30)]" />;
     case "flip_pdf":
-      return <BookOpen className="size-3.5 shrink-0 text-[#cf222e]" />;
+      return <BookOpen className="size-3.5 shrink-0 text-[var(--tema-yerel-eczanem-islevsel-metin-31)]" />;
     default:
-      return <FileText className="size-3.5 shrink-0 text-[#656d76]" />;
+      return <FileText className="size-3.5 shrink-0 text-[var(--tema-yerel-eczanem-yardimci-metin-32)]" />;
   }
 }
 
@@ -218,18 +218,18 @@ export default function EczanemMusteriSidebar({
     return (
       <div className="flex flex-col gap-2">
         {/* 1. Tüm İçerikler */}
-        <div className="border-b border-[#e2e8f0] pb-2">
+        <div className="border-b border-[var(--tema-yerel-eczanem-cizgi-29)] pb-2">
           <button
             type="button"
             onClick={() => secimYap({ tip: "tum" }, mobildeMi)}
             aria-pressed={tumSecili}
             className={`flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-black transition ${
               tumSecili
-                ? "bg-[#fef2f2] text-[#bc2d0d] ring-1 ring-[#fecaca]"
-                : "text-[#374151] hover:bg-gray-50 hover:text-gray-900"
+                ? "bg-[var(--tema-yerel-eczanem-islevsel-zemin-32)] text-[var(--tema-yerel-eczanem-vurgu-metin-01)] ring-1 ring-[var(--tema-yerel-eczanem-islevsel-odak-01)]"
+                : "text-[var(--tema-yerel-eczanem-ana-metin-19)] hover:bg-[var(--tema-yerel-eczanem-sayfa-zemini-05)] hover:text-[var(--tema-yerel-eczanem-ana-metin-02)]"
             }`}
           >
-            <Layers className="size-4 shrink-0 text-[#bc2d0d]" />
+            <Layers className="size-4 shrink-0 text-[var(--tema-yerel-eczanem-vurgu-metin-01)]" />
             <span>Tüm İçerikler</span>
             {tumSecili && <span className="sr-only"> (seçili)</span>}
           </button>
@@ -237,12 +237,12 @@ export default function EczanemMusteriSidebar({
 
         {/* 2. Eczanelerim Başlığı ve Ağaç */}
         {agac.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-[#e2e8f0] bg-[#fafafa] p-4 text-center text-xs font-semibold text-gray-500">
+          <div className="rounded-xl border border-dashed border-[var(--tema-yerel-eczanem-cizgi-29)] bg-[var(--tema-yerel-eczanem-sayfa-zemini-18)] p-4 text-center text-xs font-semibold text-[var(--tema-yerel-eczanem-yardimci-metin-04)]">
             Henüz eczanenizden içerik bulunmuyor.
           </div>
         ) : (
           <div>
-            <p className="px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-gray-400">
+            <p className="px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-[var(--tema-yerel-eczanem-yardimci-metin-03)]">
               Eczanelerim
             </p>
 
@@ -259,8 +259,8 @@ export default function EczanemMusteriSidebar({
                     <div
                       className={`group flex items-center justify-between rounded-xl px-2 py-1.5 transition ${
                         eczaneAktif
-                          ? "bg-[#fef2f2] text-[#bc2d0d] font-black ring-1 ring-[#fecaca]"
-                          : "text-[#374151] hover:bg-gray-50"
+                          ? "bg-[var(--tema-yerel-eczanem-islevsel-zemin-32)] text-[var(--tema-yerel-eczanem-vurgu-metin-01)] font-black ring-1 ring-[var(--tema-yerel-eczanem-islevsel-odak-01)]"
+                          : "text-[var(--tema-yerel-eczanem-ana-metin-19)] hover:bg-[var(--tema-yerel-eczanem-sayfa-zemini-05)]"
                       }`}
                     >
                       <button
@@ -274,7 +274,7 @@ export default function EczanemMusteriSidebar({
                         aria-pressed={eczaneAktif}
                         className="flex min-w-0 flex-1 items-center gap-2 text-left text-xs font-bold"
                       >
-                        <Building2 className="size-3.5 shrink-0 text-[#bc2d0d]" />
+                        <Building2 className="size-3.5 shrink-0 text-[var(--tema-yerel-eczanem-vurgu-metin-01)]" />
                         <span className="truncate">{eczane.eczane_adi}</span>
                         {eczaneAktif && (
                           <span className="sr-only"> (seçili)</span>
@@ -289,7 +289,7 @@ export default function EczanemMusteriSidebar({
                         aria-label={`${eczane.eczane_adi} firmalarını ${
                           eczaneAcik ? "kapat" : "aç"
                         }`}
-                        className="ml-1 rounded-md p-1 text-gray-400 hover:bg-black/5 hover:text-gray-700"
+                        className="ml-1 rounded-md p-1 text-[var(--tema-yerel-eczanem-yardimci-metin-03)] hover:bg-[var(--tema-yerel-eczanem-ortu-01)]/5 hover:text-[var(--tema-yerel-eczanem-ana-metin-13)]"
                       >
                         {eczaneAcik ? (
                           <ChevronDown className="size-3.5" />
@@ -303,11 +303,11 @@ export default function EczanemMusteriSidebar({
                     {eczaneAcik && (
                       <div id={eczaneAltId}>
                         {eczane.firmalar.length === 0 ? (
-                          <p className="ml-5 py-1.5 text-[11px] italic text-gray-400">
+                          <p className="ml-5 py-1.5 text-[11px] italic text-[var(--tema-yerel-eczanem-yardimci-metin-03)]">
                             Bu eczanede içerik sağlayan firma bulunmuyor.
                           </p>
                         ) : (
-                          <ul className="ml-3.5 mt-0.5 flex flex-col gap-1 border-l border-[#e2e8f0] pl-2">
+                          <ul className="ml-3.5 mt-0.5 flex flex-col gap-1 border-l border-[var(--tema-yerel-eczanem-cizgi-29)] pl-2">
                             {eczane.firmalar.map((firma) => {
                               const firmaKey = `firma:${eczane.eczane_id}:${firma.firma_id}`;
                               const firmaAcik = acikDallar.has(firmaKey);
@@ -323,8 +323,8 @@ export default function EczanemMusteriSidebar({
                                   <div
                                     className={`group flex items-center justify-between rounded-lg px-2 py-1 transition ${
                                       firmaAktif
-                                        ? "bg-[#fef2f2] text-[#bc2d0d] font-bold ring-1 ring-[#fecaca]"
-                                        : "text-[#4b5563] hover:bg-gray-50"
+                                        ? "bg-[var(--tema-yerel-eczanem-islevsel-zemin-32)] text-[var(--tema-yerel-eczanem-vurgu-metin-01)] font-bold ring-1 ring-[var(--tema-yerel-eczanem-islevsel-odak-01)]"
+                                        : "text-[var(--tema-yerel-eczanem-ana-metin-17)] hover:bg-[var(--tema-yerel-eczanem-sayfa-zemini-05)]"
                                     }`}
                                   >
                                     <button
@@ -342,7 +342,7 @@ export default function EczanemMusteriSidebar({
                                       aria-pressed={firmaAktif}
                                       className="flex min-w-0 flex-1 items-center gap-2 text-left text-[11px] font-bold"
                                     >
-                                      <Folder className="size-3 shrink-0 text-gray-500" />
+                                      <Folder className="size-3 shrink-0 text-[var(--tema-yerel-eczanem-yardimci-metin-04)]" />
                                       <span className="truncate">
                                         {firma.firma_adi}
                                       </span>
@@ -362,7 +362,7 @@ export default function EczanemMusteriSidebar({
                                       aria-label={`${firma.firma_adi} ürünlerini ${
                                         firmaAcik ? "kapat" : "aç"
                                       }`}
-                                      className="ml-1 rounded-md p-0.5 text-gray-400 hover:bg-black/5 hover:text-gray-700"
+                                      className="ml-1 rounded-md p-0.5 text-[var(--tema-yerel-eczanem-yardimci-metin-03)] hover:bg-[var(--tema-yerel-eczanem-ortu-01)]/5 hover:text-[var(--tema-yerel-eczanem-ana-metin-13)]"
                                     >
                                       {firmaAcik ? (
                                         <ChevronDown className="size-3" />
@@ -376,11 +376,11 @@ export default function EczanemMusteriSidebar({
                                   {firmaAcik && (
                                     <div id={firmaAltId}>
                                       {firma.urunler.length === 0 ? (
-                                        <p className="ml-5 py-1.5 text-[11px] italic text-gray-400">
+                                        <p className="ml-5 py-1.5 text-[11px] italic text-[var(--tema-yerel-eczanem-yardimci-metin-03)]">
                                           Bu firmaya ait ürün veya içerik bulunmuyor.
                                         </p>
                                       ) : (
-                                        <ul className="ml-3 mt-0.5 flex flex-col gap-1 border-l border-[#e2e8f0] pl-2">
+                                        <ul className="ml-3 mt-0.5 flex flex-col gap-1 border-l border-[var(--tema-yerel-eczanem-cizgi-29)] pl-2">
                                           {firma.urunler.map((urun, urunIdx) => {
                                             const urunKey = `urun:${eczane.eczane_id}:${
                                               firma.firma_id
@@ -415,8 +415,8 @@ export default function EczanemMusteriSidebar({
                                                 <div
                                                   className={`group flex items-center justify-between rounded-lg px-2 py-1 transition ${
                                                     urunAktif
-                                                      ? "bg-[#fef2f2] text-[#bc2d0d] font-black ring-1 ring-[#fecaca]"
-                                                      : "text-gray-600 hover:bg-gray-50"
+                                                      ? "bg-[var(--tema-yerel-eczanem-islevsel-zemin-32)] text-[var(--tema-yerel-eczanem-vurgu-metin-01)] font-black ring-1 ring-[var(--tema-yerel-eczanem-islevsel-odak-01)]"
+                                                      : "text-[var(--tema-yerel-eczanem-ana-metin-16)] hover:bg-[var(--tema-yerel-eczanem-sayfa-zemini-05)]"
                                                   }`}
                                                 >
                                                   <button
@@ -437,7 +437,7 @@ export default function EczanemMusteriSidebar({
                                                     aria-pressed={urunAktif}
                                                     className="flex min-w-0 flex-1 items-center gap-1.5 text-left text-[11px] font-bold"
                                                   >
-                                                    <Package className="size-3 shrink-0 text-gray-400" />
+                                                    <Package className="size-3 shrink-0 text-[var(--tema-yerel-eczanem-yardimci-metin-03)]" />
                                                     <span className="truncate">
                                                       {urunGorunenAdi}
                                                     </span>
@@ -459,7 +459,7 @@ export default function EczanemMusteriSidebar({
                                                     aria-label={`${urunGorunenAdi} araçlarını ${
                                                       urunAcik ? "kapat" : "aç"
                                                     }`}
-                                                    className="ml-1 rounded-md p-0.5 text-gray-400 hover:bg-black/5 hover:text-gray-700"
+                                                    className="ml-1 rounded-md p-0.5 text-[var(--tema-yerel-eczanem-yardimci-metin-03)] hover:bg-[var(--tema-yerel-eczanem-ortu-01)]/5 hover:text-[var(--tema-yerel-eczanem-ana-metin-13)]"
                                                   >
                                                     {urunAcik ? (
                                                       <ChevronDown className="size-3" />
@@ -473,11 +473,11 @@ export default function EczanemMusteriSidebar({
                                                 {urunAcik && (
                                                   <div id={urunAltId}>
                                                     {toplamArac === 0 ? (
-                                                      <p className="ml-4 py-1 text-[10px] italic text-gray-400">
+                                                      <p className="ml-4 py-1 text-[10px] italic text-[var(--tema-yerel-eczanem-yardimci-metin-03)]">
                                                         Bu ürün için öğrenme aracı bulunmuyor.
                                                       </p>
                                                     ) : (
-                                                      <ul className="ml-2.5 mt-0.5 flex flex-col gap-0.5 border-l border-[#e2e8f0] pl-2">
+                                                      <ul className="ml-2.5 mt-0.5 flex flex-col gap-0.5 border-l border-[var(--tema-yerel-eczanem-cizgi-29)] pl-2">
                                                         {urun.yayinlar.flatMap(
                                                           (yayin) =>
                                                             yayin.araclar.map(
@@ -521,8 +521,8 @@ export default function EczanemMusteriSidebar({
                                                                       }
                                                                       className={`flex w-full items-center gap-1.5 rounded-md px-2 py-1 text-left text-[10px] transition ${
                                                                         aracAktif
-                                                                          ? "bg-[#bc2d0d] font-bold text-white shadow-sm"
-                                                                          : "text-gray-600 hover:bg-[#fef2f2]/60 hover:text-gray-900"
+                                                                          ? "bg-[var(--tema-yerel-eczanem-vurgu-zemin-01)] font-bold text-[var(--tema-yerel-eczanem-ters-metin-01)] shadow-sm"
+                                                                          : "text-[var(--tema-yerel-eczanem-ana-metin-16)] hover:bg-[var(--tema-yerel-eczanem-islevsel-zemin-32)]/60 hover:text-[var(--tema-yerel-eczanem-ana-metin-02)]"
                                                                       }`}
                                                                     >
                                                                       <AracIkonu
@@ -544,8 +544,8 @@ export default function EczanemMusteriSidebar({
                                                                       <span
                                                                         className={`ml-auto shrink-0 rounded px-1 py-0.2 text-[8px] font-extrabold uppercase tracking-wide ${
                                                                           aracAktif
-                                                                            ? "bg-white/20 text-white"
-                                                                            : "bg-gray-100 text-gray-500"
+                                                                            ? "bg-[var(--tema-yerel-eczanem-kart-01)]/20 text-[var(--tema-yerel-eczanem-ters-metin-01)]"
+                                                                            : "bg-[var(--tema-yerel-eczanem-sayfa-zemini-15)] text-[var(--tema-yerel-eczanem-yardimci-metin-04)]"
                                                                         }`}
                                                                       >
                                                                         {
@@ -594,29 +594,29 @@ export default function EczanemMusteriSidebar({
       {/* 1. Masaüstü Sidebar */}
       <aside
         aria-label="Öğrenme İçerikleri Gezintisi"
-        className={`hidden md:flex flex-col sticky top-[88px] max-h-[calc(100vh-104px)] rounded-2xl border border-[#e2e8f0] bg-white shadow-sm transition-all duration-200 shrink-0 self-start ${
+        className={`hidden md:flex flex-col sticky top-[88px] max-h-[calc(100vh-104px)] rounded-2xl border border-[var(--tema-yerel-eczanem-cizgi-29)] bg-[var(--tema-yerel-eczanem-kart-01)] shadow-sm transition-all duration-200 shrink-0 self-start ${
           daraltilmis ? "w-[64px] p-2" : "w-[280px] p-3"
         }`}
         style={{ fontFamily: "'Nunito', sans-serif" }}
       >
         {/* Başlık ve Daraltma / Genişletme Kontrol Düğmesi */}
         {daraltilmis ? (
-          <div className="flex flex-col items-center border-b border-[#e2e8f0] pb-2 mb-2">
+          <div className="flex flex-col items-center border-b border-[var(--tema-yerel-eczanem-cizgi-29)] pb-2 mb-2">
             <button
               type="button"
               onClick={() => setDaraltilmis(false)}
               title="Kenar çubuğunu aç"
               aria-label="Kenar çubuğunu aç"
-              className="rounded-lg p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition"
+              className="rounded-lg p-1.5 text-[var(--tema-yerel-eczanem-yardimci-metin-04)] hover:bg-[var(--tema-yerel-eczanem-sayfa-zemini-15)] hover:text-[var(--tema-yerel-eczanem-ana-metin-02)] transition"
             >
               <ChevronRight className="size-4" />
             </button>
           </div>
         ) : (
-          <div className="flex items-center justify-between border-b border-[#e2e8f0] pb-2 mb-2 px-1">
+          <div className="flex items-center justify-between border-b border-[var(--tema-yerel-eczanem-cizgi-29)] pb-2 mb-2 px-1">
             <div className="flex items-center gap-2">
-              <Layers className="size-4 text-[#bc2d0d]" />
-              <span className="text-xs font-black uppercase tracking-wider text-[#374151]">
+              <Layers className="size-4 text-[var(--tema-yerel-eczanem-vurgu-metin-01)]" />
+              <span className="text-xs font-black uppercase tracking-wider text-[var(--tema-yerel-eczanem-ana-metin-19)]">
                 İçerikler
               </span>
             </div>
@@ -625,7 +625,7 @@ export default function EczanemMusteriSidebar({
               onClick={() => setDaraltilmis(true)}
               title="Kenar çubuğunu daralt"
               aria-label="Kenar çubuğunu daralt"
-              className="rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition"
+              className="rounded-lg p-1 text-[var(--tema-yerel-eczanem-yardimci-metin-03)] hover:bg-[var(--tema-yerel-eczanem-sayfa-zemini-15)] hover:text-[var(--tema-yerel-eczanem-ana-metin-13)] transition"
             >
               <ChevronLeft className="size-4" />
             </button>
@@ -644,11 +644,11 @@ export default function EczanemMusteriSidebar({
               onClick={() => onSecim({ tip: "tum" })}
               className={`flex w-full items-center justify-center rounded-xl p-2.5 transition ${
                 tumSecili
-                  ? "bg-[#fef2f2] text-[#bc2d0d] ring-1 ring-[#fecaca]"
-                  : "text-[#4b5563] hover:bg-gray-100 hover:text-gray-900"
+                  ? "bg-[var(--tema-yerel-eczanem-islevsel-zemin-32)] text-[var(--tema-yerel-eczanem-vurgu-metin-01)] ring-1 ring-[var(--tema-yerel-eczanem-islevsel-odak-01)]"
+                  : "text-[var(--tema-yerel-eczanem-ana-metin-17)] hover:bg-[var(--tema-yerel-eczanem-sayfa-zemini-15)] hover:text-[var(--tema-yerel-eczanem-ana-metin-02)]"
               }`}
             >
-              <Layers className="size-4 shrink-0 text-[#bc2d0d]" />
+              <Layers className="size-4 shrink-0 text-[var(--tema-yerel-eczanem-vurgu-metin-01)]" />
             </button>
 
             {agac.map((eczane) => (
@@ -663,11 +663,11 @@ export default function EczanemMusteriSidebar({
                 }
                 className={`flex w-full items-center justify-center rounded-xl p-2.5 transition ${
                   eczaneSeciliMi(eczane.eczane_id)
-                    ? "bg-[#fef2f2] text-[#bc2d0d] ring-1 ring-[#fecaca]"
-                    : "text-[#4b5563] hover:bg-gray-100 hover:text-gray-900"
+                    ? "bg-[var(--tema-yerel-eczanem-islevsel-zemin-32)] text-[var(--tema-yerel-eczanem-vurgu-metin-01)] ring-1 ring-[var(--tema-yerel-eczanem-islevsel-odak-01)]"
+                    : "text-[var(--tema-yerel-eczanem-ana-metin-17)] hover:bg-[var(--tema-yerel-eczanem-sayfa-zemini-15)] hover:text-[var(--tema-yerel-eczanem-ana-metin-02)]"
                 }`}
               >
-                <Building2 className="size-4 shrink-0 text-[#bc2d0d]" />
+                <Building2 className="size-4 shrink-0 text-[var(--tema-yerel-eczanem-vurgu-metin-01)]" />
               </button>
             ))}
           </div>
@@ -689,7 +689,7 @@ export default function EczanemMusteriSidebar({
         >
           {/* Yarı Saydam Overlay */}
           <div
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity"
+            className="fixed inset-0 bg-[var(--tema-yerel-eczanem-ortu-01)]/40 backdrop-blur-sm transition-opacity"
             onClick={onMobilKapat}
             aria-hidden="true"
           />
@@ -697,16 +697,16 @@ export default function EczanemMusteriSidebar({
           {/* Soldan Açılan Çekmece (Drawer) */}
           <aside
             ref={drawerRef}
-            className="fixed inset-y-0 left-0 z-50 flex h-full max-h-screen w-[280px] max-w-[85vw] flex-col border-r border-[#e2e8f0] bg-white shadow-2xl"
+            className="fixed inset-y-0 left-0 z-50 flex h-full max-h-screen w-[280px] max-w-[85vw] flex-col border-r border-[var(--tema-yerel-eczanem-cizgi-29)] bg-[var(--tema-yerel-eczanem-kart-01)] shadow-2xl"
             style={{ fontFamily: "'Nunito', sans-serif" }}
           >
             {/* Drawer Başlık ve Kapatma Butonu */}
-            <div className="flex items-center justify-between border-b border-[#e2e8f0] px-4 py-3.5">
+            <div className="flex items-center justify-between border-b border-[var(--tema-yerel-eczanem-cizgi-29)] px-4 py-3.5">
               <div className="flex items-center gap-2">
-                <Layers className="size-4 text-[#bc2d0d]" />
+                <Layers className="size-4 text-[var(--tema-yerel-eczanem-vurgu-metin-01)]" />
                 <span
                   id="eczanem-drawer-baslik"
-                  className="text-xs font-black uppercase tracking-wider text-[#1e344a]"
+                  className="text-xs font-black uppercase tracking-wider text-[var(--tema-yerel-eczanem-ana-metin-20)]"
                 >
                   İçerikler
                 </span>
@@ -715,7 +715,7 @@ export default function EczanemMusteriSidebar({
                 ref={kapatButonRef}
                 type="button"
                 onClick={onMobilKapat}
-                className="rounded-lg p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition"
+                className="rounded-lg p-1.5 text-[var(--tema-yerel-eczanem-yardimci-metin-04)] hover:bg-[var(--tema-yerel-eczanem-sayfa-zemini-15)] hover:text-[var(--tema-yerel-eczanem-ana-metin-02)] transition"
                 aria-label="Kapat"
               >
                 <X className="size-4" />

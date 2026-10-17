@@ -12,7 +12,7 @@ export default function LeagueHeader({ periyotSecici, yenileButonu }: { periyotS
   return (
     <SayfaYenileBasligi className={styles.header}
       baslik={<div className="inline-flex items-center">
-        <h1 className="m-0 text-xl font-extrabold tracking-[-0.025em] text-[#10213d]">T-Club Ligi</h1>
+        <h1 className="m-0 text-xl font-extrabold tracking-[-0.025em] text-[var(--tema-yerel-lig-ana-metin-02)]">T-Club Ligi</h1>
         <SayfaRehberi anahtar="tclub-ligi-saha" className="ml-1.5 -translate-y-0.5" />
       </div>}
       aksiyon={yenileButonu}

@@ -16,10 +16,10 @@ export interface HataMesajiProps {
 }
 
 const turAyarlari: Record<HataTuru, { bg: string; border: string; text: string; icon: string }> = {
-  hata: { bg: "#fef2f2", border: "#fecaca", text: "#bc2d0d", icon: "✕" },
-  basari: { bg: "#f0fdf4", border: "#bbf7d0", text: "#16a34a", icon: "✓" },
-  uyari: { bg: "#fefce8", border: "#fde68a", text: "#854d0e", icon: "⚠" },
-  bilgi: { bg: "#eff6ff", border: "#bfdbfe", text: "#1d4ed8", icon: "ℹ" },
+  hata: { bg: "var(--tema-bildirim-hata-zemin)", border: "var(--tema-bildirim-hata-cizgi)", text: "var(--tema-bildirim-hata-metin)", icon: "✕" },
+  basari: { bg: "var(--tema-bildirim-basari-zemin)", border: "var(--tema-bildirim-basari-cizgi)", text: "var(--tema-bildirim-basari-metin)", icon: "✓" },
+  uyari: { bg: "var(--tema-bildirim-uyari-zemin)", border: "var(--tema-bildirim-uyari-cizgi)", text: "var(--tema-bildirim-uyari-metin)", icon: "⚠" },
+  bilgi: { bg: "var(--tema-bildirim-bilgi-zemin)", border: "var(--tema-bildirim-bilgi-cizgi)", text: "var(--tema-bildirim-bilgi-metin)", icon: "ℹ" },
 };
 
 export default function HataMesaji({

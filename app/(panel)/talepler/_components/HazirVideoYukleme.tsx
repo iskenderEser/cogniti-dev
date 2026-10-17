@@ -56,7 +56,7 @@ export function HazirVideoYukleme({ yuzde, onYukle, ogrenmeAraciTuru }: Props) {
 
   return (
     <div className="flex flex-col gap-2.5">
-      <p className="text-sm text-gray-500 m-0">
+      <p className="text-sm text-[var(--tema-yerel-uretim-yardimci-metin-01)] m-0">
         Hazır {metinler.adKucuk} talebi — {metinler.adKucuk} henüz yüklenmedi.
       </p>
 
@@ -73,9 +73,9 @@ export function HazirVideoYukleme({ yuzde, onYukle, ogrenmeAraciTuru }: Props) {
           type="button"
           onClick={() => bekleyen && onYukle(bekleyen.dosya)}
           disabled={!bekleyen || yukleniyor}
-          className="text-white border-none rounded-lg px-5 py-2 text-xs font-semibold cursor-pointer"
+          className="text-[var(--tema-yerel-uretim-ters-metin-01)] border-none rounded-lg px-5 py-2 text-xs font-semibold cursor-pointer"
           style={{
-            background: "#237ac8",
+            background: "var(--tema-yerel-uretim-eylem-zemin-01)",
             opacity: !bekleyen || yukleniyor ? 0.5 : 1,
             fontFamily: "'Nunito', sans-serif",
           }}

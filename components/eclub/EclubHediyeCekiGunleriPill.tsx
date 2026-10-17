@@ -14,14 +14,14 @@ export default function EclubHediyeCekiGunleriPill() {
   return <span
     className="inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-full border px-3 py-1 text-center text-[10px] font-bold shadow-xs"
     style={{
-      backgroundColor: takvim.acik ? "#f0fdf4" : onGunKala ? "#1e3a8a" : "#fffbeb",
-      borderColor: takvim.acik ? "#bbf7d0" : onGunKala ? "#1e3a8a" : "#fef3c7",
-      color: takvim.acik ? "#166534" : onGunKala ? "#ffffff" : "#92400e",
+      backgroundColor: takvim.acik ? "var(--tema-cek-gun-acik-zemin)" : onGunKala ? "var(--tema-cek-gun-yakin-zemin)" : "var(--tema-cek-gun-kapali-zemin)",
+      borderColor: takvim.acik ? "var(--tema-cek-gun-acik-cizgi)" : onGunKala ? "var(--tema-cek-gun-yakin-zemin)" : "var(--tema-cek-gun-kapali-cizgi)",
+      color: takvim.acik ? "var(--tema-cek-gun-acik-metin)" : onGunKala ? "var(--tema-ters-metin)" : "var(--tema-cek-gun-kapali-metin)",
     }}
     title={takvim.acik ? `Kapanışa ${takvim.kalanSureMetni} kaldı` : `Talep dönemi: ${takvim.sonrakiDonemEtiketi}`}
   >
     {!onGunKala && <span className="h-2 w-2 shrink-0 rounded-full" aria-hidden="true"
-      style={{ backgroundColor: takvim.acik ? "#16a34a" : "#f59e0b", boxShadow: takvim.acik ? "0 0 6px #16a34a" : "none" }} />}
+      style={{ backgroundColor: takvim.acik ? "var(--tema-cek-gun-acik-nokta)" : "var(--tema-cek-gun-kapali-nokta)", boxShadow: takvim.acik ? "0 0 6px var(--tema-cek-gun-acik-nokta)" : "none" }} />}
     {metin}
   </span>;
 }

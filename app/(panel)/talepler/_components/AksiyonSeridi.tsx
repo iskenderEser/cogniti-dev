@@ -55,9 +55,9 @@ export function AksiyonSeridi({
   };
 
   return (
-    <div className="mt-3 pt-3 border-t border-gray-100">
+    <div className="mt-3 pt-3 border-t border-[var(--tema-yerel-uretim-cizgi-03)]">
       {incelemeKisitli && incelemeKisitNedeni && (
-        <p className="mb-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs font-semibold text-red-700">
+        <p className="mb-2 rounded-lg border border-[var(--tema-yerel-uretim-islevsel-cizgi-03)] bg-[var(--tema-yerel-uretim-islevsel-zemin-03)] px-3 py-2 text-xs font-semibold text-[var(--tema-yerel-uretim-islevsel-metin-05)]">
           {incelemeKisitNedeni}
         </p>
       )}
@@ -68,11 +68,11 @@ export function AksiyonSeridi({
             onChange={(e) => setNot(e.target.value)}
             placeholder="Revizyon notunu yazın..."
             rows={3}
-            className="w-full border border-yellow-200 rounded-lg px-3 py-2 text-sm resize-y outline-none focus:border-yellow-400"
+            className="w-full border border-[var(--tema-yerel-uretim-islevsel-cizgi-04)] rounded-lg px-3 py-2 text-sm resize-y outline-none focus:border-[var(--tema-yerel-uretim-islevsel-cizgi-05)]"
             style={{ fontFamily: "'Nunito', sans-serif" }}
           />
           {podcastTranskriptRevizyondaIstenebilir && (
-            <label className="flex cursor-pointer items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
+            <label className="flex cursor-pointer items-start gap-2 rounded-lg border border-[var(--tema-yerel-uretim-islevsel-cizgi-06)] bg-[var(--tema-yerel-uretim-islevsel-zemin-04)] px-3 py-2 text-sm text-[var(--tema-yerel-uretim-islevsel-metin-06)]">
               <input
                 type="checkbox"
                 checked={revizyondaTranskriptIstendi}
@@ -81,7 +81,7 @@ export function AksiyonSeridi({
               />
               <span>
                 <strong>Bu revizyonda transkript de istiyorum</strong>
-                <span className="mt-0.5 block text-xs text-amber-700">İçerik üreticisi transkripti podcast sesinden AI ile oluşturup onaylayarak yeniden teslim eder.</span>
+                <span className="mt-0.5 block text-xs text-[var(--tema-yerel-uretim-islevsel-metin-07)]">İçerik üreticisi transkripti podcast sesinden AI ile oluşturup onaylayarak yeniden teslim eder.</span>
               </span>
             </label>
           )}
@@ -89,7 +89,7 @@ export function AksiyonSeridi({
             <button
               type="button"
               onClick={kapat}
-              className="px-3 py-1.5 rounded-lg border border-gray-200 bg-transparent text-gray-500 text-xs cursor-pointer"
+              className="px-3 py-1.5 rounded-lg border border-[var(--tema-yerel-uretim-cizgi-01)] bg-transparent text-[var(--tema-yerel-uretim-yardimci-metin-01)] text-xs cursor-pointer"
               style={{ fontFamily: "'Nunito', sans-serif" }}
             >
               Vazgeç
@@ -98,7 +98,7 @@ export function AksiyonSeridi({
               type="button"
               onClick={() => { onKarar("revizyon bekleniyor", not, revizyondaTranskriptIstendi); kapat(); }}
               disabled={!not.trim() || yukleniyor || incelemeKisitli}
-              className="px-3 py-1.5 rounded-lg border-none bg-amber-500 text-white text-xs font-semibold cursor-pointer"
+              className="px-3 py-1.5 rounded-lg border-none bg-[var(--tema-yerel-uretim-islevsel-zemin-05)] text-[var(--tema-yerel-uretim-ters-metin-01)] text-xs font-semibold cursor-pointer"
               style={{ opacity: !not.trim() || yukleniyor || incelemeKisitli ? 0.5 : 1, fontFamily: "'Nunito', sans-serif" }}
             >
               Revizyon Gönder
@@ -111,7 +111,7 @@ export function AksiyonSeridi({
             type="button"
             onClick={() => onKarar("onaylandi")}
             disabled={yukleniyor || incelemeKisitli}
-            className="px-3 py-1.5 rounded-lg border-none bg-green-700 text-white text-xs font-semibold cursor-pointer"
+            className="px-3 py-1.5 rounded-lg border-none bg-[var(--tema-yerel-uretim-islevsel-zemin-06)] text-[var(--tema-yerel-uretim-ters-metin-01)] text-xs font-semibold cursor-pointer"
             style={{ fontFamily: "'Nunito', sans-serif" }}
           >
             Onayla
@@ -121,7 +121,7 @@ export function AksiyonSeridi({
               type="button"
               onClick={() => setRevizyonAcik(true)}
               disabled={yukleniyor || incelemeKisitli}
-              className="px-3 py-1.5 rounded-lg border-none bg-amber-500 text-white text-xs font-semibold cursor-pointer"
+              className="px-3 py-1.5 rounded-lg border-none bg-[var(--tema-yerel-uretim-islevsel-zemin-05)] text-[var(--tema-yerel-uretim-ters-metin-01)] text-xs font-semibold cursor-pointer"
               style={{ fontFamily: "'Nunito', sans-serif" }}
             >
               Revizyon İste
@@ -132,7 +132,7 @@ export function AksiyonSeridi({
             onClick={() => onKarar("Iptal Edildi")}
             disabled={yukleniyor}
             className="px-3 py-1.5 rounded-lg bg-transparent text-xs font-semibold cursor-pointer"
-            style={{ border: "0.5px solid #fecaca", color: "#bc2d0d", fontFamily: "'Nunito', sans-serif" }}
+            style={{ border: "0.5px solid var(--tema-yerel-uretim-islevsel-cizgi-07)", color: "var(--tema-yerel-uretim-vurgu-metin-01)", fontFamily: "'Nunito', sans-serif" }}
           >
             İptal Et
           </button>

@@ -16,6 +16,7 @@ import { ogrenmeAraciIzlemesiniBaslat } from "@/lib/ogrenmeAraci/izlemeIstemci";
 import { IzlemeSoruFormu, IzlemeSoruSonuclari } from "@/components/soru/IzlemeSoruPaneli";
 import type { IzlemeCevapSonucu, IzlemeSorusu } from "@/lib/soru/izlemeTipleri";
 import { eclubHoykSureDurumu, eclubHoykUcRengi, sonrakiTurkiyeGeceYarisi } from "@/lib/eclub/hoykSureCercevesi";
+import { hesaplananRenk } from "@/lib/tema/cizimRenkleri";
 
 interface OynaticiOneri {
   oneri_id: string;
@@ -78,7 +79,7 @@ export default function EclubVideoOynatici({ oneri, onKapat, onTamamlandi, hata,
     : suresiGecti
       ? "Bu yayının süresi geçti. Puansız izlenebilir."
       : `Bu yayını tamamlayıp puan kazanabilmeniz kalan süre ${sureDurumu?.kalanGun ?? 0} gündür`;
-  const bilgiRengi = tamamlandi ? "#2563eb" : suresiGecti ? "#dc2626" : eclubHoykUcRengi(sureDurumu?.gecenGun ?? 0);
+  const bilgiRengi = tamamlandi ? hesaplananRenk("--tema-cizim-sure-tamamlandi") : suresiGecti ? hesaplananRenk("--tema-cizim-sure-bitis") : eclubHoykUcRengi(sureDurumu?.gecenGun ?? 0);
   const renkSayilari = bilgiRengi.match(/\d+/g)?.map(Number) ?? [];
   const dogrusalRenk = renkSayilari.map((deger) => {
     const oran = deger / 255;
@@ -430,18 +431,18 @@ export default function EclubVideoOynatici({ oneri, onKapat, onTamamlandi, hata,
       <button
         type="button"
         onClick={onKapat}
-        className="flex w-fit items-center gap-1.5 rounded-lg px-1 py-1 text-xs font-extrabold text-[#71859d] hover:text-[#237ac8]"
+        className="flex w-fit items-center gap-1.5 rounded-lg px-1 py-1 text-xs font-extrabold text-[var(--tema-oynatici-eclub-geri)] hover:text-[var(--tema-oynatici-panel-eylem)]"
       >
         <ArrowLeft size={15} /> Videolarıma dön
       </button>
 
-      <div className="overflow-hidden rounded-2xl border border-[#dfe7f1] bg-white shadow-[0_8px_26px_rgba(31,55,90,0.06)]">
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#e7edf4] px-4 py-4 md:px-5">
-          <div><div className="text-base font-extrabold text-[#203653]">{oneri.urun_adi}</div>{oneri.teknik_adi && <div className="mt-0.5 text-xs font-semibold text-[#8190a3]">{oneri.teknik_adi}</div>}</div>
+      <div className="overflow-hidden rounded-2xl border border-[var(--tema-oynatici-eclub-cizgi)] bg-[var(--tema-oynatici-yuzey)] shadow-[0_8px_26px_rgba(31,55,90,0.06)]">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--tema-oynatici-eclub-ic-cizgi)] px-4 py-4 md:px-5">
+          <div><div className="text-base font-extrabold text-[var(--tema-oynatici-bilgi-baslik)]">{oneri.urun_adi}</div>{oneri.teknik_adi && <div className="mt-0.5 text-xs font-semibold text-[var(--tema-oynatici-eclub-ikincil-metin)]">{oneri.teknik_adi}</div>}</div>
           <span
             aria-live="polite"
             className="max-w-full rounded-full px-3 py-1 text-center text-xs font-medium leading-snug sm:text-[11px]"
-            style={{ backgroundColor: bilgiRengi, color: acikZemin ? "#172a44" : "#fff" }}
+            style={{ backgroundColor: bilgiRengi, color: acikZemin ? "var(--tema-hoyk-sure-acik-zemin-metni)" : "var(--tema-ters-metin)" }}
           >
             {bilgiMetni}
           </span>
@@ -449,7 +450,7 @@ export default function EclubVideoOynatici({ oneri, onKapat, onTamamlandi, hata,
 
         {oneri.arac_turu && oneri.arac_turu !== "video" && oneri.arac_id && <TuketimOynaticisi aracId={oneri.arac_id} yayinId={oneri.yayin_id} aracTuru={oneri.arac_turu} bagId={oneri.oneri_id} urunAdi={oneri.urun_adi} ileriSarmaAcik hata={hata} baslat={handleAracBaslat} bitir={handleAracBitir} onTamamlandi={onTamamlandi} />}
         {!(["podcast", "gorsel", "flip_pdf"].includes(oneri.arac_turu ?? "video")) && oneri.video_url && (
-          <div className="border-b border-[#e7edf4] bg-[#10213d]">
+          <div className="border-b border-[var(--tema-oynatici-eclub-ic-cizgi)] bg-[var(--tema-oynatici-eclub-video-zemini)]">
             {/* Kutu videonun oranına göre çizilir (26.07). iframe burada kalır — ref playerjs'e bağlı. */}
             <VideoCercevesi
               videoUrl={oneri.video_url}
@@ -487,7 +488,7 @@ export default function EclubVideoOynatici({ oneri, onKapat, onTamamlandi, hata,
               altIcerik={<button
                 type="button"
                 onClick={onKapat}
-                className="self-end rounded-xl bg-[#237ac8] px-5 py-2.5 text-xs font-extrabold text-white hover:bg-[#1d69aa]"
+                className="self-end rounded-xl bg-[var(--tema-oynatici-panel-eylem)] px-5 py-2.5 text-xs font-extrabold text-[var(--tema-oynatici-eylem-metni)] hover:bg-[var(--tema-oynatici-eclub-eylem-hover)]"
               >
                 Panele dön
               </button>}
@@ -495,27 +496,27 @@ export default function EclubVideoOynatici({ oneri, onKapat, onTamamlandi, hata,
           )}
 
           {izlemeTamamlandi && !soruGosterilecek && cevapSonuclari.length === 0 && (
-            <div className="rounded-xl border border-[#bfdbfe] bg-[#eff6ff] px-4 py-4 text-center">
-              <span className="text-sm font-extrabold text-[#2563a8]">İzleme tamamlandı.</span>
+            <div className="rounded-xl border border-[var(--tema-oynatici-eclub-sonuc-cizgi)] bg-[var(--tema-oynatici-eclub-sonuc-zemin)] px-4 py-4 text-center">
+              <span className="text-sm font-extrabold text-[var(--tema-oynatici-eclub-sonuc-metin)]">İzleme tamamlandı.</span>
             </div>
           )}
         </div>
       </div>
 
       {ileriSarmaModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="w-11/12 max-w-md rounded-2xl border border-[#dfe7f1] bg-white p-6 shadow-xl">
-            <div className="mb-3 text-sm font-extrabold text-[#203653]">İleri sarmak istiyor musunuz?</div>
-            <div className="mb-5 rounded-xl border border-amber-200 bg-amber-50 px-3 py-3 text-sm leading-relaxed text-[#66788f]">
-              İleri sarılan süre kadar <strong className="text-[#b23b31]">puan kaybedersiniz</strong> ve bu izleme sonunda sorular gösterilmez.
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--tema-oynatici-modal-ortu)]">
+          <div className="w-11/12 max-w-md rounded-2xl border border-[var(--tema-oynatici-eclub-cizgi)] bg-[var(--tema-oynatici-yuzey)] p-6 shadow-xl">
+            <div className="mb-3 text-sm font-extrabold text-[var(--tema-oynatici-bilgi-baslik)]">İleri sarmak istiyor musunuz?</div>
+            <div className="mb-5 rounded-xl border border-[var(--tema-oynatici-uyari-cizgi)] bg-[var(--tema-oynatici-uyari-zemini)] px-3 py-3 text-sm leading-relaxed text-[var(--tema-oynatici-eclub-uyari-metin)]">
+              İleri sarılan süre kadar <strong className="text-[var(--tema-oynatici-eclub-risk-metin)]">puan kaybedersiniz</strong> ve bu izleme sonunda sorular gösterilmez.
             </div>
             <div className="flex justify-end gap-2.5">
               <button type="button" onClick={handleIleriSarmaReddet} disabled={islemLoading}
-                className="rounded-xl border border-[#dfe7f1] bg-white px-4 py-2 text-xs font-bold text-[#617590] disabled:opacity-50">
+                className="rounded-xl border border-[var(--tema-oynatici-eclub-cizgi)] bg-[var(--tema-oynatici-yuzey)] px-4 py-2 text-xs font-bold text-[var(--tema-oynatici-eclub-iptal-metni)] disabled:opacity-50">
                 İptal
               </button>
               <button type="button" onClick={handleIleriSarmaOnayla} disabled={islemLoading}
-                className="rounded-xl bg-[#b23b31] px-4 py-2 text-xs font-extrabold text-white disabled:opacity-50">
+                className="rounded-xl bg-[var(--tema-oynatici-eclub-risk-eylem)] px-4 py-2 text-xs font-extrabold text-[var(--tema-oynatici-eylem-metni)] disabled:opacity-50">
                 {islemLoading ? "Kaydediliyor..." : "Anladım, İleri Sar"}
               </button>
             </div>

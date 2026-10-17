@@ -1,12 +1,12 @@
 // lib/utils/raporUtils.ts
 
 // Renk sabitleri
-export const BORDO = '#bc2d0d';
-export const MAVI = '#56aeff';
-export const KIRMIZI = '#E24B4A';
-export const GRI_METIN = '#737373';
-export const KOYU_METIN = '#111827';
-export const GRI_ZEMIN = '#f9fafb';
+export const BORDO = 'var(--tema-yerel-rapor-puan-ortalama-alti)';
+export const MAVI = 'var(--tema-yerel-rapor-puan-ortalama-ustu)';
+export const KIRMIZI = 'var(--tema-yerel-rapor-islevsel-metin-48)';
+export const GRI_METIN = 'var(--tema-yerel-rapor-yardimci-metin-69)';
+export const KOYU_METIN = 'var(--tema-yerel-rapor-ana-metin-24)';
+export const GRI_ZEMIN = 'var(--tema-yerel-rapor-sayfa-zemini-29)';
 
 // Puan değerine göre renk kararı
 // Ortalamanın üstü → mavi, altı → bordo, sıfır → kırmızı

@@ -51,17 +51,17 @@ function KayanYayinRafi({ baslik, videolar, onVideoSec, uretenBilgisiGoster, sif
   return (
     <section>
       <div className="mb-2.5 flex items-center justify-between gap-3">
-        <h2 className="text-base font-extrabold text-[#243957] md:text-lg">{baslik}</h2>
-        <span className="text-[11px] font-bold text-[#7b8ca5]">{videolar.length} yayın</span>
+        <h2 className="text-base font-extrabold text-[var(--tema-yerel-ortak-sayfa-ana-metin-02)] md:text-lg">{baslik}</h2>
+        <span className="text-[11px] font-bold text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-05)]">{videolar.length} yayın</span>
       </div>
       <div className="group relative">
         <button
           type="button"
           aria-label={`${baslik} rafını sola kaydır`}
           onClick={() => kaydir(-1)}
-          className="absolute inset-y-0 left-0 z-10 hidden sm:flex w-14 items-center justify-start bg-gradient-to-r from-[#f5f8fc] via-[#f5f8fc]/80 to-transparent opacity-0 transition-opacity group-hover:opacity-100"
+          className="absolute inset-y-0 left-0 z-10 hidden sm:flex w-14 items-center justify-start bg-gradient-to-r from-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-12)] via-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-12)]/80 to-transparent opacity-0 transition-opacity group-hover:opacity-100"
         >
-          <svg aria-hidden="true" className="h-7 w-7 text-[#243957]" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m15 19-7-7 7-7" /></svg>
+          <svg aria-hidden="true" className="h-7 w-7 text-[var(--tema-yerel-ortak-sayfa-ana-metin-02)]" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m15 19-7-7 7-7" /></svg>
         </button>
         <YayindakiVideoBolumu
           videolar={videolar}
@@ -75,9 +75,9 @@ function KayanYayinRafi({ baslik, videolar, onVideoSec, uretenBilgisiGoster, sif
           type="button"
           aria-label={`${baslik} rafını sağa kaydır`}
           onClick={() => kaydir(1)}
-          className="absolute inset-y-0 right-0 z-10 hidden sm:flex w-14 items-center justify-end bg-gradient-to-l from-[#f5f8fc] via-[#f5f8fc]/80 to-transparent opacity-0 transition-opacity group-hover:opacity-100"
+          className="absolute inset-y-0 right-0 z-10 hidden sm:flex w-14 items-center justify-end bg-gradient-to-l from-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-12)] via-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-12)]/80 to-transparent opacity-0 transition-opacity group-hover:opacity-100"
         >
-          <svg aria-hidden="true" className="h-7 w-7 text-[#243957]" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m9 5 7 7-7 7" /></svg>
+          <svg aria-hidden="true" className="h-7 w-7 text-[var(--tema-yerel-ortak-sayfa-ana-metin-02)]" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="m9 5 7 7-7 7" /></svg>
         </button>
       </div>
     </section>
@@ -144,23 +144,23 @@ function HedefKitleKartlari({ videolar, aktifHedef, onSec }: {
             key={hedef}
             onClick={() => onSec(hedef)}
             aria-pressed={aktif}
-            className="flex min-h-[92px] flex-col justify-between rounded-xl border border-gray-200 border-l-[3px] bg-white p-3 text-left transition-all duration-150 cursor-pointer md:p-4 hover:-translate-y-0.5 hover:shadow-md"
+            className="flex min-h-[92px] flex-col justify-between rounded-xl border border-[var(--tema-yerel-ortak-sayfa-cizgi-06)] border-l-[3px] bg-[var(--tema-yerel-ortak-sayfa-kart-01)] p-3 text-left transition-all duration-150 cursor-pointer md:p-4 hover:-translate-y-0.5 hover:shadow-md"
             style={{
               borderLeftColor: tasarim.renk,
-              boxShadow: aktif ? `0 0 0 2px ${tasarim.renk}33` : undefined,
+              boxShadow: aktif ? `0 0 0 2px var(--tema-hedef-${hedef}-halka)` : undefined,
             }}
           >
             <div
-              className="truncate text-xs font-bold uppercase tracking-wide text-gray-400"
+              className="truncate text-xs font-bold uppercase tracking-wide text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-12)]"
               title={tasarim.tamEtiket}
             >
               {tasarim.tamEtiket}
             </div>
             <div>
-              <div className="text-2xl font-extrabold leading-none text-gray-900 md:text-3xl">
+              <div className="text-2xl font-extrabold leading-none text-[var(--tema-yerel-ortak-sayfa-ana-metin-07)] md:text-3xl">
                 {sayi.toLocaleString("tr-TR")}
               </div>
-              <div className="mt-1 hidden text-xs text-gray-500 md:block">
+              <div className="mt-1 hidden text-xs text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-11)] md:block">
                 Yayın
               </div>
             </div>
@@ -195,17 +195,17 @@ function DepartmanKartlari({ videolar, aktifDepartman, onSec }: {
             onClick={() => onSec(departman)}
             aria-pressed={aktif}
             disabled={grup.length === 0}
-            className="flex min-h-[92px] flex-col justify-between rounded-xl border border-gray-200 border-l-[3px] bg-white p-3 text-left transition-all duration-150 enabled:hover:-translate-y-0.5 enabled:hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#56aeff] disabled:cursor-not-allowed disabled:opacity-45 md:p-4"
-            style={{ borderLeftColor: renk, boxShadow: aktif ? `0 0 0 2px ${renk}33` : undefined }}
+            className="flex min-h-[92px] flex-col justify-between rounded-xl border border-[var(--tema-yerel-ortak-sayfa-cizgi-06)] border-l-[3px] bg-[var(--tema-yerel-ortak-sayfa-kart-01)] p-3 text-left transition-all duration-150 enabled:hover:-translate-y-0.5 enabled:hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--tema-yerel-ortak-sayfa-odak-05)] disabled:cursor-not-allowed disabled:opacity-45 md:p-4"
+            style={{ borderLeftColor: renk, boxShadow: aktif ? `0 0 0 2px color-mix(in srgb, ${renk} 20%, transparent)` : undefined }}
           >
-            <div className="truncate text-xs font-bold uppercase tracking-wide text-gray-400" title={DEPARTMAN_ETIKET[departman]}>
+            <div className="truncate text-xs font-bold uppercase tracking-wide text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-12)]" title={DEPARTMAN_ETIKET[departman]}>
               {DEPARTMAN_ETIKET[departman]}
             </div>
             <div>
-              <div className="text-2xl font-extrabold leading-none text-gray-900 md:text-3xl">
+              <div className="text-2xl font-extrabold leading-none text-[var(--tema-yerel-ortak-sayfa-ana-metin-07)] md:text-3xl">
                 {grup.length.toLocaleString("tr-TR")}
               </div>
-              <div className="mt-1 text-xs text-gray-500">
+              <div className="mt-1 text-xs text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-11)]">
                 Yayın
               </div>
             </div>
@@ -323,7 +323,7 @@ export default function UreticiYayinKatalogu({ kapsam }: Props) {
     : departmanVideolari.filter((video) => aktifYayinTuru === "tumu" || video.arac_turu === aktifYayinTuru);
 
   if (yukleniyor || !kullanici) {
-    return <div className="flex min-h-[50vh] items-center justify-center text-sm text-[#7b8ca5]">Yükleniyor…</div>;
+    return <div className="flex min-h-[50vh] items-center justify-center text-sm text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-05)]">Yükleniyor…</div>;
   }
 
   if (aktifVideo) {
@@ -352,18 +352,18 @@ export default function UreticiYayinKatalogu({ kapsam }: Props) {
   const sifirlamaKapsami = `${kapsam}-${kapsam === "benim" ? aktifHedef : (aktifDepartman ?? "tum")}-${aktifYayinTuru}-${katalogListesi.arama.alanAnahtari}-${katalogListesi.arama.aranan}`;
 
   return (
-    <div className="min-h-full bg-[#f5f8fc]" style={{ fontFamily: "'Nunito', sans-serif" }}>
+    <div className="min-h-full bg-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-12)]" style={{ fontFamily: "'Nunito', sans-serif" }}>
       <div className="mx-auto flex max-w-[1480px] flex-col gap-5 px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
         <SayfaYenileBasligi className="flex flex-col items-start justify-between gap-3 sm:flex-row"
           baslik={<div className="inline-flex items-center">
-            <h1 className={`${kapsam === "digerleri" ? "mt-1 " : ""}text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]`}>{baslik}</h1>
+            <h1 className={`${kapsam === "digerleri" ? "mt-1 " : ""}text-2xl font-extrabold tracking-[-0.025em] text-[var(--tema-yerel-ortak-sayfa-ana-metin-01)] md:text-[28px]`}>{baslik}</h1>
             <SayfaRehberi
               anahtar={kapsam === "benim" ? "sizin-yayinlariniz-katalog" : "tum-yayinlar-katalog"}
               className="ml-1.5 -translate-y-2"
             />
           </div>}
-          ustBilgi={<>{kapsam === "digerleri" && <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-[#4f7fb7]">Yayın kataloğu</p>}</>}
-          aciklama={<>{aciklama && <p className="mt-1 text-sm text-[#6b7f9b]">{aciklama}</p>}</>}
+          ustBilgi={<>{kapsam === "digerleri" && <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-[var(--tema-yerel-ortak-sayfa-eylem-metin-10)]">Yayın kataloğu</p>}</>}
+          aciklama={<>{aciklama && <p className="mt-1 text-sm text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-01)]">{aciklama}</p>}</>}
           aksiyon={<YenileButonu yenileniyor={yenileniyor} onYenile={() => veriCek()} />}
           ekKontroller={<><div className="flex flex-wrap items-center justify-end gap-2">
             <ListeArama arama={katalogListesi.arama} ipucu="Ürün adı, talep ID veya diğer alanlarda ara" yukseklik="secim" />
@@ -376,22 +376,22 @@ export default function UreticiYayinKatalogu({ kapsam }: Props) {
             {kapsam === "benim" ? (
               <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-5">
                 {[1, 2, 3, 4, 5].map((i) => (
-                  <div key={i} className="min-h-[92px] animate-pulse rounded-xl border border-gray-200 bg-white/70 p-3 md:p-4" />
+                  <div key={i} className="min-h-[92px] animate-pulse rounded-xl border border-[var(--tema-yerel-ortak-sayfa-cizgi-06)] bg-[var(--tema-yerel-ortak-sayfa-kart-01)]/70 p-3 md:p-4" />
                 ))}
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 xl:grid-cols-4">
                 {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="min-h-[92px] animate-pulse rounded-xl border border-gray-200 bg-white/70 p-3 md:p-4" />
+                  <div key={i} className="min-h-[92px] animate-pulse rounded-xl border border-[var(--tema-yerel-ortak-sayfa-cizgi-06)] bg-[var(--tema-yerel-ortak-sayfa-kart-01)]/70 p-3 md:p-4" />
                 ))}
               </div>
             )}
-            <div className="flex h-48 animate-pulse items-center justify-center rounded-2xl border border-[#dfe7f1] bg-white">
-              <span className="text-xs font-bold text-[#7b8ca5]">Yayınlar hazırlanıyor...</span>
+            <div className="flex h-48 animate-pulse items-center justify-center rounded-2xl border border-[var(--tema-yerel-ortak-sayfa-cizgi-01)] bg-[var(--tema-yerel-ortak-sayfa-kart-01)]">
+              <span className="text-xs font-bold text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-05)]">Yayınlar hazırlanıyor...</span>
             </div>
           </div>
         ) : videolar.length === 0 ? (
-          <div className="rounded-2xl border border-[#dfe7f1] bg-white py-16 text-center text-sm text-[#6b7f9b]">
+          <div className="rounded-2xl border border-[var(--tema-yerel-ortak-sayfa-cizgi-01)] bg-[var(--tema-yerel-ortak-sayfa-kart-01)] py-16 text-center text-sm text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-01)]">
             {kapsam === "benim" ? "Henüz yayında bir içeriğiniz yok." : "Diğer üretici birimlere ait yayında içerik yok."}
           </div>
         ) : kapsam === "benim" ? (
@@ -401,7 +401,7 @@ export default function UreticiYayinKatalogu({ kapsam }: Props) {
             {seciliVideolar.length > 0 ? (
               <YayinRaflari videolar={seciliVideolar} onVideoSec={setAktifVideo} uretenBilgisiGoster={false} sifirlamaKapsami={sifirlamaKapsami} />
             ) : (
-              <div className="rounded-2xl border border-[#dfe7f1] bg-white py-12 text-center text-sm text-[#6b7f9b]">
+              <div className="rounded-2xl border border-[var(--tema-yerel-ortak-sayfa-cizgi-01)] bg-[var(--tema-yerel-ortak-sayfa-kart-01)] py-12 text-center text-sm text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-01)]">
                 {katalogListesi.arama.aranan ? "Aramanıza uyan yayın bulunamadı." : "Bu hedef kitleye ait yayında içerik yok."}
               </div>
             )}
@@ -412,14 +412,14 @@ export default function UreticiYayinKatalogu({ kapsam }: Props) {
             {aktifDepartman && (
               <>
                 <div className="flex items-center justify-between gap-3">
-                  <h2 className="text-base font-extrabold text-[#203653]">{DEPARTMAN_ETIKET[aktifDepartman]} Yayınları</h2>
-                  <span className="text-xs font-bold text-[#7b8da5]">{departmanVideolari.length} yayın</span>
+                  <h2 className="text-base font-extrabold text-[var(--tema-yerel-ortak-sayfa-ana-metin-03)]">{DEPARTMAN_ETIKET[aktifDepartman]} Yayınları</h2>
+                  <span className="text-xs font-bold text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-32)]">{departmanVideolari.length} yayın</span>
                 </div>
                 <YayinTuruFiltresi secili={aktifYayinTuru} onSec={setAktifYayinTuru} sayilar={turSayilari} />
                 {seciliVideolar.length > 0 ? (
                   <YayinRaflari videolar={seciliVideolar} onVideoSec={setAktifVideo} uretenBilgisiGoster sifirlamaKapsami={sifirlamaKapsami} />
                 ) : (
-                  <div className="rounded-2xl border border-[#dfe7f1] bg-white py-12 text-center text-sm text-[#6b7f9b]">
+                  <div className="rounded-2xl border border-[var(--tema-yerel-ortak-sayfa-cizgi-01)] bg-[var(--tema-yerel-ortak-sayfa-kart-01)] py-12 text-center text-sm text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-01)]">
                     Bu müdürlükte seçilen yayın türüne ait içerik yok.
                   </div>
                 )}

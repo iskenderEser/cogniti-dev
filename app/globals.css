@@ -1,27 +1,7 @@
 @import "tailwindcss";
+@import "./tema.css";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-
-  /* shadcn/ui token'ları — yalnız görüntüleme sayfaları için; app-geneli base reset EKLENMEDİ */
-  --card: #ffffff;
-  --card-foreground: #171717;
-  --popover: #ffffff;
-  --popover-foreground: #171717;
-  --primary: #56aeff;
-  --primary-foreground: #ffffff;
-  --secondary: #f4f4f5;
-  --secondary-foreground: #18181b;
-  --muted: #f4f4f5;
-  --muted-foreground: #71717a;
-  --accent: #f4f4f5;
-  --accent-foreground: #18181b;
-  --destructive: #e24b4a;
-  --destructive-foreground: #ffffff;
-  --border: #e5e7eb;
-  --input: #e5e7eb;
-  --ring: #56aeff;
   --radius: 0.75rem;
 }
 
@@ -30,12 +10,30 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --color-bordo: #bc2d0d;
-  --color-mavi: #56aeff;
-  --color-kirmizi: #E24B4A;
-  --color-gri-metin: #737373;
-  --color-koyu-metin: #111827;
-  --color-gri-zemin: #f9fafb;
+  --color-bordo: var(--tema-vurgu);
+  --color-mavi: var(--tema-bilesen-eylemi);
+  --color-kirmizi: var(--tema-hata);
+  --color-gri-metin: var(--tema-yardimci-metin);
+  --color-koyu-metin: var(--tema-baslik);
+  --color-gri-zemin: var(--tema-zemin);
+
+  /* Yeni bileşenlerde renk adı yerine kullanım amacını seç. */
+  --color-tema-zemin: var(--tema-zemin);
+  --color-tema-yuzey: var(--tema-yuzey);
+  --color-tema-kart: var(--tema-kart);
+  --color-tema-metin: var(--tema-metin);
+  --color-tema-ikincil: var(--tema-ikincil-metin);
+  --color-tema-vurgu: var(--tema-vurgu);
+  --color-tema-eylem: var(--tema-eylem);
+  --color-tema-eylem-hover: var(--tema-eylem-hover);
+  --color-tema-eylem-metin: var(--tema-eylem-metin);
+  --color-tema-secili: var(--tema-secili);
+  --color-tema-secili-metin: var(--tema-secili-metin);
+  --color-tema-cizgi: var(--tema-cizgi);
+  --color-tema-odak: var(--tema-odak);
+  --color-tema-basari: var(--tema-basari);
+  --color-tema-uyari: var(--tema-uyari);
+  --color-tema-hata: var(--tema-hata);
 
   /* shadcn token eşlemeleri */
   --color-card: var(--card);
@@ -59,13 +57,6 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {

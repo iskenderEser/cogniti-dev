@@ -153,7 +153,7 @@ export default function EclubPanelPage() {
           <EclubKisiBaslik
             ikon={Sparkles}
             ustEtiket=""
-            baslikClassName="text-lg md:text-xl font-extrabold text-gray-900 m-0"
+            baslikClassName="text-lg md:text-xl font-extrabold text-[var(--tema-yerel-ana-sayfa-islevsel-metin-01)] m-0"
             baslik={karsilamaBasligi}
             aksiyon={statOzeti.eclub_store_aktif ? <EclubHediyeCekiGunleriPill /> : undefined}
             altAksiyon={<TarihPill />}
@@ -161,9 +161,9 @@ export default function EclubPanelPage() {
           />
 
           <section className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-            <EclubKisiStat ikon={Sparkles} etiket="Yeni Yayınlar" deger={yeniYayinlar} detay="Üyesi olduğunuz firmaların yeni yayınları" detayKirilsin onClick={() => setYayinFiltresi((mevcut) => mevcut === "yeni" ? null : "yeni")} secili={yayinFiltresi === "yeni"} renk="#d78022" zemin="#fff6e8" />
-            <EclubKisiStat ikon={CheckCircle2} etiket="Tamamlananlar" deger={tamamlanan} detay="Tamamladığınız yayınlar" onClick={() => setYayinFiltresi((mevcut) => mevcut === "tamamlanan" ? null : "tamamlanan")} secili={yayinFiltresi === "tamamlanan"} renk="#16865f" zemin="#ebf8f2" />
-            <EclubKisiStat ikon={Trophy} etiket="Net Puan" deger={Math.max(0, statOzeti.toplam_kazanilan_puan - statOzeti.ileri_sarma_kaybi).toLocaleString("tr-TR")} detay={`${statOzeti.dogru_cevap} doğru · ${statOzeti.ileri_sarma_kaybi} ileri sarma kaybı`} renk="#7358c7" zemin="#f2efff" />
+            <EclubKisiStat ikon={Sparkles} etiket="Yeni Yayınlar" deger={yeniYayinlar} detay="Üyesi olduğunuz firmaların yeni yayınları" detayKirilsin onClick={() => setYayinFiltresi((mevcut) => mevcut === "yeni" ? null : "yeni")} secili={yayinFiltresi === "yeni"} renk="var(--tema-yerel-ana-sayfa-islevsel-metin-02)" zemin="var(--tema-yerel-ana-sayfa-islevsel-zemin-01)" />
+            <EclubKisiStat ikon={CheckCircle2} etiket="Tamamlananlar" deger={tamamlanan} detay="Tamamladığınız yayınlar" onClick={() => setYayinFiltresi((mevcut) => mevcut === "tamamlanan" ? null : "tamamlanan")} secili={yayinFiltresi === "tamamlanan"} renk="var(--tema-yerel-ana-sayfa-islevsel-metin-03)" zemin="var(--tema-yerel-ana-sayfa-islevsel-zemin-02)" />
+            <EclubKisiStat ikon={Trophy} etiket="Net Puan" deger={Math.max(0, statOzeti.toplam_kazanilan_puan - statOzeti.ileri_sarma_kaybi).toLocaleString("tr-TR")} detay={`${statOzeti.dogru_cevap} doğru · ${statOzeti.ileri_sarma_kaybi} ileri sarma kaybı`} renk="var(--tema-yerel-ana-sayfa-islevsel-metin-04)" zemin="var(--tema-yerel-ana-sayfa-islevsel-zemin-03)" />
           </section>
           </>}
 
@@ -172,7 +172,7 @@ export default function EclubPanelPage() {
           ) : (
             <>
             {!secim.gomulu && yayinFiltresi && <div className="flex justify-end">
-              <button type="button" onClick={() => setYayinFiltresi(null)} className="rounded-full border border-[#cdddec] bg-white px-3 py-1.5 text-xs font-bold text-[#237ac8] transition hover:border-[#87bde8] hover:bg-[#f1f7fe] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#237ac8]">Tüm yayınları göster</button>
+              <button type="button" onClick={() => setYayinFiltresi(null)} className="rounded-full border border-[var(--tema-yerel-ana-sayfa-cizgi-01)] bg-[var(--tema-yerel-ana-sayfa-kart-01)] px-3 py-1.5 text-xs font-bold text-[var(--tema-yerel-ana-sayfa-eylem-metin-01)] transition hover:border-[var(--tema-yerel-ana-sayfa-cizgi-02)] hover:bg-[var(--tema-yerel-ana-sayfa-secim-zemin-01)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--tema-yerel-ana-sayfa-odak-01)]">Tüm yayınları göster</button>
             </div>}
             <EclubFirmaVideoKatalogu
               playButonuGoster={kisi?.rol !== "eczaci"}

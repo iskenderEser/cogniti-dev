@@ -29,16 +29,16 @@ interface TopluGirisFormuProps {
 const tarz_th: React.CSSProperties = {
   padding: "8px 10px",
   textAlign: "left",
-  borderBottom: "0.5px solid #e5e7eb",
+  borderBottom: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)",
   fontWeight: 700,
-  color: "#374151",
+  color: "var(--tema-yerel-yonetim-ana-metin-03)",
   whiteSpace: "nowrap",
 };
 
 const tarz_td: React.CSSProperties = {
   padding: "6px 10px",
-  borderBottom: "0.5px solid #f3f4f6",
-  color: "#111",
+  borderBottom: "0.5px solid var(--tema-yerel-yonetim-cizgi-05)",
+  color: "var(--tema-yerel-yonetim-ana-metin-01)",
 };
 
 // B-25 — şablon indir: insan başlıklı, tek örnek satırlı XLSX üretir.
@@ -59,7 +59,7 @@ export default function TopluGirisFormu(p: TopluGirisFormuProps) {
     <div style={{ maxWidth: "1000px" }}>
       {/* Dosya seçme */}
       <div style={{ marginBottom: "20px" }}>
-        <label style={{ display: "block", fontSize: "13px", fontWeight: 600, color: "#111", marginBottom: "8px", fontFamily: "'Nunito', sans-serif" }}>
+        <label style={{ display: "block", fontSize: "13px", fontWeight: 600, color: "var(--tema-yerel-yonetim-ana-metin-01)", marginBottom: "8px", fontFamily: "'Nunito', sans-serif" }}>
           Dosya seç (CSV, XLSX veya XLS):
         </label>
         {/* Native input gizli; görünen buton proje stilinde (tarayıcının ham
@@ -75,17 +75,17 @@ export default function TopluGirisFormu(p: TopluGirisFormuProps) {
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <label
             htmlFor="toplu-dosya-input"
-            style={{ ...btnBase, background: "white", color: "#111" }}
+            style={{ ...btnBase, background: "var(--tema-yerel-yonetim-kart-01)", color: "var(--tema-yerel-yonetim-ana-metin-01)" }}
           >
             Dosya Seç
           </label>
           <button
             onClick={sablonIndir}
-            style={{ ...btnBase, background: "white", color: "#737373" }}
+            style={{ ...btnBase, background: "var(--tema-yerel-yonetim-kart-01)", color: "var(--tema-yerel-yonetim-yardimci-metin-01)" }}
           >
             Şablonu İndir
           </button>
-          <span style={{ fontSize: "12px", color: "#737373", fontFamily: "'Nunito', sans-serif" }}>
+          <span style={{ fontSize: "12px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)", fontFamily: "'Nunito', sans-serif" }}>
             {p.topluDosya ? `Seçili: ${p.topluDosya.name}` : "Henüz dosya seçilmedi"}
           </span>
         </div>
@@ -93,7 +93,7 @@ export default function TopluGirisFormu(p: TopluGirisFormuProps) {
 
       {/* Yüklenme durumu */}
       {p.onizlemeLoading && (
-        <p style={{ fontSize: "13px", color: "#737373", fontFamily: "'Nunito', sans-serif" }}>
+        <p style={{ fontSize: "13px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)", fontFamily: "'Nunito', sans-serif" }}>
           Dosya okunuyor...
         </p>
       )}
@@ -104,17 +104,17 @@ export default function TopluGirisFormu(p: TopluGirisFormuProps) {
           <div style={{ marginBottom: "12px", display: "flex", gap: "12px", flexWrap: "wrap", fontSize: "13px", fontWeight: 600, fontFamily: "'Nunito', sans-serif" }}>
             {/* Upsert kırılımı: eşleşmeyen satır yeni, eşleşen güncelleme */}
             <span style={{ color: RENK_BORDO }}>Yeni: {p.yeniSayisi}</span>
-            <span style={{ color: "#0f766e" }}>Güncellenecek: {p.guncelleSayisi}</span>
-            <span style={{ color: "#737373" }}>Değişiklik yok: {p.degismeyenSayisi}</span>
+            <span style={{ color: "var(--tema-yerel-yonetim-islevsel-metin-13)" }}>Güncellenecek: {p.guncelleSayisi}</span>
+            <span style={{ color: "var(--tema-yerel-yonetim-yardimci-metin-01)" }}>Değişiklik yok: {p.degismeyenSayisi}</span>
             {/* K-A6: eksik satırlar da yüklenir — ayrı sayaçla görünür */}
-            <span style={{ color: "#d97706" }}>Eksik bilgili: {p.eksikSayisi}</span>
-            <span style={{ color: "#dc2626" }}>Hatalı: {p.hataliSayisi}</span>
+            <span style={{ color: "var(--tema-yerel-yonetim-islevsel-metin-14)" }}>Eksik bilgili: {p.eksikSayisi}</span>
+            <span style={{ color: "var(--tema-yerel-yonetim-islevsel-metin-09)" }}>Hatalı: {p.hataliSayisi}</span>
           </div>
 
           {/* K-A8: dosyadan kurulacak organizasyon — kaydetmeden önce göz onayı
               (yazım hatasından çöp takım/bölge üretmeye karşı görünür liste). */}
           {p.onizlemeKurulum && (p.onizlemeKurulum.yeniTakimlar.length > 0 || p.onizlemeKurulum.yeniBolgeler.length > 0) && (
-            <div style={{ marginBottom: "12px", padding: "8px 12px", background: "#fef2f2", border: "0.5px solid #fecaca", borderRadius: "6px", fontSize: "13px", color: RENK_BORDO, fontWeight: 600, fontFamily: "'Nunito', sans-serif" }}>
+            <div style={{ marginBottom: "12px", padding: "8px 12px", background: "var(--tema-yerel-yonetim-islevsel-zemin-01)", border: "0.5px solid var(--tema-yerel-yonetim-islevsel-cizgi-02)", borderRadius: "6px", fontSize: "13px", color: RENK_BORDO, fontWeight: 600, fontFamily: "'Nunito', sans-serif" }}>
               Bu yüklemeyle oluşturulacak:
               {p.onizlemeKurulum.yeniTakimlar.length > 0 && ` ${p.onizlemeKurulum.yeniTakimlar.length} takım (${p.onizlemeKurulum.yeniTakimlar.join(", ")})`}
               {p.onizlemeKurulum.yeniTakimlar.length > 0 && p.onizlemeKurulum.yeniBolgeler.length > 0 && " ·"}
@@ -122,9 +122,9 @@ export default function TopluGirisFormu(p: TopluGirisFormuProps) {
             </div>
           )}
 
-          <div style={{ overflow: "auto", border: "0.5px solid #e5e7eb", borderRadius: "8px", marginBottom: "16px" }}>
+          <div style={{ overflow: "auto", border: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)", borderRadius: "8px", marginBottom: "16px" }}>
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "12px", fontFamily: "'Nunito', sans-serif" }}>
-              <thead style={{ background: "#f9fafb" }}>
+              <thead style={{ background: "var(--tema-yerel-yonetim-sayfa-zemini-02)" }}>
                 <tr>
                   <th style={tarz_th}>#</th>
                   <th style={tarz_th}>Ad</th>
@@ -140,7 +140,7 @@ export default function TopluGirisFormu(p: TopluGirisFormuProps) {
               </thead>
               <tbody>
                 {p.onizlemesatirlari.map((s) => (
-                  <tr key={s.index} style={{ background: s.durum === "hatali" ? "#fef2f2" : s.durum === "eksik" ? "#fffbeb" : "white" }}>
+                  <tr key={s.index} style={{ background: s.durum === "hatali" ? "var(--tema-yerel-yonetim-islevsel-zemin-01)" : s.durum === "eksik" ? "var(--tema-yerel-yonetim-islevsel-zemin-02)" : "var(--tema-yerel-yonetim-islevsel-zemin-11)" }}>
                     <td style={tarz_td}>{s.index}</td>
                     <td style={tarz_td}>{s.ad}</td>
                     <td style={tarz_td}>{s.soyad}</td>
@@ -154,13 +154,13 @@ export default function TopluGirisFormu(p: TopluGirisFormuProps) {
                       {s.islem === "yeni" ? (
                         <span style={{ color: RENK_BORDO, fontWeight: 600 }}>Yeni</span>
                       ) : s.islem === "guncelle" ? (
-                        <span style={{ color: "#0f766e", fontWeight: 600 }}>
+                        <span style={{ color: "var(--tema-yerel-yonetim-islevsel-metin-13)", fontWeight: 600 }}>
                           Güncelleme{s.degisen && s.degisen.length > 0 ? ` — ${s.degisen.join(", ")}` : ""}
                         </span>
                       ) : s.islem === "degisiklik-yok" ? (
-                        <span style={{ color: "#737373" }}>Değişiklik yok</span>
+                        <span style={{ color: "var(--tema-yerel-yonetim-yardimci-metin-01)" }}>Değişiklik yok</span>
                       ) : (
-                        <span style={{ color: "#737373" }}>—</span>
+                        <span style={{ color: "var(--tema-yerel-yonetim-yardimci-metin-01)" }}>—</span>
                       )}
                     </td>
                     <td style={tarz_td}>
@@ -171,12 +171,12 @@ export default function TopluGirisFormu(p: TopluGirisFormuProps) {
                           Hazır{s.uyari_mesaji ? ` — ${s.uyari_mesaji}` : ""}
                         </span>
                       ) : s.durum === "eksik" ? (
-                        <span style={{ color: "#d97706", fontWeight: 600 }} title={s.uyari_mesaji}>
+                        <span style={{ color: "var(--tema-yerel-yonetim-islevsel-metin-14)", fontWeight: 600 }} title={s.uyari_mesaji}>
                           Eksik bilgili{s.uyari_mesaji ? ` — ${s.uyari_mesaji}` : " (takım/bölge yok)"}
                         </span>
                       ) : (
                         // B-25: hata yalnız tooltip'te değil, GÖRÜNÜR metin olarak.
-                        <span style={{ color: "#dc2626", fontWeight: 600 }}>
+                        <span style={{ color: "var(--tema-yerel-yonetim-islevsel-metin-09)", fontWeight: 600 }}>
                           Hatalı{s.hata_mesaji ? ` — ${s.hata_mesaji}` : ""}
                         </span>
                       )}
@@ -194,8 +194,8 @@ export default function TopluGirisFormu(p: TopluGirisFormuProps) {
             disabled={p.yeniSayisi + p.guncelleSayisi === 0 || p.hataliSayisi > 0 || p.topluKaydetLoading}
             style={{
               ...btnBase,
-              background: p.yeniSayisi + p.guncelleSayisi === 0 || p.hataliSayisi > 0 || p.topluKaydetLoading ? "#d1d5db" : RENK_BORDO,
-              color: "white",
+              background: p.yeniSayisi + p.guncelleSayisi === 0 || p.hataliSayisi > 0 || p.topluKaydetLoading ? "var(--tema-yerel-yonetim-islevsel-zemin-12)" : RENK_BORDO,
+              color: "var(--tema-yerel-yonetim-ters-metin-01)",
               border: "none",
               cursor: p.yeniSayisi + p.guncelleSayisi === 0 || p.hataliSayisi > 0 || p.topluKaydetLoading ? "not-allowed" : "pointer",
             }}
@@ -210,7 +210,7 @@ export default function TopluGirisFormu(p: TopluGirisFormuProps) {
       )}
 
       {p.onizlemesatirlari && p.onizlemesatirlari.length === 0 && (
-        <p style={{ fontSize: "13px", color: "#737373", fontFamily: "'Nunito', sans-serif" }}>
+        <p style={{ fontSize: "13px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)", fontFamily: "'Nunito', sans-serif" }}>
           Dosyada geçerli satır bulunamadı.
         </p>
       )}
@@ -220,14 +220,14 @@ export default function TopluGirisFormu(p: TopluGirisFormuProps) {
         <div
           style={{
             marginTop: "16px",
-            border: `0.5px solid ${p.kaydetSonucu.hatali > 0 ? "#fecaca" : "#bbf7d0"}`,
-            background: p.kaydetSonucu.hatali > 0 ? "#fef2f2" : "#f0fdf4",
+            border: `0.5px solid ${p.kaydetSonucu.hatali > 0 ? "var(--tema-yerel-yonetim-islevsel-cizgi-02)" : "var(--tema-yerel-yonetim-islevsel-cizgi-04)"}`,
+            background: p.kaydetSonucu.hatali > 0 ? "var(--tema-yerel-yonetim-islevsel-zemin-01)" : "var(--tema-yerel-yonetim-islevsel-zemin-07)",
             borderRadius: "8px",
             padding: "12px 14px",
             fontFamily: "'Nunito', sans-serif",
           }}
         >
-          <p style={{ fontSize: "13px", fontWeight: 700, color: p.kaydetSonucu.hatali > 0 ? "#b91c1c" : "#166534", margin: 0 }}>
+          <p style={{ fontSize: "13px", fontWeight: 700, color: p.kaydetSonucu.hatali > 0 ? "var(--tema-yerel-yonetim-islevsel-metin-15)" : "var(--tema-yerel-yonetim-islevsel-metin-10)", margin: 0 }}>
             {p.kaydetSonucu.olusturulanTakim > 0 ? `${p.kaydetSonucu.olusturulanTakim} takım oluşturuldu, ` : ""}
             {p.kaydetSonucu.olusturulanBolge > 0 ? `${p.kaydetSonucu.olusturulanBolge} bölge oluşturuldu, ` : ""}
             {p.kaydetSonucu.eklenen} eklendi, {p.kaydetSonucu.guncellenen} güncellendi
@@ -236,7 +236,7 @@ export default function TopluGirisFormu(p: TopluGirisFormuProps) {
             {p.kaydetSonucu.hatali > 0 ? `, ${p.kaydetSonucu.hatali} satır işlenemedi:` : "."}
           </p>
           {p.kaydetSonucu.hatalar.length > 0 && (
-            <ul style={{ fontSize: "12px", color: "#7f1d1d", margin: "8px 0 0 0", paddingLeft: "18px", lineHeight: 1.7 }}>
+            <ul style={{ fontSize: "12px", color: "var(--tema-yerel-yonetim-islevsel-metin-16)", margin: "8px 0 0 0", paddingLeft: "18px", lineHeight: 1.7 }}>
               {p.kaydetSonucu.hatalar.map((h, i) => <li key={i}>{h}</li>)}
             </ul>
           )}

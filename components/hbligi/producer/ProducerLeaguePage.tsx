@@ -38,12 +38,12 @@ const KAPSAMLAR: Array<{ id: LigKapsami; etiket: string }> = [
 ];
 
 const PUAN_RENKLERI = {
-  izleme: "#1aa160",
-  cevaplama: "#6d5ce8",
-  oneri: "#f59e0b",
-  extra: "#2f9ae9",
-  eclub: "#237ac8",
-  kayip: "#e44c4c",
+  izleme: "var(--tema-cizim-lig-izleme)",
+  cevaplama: "var(--tema-cizim-lig-cevaplama)",
+  oneri: "var(--tema-cizim-lig-oneri)",
+  extra: "var(--tema-cizim-lig-extra)",
+  eclub: "var(--tema-cizim-lig-eclub)",
+  kayip: "var(--tema-cizim-lig-kayip)",
 };
 
 function aktifMi(
@@ -70,18 +70,18 @@ function StatCard({
   icon: typeof Gauge;
 }) {
   const tonlar = {
-    blue: "border-blue-100 bg-blue-50/70 text-blue-700",
-    violet: "border-violet-100 bg-violet-50/70 text-violet-700",
-    green: "border-emerald-100 bg-emerald-50/70 text-emerald-700",
-    red: "border-rose-100 bg-rose-50/70 text-rose-700",
+    blue: "border-[var(--tema-yerel-lig-cizgi-01)] bg-[var(--tema-yerel-lig-secim-zemin-01)]/70 text-[var(--tema-yerel-lig-eylem-metin-01)]",
+    violet: "border-[var(--tema-yerel-lig-islevsel-cizgi-12)] bg-[var(--tema-yerel-lig-islevsel-zemin-30)]/70 text-[var(--tema-yerel-lig-islevsel-metin-32)]",
+    green: "border-[var(--tema-yerel-lig-islevsel-cizgi-01)] bg-[var(--tema-yerel-lig-islevsel-zemin-01)]/70 text-[var(--tema-yerel-lig-islevsel-metin-01)]",
+    red: "border-[var(--tema-yerel-lig-islevsel-cizgi-02)] bg-[var(--tema-yerel-lig-islevsel-zemin-02)]/70 text-[var(--tema-yerel-lig-islevsel-metin-02)]",
   };
   return (
     <article className={`flex min-h-[104px] items-center gap-3 rounded-2xl border p-4 ${tonlar[renk]}`}>
-      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white/80 shadow-sm"><Icon className="h-4 w-4" /></span>
+      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[var(--tema-yerel-lig-kart-01)]/80 shadow-sm"><Icon className="h-4 w-4" /></span>
       <div className="min-w-0">
         <div className="text-[9px] font-black uppercase tracking-[0.12em] opacity-70">{etiket}</div>
-        <div className="mt-0.5 text-2xl font-black tabular-nums text-[#10213d]">{deger}</div>
-        <div className="mt-1 text-[10px] font-bold leading-4 text-[#718198]">{aciklama}</div>
+        <div className="mt-0.5 text-2xl font-black tabular-nums text-[var(--tema-yerel-lig-ana-metin-02)]">{deger}</div>
+        <div className="mt-1 text-[10px] font-bold leading-4 text-[var(--tema-yerel-lig-yardimci-metin-02)]">{aciklama}</div>
       </div>
     </article>
   );
@@ -210,7 +210,7 @@ export default function ProducerLeaguePage({
     { ad: "Kayıplar", deger: kayip, renk: PUAN_RENKLERI.kayip },
   ];
   const grafikOption = {
-    tooltip: { trigger: "item" as const, formatter: "{b}: {c}" },
+    tooltip: { trigger: "item" as const, backgroundColor: "var(--tema-cizim-tooltip-kart)", textStyle: { color: "var(--tema-cizim-tooltip-metin)" }, formatter: "{b}: {c}" },
     series: [{
       type: "pie" as const,
       radius: ["63%", "88%"],
@@ -254,7 +254,7 @@ export default function ProducerLeaguePage({
       <div className={leagueStyles.shell} style={{ fontFamily: "'Nunito', sans-serif" }}>
         <div className={`${leagueStyles.dashboard} !h-auto !min-h-full`}>
           <div className="shrink-0"><LeagueHeader periyotSecici={null} yenileButonu={yenileButonu} /></div>
-          <p className="-mt-1 text-[11px] font-bold text-[#7b8ca5]">Performansları görebilirsiniz</p>
+          <p className="-mt-1 text-[11px] font-bold text-[var(--tema-yerel-lig-yardimci-metin-20)]">Performansları görebilirsiniz</p>
           <MonthlyLeaders top3={bannerTop3} ayAdi={veri.aylik_kursu?.ay_adi} />
           <div className="flex flex-wrap items-center justify-between gap-2">
             {bakisSecici}

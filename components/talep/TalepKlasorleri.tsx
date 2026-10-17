@@ -42,7 +42,7 @@ interface Props<T extends KlasorlenebilirTalep> {
   birim?: string;
 }
 
-const FIRMA_RENK = "#6b7280";
+const FIRMA_RENK = "var(--tema-yerel-uretim-yardimci-metin-06)";
 
 export default function TalepKlasorleri<T extends KlasorlenebilirTalep>({
   talepler,
@@ -80,19 +80,19 @@ export default function TalepKlasorleri<T extends KlasorlenebilirTalep>({
   }) => (
     <button
       onClick={() => setYol([...yol, ad])}
-      className="text-left bg-white border border-gray-200 rounded-xl p-3 md:p-4 cursor-pointer transition-shadow duration-150 flex flex-col gap-3"
+      className="text-left bg-[var(--tema-yerel-uretim-kart-01)] border border-[var(--tema-yerel-uretim-cizgi-01)] rounded-xl p-3 md:p-4 cursor-pointer transition-shadow duration-150 flex flex-col gap-3"
       style={{ borderLeft: `3px solid ${renk}`, fontFamily: "'Nunito', sans-serif" }}
-      onMouseEnter={(e) => ((e.currentTarget as HTMLButtonElement).style.boxShadow = `0 0 0 2px ${renk}33`)}
+      onMouseEnter={(e) => ((e.currentTarget as HTMLButtonElement).style.boxShadow = `0 0 0 2px color-mix(in srgb, ${renk} 20%, transparent)`)}
       onMouseLeave={(e) => ((e.currentTarget as HTMLButtonElement).style.boxShadow = "none")}
     >
       <div className="flex items-center justify-between">
         {ikon}
-        <span className="text-xs text-gray-500 bg-gray-50 border border-gray-200 rounded-lg px-2 py-0.5 whitespace-nowrap">
+        <span className="text-xs text-[var(--tema-yerel-uretim-yardimci-metin-01)] bg-[var(--tema-yerel-uretim-sayfa-zemini-01)] border border-[var(--tema-yerel-uretim-cizgi-01)] rounded-lg px-2 py-0.5 whitespace-nowrap">
           {sayi} {birim}
         </span>
       </div>
-      <span className="text-sm font-bold text-gray-900">{etiket}</span>
-      <span className="text-xs text-gray-500">{altBilgi}</span>
+      <span className="text-sm font-bold text-[var(--tema-yerel-uretim-ana-metin-01)]">{etiket}</span>
+      <span className="text-xs text-[var(--tema-yerel-uretim-yardimci-metin-01)]">{altBilgi}</span>
     </button>
   );
 
@@ -106,24 +106,24 @@ export default function TalepKlasorleri<T extends KlasorlenebilirTalep>({
     <div className="flex items-center gap-2 flex-wrap mb-3">
       <button
         onClick={() => setYol([])}
-        className="text-xs font-semibold text-gray-700 border border-gray-200 rounded-lg px-3 py-1.5 bg-white cursor-pointer"
+        className="text-xs font-semibold text-[var(--tema-yerel-uretim-ana-metin-03)] border border-[var(--tema-yerel-uretim-cizgi-01)] rounded-lg px-3 py-1.5 bg-[var(--tema-yerel-uretim-kart-01)] cursor-pointer"
         style={{ fontFamily: "'Nunito', sans-serif" }}
       >
         Klasörler
       </button>
       {yol.map((p, i) => (
         <span key={`${p}-${i}`} className="flex items-center gap-2">
-          <span className="text-gray-300 text-xs">/</span>
+          <span className="text-[var(--tema-yerel-uretim-yardimci-metin-07)] text-xs">/</span>
           <button
             onClick={() => setYol(yol.slice(0, i + 1))}
-            className={`text-xs bg-transparent border-none cursor-pointer p-0 ${i === yol.length - 1 ? "text-gray-900 font-bold" : "text-gray-500"}`}
+            className={`text-xs bg-transparent border-none cursor-pointer p-0 ${i === yol.length - 1 ? "text-[var(--tema-yerel-uretim-ana-metin-01)] font-bold" : "text-[var(--tema-yerel-uretim-yardimci-metin-01)]"}`}
             style={{ fontFamily: "'Nunito', sans-serif" }}
           >
             {kirilimEtiketi(p, i)}
           </button>
         </span>
       ))}
-      <span className="text-xs text-gray-400 ml-auto">
+      <span className="text-xs text-[var(--tema-yerel-uretim-yardimci-metin-02)] ml-auto">
         {suzulmus.length} {birim}
       </span>
     </div>

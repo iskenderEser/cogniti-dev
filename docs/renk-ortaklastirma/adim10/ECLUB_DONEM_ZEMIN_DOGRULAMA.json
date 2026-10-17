@@ -1,0 +1,20 @@
+{
+  "tarih": "2026-10-17",
+  "sira": 1,
+  "durum": "TAMAMLANDI",
+  "konu": "E-Club performansı dönem seçicisinin zemini",
+  "dosya": "components/eclub/eclub-performans.module.css",
+  "ortak_kaynak": "--tema-yerel-eclub-kart-03",
+  "renk_disi_fark": 0,
+  "tum_css_bildirimleri_iki_temada_ayni": true,
+  "svg_oku_ve_periyot_davranisi_degismedi": true,
+  "gercek_tarayıcı": "YAPILMADI",
+  "ikinci_ise_gecildi": false,
+  "yeni_degisken_eklenmedi": true,
+  "hedef_testler": {
+    "komut": "node --import ./tests/_alias.mjs --test tests/eclubPerformansTasarim.hedef.test.ts",
+    "toplam": 2,
+    "basarili": 2,
+    "basarisiz": 0
+  }
+}

@@ -1,0 +1,1345 @@
+{
+  "adim": 6,
+  "tarih": "2026-10-17",
+  "durum": "TAMAMLANDI",
+  "uygulama": "Yerel kaynaklar güncellendi; canlı dağıtım yapılmadı.",
+  "kapsam": {
+    "tsx": 23,
+    "css": [
+      "app/tema.css",
+      "app/renk-demo/renk.module.css"
+    ],
+    "bilesen_ortaklastirma": false,
+    "kart_slotlari": "YayinKarti, dört araç kapağı, oynatıcı arayüzleri ve doğrudan gerçek kart renk slotları; ayrı gönderim detay paneli ve sayfa kabukları sonraki adımlar."
+  },
+  "tema": {
+    "degisken": 216,
+    "temaya_gore_degisen": 134,
+    "iki_temada_sabit": 82,
+    "yeni_bildirim": 350,
+    "onceki_bildirim": 281,
+    "korunan_bildirim": 281,
+    "renkler": {
+      "--tema-hoyk-cizgi": {
+        "mavi": "var(--color-gray-200)",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-hoyk-zemin": {
+        "mavi": "#fff",
+        "yesil": "var(--tema-kart)"
+      },
+      "--tema-hoyk-kapak-zemini": {
+        "mavi": "var(--color-gray-100)",
+        "yesil": "var(--tema-bilgi-zemini)"
+      },
+      "--tema-hoyk-baslik": {
+        "mavi": "var(--color-gray-900)",
+        "yesil": "var(--tema-baslik)"
+      },
+      "--tema-hoyk-soluk-metin": {
+        "mavi": "var(--color-gray-400)",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-hoyk-ikincil-metin": {
+        "mavi": "var(--color-gray-500)",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-hoyk-aciklama-metni": {
+        "mavi": "var(--color-gray-600)",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-hoyk-ayirici": {
+        "mavi": "var(--color-gray-300)",
+        "yesil": "#a7b398"
+      },
+      "--tema-hoyk-talep-metni": {
+        "mavi": "#bc2d0d",
+        "yesil": "#776f58"
+      },
+      "--tema-hoyk-dongu-metni": {
+        "mavi": "#1e3a8a",
+        "yesil": "var(--tema-secili-metin)"
+      },
+      "--tema-hoyk-etkilesim-hover": {
+        "mavi": "var(--color-gray-600)",
+        "yesil": "var(--tema-metin)"
+      },
+      "--tema-hoyk-begeni": {
+        "mavi": "var(--color-red-500)",
+        "yesil": "#a0784d"
+      },
+      "--tema-hoyk-favori": {
+        "mavi": "var(--color-blue-500)",
+        "yesil": "var(--tema-toprak)"
+      },
+      "--tema-hoyk-favori-dolgu": {
+        "mavi": "#2563eb",
+        "yesil": "var(--tema-toprak)"
+      },
+      "--tema-hoyk-favori-simge": {
+        "mavi": "#2563eb",
+        "yesil": "var(--tema-toprak)"
+      },
+      "--tema-hoyk-durum-yeni": {
+        "mavi": "var(--color-blue-600)",
+        "yesil": "var(--color-blue-600)"
+      },
+      "--tema-hoyk-durum-devam": {
+        "mavi": "var(--color-amber-600)",
+        "yesil": "var(--color-amber-600)"
+      },
+      "--tema-hoyk-durum-izlendi": {
+        "mavi": "var(--color-gray-700)",
+        "yesil": "var(--color-gray-700)"
+      },
+      "--tema-hoyk-sure-doldu": {
+        "mavi": "#dc2626",
+        "yesil": "#dc2626"
+      },
+      "--tema-hoyk-tamamlandi": {
+        "mavi": "#2563eb",
+        "yesil": "#2563eb"
+      },
+      "--tema-hoyk-yeniden-zemin": {
+        "mavi": "var(--color-amber-50)",
+        "yesil": "var(--color-amber-50)"
+      },
+      "--tema-hoyk-yeniden-metin": {
+        "mavi": "var(--color-amber-700)",
+        "yesil": "var(--color-amber-700)"
+      },
+      "--tema-hoyk-kapsul-zemini": {
+        "mavi": "rgba(0,0,0,0.04)",
+        "yesil": "var(--tema-secili)"
+      },
+      "--tema-hoyk-kapsul-cizgi": {
+        "mavi": "rgba(0,0,0,0.08)",
+        "yesil": "#e1e7d8"
+      },
+      "--tema-kapak-video-ilk": {
+        "mavi": "#1e3a8a",
+        "yesil": "#dfe7d7"
+      },
+      "--tema-kapak-video-son": {
+        "mavi": "#0f172a",
+        "yesil": "#edf0e6"
+      },
+      "--tema-kapak-video-metin": {
+        "mavi": "#fff",
+        "yesil": "#456844"
+      },
+      "--tema-kapak-podcast-ilk": {
+        "mavi": "#2a1343",
+        "yesil": "#e8e7d8"
+      },
+      "--tema-kapak-podcast-son": {
+        "mavi": "#140824",
+        "yesil": "#f0f1e9"
+      },
+      "--tema-kapak-podcast-metin": {
+        "mavi": "#fff",
+        "yesil": "#776f58"
+      },
+      "--tema-kapak-gorsel-ilk": {
+        "mavi": "#064e3b",
+        "yesil": "#eef1e6"
+      },
+      "--tema-kapak-gorsel-son": {
+        "mavi": "#022c22",
+        "yesil": "#dfe7d7"
+      },
+      "--tema-kapak-gorsel-metin": {
+        "mavi": "#fff",
+        "yesil": "#456844"
+      },
+      "--tema-kapak-flip_pdf-ilk": {
+        "mavi": "#78350f",
+        "yesil": "#fffdf5"
+      },
+      "--tema-kapak-flip_pdf-son": {
+        "mavi": "#451a03",
+        "yesil": "#e8e7d8"
+      },
+      "--tema-kapak-flip_pdf-metin": {
+        "mavi": "#fff",
+        "yesil": "#776f58"
+      },
+      "--tema-kapak-etiket-zemini": {
+        "mavi": "rgba(0,0,0,0.4)",
+        "yesil": "#fcfdf880"
+      },
+      "--tema-kapak-podcast-buyuk-ara": {
+        "mavi": "#1a0c2d",
+        "yesil": "#e8e7d8"
+      },
+      "--tema-kapak-podcast-buyuk-son": {
+        "mavi": "#120721",
+        "yesil": "#f0f1e9"
+      },
+      "--tema-kapak-podcast-simge-ilk": {
+        "mavi": "#b150e2",
+        "yesil": "#a4b8aa"
+      },
+      "--tema-kapak-podcast-simge-son": {
+        "mavi": "#6821a8",
+        "yesil": "var(--tema-bilgi-metni)"
+      },
+      "--tema-oynatici-yuzey": {
+        "mavi": "#fff",
+        "yesil": "var(--tema-yuzey)"
+      },
+      "--tema-oynatici-zemin": {
+        "mavi": "var(--color-gray-50)",
+        "yesil": "var(--tema-zemin)"
+      },
+      "--tema-oynatici-transkript-zemini": {
+        "mavi": "color-mix(in oklab, var(--color-gray-50) 70%, transparent)",
+        "yesil": "color-mix(in srgb, var(--tema-zemin) 70%, transparent)"
+      },
+      "--tema-oynatici-cizgi": {
+        "mavi": "var(--color-gray-200)",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-oynatici-ic-cizgi": {
+        "mavi": "var(--color-gray-100)",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-oynatici-baslik": {
+        "mavi": "var(--color-gray-900)",
+        "yesil": "var(--tema-baslik)"
+      },
+      "--tema-oynatici-koyu-metin": {
+        "mavi": "var(--color-gray-800)",
+        "yesil": "var(--tema-metin)"
+      },
+      "--tema-oynatici-metin": {
+        "mavi": "var(--color-gray-700)",
+        "yesil": "var(--tema-metin)"
+      },
+      "--tema-oynatici-ikincil-metin": {
+        "mavi": "var(--color-gray-500)",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-oynatici-baglanti": {
+        "mavi": "#287fce",
+        "yesil": "var(--tema-eylem)"
+      },
+      "--tema-oynatici-eylem": {
+        "mavi": "#56aeff",
+        "yesil": "var(--tema-eylem)"
+      },
+      "--tema-oynatici-eylem-metni": {
+        "mavi": "#fff",
+        "yesil": "var(--tema-eylem-metin)"
+      },
+      "--tema-oynatici-gorsel-kontrol-zemini": {
+        "mavi": "rgba(0,0,0,0.75)",
+        "yesil": "rgba(0,0,0,0.75)"
+      },
+      "--tema-oynatici-gorsel-kontrol-hover": {
+        "mavi": "rgba(255,255,255,0.2)",
+        "yesil": "rgba(255,255,255,0.2)"
+      },
+      "--tema-oynatici-gorsel-kontrol-soluk": {
+        "mavi": "var(--color-gray-300)",
+        "yesil": "var(--color-gray-300)"
+      },
+      "--tema-oynatici-gorsel-kontrol-metni": {
+        "mavi": "#fff",
+        "yesil": "#fff"
+      },
+      "--tema-oynatici-pdf-soluk-zemin": {
+        "mavi": "var(--color-slate-50)",
+        "yesil": "var(--tema-zemin)"
+      },
+      "--tema-oynatici-pdf-zemin": {
+        "mavi": "var(--color-slate-100)",
+        "yesil": "var(--tema-bilgi-zemini)"
+      },
+      "--tema-oynatici-pdf-hover": {
+        "mavi": "var(--color-slate-100)",
+        "yesil": "var(--tema-secili)"
+      },
+      "--tema-oynatici-pdf-cizgi": {
+        "mavi": "var(--color-slate-200)",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-oynatici-pdf-ikincil-metin": {
+        "mavi": "var(--color-slate-500)",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-oynatici-pdf-metin": {
+        "mavi": "var(--color-slate-600)",
+        "yesil": "var(--tema-metin)"
+      },
+      "--tema-oynatici-pdf-secili-cizgi": {
+        "mavi": "#bc2d0d",
+        "yesil": "var(--tema-odak)"
+      },
+      "--tema-oynatici-pdf-secili-zemin": {
+        "mavi": "var(--color-red-50)",
+        "yesil": "var(--tema-secili)"
+      },
+      "--tema-oynatici-pdf-sayfa": {
+        "mavi": "#fff",
+        "yesil": "#fff"
+      },
+      "--tema-oynatici-video-yan-zemin": {
+        "mavi": "var(--color-gray-900)",
+        "yesil": "var(--color-gray-900)"
+      },
+      "--tema-oynatici-video-ilk-ortu": {
+        "mavi": "color-mix(in oklab, #10233a 20%, transparent)",
+        "yesil": "color-mix(in srgb, var(--tema-eylem) 20%, transparent)"
+      },
+      "--tema-oynatici-video-play-zemini": {
+        "mavi": "color-mix(in oklab, #10233a 80%, transparent)",
+        "yesil": "color-mix(in srgb, var(--tema-eylem) 80%, transparent)"
+      },
+      "--tema-oynatici-video-play-hover": {
+        "mavi": "color-mix(in oklab, #10233a 95%, transparent)",
+        "yesil": "color-mix(in srgb, var(--tema-eylem) 95%, transparent)"
+      },
+      "--tema-oynatici-video-odak": {
+        "mavi": "#56aeff",
+        "yesil": "var(--tema-odak)"
+      },
+      "--tema-oynatici-video-play-halka": {
+        "mavi": "#fff",
+        "yesil": "#fff"
+      },
+      "--tema-oynatici-video-bitis-ortusu": {
+        "mavi": "color-mix(in oklab, #10233a 75%, transparent)",
+        "yesil": "color-mix(in srgb, var(--tema-eylem) 75%, transparent)"
+      },
+      "--tema-oynatici-video-bitis-aciklama": {
+        "mavi": "rgba(255,255,255,0.75)",
+        "yesil": "rgba(255,255,255,0.75)"
+      },
+      "--tema-oynatici-video-bitis-aciklama-cc": {
+        "mavi": "rgba(255,255,255,0.8)",
+        "yesil": "rgba(255,255,255,0.8)"
+      },
+      "--tema-oynatici-video-ters-metin": {
+        "mavi": "#fff",
+        "yesil": "#fff"
+      },
+      "--tema-oynatici-puan-zemini": {
+        "mavi": "var(--color-blue-50)",
+        "yesil": "var(--tema-puan-zemini)"
+      },
+      "--tema-oynatici-puan-cizgi": {
+        "mavi": "var(--color-blue-200)",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-oynatici-puan-metni": {
+        "mavi": "var(--color-blue-700)",
+        "yesil": "var(--tema-puan-metni)"
+      },
+      "--tema-oynatici-uyari-zemini": {
+        "mavi": "var(--color-amber-50)",
+        "yesil": "var(--color-amber-50)"
+      },
+      "--tema-oynatici-uyari-cizgi": {
+        "mavi": "var(--color-amber-200)",
+        "yesil": "var(--color-amber-200)"
+      },
+      "--tema-oynatici-bilgi-cizgi": {
+        "mavi": "#dbe5ef",
+        "yesil": "var(--tema-modal-cizgisi)"
+      },
+      "--tema-oynatici-bilgi-baslik": {
+        "mavi": "#203653",
+        "yesil": "var(--tema-baslik)"
+      },
+      "--tema-oynatici-bilgi-metin": {
+        "mavi": "#687b90",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-oynatici-panel-eylem": {
+        "mavi": "#237ac8",
+        "yesil": "var(--tema-eylem)"
+      },
+      "--tema-oynatici-panel-eylem-hover": {
+        "mavi": "#1d69ad",
+        "yesil": "var(--tema-eylem-hover)"
+      },
+      "--tema-oynatici-eclub-eylem-hover": {
+        "mavi": "#1d69aa",
+        "yesil": "var(--tema-eylem-hover)"
+      },
+      "--tema-oynatici-eclub-geri": {
+        "mavi": "#71859d",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-oynatici-eclub-cizgi": {
+        "mavi": "#dfe7f1",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-oynatici-eclub-ic-cizgi": {
+        "mavi": "#e7edf4",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-oynatici-eclub-ikincil-metin": {
+        "mavi": "#8190a3",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-oynatici-eclub-video-zemini": {
+        "mavi": "#10213d",
+        "yesil": "#10213d"
+      },
+      "--tema-oynatici-eclub-sonuc-cizgi": {
+        "mavi": "#bfdbfe",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-oynatici-eclub-sonuc-zemin": {
+        "mavi": "#eff6ff",
+        "yesil": "var(--tema-puan-zemini)"
+      },
+      "--tema-oynatici-eclub-sonuc-metin": {
+        "mavi": "#2563a8",
+        "yesil": "var(--tema-puan-metni)"
+      },
+      "--tema-oynatici-eclub-uyari-metin": {
+        "mavi": "#66788f",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-oynatici-eclub-risk-metin": {
+        "mavi": "#b23b31",
+        "yesil": "#b23b31"
+      },
+      "--tema-oynatici-eclub-risk-eylem": {
+        "mavi": "#b23b31",
+        "yesil": "#b23b31"
+      },
+      "--tema-oynatici-eclub-iptal-metni": {
+        "mavi": "#617590",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-oynatici-modal-ortu": {
+        "mavi": "rgba(0,0,0,0.4)",
+        "yesil": "rgba(0,0,0,0.4)"
+      },
+      "--tema-oynatici-video-basari-simgesi": {
+        "mavi": "var(--color-emerald-400)",
+        "yesil": "var(--color-emerald-400)"
+      },
+      "--tema-oynatici-eczanem-geri": {
+        "mavi": "#61768c",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-oynatici-eczanem-cizgi": {
+        "mavi": "#dfe7ef",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-oynatici-eczanem-ic-cizgi": {
+        "mavi": "#e7edf3",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-oynatici-eczanem-aciklama": {
+        "mavi": "#8191a4",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-oynatici-eczanem-eczane": {
+        "mavi": "#5f7893",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-oynatici-eczanem-bilgi-cizgi": {
+        "mavi": "#dce8f2",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-oynatici-eczanem-bilgi-zemin": {
+        "mavi": "#f5f9fc",
+        "yesil": "var(--tema-bilgi-zemini)"
+      },
+      "--tema-oynatici-eczanem-bilgi-metin": {
+        "mavi": "#60758c",
+        "yesil": "var(--tema-bilgi-metni)"
+      },
+      "--tema-oynatici-eczanem-bilgi-simge": {
+        "mavi": "#4d8fc8",
+        "yesil": "var(--tema-bilgi-metni)"
+      },
+      "--tema-oynatici-eczanem-video-zemini": {
+        "mavi": "#10233a",
+        "yesil": "#10233a"
+      },
+      "--tema-oynatici-eczanem-bekleme-ortu": {
+        "mavi": "color-mix(in oklab, #10233a 65%, transparent)",
+        "yesil": "color-mix(in oklab, #10233a 65%, transparent)"
+      },
+      "--tema-oynatici-risk": {
+        "mavi": "#bc2d0d",
+        "yesil": "#bc2d0d"
+      },
+      "--tema-oynatici-cc-basari-zemin": {
+        "mavi": "#f0fdf4",
+        "yesil": "#f0fdf4"
+      },
+      "--tema-oynatici-cc-basari-cizgi": {
+        "mavi": "#bbf7d0",
+        "yesil": "#bbf7d0"
+      },
+      "--tema-oynatici-cc-basari-metin": {
+        "mavi": "#16a34a",
+        "yesil": "#16a34a"
+      },
+      "--tema-oynatici-cc-kayip-zemin": {
+        "mavi": "#fef2f2",
+        "yesil": "#fef2f2"
+      },
+      "--tema-oynatici-cc-kayip-cizgi": {
+        "mavi": "#fecaca",
+        "yesil": "#fecaca"
+      },
+      "--tema-oynatici-cc-kayip-metin": {
+        "mavi": "#dc2626",
+        "yesil": "#dc2626"
+      },
+      "--tema-oynatici-cc-uyari-zemin": {
+        "mavi": "#fffbeb",
+        "yesil": "#fffbeb"
+      },
+      "--tema-oynatici-cc-uyari-cizgi": {
+        "mavi": "#fde68a",
+        "yesil": "#fde68a"
+      },
+      "--tema-oynatici-cc-challenge-metin": {
+        "mavi": "#7c3aed",
+        "yesil": "#7c3aed"
+      },
+      "--tema-oynatici-cc-challenge-zemin": {
+        "mavi": "rgba(124,58,237,0.08)",
+        "yesil": "rgba(124,58,237,0.08)"
+      },
+      "--tema-oynatici-cc-challenge-cizgi": {
+        "mavi": "rgba(124,58,237,0.3)",
+        "yesil": "rgba(124,58,237,0.3)"
+      },
+      "--tema-oynatici-cc-rozet-metin": {
+        "mavi": "#237ac8",
+        "yesil": "#237ac8"
+      },
+      "--tema-oynatici-cc-rozet-zemin": {
+        "mavi": "#edf6fd",
+        "yesil": "#edf6fd"
+      },
+      "--tema-oynatici-cc-rozet-cizgi": {
+        "mavi": "#bfdbfe",
+        "yesil": "#bfdbfe"
+      },
+      "--tema-hoyk-sure-acik-zemin-metni": {
+        "mavi": "#172a44",
+        "yesil": "#172a44"
+      },
+      "--tema-hoyk-secim-cizgi": {
+        "mavi": "#237ac8",
+        "yesil": "var(--tema-eylem)"
+      },
+      "--tema-hoyk-secim-halka": {
+        "mavi": "color-mix(in oklab, #237ac8 20%, transparent)",
+        "yesil": "color-mix(in srgb, var(--tema-eylem) 20%, transparent)"
+      },
+      "--tema-hoyk-bm-secim-halka": {
+        "mavi": "color-mix(in oklab, #237ac8 30%, transparent)",
+        "yesil": "color-mix(in srgb, var(--tema-eylem) 30%, transparent)"
+      },
+      "--tema-hoyk-secim-metni": {
+        "mavi": "#1d65aa",
+        "yesil": "var(--tema-secili-metin)"
+      },
+      "--tema-hoyk-secim-pasif-metni": {
+        "mavi": "#526780",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-hoyk-secim-kontrolu": {
+        "mavi": "#237ac8",
+        "yesil": "var(--tema-eylem)"
+      },
+      "--tema-hoyk-bm-secim-kontrolu": {
+        "mavi": "#2f7fc7",
+        "yesil": "var(--tema-eylem)"
+      },
+      "--tema-hoyk-gonderim-cizgi": {
+        "mavi": "#dce7f2",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-hoyk-gonderim-zemin": {
+        "mavi": "#f2f7fc",
+        "yesil": "var(--tema-bilgi-zemini)"
+      },
+      "--tema-hoyk-gonderim-metin": {
+        "mavi": "#405976",
+        "yesil": "var(--tema-bilgi-metni)"
+      },
+      "--tema-hoyk-ek-icerik-cizgi": {
+        "mavi": "#e8eef5",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-hoyk-kosul-cizgi": {
+        "mavi": "#e1e9f3",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-hoyk-kosul-zemin": {
+        "mavi": "#f5f8fc",
+        "yesil": "var(--tema-bilgi-zemini)"
+      },
+      "--tema-hoyk-onizleme-cizgi": {
+        "mavi": "#dbe4ef",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-hoyk-secim-zemin": {
+        "mavi": "#eaf3fd",
+        "yesil": "var(--tema-secili)"
+      },
+      "--tema-hoyk-secim-eylemi": {
+        "mavi": "#237ac8",
+        "yesil": "var(--tema-eylem)"
+      },
+      "--tema-hoyk-onizleme-simge": {
+        "mavi": "#237ac8",
+        "yesil": "var(--tema-eylem)"
+      },
+      "--tema-hoyk-secim-kapali-zemin": {
+        "mavi": "#f2f5f8",
+        "yesil": "var(--tema-zemin)"
+      },
+      "--tema-hoyk-secim-kapali-metin": {
+        "mavi": "#8a9bad",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-hoyk-inceleme-uyari-zemin": {
+        "mavi": "#fff3f1",
+        "yesil": "#fff3f1"
+      },
+      "--tema-hoyk-inceleme-uyari-metin": {
+        "mavi": "#ad625c",
+        "yesil": "#ad625c"
+      },
+      "--tema-hoyk-firma-zemin": {
+        "mavi": "#1e3a8a",
+        "yesil": "var(--tema-eylem)"
+      },
+      "--tema-hoyk-firma-cizgi": {
+        "mavi": "rgba(255,255,255,0.4)",
+        "yesil": "rgba(255,255,255,0.4)"
+      },
+      "--tema-hoyk-play-cizgi": {
+        "mavi": "rgba(255,255,255,0.45)",
+        "yesil": "rgba(255,255,255,0.45)"
+      },
+      "--tema-hoyk-play-zemin": {
+        "mavi": "color-mix(in oklab, #10233a 65%, transparent)",
+        "yesil": "color-mix(in srgb, var(--tema-eylem) 65%, transparent)"
+      },
+      "--tema-hoyk-ters-metin": {
+        "mavi": "#fff",
+        "yesil": "#fff"
+      },
+      "--tema-hoyk-cekli-simge-zemin": {
+        "mavi": "#e2edff",
+        "yesil": "var(--tema-secili)"
+      },
+      "--tema-hoyk-cekli-simge-metin": {
+        "mavi": "#0759e9",
+        "yesil": "var(--tema-secili-metin)"
+      },
+      "--tema-hoyk-kosul-baslik": {
+        "mavi": "#111b2f",
+        "yesil": "var(--tema-baslik)"
+      },
+      "--tema-hoyk-siparis-uyari-zemin": {
+        "mavi": "#fdeaea",
+        "yesil": "#fdeaea"
+      },
+      "--tema-hoyk-siparis-uyari-metin": {
+        "mavi": "#cf261c",
+        "yesil": "#cf261c"
+      },
+      "--tema-hoyk-kosul-aciklama": {
+        "mavi": "#627694",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-hoyk-barem-cizgi": {
+        "mavi": "#dce9fa",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-hoyk-barem-etiket": {
+        "mavi": "#627997",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-hoyk-barem-zemin": {
+        "mavi": "#eaf4ff",
+        "yesil": "var(--tema-bilgi-zemini)"
+      },
+      "--tema-hoyk-barem-adet": {
+        "mavi": "#071a3b",
+        "yesil": "var(--tema-metin)"
+      },
+      "--tema-hoyk-barem-fazla": {
+        "mavi": "#1263ef",
+        "yesil": "var(--tema-secili-metin)"
+      },
+      "--tema-hoyk-ceksiz-ilk": {
+        "mavi": "#f0f6ff",
+        "yesil": "var(--tema-puan-zemini)"
+      },
+      "--tema-hoyk-ceksiz-son": {
+        "mavi": "#f7faff",
+        "yesil": "var(--tema-bilgi-zemini)"
+      },
+      "--tema-hoyk-ceksiz-simge-zemin": {
+        "mavi": "#dceaff",
+        "yesil": "var(--tema-secili)"
+      },
+      "--tema-hoyk-ceksiz-metin": {
+        "mavi": "#1764e8",
+        "yesil": "var(--tema-secili-metin)"
+      },
+      "--tema-hoyk-lig-zemin": {
+        "mavi": "#deecff",
+        "yesil": "var(--tema-secili)"
+      },
+      "--tema-hoyk-ic-cizgi": {
+        "mavi": "var(--color-gray-100)",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-hoyk-oneri-ayirici": {
+        "mavi": "color-mix(in oklab, var(--color-gray-200) 60%, transparent)",
+        "yesil": "color-mix(in srgb, var(--tema-cizgi) 60%, transparent)"
+      },
+      "--tema-hoyk-bm-onizleme": {
+        "mavi": "#7d8ba0",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-hoyk-bm-alt-cizgi": {
+        "mavi": "#eef2f6",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-hoyk-oneri-sure-doldu": {
+        "mavi": "var(--color-red-600)",
+        "yesil": "var(--color-red-600)"
+      },
+      "--tema-hoyk-oneri-puan-metni": {
+        "mavi": "#0a1b39",
+        "yesil": "#0a1b39"
+      },
+      "--tema-hoyk-oneri-puan-zemini": {
+        "mavi": "linear-gradient(to right, #d4af37 0%, #ecd077 50%, #fae896 100%)",
+        "yesil": "linear-gradient(to right, #d4af37 0%, #ecd077 50%, #fae896 100%)"
+      },
+      "--tema-hoyk-oneri-bilgi-zemini": {
+        "mavi": "rgba(0,0,0,0.03)",
+        "yesil": "var(--tema-bilgi-zemini)"
+      },
+      "--tema-hoyk-oneri-ortu": {
+        "mavi": "rgba(0,0,0,0.2)",
+        "yesil": "rgba(0,0,0,0.2)"
+      },
+      "--tema-hoyk-saha-ortu-hover": {
+        "mavi": "rgba(0,0,0,0.15)",
+        "yesil": "rgba(0,0,0,0.15)"
+      },
+      "--tema-hoyk-saha-ortu": {
+        "mavi": "rgba(0,0,0,0.05)",
+        "yesil": "rgba(0,0,0,0.05)"
+      },
+      "--tema-hoyk-saha-play": {
+        "mavi": "rgba(0,0,0,0.6)",
+        "yesil": "rgba(0,0,0,0.6)"
+      },
+      "--tema-hoyk-eczanem-play-zemin": {
+        "mavi": "rgba(255,255,255,0.95)",
+        "yesil": "rgba(255,255,255,0.95)"
+      },
+      "--tema-hoyk-eczanem-eczane": {
+        "mavi": "#8fa0b2",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-hoyk-eczanem-ayirici": {
+        "mavi": "#e3e9ef",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-hoyk-eczanem-ozet-cizgi": {
+        "mavi": "#e5ebf1",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-hoyk-eczanem-ozet-zemin": {
+        "mavi": "#f8fafc",
+        "yesil": "var(--tema-bilgi-zemini)"
+      },
+      "--tema-hoyk-eczanem-ozet-etiket": {
+        "mavi": "#8a99aa",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-hoyk-eczanem-tamamlama": {
+        "mavi": "#286fae",
+        "yesil": "#286fae"
+      },
+      "--tema-hoyk-eczanem-soru": {
+        "mavi": "#654db0",
+        "yesil": "#654db0"
+      },
+      "--tema-hoyk-eczanem-dogru": {
+        "mavi": "#16865f",
+        "yesil": "#16865f"
+      },
+      "--tema-hoyk-eczanem-ortu": {
+        "mavi": "linear-gradient(180deg, transparent 40%, rgba(15,35,56,0.65) 100%)",
+        "yesil": "linear-gradient(180deg, transparent 40%, rgba(15,35,56,0.65) 100%)"
+      },
+      "--tema-oynatici-eczanem-basari-cizgi": {
+        "mavi": "#bde5d5",
+        "yesil": "#bde5d5"
+      },
+      "--tema-oynatici-eczanem-basari-zemin": {
+        "mavi": "#edf9f4",
+        "yesil": "#edf9f4"
+      },
+      "--tema-oynatici-eczanem-basari-metin": {
+        "mavi": "#157254",
+        "yesil": "#157254"
+      },
+      "--tema-oynatici-eczanem-izleniyor-cizgi": {
+        "mavi": "#c9dff1",
+        "yesil": "#c9dff1"
+      },
+      "--tema-oynatici-eczanem-izleniyor-zemin": {
+        "mavi": "#edf6fd",
+        "yesil": "#edf6fd"
+      },
+      "--tema-oynatici-eczanem-izleniyor-metin": {
+        "mavi": "#286fae",
+        "yesil": "#286fae"
+      },
+      "--tema-oynatici-eczanem-bekliyor-cizgi": {
+        "mavi": "#e0e7ee",
+        "yesil": "#e0e7ee"
+      },
+      "--tema-oynatici-eczanem-bekliyor-zemin": {
+        "mavi": "#f7f9fb",
+        "yesil": "#f7f9fb"
+      },
+      "--tema-oynatici-eczanem-bekliyor-metin": {
+        "mavi": "#71849a",
+        "yesil": "#71849a"
+      },
+      "--tema-oynatici-eczanem-kaynak-hata-simge": {
+        "mavi": "#b84c4c",
+        "yesil": "#b84c4c"
+      },
+      "--tema-oynatici-eczanem-kaynak-hata-baslik": {
+        "mavi": "#8f3636",
+        "yesil": "#8f3636"
+      },
+      "--tema-oynatici-eczanem-kaynak-hata-metin": {
+        "mavi": "#9a6969",
+        "yesil": "#9a6969"
+      },
+      "--tema-oynatici-eczanem-hata-cizgi": {
+        "mavi": "#efcaca",
+        "yesil": "#efcaca"
+      },
+      "--tema-oynatici-eczanem-hata-zemin": {
+        "mavi": "#fff5f5",
+        "yesil": "#fff5f5"
+      },
+      "--tema-oynatici-eczanem-hata-metin": {
+        "mavi": "#a74646",
+        "yesil": "#a74646"
+      },
+      "--tema-oynatici-eczanem-hata-eylem-cizgi": {
+        "mavi": "#e4b6b6",
+        "yesil": "#e4b6b6"
+      },
+      "--tema-oynatici-eczanem-basari-simge": {
+        "mavi": "#16865f",
+        "yesil": "#16865f"
+      },
+      "--tema-oynatici-eczanem-basari-eylem-cizgi": {
+        "mavi": "#abd7c6",
+        "yesil": "#abd7c6"
+      },
+      "--tema-hoyk-demo-arac-golgesi": {
+        "mavi": "#34482e08",
+        "yesil": "#34482e08"
+      },
+      "--tema-hoyk-demo-puan-cizgi": {
+        "mavi": "#d8e0cb",
+        "yesil": "#d8e0cb"
+      },
+      "--tema-hoyk-demo-ek-puan-cizgi": {
+        "mavi": "#dae3cc",
+        "yesil": "#dae3cc"
+      },
+      "--tema-oynatici-video-cc-bitis-ortusu": {
+        "mavi": "color-mix(in oklab, #10233a 80%, transparent)",
+        "yesil": "color-mix(in srgb, var(--tema-eylem) 80%, transparent)"
+      },
+      "--tema-hoyk-oneri-tarih-metni": {
+        "mavi": "var(--color-gray-700)",
+        "yesil": "var(--tema-metin)"
+      },
+      "--tema-hoyk-oneren-metni": {
+        "mavi": "#1e3a8a",
+        "yesil": "var(--tema-secili-metin)"
+      }
+    }
+  },
+  "kaynak": {
+    "tsx_renk_disi_fark": 0,
+    "geri_esleme_ayni": [
+      "app/(panel)/eclub/panel/_components/EclubFirmaVideoKatalogu.tsx",
+      "app/(panel)/eclub/panel/_components/EclubVideoOynatici.tsx",
+      "app/(panel)/eclub/yayinlar/_components/EclubYayinGonderimKarti.tsx",
+      "app/(panel)/eczanem/eczane/uye-yayinlari/_components/EczaneDanisanYayinKarti.tsx",
+      "app/(panel)/eczanem/yayinlar/_components/EczanemYayinGonderimKarti.tsx",
+      "app/(panel)/oneriler/_components/BmOneriTakibi.tsx",
+      "app/(panel)/oneriler/_components/UyeOnerilerGorunumu.tsx",
+      "app/eczanem/_components/EczanemVideoOynatici.tsx",
+      "app/eczanem/_components/EczanemVideoRafi.tsx",
+      "components/ana-sayfa/SahaVideoRaflari.tsx",
+      "components/challenge-club/CcVideoOynatici.tsx",
+      "components/izle/VideoOynatici.tsx",
+      "components/ogrenme-araci/AracVarsayilanKapak.tsx",
+      "components/ogrenme-araci/FlipPdfOynatici.tsx",
+      "components/ogrenme-araci/GorselOynatici.tsx",
+      "components/ogrenme-araci/OgrenmeAraciOnizleme.tsx",
+      "components/ogrenme-araci/PodcastKapakGorseli.tsx",
+      "components/ogrenme-araci/PodcastOynatici.tsx",
+      "components/video/VideoCercevesi.tsx",
+      "components/video/VideoOnizleme.tsx",
+      "components/yayin/BmEgitimYayinlari.tsx",
+      "components/yayin/YayinKarti.tsx",
+      "components/yayin/katalog/YayindakiVideoBolumu.tsx"
+    ],
+    "dosyalar": [
+      {
+        "dosya": "app/(panel)/eclub/panel/_components/EclubFirmaVideoKatalogu.tsx",
+        "once_sha256": "1e139bd43cb4dfd1763da7946eb607c40cfbe9e8832c8bfad66adc79150b44e7",
+        "sonra_sha256": "bc15196d36909c958980b3ac38b80c11e15efa3caf4407bae6cabd482e63bcdd",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "app/(panel)/eclub/panel/_components/EclubVideoOynatici.tsx",
+        "once_sha256": "df3655824360e65b567cf23db863e877976ab6e53967fa52ef87b71ab77a63c7",
+        "sonra_sha256": "73751541dd90b031d8f0f436cd0a3586e2a9ebf9f821fb2b19d69b24b38d5a5c",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "app/(panel)/eclub/yayinlar/_components/EclubYayinGonderimKarti.tsx",
+        "once_sha256": "293705af02e81c6defe5d849337a831415c27d5761c463a300e176702eadcd0c",
+        "sonra_sha256": "53c281f67a6977bc2f2a04a6085f7f09373aac3d34e6abe9f6ac72c638d0c26e",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "app/(panel)/eczanem/eczane/uye-yayinlari/_components/EczaneDanisanYayinKarti.tsx",
+        "once_sha256": "a0e63aae54c511ea16b8b8d1e94aed33f1b6626fea90361109a01bf1a8840afb",
+        "sonra_sha256": "c197f96c722892a1f75e0e1ba9fccf1c0a99cd14874c399c3b96bc220d80ce49",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "app/(panel)/eczanem/yayinlar/_components/EczanemYayinGonderimKarti.tsx",
+        "once_sha256": "ce8d731fc228f58941af57400917fdc10bd51c23ea1adff422437da1c5a1a4c5",
+        "sonra_sha256": "98ee8ded1c3a768b69231c41c73e58f8700f8506de4aa9ee9fb1b18921bc5433",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "app/(panel)/oneriler/_components/BmOneriTakibi.tsx",
+        "once_sha256": "f8da3bfd07b8e335233b272bb27e8bcd91862302b8791a7c1ad966c742ee3ccd",
+        "sonra_sha256": "ae8b832241623452fa4e23f83ca724c3f2dc086a8d69120e1e4e6874ef4512ba",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "app/(panel)/oneriler/_components/UyeOnerilerGorunumu.tsx",
+        "once_sha256": "b55fd09ea248d8191fbe825bef072db997b588e8c721ef38da7dd96ed68f349b",
+        "sonra_sha256": "0a64fcd65320cc0af9dadcbde201be5f90d3dd45d44614afa63eb3d546aafa92",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "app/eczanem/_components/EczanemVideoOynatici.tsx",
+        "once_sha256": "9a978a434b2061d9e7a552ef1ee248f9c2b9de10c0d70551347cefe8d0bc1260",
+        "sonra_sha256": "af4e6134e3591fb08dff3edcddcba4def7502e31c5f55ac119593656671d030a",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "app/eczanem/_components/EczanemVideoRafi.tsx",
+        "once_sha256": "21cb47ac18a2ef3d865f7f40cee519e5e13a8edc6b1c52e2b694b05f680a670b",
+        "sonra_sha256": "17c8811093783e6ab393ddf987c2169d9749e7d63a8237d99fa773d5aa0c2598",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "app/renk-demo/renk.module.css",
+        "once_sha256": "d09ccbbada2a2a0bcd341cc6d1b14c13b50c8cabeb3447bd1a475bb15ce26a44",
+        "sonra_sha256": "e7e2fc818b157ea2b32f1e6630bd00d766f528d97a0837bf20ed2f9c2ad8d3d3",
+        "renk_disi_fark": null
+      },
+      {
+        "dosya": "components/ana-sayfa/SahaVideoRaflari.tsx",
+        "once_sha256": "63239dd4e8cc0d2a3275d3bf41a4bf35b7ef6bcac332051718792f5874e09755",
+        "sonra_sha256": "5d2563ee8aad3e83a2f756794ef1edf6c9000e5738f83b974c58fc994ad46afa",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "components/challenge-club/CcVideoOynatici.tsx",
+        "once_sha256": "532c8a008449b0f504febff2817c5eb55e9b13dae9859f26909488949aea6530",
+        "sonra_sha256": "a696cfcc57dc2d6743ded40463c3e99ee5260f60bb6689a4c1adac08fa77523e",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "components/izle/VideoOynatici.tsx",
+        "once_sha256": "d33b7f8a99868724379ed0077903e8e1db0e2550132c389b0cb8f92ee555f8f0",
+        "sonra_sha256": "12cd55ae63264acd3408842d4b5d0e76bc24b1fcbb61d378c2730e53f058cce8",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "components/ogrenme-araci/AracVarsayilanKapak.tsx",
+        "once_sha256": "31c21ea32dec2270d7a9358894305c2ad21b1c797f8af1a7685253ec6692b194",
+        "sonra_sha256": "3f65a987435f41c6f0bcf93473c9fe2a143eb20a26dfe2ad9db762c1e93ffc43",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "components/ogrenme-araci/FlipPdfOynatici.tsx",
+        "once_sha256": "07805a21869c0718317f946959aee230a316f3d2c149419f2ab5d636d4a17afe",
+        "sonra_sha256": "9453a604ad5dd69b4501c695b29ca91d4c35a47a7a9139f9b26b9584bfcf7fa0",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "components/ogrenme-araci/GorselOynatici.tsx",
+        "once_sha256": "5ea85ee7cef8ab72f0d7166bcb19b0b09950cbe5e25e3706f7cfd91ccdebc8b4",
+        "sonra_sha256": "ae33547a5847f4ec1ae250f79847af94a94331ee1e8be8753d73fc21d2a89b8f",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "components/ogrenme-araci/OgrenmeAraciOnizleme.tsx",
+        "once_sha256": "f7576b6b8a17f61b71e62cbfa922ba823393d1a89d269ee38f77e2e730586e2a",
+        "sonra_sha256": "e1b5fcddd0c68c59e0c647f4572693901929f5ecbfebab4f8f4471a9d10073a9",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "components/ogrenme-araci/PodcastKapakGorseli.tsx",
+        "once_sha256": "4107703370a97ba23719a0c992a7c0f820430a6956165c1e7cb4ea03a64620ad",
+        "sonra_sha256": "674354149073bd17af70fbf88ccd797822425ecec80a252265cec17b0f232ae0",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "components/ogrenme-araci/PodcastOynatici.tsx",
+        "once_sha256": "118a058e0f44a8a69ca895c4499046934361db3e884c6dedcb99aef9df6574ea",
+        "sonra_sha256": "bb32d70fb0163d0788ea4ef7e725ee9de7276cd599d132cf8aa75d2a9e422e05",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "components/video/VideoCercevesi.tsx",
+        "once_sha256": "1cc533fff320d52b289495605320174d4ef4124472bd20c5b868b03710c80e41",
+        "sonra_sha256": "52d33a8ef0284fdc5920f67cf7004e67767b5e6b4d779d24c74ded8dea361c05",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "components/video/VideoOnizleme.tsx",
+        "once_sha256": "e0045c38b1283c177dad0da9abf48f0411be5fd4cd451038ce61e2de5c598bcc",
+        "sonra_sha256": "243cc926b793e28d0f597f4eb2454a961c8feda441a3c5bd20aee6a835be2be4",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "components/yayin/BmEgitimYayinlari.tsx",
+        "once_sha256": "1a2f66ad2805843229d5a0864f8f32e7470ea0b063ded7368edb4039bf676e35",
+        "sonra_sha256": "b739ab24b695db1dbb5e0cb62dbc99093866022f786f4d2334e7b8b5d819f406",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "components/yayin/YayinKarti.tsx",
+        "once_sha256": "94a59418be5f32f326e3ad6eb2f51786d63b7342c7d24d01b20c1bf135889699",
+        "sonra_sha256": "e0c40c2172bac737944a74cc2d5fa02d3ad402d1f0ab451e47b129edc7eddd14",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "components/yayin/katalog/YayindakiVideoBolumu.tsx",
+        "once_sha256": "4db0e868e919c522b20a0366e89744faa85de184ed3b5cc2de3c6e0e1939f019",
+        "sonra_sha256": "d1c375acc9fad8b290db50e932a13b51b759c47a34005702a628c95315b04507",
+        "renk_disi_fark": 0
+      }
+    ],
+    "dogrudan_tuketici_kodlari": [
+      {
+        "dosya": "app/eczanem/page.tsx",
+        "degismedi": true
+      },
+      {
+        "dosya": "components/ana-sayfa/BmAnaSayfa.tsx",
+        "degismedi": true
+      },
+      {
+        "dosya": "components/ana-sayfa/SahaVideoRaflari.tsx",
+        "degismedi": false
+      },
+      {
+        "dosya": "components/ana-sayfa/YoneticiAnaSayfa.tsx",
+        "degismedi": true
+      },
+      {
+        "dosya": "components/ana-sayfa/UttAnaSayfa.tsx",
+        "degismedi": true
+      },
+      {
+        "dosya": "components/ana-sayfa/VideoBolumu.tsx",
+        "degismedi": true
+      },
+      {
+        "dosya": "components/ana-sayfa/TmAnaSayfa.tsx",
+        "degismedi": true
+      },
+      {
+        "dosya": "components/challenge-club/CcVideoOynatici.tsx",
+        "degismedi": false
+      },
+      {
+        "dosya": "app/renk-demo/RenkKarsilastirma.tsx",
+        "degismedi": true
+      },
+      {
+        "dosya": "app/eczanem/_components/EczanemVideoRafi.tsx",
+        "degismedi": false
+      },
+      {
+        "dosya": "app/eczanem/_components/EczanemVideoOynatici.tsx",
+        "degismedi": false
+      },
+      {
+        "dosya": "components/eclub/UttGonderimIncelemesi.tsx",
+        "degismedi": true
+      },
+      {
+        "dosya": "components/izle/VideoOynatici.tsx",
+        "degismedi": false
+      },
+      {
+        "dosya": "components/yayin/katalog/UreticiYayinKatalogu.tsx",
+        "degismedi": true
+      },
+      {
+        "dosya": "components/yayin/katalog/YayindakiVideoBolumu.tsx",
+        "degismedi": false
+      },
+      {
+        "dosya": "components/yayin/YayinKarti.tsx",
+        "degismedi": false
+      },
+      {
+        "dosya": "components/yayin/BmEgitimYayinlari.tsx",
+        "degismedi": false
+      },
+      {
+        "dosya": "components/raporlar/YayinDetayModal.tsx",
+        "degismedi": true
+      },
+      {
+        "dosya": "app/(panel)/challenge-club/izle/[yayin_id]/page.tsx",
+        "degismedi": true
+      },
+      {
+        "dosya": "components/video/VideoOnizleme.tsx",
+        "degismedi": false
+      },
+      {
+        "dosya": "components/video/UttVideoKarti.tsx",
+        "degismedi": true
+      },
+      {
+        "dosya": "components/ogrenme-araci/TuketimOynaticisi.tsx",
+        "degismedi": true
+      },
+      {
+        "dosya": "components/ogrenme-araci/DagitimIcerikOzeti.tsx",
+        "degismedi": true
+      },
+      {
+        "dosya": "components/ogrenme-araci/PodcastOynatici.tsx",
+        "degismedi": false
+      },
+      {
+        "dosya": "components/ogrenme-araci/OgrenmeAraciOnizleme.tsx",
+        "degismedi": false
+      },
+      {
+        "dosya": "components/ogrenme-araci/AracVarsayilanKapak.tsx",
+        "degismedi": false
+      },
+      {
+        "dosya": "app/(panel)/uretim/gorevler/[gorev_id]/page.tsx",
+        "degismedi": true
+      },
+      {
+        "dosya": "app/(panel)/oneriler/page.tsx",
+        "degismedi": true
+      },
+      {
+        "dosya": "app/(panel)/oneriler/tamamlanan/page.tsx",
+        "degismedi": true
+      },
+      {
+        "dosya": "app/(panel)/oneriler/_hooks/useOneriler.ts",
+        "degismedi": true
+      },
+      {
+        "dosya": "app/(panel)/onaylanan-talepler/page.tsx",
+        "degismedi": true
+      },
+      {
+        "dosya": "app/(panel)/yayindaki-videolar/[kategori]/page.tsx",
+        "degismedi": true
+      },
+      {
+        "dosya": "app/(panel)/oneriler/_components/BmOneriTakibi.tsx",
+        "degismedi": false
+      },
+      {
+        "dosya": "app/(panel)/oneriler/_components/TmOneriTakibi.tsx",
+        "degismedi": true
+      },
+      {
+        "dosya": "app/(panel)/oneriler/_components/UyeOnerilerGorunumu.tsx",
+        "degismedi": false
+      },
+      {
+        "dosya": "app/(panel)/yayin-yonetimi/_components/Modallar.tsx",
+        "degismedi": true
+      },
+      {
+        "dosya": "app/(panel)/yayin-yonetimi/_components/YayinSatir.tsx",
+        "degismedi": true
+      },
+      {
+        "dosya": "app/(panel)/yayin-yonetimi/_components/Yardimcilar.tsx",
+        "degismedi": true
+      },
+      {
+        "dosya": "app/(panel)/eczanem/yayinlar/page.tsx",
+        "degismedi": true
+      },
+      {
+        "dosya": "app/(panel)/eczanem/yayinlar/_components/EczanemYayinGonderimKarti.tsx",
+        "degismedi": false
+      },
+      {
+        "dosya": "app/(panel)/talepler/_components/AdimIcerigi.tsx",
+        "degismedi": true
+      },
+      {
+        "dosya": "app/(panel)/eclub/ana-sayfa/page.tsx",
+        "degismedi": true
+      },
+      {
+        "dosya": "app/(panel)/eczanem/eczane/uye-yayinlari/page.tsx",
+        "degismedi": true
+      },
+      {
+        "dosya": "app/(panel)/eczanem/eczane/uye-yayinlari/_components/EczaneDanisanYayinKarti.tsx",
+        "degismedi": false
+      },
+      {
+        "dosya": "app/(panel)/eclub/yayinlar/page.tsx",
+        "degismedi": true
+      },
+      {
+        "dosya": "app/(panel)/eclub/yayinlar/_components/BmEclubYayinlari.tsx",
+        "degismedi": true
+      },
+      {
+        "dosya": "app/(panel)/eclub/yayinlar/_components/EclubYayinGonderimKarti.tsx",
+        "degismedi": false
+      },
+      {
+        "dosya": "app/(panel)/eclub/panel/_components/EclubVideoOynatici.tsx",
+        "degismedi": false
+      },
+      {
+        "dosya": "app/(panel)/eclub/panel/_components/EclubFirmaVideoKatalogu.tsx",
+        "degismedi": false
+      }
+    ],
+    "tuketici_siniri": "Import/kaynak karşılaştırması gerçek rol oturumu veya ekran testi değildir."
+  },
+  "css": {
+    "derleme_basarili": true,
+    "uyari": [],
+    "utility_karsilastirma": {
+      "ayni": 275,
+      "eksik": [],
+      "fark": []
+    },
+    "satir_ici_karsilastirma": {
+      "ayni": 45,
+      "fark": []
+    },
+    "mevcut_serilestirme_bulgusu": {
+      "hata": "Missed semicolon",
+      "adim5_ile_ayni": true,
+      "kaynak": "docs/renk-envanteri/renk-katalogu.html",
+      "bildirim_sha256": "c47b273f42f3799b10979608021ff44848926d3e476eea026063c914c3f5ade3",
+      "genel_css_temiz_iddiasi": false
+    }
+  },
+  "test": {
+    "yeni": {
+      "basarili": 6,
+      "basarisiz": 0
+    },
+    "mevcut": {
+      "basarili": 56,
+      "onceden_basarisiz": 2
+    },
+    "toplam": 64,
+    "basarili": 62,
+    "basarisiz": 2,
+    "yeni_basarisizlik": 0,
+    "onceki_kodla_karsilastirma": {
+      "toplam": 23,
+      "basarili": 21,
+      "basarisiz": 2,
+      "ayni_basarisiz_testler": [
+        "E-Club: video kartı durum etiketi 11px (text-[11px]) ve sm:text-[9px] uygulanır",
+        "E-Club: süresi geçen yayın açıldığında puansız izleme açıklaması gösterilir"
+      ]
+    },
+    "dosyalar": [
+      "tests/hoykOynaticiTema.hedef.test.ts",
+      "tests/temaAltyapisi.hedef.test.ts",
+      "tests/eclubHoykDurumGorunumu.hedef.test.ts",
+      "tests/eclubHoykSecim.hedef.test.ts",
+      "tests/videoOrtakCozumlemeVeOynatma.hedef.test.ts",
+      "tests/yayinThumbnailOgrenmeAraci.smoke.test.ts",
+      "tests/ogrenmeAraciTamamlamaFaz5.hedef.test.ts",
+      "tests/yayinKartiTipografi.smoke.test.ts"
+    ],
+    "yontem": "Gerçek PostCSS/Tailwind hedef kuralları + Happy DOM/React + mock erişim/ilerleme; OKLCH gerçek CSS çözümlemesiyle karşılaştırıldı."
+  },
+  "typecheck": {
+    "komut": "npm run typecheck:build",
+    "basarili": true
+  },
+  "lint": {
+    "uygulama_tsx": 23,
+    "test": 3,
+    "hata": 0,
+    "uyari": 0,
+    "bulgular": []
+  },
+  "korunanlar": [
+    "23 TSX kaynağında renk dışı kod",
+    "281 önceki tema bildirimi",
+    "Gerçek kapak/görsel/PDF içeriği",
+    "Durum/rol/araç ayrımları",
+    "0–15 gün süre hesabı ve yeşil-sarı-kırmızı çizim",
+    "Video TUS/asenkron transkod/hazir-video/webhook/GUID",
+    "İzleme, ilerleme, puan ve tamamlama akışı"
+  ],
+  "yapilmayanlar": [
+    "Gerçek rol oturumlarıyla uçtan uca test",
+    "Yeni masaüstü/mobil ekran görüntüsü karşılaştırması",
+    "Gerçek Bunny iframe/ses oynatımı",
+    "SQL, veritabanına yazma veya test verisi oluşturma/silme",
+    "Gerçek e-posta/push gönderimi",
+    "Canlı dağıtım",
+    "7. adım"
+  ]
+}

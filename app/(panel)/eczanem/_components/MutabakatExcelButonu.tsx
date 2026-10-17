@@ -111,9 +111,9 @@ export default function MutabakatExcelButonu({ rol, donem, kayitlar }: {
 
   return <div className="flex flex-col items-end gap-1">
     <Button type="button" size="sm" variant="outline" disabled={aktariliyor || kayitlar.length === 0} onClick={() => { void excelAktar(); }}
-      className="h-[30px] border-[#a9c9e5] bg-white px-3 font-extrabold text-[#237ac8] hover:border-[#237ac8] hover:bg-[#edf6fd] hover:text-[#1d69ad]">
+      className="h-[30px] border-[var(--tema-yerel-eczanem-cizgi-01)] bg-[var(--tema-yerel-eczanem-kart-01)] px-3 font-extrabold text-[var(--tema-yerel-eczanem-eylem-metin-01)] hover:border-[var(--tema-yerel-eczanem-cizgi-02)] hover:bg-[var(--tema-yerel-eczanem-secim-zemin-01)] hover:text-[var(--tema-yerel-eczanem-eylem-metin-02)]">
       <FileSpreadsheet className="size-3.5" aria-hidden="true" />{aktariliyor ? "Hazırlanıyor…" : "Excel'e Aktar"}
     </Button>
-    {hata && <span role="alert" className="text-[10px] font-semibold text-[#b42318]">{hata}</span>}
+    {hata && <span role="alert" className="text-[10px] font-semibold text-[var(--tema-yerel-eczanem-islevsel-metin-01)]">{hata}</span>}
   </div>;
 }

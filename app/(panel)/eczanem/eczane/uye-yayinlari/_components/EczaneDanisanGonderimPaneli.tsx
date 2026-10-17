@@ -103,68 +103,68 @@ export function EczaneDanisanGonderimPaneli({ yayinlar, gonderiliyor, onSecimTem
   };
 
   return <>
-    {yayinlar.length > 0 && <div role="region" aria-label="Seçilen yayınlar" className="fixed inset-x-3 bottom-3 z-40 mx-auto flex max-w-[650px] flex-wrap items-center gap-2 rounded-2xl bg-[#172b4d] px-4 py-3 text-white shadow-[0_16px_40px_rgba(23,43,77,0.3)] sm:bottom-5 sm:gap-3">
+    {yayinlar.length > 0 && <div role="region" aria-label="Seçilen yayınlar" className="fixed inset-x-3 bottom-3 z-40 mx-auto flex max-w-[650px] flex-wrap items-center gap-2 rounded-2xl bg-[var(--tema-yerel-eczanem-eylem-zemin-03)] px-4 py-3 text-[var(--tema-yerel-eczanem-ters-metin-01)] shadow-[0_16px_40px_var(--tema-yerel-eczanem-golge-01)] sm:bottom-5 sm:gap-3">
       <strong className="min-w-32 flex-1 text-sm">{yayinlar.length} yayın seçildi</strong>
-      <span className="text-[10px] text-[#b8cade]">Uygun danışanlara anlık gönderim</span>
-      <button type="button" onClick={onSecimTemizle} disabled={gonderiliyor} className="rounded-lg px-2 py-2 text-xs font-bold text-[#d5e2f0] hover:bg-white/10 disabled:opacity-50">Seçimi temizle</button>
-      <button type="button" onClick={() => void panelAc()} disabled={gonderiliyor} className="rounded-lg bg-white px-3 py-2 text-xs font-extrabold text-[#237ac8] hover:bg-[#edf5fc] disabled:opacity-50">Gönderim oluştur →</button>
+      <span className="text-[10px] text-[var(--tema-yerel-eczanem-yardimci-metin-15)]">Uygun danışanlara anlık gönderim</span>
+      <button type="button" onClick={onSecimTemizle} disabled={gonderiliyor} className="rounded-lg px-2 py-2 text-xs font-bold text-[var(--tema-yerel-eczanem-yardimci-metin-16)] hover:bg-[var(--tema-yerel-eczanem-kart-01)]/10 disabled:opacity-50">Seçimi temizle</button>
+      <button type="button" onClick={() => void panelAc()} disabled={gonderiliyor} className="rounded-lg bg-[var(--tema-yerel-eczanem-kart-01)] px-3 py-2 text-xs font-extrabold text-[var(--tema-yerel-eczanem-eylem-metin-01)] hover:bg-[var(--tema-yerel-eczanem-secim-zemin-05)] disabled:opacity-50">Gönderim oluştur →</button>
     </div>}
 
     <Dialog.Root open={acik} onOpenChange={(sonraki) => { if (!sonraki) kapat(); }}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-[100] bg-[#0f2746]/40" />
-        <Dialog.Content className="fixed inset-y-0 right-0 z-[101] flex w-full max-w-[515px] flex-col bg-white shadow-[-10px_0_40px_rgba(13,40,70,0.2)]"
+        <Dialog.Overlay className="fixed inset-0 z-[100] bg-[var(--tema-yerel-eczanem-eylem-zemin-04)]/40" />
+        <Dialog.Content className="fixed inset-y-0 right-0 z-[101] flex w-full max-w-[515px] flex-col bg-[var(--tema-yerel-eczanem-kart-01)] shadow-[-10px_0_40px_var(--tema-yerel-eczanem-golge-02)]"
           onEscapeKeyDown={(event) => { if (gonderiliyor) event.preventDefault(); }}
           onPointerDownOutside={(event) => { if (gonderiliyor) event.preventDefault(); }}>
-          <div className="flex items-start justify-between gap-4 border-b border-[#e6edf4] px-5 py-5 sm:px-6">
-            <div><Dialog.Title className="text-xl font-extrabold text-[#172b4d]">Gönderim oluştur</Dialog.Title><Dialog.Description className="mt-1 text-xs text-[#74869a]">{yayinlar.length} yayın seçildi · Danışan gönderimi</Dialog.Description></div>
-            <Dialog.Close disabled={gonderiliyor} aria-label="Gönderim panelini kapat" className="flex size-8 shrink-0 items-center justify-center rounded-lg border-0 bg-[#f1f5f9] text-xl text-[#49627e] disabled:opacity-50">×</Dialog.Close>
+          <div className="flex items-start justify-between gap-4 border-b border-[var(--tema-yerel-eczanem-cizgi-11)] px-5 py-5 sm:px-6">
+            <div><Dialog.Title className="text-xl font-extrabold text-[var(--tema-yerel-eczanem-ana-metin-04)]">Gönderim oluştur</Dialog.Title><Dialog.Description className="mt-1 text-xs text-[var(--tema-yerel-eczanem-yardimci-metin-17)]">{yayinlar.length} yayın seçildi · Danışan gönderimi</Dialog.Description></div>
+            <Dialog.Close disabled={gonderiliyor} aria-label="Gönderim panelini kapat" className="flex size-8 shrink-0 items-center justify-center rounded-lg border-0 bg-[var(--tema-yerel-eczanem-sayfa-zemini-09)] text-xl text-[var(--tema-yerel-eczanem-ana-metin-07)] disabled:opacity-50">×</Dialog.Close>
           </div>
           <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-4 py-5 sm:px-6">
-            <section className={`overflow-hidden rounded-xl border ${adim === 1 ? "border-[#9fc7e8] shadow-[0_0_0_2px_#cfe5f744]" : "border-[#e0e8f0] bg-[#fbfdff]"}`}>
+            <section className={`overflow-hidden rounded-xl border ${adim === 1 ? "border-[var(--tema-yerel-eczanem-cizgi-12)] shadow-[0_0_0_2px_var(--tema-yerel-eczanem-golge-03)]" : "border-[var(--tema-yerel-eczanem-cizgi-13)] bg-[var(--tema-yerel-eczanem-sayfa-zemini-10)]"}`}>
               <button type="button" onClick={() => { if (!gonderiliyor) setAdim(1); }} aria-expanded={adim === 1} className="flex w-full items-center gap-3 px-4 py-3.5 text-left">
-                <span className={`grid size-7 shrink-0 place-items-center rounded-full text-xs font-extrabold ${adim === 1 ? "bg-[#237ac8] text-white" : "bg-[#e7f6ee] text-[#188354]"}`}>{adim === 1 ? "1" : "✓"}</span>
-                <span><strong className="block text-sm text-[#314b67]">Danışanlar</strong><small className="mt-0.5 block text-[10px] text-[#879aaf]">{adim === 1 ? "Uygun danışanları seçin" : `${gecerliSeciliIdler.length} danışan seçildi`}</small></span>
-                <span className="ml-auto text-[#8da0b2]">⌄</span>
+                <span className={`grid size-7 shrink-0 place-items-center rounded-full text-xs font-extrabold ${adim === 1 ? "bg-[var(--tema-yerel-eczanem-eylem-zemin-01)] text-[var(--tema-yerel-eczanem-ters-metin-01)]" : "bg-[var(--tema-yerel-eczanem-islevsel-zemin-18)] text-[var(--tema-yerel-eczanem-islevsel-metin-17)]"}`}>{adim === 1 ? "1" : "✓"}</span>
+                <span><strong className="block text-sm text-[var(--tema-yerel-eczanem-ana-metin-08)]">Danışanlar</strong><small className="mt-0.5 block text-[10px] text-[var(--tema-yerel-eczanem-yardimci-metin-18)]">{adim === 1 ? "Uygun danışanları seçin" : `${gecerliSeciliIdler.length} danışan seçildi`}</small></span>
+                <span className="ml-auto text-[var(--tema-yerel-eczanem-yardimci-metin-19)]">⌄</span>
               </button>
               {adim === 1 && <div className="px-4 pb-4 sm:pl-14">
-                <p className="mb-3 text-[11px] leading-5 text-[#657b93]">Seçili yayınların tamamını alabilecek danışanları seçin. Seçilemeyen danışanın nedeni yanında gösterilir.</p>
-                {yukleniyor ? <p role="status" className="rounded-lg border border-[#e1e9f2] p-4 text-center text-xs text-[#8090a4]">Danışanlar yükleniyor…</p> : <>
-                  <input type="search" value={arama} onChange={(event) => setArama(event.target.value)} placeholder="Danışan ara…" aria-label="Danışan ara" className="w-full rounded-lg border border-[#d8e4ef] px-3 py-2.5 text-xs text-[#334d67]" />
+                <p className="mb-3 text-[11px] leading-5 text-[var(--tema-yerel-eczanem-yardimci-metin-20)]">Seçili yayınların tamamını alabilecek danışanları seçin. Seçilemeyen danışanın nedeni yanında gösterilir.</p>
+                {yukleniyor ? <p role="status" className="rounded-lg border border-[var(--tema-yerel-eczanem-cizgi-14)] p-4 text-center text-xs text-[var(--tema-yerel-eczanem-yardimci-metin-05)]">Danışanlar yükleniyor…</p> : <>
+                  <input type="search" value={arama} onChange={(event) => setArama(event.target.value)} placeholder="Danışan ara…" aria-label="Danışan ara" className="w-full rounded-lg border border-[var(--tema-yerel-eczanem-cizgi-15)] px-3 py-2.5 text-xs text-[var(--tema-yerel-eczanem-ana-metin-09)]" />
                   <div className="mt-3 max-h-[45vh] space-y-2 overflow-y-auto">
-                    {gorunenDanisanlar.length === 0 && <p className="rounded-lg border border-[#e1e9f2] p-4 text-center text-xs text-[#8090a4]">{danisanlar.length === 0 ? "Aktif danışan bulunmuyor." : "Eşleşen danışan yok."}</p>}
-                    {gorunenDanisanlar.map((danisan) => { const engel = danisanEngeli(danisan); const secili = gecerliSeciliIdler.includes(danisan.musteri_id); return <label key={danisan.musteri_id} className={`flex items-start gap-2.5 rounded-lg border px-3 py-2.5 ${engel ? "border-[#e3e9ef] bg-[#f8fafc] opacity-75" : secili ? "cursor-pointer border-[#237ac8] bg-[#f0f8ff]" : "cursor-pointer border-[#dce6ef] bg-white hover:bg-[#f7fbff]"}`}>
-                      <input type="checkbox" checked={secili} disabled={!!engel || gonderiliyor} onChange={(event) => setSeciliDanisanIdleri((onceki) => event.target.checked ? [...onceki, danisan.musteri_id] : onceki.filter((id) => id !== danisan.musteri_id))} className="mt-0.5 size-4 shrink-0 accent-[#237ac8]" />
-                      <span className="min-w-0 flex-1"><strong className="block text-xs text-[#2d4660]">{danisan.ad_soyad}</strong><small className="mt-0.5 block text-[10px] text-[#8294a7]">{danisan.telefon_maskeli}</small><small className={`mt-1 block text-[10px] leading-4 ${engel ? "text-[#a2643c]" : "text-[#28815c]"}`}>{engel ?? "Tüm seçili yayınlar için uygun"}</small></span>
-                      {!engel && <span className="shrink-0 text-[10px] font-extrabold text-[#2e8962]">Uygun</span>}
+                    {gorunenDanisanlar.length === 0 && <p className="rounded-lg border border-[var(--tema-yerel-eczanem-cizgi-14)] p-4 text-center text-xs text-[var(--tema-yerel-eczanem-yardimci-metin-05)]">{danisanlar.length === 0 ? "Aktif danışan bulunmuyor." : "Eşleşen danışan yok."}</p>}
+                    {gorunenDanisanlar.map((danisan) => { const engel = danisanEngeli(danisan); const secili = gecerliSeciliIdler.includes(danisan.musteri_id); return <label key={danisan.musteri_id} className={`flex items-start gap-2.5 rounded-lg border px-3 py-2.5 ${engel ? "border-[var(--tema-yerel-eczanem-cizgi-16)] bg-[var(--tema-yerel-eczanem-sayfa-zemini-11)] opacity-75" : secili ? "cursor-pointer border-[var(--tema-yerel-eczanem-cizgi-02)] bg-[var(--tema-yerel-eczanem-secim-zemin-06)]" : "cursor-pointer border-[var(--tema-yerel-eczanem-cizgi-17)] bg-[var(--tema-yerel-eczanem-kart-01)] hover:bg-[var(--tema-yerel-eczanem-sayfa-zemini-12)]"}`}>
+                      <input type="checkbox" checked={secili} disabled={!!engel || gonderiliyor} onChange={(event) => setSeciliDanisanIdleri((onceki) => event.target.checked ? [...onceki, danisan.musteri_id] : onceki.filter((id) => id !== danisan.musteri_id))} className="mt-0.5 size-4 shrink-0 accent-[var(--tema-yerel-eczanem-eylem-metin-01)]" />
+                      <span className="min-w-0 flex-1"><strong className="block text-xs text-[var(--tema-yerel-eczanem-ana-metin-10)]">{danisan.ad_soyad}</strong><small className="mt-0.5 block text-[10px] text-[var(--tema-yerel-eczanem-yardimci-metin-21)]">{danisan.telefon_maskeli}</small><small className={`mt-1 block text-[10px] leading-4 ${engel ? "text-[var(--tema-yerel-eczanem-islevsel-metin-18)]" : "text-[var(--tema-yerel-eczanem-islevsel-metin-19)]"}`}>{engel ?? "Tüm seçili yayınlar için uygun"}</small></span>
+                      {!engel && <span className="shrink-0 text-[10px] font-extrabold text-[var(--tema-yerel-eczanem-islevsel-metin-20)]">Uygun</span>}
                     </label>; })}
                   </div>
-                  <p className="mt-3 rounded-lg border border-[#e2ecf5] bg-[#f4f8fc] p-2.5 text-[10px] leading-4 text-[#607b96]">Yalnız eczanenizin aktif danışanları ve seçili yayınları daha önce almamış kişiler seçilebilir.</p>
-                  <div className="mt-4 flex justify-end"><button type="button" disabled={gecerliSeciliIdler.length === 0 || gonderiliyor} onClick={() => setAdim(2)} className="rounded-lg bg-[#237ac8] px-4 py-2.5 text-xs font-extrabold text-white disabled:cursor-not-allowed disabled:opacity-50">Devam et · Özet →</button></div>
+                  <p className="mt-3 rounded-lg border border-[var(--tema-yerel-eczanem-cizgi-18)] bg-[var(--tema-yerel-eczanem-sayfa-zemini-13)] p-2.5 text-[10px] leading-4 text-[var(--tema-yerel-eczanem-yardimci-metin-22)]">Yalnız eczanenizin aktif danışanları ve seçili yayınları daha önce almamış kişiler seçilebilir.</p>
+                  <div className="mt-4 flex justify-end"><button type="button" disabled={gecerliSeciliIdler.length === 0 || gonderiliyor} onClick={() => setAdim(2)} className="rounded-lg bg-[var(--tema-yerel-eczanem-eylem-zemin-01)] px-4 py-2.5 text-xs font-extrabold text-[var(--tema-yerel-eczanem-ters-metin-01)] disabled:cursor-not-allowed disabled:opacity-50">Devam et · Özet →</button></div>
                 </>}
               </div>}
             </section>
-            <section className={`overflow-hidden rounded-xl border ${adim === 2 ? "border-[#9fc7e8] shadow-[0_0_0_2px_#cfe5f744]" : "border-[#e0e8f0]"}`}>
+            <section className={`overflow-hidden rounded-xl border ${adim === 2 ? "border-[var(--tema-yerel-eczanem-cizgi-12)] shadow-[0_0_0_2px_var(--tema-yerel-eczanem-golge-03)]" : "border-[var(--tema-yerel-eczanem-cizgi-13)]"}`}>
               <button type="button" disabled={gecerliSeciliIdler.length === 0 || gonderiliyor} onClick={() => setAdim(2)} aria-expanded={adim === 2} className="flex w-full items-center gap-3 px-4 py-3.5 text-left disabled:cursor-not-allowed">
-                <span className={`grid size-7 shrink-0 place-items-center rounded-full text-xs font-extrabold ${adim === 2 ? "bg-[#237ac8] text-white" : "bg-[#edf3f8] text-[#71869d]"}`}>2</span>
-                <span><strong className="block text-sm text-[#314b67]">Özet</strong><small className="mt-0.5 block text-[10px] text-[#879aaf]">Göndermeden önce kontrol edin</small></span><span className="ml-auto text-[#8da0b2]">⌄</span>
+                <span className={`grid size-7 shrink-0 place-items-center rounded-full text-xs font-extrabold ${adim === 2 ? "bg-[var(--tema-yerel-eczanem-eylem-zemin-01)] text-[var(--tema-yerel-eczanem-ters-metin-01)]" : "bg-[var(--tema-yerel-eczanem-secim-zemin-07)] text-[var(--tema-yerel-eczanem-yardimci-metin-23)]"}`}>2</span>
+                <span><strong className="block text-sm text-[var(--tema-yerel-eczanem-ana-metin-08)]">Özet</strong><small className="mt-0.5 block text-[10px] text-[var(--tema-yerel-eczanem-yardimci-metin-18)]">Göndermeden önce kontrol edin</small></span><span className="ml-auto text-[var(--tema-yerel-eczanem-yardimci-metin-19)]">⌄</span>
               </button>
               {adim === 2 && <div className="px-4 pb-4 sm:pl-14">
-                <p className="mb-3 text-[11px] leading-5 text-[#657b93]">Bu gönderim seçtiğiniz danışanlara hemen yapılır.</p>
-                <div className="divide-y divide-[#edf2f7] rounded-lg border border-[#e0e9f1] text-xs">
-                  <div className="flex justify-between gap-3 px-3 py-2.5"><span className="text-[#71849b]">Yayın</span><strong className="text-[#263e56]">{yayinlar.length} yayın</strong></div>
-                  <div className="flex justify-between gap-3 px-3 py-2.5"><span className="text-[#71849b]">Danışan</span><strong className="text-[#263e56]">{gecerliSeciliIdler.length} danışan</strong></div>
-                  <div className="flex justify-between gap-3 px-3 py-2.5"><span className="text-[#71849b]">Gönderim</span><strong className="text-[#263e56]">Şimdi</strong></div>
-                  <div className="flex justify-between gap-3 px-3 py-2.5"><span className="text-[#71849b]">Oluşturulacak kayıt</span><strong className="text-[#263e56]">{yayinlar.length * gecerliSeciliIdler.length}</strong></div>
+                <p className="mb-3 text-[11px] leading-5 text-[var(--tema-yerel-eczanem-yardimci-metin-20)]">Bu gönderim seçtiğiniz danışanlara hemen yapılır.</p>
+                <div className="divide-y divide-[var(--tema-yerel-eczanem-cizgi-03)] rounded-lg border border-[var(--tema-yerel-eczanem-cizgi-19)] text-xs">
+                  <div className="flex justify-between gap-3 px-3 py-2.5"><span className="text-[var(--tema-yerel-eczanem-yardimci-metin-24)]">Yayın</span><strong className="text-[var(--tema-yerel-eczanem-ana-metin-11)]">{yayinlar.length} yayın</strong></div>
+                  <div className="flex justify-between gap-3 px-3 py-2.5"><span className="text-[var(--tema-yerel-eczanem-yardimci-metin-24)]">Danışan</span><strong className="text-[var(--tema-yerel-eczanem-ana-metin-11)]">{gecerliSeciliIdler.length} danışan</strong></div>
+                  <div className="flex justify-between gap-3 px-3 py-2.5"><span className="text-[var(--tema-yerel-eczanem-yardimci-metin-24)]">Gönderim</span><strong className="text-[var(--tema-yerel-eczanem-ana-metin-11)]">Şimdi</strong></div>
+                  <div className="flex justify-between gap-3 px-3 py-2.5"><span className="text-[var(--tema-yerel-eczanem-yardimci-metin-24)]">Oluşturulacak kayıt</span><strong className="text-[var(--tema-yerel-eczanem-ana-metin-11)]">{yayinlar.length * gecerliSeciliIdler.length}</strong></div>
                 </div>
-                <ul className="mt-3 space-y-1 text-[11px] text-[#4d6680]">{yayinlar.map((yayin) => <li key={yayin.yayin_id}>{yayin.urun_adi} · {yayin.teknik_adi || "Öğrenme içeriği"}</li>)}</ul>
-                <p className="mt-3 rounded-lg border border-[#e2ecf5] bg-[#f4f8fc] p-2.5 text-[10px] leading-4 text-[#607b96]">Alıcılar: {danisanlar.filter((danisan) => gecerliSeciliIdler.includes(danisan.musteri_id)).map((danisan) => danisan.ad_soyad).join(", ")}</p>
-                <div className="mt-4 flex justify-end"><button type="button" disabled={gonderiliyor || gecerliSeciliIdler.length === 0} onClick={() => void gonder()} className="rounded-lg bg-[#237ac8] px-4 py-2.5 text-xs font-extrabold text-white disabled:cursor-not-allowed disabled:opacity-50">{gonderiliyor ? "Gönderiliyor…" : "Danışanlara gönder"}</button></div>
+                <ul className="mt-3 space-y-1 text-[11px] text-[var(--tema-yerel-eczanem-ana-metin-12)]">{yayinlar.map((yayin) => <li key={yayin.yayin_id}>{yayin.urun_adi} · {yayin.teknik_adi || "Öğrenme içeriği"}</li>)}</ul>
+                <p className="mt-3 rounded-lg border border-[var(--tema-yerel-eczanem-cizgi-18)] bg-[var(--tema-yerel-eczanem-sayfa-zemini-13)] p-2.5 text-[10px] leading-4 text-[var(--tema-yerel-eczanem-yardimci-metin-22)]">Alıcılar: {danisanlar.filter((danisan) => gecerliSeciliIdler.includes(danisan.musteri_id)).map((danisan) => danisan.ad_soyad).join(", ")}</p>
+                <div className="mt-4 flex justify-end"><button type="button" disabled={gonderiliyor || gecerliSeciliIdler.length === 0} onClick={() => void gonder()} className="rounded-lg bg-[var(--tema-yerel-eczanem-eylem-zemin-01)] px-4 py-2.5 text-xs font-extrabold text-[var(--tema-yerel-eczanem-ters-metin-01)] disabled:cursor-not-allowed disabled:opacity-50">{gonderiliyor ? "Gönderiliyor…" : "Danışanlara gönder"}</button></div>
               </div>}
             </section>
-            {panelHatasi && <p role="alert" className="rounded-lg bg-[#fff5df] p-3 text-xs text-amber-800">{panelHatasi}</p>}
+            {panelHatasi && <p role="alert" className="rounded-lg bg-[var(--tema-yerel-eczanem-islevsel-zemin-19)] p-3 text-xs text-[var(--tema-yerel-eczanem-islevsel-metin-21)]">{panelHatasi}</p>}
           </div>
-          <p className="border-t border-[#e7edf4] px-5 py-3 text-[10px] leading-4 text-[#7990a6] sm:px-6">Yayın ve aktif danışan koşulları gönderim anında yeniden denetlenir.</p>
+          <p className="border-t border-[var(--tema-yerel-eczanem-cizgi-07)] px-5 py-3 text-[10px] leading-4 text-[var(--tema-yerel-eczanem-yardimci-metin-25)] sm:px-6">Yayın ve aktif danışan koşulları gönderim anında yeniden denetlenir.</p>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

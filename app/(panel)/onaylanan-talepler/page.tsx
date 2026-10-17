@@ -176,8 +176,8 @@ export default function OnaylananTaleplerPage() {
   // Auth guard layout'ta; IU erişim kontrolü useEffect'te; burada veri spinner'ı.
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <svg className="animate-spin w-6 h-6 text-gray-500" fill="none" viewBox="0 0 24 24">
+      <div className="min-h-screen bg-[var(--tema-yerel-uretim-sayfa-zemini-01)] flex items-center justify-center">
+        <svg className="animate-spin w-6 h-6 text-[var(--tema-yerel-uretim-yardimci-metin-01)]" fill="none" viewBox="0 0 24 24">
           <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
           <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
         </svg>
@@ -189,26 +189,26 @@ export default function OnaylananTaleplerPage() {
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between gap-2 flex-wrap">
         <div className="flex flex-col">
-          <span className="text-sm font-semibold text-gray-900">{k.urun_adi}</span>
-          <span className="text-xs text-gray-500">{k.teknik_adi}</span>
+          <span className="text-sm font-semibold text-[var(--tema-yerel-uretim-ana-metin-01)]">{k.urun_adi}</span>
+          <span className="text-xs text-[var(--tema-yerel-uretim-yardimci-metin-01)]">{k.teknik_adi}</span>
         </div>
         <HedefRolPilleri hedefRoller={k.hedef_roller} />
         {k.yayin_oncesi_silindi && (
-          <span className="rounded-full border border-gray-200 bg-gray-50 px-2.5 py-1 text-[11px] font-bold text-gray-600">Yayın öncesi silindi</span>
+          <span className="rounded-full border border-[var(--tema-yerel-uretim-cizgi-01)] bg-[var(--tema-yerel-uretim-sayfa-zemini-01)] px-2.5 py-1 text-[11px] font-bold text-[var(--tema-yerel-uretim-ana-metin-02)]">Yayın öncesi silindi</span>
         )}
       </div>
 
       <div>
-        <div className="text-xs font-semibold text-gray-500 mb-1.5">Onaylı Senaryo</div>
-        <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap m-0">{k.senaryo_metni}</p>
+        <div className="text-xs font-semibold text-[var(--tema-yerel-uretim-yardimci-metin-01)] mb-1.5">Onaylı Senaryo</div>
+        <p className="text-sm text-[var(--tema-yerel-uretim-ana-metin-03)] leading-relaxed whitespace-pre-wrap m-0">{k.senaryo_metni}</p>
       </div>
 
       {k.video_url && !k.yayin_oncesi_silindi && (
         <div>
-          <div className="text-xs font-semibold text-gray-500 mb-1.5">Onaylı Video</div>
+          <div className="text-xs font-semibold text-[var(--tema-yerel-uretim-yardimci-metin-01)] mb-1.5">Onaylı Video</div>
           <VideoOnizleme
             videoUrl={k.video_url}
-            className="rounded-lg border border-gray-200"
+            className="rounded-lg border border-[var(--tema-yerel-uretim-cizgi-01)]"
             ariaLabel={`${k.urun_adi} videosunu oynat`}
           />
         </div>
@@ -216,17 +216,17 @@ export default function OnaylananTaleplerPage() {
 
       {k.sorular && k.sorular.length > 0 && (
         <div>
-          <div className="text-xs font-semibold text-gray-500 mb-1.5">Onaylı Soru Seti</div>
+          <div className="text-xs font-semibold text-[var(--tema-yerel-uretim-yardimci-metin-01)] mb-1.5">Onaylı Soru Seti</div>
           <div className="flex flex-col gap-2">
             {k.sorular.map((soru, i) => (
-              <div key={i} className="border border-gray-200 rounded-lg px-3 py-2.5 bg-white">
-                <div className="text-sm text-gray-900 mb-1.5">{i + 1}. {soru.soru_metni}</div>
+              <div key={i} className="border border-[var(--tema-yerel-uretim-cizgi-01)] rounded-lg px-3 py-2.5 bg-[var(--tema-yerel-uretim-kart-01)]">
+                <div className="text-sm text-[var(--tema-yerel-uretim-ana-metin-01)] mb-1.5">{i + 1}. {soru.soru_metni}</div>
                 {soru.secenekler?.map(sec => (
                   <div key={sec.harf} className="text-xs mb-0.5 flex items-center gap-1.5"
-                    style={{ color: sec.dogru ? "#16a34a" : "#6b7280", fontWeight: sec.dogru ? 700 : 400 }}>
+                    style={{ color: sec.dogru ? "var(--tema-yerel-uretim-islevsel-metin-01)" : "var(--tema-yerel-uretim-islevsel-metin-02)", fontWeight: sec.dogru ? 700 : 400 }}>
                     <span>{sec.harf}) {sec.metin}</span>
                     {sec.dogru && (
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="3"><path d="M20 6L9 17l-5-5"/></svg>
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--tema-yerel-uretim-islevsel-metin-01)" strokeWidth="3"><path d="M20 6L9 17l-5-5"/></svg>
                     )}
                   </div>
                 ))}
@@ -242,7 +242,7 @@ export default function OnaylananTaleplerPage() {
     <>
       <div className="max-w-6xl mx-auto px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7 flex flex-col gap-4">
         <SayfaYenileBasligi className="flex flex-wrap items-center justify-between gap-3"
-          baslik={<h1 className="text-lg font-bold text-gray-900 m-0">Onaylanan Talepler</h1>}
+          baslik={<h1 className="text-lg font-bold text-[var(--tema-yerel-uretim-ana-metin-01)] m-0">Onaylanan Talepler</h1>}
 
           aksiyon={<YenileButonu yenileniyor={yenileniyor} onYenile={() => veriCek()} />}
 
@@ -251,8 +251,8 @@ export default function OnaylananTaleplerPage() {
         <div className="mb-3 flex justify-end"><ListeArama arama={liste.arama} /></div>
 
         {liste.toplam === 0 ? (
-          <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-            <p className="text-sm text-gray-400 text-center py-8 m-0">
+          <div className="bg-[var(--tema-yerel-uretim-kart-01)] border border-[var(--tema-yerel-uretim-cizgi-01)] rounded-xl overflow-hidden">
+            <p className="text-sm text-[var(--tema-yerel-uretim-yardimci-metin-02)] text-center py-8 m-0">
               {kayitlar.length === 0 ? "Henüz onaylanmış talep yok." : "Aramanıza uyan talep bulunamadı."}
             </p>
           </div>
@@ -262,25 +262,25 @@ export default function OnaylananTaleplerPage() {
           // Gösterim aşağıda aynı kaldı — yalnız hangi taleplerin görüneceğini
           // klasör belirliyor.
           <TalepKlasorleri talepler={liste.gorunen} render={(liste) => (
-          <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-            <div className="md:hidden divide-y divide-gray-50">
+          <div className="bg-[var(--tema-yerel-uretim-kart-01)] border border-[var(--tema-yerel-uretim-cizgi-01)] rounded-xl overflow-hidden">
+            <div className="md:hidden divide-y divide-[var(--tema-yerel-uretim-cizgi-02)]">
               {liste.map(k => (
                 <div key={k.talep_id}>
                   <div onClick={() => setAcikTalep(acikTalep === k.talep_id ? null : k.talep_id)}
                     className="px-4 py-3 cursor-pointer flex items-center justify-between gap-2">
                     <div className="flex flex-col min-w-0">
-                      <span className="text-xs text-gray-400">{k.talep_no_goster}</span>
-                      <span className="text-sm font-semibold text-gray-900 truncate">{k.urun_adi}</span>
-                      {k.yayin_oncesi_silindi && <span className="mt-1 w-fit rounded-full border border-gray-200 bg-gray-50 px-2 py-0.5 text-[10px] font-bold text-gray-600">Yayın öncesi silindi</span>}
-                      <span className="text-xs text-gray-500">{formatTarih(k.talep_tarihi)} → {formatTarih(k.onay_tarihi)}</span>
+                      <span className="text-xs text-[var(--tema-yerel-uretim-yardimci-metin-02)]">{k.talep_no_goster}</span>
+                      <span className="text-sm font-semibold text-[var(--tema-yerel-uretim-ana-metin-01)] truncate">{k.urun_adi}</span>
+                      {k.yayin_oncesi_silindi && <span className="mt-1 w-fit rounded-full border border-[var(--tema-yerel-uretim-cizgi-01)] bg-[var(--tema-yerel-uretim-sayfa-zemini-01)] px-2 py-0.5 text-[10px] font-bold text-[var(--tema-yerel-uretim-ana-metin-02)]">Yayın öncesi silindi</span>}
+                      <span className="text-xs text-[var(--tema-yerel-uretim-yardimci-metin-01)]">{formatTarih(k.talep_tarihi)} → {formatTarih(k.onay_tarihi)}</span>
                     </div>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" width="14" height="14" className="flex-shrink-0"
+                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--tema-yerel-uretim-yardimci-metin-03)" strokeWidth="2" width="14" height="14" className="flex-shrink-0"
                       style={{ transform: acikTalep === k.talep_id ? "rotate(180deg)" : "none", transition: "transform 0.15s" }}>
                       <path d="M6 9l6 6 6-6" />
                     </svg>
                   </div>
                   {acikTalep === k.talep_id && (
-                    <div className="px-4 py-4 bg-gray-50 border-t border-gray-100">
+                    <div className="px-4 py-4 bg-[var(--tema-yerel-uretim-sayfa-zemini-01)] border-t border-[var(--tema-yerel-uretim-cizgi-03)]">
                       <DetayIcerik k={k} />
                     </div>
                   )}
@@ -291,11 +291,11 @@ export default function OnaylananTaleplerPage() {
             <div className="hidden md:block">
               <table className="w-full border-collapse text-sm">
                 <thead>
-                  <tr className="border-b border-gray-100 bg-gray-50">
-                    <th className="text-left px-5 py-2.5 text-gray-400 font-medium text-xs uppercase">Talep No</th>
-                    <th className="text-left px-3 py-2.5 text-gray-400 font-medium text-xs uppercase">Talep Adı (Ürün Adı)</th>
-                    <th className="text-left px-3 py-2.5 text-gray-400 font-medium text-xs uppercase">Talep Tarihi</th>
-                    <th className="text-left px-3 py-2.5 text-gray-400 font-medium text-xs uppercase">Talep Onay Tarihi</th>
+                  <tr className="border-b border-[var(--tema-yerel-uretim-cizgi-03)] bg-[var(--tema-yerel-uretim-sayfa-zemini-01)]">
+                    <th className="text-left px-5 py-2.5 text-[var(--tema-yerel-uretim-yardimci-metin-02)] font-medium text-xs uppercase">Talep No</th>
+                    <th className="text-left px-3 py-2.5 text-[var(--tema-yerel-uretim-yardimci-metin-02)] font-medium text-xs uppercase">Talep Adı (Ürün Adı)</th>
+                    <th className="text-left px-3 py-2.5 text-[var(--tema-yerel-uretim-yardimci-metin-02)] font-medium text-xs uppercase">Talep Tarihi</th>
+                    <th className="text-left px-3 py-2.5 text-[var(--tema-yerel-uretim-yardimci-metin-02)] font-medium text-xs uppercase">Talep Onay Tarihi</th>
                     <th className="px-5 py-2.5"></th>
                   </tr>
                 </thead>
@@ -303,16 +303,16 @@ export default function OnaylananTaleplerPage() {
                   {liste.map(k => (
                     <Fragment key={k.talep_id}>
                       <tr onClick={() => setAcikTalep(acikTalep === k.talep_id ? null : k.talep_id)}
-                        className="border-b border-gray-50 cursor-pointer hover:bg-gray-50 transition-colors duration-100">
-                        <td className="px-5 py-3 text-gray-700 font-semibold">{k.talep_no_goster}</td>
-                        <td className="px-3 py-3 text-gray-900">
+                        className="border-b border-[var(--tema-yerel-uretim-cizgi-02)] cursor-pointer hover:bg-[var(--tema-yerel-uretim-sayfa-zemini-01)] transition-colors duration-100">
+                        <td className="px-5 py-3 text-[var(--tema-yerel-uretim-ana-metin-03)] font-semibold">{k.talep_no_goster}</td>
+                        <td className="px-3 py-3 text-[var(--tema-yerel-uretim-ana-metin-01)]">
                           <div>{k.urun_adi}</div>
-                          {k.yayin_oncesi_silindi && <span className="mt-1 inline-flex rounded-full border border-gray-200 bg-gray-50 px-2 py-0.5 text-[10px] font-bold text-gray-600">Yayın öncesi silindi</span>}
+                          {k.yayin_oncesi_silindi && <span className="mt-1 inline-flex rounded-full border border-[var(--tema-yerel-uretim-cizgi-01)] bg-[var(--tema-yerel-uretim-sayfa-zemini-01)] px-2 py-0.5 text-[10px] font-bold text-[var(--tema-yerel-uretim-ana-metin-02)]">Yayın öncesi silindi</span>}
                         </td>
-                        <td className="px-3 py-3 text-gray-500 text-xs">{formatTarih(k.talep_tarihi)}</td>
-                        <td className="px-3 py-3 text-gray-500 text-xs">{formatTarih(k.onay_tarihi)}</td>
+                        <td className="px-3 py-3 text-[var(--tema-yerel-uretim-yardimci-metin-01)] text-xs">{formatTarih(k.talep_tarihi)}</td>
+                        <td className="px-3 py-3 text-[var(--tema-yerel-uretim-yardimci-metin-01)] text-xs">{formatTarih(k.onay_tarihi)}</td>
                         <td className="px-5 py-3">
-                          <svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" width="14" height="14"
+                          <svg viewBox="0 0 24 24" fill="none" stroke="var(--tema-yerel-uretim-yardimci-metin-03)" strokeWidth="2" width="14" height="14"
                             style={{ transform: acikTalep === k.talep_id ? "rotate(180deg)" : "none", transition: "transform 0.15s" }}>
                             <path d="M6 9l6 6 6-6" />
                           </svg>
@@ -320,7 +320,7 @@ export default function OnaylananTaleplerPage() {
                       </tr>
                       {acikTalep === k.talep_id && (
                         <tr>
-                          <td colSpan={5} className="px-5 py-4 bg-gray-50 border-b border-gray-100">
+                          <td colSpan={5} className="px-5 py-4 bg-[var(--tema-yerel-uretim-sayfa-zemini-01)] border-b border-[var(--tema-yerel-uretim-cizgi-03)]">
                             <DetayIcerik k={k} />
                           </td>
                         </tr>

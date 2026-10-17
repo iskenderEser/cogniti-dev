@@ -52,7 +52,7 @@ function Switch({
         height: "19px",
         borderRadius: "999px",
         border: "none",
-        background: acik ? renk : "#d1d5db",
+        background: acik ? renk : "var(--tema-yerel-yonetim-sayfa-zemini-01)",
         position: "relative",
         cursor: "pointer",
         padding: 0,
@@ -67,7 +67,7 @@ function Switch({
           width: "15px",
           height: "15px",
           borderRadius: "50%",
-          background: "white",
+          background: "var(--tema-yerel-yonetim-kart-01)",
           transition: "left 0.15s",
         }}
       />
@@ -105,8 +105,8 @@ export default function FirmaSidebar({
   };
 
   return (
-    <div style={{ width: "300px", borderRight: "0.5px solid #e5e7eb", padding: "20px", flexShrink: 0 }}>
-      <h2 style={{ fontSize: "16px", fontWeight: 700, color: "#111", marginBottom: "16px", fontFamily: "'Nunito', sans-serif" }}>
+    <div style={{ width: "300px", borderRight: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)", padding: "20px", flexShrink: 0 }}>
+      <h2 style={{ fontSize: "16px", fontWeight: 700, color: "var(--tema-yerel-yonetim-ana-metin-01)", marginBottom: "16px", fontFamily: "'Nunito', sans-serif" }}>
         Firmalar
       </h2>
 
@@ -119,12 +119,12 @@ export default function FirmaSidebar({
           style={{
             flex: 1,
             padding: "8px 10px",
-            border: "0.5px solid #e5e7eb",
+            border: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)",
             borderRadius: "6px",
             fontSize: "13px",
             outline: "none",
             fontFamily: "'Nunito', sans-serif",
-            color: "#111",
+            color: "var(--tema-yerel-yonetim-ana-metin-01)",
           }}
         />
         <button
@@ -132,8 +132,8 @@ export default function FirmaSidebar({
           disabled={!yeniFirmaAdi.trim()}
           style={{
             padding: "8px 14px",
-            background: yeniFirmaAdi.trim() ? RENK_BORDO : "#d1d5db",
-            color: "white",
+            background: yeniFirmaAdi.trim() ? RENK_BORDO : "var(--tema-yerel-yonetim-sayfa-zemini-01)",
+            color: "var(--tema-yerel-yonetim-ters-metin-01)",
             border: "none",
             borderRadius: "6px",
             fontSize: "13px",
@@ -147,9 +147,9 @@ export default function FirmaSidebar({
       </form>
 
       {loading ? (
-        <p style={{ fontSize: "13px", color: "#737373" }}>Yükleniyor...</p>
+        <p style={{ fontSize: "13px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)" }}>Yükleniyor...</p>
       ) : firmalar.length === 0 ? (
-        <p style={{ fontSize: "13px", color: "#737373" }}>Henüz firma yok.</p>
+        <p style={{ fontSize: "13px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)" }}>Henüz firma yok.</p>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
           {firmalar.map((f, i) => {
@@ -183,7 +183,7 @@ export default function FirmaSidebar({
                       padding: 0,
                       fontSize: "14px",
                       fontWeight: secili ? 700 : 500,
-                      color: secili ? RENK_BORDO : "#111",
+                      color: secili ? RENK_BORDO : "var(--tema-yerel-yonetim-ana-metin-01)",
                       cursor: "pointer",
                       fontFamily: "'Nunito', sans-serif",
                     }}
@@ -194,8 +194,8 @@ export default function FirmaSidebar({
                     <span
                       style={{
                         fontSize: "11px",
-                        background: "#fef2f2",
-                        color: "#bc2d0d",
+                        background: "var(--tema-yerel-yonetim-islevsel-zemin-01)",
+                        color: "var(--tema-yerel-yonetim-vurgu-metin-01)",
                         padding: "2px 8px",
                         borderRadius: "999px",
                         fontWeight: 600,
@@ -216,9 +216,9 @@ export default function FirmaSidebar({
                       }
                       style={{
                         fontSize: "11px",
-                        background: "#fffbeb",
-                        border: "0.5px solid #fcd34d",
-                        color: "#92400e",
+                        background: "var(--tema-yerel-yonetim-islevsel-zemin-02)",
+                        border: "0.5px solid var(--tema-yerel-yonetim-islevsel-cizgi-01)",
+                        color: "var(--tema-yerel-yonetim-islevsel-metin-01)",
                         padding: "2px 8px",
                         borderRadius: "999px",
                         fontWeight: 600,
@@ -232,17 +232,17 @@ export default function FirmaSidebar({
 
                 {/* Aksiyon satırı: Firma · Mağaza · CC · E-Club · E-Club Store · Sil */}
                 <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "10px", flexWrap: "wrap" }}>
-                  <span style={{ display: "inline-flex", alignItems: "center", gap: "5px", fontSize: "12px", color: "#737373", fontFamily: "'Nunito', sans-serif" }}>
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: "5px", fontSize: "12px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)", fontFamily: "'Nunito', sans-serif" }}>
                     <Switch
                       acik={f.aktif}
-                      renk="#10b981"
+                      renk="var(--tema-yerel-yonetim-islevsel-metin-02)"
                       onClick={() => handleFirmaToggle(f)}
                       baslik={f.aktif ? "Firma aktif — pasifleştirmek için tıkla" : "Firma pasif — aktifleştirmek için tıkla"}
                     />
                     Firma
                   </span>
 
-                  <span style={{ display: "inline-flex", alignItems: "center", gap: "5px", fontSize: "12px", color: "#737373", fontFamily: "'Nunito', sans-serif" }}>
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: "5px", fontSize: "12px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)", fontFamily: "'Nunito', sans-serif" }}>
                     <Switch
                       acik={f.hbstore_aktif}
                       renk={RENK_BORDO}
@@ -252,40 +252,40 @@ export default function FirmaSidebar({
                     Mağaza
                   </span>
 
-                  <span style={{ display: "inline-flex", alignItems: "center", gap: "5px", fontSize: "12px", color: "#737373", fontFamily: "'Nunito', sans-serif" }}>
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: "5px", fontSize: "12px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)", fontFamily: "'Nunito', sans-serif" }}>
                     <Switch
                       acik={f.cc_aktif}
-                      renk="#7c3aed"
+                      renk="var(--tema-yerel-yonetim-islevsel-metin-03)"
                       onClick={() => handleCcToggle(f)}
                       baslik={f.cc_aktif ? "Challenge Club açık — kapatmak için tıkla" : "Challenge Club kapalı — açmak için tıkla"}
                     />
                     CC
                   </span>
 
-                  <span style={{ display: "inline-flex", alignItems: "center", gap: "5px", fontSize: "12px", color: "#737373", fontFamily: "'Nunito', sans-serif" }}>
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: "5px", fontSize: "12px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)", fontFamily: "'Nunito', sans-serif" }}>
                     <Switch
                       acik={f.eclub_aktif}
-                      renk="#0891b2"
+                      renk="var(--tema-yerel-yonetim-eylem-metin-01)"
                       onClick={() => handleEclubToggle(f)}
                       baslik={f.eclub_aktif ? "E-Club açık — kapatmak için tıkla" : "E-Club kapalı — açmak için tıkla"}
                     />
                     E-Club
                   </span>
 
-                  <span style={{ display: "inline-flex", alignItems: "center", gap: "5px", fontSize: "12px", color: "#737373", fontFamily: "'Nunito', sans-serif" }}>
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: "5px", fontSize: "12px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)", fontFamily: "'Nunito', sans-serif" }}>
                     <Switch
                       acik={f.eclub_store_aktif}
-                      renk="#ea580c"
+                      renk="var(--tema-yerel-yonetim-islevsel-metin-04)"
                       onClick={() => handleEclubStoreToggle(f)}
                       baslik={f.eclub_store_aktif ? "E-Club Store açık — kapatmak için tıkla" : "E-Club Store kapalı — açmak için tıkla"}
                     />
                     E-Club Store
                   </span>
 
-                  <span style={{ display: "inline-flex", alignItems: "center", gap: "5px", fontSize: "12px", color: "#737373", fontFamily: "'Nunito', sans-serif" }}>
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: "5px", fontSize: "12px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)", fontFamily: "'Nunito', sans-serif" }}>
                     <Switch
                       acik={f.eczanem_aktif}
-                      renk="#b45309"
+                      renk="var(--tema-yerel-yonetim-islevsel-metin-05)"
                       onClick={() => handleEczanemToggle(f)}
                       baslik={f.eczanem_aktif ? "Eczanem açık — kapatmak için tıkla" : "Eczanem kapalı — açmak için tıkla"}
                     />
@@ -300,10 +300,10 @@ export default function FirmaSidebar({
                       flexShrink: 0,
                       padding: "5px 9px",
                       background: "transparent",
-                      border: "0.5px solid #d1d5db",
+                      border: "0.5px solid var(--tema-yerel-yonetim-cizgi-02)",
                       borderRadius: "6px",
                       fontSize: "12px",
-                      color: "#525252",
+                      color: "var(--tema-yerel-yonetim-ana-metin-02)",
                       cursor: "pointer",
                       fontFamily: "'Nunito', sans-serif",
                     }}
@@ -318,10 +318,10 @@ export default function FirmaSidebar({
                       flexShrink: 0,
                       padding: "5px 9px",
                       background: "transparent",
-                      border: "0.5px solid #fecaca",
+                      border: "0.5px solid var(--tema-yerel-yonetim-islevsel-cizgi-02)",
                       borderRadius: "6px",
                       fontSize: "12px",
-                      color: "#bc2d0d",
+                      color: "var(--tema-yerel-yonetim-islevsel-metin-06)",
                       cursor: "pointer",
                       fontFamily: "'Nunito', sans-serif",
                     }}
@@ -338,7 +338,7 @@ export default function FirmaSidebar({
                     style={{
                       flex: 1,
                       padding: "6px",
-                      background: "#ffffff",
+                      background: "var(--tema-yerel-yonetim-kart-02)",
                       border: `0.5px solid ${RENK_BORDO}`,
                       borderRadius: "6px",
                       fontSize: "12px",

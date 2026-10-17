@@ -117,19 +117,19 @@ export default function AdresModal({
   if (!acik) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--tema-yerel-magaza-ortu-01)]/50 p-4">
       <div
-        className="flex w-full max-w-lg flex-col rounded-2xl border border-[#dfe7f1] bg-white shadow-2xl"
+        className="flex w-full max-w-lg flex-col rounded-2xl border border-[var(--tema-yerel-magaza-cizgi-01)] bg-[var(--tema-yerel-magaza-kart-01)] shadow-2xl"
         style={{ maxHeight: "90vh", fontFamily: "'Nunito', sans-serif" }}
       >
         {/* Başlık */}
-        <div className="flex items-center justify-between border-b border-[#edf1f5] px-6 py-4">
+        <div className="flex items-center justify-between border-b border-[var(--tema-yerel-magaza-cizgi-09)] px-6 py-4">
           <div className="flex items-center gap-2">
-            <div className="flex size-8 items-center justify-center rounded-lg bg-[#edf6fd] text-[#237ac8]">
+            <div className="flex size-8 items-center justify-center rounded-lg bg-[var(--tema-yerel-magaza-secim-zemin-04)] text-[var(--tema-yerel-magaza-eylem-metin-01)]">
               <MapPin size={16} />
             </div>
             <div>
-              <h2 className="text-base font-extrabold text-[#1a2d42]">
+              <h2 className="text-base font-extrabold text-[var(--tema-yerel-magaza-ana-metin-02)]">
                 {mevcutAdres ? "Adresi Düzenle" : "Yeni Teslimat Adresi Ekle"}
               </h2>
             </div>
@@ -138,7 +138,7 @@ export default function AdresModal({
             type="button"
             onClick={onKapat}
             disabled={kaydediliyor}
-            className="flex size-8 items-center justify-center rounded-lg text-[#7b8da5] hover:bg-[#f0f4f9] disabled:opacity-40"
+            className="flex size-8 items-center justify-center rounded-lg text-[var(--tema-yerel-magaza-yardimci-metin-08)] hover:bg-[var(--tema-yerel-magaza-sayfa-zemini-06)] disabled:opacity-40"
           >
             <X size={18} />
           </button>
@@ -152,7 +152,7 @@ export default function AdresModal({
               value={form.baslik}
               onChange={(e) => handleChange("baslik", e.target.value)}
               disabled={kaydediliyor}
-              className="w-full rounded-xl border border-[#dce5ee] bg-[#f8fafc] px-3.5 py-2 text-xs font-bold text-[#1f334d] placeholder-[#95a6bb] focus:border-[#237ac8] focus:bg-white focus:outline-none"
+              className="w-full rounded-xl border border-[var(--tema-yerel-magaza-cizgi-03)] bg-[var(--tema-yerel-magaza-sayfa-zemini-02)] px-3.5 py-2 text-xs font-bold text-[var(--tema-yerel-magaza-ana-metin-04)] placeholder-[var(--tema-yerel-magaza-yardimci-metin-25)] focus:border-[var(--tema-yerel-magaza-cizgi-04)] focus:bg-[var(--tema-yerel-magaza-kart-01)] focus:outline-none"
               placeholder="Örn: Ev Adresim"
             />
           </FormAlani>
@@ -164,10 +164,10 @@ export default function AdresModal({
                 value={form.alici_adi || profilAdSoyad}
                 readOnly
                 disabled
-                className="w-full rounded-xl border border-[#dce5ee] bg-[#edf2f7] px-3.5 py-2 text-xs font-bold text-[#4a5568] cursor-not-allowed focus:outline-none"
+                className="w-full rounded-xl border border-[var(--tema-yerel-magaza-cizgi-03)] bg-[var(--tema-yerel-magaza-sayfa-zemini-13)] px-3.5 py-2 text-xs font-bold text-[var(--tema-yerel-magaza-ana-metin-10)] cursor-not-allowed focus:outline-none"
                 placeholder="Ad Soyad"
               />
-              <span className="text-[10px] font-semibold text-[#7a8da5]">
+              <span className="text-[10px] font-semibold text-[var(--tema-yerel-magaza-yardimci-metin-01)]">
                 Ad soyad profilinizden otomatik alınır ve değiştirilemez.
               </span>
             </FormAlani>
@@ -178,7 +178,7 @@ export default function AdresModal({
                 value={form.telefon}
                 onChange={(e) => handleChange("telefon", e.target.value)}
                 disabled={kaydediliyor}
-                className="w-full rounded-xl border border-[#dce5ee] bg-[#f8fafc] px-3.5 py-2 text-xs font-bold text-[#1f334d] placeholder-[#95a6bb] focus:border-[#237ac8] focus:bg-white focus:outline-none"
+                className="w-full rounded-xl border border-[var(--tema-yerel-magaza-cizgi-03)] bg-[var(--tema-yerel-magaza-sayfa-zemini-02)] px-3.5 py-2 text-xs font-bold text-[var(--tema-yerel-magaza-ana-metin-04)] placeholder-[var(--tema-yerel-magaza-yardimci-metin-25)] focus:border-[var(--tema-yerel-magaza-cizgi-04)] focus:bg-[var(--tema-yerel-magaza-kart-01)] focus:outline-none"
                 placeholder="05XX XXX XX XX"
               />
             </FormAlani>
@@ -191,7 +191,7 @@ export default function AdresModal({
                 value={form.il}
                 onChange={(e) => handleChange("il", e.target.value)}
                 disabled={kaydediliyor}
-                className="w-full rounded-xl border border-[#dce5ee] bg-[#f8fafc] px-3.5 py-2 text-xs font-bold text-[#1f334d] placeholder-[#95a6bb] focus:border-[#237ac8] focus:bg-white focus:outline-none"
+                className="w-full rounded-xl border border-[var(--tema-yerel-magaza-cizgi-03)] bg-[var(--tema-yerel-magaza-sayfa-zemini-02)] px-3.5 py-2 text-xs font-bold text-[var(--tema-yerel-magaza-ana-metin-04)] placeholder-[var(--tema-yerel-magaza-yardimci-metin-25)] focus:border-[var(--tema-yerel-magaza-cizgi-04)] focus:bg-[var(--tema-yerel-magaza-kart-01)] focus:outline-none"
                 placeholder="İstanbul"
               />
             </FormAlani>
@@ -202,7 +202,7 @@ export default function AdresModal({
                 value={form.ilce}
                 onChange={(e) => handleChange("ilce", e.target.value)}
                 disabled={kaydediliyor}
-                className="w-full rounded-xl border border-[#dce5ee] bg-[#f8fafc] px-3.5 py-2 text-xs font-bold text-[#1f334d] placeholder-[#95a6bb] focus:border-[#237ac8] focus:bg-white focus:outline-none"
+                className="w-full rounded-xl border border-[var(--tema-yerel-magaza-cizgi-03)] bg-[var(--tema-yerel-magaza-sayfa-zemini-02)] px-3.5 py-2 text-xs font-bold text-[var(--tema-yerel-magaza-ana-metin-04)] placeholder-[var(--tema-yerel-magaza-yardimci-metin-25)] focus:border-[var(--tema-yerel-magaza-cizgi-04)] focus:bg-[var(--tema-yerel-magaza-kart-01)] focus:outline-none"
                 placeholder="Kadıköy"
               />
             </FormAlani>
@@ -214,7 +214,7 @@ export default function AdresModal({
               onChange={(e) => handleChange("adres_detay", e.target.value)}
               disabled={kaydediliyor}
               rows={3}
-              className="w-full rounded-xl border border-[#dce5ee] bg-[#f8fafc] px-3.5 py-2 text-xs font-bold text-[#1f334d] placeholder-[#95a6bb] focus:border-[#237ac8] focus:bg-white focus:outline-none"
+              className="w-full rounded-xl border border-[var(--tema-yerel-magaza-cizgi-03)] bg-[var(--tema-yerel-magaza-sayfa-zemini-02)] px-3.5 py-2 text-xs font-bold text-[var(--tema-yerel-magaza-ana-metin-04)] placeholder-[var(--tema-yerel-magaza-yardimci-metin-25)] focus:border-[var(--tema-yerel-magaza-cizgi-04)] focus:bg-[var(--tema-yerel-magaza-kart-01)] focus:outline-none"
               placeholder="Mahalle, sokak, bina no, daire no..."
             />
           </FormAlani>
@@ -225,7 +225,7 @@ export default function AdresModal({
               value={form.posta_kodu ?? ""}
               onChange={(e) => handleChange("posta_kodu", e.target.value)}
               disabled={kaydediliyor}
-              className="w-full rounded-xl border border-[#dce5ee] bg-[#f8fafc] px-3.5 py-2 text-xs font-bold text-[#1f334d] placeholder-[#95a6bb] focus:border-[#237ac8] focus:bg-white focus:outline-none"
+              className="w-full rounded-xl border border-[var(--tema-yerel-magaza-cizgi-03)] bg-[var(--tema-yerel-magaza-sayfa-zemini-02)] px-3.5 py-2 text-xs font-bold text-[var(--tema-yerel-magaza-ana-metin-04)] placeholder-[var(--tema-yerel-magaza-yardimci-metin-25)] focus:border-[var(--tema-yerel-magaza-cizgi-04)] focus:bg-[var(--tema-yerel-magaza-kart-01)] focus:outline-none"
               placeholder="34000"
             />
           </FormAlani>
@@ -236,21 +236,21 @@ export default function AdresModal({
               checked={Boolean(form.varsayilan_mi)}
               onChange={(e) => handleChange("varsayilan_mi", e.target.checked)}
               disabled={kaydediliyor}
-              className="size-4 rounded text-[#237ac8] focus:ring-[#237ac8]"
+              className="size-4 rounded text-[var(--tema-yerel-magaza-eylem-metin-01)] focus:ring-[var(--tema-yerel-magaza-odak-01)]"
             />
-            <span className="text-xs font-extrabold text-[#3a516b]">
+            <span className="text-xs font-extrabold text-[var(--tema-yerel-magaza-ana-metin-11)]">
               Bu adresi varsayılan teslimat adresi olarak ayarla
             </span>
           </label>
         </div>
 
         {/* Aksiyon Butonları */}
-        <div className="flex items-center justify-end gap-2.5 border-t border-[#edf1f5] px-6 py-4">
+        <div className="flex items-center justify-end gap-2.5 border-t border-[var(--tema-yerel-magaza-cizgi-09)] px-6 py-4">
           <button
             type="button"
             onClick={onKapat}
             disabled={kaydediliyor}
-            className="rounded-xl border border-[#dce5ee] bg-white px-4 py-2.5 text-xs font-extrabold text-[#5f738c] hover:bg-[#f8fafc]"
+            className="rounded-xl border border-[var(--tema-yerel-magaza-cizgi-03)] bg-[var(--tema-yerel-magaza-kart-01)] px-4 py-2.5 text-xs font-extrabold text-[var(--tema-yerel-magaza-yardimci-metin-10)] hover:bg-[var(--tema-yerel-magaza-sayfa-zemini-02)]"
           >
             Vazgeç
           </button>
@@ -258,7 +258,7 @@ export default function AdresModal({
             type="button"
             onClick={handleKaydet}
             disabled={kaydediliyor}
-            className="rounded-xl bg-[#237ac8] px-5 py-2.5 text-xs font-extrabold text-white shadow-sm hover:bg-[#1d69aa] disabled:opacity-50"
+            className="rounded-xl bg-[var(--tema-yerel-magaza-eylem-zemin-01)] px-5 py-2.5 text-xs font-extrabold text-[var(--tema-yerel-magaza-ters-metin-01)] shadow-sm hover:bg-[var(--tema-yerel-magaza-eylem-zemin-02)] disabled:opacity-50"
           >
             {kaydediliyor ? "Kaydediliyor..." : "Adresi Kaydet"}
           </button>
@@ -277,7 +277,7 @@ function FormAlani({
 }) {
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-[11px] font-extrabold uppercase tracking-wider text-[#7a8da5]">
+      <label className="text-[11px] font-extrabold uppercase tracking-wider text-[var(--tema-yerel-magaza-yardimci-metin-01)]">
         {label}
       </label>
       {children}

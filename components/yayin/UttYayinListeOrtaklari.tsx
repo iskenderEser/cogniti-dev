@@ -61,8 +61,8 @@ export function UttYayinTuruToggle<T extends YayinTuruTasiyan>({
 
 export function UttYayinBosDurum({ mesaj }: { mesaj: string }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-gray-300 bg-white p-10 text-center">
-      <p className="text-sm font-bold text-gray-500">{mesaj}</p>
+    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[var(--tema-bos-durum-kesik-cizgi)] bg-[var(--tema-bos-durum-zemin)] p-10 text-center">
+      <p className="text-sm font-bold text-[var(--tema-bos-durum-metin)]">{mesaj}</p>
     </div>
   );
 }
@@ -126,12 +126,12 @@ export function UttYayinKartIskeletleri({
   return (
     <div className={izgaraClassName}>
       {Array.from({ length: kartSayisi }, (_, kart) => (
-        <div key={kart} className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-          <div className="aspect-video bg-gray-200" />
+        <div key={kart} className="overflow-hidden rounded-xl border border-[var(--tema-iskelet-yayin-cizgi)] bg-[var(--tema-iskelet-kart)] shadow-sm">
+          <div className="aspect-video bg-[var(--tema-iskelet-yayin-kapak)]" />
           <div className="space-y-3 p-3">
-            <div className="h-4 w-3/4 rounded bg-gray-200" />
-            <div className="h-3 w-1/2 rounded bg-gray-100" />
-            <div className="h-8 rounded-lg bg-gray-100" />
+            <div className="h-4 w-3/4 rounded bg-[var(--tema-iskelet-yayin-kapak)]" />
+            <div className="h-3 w-1/2 rounded bg-[var(--tema-iskelet-yayin-satir)]" />
+            <div className="h-8 rounded-lg bg-[var(--tema-iskelet-yayin-satir)]" />
           </div>
         </div>
       ))}

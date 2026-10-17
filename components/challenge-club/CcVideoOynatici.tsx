@@ -406,7 +406,7 @@ export default function CcVideoOynatici({
       {/* Geri linki */}
       <button
         onClick={onKapat}
-        className="flex items-center gap-1.5 bg-transparent border-none cursor-pointer text-gray-500 text-sm p-0 w-fit"
+        className="flex items-center gap-1.5 bg-transparent border-none cursor-pointer text-[var(--tema-oynatici-ikincil-metin)] text-sm p-0 w-fit"
       >
         <svg
           viewBox="0 0 24 24"
@@ -422,23 +422,23 @@ export default function CcVideoOynatici({
       </button>
 
       {/* Ana kart */}
-      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+      <div className="bg-[var(--tema-oynatici-yuzey)] border border-[var(--tema-oynatici-cizgi)] rounded-xl overflow-hidden shadow-sm">
         {/* Başlık */}
-        <div className="px-4 md:px-5 py-4 border-b border-gray-100 flex items-center justify-between gap-3">
+        <div className="px-4 md:px-5 py-4 border-b border-[var(--tema-oynatici-ic-cizgi)] flex items-center justify-between gap-3">
           <div>
-            <div className="text-base font-semibold text-gray-900">
+            <div className="text-base font-semibold text-[var(--tema-oynatici-baslik)]">
               {video.urun_adi}
             </div>
-            <div className="text-xs text-gray-500 mt-1">{video.teknik_adi}</div>
+            <div className="text-xs text-[var(--tema-oynatici-ikincil-metin)] mt-1">{video.teknik_adi}</div>
           </div>
           <div className="flex items-center gap-2">
             {izlemeTuru === "challenge" && (
               <span
                 className="flex items-center gap-1 text-[10px] px-2.5 py-1 rounded-full font-bold"
                 style={{
-                  color: "#237ac8",
-                  background: "#edf6fd",
-                  border: "0.5px solid #bfdbfe",
+                  color: "var(--tema-oynatici-cc-rozet-metin)",
+                  background: "var(--tema-oynatici-cc-rozet-zemin)",
+                  border: "0.5px solid var(--tema-oynatici-cc-rozet-cizgi)",
                 }}
               >
                 Challenge
@@ -448,9 +448,9 @@ export default function CcVideoOynatici({
               <span
                 className="flex items-center gap-1 text-[10px] px-2.5 py-1 rounded-full font-bold"
                 style={{
-                  color: "#7c3aed",
-                  background: "rgba(124,58,237,0.08)",
-                  border: "0.5px solid rgba(124,58,237,0.3)",
+                  color: "var(--tema-oynatici-cc-challenge-metin)",
+                  background: "var(--tema-oynatici-cc-challenge-zemin)",
+                  border: "0.5px solid var(--tema-oynatici-cc-challenge-cizgi)",
                 }}
               >
                 Extra İzleme
@@ -460,9 +460,9 @@ export default function CcVideoOynatici({
               <span
                 className="flex items-center gap-1 text-[10px] px-2.5 py-1 rounded-full font-bold"
                 style={{
-                  color: "#237ac8",
-                  background: "#edf6fd",
-                  border: "0.5px solid #bfdbfe",
+                  color: "var(--tema-oynatici-cc-rozet-metin)",
+                  background: "var(--tema-oynatici-cc-rozet-zemin)",
+                  border: "0.5px solid var(--tema-oynatici-cc-rozet-cizgi)",
                 }}
               >
                 <svg
@@ -470,7 +470,7 @@ export default function CcVideoOynatici({
                   height="10"
                   viewBox="0 0 24 24"
                   fill="none"
-                  stroke="#237ac8"
+                  stroke="var(--tema-oynatici-cc-rozet-metin)"
                   strokeWidth="2.5"
                 >
                   <polygon points="5 4 15 12 5 20 5 4" />
@@ -483,9 +483,9 @@ export default function CcVideoOynatici({
         </div>
 
         {/* Video */}
-        {video.arac_turu && video.arac_turu !== "video" && video.arac_id && <TuketimOynaticisi aracId={video.arac_id} yayinId={video.yayin_id} aracTuru={video.arac_turu} bagId={challenge_id} urunAdi={video.urun_adi} ileriSarmaAcik={video.ileri_sarma_acik} hata={hata} baslat={handleAracBaslat} bitir={handleAracBitir} onTamamlandi={onVeriYenile} className="border-b border-gray-100 p-4" />}
+        {video.arac_turu && video.arac_turu !== "video" && video.arac_id && <TuketimOynaticisi aracId={video.arac_id} yayinId={video.yayin_id} aracTuru={video.arac_turu} bagId={challenge_id} urunAdi={video.urun_adi} ileriSarmaAcik={video.ileri_sarma_acik} hata={hata} baslat={handleAracBaslat} bitir={handleAracBitir} onTamamlandi={onVeriYenile} className="border-b border-[var(--tema-oynatici-ic-cizgi)] p-4" />}
         {!(["podcast", "gorsel", "flip_pdf"].includes(video.arac_turu ?? "video")) && video.video_url && (
-          <div className="border-b border-gray-100">
+          <div className="border-b border-[var(--tema-oynatici-ic-cizgi)]">
             <div className={`relative transition-opacity duration-300 ${bitisAsamasi === "kayboluyor" ? "opacity-0" : "opacity-100"}`}>
               {/* Kutu videonun oranına göre çizilir (26.07). iframe burada kalır — ref playerjs'e bağlı. */}
               <VideoCercevesi
@@ -506,13 +506,13 @@ export default function CcVideoOynatici({
                 />
               </VideoCercevesi>
               {bitisAsamasi !== "yok" && (
-                <div className="absolute inset-0 z-20 flex animate-in items-center justify-center bg-[#10233a]/80 text-white fade-in duration-200">
+                <div className="absolute inset-0 z-20 flex animate-in items-center justify-center bg-[var(--tema-oynatici-video-cc-bitis-ortusu)] text-[var(--tema-oynatici-video-ters-metin)] fade-in duration-200">
                   <div className="flex flex-col items-center text-center">
-                    <CheckCircle2 className="size-10 text-emerald-400" />
+                    <CheckCircle2 className="size-10 text-[var(--tema-oynatici-video-basari-simgesi)]" />
                     <strong className="mt-3 text-base">
                       {cevapSonuclari.length > 0 ? "Cevaplar kaydedildi" : "Öğrenme içeriği tamamlandı"}
                     </strong>
-                    <span className="mt-1 text-xs font-semibold text-white/80">Listeye dönülüyor…</span>
+                    <span className="mt-1 text-xs font-semibold text-[var(--tema-oynatici-video-bitis-aciklama-cc)]">Listeye dönülüyor…</span>
                   </div>
                 </div>
               )}
@@ -549,15 +549,15 @@ export default function CcVideoOynatici({
                 <div
                   className="px-4 py-3.5 rounded-xl border text-center"
                   style={{
-                    background: netPuan >= 0 ? "#f0fdf4" : "#fef2f2",
+                    background: netPuan >= 0 ? "var(--tema-oynatici-cc-basari-zemin)" : "var(--tema-oynatici-cc-kayip-zemin)",
                     border: `0.5px solid ${
-                      netPuan >= 0 ? "#bbf7d0" : "#fecaca"
+                      netPuan >= 0 ? "var(--tema-oynatici-cc-basari-cizgi)" : "var(--tema-oynatici-cc-kayip-cizgi)"
                     }`,
                   }}
                 >
                   <span
                     className="text-sm font-bold"
-                    style={{ color: netPuan >= 0 ? "#16a34a" : "#dc2626" }}
+                    style={{ color: netPuan >= 0 ? "var(--tema-oynatici-cc-basari-metin)" : "var(--tema-oynatici-cc-kayip-metin)" }}
                   >
                     {netPuan >= 0
                       ? `Net +${netPuan} puan kazandınız!`
@@ -570,8 +570,8 @@ export default function CcVideoOynatici({
                 <button
                   type="button"
                   onClick={onKapat}
-                  className="text-white border-none rounded-lg px-6 py-2.5 text-xs font-semibold cursor-pointer transition-colors hover:bg-[#1d69aa]"
-                  style={{ background: "#237ac8", fontFamily: "'Nunito', sans-serif" }}
+                  className="text-[var(--tema-oynatici-eylem-metni)] border-none rounded-lg px-6 py-2.5 text-xs font-semibold cursor-pointer transition-colors hover:bg-[var(--tema-oynatici-eclub-eylem-hover)]"
+                  style={{ background: "var(--tema-oynatici-panel-eylem)", fontFamily: "'Nunito', sans-serif" }}
                 >
                   Videolara dön
                 </button>
@@ -589,11 +589,11 @@ export default function CcVideoOynatici({
                   <div
                     className="px-4 py-3.5 rounded-xl border text-center"
                     style={{
-                      background: "#f0fdf4",
-                      border: "0.5px solid #bbf7d0",
+                      background: "var(--tema-oynatici-cc-basari-zemin)",
+                      border: "0.5px solid var(--tema-oynatici-cc-basari-cizgi)",
                     }}
                   >
-                    <span className="text-sm font-bold" style={{ color: "#16a34a" }}>
+                    <span className="text-sm font-bold" style={{ color: "var(--tema-oynatici-cc-basari-metin)" }}>
                       +{kazanilanPuan} puan kazandınız!
                     </span>
                   </div>
@@ -602,8 +602,8 @@ export default function CcVideoOynatici({
                   <button
                     type="button"
                     onClick={onKapat}
-                    className="text-white border-none rounded-lg px-6 py-2.5 text-xs font-semibold cursor-pointer transition-colors hover:bg-[#1d69aa]"
-                    style={{ background: "#237ac8", fontFamily: "'Nunito', sans-serif" }}
+                    className="text-[var(--tema-oynatici-eylem-metni)] border-none rounded-lg px-6 py-2.5 text-xs font-semibold cursor-pointer transition-colors hover:bg-[var(--tema-oynatici-eclub-eylem-hover)]"
+                    style={{ background: "var(--tema-oynatici-panel-eylem)", fontFamily: "'Nunito', sans-serif" }}
                   >
                     Videolara dön
                   </button>
@@ -617,36 +617,36 @@ export default function CcVideoOynatici({
       {ileriSarmaModal && (
         <div
           className="fixed inset-0 flex items-center justify-center z-50"
-          style={{ background: "rgba(0,0,0,0.4)" }}
+          style={{ background: "var(--tema-oynatici-modal-ortu)" }}
         >
-          <div className="bg-white rounded-xl border border-gray-200 p-6 w-11/12 max-w-md shadow-lg">
-            <div className="text-sm font-semibold text-gray-900 mb-3">
+          <div className="bg-[var(--tema-oynatici-yuzey)] rounded-xl border border-[var(--tema-oynatici-cizgi)] p-6 w-11/12 max-w-md shadow-lg">
+            <div className="text-sm font-semibold text-[var(--tema-oynatici-baslik)] mb-3">
               İleri sarmak istiyor musunuz?
             </div>
             <div
-              className="text-sm text-gray-500 leading-relaxed mb-5 rounded-lg px-3 py-3"
+              className="text-sm text-[var(--tema-oynatici-ikincil-metin)] leading-relaxed mb-5 rounded-lg px-3 py-3"
               style={{
-                background: "#fffbeb",
-                border: "0.5px solid #fde68a",
+                background: "var(--tema-oynatici-cc-uyari-zemin)",
+                border: "0.5px solid var(--tema-oynatici-cc-uyari-cizgi)",
               }}
             >
               Bu videonun her saniyesi puan değer taşır. İleri sarılan süre kadar{" "}
-              <strong style={{ color: "#bc2d0d" }}>puan kaybedeceksiniz</strong>.
+              <strong style={{ color: "var(--tema-oynatici-risk)" }}>puan kaybedeceksiniz</strong>.
               İleri sarılan videolarda sorular gösterilmez.
             </div>
             <div className="flex gap-2.5 justify-end">
               <button
                 onClick={handleIleriSarmaReddet}
-                className="px-4 py-2 rounded-lg border border-gray-200 bg-transparent text-gray-500 text-xs cursor-pointer"
+                className="px-4 py-2 rounded-lg border border-[var(--tema-oynatici-cizgi)] bg-transparent text-[var(--tema-oynatici-ikincil-metin)] text-xs cursor-pointer"
                 style={{ fontFamily: "'Nunito', sans-serif" }}
               >
                 İptal
               </button>
               <button
                 onClick={handleIleriSarmaOnayla}
-                className="px-4 py-2 rounded-lg border-none text-white text-xs font-semibold cursor-pointer"
+                className="px-4 py-2 rounded-lg border-none text-[var(--tema-oynatici-eylem-metni)] text-xs font-semibold cursor-pointer"
                 style={{
-                  background: "#bc2d0d",
+                  background: "var(--tema-oynatici-risk)",
                   fontFamily: "'Nunito', sans-serif",
                 }}
               >

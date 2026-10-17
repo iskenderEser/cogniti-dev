@@ -93,11 +93,11 @@ export default function UttGonderimIncelemesi({ yayinId, aracId, aracTuru, video
     tamamla: (sayfalar: number[]) => { void tamamla({ sayfalar, kullanici_onayi: true }); },
   }), [incelemeId, sirayaAl, tamamla]);
 
-  if (!incelemeId) return <div className="rounded-xl bg-white p-6 text-sm text-slate-500">İnceleme hazırlanıyor…</div>;
+  if (!incelemeId) return <div className="rounded-xl bg-[var(--tema-yerel-eclub-kart-01)] p-6 text-sm text-[var(--tema-yerel-eclub-yardimci-metin-30)]">İnceleme hazırlanıyor…</div>;
 
   return (
     <div className="space-y-3">
-      <p className="rounded-lg bg-[#f1f6fb] px-3 py-2 text-xs text-[#476078]">{urunAdi} · Gönderim öncesi inceleme. Soru ve puan yoktur.</p>
+      <p className="rounded-lg bg-[var(--tema-yerel-eclub-sayfa-zemini-23)] px-3 py-2 text-xs text-[var(--tema-yerel-eclub-ana-metin-29)]">{urunAdi} · Gönderim öncesi inceleme. Soru ve puan yoktur.</p>
       {aracTuru === "video" && videoUrl && <VideoOnizleme
         videoUrl={videoUrl}
         ariaLabel={`${urunAdi} yayınını incele`}
@@ -114,7 +114,7 @@ export default function UttGonderimIncelemesi({ yayinId, aracId, aracTuru, video
           void tamamla({ konum_saniye: sonKonum.current, oynuyor: true, sona_ulasti: true });
         }}
       />}
-      {aracTuru === "video" && !videoUrl && <p className="p-4 text-sm text-red-600">Video bağlantısı bulunamadı.</p>}
+      {aracTuru === "video" && !videoUrl && <p className="p-4 text-sm text-[var(--tema-yerel-eclub-islevsel-metin-40)]">Video bağlantısı bulunamadı.</p>}
       {aracTuru === "podcast" && (podcastUrl ? <audio
         src={podcastUrl} controls controlsList="nodownload" className="w-full" preload="metadata"
         onTimeUpdate={(event) => {
@@ -129,10 +129,10 @@ export default function UttGonderimIncelemesi({ yayinId, aracId, aracTuru, video
           sirayaAl({ konum_saniye: sonKonum.current, oynuyor: true, sona_ulasti: true });
           void tamamla({ konum_saniye: sonKonum.current, oynuyor: true, sona_ulasti: true });
         }}
-      /> : <p className="p-4 text-sm text-slate-500">Podcast yükleniyor…</p>)}
+      /> : <p className="p-4 text-sm text-[var(--tema-yerel-eclub-yardimci-metin-30)]">Podcast yükleniyor…</p>)}
       {aracTuru === "gorsel" && <>
         <GorselOynatici aracId={aracId} yayinId={yayinId} saltGoruntuleme baslat={async () => ({ izlemeId: incelemeId })} bitir={async () => undefined} hata={hata} />
-        <button type="button" disabled={islem || beklemeSaniyesi < 3} onClick={() => void tamamla({ kullanici_onayi: true })} className="rounded-lg bg-[#237ac8] px-4 py-2 text-xs font-bold text-white disabled:opacity-40">İnceledim, tamamla</button>
+        <button type="button" disabled={islem || beklemeSaniyesi < 3} onClick={() => void tamamla({ kullanici_onayi: true })} className="rounded-lg bg-[var(--tema-yerel-eclub-eylem-zemin-01)] px-4 py-2 text-xs font-bold text-[var(--tema-yerel-eclub-ters-metin-01)] disabled:opacity-40">İnceledim, tamamla</button>
       </>}
       {aracTuru === "flip_pdf" && <FlipPdfOynatici aracId={aracId} yayinId={yayinId} saltGoruntuleme baslat={async () => ({ izlemeId: incelemeId })} bitir={async () => undefined} inceleme={pdfInceleme} hata={hata} />}
     </div>

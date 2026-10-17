@@ -90,34 +90,34 @@ export default function DavranisRaporu({ rol }: { rol: 'utt' | 'bm' | 'tm' | 'yo
   const bekliyor = yukleniyor || (!data && loading);
   return <div className={styles.page} style={{ fontFamily: "'Nunito', sans-serif" }}>
     <div className={styles.container}>
-      <Link href="/ana-sayfa" className="mb-3 inline-flex items-center gap-1.5 text-xs font-bold text-[#7890aa]"><ArrowLeft size={14} /> Ana Sayfa</Link>
+      <Link href="/ana-sayfa" className="mb-3 inline-flex items-center gap-1.5 text-xs font-bold text-[var(--tema-yerel-rapor-yardimci-metin-10)]"><ArrowLeft size={14} /> Ana Sayfa</Link>
       <SayfaYenileBasligi className={styles.header}
-        baslik={<h1 className="text-2xl font-extrabold tracking-tight text-[#10213d]">T-Club Raporları</h1>}
+        baslik={<h1 className="text-2xl font-extrabold tracking-tight text-[var(--tema-yerel-rapor-ana-metin-07)]">T-Club Raporları</h1>}
 
-        aciklama={<><p className="mt-1 text-xs font-semibold text-[#78889d]">{karsilastirma ? takimRolu ? 'İki bölgenin temsilcilerinin öğrenme davranışlarını karşılaştırın.' : 'Bölgenizdeki iki temsilcinin öğrenme davranışlarını karşılaştırın.' : takimGorunumu ? yonetici ? 'Seçili takımın lig sonucunu oluşturan öğrenme davranışları.' : 'Takımınızın lig sonucunu oluşturan öğrenme davranışları.' : bolgeGorunumu ? 'Bölgenizin lig sonucunu oluşturan öğrenme davranışları.' : rol !== 'utt' ? 'Seçili temsilcinin lig sonucunu oluşturan öğrenme davranışları.' : 'Lig sonucunu oluşturan öğrenme davranışlarınız.'}</p></>}
+        aciklama={<><p className="mt-1 text-xs font-semibold text-[var(--tema-yerel-rapor-yardimci-metin-11)]">{karsilastirma ? takimRolu ? 'İki bölgenin temsilcilerinin öğrenme davranışlarını karşılaştırın.' : 'Bölgenizdeki iki temsilcinin öğrenme davranışlarını karşılaştırın.' : takimGorunumu ? yonetici ? 'Seçili takımın lig sonucunu oluşturan öğrenme davranışları.' : 'Takımınızın lig sonucunu oluşturan öğrenme davranışları.' : bolgeGorunumu ? 'Bölgenizin lig sonucunu oluşturan öğrenme davranışları.' : rol !== 'utt' ? 'Seçili temsilcinin lig sonucunu oluşturan öğrenme davranışları.' : 'Lig sonucunu oluşturan öğrenme davranışlarınız.'}</p></>}
         aksiyon={<YenileButonu onYenile={raporuYenile} yenileniyor={loading || yenileniyor} />}
 
       />
       {yonetici && (yanit?.takimlar?.length ?? 0) > 1 && <div className="mb-5 flex min-w-0 justify-end"><SadeKontrolGrubu tur="kapsul" aria-label="Rapor takımı" className="min-w-0 max-w-full">
         {yanit?.takimlar?.map(takim => <SadeKontrolButonu key={takim.id} type="button" aria-pressed={(takimId || yanit?.takimId) === takim.id} onClick={() => { setTakimId(takim.id); setBmId(''); setTemsilciId(''); setIkinciId(''); }}>{takim.ad}</SadeKontrolButonu>)}
       </SadeKontrolGrubu></div>}
-      {yonetici && yanit?.takimlar?.length === 0 && <p className="mb-5 text-sm text-[#667e98]">Firma kapsamında takım bulunamadı.</p>}
+      {yonetici && yanit?.takimlar?.length === 0 && <p className="mb-5 text-sm text-[var(--tema-yerel-rapor-yardimci-metin-23)]">Firma kapsamında takım bulunamadı.</p>}
       {karsilastirma ? <section className="mb-5 grid grid-cols-2 gap-2" aria-label={takimRolu ? 'Karşılaştırılan bölgeler' : 'Karşılaştırılan temsilciler'} aria-busy={loading || yenileniyor}>
-        {[{ ad: ilkAd, puan: data?.katki.netPuan, sayi: data?.temsilciSayisi, ortalama: data?.kisiBasiNetPuan }, { ad: ikinciAd, puan: data?.karsilastirma?.katki.netPuan, sayi: data?.karsilastirma?.temsilciSayisi, ortalama: data?.karsilastirma?.kisiBasiNetPuan }].map((k, i) => <div key={i} className="min-w-0 rounded-xl border border-gray-200 bg-white p-3 md:p-5" style={{ borderLeft: `3px solid ${i ? '#7c5ce7' : '#237ac8'}` }}>
-          <h2 className="mb-2 truncate text-xs font-bold text-gray-400" title={k.ad}>{k.ad}</h2>
-          <div className="text-2xl font-extrabold leading-none text-gray-900 tabular-nums md:text-3xl">{k.puan != null ? fmt(k.puan) : '—'}</div>
-          <p className="mt-1.5 text-xs text-gray-500">{takimRolu ? 'Bölge Net Puanı' : 'Net Puan'}</p>
-          {takimRolu && <div className="mt-2 space-y-1 text-xs text-[#667e98]"><p>Temsilci sayısı: <strong>{k.sayi != null ? fmt(k.sayi) : '—'}</strong></p><p>Temsilci başına net puan: <strong>{k.ortalama != null ? fmt(k.ortalama) : '—'}</strong></p></div>}
+        {[{ ad: ilkAd, puan: data?.katki.netPuan, sayi: data?.temsilciSayisi, ortalama: data?.kisiBasiNetPuan }, { ad: ikinciAd, puan: data?.karsilastirma?.katki.netPuan, sayi: data?.karsilastirma?.temsilciSayisi, ortalama: data?.karsilastirma?.kisiBasiNetPuan }].map((k, i) => <div key={i} className="min-w-0 rounded-xl border border-[var(--tema-yerel-rapor-cizgi-43)] bg-[var(--tema-yerel-rapor-kart-04)] p-3 md:p-5" style={{ borderLeft: `3px solid ${i ? 'var(--tema-yerel-rapor-islevsel-cizgi-09)' : 'var(--tema-yerel-rapor-cizgi-18)'}` }}>
+          <h2 className="mb-2 truncate text-xs font-bold text-[var(--tema-yerel-rapor-yardimci-metin-62)]" title={k.ad}>{k.ad}</h2>
+          <div className="text-2xl font-extrabold leading-none text-[var(--tema-yerel-rapor-ana-metin-19)] tabular-nums md:text-3xl">{k.puan != null ? fmt(k.puan) : '—'}</div>
+          <p className="mt-1.5 text-xs text-[var(--tema-yerel-rapor-yardimci-metin-07)]">{takimRolu ? 'Bölge Net Puanı' : 'Net Puan'}</p>
+          {takimRolu && <div className="mt-2 space-y-1 text-xs text-[var(--tema-yerel-rapor-yardimci-metin-23)]"><p>Temsilci sayısı: <strong>{k.sayi != null ? fmt(k.sayi) : '—'}</strong></p><p>Temsilci başına net puan: <strong>{k.ortalama != null ? fmt(k.ortalama) : '—'}</strong></p></div>}
         </div>)}
       </section> : <>
       <section className={`mb-5 grid grid-cols-1 gap-2 ${takimGorunumu ? 'sm:grid-cols-2' : 'sm:grid-cols-3'}`} aria-label={takimGorunumu ? 'Takım net puanı ve katkısı' : bolgeGorunumu ? 'Bölge net puanı ve katkıları' : 'Net puan katkınız'} aria-busy={loading || yenileniyor}>
-        {(takimGorunumu ? [{ key: 'takim' as const, ad: 'Takım Net Puanı', renk: '#237ac8' }, { key: 'firma' as const, ad: 'Firma Katkısı', renk: '#059669' }] : [{ key: 'bolge' as const, ad: bolgeGorunumu ? 'Bölge Net Puanı' : 'Bölge Katkısı', renk: '#237ac8' }, { key: 'takim' as const, ad: 'Takım Katkısı', renk: '#7c5ce7' }, { key: 'firma' as const, ad: 'Firma Katkısı', renk: '#059669' }]).map(kart => {
+        {(takimGorunumu ? [{ key: 'takim' as const, ad: 'Takım Net Puanı', renk: 'var(--tema-yerel-rapor-eylem-metin-06)' }, { key: 'firma' as const, ad: 'Firma Katkısı', renk: 'var(--tema-yerel-rapor-islevsel-metin-36)' }] : [{ key: 'bolge' as const, ad: bolgeGorunumu ? 'Bölge Net Puanı' : 'Bölge Katkısı', renk: 'var(--tema-yerel-rapor-eylem-metin-06)' }, { key: 'takim' as const, ad: 'Takım Katkısı', renk: 'var(--tema-yerel-rapor-islevsel-metin-14)' }, { key: 'firma' as const, ad: 'Firma Katkısı', renk: 'var(--tema-yerel-rapor-islevsel-metin-36)' }]).map(kart => {
           const katki = data?.katki?.[kart.key];
           const netKart = (takimGorunumu && kart.key === 'takim') || (bolgeGorunumu && kart.key === 'bolge');
-          return <div key={kart.key} className="min-w-0 rounded-xl border border-gray-200 bg-white p-3 md:p-5" style={{ borderLeft: `3px solid ${kart.renk}` }}>
-            <h2 className="mb-2 text-xs font-bold uppercase tracking-wide text-gray-400">{kart.ad}</h2>
-            <div className="text-2xl font-extrabold leading-none text-gray-900 tabular-nums md:text-3xl">{netKart ? (data ? fmt(data.katki.netPuan) : '—') : katki?.yuzde != null ? `%${fmt(katki.yuzde)}` : '—'}</div>
-            <p className="mt-1.5 min-h-4 text-xs text-gray-500 tabular-nums">{netKart ? takimGorunumu ? yonetici ? 'Seçili takımdaki temsilcilerin toplamı' : 'Takımınızdaki temsilcilerin toplamı' : 'Bölgenizdeki temsilcilerin toplamı' : katki && data ? `${fmt(data.katki.netPuan)} / ${fmt(katki.toplam)} net puan` : '\u00a0'}</p>
+          return <div key={kart.key} className="min-w-0 rounded-xl border border-[var(--tema-yerel-rapor-cizgi-43)] bg-[var(--tema-yerel-rapor-kart-04)] p-3 md:p-5" style={{ borderLeft: `3px solid ${kart.renk}` }}>
+            <h2 className="mb-2 text-xs font-bold uppercase tracking-wide text-[var(--tema-yerel-rapor-yardimci-metin-62)]">{kart.ad}</h2>
+            <div className="text-2xl font-extrabold leading-none text-[var(--tema-yerel-rapor-ana-metin-19)] tabular-nums md:text-3xl">{netKart ? (data ? fmt(data.katki.netPuan) : '—') : katki?.yuzde != null ? `%${fmt(katki.yuzde)}` : '—'}</div>
+            <p className="mt-1.5 min-h-4 text-xs text-[var(--tema-yerel-rapor-yardimci-metin-07)] tabular-nums">{netKart ? takimGorunumu ? yonetici ? 'Seçili takımdaki temsilcilerin toplamı' : 'Takımınızdaki temsilcilerin toplamı' : 'Bölgenizdeki temsilcilerin toplamı' : katki && data ? `${fmt(data.katki.netPuan)} / ${fmt(katki.toplam)} net puan` : '\u00a0'}</p>
           </div>;
         })}
       </section>
@@ -152,22 +152,22 @@ export default function DavranisRaporu({ rol }: { rol: 'utt' | 'bm' | 'tm' | 'yo
             event.currentTarget.parentElement?.querySelectorAll('button')[hedef]?.focus();
           }}>{sekme.ad}</SadeKontrolButonu>)}
       </SadeKontrolGrubu>
-      {raporHatasi && <div role="alert" className="mt-5 mb-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">{raporHatasi}<button onClick={raporuYenile} className="ml-3 font-bold underline">Tekrar dene</button></div>}
-      {karsilastirma && !karsilastirmaSecildi && <p className="mt-5 rounded-xl border border-[#dbe5ef] bg-white p-5 text-sm text-[#667e98]">{takimRolu ? 'Karşılaştırmak için iki bölge müdürü seçiniz.' : 'Karşılaştırmak için iki temsilci seçiniz.'}</p>}
+      {raporHatasi && <div role="alert" className="mt-5 mb-4 rounded-xl border border-[var(--tema-yerel-rapor-islevsel-cizgi-07)] bg-[var(--tema-yerel-rapor-islevsel-zemin-24)] p-4 text-sm text-[var(--tema-yerel-rapor-islevsel-metin-37)]">{raporHatasi}<button onClick={raporuYenile} className="ml-3 font-bold underline">Tekrar dene</button></div>}
+      {karsilastirma && !karsilastirmaSecildi && <p className="mt-5 rounded-xl border border-[var(--tema-yerel-rapor-cizgi-26)] bg-[var(--tema-yerel-rapor-kart-04)] p-5 text-sm text-[var(--tema-yerel-rapor-yardimci-metin-23)]">{takimRolu ? 'Karşılaştırmak için iki bölge müdürü seçiniz.' : 'Karşılaştırmak için iki temsilci seçiniz.'}</p>}
       {(!karsilastirma || karsilastirmaSecildi) && (bekliyor || data) && <div className="pt-5" id="rapor-davranis-panel" role="tabpanel" aria-labelledby={`davranis-tab-${davranis}`} aria-busy={loading || yenileniyor}>
         {GRUPLAR.filter(grup => davranis === 'tumu' || grup.key === davranis).map(grup => <section key={grup.key} aria-label={grup.ad} className={styles.behaviorGroup}>
           {davranis === 'tumu' && <h2 className={styles.behaviorGroupTitle}>{grup.ad}</h2>}
           <div className={styles.analysisGrid}>
             {gorunurBolumler.filter(b => b.grup === grup.key).map(b => bekliyor
-              ? <div key={b.ad} className={`${styles.panel} h-64 animate-pulse bg-slate-50`} />
+              ? <div key={b.ad} className={`${styles.panel} h-64 animate-pulse bg-[var(--tema-yerel-rapor-sayfa-zemini-28)]`} />
               : <section key={b.ad} className={`${styles.panel} ${styles.behaviorCard}`}>
-          <div className={styles.sectionHeader}><div><h3 className="text-base font-extrabold text-[#203653]">{b.ad}</h3><p className="mt-1 text-xs font-bold leading-5 text-[#7b8da3]">{b.aciklama}</p></div><span className={styles.sectionIcon}><b.icon size={18} /></span></div>
+          <div className={styles.sectionHeader}><div><h3 className="text-base font-extrabold text-[var(--tema-yerel-rapor-ana-metin-12)]">{b.ad}</h3><p className="mt-1 text-xs font-bold leading-5 text-[var(--tema-yerel-rapor-yardimci-metin-22)]">{b.aciklama}</p></div><span className={styles.sectionIcon}><b.icon size={18} /></span></div>
           {karsilastirma ? <table className={styles.comparisonTable}>
             <thead><tr><th scope="col"><span className="sr-only">Ölçüt</span></th><th scope="col">{ilkAd}</th><th scope="col">{ikinciAd}</th></tr></thead>
             <tbody>{b.rows.map(([ad, key]) => <tr key={key}><th scope="row">{ad}</th><td>{goster(key)}</td><td>{goster(key, ikinciD)}</td></tr>)}</tbody>
           </table> : <dl>{b.rows.map(([ad, key]) => <div key={key} className={styles.behaviorRow}><dt>{ad}</dt><dd>{goster(key)}</dd></div>)}</dl>}
 
-          {b.agirlik && <div className={styles.weights}><p className="mb-2 text-[11px] font-bold text-[#7b8da3]">{b.agirlik === 'tamamlama' ? 'Tamamlanan öğrenme araçlarının puan ağırlığı sayısı' : b.agirlik === 'dogru' ? 'Doğru cevap sayıları ve puanları' : 'Yanlış cevap sayıları ve puanları'}</p><div className={karsilastirma ? styles.comparisonWeights : undefined}>{(karsilastirma ? [{ ad: ilkAd, degerler: d }, { ad: ikinciAd, degerler: ikinciD }] : [{ ad: '', degerler: d }]).map((k, i) => <div key={i}>{karsilastirma && <p className="mb-2 text-xs font-bold text-[#203653]">{k.ad}</p>}<div className="flex flex-wrap gap-2">{Object.entries(k.degerler).filter(([k, v]) => k.startsWith(`${b.agirlik}_agirlik_`) && v > 0).sort(([a], [z]) => Number(a.split('_').at(-1)) - Number(z.split('_').at(-1))).map(([k, v]) => <span key={k} className={styles.weightPill}>{b.agirlik === 'tamamlama' ? `${k.split('_').at(-1)} puanlık · ${fmt(v)} yayın` : `${fmt(v)} cevap ${k.split('_').at(-1)}'er puanlık`}</span>)}{!Object.keys(k.degerler).some(k => k.startsWith(`${b.agirlik}_agirlik_`)) && <span className="text-xs text-[#8a9aaf]">Bu seçimde kayıt yok.</span>}</div></div>)}</div></div>}
+          {b.agirlik && <div className={styles.weights}><p className="mb-2 text-[11px] font-bold text-[var(--tema-yerel-rapor-yardimci-metin-22)]">{b.agirlik === 'tamamlama' ? 'Tamamlanan öğrenme araçlarının puan ağırlığı sayısı' : b.agirlik === 'dogru' ? 'Doğru cevap sayıları ve puanları' : 'Yanlış cevap sayıları ve puanları'}</p><div className={karsilastirma ? styles.comparisonWeights : undefined}>{(karsilastirma ? [{ ad: ilkAd, degerler: d }, { ad: ikinciAd, degerler: ikinciD }] : [{ ad: '', degerler: d }]).map((k, i) => <div key={i}>{karsilastirma && <p className="mb-2 text-xs font-bold text-[var(--tema-yerel-rapor-ana-metin-12)]">{k.ad}</p>}<div className="flex flex-wrap gap-2">{Object.entries(k.degerler).filter(([k, v]) => k.startsWith(`${b.agirlik}_agirlik_`) && v > 0).sort(([a], [z]) => Number(a.split('_').at(-1)) - Number(z.split('_').at(-1))).map(([k, v]) => <span key={k} className={styles.weightPill}>{b.agirlik === 'tamamlama' ? `${k.split('_').at(-1)} puanlık · ${fmt(v)} yayın` : `${fmt(v)} cevap ${k.split('_').at(-1)}'er puanlık`}</span>)}{!Object.keys(k.degerler).some(k => k.startsWith(`${b.agirlik}_agirlik_`)) && <span className="text-xs text-[var(--tema-yerel-rapor-yardimci-metin-63)]">Bu seçimde kayıt yok.</span>}</div></div>)}</div></div>}
               </section>)}
           </div>
         </section>)}

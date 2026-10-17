@@ -194,15 +194,15 @@ export default function HapbiMaskot() {
         } ${isHovered && !chatAcik && !surukleniyor ? "opacity-100" : "opacity-0"}`}
       >
         <div
-          className="bg-gray-900/95 backdrop-blur-md text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg shadow-black/10 flex items-center gap-1.5 whitespace-nowrap border border-white/10"
+          className="bg-[var(--tema-bi-ipucu-zemin)]/95 backdrop-blur-md text-[var(--tema-bi-ipucu-ters-metin)] text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg shadow-[color:var(--tema-bi-ipucu-golge)]/10 flex items-center gap-1.5 whitespace-nowrap border border-[var(--tema-bi-ipucu-cizgi)]/10"
         >
-          <span className="font-extrabold text-orange-400 tracking-tight">bi</span>
-          <span className="text-gray-600">|</span>
-          <div className="text-gray-200 flex items-center gap-1.5">
+          <span className="font-extrabold text-[var(--tema-bi-ipucu-kimlik)] tracking-tight">bi</span>
+          <span className="text-[var(--tema-bi-ipucu-ayirici)]">|</span>
+          <div className="text-[var(--tema-bi-ipucu-metin)] flex items-center gap-1.5">
             <span>Sor</span>
-            <span className="w-1 h-1 rounded-full bg-orange-400/80 flex-shrink-0" />
+            <span className="w-1 h-1 rounded-full bg-[var(--tema-bi-ipucu-kimlik)]/80 flex-shrink-0" />
             <span>Öğren</span>
-            <span className="w-1 h-1 rounded-full bg-orange-400/80 flex-shrink-0" />
+            <span className="w-1 h-1 rounded-full bg-[var(--tema-bi-ipucu-kimlik)]/80 flex-shrink-0" />
             <span>Değiştir</span>
           </div>
         </div>

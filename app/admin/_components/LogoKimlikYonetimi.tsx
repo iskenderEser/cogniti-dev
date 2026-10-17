@@ -130,17 +130,17 @@ export default function LogoKimlikYonetimi({ firma, onGuncelle }: LogoKimlikYone
         borderRadius: "14px",
         padding: "24px",
         maxWidth: "760px",
-        background: "white",
+        background: "var(--tema-yerel-yonetim-kart-01)",
         fontFamily: "'Nunito', sans-serif",
       }}
     >
       {/* Üst Başlık & Durum Rozeti */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "16px" }}>
         <div>
-          <h2 style={{ fontSize: "16px", fontWeight: 700, color: "#111827", margin: 0 }}>
+          <h2 style={{ fontSize: "16px", fontWeight: 700, color: "var(--tema-yerel-yonetim-ana-metin-04)", margin: 0 }}>
             {firma.firma_adi} · Logo ve Kimlik Yönetimi
           </h2>
-          <p style={{ fontSize: "12.5px", color: "#6b7280", marginTop: "3px", margin: 0 }}>
+          <p style={{ fontSize: "12.5px", color: "var(--tema-yerel-yonetim-yardimci-metin-02)", marginTop: "3px", margin: 0 }}>
             İç müşteri panelinde (UTT, üretici vb.) HapBilgi logosu yanında görünecek kurumsal logo ve resmi öğrenme ortaklığı.
           </p>
         </div>
@@ -154,15 +154,15 @@ export default function LogoKimlikYonetimi({ firma, onGuncelle }: LogoKimlikYone
                 fontWeight: 700,
                 padding: "3px 12px",
                 borderRadius: "999px",
-                background: "#f0fdf4",
-                color: "#166534",
-                border: "1px solid #bbf7d0",
+                background: "var(--tema-yerel-yonetim-islevsel-zemin-07)",
+                color: "var(--tema-yerel-yonetim-islevsel-metin-10)",
+                border: "1px solid var(--tema-yerel-yonetim-islevsel-cizgi-04)",
                 display: "inline-flex",
                 alignItems: "center",
                 gap: "5px",
               }}
             >
-              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#16a34a" }} />
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--tema-yerel-yonetim-islevsel-zemin-08)" }} />
               Yayında
             </span>
           )}
@@ -173,15 +173,15 @@ export default function LogoKimlikYonetimi({ firma, onGuncelle }: LogoKimlikYone
                 fontWeight: 700,
                 padding: "3px 12px",
                 borderRadius: "999px",
-                background: "#fefce8",
-                color: "#854d0e",
-                border: "1px solid #fef08a",
+                background: "var(--tema-yerel-yonetim-sayfa-zemini-03)",
+                color: "var(--tema-yerel-yonetim-islevsel-metin-11)",
+                border: "1px solid var(--tema-yerel-yonetim-islevsel-cizgi-05)",
                 display: "inline-flex",
                 alignItems: "center",
                 gap: "5px",
               }}
             >
-              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#ca8a04" }} />
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--tema-yerel-yonetim-islevsel-zemin-09)" }} />
               Durduruldu
             </span>
           )}
@@ -192,9 +192,9 @@ export default function LogoKimlikYonetimi({ firma, onGuncelle }: LogoKimlikYone
                 fontWeight: 600,
                 padding: "3px 12px",
                 borderRadius: "999px",
-                background: "#f3f4f6",
-                color: "#6b7280",
-                border: "1px solid #e5e7eb",
+                background: "var(--tema-yerel-yonetim-sayfa-zemini-04)",
+                color: "var(--tema-yerel-yonetim-yardimci-metin-02)",
+                border: "1px solid var(--tema-yerel-yonetim-cizgi-01)",
                 whiteSpace: "nowrap",
               }}
             >
@@ -206,18 +206,18 @@ export default function LogoKimlikYonetimi({ firma, onGuncelle }: LogoKimlikYone
 
       {/* Canlı Simülasyon / Önizleme Kutusu */}
       <div style={{ marginBottom: "24px" }}>
-        <div style={{ fontSize: "11.5px", fontWeight: 700, textTransform: "uppercase", color: "#6b7280", letterSpacing: "0.5px", marginBottom: "8px" }}>
+        <div style={{ fontSize: "11.5px", fontWeight: 700, textTransform: "uppercase", color: "var(--tema-yerel-yonetim-yardimci-metin-02)", letterSpacing: "0.5px", marginBottom: "8px" }}>
           Header Görünüm Önizlemesi
         </div>
         <div
           style={{
-            background: "#ffffff",
-            border: "1px solid #e5e7eb",
+            background: "var(--tema-yerel-yonetim-kart-02)",
+            border: "1px solid var(--tema-yerel-yonetim-cizgi-01)",
             borderRadius: "10px",
             padding: "12px 20px",
             display: "flex",
             alignItems: "center",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.03)",
+            boxShadow: "0 2px 8px var(--tema-yerel-yonetim-golge-02)",
             minHeight: "68px",
           }}
         >
@@ -228,7 +228,7 @@ export default function LogoKimlikYonetimi({ firma, onGuncelle }: LogoKimlikYone
             style={{ height: "42px", width: "auto", display: "block" }}
           />
 
-          <div style={{ height: "28px", width: "1.5px", background: "#e2e8f0", margin: "0 16px" }} />
+          <div style={{ height: "28px", width: "1.5px", background: "var(--tema-yerel-yonetim-secim-zemin-01)", margin: "0 16px" }} />
 
           {/* Firma Logo & Metin */}
           {logoUrl.trim() ? (
@@ -243,23 +243,23 @@ export default function LogoKimlikYonetimi({ firma, onGuncelle }: LogoKimlikYone
                   }}
                 />
               </div>
-              <span style={{ fontSize: "11px", fontWeight: 400, color: "#64748b", whiteSpace: "nowrap" }}>
+              <span style={{ fontSize: "11px", fontWeight: 400, color: "var(--tema-yerel-yonetim-yardimci-metin-03)", whiteSpace: "nowrap" }}>
                 resmi öğrenme platformu
               </span>
             </div>
           ) : (
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#9ca3af", fontSize: "12px", fontStyle: "italic" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--tema-yerel-yonetim-yardimci-metin-04)", fontSize: "12px", fontStyle: "italic" }}>
               <div
                 style={{
                   width: "115px",
                   height: "32px",
-                  border: "1px dashed #d1d5db",
+                  border: "1px dashed var(--tema-yerel-yonetim-cizgi-02)",
                   borderRadius: "6px",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   fontSize: "11px",
-                  color: "#9ca3af",
+                  color: "var(--tema-yerel-yonetim-yardimci-metin-04)",
                 }}
               >
                 Firma Logosu
@@ -269,7 +269,7 @@ export default function LogoKimlikYonetimi({ firma, onGuncelle }: LogoKimlikYone
           )}
 
           {!ogrenmeAktif && logoUrl.trim() && (
-            <span style={{ marginLeft: "auto", fontSize: "11px", color: "#9ca3af", fontStyle: "italic" }}>
+            <span style={{ marginLeft: "auto", fontSize: "11px", color: "var(--tema-yerel-yonetim-yardimci-metin-04)", fontStyle: "italic" }}>
               (Yayın durdurulduğu için kullanıcılara gizlidir)
             </span>
           )}
@@ -277,8 +277,8 @@ export default function LogoKimlikYonetimi({ firma, onGuncelle }: LogoKimlikYone
       </div>
 
       {/* Logo Ekleme / Düzenleme Alanı */}
-      <div style={{ background: "#f9fafb", padding: "16px", borderRadius: "10px", border: "0.5px solid #e5e7eb", marginBottom: "20px" }}>
-        <label style={{ display: "block", fontSize: "12.5px", fontWeight: 700, color: "#374151", marginBottom: "6px" }}>
+      <div style={{ background: "var(--tema-yerel-yonetim-sayfa-zemini-02)", padding: "16px", borderRadius: "10px", border: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)", marginBottom: "20px" }}>
+        <label style={{ display: "block", fontSize: "12.5px", fontWeight: 700, color: "var(--tema-yerel-yonetim-ana-metin-03)", marginBottom: "6px" }}>
           Logo URL veya Dosya Yükleme
         </label>
         
@@ -292,9 +292,9 @@ export default function LogoKimlikYonetimi({ firma, onGuncelle }: LogoKimlikYone
               flex: 1,
               padding: "9px 12px",
               fontSize: "13px",
-              border: "1px solid #d1d5db",
+              border: "1px solid var(--tema-yerel-yonetim-cizgi-02)",
               borderRadius: "8px",
-              background: "white",
+              background: "var(--tema-yerel-yonetim-kart-01)",
               outline: "none",
               fontFamily: "'Nunito', sans-serif",
             }}
@@ -314,22 +314,22 @@ export default function LogoKimlikYonetimi({ firma, onGuncelle }: LogoKimlikYone
             disabled={dosyaYukleniyor || yukleniyor}
             style={{
               ...btnBase,
-              background: "#ffffff",
-              color: "#374151",
-              borderColor: "#d1d5db",
+              background: "var(--tema-yerel-yonetim-kart-02)",
+              color: "var(--tema-yerel-yonetim-ana-metin-03)",
+              borderColor: "var(--tema-yerel-yonetim-cizgi-02)",
               whiteSpace: "nowrap",
             }}
           >
             {dosyaYukleniyor ? "Yükleniyor..." : "Dosya Seç"}
           </button>
         </div>
-        <p style={{ fontSize: "11.5px", color: "#6b7280", marginTop: "6px", margin: 0 }}>
+        <p style={{ fontSize: "11.5px", color: "var(--tema-yerel-yonetim-yardimci-metin-02)", marginTop: "6px", margin: 0 }}>
           💡 Tavsiye: Beyaz/açık header zemininde net görünmesi için şeffaf zeminli (PNG veya SVG) koyu renkli logo kullanınız (Maks. 5 MB - yüklenirken Retina netliğinde otomatik optimize edilir).
         </p>
       </div>
 
       {/* Alt Buton Grubu: Ekle, Durdur, Kaldır */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: "12px", borderTop: "1px solid #f3f4f6" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: "12px", borderTop: "1px solid var(--tema-yerel-yonetim-cizgi-05)" }}>
         {/* Sol Grup: Ekle / Güncelle ve Durdur / Yayına Al */}
         <div style={{ display: "flex", gap: "10px" }}>
           <button
@@ -339,7 +339,7 @@ export default function LogoKimlikYonetimi({ firma, onGuncelle }: LogoKimlikYone
             style={{
               ...btnBase,
               background: RENK_BORDO,
-              color: "white",
+              color: "var(--tema-yerel-yonetim-ters-metin-01)",
               border: "none",
               opacity: yukleniyor ? 0.7 : 1,
             }}
@@ -354,9 +354,9 @@ export default function LogoKimlikYonetimi({ firma, onGuncelle }: LogoKimlikYone
               disabled={yukleniyor || dosyaYukleniyor}
               style={{
                 ...btnBase,
-                background: ogrenmeAktif ? "#fef3c7" : "#dcfce7",
-                color: ogrenmeAktif ? "#92400e" : "#166534",
-                borderColor: ogrenmeAktif ? "#fde68a" : "#bbf7d0",
+                background: ogrenmeAktif ? "var(--tema-yerel-yonetim-islevsel-zemin-10)" : "var(--tema-yerel-yonetim-islevsel-zemin-05)",
+                color: ogrenmeAktif ? "var(--tema-yerel-yonetim-islevsel-metin-01)" : "var(--tema-yerel-yonetim-islevsel-metin-10)",
+                borderColor: ogrenmeAktif ? "var(--tema-yerel-yonetim-islevsel-cizgi-06)" : "var(--tema-yerel-yonetim-islevsel-cizgi-04)",
                 opacity: yukleniyor ? 0.7 : 1,
               }}
             >
@@ -373,9 +373,9 @@ export default function LogoKimlikYonetimi({ firma, onGuncelle }: LogoKimlikYone
             disabled={yukleniyor || dosyaYukleniyor}
             style={{
               ...btnBase,
-              background: "#fee2e2",
-              color: "#991b1b",
-              borderColor: "#fecaca",
+              background: "var(--tema-yerel-yonetim-islevsel-zemin-06)",
+              color: "var(--tema-yerel-yonetim-islevsel-metin-12)",
+              borderColor: "var(--tema-yerel-yonetim-islevsel-cizgi-02)",
               opacity: yukleniyor ? 0.7 : 1,
             }}
           >

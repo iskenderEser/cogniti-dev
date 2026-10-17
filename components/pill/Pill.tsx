@@ -37,7 +37,7 @@ export interface PillRenk {
  * Karar 5: aşama sıralı bir konum bilgisidir, uyarı değil — renk yalnız durumda
  * anlam taşısın diye aşama nötre alındı. Böylece aynı renk iki şey demiyor.
  */
-export const NOTR_RENK: PillRenk = { bg: "#f3f4f6", metin: "#4b5563", kenar: "#e5e7eb" };
+export const NOTR_RENK: PillRenk = { bg: "var(--tema-pill-notr-zemin)", metin: "var(--tema-pill-notr-metin)", kenar: "var(--tema-cizgi)" };
 
 // Ölçünün tek satırı. Değişirse tüm pill'ler birlikte değişir — amaç budur.
 const OLCU = "inline-flex items-center rounded-full text-[10px] font-semibold px-2 py-0.5 leading-tight";
@@ -86,7 +86,7 @@ export function PillButon({ children, onClick, secili = false, renk = NOTR_RENK,
       style={
         secili
           ? { background: renk.bg, color: renk.metin, border: `1px solid ${renk.kenar}` }
-          : { background: "transparent", color: "#6b7280", border: "1px solid #e5e7eb" }
+          : { background: "transparent", color: "var(--tema-ikincil-metin)", border: "1px solid var(--tema-cizgi)" }
       }
     >
       {children}

@@ -6,10 +6,10 @@ export const YAYIN_TURU_SUNUMU: Record<OgrenmeAraciTuru, {
   renk: string;
   zemin: string;
 }> = {
-  video: { etiket: "Video", cogulEtiket: "Videolar", renk: "#1d4ed8", zemin: "#dbeafe" },
-  podcast: { etiket: "Podcast", cogulEtiket: "Podcastler", renk: "#7e22ce", zemin: "#f3e8ff" },
-  gorsel: { etiket: "Dijital Broşür", cogulEtiket: "Dijital Broşürler", renk: "#047857", zemin: "#d1fae5" },
-  flip_pdf: { etiket: "Literatür", cogulEtiket: "Literatürler", renk: "#b45309", zemin: "#fef3c7" },
+  video: { etiket: "Video", cogulEtiket: "Videolar", renk: "var(--tema-arac-video-metin)", zemin: "var(--tema-arac-video-zemin)" },
+  podcast: { etiket: "Podcast", cogulEtiket: "Podcastler", renk: "var(--tema-arac-podcast-metin)", zemin: "var(--tema-arac-podcast-zemin)" },
+  gorsel: { etiket: "Dijital Broşür", cogulEtiket: "Dijital Broşürler", renk: "var(--tema-arac-gorsel-metin)", zemin: "var(--tema-arac-gorsel-zemin)" },
+  flip_pdf: { etiket: "Literatür", cogulEtiket: "Literatürler", renk: "var(--tema-arac-flip_pdf-metin)", zemin: "var(--tema-arac-flip_pdf-zemin)" },
 };
 
 export const YAYIN_TURLERI = Object.keys(YAYIN_TURU_SUNUMU) as OgrenmeAraciTuru[];

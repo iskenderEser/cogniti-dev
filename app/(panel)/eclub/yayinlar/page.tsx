@@ -29,7 +29,7 @@ type HedefGrubu = "eczaci" | "eczane_teknisyeni" | "ortak";
 const HEDEF_GRUPLARI: { anahtar: HedefGrubu; etiket: string; aciklama: string; renk: string }[] = [
   { anahtar: "eczaci", etiket: "Eczacılar", aciklama: "Yalnız eczacılara uygun", renk: HEDEF_ROL_TASARIM.eczaci.renk },
   { anahtar: "eczane_teknisyeni", etiket: "Eczane Teknisyenleri", aciklama: "Yalnız teknisyenlere uygun", renk: HEDEF_ROL_TASARIM.eczane_teknisyeni.renk },
-  { anahtar: "ortak", etiket: "Eczacı ve Eczane Teknisyeni", aciklama: "Her iki hedef kitleye uygun", renk: "#5367c7" },
+  { anahtar: "ortak", etiket: "Eczacı ve Eczane Teknisyeni", aciklama: "Her iki hedef kitleye uygun", renk: "var(--tema-yerel-eclub-eylem-metin-07)" },
 ];
 
 const hedefGrubu = (video: Pick<OneriYayin, "hedef_roller">): HedefGrubu => {
@@ -41,7 +41,7 @@ const hedefGrubu = (video: Pick<OneriYayin, "hedef_roller">): HedefGrubu => {
 
 export default function EclubVideolarimPage() {
   const { kullanici, yukleniyor } = useAuth();
-  if (yukleniyor) return <div className="flex min-h-full items-center justify-center bg-gray-50"><svg className="size-6 animate-spin text-gray-500" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg></div>;
+  if (yukleniyor) return <div className="flex min-h-full items-center justify-center bg-[var(--tema-yerel-eclub-sayfa-zemini-02)]"><svg className="size-6 animate-spin text-[var(--tema-yerel-eclub-yardimci-metin-08)]" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg></div>;
   if ((kullanici?.rol ?? "").toLowerCase() === "bm") return <BmEclubYayinlari />;
   if ((kullanici?.rol ?? "").toLowerCase() === "tm") return <BmEclubYayinlari rol="tm" />;
   return <UttEclubVideolarimPage />;
@@ -121,13 +121,13 @@ function UttEclubVideolarimPage() {
   };
 
   if (authYukleniyor || !kullanici || loading) {
-    return <div className="flex min-h-full items-center justify-center bg-gray-50"><svg className="size-6 animate-spin text-gray-500" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg></div>;
+    return <div className="flex min-h-full items-center justify-center bg-[var(--tema-yerel-eclub-sayfa-zemini-02)]"><svg className="size-6 animate-spin text-[var(--tema-yerel-eclub-yardimci-metin-08)]" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg></div>;
   }
 
   if (aktifVideo) {
     return (
       <div className="mx-auto flex max-w-[1480px] flex-col gap-4 px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
-        <button type="button" onClick={() => setAktifVideo(null)} className="flex w-fit items-center gap-1.5 border-0 bg-transparent p-0 text-sm font-semibold text-gray-500 hover:text-gray-700">
+        <button type="button" onClick={() => setAktifVideo(null)} className="flex w-fit items-center gap-1.5 border-0 bg-transparent p-0 text-sm font-semibold text-[var(--tema-yerel-eclub-yardimci-metin-08)] hover:text-[var(--tema-yerel-eclub-ana-metin-26)]">
           <ChevronLeft className="size-4" /> Öğrenme içerikleri
         </button>
         <UttGonderimIncelemesi
@@ -146,15 +146,15 @@ function UttEclubVideolarimPage() {
   }
 
   return (
-    <div className="min-h-full bg-gray-50 pb-20" style={{ fontFamily: "'Nunito', sans-serif" }}>
+    <div className="min-h-full bg-[var(--tema-yerel-eclub-sayfa-zemini-02)] pb-20" style={{ fontFamily: "'Nunito', sans-serif" }}>
       <div className="mx-auto flex max-w-[1480px] flex-col gap-5 px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
         <SayfaYenileBasligi className="flex flex-wrap items-end justify-between gap-4"
           baslik={<div className="inline-flex items-center">
-            <h1 className="text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]">E-Club Yayınları</h1>
+            <h1 className="text-2xl font-extrabold tracking-[-0.025em] text-[var(--tema-yerel-eclub-ana-metin-01)] md:text-[28px]">E-Club Yayınları</h1>
             <SayfaRehberi anahtar="eclub-yayinlar" className="ml-1.5 -translate-y-1.5" />
           </div>}
 
-          aciklama={<><p className="mt-1 max-w-3xl text-sm leading-5 text-[#6b7f9b]">Uygun öğrenme içeriğini seçerek, eczacılara ve eczane teknisyenlerine gönderebilirsiniz.</p></>}
+          aciklama={<><p className="mt-1 max-w-3xl text-sm leading-5 text-[var(--tema-yerel-eclub-yardimci-metin-01)]">Uygun öğrenme içeriğini seçerek, eczacılara ve eczane teknisyenlerine gönderebilirsiniz.</p></>}
           aksiyon={<YenileButonu yenileniyor={yenileniyor} onYenile={() => { if (!gonderLoading) void veriCek(); }} />}
 
         />
@@ -163,13 +163,13 @@ function UttEclubVideolarimPage() {
           {HEDEF_GRUPLARI.map((grup) => {
             const secili = aktifHedef === grup.anahtar;
             const gonderilen = gruplar[grup.anahtar].filter((video) => gonderilenYayinlar.has(video.yayin_id)).length;
-            const ortakSinif = "bg-white border border-gray-200 border-l-[3px] [border-left-color:var(--stat-renk)] rounded-xl p-3 text-left md:p-5 transition-all";
-            const stil = { "--stat-renk": grup.renk, boxShadow: secili ? `0 0 0 2px ${grup.renk}22` : "none" } as CSSProperties;
+            const ortakSinif = "bg-[var(--tema-yerel-eclub-kart-01)] border border-[var(--tema-yerel-eclub-cizgi-04)] border-l-[3px] [border-left-color:var(--stat-renk)] rounded-xl p-3 text-left md:p-5 transition-all";
+            const stil = { "--stat-renk": grup.renk, boxShadow: secili ? `0 0 0 2px var(--tema-hedef-${grup.anahtar}-secili)` : "none" } as CSSProperties;
             return (
               <button type="button" key={grup.anahtar} disabled={gonderLoading} onClick={() => { setAktifHedef(grup.anahtar); secimSifirla(); }} aria-pressed={secili} className={`${ortakSinif} cursor-pointer hover:-translate-y-0.5 hover:shadow-md`} style={stil}>
-                <div className="mb-2 text-xs font-bold uppercase tracking-wide text-gray-400">{grup.etiket}</div>
-                <div className="text-2xl font-extrabold leading-none text-gray-900 md:text-3xl">{gruplar[grup.anahtar].length.toLocaleString("tr-TR")}</div>
-                <div className="mt-1.5 hidden text-xs text-gray-500 md:block">Yayındaki toplam yayın · {gonderilen} yayın gönderdiniz</div>
+                <div className="mb-2 text-xs font-bold uppercase tracking-wide text-[var(--tema-yerel-eclub-yardimci-metin-03)]">{grup.etiket}</div>
+                <div className="text-2xl font-extrabold leading-none text-[var(--tema-yerel-eclub-ana-metin-23)] md:text-3xl">{gruplar[grup.anahtar].length.toLocaleString("tr-TR")}</div>
+                <div className="mt-1.5 hidden text-xs text-[var(--tema-yerel-eclub-yardimci-metin-08)] md:block">Yayındaki toplam yayın · {gonderilen} yayın gönderdiniz</div>
               </button>
             );
           })}
@@ -206,11 +206,11 @@ function UttEclubVideolarimPage() {
             />
           </div>
           <div className="mb-3">
-            <h2 className="text-base font-extrabold text-[#203653]">{HEDEF_GRUPLARI.find((grup) => grup.anahtar === aktifHedef)?.etiket} İçin Öğrenme İçerikleri</h2>
-            <p className="mt-0.5 text-[11px] font-semibold text-[#7b8da5]">{gonderimFiltresi === "planlanan" ? new Set(gorunenPlanlar.map(p => p.yayin_id)).size : gorunenYayinlar.length} yayın gösteriliyor</p>
+            <h2 className="text-base font-extrabold text-[var(--tema-yerel-eclub-ana-metin-06)]">{HEDEF_GRUPLARI.find((grup) => grup.anahtar === aktifHedef)?.etiket} İçin Öğrenme İçerikleri</h2>
+            <p className="mt-0.5 text-[11px] font-semibold text-[var(--tema-yerel-eclub-yardimci-metin-06)]">{gonderimFiltresi === "planlanan" ? new Set(gorunenPlanlar.map(p => p.yayin_id)).size : gorunenYayinlar.length} yayın gösteriliyor</p>
           </div>
           {gonderimFiltresi === "planlanan" ? <EclubPlanlananlar planlar={gorunenPlanlar} kisiler={kisiler} /> : gorunenYayinlar.length === 0 ? (
-            <div className="rounded-2xl border border-[#dfe7f1] bg-white px-4 py-14 text-center text-sm font-semibold text-[#8090a4]">{aktifYayinTuru !== "tumu" ? "Seçilen yayın türünde bu listede yayın bulunmuyor." : gonderimFiltresi === "gonderilebilir" ? "İncelemesini tamamladığınız yayın bulunmuyor." : gonderimFiltresi === "gonderilen" ? "Henüz gönderilmiş yayın bulunmuyor." : "Bu hedef kitle için yayında öğrenme içeriği bulunmuyor."}</div>
+            <div className="rounded-2xl border border-[var(--tema-yerel-eclub-cizgi-03)] bg-[var(--tema-yerel-eclub-kart-01)] px-4 py-14 text-center text-sm font-semibold text-[var(--tema-yerel-eclub-yardimci-metin-32)]">{aktifYayinTuru !== "tumu" ? "Seçilen yayın türünde bu listede yayın bulunmuyor." : gonderimFiltresi === "gonderilebilir" ? "İncelemesini tamamladığınız yayın bulunmuyor." : gonderimFiltresi === "gonderilen" ? "Henüz gönderilmiş yayın bulunmuyor." : "Bu hedef kitle için yayında öğrenme içeriği bulunmuyor."}</div>
           ) : <MobilYayinAkisi
             kayitlar={[...gorunenYayinlar].sort((a, b) => new Date(b.yayin_tarihi).getTime() - new Date(a.yayin_tarihi).getTime())}
             kayitAnahtari={(video) => video.yayin_id}

@@ -125,23 +125,23 @@ export function PushAbonelik() {
   if (!kullanici || !kartAcik) return null;
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 w-80 rounded-xl border border-neutral-200 bg-white p-4 shadow-lg">
-      <p className="text-sm font-semibold text-neutral-800">Bildirimleri açalım mı?</p>
-      <p className="mt-1 text-sm text-neutral-500">
+    <div className="fixed bottom-4 right-4 z-50 w-80 rounded-xl border border-[var(--tema-yerel-ortak-sayfa-cizgi-07)] bg-[var(--tema-yerel-ortak-sayfa-kart-01)] p-4 shadow-lg">
+      <p className="text-sm font-semibold text-[var(--tema-yerel-ortak-sayfa-ana-metin-09)]">Bildirimleri açalım mı?</p>
+      <p className="mt-1 text-sm text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-13)]">
         Sizi ilgilendiren gelişmeleri (onaylar, öneriler, yeni videolar) HapBilgi
         kapalıyken de tarayıcı bildirimi olarak alırsınız.
       </p>
       <div className="mt-3 flex justify-end gap-2">
         <button
           onClick={ertele}
-          className="rounded-lg px-3 py-1.5 text-sm text-neutral-500 hover:bg-neutral-100"
+          className="rounded-lg px-3 py-1.5 text-sm text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-13)] hover:bg-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-07)]"
         >
           Daha sonra
         </button>
         <button
           onClick={izinVer}
-          className="rounded-lg px-3 py-1.5 text-sm font-semibold text-white"
-          style={{ backgroundColor: "#bc2d0d" }}
+          className="rounded-lg px-3 py-1.5 text-sm font-semibold text-[var(--tema-yerel-ortak-sayfa-ters-metin-01)]"
+          style={{ backgroundColor: "var(--tema-yerel-ortak-sayfa-vurgu-zemin-01)" }}
         >
           İzin ver
         </button>

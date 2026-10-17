@@ -39,7 +39,7 @@ export function YayinKumandaPaneli({
   aksiyon,
 }: Props) {
   const hedefTasarimi = aktifHedef === ECLUB_ORTAK_YAYIN_GRUBU
-    ? { renk: "#5367c7", bg: "#f0f1ff" }
+    ? { renk: "var(--tema-yerel-uretim-eylem-metin-16)", bg: "var(--tema-yerel-uretim-secim-zemin-15)" }
     : HEDEF_ROL_TASARIM[aktifHedef];
   const durumlar: {
     anahtar: AltSekme;
@@ -55,24 +55,24 @@ export function YayinKumandaPaneli({
       etiket: "Yayına Hazır",
       deger: bekleyen,
       aciklama: "Puanlama ve yayın kararı bekliyor",
-      renk: "#c2410c",
-      zemin: "#fff7ed",
+      renk: "var(--tema-yerel-uretim-islevsel-metin-36)",
+      zemin: "var(--tema-yerel-uretim-islevsel-zemin-15)",
     },
     {
       anahtar: "yayinda",
       etiket: "Yayında",
       deger: canli + planli,
       aciklama: "Hedef kitlenin erişebildiği içerikler",
-      renk: "#167453",
-      zemin: "#ecfdf5",
+      renk: "var(--tema-yerel-uretim-islevsel-metin-37)",
+      zemin: "var(--tema-yerel-uretim-islevsel-zemin-17)",
     },
     {
       anahtar: "durdurulan",
       etiket: "Durdurulan",
       deger: durdurulan,
       aciklama: "Yeniden başlatılabilir yayınlar",
-      renk: "#a33f32",
-      zemin: "#fff1f0",
+      renk: "var(--tema-yerel-uretim-islevsel-metin-38)",
+      zemin: "var(--tema-yerel-uretim-islevsel-zemin-18)",
     },
   ];
 
@@ -80,7 +80,7 @@ export function YayinKumandaPaneli({
     <section aria-labelledby="yayin-merkezi-baslik" className="flex flex-col gap-4">
       <SayfaYenileBasligi
         baslik={<div className="inline-flex items-center">
-          <h1 id="yayin-merkezi-baslik" className="text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]">
+          <h1 id="yayin-merkezi-baslik" className="text-2xl font-extrabold tracking-[-0.025em] text-[var(--tema-yerel-uretim-ana-metin-17)] md:text-[28px]">
             Yayın Yönetimi
           </h1>
           <SayfaRehberi anahtar="yayin-yonetimi" className="ml-1.5 -translate-y-1.5" />
@@ -88,10 +88,10 @@ export function YayinKumandaPaneli({
         aksiyon={aksiyon}
       />
 
-      <div className="rounded-2xl border border-[#dfe8f3] bg-white p-3 shadow-[0_8px_24px_rgba(31,55,90,0.045)] md:p-4">
+      <div className="rounded-2xl border border-[var(--tema-yerel-uretim-cizgi-08)] bg-[var(--tema-yerel-uretim-kart-01)] p-3 shadow-[0_8px_24px_var(--tema-yerel-uretim-golge-01)] md:p-4">
         <div className="mb-3 flex items-center justify-between gap-3">
           <div>
-            <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#7a8da8]">Yayın kitlesi</p>
+            <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-[var(--tema-yerel-uretim-yardimci-metin-24)]">Yayın kitlesi</p>
           </div>
           <span
             className="hidden rounded-full px-2.5 py-1 text-[10px] font-extrabold sm:inline"
@@ -112,7 +112,7 @@ export function YayinKumandaPaneli({
                   {bekleyenSayi > 0 && (
                     <span
                       aria-label={`${bekleyenSayi} yayına hazır içerik`}
-                      className="inline-flex h-[18px] min-w-[18px] shrink-0 items-center justify-center rounded-full bg-[#bc2d0d] px-[5px] text-[10px] font-bold leading-none text-white"
+                      className="inline-flex h-[18px] min-w-[18px] shrink-0 items-center justify-center rounded-full bg-[var(--tema-yerel-uretim-vurgu-zemin-01)] px-[5px] text-[10px] font-bold leading-none text-[var(--tema-yerel-uretim-ters-metin-01)]"
                     >
                       {bekleyenSayi}
                     </span>
@@ -133,10 +133,10 @@ export function YayinKumandaPaneli({
               key={durum.anahtar}
               aria-pressed={aktif}
               onClick={() => onDurumDegistir(durum.anahtar)}
-              className="group rounded-2xl border bg-white px-3.5 py-3.5 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#56aeff]"
+              className="group rounded-2xl border bg-[var(--tema-yerel-uretim-kart-01)] px-3.5 py-3.5 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--tema-yerel-uretim-odak-01)]"
               style={{
-                borderColor: aktif ? durum.renk : "#e1e8f1",
-                boxShadow: aktif ? `0 8px 22px ${durum.renk}18` : "0 6px 18px rgba(31,55,90,0.035)",
+                borderColor: aktif ? durum.renk : "var(--tema-yerel-uretim-cizgi-12)",
+                boxShadow: aktif ? `0 8px 22px color-mix(in srgb, ${durum.renk} 9.411764705882353%, transparent)` : "0 6px 18px var(--tema-yerel-uretim-golge-07)",
               }}
             >
               <span className="flex items-center gap-3">
@@ -151,8 +151,8 @@ export function YayinKumandaPaneli({
                   )}
                 </span>
                 <span className="min-w-0">
-                  <span className="block text-sm font-extrabold text-[#243957]">{durum.etiket}</span>
-                  <span className="mt-0.5 block text-[11px] leading-4 text-[#7b8ca5]">{durum.aciklama}</span>
+                  <span className="block text-sm font-extrabold text-[var(--tema-yerel-uretim-ana-metin-18)]">{durum.etiket}</span>
+                  <span className="mt-0.5 block text-[11px] leading-4 text-[var(--tema-yerel-uretim-yardimci-metin-20)]">{durum.aciklama}</span>
                   {durum.altBilgi && <span className="mt-1 block text-[10px] font-extrabold" style={{ color: durum.renk }}>{durum.altBilgi}</span>}
                 </span>
               </span>

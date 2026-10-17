@@ -110,19 +110,19 @@ function FirmaCalismaAlaniIcerigi({ sekme, firmaRotasi, kullaniciId }: { sekme: 
   const yeniYayinlar = firmaYayinSayilari.yeni;
   const gorunenSekmeler = SEKMELER.filter((secenek) => ["yayinlar", "performans"].includes(secenek.deger) || firma.eclub_store_aktif);
   return <EclubKisiSayfa>
-    <Link href="/eclub/firmalar" className="inline-flex w-fit items-center gap-1.5 text-xs font-bold text-[#237ac8]"><ArrowLeft size={14} /> Firmalara Dön</Link>
+    <Link href="/eclub/firmalar" className="inline-flex w-fit items-center gap-1.5 text-xs font-bold text-[var(--tema-yerel-eclub-eylem-metin-01)]"><ArrowLeft size={14} /> Firmalara Dön</Link>
     <EclubKisiBaslik ikon={Building2} ustEtiket="" baslik={firma.firma_adi} aciklama="Ürünü seçerek yayınları, tamamlama performansını, hediye çeki talebini ve takibini görüntüleyin."
-      baslikAlti={<div aria-busy={panel.loading} className="mb-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs font-semibold text-[#40556d]">
-        <span>Yeni Yayın <strong className="text-[#203653]">{panel.loading ? "…" : `${firmaYayinSayilari.yeni} adet`}</strong></span>
-        <span>Toplam Yayın <strong className="text-[#203653]">{panel.loading ? "…" : `${firmaYayinSayilari.toplam} adet`}</strong></span>
+      baslikAlti={<div aria-busy={panel.loading} className="mb-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs font-semibold text-[var(--tema-yerel-eclub-ana-metin-02)]">
+        <span>Yeni Yayın <strong className="text-[var(--tema-yerel-eclub-ana-metin-06)]">{panel.loading ? "…" : `${firmaYayinSayilari.yeni} adet`}</strong></span>
+        <span>Toplam Yayın <strong className="text-[var(--tema-yerel-eclub-ana-metin-06)]">{panel.loading ? "…" : `${firmaYayinSayilari.toplam} adet`}</strong></span>
       </div>}
       aksiyon={<div ref={setAksiyonAlani} className="ml-auto flex justify-end" />} />
     {sekme !== "performans" && (panel.loading ? <section aria-label="Firma özeti yükleniyor" aria-busy="true" className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-      {[0, 1, 2].map(i => <div key={i} className="h-28 animate-pulse rounded-2xl bg-[#e8eef5]" aria-hidden="true" />)}
+      {[0, 1, 2].map(i => <div key={i} className="h-28 animate-pulse rounded-2xl bg-[var(--tema-yerel-eclub-secim-zemin-18)]" aria-hidden="true" />)}
     </section> : <section aria-label="Firma özeti" className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-      <EclubKisiStat ikon={Sparkles} etiket="Yeni Yayınlar" deger={yeniYayinlar} detay="Tamamlanmayı bekleyenler" renk="#d78022" zemin="#fff6e8" />
-      <EclubKisiStat ikon={CheckCircle2} etiket="Tamamlananlar" deger={tamamlanan} detay="Tamamladığınız içerikler" renk="#16865f" zemin="#ebf8f2" />
-      <EclubKisiStat ikon={Trophy} etiket="Net Puan" deger={Math.max(0, (firmaOzeti?.kazanilan_puan ?? 0) - (firmaOzeti?.kaybedilen_puan ?? 0)).toLocaleString("tr-TR")} detay={`${firmaOzeti?.dogru_cevap ?? 0} doğru · ${firmaOzeti?.kaybedilen_puan ?? 0} ileri sarma kaybı`} renk="#7358c7" zemin="#f2efff" />
+      <EclubKisiStat ikon={Sparkles} etiket="Yeni Yayınlar" deger={yeniYayinlar} detay="Tamamlanmayı bekleyenler" renk="var(--tema-yerel-eclub-islevsel-metin-43)" zemin="var(--tema-yerel-eclub-islevsel-zemin-01)" />
+      <EclubKisiStat ikon={CheckCircle2} etiket="Tamamlananlar" deger={tamamlanan} detay="Tamamladığınız içerikler" renk="var(--tema-yerel-eclub-islevsel-metin-02)" zemin="var(--tema-yerel-eclub-islevsel-zemin-02)" />
+      <EclubKisiStat ikon={Trophy} etiket="Net Puan" deger={Math.max(0, (firmaOzeti?.kazanilan_puan ?? 0) - (firmaOzeti?.kaybedilen_puan ?? 0)).toLocaleString("tr-TR")} detay={`${firmaOzeti?.dogru_cevap ?? 0} doğru · ${firmaOzeti?.kaybedilen_puan ?? 0} ileri sarma kaybı`} renk="var(--tema-yerel-eclub-islevsel-metin-44)" zemin="var(--tema-yerel-eclub-islevsel-zemin-29)" />
     </section>)}
     {veri?.urunler.length ? <>
       <SadeKontrolGrubu tur="sekme" role="tablist" aria-label="Ürünler" className="!flex-nowrap overflow-x-auto">

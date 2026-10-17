@@ -146,11 +146,11 @@ export default function GorselOynatici({
   };
 
   if (!url) {
-    return <div className="p-6 text-center text-sm text-gray-500">Görsel hazırlanıyor…</div>;
+    return <div className="p-6 text-center text-sm text-[var(--tema-oynatici-ikincil-metin)]">Görsel hazırlanıyor…</div>;
   }
 
   return (
-    <div className="flex flex-col gap-3 rounded-xl border border-gray-200 bg-white p-4">
+    <div className="flex flex-col gap-3 rounded-xl border border-[var(--tema-oynatici-cizgi)] bg-[var(--tema-oynatici-yuzey)] p-4">
       {/* Pan ve Zoom özellikli görsel kapsayıcısı */}
       <div
         ref={konteynerRef}
@@ -159,19 +159,19 @@ export default function GorselOynatici({
         onPointerUp={handlePointerUp}
         onPointerCancel={handlePointerUp}
         onDoubleClick={() => (olcek === 1 ? setOlcek(2) : sifirla())}
-        className={`relative flex min-h-[300px] max-h-[72vh] w-full items-center justify-center overflow-hidden rounded-xl bg-gray-50 select-none ${
+        className={`relative flex min-h-[300px] max-h-[72vh] w-full items-center justify-center overflow-hidden rounded-xl bg-[var(--tema-oynatici-zemin)] select-none ${
           olcek > 1 ? (surukleniyor ? "cursor-grabbing" : "cursor-grab") : "cursor-default"
         }`}
       >
         {/* Yakınlaştırma ve Kaydırma Kontrol Araç Çubuğu */}
-        <div className="absolute right-3 top-3 z-10 flex items-center gap-1.5 rounded-lg bg-black/75 px-2.5 py-1.5 text-white shadow-lg backdrop-blur-sm">
+        <div className="absolute right-3 top-3 z-10 flex items-center gap-1.5 rounded-lg bg-[var(--tema-oynatici-gorsel-kontrol-zemini)] px-2.5 py-1.5 text-[var(--tema-oynatici-gorsel-kontrol-metni)] shadow-lg backdrop-blur-sm">
           <button
             type="button"
             title="Uzaklaştır"
             aria-label="Uzaklaştır"
             onClick={uzaklastir}
             disabled={olcek <= 0.5}
-            className="flex h-6 w-6 items-center justify-center rounded hover:bg-white/20 disabled:opacity-30 cursor-pointer text-sm font-bold"
+            className="flex h-6 w-6 items-center justify-center rounded hover:bg-[var(--tema-oynatici-gorsel-kontrol-hover)] disabled:opacity-30 cursor-pointer text-sm font-bold"
           >
             −
           </button>
@@ -180,7 +180,7 @@ export default function GorselOynatici({
             title="Sıfırla (%100)"
             aria-label="Sıfırla"
             onClick={sifirla}
-            className="min-w-[45px] rounded px-1.5 py-0.5 text-center text-[11px] font-semibold hover:bg-white/20 cursor-pointer"
+            className="min-w-[45px] rounded px-1.5 py-0.5 text-center text-[11px] font-semibold hover:bg-[var(--tema-oynatici-gorsel-kontrol-hover)] cursor-pointer"
           >
             %{Math.round(olcek * 100)}
           </button>
@@ -190,7 +190,7 @@ export default function GorselOynatici({
             aria-label="Yakınlaştır"
             onClick={yakinlastir}
             disabled={olcek >= 4}
-            className="flex h-6 w-6 items-center justify-center rounded hover:bg-white/20 disabled:opacity-30 cursor-pointer text-sm font-bold"
+            className="flex h-6 w-6 items-center justify-center rounded hover:bg-[var(--tema-oynatici-gorsel-kontrol-hover)] disabled:opacity-30 cursor-pointer text-sm font-bold"
           >
             +
           </button>
@@ -199,7 +199,7 @@ export default function GorselOynatici({
             title="Ekrana Sığdır (Sıfırla)"
             aria-label="Ekrana Sığdır"
             onClick={sifirla}
-            className="rounded px-1.5 py-0.5 text-[11px] font-medium text-gray-300 hover:bg-white/20 hover:text-white cursor-pointer"
+            className="rounded px-1.5 py-0.5 text-[11px] font-medium text-[var(--tema-oynatici-gorsel-kontrol-soluk)] hover:bg-[var(--tema-oynatici-gorsel-kontrol-hover)] hover:text-[var(--tema-oynatici-gorsel-kontrol-metni)] cursor-pointer"
           >
             ↺ Sıfırla
           </button>
@@ -226,7 +226,7 @@ export default function GorselOynatici({
           type="button"
           disabled={islem || saniye < 3}
           onClick={() => void tamamla()}
-          className="self-end rounded-lg border-0 bg-[#56aeff] px-5 py-2.5 text-xs font-semibold text-white disabled:opacity-50 cursor-pointer"
+          className="self-end rounded-lg border-0 bg-[var(--tema-oynatici-eylem)] px-5 py-2.5 text-xs font-semibold text-[var(--tema-oynatici-eylem-metni)] disabled:opacity-50 cursor-pointer"
         >
           İnceledim, tamamla
         </button>

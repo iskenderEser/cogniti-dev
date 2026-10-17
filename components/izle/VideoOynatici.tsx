@@ -572,26 +572,26 @@ export default function VideoOynatici({ video, tuketici, onizlemeYuzeyi = false,
   return (
     <div className="flex flex-col gap-4">
       <button onClick={onKapat}
-        className="flex items-center gap-1.5 bg-transparent border-none cursor-pointer text-gray-500 text-sm p-0 w-fit">
+        className="flex items-center gap-1.5 bg-transparent border-none cursor-pointer text-[var(--tema-oynatici-ikincil-metin)] text-sm p-0 w-fit">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16"><path d="M15 19l-7-7 7-7" /></svg>
         Öğrenme İçerikleri
       </button>
 
-      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+      <div className="bg-[var(--tema-oynatici-yuzey)] border border-[var(--tema-oynatici-cizgi)] rounded-xl overflow-hidden">
         {/* Başlık */}
-        <div className="px-4 md:px-5 py-4 border-b border-gray-100 flex items-center justify-between gap-3">
+        <div className="px-4 md:px-5 py-4 border-b border-[var(--tema-oynatici-ic-cizgi)] flex items-center justify-between gap-3">
           <div>
-            <div className="text-base font-semibold text-gray-900">{video.urun_adi}</div>
-            <div className="text-xs text-gray-500 mt-1">{video.teknik_adi}</div>
+            <div className="text-base font-semibold text-[var(--tema-oynatici-baslik)]">{video.urun_adi}</div>
+            <div className="text-xs text-[var(--tema-oynatici-ikincil-metin)] mt-1">{video.teknik_adi}</div>
           </div>
         </div>
 
         {/* Video */}
         {video.arac_turu && video.arac_turu !== "video" && video.arac_id && (
-          <TuketimOynaticisi aracId={video.arac_id} yayinId={video.yayin_id} aracTuru={video.arac_turu} bagId={oneri_id} urunAdi={video.urun_adi} ileriSarmaAcik={video.ileri_sarma_acik} saltGoruntuleme={!tuketici} hata={hata} baslat={handleAracBaslat} bitir={handleAracBitir} onTamamlandi={onVeriYenile} className="border-b border-gray-100 p-4" />
+          <TuketimOynaticisi aracId={video.arac_id} yayinId={video.yayin_id} aracTuru={video.arac_turu} bagId={oneri_id} urunAdi={video.urun_adi} ileriSarmaAcik={video.ileri_sarma_acik} saltGoruntuleme={!tuketici} hata={hata} baslat={handleAracBaslat} bitir={handleAracBitir} onTamamlandi={onVeriYenile} className="border-b border-[var(--tema-oynatici-ic-cizgi)] p-4" />
         )}
         {!(["podcast", "gorsel", "flip_pdf"].includes(video.arac_turu ?? "video")) && oynatilacakVideoUrl && (
-          <div className="border-b border-gray-100">
+          <div className="border-b border-[var(--tema-oynatici-ic-cizgi)]">
             {/* Kutu artık videonun oranına göre çizilir (26.07 — VideoCercevesi).
                 iframe burada kalır: ref playerjs'e bağlı, sarmalayıcı yalnız kutuyu kurar.
                 width/height nitelikleri kalktı — ölçüyü CSS veriyor. */}
@@ -635,16 +635,16 @@ export default function VideoOynatici({ video, tuketici, onizlemeYuzeyi = false,
                 sonucMetni={(sonuc) => sonuc.dogru_mu ? "✓ Doğru" : `✗ Yanlış — Doğru cevap: ${sonuc.dogru_cevap}`}
                 altIcerik={<>
                 {kazanilanPuan !== null && kazanilanPuan > 0 && (
-                  <div className="px-4 py-3.5 bg-blue-50 rounded-xl border border-blue-200 text-center">
-                    <span className="text-sm font-bold text-blue-700">+{kazanilanPuan} puan kazandınız!</span>
+                  <div className="px-4 py-3.5 bg-[var(--tema-oynatici-puan-zemini)] rounded-xl border border-[var(--tema-oynatici-puan-cizgi)] text-center">
+                    <span className="text-sm font-bold text-[var(--tema-oynatici-puan-metni)]">+{kazanilanPuan} puan kazandınız!</span>
                   </div>
                 )}
                 {/* Akışın sonu — dönüş yolu sonuçların altında, gözün olduğu yerde.
                     Üstteki "← Videolar" bağlantısı bağ sanılıp kaçırılabiliyordu. */}
                 <div className="flex justify-end">
                   <button onClick={onKapat}
-                    className="text-white border-none rounded-lg px-6 py-2.5 text-xs font-semibold cursor-pointer"
-                    style={{ background: "#56aeff", fontFamily: "'Nunito', sans-serif" }}>
+                    className="text-[var(--tema-oynatici-eylem-metni)] border-none rounded-lg px-6 py-2.5 text-xs font-semibold cursor-pointer"
+                    style={{ background: "var(--tema-oynatici-eylem)", fontFamily: "'Nunito', sans-serif" }}>
                     Videolara dön
                   </button>
                 </div>
@@ -654,8 +654,8 @@ export default function VideoOynatici({ video, tuketici, onizlemeYuzeyi = false,
 
             {/* Soru yok ama puan var */}
             {izlemeTamamlandi && !soruGosterilecek && kazanilanPuan !== null && kazanilanPuan > 0 && cevapSonuclari.length === 0 && (
-              <div className="px-4 py-3.5 bg-blue-50 rounded-xl border border-blue-200 text-center">
-                <span className="text-sm font-bold text-blue-700">+{kazanilanPuan} puan kazandınız!</span>
+              <div className="px-4 py-3.5 bg-[var(--tema-oynatici-puan-zemini)] rounded-xl border border-[var(--tema-oynatici-puan-cizgi)] text-center">
+                <span className="text-sm font-bold text-[var(--tema-oynatici-puan-metni)]">+{kazanilanPuan} puan kazandınız!</span>
               </div>
             )}
           </div>
@@ -664,35 +664,35 @@ export default function VideoOynatici({ video, tuketici, onizlemeYuzeyi = false,
 
       {/* İleri sarma uyarı modal — yalnızca tüketici */}
       {tuketici && ileriSarmaModal && (
-        <div className="fixed inset-0 flex items-center justify-center z-50" style={{ background: "rgba(0,0,0,0.4)" }}>
-          <div className="bg-white rounded-xl border border-gray-200 p-6 w-11/12 max-w-md">
-            <div className="text-sm font-semibold text-gray-900 mb-3">İleri sarmak istiyor musunuz?</div>
-            <div className="text-sm text-gray-500 leading-relaxed mb-5 bg-amber-50 border border-amber-200 rounded-lg px-3 py-3">
-              Bu videonun her saniyesi puan değer taşır. İleri sarılan süre kadar <strong style={{ color: "#bc2d0d" }}>puan kaybedeceksiniz</strong>. İleri sarılan videolarda sorular gösterilmez.
+        <div className="fixed inset-0 flex items-center justify-center z-50" style={{ background: "var(--tema-oynatici-modal-ortu)" }}>
+          <div className="bg-[var(--tema-oynatici-yuzey)] rounded-xl border border-[var(--tema-oynatici-cizgi)] p-6 w-11/12 max-w-md">
+            <div className="text-sm font-semibold text-[var(--tema-oynatici-baslik)] mb-3">İleri sarmak istiyor musunuz?</div>
+            <div className="text-sm text-[var(--tema-oynatici-ikincil-metin)] leading-relaxed mb-5 bg-[var(--tema-oynatici-uyari-zemini)] border border-[var(--tema-oynatici-uyari-cizgi)] rounded-lg px-3 py-3">
+              Bu videonun her saniyesi puan değer taşır. İleri sarılan süre kadar <strong style={{ color: "var(--tema-oynatici-risk)" }}>puan kaybedeceksiniz</strong>. İleri sarılan videolarda sorular gösterilmez.
             </div>
             <div className="flex gap-2.5 justify-end">
               <button onClick={handleIleriSarmaReddet}
-                className="px-4 py-2 rounded-lg border border-gray-200 bg-transparent text-gray-500 text-xs cursor-pointer"
+                className="px-4 py-2 rounded-lg border border-[var(--tema-oynatici-cizgi)] bg-transparent text-[var(--tema-oynatici-ikincil-metin)] text-xs cursor-pointer"
                 style={{ fontFamily: "'Nunito', sans-serif" }}>İptal</button>
               <button onClick={handleIleriSarmaOnayla}
-                className="px-4 py-2 rounded-lg border-none text-white text-xs font-semibold cursor-pointer"
-                style={{ background: "#bc2d0d", fontFamily: "'Nunito', sans-serif" }}>Anladım, İleri Sar</button>
+                className="px-4 py-2 rounded-lg border-none text-[var(--tema-oynatici-eylem-metni)] text-xs font-semibold cursor-pointer"
+                style={{ background: "var(--tema-oynatici-risk)", fontFamily: "'Nunito', sans-serif" }}>Anladım, İleri Sar</button>
             </div>
           </div>
         </div>
       )}
 
       <AlertDialog open={mesaiDisiModal} onOpenChange={setMesaiDisiModal}>
-        <AlertDialogContent className="max-w-sm border-[#dbe5ef] bg-white text-center">
+        <AlertDialogContent className="max-w-sm border-[var(--tema-oynatici-bilgi-cizgi)] bg-[var(--tema-oynatici-yuzey)] text-center">
           <AlertDialogHeader className="items-center text-center sm:text-center">
-            <AlertDialogTitle className="text-[#203653]">Bilgilendirme</AlertDialogTitle>
-            <AlertDialogDescription className="mx-auto max-w-[280px] text-center leading-6 text-[#687b90]">
+            <AlertDialogTitle className="text-[var(--tema-oynatici-bilgi-baslik)]">Bilgilendirme</AlertDialogTitle>
+            <AlertDialogDescription className="mx-auto max-w-[280px] text-center leading-6 text-[var(--tema-oynatici-bilgi-metin)]">
               Mesai saatleri dışında izleme puanı verilmez ve sorular gösterilmez.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="sm:justify-center">
             <AlertDialogCancel>Vazgeç</AlertDialogCancel>
-            <AlertDialogAction onClick={handleMesaiDisiOnayla} className="bg-[#237ac8] hover:bg-[#1d69ad]">
+            <AlertDialogAction onClick={handleMesaiDisiOnayla} className="bg-[var(--tema-oynatici-panel-eylem)] hover:bg-[var(--tema-oynatici-panel-eylem-hover)]">
               Onayla
             </AlertDialogAction>
           </AlertDialogFooter>

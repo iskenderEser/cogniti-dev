@@ -31,13 +31,13 @@ export default function TakimBolgeFormu(p: TakimBolgeFormuProps) {
           style={{
             marginBottom: "20px",
             padding: "12px",
-            background: "#fafafa",
-            border: "0.5px solid #e5e7eb",
+            background: "var(--tema-yerel-yonetim-sayfa-zemini-07)",
+            border: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)",
             borderRadius: "8px",
           }}
         >
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
-            <p style={{ fontSize: "12px", fontWeight: 700, color: "#737373", margin: 0, fontFamily: "'Nunito', sans-serif" }}>
+            <p style={{ fontSize: "12px", fontWeight: 700, color: "var(--tema-yerel-yonetim-yardimci-metin-01)", margin: 0, fontFamily: "'Nunito', sans-serif" }}>
               Takım #{idx + 1}
             </p>
             {p.bloklar.length > 1 && (
@@ -47,7 +47,7 @@ export default function TakimBolgeFormu(p: TakimBolgeFormuProps) {
                 style={{
                   background: "transparent",
                   border: "none",
-                  color: "#dc2626",
+                  color: "var(--tema-yerel-yonetim-islevsel-metin-09)",
                   fontSize: "18px",
                   fontWeight: 700,
                   cursor: "pointer",
@@ -88,7 +88,7 @@ export default function TakimBolgeFormu(p: TakimBolgeFormuProps) {
 
       <button
         onClick={p.handleYeniBlokEkle}
-        style={{ ...btnBase, background: "white", color: RENK_BORDO, marginBottom: "16px" }}
+        style={{ ...btnBase, background: "var(--tema-yerel-yonetim-kart-01)", color: RENK_BORDO, marginBottom: "16px" }}
       >
         + Yeni Takım Ekle
       </button>
@@ -99,8 +99,8 @@ export default function TakimBolgeFormu(p: TakimBolgeFormuProps) {
           disabled={!gecerli || p.kaydetLoading}
           style={{
             ...btnBase,
-            background: !gecerli || p.kaydetLoading ? "#d1d5db" : RENK_BORDO,
-            color: "white",
+            background: !gecerli || p.kaydetLoading ? "var(--tema-yerel-yonetim-sayfa-zemini-01)" : RENK_BORDO,
+            color: "var(--tema-yerel-yonetim-ters-metin-01)",
             border: "none",
             cursor: !gecerli || p.kaydetLoading ? "not-allowed" : "pointer",
           }}

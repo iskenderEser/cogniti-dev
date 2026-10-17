@@ -1,0 +1,35 @@
+{
+  "tarih": "2026-10-17",
+  "durum": "TAMAMLANDI",
+  "konu": "Yayın Raporları bağımsız Üretim Varyantları penceresi",
+  "dosya": "components/rehber/UretimVaryantlariModal.tsx",
+  "renk_kullanimi": 20,
+  "yeni_degisken_eklenmedi": true,
+  "mavi_etkin_css_karsilastirma": 27,
+  "mavi_fark": 0,
+  "renk_disi_kaynak_farki": 0,
+  "ortak_tema_css_degismedi": true,
+  "portal_tema_icerik_ve_kapanma_kontrolu": 15,
+  "kapanma_yollari": [
+    "Kapat düğmesi",
+    "Escape",
+    "Örtü tıklaması"
+  ],
+  "icerik_kartlari": 4,
+  "mevcut_metin_testleri": {
+    "basarili": 2,
+    "basarisiz": 0,
+    "secim": "VARYANT_ALT_MODAL V1-V4 ve raporlar-uretim rehber sözleşmesi"
+  },
+  "yeni_lint_bulgusu": 0,
+  "mevcut_lint": [
+    [
+      "react-hooks/set-state-in-effect",
+      2,
+      "Error: Calling setState synchronously within an effect can trigger cascading renders\n\nEffects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:\n* Update external systems with the latest state from React.\n* Subscribe for updates from some external system, calling setState in a callback function when external state changes.\n\nCalling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).\n\n/Users/iskendereser/Desktop/hapbilgi/components/rehber/UretimVaryantlariModal.tsx:18:5\n  16 |\n  17 |   useEffect(() => {\n> 18 |     setMounted(true);\n     |     ^^^^^^^^^^ Avoid calling setState() directly within an effect\n  19 |   }, []);\n  20 |\n  21 |   useEffect(() => {",
+      18
+    ]
+  ],
+  "typecheck": "npm run typecheck:build: BASARILI",
+  "gercek_tarayıcı": "YAPILMADI"
+}

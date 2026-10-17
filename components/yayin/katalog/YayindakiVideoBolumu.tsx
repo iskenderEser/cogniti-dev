@@ -55,11 +55,11 @@ export default function YayindakiVideoBolumu({
         altEkIcerik={
           <>
             {uretenBilgisiGoster && (
-              <div className="mt-2 flex items-center gap-1.5 border-t border-gray-100 pt-2">
-                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gray-100 text-gray-500">
+              <div className="mt-2 flex items-center gap-1.5 border-t border-[var(--tema-hoyk-ic-cizgi)] pt-2">
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--tema-hoyk-kapak-zemini)] text-[var(--tema-hoyk-ikincil-metin)]">
                   <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="sm:h-2.5 sm:w-2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
                 </span>
-                <span className="truncate text-xs font-semibold text-gray-500 sm:text-[10px]">{uretenEtiket(v.ureten_rol, v.ureten_ad_soyad)}</span>
+                <span className="truncate text-xs font-semibold text-[var(--tema-hoyk-ikincil-metin)] sm:text-[10px]">{uretenEtiket(v.ureten_rol, v.ureten_ad_soyad)}</span>
               </div>
             )}
           </>

@@ -36,11 +36,11 @@ function DosyaAlani({
 
   return (
     <div>
-      <label className="mb-1 flex h-5 items-center text-xs font-bold text-[#425672]">
-        {etiket} {zorunlu && !yukluGoster && <span className="ml-1 text-red-500">*</span>}
+      <label className="mb-1 flex h-5 items-center text-xs font-bold text-[var(--tema-yerel-uretim-ana-metin-07)]">
+        {etiket} {zorunlu && !yukluGoster && <span className="ml-1 text-[var(--tema-yerel-uretim-islevsel-metin-09)]">*</span>}
       </label>
       <div>
-        <label className="cursor-pointer rounded-lg border border-[#56aeff] bg-white px-3 py-1.5 text-xs font-semibold text-[#2483e2] hover:bg-[#f0f7ff] w-full flex items-center justify-center text-center">
+        <label className="cursor-pointer rounded-lg border border-[var(--tema-yerel-uretim-cizgi-04)] bg-[var(--tema-yerel-uretim-kart-01)] px-3 py-1.5 text-xs font-semibold text-[var(--tema-yerel-uretim-eylem-metin-06)] hover:bg-[var(--tema-yerel-uretim-secim-zemin-07)] w-full flex items-center justify-center text-center">
           {yukluGoster ? "Dosyayı Değiştir" : "Dosya Seç"}
           <input
             ref={inputRef}
@@ -54,15 +54,15 @@ function DosyaAlani({
           />
         </label>
         {bekleyen && (
-          <span className="mt-1.5 inline-flex w-full items-center justify-between gap-2 rounded-full border border-gray-200 bg-gray-50 px-2.5 py-1 text-xs text-gray-700">
+          <span className="mt-1.5 inline-flex w-full items-center justify-between gap-2 rounded-full border border-[var(--tema-yerel-uretim-islevsel-cizgi-11)] bg-[var(--tema-yerel-uretim-islevsel-zemin-11)] px-2.5 py-1 text-xs text-[var(--tema-yerel-uretim-islevsel-metin-10)]">
             <span className="truncate">{bekleyen.preview.dosya_adi}</span>
-            <button type="button" onClick={onSil} aria-label={`${etiket} dosyasını kaldır`} className="cursor-pointer text-gray-400 hover:text-gray-600 font-bold">×</button>
+            <button type="button" onClick={onSil} aria-label={`${etiket} dosyasını kaldır`} className="cursor-pointer text-[var(--tema-yerel-uretim-islevsel-metin-11)] hover:text-[var(--tema-yerel-uretim-islevsel-metin-12)] font-bold">×</button>
           </span>
         )}
         {yukluGoster && (
-          <span className="mt-1.5 inline-flex w-full items-center justify-between gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs text-emerald-800">
-            <span className="truncate"><span className="font-semibold text-emerald-600">Sunucuda Yüklü: </span>{yuklenenDosyaAdi || (etiket === "Podcast" ? "podcast.mp3" : "kapak.jpg")}</span>
-            <button type="button" onClick={onSil} aria-label={`${etiket} dosyasını kaldır`} className="cursor-pointer text-emerald-600 hover:text-emerald-800 font-bold">×</button>
+          <span className="mt-1.5 inline-flex w-full items-center justify-between gap-2 rounded-full border border-[var(--tema-yerel-uretim-islevsel-cizgi-12)] bg-[var(--tema-yerel-uretim-islevsel-zemin-12)] px-2.5 py-1 text-xs text-[var(--tema-yerel-uretim-islevsel-metin-13)]">
+            <span className="truncate"><span className="font-semibold text-[var(--tema-yerel-uretim-islevsel-metin-14)]">Sunucuda Yüklü: </span>{yuklenenDosyaAdi || (etiket === "Podcast" ? "podcast.mp3" : "kapak.jpg")}</span>
+            <button type="button" onClick={onSil} aria-label={`${etiket} dosyasını kaldır`} className="cursor-pointer text-[var(--tema-yerel-uretim-islevsel-metin-14)] hover:text-[var(--tema-yerel-uretim-islevsel-metin-13)] font-bold">×</button>
           </span>
         )}
       </div>
@@ -119,18 +119,18 @@ export function PodcastTalepAlanlari(props: PodcastTalepAlanlariProps) {
   );
 
   return (
-    <section className="rounded-2xl border border-[#dfe8f3] bg-white p-4">
-      <h3 className="text-sm font-extrabold text-[#263b58]">Podcast Yapısı</h3>
+    <section className="rounded-2xl border border-[var(--tema-yerel-uretim-cizgi-08)] bg-[var(--tema-yerel-uretim-kart-01)] p-4">
+      <h3 className="text-sm font-extrabold text-[var(--tema-yerel-uretim-ana-metin-04)]">Podcast Yapısı</h3>
       {!props.hazir && (
         <div className="mt-3 space-y-3">
-          <p className="text-xs text-[#7a8ca5]">
+          <p className="text-xs text-[var(--tema-yerel-uretim-yardimci-metin-05)]">
             İçerik üreticisi podcast ses kaydını hazırlayacaktır.
           </p>
 
-          <div className="rounded-xl border border-[#dfe8f3] bg-[#f8fafc] p-3.5">
+          <div className="rounded-xl border border-[var(--tema-yerel-uretim-cizgi-08)] bg-[var(--tema-yerel-uretim-sayfa-zemini-04)] p-3.5">
             <div className="flex flex-col gap-1">
-              <label className="text-xs font-bold text-[#263b58]">
-                Transkript Tercihi <span className="text-[#e53e3e]">*</span>
+              <label className="text-xs font-bold text-[var(--tema-yerel-uretim-ana-metin-04)]">
+                Transkript Tercihi <span className="text-[var(--tema-yerel-uretim-islevsel-metin-15)]">*</span>
               </label>
             </div>
 
@@ -148,13 +148,13 @@ export function PodcastTalepAlanlari(props: PodcastTalepAlanlariProps) {
             </div>
 
             {props.iuTranskriptIstendi === true && (
-              <div className="mt-3 rounded-lg border border-[#cce5ff] bg-[#f0f7ff] p-2.5 text-xs text-[#004085]">
+              <div className="mt-3 rounded-lg border border-[var(--tema-yerel-uretim-cizgi-14)] bg-[var(--tema-yerel-uretim-secim-zemin-07)] p-2.5 text-xs text-[var(--tema-yerel-uretim-ana-metin-08)]">
                 <strong>Bilgi:</strong> Transkript talep edildiğinde, İçerik Üreticisi tarafından podcast sesinden AI ile oluşturulacaktır.
               </div>
             )}
 
             {props.iuTranskriptIstendi === false && (
-              <div className="mt-3 rounded-lg border border-[#e2e8f0] bg-[#edf2f7] p-2.5 text-xs text-[#4a5568]">
+              <div className="mt-3 rounded-lg border border-[var(--tema-yerel-uretim-cizgi-15)] bg-[var(--tema-yerel-uretim-sayfa-zemini-05)] p-2.5 text-xs text-[var(--tema-yerel-uretim-ana-metin-09)]">
                 <strong>Bilgi:</strong> Transkript talep edilmedi; podcast yalnızca ses kaydı olarak yayınlanacaktır.
               </div>
             )}
@@ -190,18 +190,18 @@ export function PodcastTalepAlanlari(props: PodcastTalepAlanlariProps) {
 
             {/* 3. Manuel Transkript */}
             <div>
-              <label className="mb-1 flex h-5 items-center text-xs font-bold text-[#425672] truncate">
-                Manuel Transkript <span className="ml-1 text-[11px] font-normal text-gray-400">(İsteğe bağlı)</span>
+              <label className="mb-1 flex h-5 items-center text-xs font-bold text-[var(--tema-yerel-uretim-ana-metin-07)] truncate">
+                Manuel Transkript <span className="ml-1 text-[11px] font-normal text-[var(--tema-yerel-uretim-yardimci-metin-02)]">(İsteğe bağlı)</span>
               </label>
               <div>
                 {props.transkript ? (
-                  <span className="inline-flex w-full items-center justify-between gap-2 rounded-full border border-gray-200 bg-gray-50 px-2.5 py-1 text-xs text-gray-700">
+                  <span className="inline-flex w-full items-center justify-between gap-2 rounded-full border border-[var(--tema-yerel-uretim-islevsel-cizgi-11)] bg-[var(--tema-yerel-uretim-islevsel-zemin-11)] px-2.5 py-1 text-xs text-[var(--tema-yerel-uretim-islevsel-metin-10)]">
                     <span className="truncate">{props.transkript.preview.dosya_adi}</span>
                     <button
                       type="button"
                       onClick={props.onTranskriptSil}
                       aria-label="Transkript dosyasını kaldır"
-                      className="cursor-pointer text-gray-400 hover:text-gray-600 font-bold"
+                      className="cursor-pointer text-[var(--tema-yerel-uretim-islevsel-metin-11)] hover:text-[var(--tema-yerel-uretim-islevsel-metin-12)] font-bold"
                     >
                       ×
                     </button>
@@ -214,7 +214,7 @@ export function PodcastTalepAlanlari(props: PodcastTalepAlanlariProps) {
                       props.onAiIstendiDegisti?.(false);
                       setTranskriptAcik(true);
                     }}
-                    className="cursor-pointer rounded-lg border border-[#56aeff] bg-white px-3 py-1.5 text-xs font-semibold text-[#2483e2] hover:bg-[#f0f7ff] w-full flex items-center justify-center text-center"
+                    className="cursor-pointer rounded-lg border border-[var(--tema-yerel-uretim-cizgi-04)] bg-[var(--tema-yerel-uretim-kart-01)] px-3 py-1.5 text-xs font-semibold text-[var(--tema-yerel-uretim-eylem-metin-06)] hover:bg-[var(--tema-yerel-uretim-secim-zemin-07)] w-full flex items-center justify-center text-center"
                   >
                     + Manuel Transkript Ekle
                   </button>
@@ -224,8 +224,8 @@ export function PodcastTalepAlanlari(props: PodcastTalepAlanlariProps) {
 
             {/* 4. AI ile Transkript */}
             <div>
-              <label className="mb-1 flex h-5 items-center text-xs font-bold text-[#425672] truncate">
-                AI ile Transkript <span className="ml-1 text-[11px] font-normal text-gray-400">(Gemini 3.5)</span>
+              <label className="mb-1 flex h-5 items-center text-xs font-bold text-[var(--tema-yerel-uretim-ana-metin-07)] truncate">
+                AI ile Transkript <span className="ml-1 text-[11px] font-normal text-[var(--tema-yerel-uretim-yardimci-metin-02)]">(Gemini 3.5)</span>
               </label>
               <div>
                 <button
@@ -238,7 +238,7 @@ export function PodcastTalepAlanlari(props: PodcastTalepAlanlariProps) {
                       void props.onAiBaslat();
                     }
                   }}
-                  className="cursor-pointer rounded-lg border border-[#2483e2] bg-[#2483e2] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#1a6ec7] w-full flex items-center justify-center text-center"
+                  className="cursor-pointer rounded-lg border border-[var(--tema-yerel-uretim-cizgi-16)] bg-[var(--tema-yerel-uretim-eylem-zemin-02)] px-3 py-1.5 text-xs font-semibold text-[var(--tema-yerel-uretim-ters-metin-01)] hover:bg-[var(--tema-yerel-uretim-eylem-zemin-03)] w-full flex items-center justify-center text-center"
                 >
                   ✨ AI ile Transkript Oluştur
                 </button>

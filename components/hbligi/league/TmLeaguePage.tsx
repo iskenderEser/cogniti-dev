@@ -97,7 +97,7 @@ export default function TmLeaguePage({ veri, periyotSecici, yenileButonu }: { ve
             if (!bolge) return null;
             return <CompetitorComparison eclubAcik={veri.eclub_acik === true} satirlar={sirala(bolge.uttler)} benimId="" baslik={`${bolge.ad} Temsilcileri`} />;
           } : undefined} />
-        {satirlar.length === 0 && <p className={`${styles.panel} p-6 text-center text-xs text-[#7b8ca5]`}>{yonetici && takimlar.length === 0 ? "Firma kapsamında takım bulunamadı." : "Seçili kapsamda temsilci bulunamadı."}</p>}
+        {satirlar.length === 0 && <p className={`${styles.panel} p-6 text-center text-xs text-[var(--tema-yerel-lig-yardimci-metin-20)]`}>{yonetici && takimlar.length === 0 ? "Firma kapsamında takım bulunamadı." : "Seçili kapsamda temsilci bulunamadı."}</p>}
         </div>
       </div>
     </div>

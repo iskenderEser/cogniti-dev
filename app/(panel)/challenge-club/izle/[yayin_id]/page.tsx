@@ -126,7 +126,7 @@ export default function CcIzlemePage() {
   if (loading) {
     return (
       <div className="max-w-6xl mx-auto px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
-        <div className="text-sm text-gray-500">Yükleniyor...</div>
+        <div className="text-sm text-[var(--tema-yerel-lig-yardimci-metin-03)]">Yükleniyor...</div>
       </div>
     );
   }
@@ -135,11 +135,11 @@ export default function CcIzlemePage() {
   if (yetkiliMi === false) {
     return (
       <div className="max-w-6xl mx-auto px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
-        <div className="bg-white border border-gray-200 rounded-xl p-6">
-          <div className="text-base font-semibold text-gray-900 mb-2">
+        <div className="bg-[var(--tema-yerel-lig-kart-01)] border border-[var(--tema-yerel-lig-cizgi-02)] rounded-xl p-6">
+          <div className="text-base font-semibold text-[var(--tema-yerel-lig-ana-metin-03)] mb-2">
             Yetkisiz Erişim
           </div>
-          <div className="text-sm text-gray-500">
+          <div className="text-sm text-[var(--tema-yerel-lig-yardimci-metin-03)]">
             Challenge Club yalnızca BM rolündeki kullanıcılar içindir.
           </div>
         </div>

@@ -71,7 +71,7 @@ function MutabakatIslemSatiri({ kayit, rol, gorunum, kararPenceresiAcik, islemde
   const kararAcik = kararVerilebilir(kayit, rol, kararPenceresiAcik);
   const gonderEtiketi = gondermeEylemi(kayit, rol);
 
-  return <div className="border-t border-[#e8eef5] bg-white px-3 py-3 text-[#405976] md:px-4">
+  return <div className="border-t border-[var(--tema-yerel-eczanem-cizgi-04)] bg-[var(--tema-yerel-eczanem-kart-01)] px-3 py-3 text-[var(--tema-yerel-eczanem-ana-metin-01)] md:px-4">
     <div className={styles.sutunlar}>
       {gorunum === "duz" && <>
         {rol === "tm" && <div className={styles.alan}><span className={styles.alanEtiketi}>BM</span><span>{(kayit as MutabakatDuzKaydi).bm_adi}</span></div>}
@@ -83,9 +83,9 @@ function MutabakatIslemSatiri({ kayit, rol, gorunum, kararPenceresiAcik, islemde
         <SadeTabloSecimi etiket={`${kayit.urun_adi}: ürün adına göre filtrele`} gorunenEtiket={kayit.urun_adi}
  secenekler={[{ deger: "", etiket: "Tümü" }, ...urunSecenekleri.map((urun) => ({ deger: urun.urun_id, etiket: urun.urun_adi, altBilgi: urun.gorunen_urun_id ?? undefined }))]}
  deger={seciliUrunId ?? ""} onDegistir={(id) => onUrunDegistir(id || null)} />
-        {kayit.gorunen_urun_id && <span className="block text-[10px] text-[#7b8da5]">{kayit.gorunen_urun_id}</span>}
+        {kayit.gorunen_urun_id && <span className="block text-[10px] text-[var(--tema-yerel-eczanem-yardimci-metin-01)]">{kayit.gorunen_urun_id}</span>}
       </div></div>
-      <div className={`${styles.alan} ${styles.aracAlani}`}><span className={styles.alanEtiketi}>Öğrenme Aracı</span><div className="min-w-0">{kayit.kaynaklar.map((kaynak) => <div key={`${kaynak.yayin_id}-${kaynak.arac_id}`} className="leading-snug"><span>{YAYIN_TURU_SUNUMU[kaynak.arac_turu]?.etiket ?? "Öğrenme içeriği"}</span>{kaynak.gorunen_talep_id && <span className="block text-[10px] text-[#7b8da5]">Talep ID: {kaynak.gorunen_talep_id}</span>}</div>)}</div></div>
+      <div className={`${styles.alan} ${styles.aracAlani}`}><span className={styles.alanEtiketi}>Öğrenme Aracı</span><div className="min-w-0">{kayit.kaynaklar.map((kaynak) => <div key={`${kaynak.yayin_id}-${kaynak.arac_id}`} className="leading-snug"><span>{YAYIN_TURU_SUNUMU[kaynak.arac_turu]?.etiket ?? "Öğrenme içeriği"}</span>{kaynak.gorunen_talep_id && <span className="block text-[10px] text-[var(--tema-yerel-eczanem-yardimci-metin-01)]">Talep ID: {kaynak.gorunen_talep_id}</span>}</div>)}</div></div>
       <div className={`${styles.alan} ${styles.ortali}`}><span className={styles.alanEtiketi}>PSF</span><span>{kayit.satis_fiyati === null ? "—" : para(kayit.satis_fiyati)}</span></div>
       <div className={`${styles.alan} ${styles.ortali}`}><span className={styles.alanEtiketi}>İndirim Limiti</span><strong>{sayi(kayit.tarife_puan)} puan = {para(kayit.tarife_tl)}</strong></div>
       <div className={`${styles.alan} ${styles.ortali}`}><span className={styles.alanEtiketi}>İndirim ID</span><span className="break-all" title={kayit.gorunen_indirim_id ?? undefined}>{kayit.gorunen_indirim_id || "—"}</span></div>
@@ -97,14 +97,14 @@ function MutabakatIslemSatiri({ kayit, rol, gorunum, kararPenceresiAcik, islemde
           return <Button key={deger} type="button" size="sm" variant="outline" aria-pressed={secili}
             disabled={!kararAcik || secili || islemde} onClick={() => onKarar(kayit, deger)}
             className={`font-bold ${secili
-              ? "border-[#237ac8] bg-[#237ac8] text-white shadow-sm hover:bg-[#1d69ad] hover:text-white disabled:opacity-100"
-              : "border-[#a9c9e5] bg-white text-[#237ac8] hover:border-[#237ac8] hover:bg-[#edf6fd] hover:text-[#1d69ad] disabled:opacity-50"}`}>{etiket}</Button>;
+              ? "border-[var(--tema-yerel-eczanem-cizgi-02)] bg-[var(--tema-yerel-eczanem-eylem-zemin-01)] text-[var(--tema-yerel-eczanem-ters-metin-01)] shadow-sm hover:bg-[var(--tema-yerel-eczanem-eylem-zemin-02)] hover:text-[var(--tema-yerel-eczanem-ters-metin-01)] disabled:opacity-100"
+              : "border-[var(--tema-yerel-eczanem-cizgi-01)] bg-[var(--tema-yerel-eczanem-kart-01)] text-[var(--tema-yerel-eczanem-eylem-metin-01)] hover:border-[var(--tema-yerel-eczanem-cizgi-02)] hover:bg-[var(--tema-yerel-eczanem-secim-zemin-01)] hover:text-[var(--tema-yerel-eczanem-eylem-metin-02)] disabled:opacity-50"}`}>{etiket}</Button>;
         })}
       </div>
       <div className={styles.sonucAlani}><span className={styles.alanEtiketi}>Sonuç</span>
         {gonderEtiketi && onOnayaGonder
-          ? <Button type="button" size="sm" disabled={islemde} onClick={() => onOnayaGonder(kayit)} className={`${styles.sonucButonu} bg-[#237ac8] font-extrabold hover:bg-[#1d69ad] disabled:opacity-50`}>{gonderEtiketi}</Button>
-          : <span className={`inline-flex rounded-full px-2 py-1 font-extrabold ${mevcutKarar || !kararAcik ? "bg-[#edf6fd] text-[#237ac8]" : "bg-[#f3f6f9] text-[#718198]"}`}>{sonuc(kayit, rol)}</span>}
+          ? <Button type="button" size="sm" disabled={islemde} onClick={() => onOnayaGonder(kayit)} className={`${styles.sonucButonu} bg-[var(--tema-yerel-eczanem-eylem-zemin-01)] font-extrabold hover:bg-[var(--tema-yerel-eczanem-eylem-zemin-02)] disabled:opacity-50`}>{gonderEtiketi}</Button>
+          : <span className={`inline-flex rounded-full px-2 py-1 font-extrabold ${mevcutKarar || !kararAcik ? "bg-[var(--tema-yerel-eczanem-secim-zemin-01)] text-[var(--tema-yerel-eczanem-eylem-metin-01)]" : "bg-[var(--tema-yerel-eczanem-sayfa-zemini-01)] text-[var(--tema-yerel-eczanem-yardimci-metin-02)]"}`}>{sonuc(kayit, rol)}</span>}
       </div>
     </div>
   </div>;
@@ -125,8 +125,8 @@ export default function MutabakatIslemTablosu({ rol, gorunum = "akordiyon", kayi
   altIcerik?: ReactNode;
 }) {
   const duzRolSinifi = rol === "tm" ? styles.duzTm : rol === "bm" ? styles.duzBm : styles.duzUtt;
-  return <div className={`${styles.tablo} ${gorunum === "duz" ? `${styles.duzTablo} ${duzRolSinifi}` : ""} rounded-xl border border-[#dfe7f1] bg-white`}>
-    <div className={`min-h-14 gap-2 bg-[#f2f7fc] px-4 py-2 font-extrabold uppercase leading-tight text-[#7b8da5] ${styles.sutunlar} ${styles.baslik}`}>
+  return <div className={`${styles.tablo} ${gorunum === "duz" ? `${styles.duzTablo} ${duzRolSinifi}` : ""} rounded-xl border border-[var(--tema-yerel-eczanem-cizgi-05)] bg-[var(--tema-yerel-eczanem-kart-01)]`}>
+    <div className={`min-h-14 gap-2 bg-[var(--tema-yerel-eczanem-sayfa-zemini-02)] px-4 py-2 font-extrabold uppercase leading-tight text-[var(--tema-yerel-eczanem-yardimci-metin-01)] ${styles.sutunlar} ${styles.baslik}`}>
       {gorunum === "duz" && <>{rol === "tm" && <span>BM</span>}{rol !== "utt" && <span>UTT</span>}<span>Eczane</span></>}
       <span>İndirim Onay Tarihi</span><span>Ürün Adı</span><span>Öğrenme Aracı</span><span className="text-center" title="Perakende Satış Fiyatı">PSF</span><span className="text-center">İndirim Limiti</span><span className="text-center">İndirim ID</span><span className="text-center">Onaylanan İndirim Puanı</span><span className="text-center">İndirim Tutarı</span><span className="text-center">Karar</span><span className="text-center">Sonuç</span>
     </div>

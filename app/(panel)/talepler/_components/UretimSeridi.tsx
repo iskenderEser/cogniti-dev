@@ -27,7 +27,7 @@ const BEKLENIYOR = "Bekleniyor";
 /** Bu varyantta İÜ'nün üretmeyeceği adım — sistem geçiriyor (S-1). */
 const ASAMA_GECILDI = "Bu aşama geçildi";
 /** Aksiyon kırmızısı — kapalı adımın rengi (İskender 28.07). */
-const KAPALI_RENK = { bg: "#fff1f0", metin: "#bc2d0d", kenar: "#fecaca" };
+const KAPALI_RENK = { bg: "var(--tema-yerel-uretim-islevsel-zemin-18)", metin: "var(--tema-yerel-uretim-vurgu-metin-01)", kenar: "var(--tema-yerel-uretim-islevsel-cizgi-07)" };
 
 interface Props {
   adimlar: Adim[];
@@ -43,24 +43,24 @@ interface Props {
 function daireStili(hal: Adim["hal"]): React.CSSProperties {
   switch (hal) {
     case "tamam":
-      return { background: "#16a34a", borderColor: "#16a34a" };
+      return { background: "var(--tema-yerel-uretim-islevsel-zemin-19)", borderColor: "var(--tema-yerel-uretim-islevsel-cizgi-15)" };
     case "aktif":
-      return { background: "#2583e2", borderColor: "#2583e2", boxShadow: "0 0 0 4px rgba(37,131,226,0.13)" };
+      return { background: "var(--tema-yerel-uretim-eylem-zemin-06)", borderColor: "var(--tema-yerel-uretim-cizgi-25)", boxShadow: "0 0 0 4px var(--tema-yerel-uretim-golge-03)" };
     case "hazir":
-      return { background: "#ffffff", borderColor: "#16a34a" };
+      return { background: "var(--tema-yerel-uretim-kart-02)", borderColor: "var(--tema-yerel-uretim-islevsel-cizgi-15)" };
     case "kapali":
-      return { background: "#fff7f5", borderColor: "#efb7aa" };
+      return { background: "var(--tema-yerel-uretim-islevsel-zemin-20)", borderColor: "var(--tema-yerel-uretim-islevsel-cizgi-16)" };
     default:
-      return { background: "#f7f9fc", borderColor: "#dce4ee" };
+      return { background: "var(--tema-yerel-uretim-sayfa-zemini-12)", borderColor: "var(--tema-yerel-uretim-cizgi-26)" };
   }
 }
 
 function kartStili(hal: Adim["hal"]): React.CSSProperties {
-  if (hal === "aktif") return { background: "#f8fbff", borderColor: "#8fc5fb", boxShadow: "0 8px 22px rgba(37,131,226,0.08)" };
-  if (hal === "tamam") return { background: "#ffffff", borderColor: "#dce9e2" };
-  if (hal === "hazir") return { background: "#f7fff9", borderColor: "#bbf7d0" };
-  if (hal === "kapali") return { background: "#fffafa", borderColor: "#f2ded9" };
-  return { background: "#fafbfd", borderColor: "#e7ecf2" };
+  if (hal === "aktif") return { background: "var(--tema-yerel-uretim-sayfa-zemini-03)", borderColor: "var(--tema-yerel-uretim-cizgi-27)", boxShadow: "0 8px 22px var(--tema-yerel-uretim-golge-04)" };
+  if (hal === "tamam") return { background: "var(--tema-yerel-uretim-kart-02)", borderColor: "var(--tema-yerel-uretim-islevsel-cizgi-17)" };
+  if (hal === "hazir") return { background: "var(--tema-yerel-uretim-islevsel-zemin-21)", borderColor: "var(--tema-yerel-uretim-islevsel-cizgi-02)" };
+  if (hal === "kapali") return { background: "var(--tema-yerel-uretim-islevsel-zemin-22)", borderColor: "var(--tema-yerel-uretim-islevsel-cizgi-18)" };
+  return { background: "var(--tema-yerel-uretim-sayfa-zemini-13)", borderColor: "var(--tema-yerel-uretim-cizgi-28)" };
 }
 
 export function UretimSeridi({ adimlar, rol, formatTarih, icerikCiz, talepId, ogrenmeAraciTuru }: Props) {
@@ -100,19 +100,19 @@ export function UretimSeridi({ adimlar, rol, formatTarih, icerikCiz, talepId, og
                 style={daireStili(adim.hal)}
               >
                 {adim.hal === "tamam" ? (
-                  <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" className="h-3.5 w-3.5"><path d="m5 12 4 4L19 6" /></svg>
+                  <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="var(--tema-yerel-uretim-ters-metin-02)" strokeWidth="3" className="h-3.5 w-3.5"><path d="m5 12 4 4L19 6" /></svg>
                 ) : adim.hal === "hazir" ? (
-                  <span className="text-[#16a34a]">✓</span>
+                  <span className="text-[var(--tema-yerel-uretim-islevsel-metin-01)]">✓</span>
                 ) : adim.hal === "kapali" ? (
-                  <span className="text-[#c85e49]">—</span>
+                  <span className="text-[var(--tema-yerel-uretim-islevsel-metin-22)]">—</span>
                 ) : (
-                  <span className={adim.hal === "aktif" ? "text-white" : "text-[#8a99ad]"}>{i + 1}</span>
+                  <span className={adim.hal === "aktif" ? "text-[var(--tema-yerel-uretim-ters-metin-01)]" : "text-[var(--tema-yerel-uretim-yardimci-metin-16)]"}>{i + 1}</span>
                 )}
               </span>
               {!sonuncu && (
                 <span
                   className="my-1 min-h-4 w-0.5 flex-1"
-                  style={{ background: adim.hal === "tamam" ? "#bbf7d0" : "#e5e7eb" }}
+                  style={{ background: adim.hal === "tamam" ? "var(--tema-yerel-uretim-islevsel-zemin-23)" : "var(--tema-yerel-uretim-sayfa-zemini-14)" }}
                 />
               )}
             </div>
@@ -125,11 +125,11 @@ export function UretimSeridi({ adimlar, rol, formatTarih, icerikCiz, talepId, og
                 onClick={tikla}
                 disabled={!yolaGider && !acilabilir}
                 aria-expanded={acilabilir ? acik === adim.anahtar : undefined}
-                className="flex w-full flex-wrap items-center gap-2 px-3 py-2.5 text-left disabled:cursor-default enabled:cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#56aeff]"
+                className="flex w-full flex-wrap items-center gap-2 px-3 py-2.5 text-left disabled:cursor-default enabled:cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--tema-yerel-uretim-odak-01)]"
               >
                 <span
                   className="text-sm font-extrabold"
-                  style={{ color: adim.hal === "ileri" ? "#8e9caf" : adim.hal === "kapali" ? "#a84f3f" : "#273d59" }}
+                  style={{ color: adim.hal === "ileri" ? "var(--tema-yerel-uretim-yardimci-metin-21)" : adim.hal === "kapali" ? "var(--tema-yerel-uretim-islevsel-metin-23)" : "var(--tema-yerel-uretim-ana-metin-19)" }}
                 >
                   {adim.etiket}
                 </span>
@@ -143,19 +143,19 @@ export function UretimSeridi({ adimlar, rol, formatTarih, icerikCiz, talepId, og
                 ) : null}
 
                 {adim.tarih && adim.hal !== "kapali" && (
-                  <span className="ml-auto text-[10px] font-semibold text-[#94a1b2]">{formatTarih(adim.tarih)}</span>
+                  <span className="ml-auto text-[10px] font-semibold text-[var(--tema-yerel-uretim-yardimci-metin-22)]">{formatTarih(adim.tarih)}</span>
                 )}
                 {(yolaGider || acilabilir) && (
                   <span
                     aria-hidden="true"
-                    className="ml-auto text-base font-bold text-[#87a0bd] transition-transform"
+                    className="ml-auto text-base font-bold text-[var(--tema-yerel-uretim-yardimci-metin-23)] transition-transform"
                     style={{ transform: acilabilir && acik === adim.anahtar ? "rotate(90deg)" : undefined }}
                   >›</span>
                 )}
               </button>
 
               {icerik && (
-                <div className="border-t border-[#dfe8f2] bg-white px-3.5 py-3.5">
+                <div className="border-t border-[var(--tema-yerel-uretim-cizgi-29)] bg-[var(--tema-yerel-uretim-kart-01)] px-3.5 py-3.5">
                   {icerik}
                 </div>
               )}

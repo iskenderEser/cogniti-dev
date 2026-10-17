@@ -1,9 +1,12 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 import { Window } from 'happy-dom';
 import React, { act } from 'react';
 
 const window = new Window({ url: 'http://localhost' });
+window.document.documentElement.setAttribute('data-tema', process.env.HAPBILGI_TEST_TEMA === 'yesil' ? 'yesil' : 'mavi');
+window.document.head.innerHTML = `<style>${readFileSync(new URL('../app/tema.css', import.meta.url), 'utf8')}\n${readFileSync(new URL('../components/kontrol/sade-kontroller.module.css', import.meta.url), 'utf8')}</style>`;
 for (const key of ['window', 'document', 'navigator', 'HTMLElement', 'Element', 'Node', 'NodeFilter', 'HTMLInputElement', 'HTMLButtonElement', 'MutationObserver', 'CustomEvent', 'Event', 'KeyboardEvent', 'MouseEvent', 'getComputedStyle', 'requestAnimationFrame', 'cancelAnimationFrame']) {
   Object.defineProperty(globalThis, key, { configurable: true, value: typeof window[key] === 'function' && ['getComputedStyle', 'requestAnimationFrame', 'cancelAnimationFrame'].includes(key) ? window[key].bind(window) : window[key] });
 }

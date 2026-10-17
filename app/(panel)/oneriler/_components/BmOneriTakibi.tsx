@@ -140,21 +140,21 @@ export default function BmOneriTakibi({
   });
 
   const kartlar: { anahtar: DurumFiltresi; etiket: string; deger: number; renk: string }[] = [
-    { anahtar: "tum", etiket: "Toplam Öneri", deger: sayilar.toplam, renk: "#2f7fc7" },
-    { anahtar: "tamamlandi", etiket: "Tamamlanan", deger: sayilar.tamamlanan, renk: "#167453" },
-    { anahtar: "acik", etiket: "Bekleyen", deger: sayilar.bekleyen, renk: "#9a6700" },
-    { anahtar: "suresi_gecmis", etiket: "Süresi Geçmiş", deger: sayilar.suresiGecmis, renk: "#bc2d0d" },
+    { anahtar: "tum", etiket: "Toplam Öneri", deger: sayilar.toplam, renk: "var(--tema-yerel-ortak-sayfa-islevsel-metin-01)" },
+    { anahtar: "tamamlandi", etiket: "Tamamlanan", deger: sayilar.tamamlanan, renk: "var(--tema-yerel-ortak-sayfa-islevsel-metin-02)" },
+    { anahtar: "acik", etiket: "Bekleyen", deger: sayilar.bekleyen, renk: "var(--tema-yerel-ortak-sayfa-islevsel-metin-03)" },
+    { anahtar: "suresi_gecmis", etiket: "Süresi Geçmiş", deger: sayilar.suresiGecmis, renk: "var(--tema-yerel-ortak-sayfa-islevsel-metin-04)" },
   ];
 
   return (
     <div className="mx-auto flex max-w-[1480px] flex-col gap-5 px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
       <SayfaYenileBasligi className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"
         baslik={<div className="inline-flex items-center">
-          <h1 className="mt-1 text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]">Öneri Takibi</h1>
+          <h1 className="mt-1 text-2xl font-extrabold tracking-[-0.025em] text-[var(--tema-yerel-ortak-sayfa-ana-metin-01)] md:text-[28px]">Öneri Takibi</h1>
           <SayfaRehberi anahtar="oneriler-bm" className="ml-1.5 -translate-y-1.5" />
         </div>}
 
-        aciklama={<><p className="mt-1 max-w-3xl text-sm leading-5 text-[#6b7f9b]">Ekibinizdeki UTT’lere önerilen yayınların tamamlanma durumunu takip edebilirsiniz.</p></>}
+        aciklama={<><p className="mt-1 max-w-3xl text-sm leading-5 text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-01)]">Ekibinizdeki UTT’lere önerilen yayınların tamamlanma durumunu takip edebilirsiniz.</p></>}
         aksiyon={onYenile && <YenileButonu yenileniyor={yenileniyor} onYenile={onYenile} />}
         ekKontroller={<><div className="flex w-full flex-col gap-2 sm:w-auto sm:items-end">
           <div className="flex items-center gap-2">
@@ -165,9 +165,9 @@ export default function BmOneriTakibi({
       />
 
       {bitisYaklasan && (
-        <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-[#f4d89a] bg-[#fffbeb] px-3 py-2 text-xs font-semibold text-[#8a5a12]">
+        <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-[var(--tema-yerel-ortak-sayfa-islevsel-cizgi-01)] bg-[var(--tema-yerel-ortak-sayfa-islevsel-zemin-01)] px-3 py-2 text-xs font-semibold text-[var(--tema-yerel-ortak-sayfa-islevsel-metin-05)]">
           <span>Bitişine 48 saat veya daha az kalan, tamamlanmamış öneriler gösteriliyor.</span>
-          <button type="button" onClick={() => router.push("/oneriler")} className="underline underline-offset-2 hover:text-[#65400c]">Tüm önerileri göster</button>
+          <button type="button" onClick={() => router.push("/oneriler")} className="underline underline-offset-2 hover:text-[var(--tema-yerel-ortak-sayfa-islevsel-metin-06)]">Tüm önerileri göster</button>
         </div>
       )}
 
@@ -175,23 +175,23 @@ export default function BmOneriTakibi({
         {kartlar.map((kart) => {
           const secili = durumFiltresi === kart.anahtar;
           return (
-            <button key={kart.anahtar} type="button" onClick={() => setDurumFiltresi(kart.anahtar)} aria-pressed={secili} className={`rounded-2xl border bg-white p-3.5 text-left shadow-[0_6px_18px_rgba(31,55,90,0.035)] transition-all hover:-translate-y-0.5 ${secili ? "ring-2 ring-[#b7d7f2]" : "border-[#dfe7f1]"}`} style={{ borderLeft: `4px solid ${kart.renk}` }}>
+            <button key={kart.anahtar} type="button" onClick={() => setDurumFiltresi(kart.anahtar)} aria-pressed={secili} className={`rounded-2xl border bg-[var(--tema-yerel-ortak-sayfa-kart-01)] p-3.5 text-left shadow-[0_6px_18px_var(--tema-yerel-ortak-sayfa-golge-01)] transition-all hover:-translate-y-0.5 ${secili ? "ring-2 ring-[var(--tema-yerel-ortak-sayfa-odak-01)]" : "border-[var(--tema-yerel-ortak-sayfa-cizgi-01)]"}`} style={{ borderLeft: `4px solid ${kart.renk}` }}>
               <span className="block text-[10px] font-extrabold uppercase tracking-[0.1em]" style={{ color: kart.renk }}>{kart.etiket}</span>
-              <strong className="mt-1 block text-2xl font-black text-[#243957]">{kart.deger}</strong>
+              <strong className="mt-1 block text-2xl font-black text-[var(--tema-yerel-ortak-sayfa-ana-metin-02)]">{kart.deger}</strong>
             </button>
           );
         })}
       </section>
 
       <div className="flex justify-end">
-        <Button type="button" onClick={() => router.push("/yayindaki-videolar/urun")} className="rounded-xl bg-[#2f7fc7] px-5 text-xs font-extrabold shadow-sm hover:bg-[#256daf]">
+        <Button type="button" onClick={() => router.push("/yayindaki-videolar/urun")} className="rounded-xl bg-[var(--tema-yerel-ortak-sayfa-eylem-zemin-01)] px-5 text-xs font-extrabold shadow-sm hover:bg-[var(--tema-yerel-ortak-sayfa-eylem-zemin-02)]">
           <Plus /> Yayın Öneriniz
         </Button>
       </div>
 
       <section>
         <div className="mb-4">
-          <h2 className="text-base font-extrabold text-[#203653]">Öneri Takip Listesi</h2>
+          <h2 className="text-base font-extrabold text-[var(--tema-yerel-ortak-sayfa-ana-metin-03)]">Öneri Takip Listesi</h2>
         </div>
 
         <div className="mb-5 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
@@ -228,13 +228,13 @@ export default function BmOneriTakibi({
         </div>
 
         {durumFiltresi !== "tum" && (
-          <p role="status" className="mb-4 rounded-lg border border-[#dce8f4] bg-[#f3f7fb] px-3 py-1.5 text-xs font-semibold text-[#55708d]">
+          <p role="status" className="mb-4 rounded-lg border border-[var(--tema-yerel-ortak-sayfa-cizgi-02)] bg-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-01)] px-3 py-1.5 text-xs font-semibold text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-02)]">
             {DURUM_ACIKLAMALARI[durumFiltresi]}
           </p>
         )}
 
         {liste.toplam === 0 ? (
-          <div className="px-4 py-14 text-center text-sm font-semibold text-[#8090a4]">Filtrelerle eşleşen öneri bulunamadı.</div>
+          <div className="px-4 py-14 text-center text-sm font-semibold text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-03)]">Filtrelerle eşleşen öneri bulunamadı.</div>
         ) : (
           <>
             <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
@@ -250,7 +250,7 @@ export default function BmOneriTakibi({
                       durumGoster={false}
                       talepNoGoster={false}
                       baslikSagAksiyon={oneri.talep_no != null ? (
-                        <span className="shrink-0 font-mono text-xs text-[#bc2d0d] sm:text-[10px]">
+                        <span className="shrink-0 font-mono text-xs text-[var(--tema-hoyk-talep-metni)] sm:text-[10px]">
                           {talepIdGoster(oneri.firma_adi, oneri.talep_no)}
                         </span>
                       ) : undefined}
@@ -265,11 +265,11 @@ export default function BmOneriTakibi({
       </section>
 
       {acikVideo && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4" onClick={() => setAcikVideo(null)}>
-          <div role="dialog" aria-modal="true" aria-labelledby="bm-video-onizleme-baslik" className="w-full max-w-3xl overflow-hidden rounded-2xl bg-white shadow-2xl" onClick={(event) => event.stopPropagation()}>
-            <div className="flex items-center justify-between border-b border-[#edf1f6] px-4 py-3">
-              <strong id="bm-video-onizleme-baslik" className="text-sm font-extrabold text-[#243957]">Video Önizleme</strong>
-              <button type="button" onClick={() => setAcikVideo(null)} aria-label="Video önizlemeyi kapat" className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#f2f5f9] text-[#718198]"><X size={16} /></button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--tema-yerel-ortak-sayfa-ortu-01)]/70 p-4" onClick={() => setAcikVideo(null)}>
+          <div role="dialog" aria-modal="true" aria-labelledby="bm-video-onizleme-baslik" className="w-full max-w-3xl overflow-hidden rounded-2xl bg-[var(--tema-yerel-ortak-sayfa-kart-01)] shadow-2xl" onClick={(event) => event.stopPropagation()}>
+            <div className="flex items-center justify-between border-b border-[var(--tema-yerel-ortak-sayfa-cizgi-03)] px-4 py-3">
+              <strong id="bm-video-onizleme-baslik" className="text-sm font-extrabold text-[var(--tema-yerel-ortak-sayfa-ana-metin-02)]">Video Önizleme</strong>
+              <button type="button" onClick={() => setAcikVideo(null)} aria-label="Video önizlemeyi kapat" className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-02)] text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-04)]"><X size={16} /></button>
             </div>
             <VideoOnizleme videoUrl={acikVideo} ariaLabel="Video önizlemeyi oynat" />
           </div>

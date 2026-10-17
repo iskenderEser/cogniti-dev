@@ -33,8 +33,8 @@ interface Props {
   basari: (mesaj: string) => void;
 }
 
-const KOYU_METIN = "#374151";
-const GRI_METIN = "#737373";
+const KOYU_METIN = "var(--tema-yerel-yonetim-ana-metin-03)";
+const GRI_METIN = "var(--tema-yerel-yonetim-yardimci-metin-01)";
 
 export default function SiparisYonetimModal({
   acik,
@@ -138,7 +138,7 @@ export default function SiparisYonetimModal({
   if (!acik || !mevcutSiparis) return null;
 
   const inputStili: React.CSSProperties = {
-    border: "0.5px solid #e5e7eb",
+    border: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)",
     fontFamily: "'Nunito', sans-serif",
     color: KOYU_METIN,
   };
@@ -151,16 +151,16 @@ export default function SiparisYonetimModal({
   return (
     <div
       className="fixed inset-0 flex items-center justify-center z-50 p-4"
-      style={{ background: "rgba(0,0,0,0.5)" }}
+      style={{ background: "var(--tema-yerel-yonetim-ortu-04)" }}
     >
-      <div className="bg-white rounded-xl border border-gray-200 shadow-lg w-full max-w-sm flex flex-col">
+      <div className="bg-[var(--tema-yerel-yonetim-kart-04)] rounded-xl border border-[var(--tema-yerel-yonetim-cizgi-08)] shadow-lg w-full max-w-sm flex flex-col">
         {/* Başlık */}
-        <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
-          <div className="text-base font-semibold text-gray-900">{baslik}</div>
+        <div className="px-5 py-4 border-b border-[var(--tema-yerel-yonetim-cizgi-09)] flex items-center justify-between">
+          <div className="text-base font-semibold text-[var(--tema-yerel-yonetim-ana-metin-05)]">{baslik}</div>
           <button
             onClick={onKapat}
             disabled={islemSuruyor}
-            className="text-gray-500 text-lg cursor-pointer border-none bg-transparent p-1"
+            className="text-[var(--tema-yerel-yonetim-yardimci-metin-06)] text-lg cursor-pointer border-none bg-transparent p-1"
             style={{ opacity: islemSuruyor ? 0.4 : 1 }}
           >
             ✕
@@ -172,7 +172,7 @@ export default function SiparisYonetimModal({
           {/* Sipariş özet */}
           <div
             className="rounded-lg px-3 py-2.5 text-xs"
-            style={{ background: "#f9fafb", color: GRI_METIN }}
+            style={{ background: "var(--tema-yerel-yonetim-sayfa-zemini-02)", color: GRI_METIN }}
           >
             <div className="font-semibold mb-0.5" style={{ color: KOYU_METIN }}>
               {mevcutSiparis.urun_adi}
@@ -184,7 +184,7 @@ export default function SiparisYonetimModal({
           {mod === "kargola" && (
             <>
               <div>
-                <label className="text-xs font-semibold text-gray-700 block mb-1.5">
+                <label className="text-xs font-semibold text-[var(--tema-yerel-yonetim-ana-metin-08)] block mb-1.5">
                   Kargo Firması
                 </label>
                 <SadeFormSecimi value={kargoFirmasi} onChange={(e) => setKargoFirmasi(e.target.value)} disabled={islemSuruyor} aria-label="Kargo Firması" className="w-full">
@@ -197,7 +197,7 @@ export default function SiparisYonetimModal({
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-gray-700 block mb-1.5">
+                <label className="text-xs font-semibold text-[var(--tema-yerel-yonetim-ana-metin-08)] block mb-1.5">
                   Takip Numarası
                 </label>
                 <input
@@ -205,7 +205,7 @@ export default function SiparisYonetimModal({
                   value={kargoTakipNo}
                   onChange={(e) => setKargoTakipNo(e.target.value)}
                   disabled={islemSuruyor}
-                  className="w-full px-3 py-2 text-sm rounded-lg bg-white"
+                  className="w-full px-3 py-2 text-sm rounded-lg bg-[var(--tema-yerel-yonetim-kart-04)]"
                   style={inputStili}
                   placeholder="örn. 1234567890"
                   autoFocus
@@ -217,14 +217,14 @@ export default function SiparisYonetimModal({
           {mod === "iptal" && (
             <>
               <div>
-                <label className="text-xs font-semibold text-gray-700 block mb-1.5">
+                <label className="text-xs font-semibold text-[var(--tema-yerel-yonetim-ana-metin-08)] block mb-1.5">
                   İptal Sebebi
                 </label>
                 <textarea
                   value={iptalSebebi}
                   onChange={(e) => setIptalSebebi(e.target.value)}
                   disabled={islemSuruyor}
-                  className="w-full px-3 py-2 text-sm rounded-lg bg-white resize-none"
+                  className="w-full px-3 py-2 text-sm rounded-lg bg-[var(--tema-yerel-yonetim-kart-04)] resize-none"
                   style={{ ...inputStili, minHeight: "70px" }}
                   placeholder="Örn. Stok güncellenemedi, müşteri talebi..."
                   autoFocus
@@ -238,13 +238,13 @@ export default function SiparisYonetimModal({
         </div>
 
         {/* Aksiyon */}
-        <div className="px-5 py-4 border-t border-gray-100 flex gap-2.5 justify-end">
+        <div className="px-5 py-4 border-t border-[var(--tema-yerel-yonetim-cizgi-09)] flex gap-2.5 justify-end">
           <button
             onClick={onKapat}
             disabled={islemSuruyor}
-            className="px-4 py-2 rounded-lg border bg-transparent text-gray-500 text-xs cursor-pointer"
+            className="px-4 py-2 rounded-lg border bg-transparent text-[var(--tema-yerel-yonetim-yardimci-metin-06)] text-xs cursor-pointer"
             style={{
-              border: "0.5px solid #e5e7eb",
+              border: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)",
               fontFamily: "'Nunito', sans-serif",
               opacity: islemSuruyor ? 0.4 : 1,
             }}
@@ -254,7 +254,7 @@ export default function SiparisYonetimModal({
           <button
             onClick={mod === "kargola" ? handleKargola : handleIptal}
             disabled={islemSuruyor}
-            className="px-5 py-2 rounded-lg border-none text-white text-xs font-semibold cursor-pointer"
+            className="px-5 py-2 rounded-lg border-none text-[var(--tema-yerel-yonetim-ters-metin-02)] text-xs font-semibold cursor-pointer"
             style={{
               background: aksiyonRenk,
               opacity: islemSuruyor ? 0.5 : 1,

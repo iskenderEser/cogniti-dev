@@ -1,0 +1,33 @@
+{
+  "tarih": "2026-10-17",
+  "sayfa": "/yayin-takip",
+  "dosya": "app/(panel)/talepler/_components/UreticiRolGorunum.tsx",
+  "degisiklik": "Yalnız dört kartın vurgu renkleri ortak kaynağa bağlandı",
+  "renkler": {
+    "devam": "#2563eb",
+    "bekleyen": "#c2410c",
+    "ureticide": "#7c3aed",
+    "planlanan": "#047857"
+  },
+  "kontrol_sayisi": 8,
+  "kontrol": "İki temada gerçek CSS değişken çözümlemesi",
+  "renk_disi_kaynak_farki": 0,
+  "onceki_tema_bildirimleri_korundu": true,
+  "yeni_lint_bulgusu": 0,
+  "mevcut_lint": [
+    [
+      "react-hooks/refs",
+      2,
+      "Error: Cannot access refs during render\n\nReact refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).\n\n/Users/iskendereser/Desktop/hapbilgi/app/(panel)/talepler/_components/UreticiRolGorunum.tsx:33:5\n  31 |\n  32 |   if (!merkez.loading && !authYukleniyor && kullanici) {\n> 33 |     ilkYuklemeTamamlandiRef.current = true;\n     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Cannot update ref during render\n  34 |   }\n  35 |\n  36 |   // Yalnız auth bekleme durumunda tam sayfa yükleme gösterilir.",
+      33
+    ],
+    [
+      "react-hooks/rules-of-hooks",
+      2,
+      "React Hook \"useMemo\" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?",
+      48
+    ]
+  ],
+  "typecheck": "npm run typecheck:build: BASARILI",
+  "gercek_tarayıcı": "YAPILMADI"
+}

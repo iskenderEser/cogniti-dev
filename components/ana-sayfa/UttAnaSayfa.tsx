@@ -42,16 +42,16 @@ export function UttKategoriIskeleti() {
   return (
     <div className="mx-auto max-w-6xl animate-pulse px-3 py-4 pb-20 md:px-6 md:py-5 md:pb-5 lg:px-8 lg:py-7">
       <div className="mb-5 space-y-2">
-        <div className="h-7 w-48 rounded-lg bg-gray-200" />
-        <div className="h-4 w-72 max-w-full rounded bg-gray-200" />
+        <div className="h-7 w-48 rounded-lg bg-[var(--tema-yerel-ana-sayfa-sayfa-zemini-03)]" />
+        <div className="h-4 w-72 max-w-full rounded bg-[var(--tema-yerel-ana-sayfa-sayfa-zemini-03)]" />
       </div>
       <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex gap-2 overflow-hidden">
           {[0, 1, 2, 3].map((oge) => (
-            <div key={oge} className="h-8 w-24 shrink-0 rounded-full bg-gray-200" />
+            <div key={oge} className="h-8 w-24 shrink-0 rounded-full bg-[var(--tema-yerel-ana-sayfa-sayfa-zemini-03)]" />
           ))}
         </div>
-        <div className="h-8 w-full rounded-lg bg-gray-200 sm:w-72" />
+        <div className="h-8 w-full rounded-lg bg-[var(--tema-yerel-ana-sayfa-sayfa-zemini-03)] sm:w-72" />
       </div>
       <UttYayinKartIskeletleri izgaraClassName="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5" />
     </div>
@@ -63,17 +63,17 @@ function UttAnaSayfaIskeleti() {
     <div className="mx-auto max-w-6xl animate-pulse px-3 py-4 pb-20 md:px-6 md:py-5 md:pb-5 lg:px-8 lg:py-7">
       <div className="mb-6 flex items-end justify-between gap-3">
         <div className="space-y-2">
-          <div className="h-7 w-44 rounded-lg bg-gray-200" />
-          <div className="h-4 w-28 rounded bg-gray-200" />
+          <div className="h-7 w-44 rounded-lg bg-[var(--tema-yerel-ana-sayfa-sayfa-zemini-03)]" />
+          <div className="h-4 w-28 rounded bg-[var(--tema-yerel-ana-sayfa-sayfa-zemini-03)]" />
         </div>
-        <div className="h-7 w-36 rounded-full bg-gray-200" />
+        <div className="h-7 w-36 rounded-full bg-[var(--tema-yerel-ana-sayfa-sayfa-zemini-03)]" />
       </div>
       <div className="mb-5 grid grid-cols-2 gap-2 md:grid-cols-4">
         {[0, 1, 2, 3].map((kart) => (
-          <div key={kart} className="h-28 rounded-xl border border-gray-200 bg-white" />
+          <div key={kart} className="h-28 rounded-xl border border-[var(--tema-yerel-ana-sayfa-cizgi-04)] bg-[var(--tema-yerel-ana-sayfa-kart-01)]" />
         ))}
       </div>
-      <div className="mb-5 h-10 max-w-full rounded-[14px] bg-white shadow-sm sm:w-[32rem]" />
+      <div className="mb-5 h-10 max-w-full rounded-[14px] bg-[var(--tema-yerel-ana-sayfa-kart-01)] shadow-sm sm:w-[32rem]" />
       <UttYayinKartIskeletleri izgaraClassName="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5" />
     </div>
   );
@@ -125,13 +125,13 @@ function KategoriYayinlariGoster({
     <div className="mx-auto max-w-6xl px-3 py-4 pb-20 md:px-6 md:py-5 md:pb-5 lg:px-8 lg:py-7">
       <header className="mb-5">
         <div className="inline-flex items-center">
-          <h1 className="m-0 text-xl font-extrabold text-gray-900 md:text-2xl">{kategoriBilgisi.etiket}</h1>
+          <h1 className="m-0 text-xl font-extrabold text-[var(--tema-yerel-ana-sayfa-ana-metin-01)] md:text-2xl">{kategoriBilgisi.etiket}</h1>
           <SayfaRehberi
             anahtar={`videolarim-${kategoriBilgisi.slug}`}
             className="ml-1.5 -translate-y-0.5"
           />
         </div>
-        <p className="mt-1 text-xs font-semibold text-gray-500">
+        <p className="mt-1 text-xs font-semibold text-[var(--tema-yerel-ana-sayfa-yardimci-metin-03)]">
           {kategoriBilgisi.sayfaAciklamasi}
         </p>
       </header>
@@ -383,8 +383,8 @@ export default function UttAnaSayfa({ user, rol, adSoyad, kategoriBilgisi, temel
       {/* Karşılama */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 mb-6">
         <div>
-          <h1 className="text-lg md:text-xl font-extrabold text-gray-900 m-0">Merhaba {ad}, 👋</h1>
-          <p className="text-sm text-gray-500 mt-1">{ROL_ADLARI[rol.toLowerCase()] ?? rol.toUpperCase()}</p>
+          <h1 className="text-lg md:text-xl font-extrabold text-[var(--tema-yerel-ana-sayfa-ana-metin-01)] m-0">Merhaba {ad}, 👋</h1>
+          <p className="text-sm text-[var(--tema-yerel-ana-sayfa-yardimci-metin-03)] mt-1">{ROL_ADLARI[rol.toLowerCase()] ?? rol.toUpperCase()}</p>
         </div>
 
         <div className="flex items-start gap-1.5 flex-wrap md:flex-col md:items-end">
@@ -397,9 +397,9 @@ export default function UttAnaSayfa({ user, rol, adSoyad, kategoriBilgisi, temel
                 onClick={() => router.push("/store")}
                 className="inline-flex items-center justify-center gap-1.5 text-[10px] font-bold px-3 py-1 rounded-full border transition-all hover:opacity-85 shadow-xs cursor-pointer select-none whitespace-nowrap text-center"
                 style={{
-                  backgroundColor: takvim.acik ? "#f0fdf4" : onGunKala ? "#1e3a8a" : "#fffbeb",
-                  borderColor: takvim.acik ? "#bbf7d0" : onGunKala ? "#1e3a8a" : "#fef3c7",
-                  color: takvim.acik ? "#166534" : onGunKala ? "#ffffff" : "#92400e",
+                  backgroundColor: takvim.acik ? "var(--tema-yerel-ana-sayfa-islevsel-zemin-04)" : onGunKala ? "var(--tema-yerel-ana-sayfa-eylem-zemin-01)" : "var(--tema-yerel-ana-sayfa-islevsel-zemin-05)",
+                  borderColor: takvim.acik ? "var(--tema-yerel-ana-sayfa-islevsel-cizgi-01)" : onGunKala ? "var(--tema-yerel-ana-sayfa-cizgi-03)" : "var(--tema-yerel-ana-sayfa-islevsel-cizgi-02)",
+                  color: takvim.acik ? "var(--tema-yerel-ana-sayfa-islevsel-metin-09)" : onGunKala ? "var(--tema-yerel-ana-sayfa-ters-metin-01)" : "var(--tema-yerel-ana-sayfa-islevsel-metin-10)",
                 }}
                 title={
                   takvim.acik
@@ -411,8 +411,8 @@ export default function UttAnaSayfa({ user, rol, adSoyad, kategoriBilgisi, temel
                   <span
                     className="w-2 h-2 rounded-full shrink-0"
                     style={{
-                      backgroundColor: takvim.acik ? "#16a34a" : "#f59e0b",
-                      boxShadow: takvim.acik ? "0 0 6px #16a34a" : "none",
+                      backgroundColor: takvim.acik ? "var(--tema-yerel-ana-sayfa-islevsel-zemin-06)" : "var(--tema-yerel-ana-sayfa-islevsel-zemin-07)",
+                      boxShadow: takvim.acik ? "0 0 6px var(--tema-yerel-ana-sayfa-islevsel-golge-01)" : "none",
                     }}
                   />
                 )}
@@ -428,22 +428,22 @@ export default function UttAnaSayfa({ user, rol, adSoyad, kategoriBilgisi, temel
       {/* Stat kartlar */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-5">
         {[
-          { label: "Yeni İçerikler", value: istat.yeni, sub: "Henüz tamamlanmadı", renk: "#bc2d0d", filtre: "yeni" as VideoDurumu },
-          { label: "Devam Eden", value: istat.devam, sub: "Yarıda bırakılan", renk: "#f59e0b", filtre: "devam" as VideoDurumu },
-          { label: "Tamamlanan", value: istat.tamamlanan, sub: "İzlendi ve tamamlandı", renk: "#16a34a", filtre: "tamamlanan" as VideoDurumu },
-          { label: "Bu Haftaki Puan", value: istat.hafta_puani, sub: `Toplam: ${istat.toplam_puan.toLocaleString("tr-TR")} p`, renk: "#56aeff", filtre: null },
+          { label: "Yeni İçerikler", value: istat.yeni, sub: "Henüz tamamlanmadı", renk: "var(--tema-yerel-ana-sayfa-vurgu-metin-01)", filtre: "yeni" as VideoDurumu },
+          { label: "Devam Eden", value: istat.devam, sub: "Yarıda bırakılan", renk: "var(--tema-yerel-ana-sayfa-islevsel-metin-07)", filtre: "devam" as VideoDurumu },
+          { label: "Tamamlanan", value: istat.tamamlanan, sub: "İzlendi ve tamamlandı", renk: "var(--tema-yerel-ana-sayfa-islevsel-metin-06)", filtre: "tamamlanan" as VideoDurumu },
+          { label: "Bu Haftaki Puan", value: istat.hafta_puani, sub: `Toplam: ${istat.toplam_puan.toLocaleString("tr-TR")} p`, renk: "var(--tema-yerel-ana-sayfa-eylem-metin-03)", filtre: null },
         ].map((k, idx) => {
           const secili = k.filtre ? aktifDurumFiltresi === k.filtre : false;
-          const ortakSinif = "bg-white border border-gray-200 border-l-[3px] [border-left-color:var(--stat-renk)] rounded-xl p-3 text-left md:p-5 transition-all";
+          const ortakSinif = "bg-[var(--tema-yerel-ana-sayfa-kart-01)] border border-[var(--tema-yerel-ana-sayfa-cizgi-04)] border-l-[3px] [border-left-color:var(--stat-renk)] rounded-xl p-3 text-left md:p-5 transition-all";
           const ortakStil = {
             "--stat-renk": k.renk,
-            boxShadow: secili ? `0 0 0 2px ${k.renk}22` : "none",
+            boxShadow: secili ? `0 0 0 2px color-mix(in srgb, ${k.renk} 13.333333333333334%, transparent)` : "none",
           } as React.CSSProperties;
           const icerik = (
             <>
-              <div className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">{k.label}</div>
-              <div className="text-2xl md:text-3xl font-extrabold text-gray-900 leading-none">{k.value.toLocaleString("tr-TR")}</div>
-              <div className="hidden md:block text-xs text-gray-500 mt-1.5">{k.sub}</div>
+              <div className="text-xs font-bold text-[var(--tema-yerel-ana-sayfa-yardimci-metin-01)] uppercase tracking-wide mb-2">{k.label}</div>
+              <div className="text-2xl md:text-3xl font-extrabold text-[var(--tema-yerel-ana-sayfa-ana-metin-01)] leading-none">{k.value.toLocaleString("tr-TR")}</div>
+              <div className="hidden md:block text-xs text-[var(--tema-yerel-ana-sayfa-yardimci-metin-03)] mt-1.5">{k.sub}</div>
             </>
           );
 
@@ -489,7 +489,7 @@ export default function UttAnaSayfa({ user, rol, adSoyad, kategoriBilgisi, temel
               onFavori={handleFavori}
             />
           )}
-          baslik={<h2 className="m-0 text-base font-extrabold text-gray-900 md:text-lg">{durumBasliklari[aktifDurumFiltresi]}</h2>}
+          baslik={<h2 className="m-0 text-base font-extrabold text-[var(--tema-yerel-ana-sayfa-ana-metin-01)] md:text-lg">{durumBasliklari[aktifDurumFiltresi]}</h2>}
           aciklama={
             aktifDurumFiltresi === "devam"
               ? "Yarım kalan öğrenme içerikleri yeniden açıldığında baştan başlar."
@@ -499,7 +499,7 @@ export default function UttAnaSayfa({ user, rol, adSoyad, kategoriBilgisi, temel
             <button
               type="button"
               onClick={() => setAktifDurumFiltresi(null)}
-              className="rounded-full border border-gray-200 bg-white px-3 py-1.5 text-xs font-bold text-gray-600 hover:border-gray-300 hover:text-gray-900 cursor-pointer"
+              className="rounded-full border border-[var(--tema-yerel-ana-sayfa-cizgi-04)] bg-[var(--tema-yerel-ana-sayfa-kart-01)] px-3 py-1.5 text-xs font-bold text-[var(--tema-yerel-ana-sayfa-ana-metin-04)] hover:border-[var(--tema-yerel-ana-sayfa-cizgi-11)] hover:text-[var(--tema-yerel-ana-sayfa-ana-metin-01)] cursor-pointer"
             >
               Tümünü Göster
             </button>
@@ -514,7 +514,7 @@ export default function UttAnaSayfa({ user, rol, adSoyad, kategoriBilgisi, temel
           {devamEdenler.length > 0 && (aktifTanburBolumu === "tumu" || aktifTanburBolumu === "devam_edenler") && (
             <KayanRaf
               key={`devam_${aktifTanburBolumu}`}
-              baslik={<h2 className="text-base font-bold text-gray-900 md:text-lg">Kaldığınız Yerden Devam Edin</h2>}
+              baslik={<h2 className="text-base font-bold text-[var(--tema-yerel-ana-sayfa-ana-metin-01)] md:text-lg">Kaldığınız Yerden Devam Edin</h2>}
               videolar={devamEdenler}
               onVideoClick={handleVideoClick}
               onBegeni={handleBegeni}
@@ -525,7 +525,7 @@ export default function UttAnaSayfa({ user, rol, adSoyad, kategoriBilgisi, temel
           {yeniVideolar.length > 0 && (aktifTanburBolumu === "tumu" || aktifTanburBolumu === "yeni_videolar") && (
             <KayanRaf
               key={`yeni_${aktifTanburBolumu}`}
-              baslik={<h2 className="text-base font-bold text-gray-900 md:text-lg">Yeni Öğrenme İçerikleri</h2>}
+              baslik={<h2 className="text-base font-bold text-[var(--tema-yerel-ana-sayfa-ana-metin-01)] md:text-lg">Yeni Öğrenme İçerikleri</h2>}
               videolar={yeniVideolar}
               onVideoClick={handleVideoClick}
               onBegeni={handleBegeni}
@@ -536,7 +536,7 @@ export default function UttAnaSayfa({ user, rol, adSoyad, kategoriBilgisi, temel
           {tureGoreSuz(uttVeri?.son_izlediklerim ?? []).length > 0 && (aktifTanburBolumu === "tumu" || aktifTanburBolumu === "son_izlediklerim") && (
             <KayanRaf
               key={`son_${aktifTanburBolumu}`}
-              baslik={<h2 className="text-base font-bold text-gray-900 md:text-lg">En Son İzlediklerim</h2>}
+              baslik={<h2 className="text-base font-bold text-[var(--tema-yerel-ana-sayfa-ana-metin-01)] md:text-lg">En Son İzlediklerim</h2>}
               videolar={tureGoreSuz(uttVeri?.son_izlediklerim ?? [])}
               onVideoClick={handleVideoClick}
               onBegeni={handleBegeni}
@@ -547,14 +547,14 @@ export default function UttAnaSayfa({ user, rol, adSoyad, kategoriBilgisi, temel
           {tureGoreSuz(uttVeri?.ekstra_izlediklerim ?? []).length > 0 && (aktifTanburBolumu === "tumu" || aktifTanburBolumu === "ekstra_izlediklerim") && (
             <KayanRaf
               key={`ekstra_${aktifTanburBolumu}`}
-              baslik={<h2 className="text-base font-bold text-gray-900 md:text-lg">Ekstra İzlediklerim</h2>}
+              baslik={<h2 className="text-base font-bold text-[var(--tema-yerel-ana-sayfa-ana-metin-01)] md:text-lg">Ekstra İzlediklerim</h2>}
               videolar={tureGoreSuz(uttVeri?.ekstra_izlediklerim ?? [])}
               onVideoClick={handleVideoClick}
               onBegeni={handleBegeni}
               onFavori={handleFavori}
               sifirlamaAnahtari={`${aktifTanburBolumu}-${aktifYayinTuru}`}
               kartAlti={(video) => (
-                <span className="rounded-lg px-2 py-1 text-center text-xs sm:text-[10px]" style={video.bu_ay_extra_kazanildi ? { background: "#f0fdf4", color: "#15803d", border: "0.5px solid #bbf7d0" } : { background: "#eff6ff", color: "#1d4ed8", border: "0.5px solid #bfdbfe" }}>
+                <span className="rounded-lg px-2 py-1 text-center text-xs sm:text-[10px]" style={video.bu_ay_extra_kazanildi ? { background: "var(--tema-yerel-ana-sayfa-islevsel-zemin-04)", color: "var(--tema-yerel-ana-sayfa-islevsel-metin-14)", border: "0.5px solid var(--tema-yerel-ana-sayfa-islevsel-cizgi-01)" } : { background: "var(--tema-yerel-ana-sayfa-secim-zemin-02)", color: "var(--tema-yerel-ana-sayfa-eylem-metin-02)", border: "0.5px solid var(--tema-yerel-ana-sayfa-cizgi-12)" }}>
                   Bu turda: {video.bu_turda_izleme} izleme · {video.bu_ay_extra_kazanildi ? "Bu ay extra kazanıldı ✓" : `Extra'ya ${video.extra_kalan} tam tekrar kaldı`}
                 </span>
               )}
@@ -563,7 +563,7 @@ export default function UttAnaSayfa({ user, rol, adSoyad, kategoriBilgisi, temel
           {enCokBegenilen.length > 0 && (aktifTanburBolumu === "tumu" || aktifTanburBolumu === "en_cok_begenilen") && (
             <KayanRaf
               key={`begenilen_${aktifTanburBolumu}`}
-              baslik={<h2 className="text-base font-bold text-gray-900 md:text-lg">En Çok Beğenilenler</h2>}
+              baslik={<h2 className="text-base font-bold text-[var(--tema-yerel-ana-sayfa-ana-metin-01)] md:text-lg">En Çok Beğenilenler</h2>}
               videolar={enCokBegenilen}
               onVideoClick={handleVideoClick}
               onBegeni={handleBegeni}
@@ -574,7 +574,7 @@ export default function UttAnaSayfa({ user, rol, adSoyad, kategoriBilgisi, temel
           {enCokFavorilenen.length > 0 && (aktifTanburBolumu === "tumu" || aktifTanburBolumu === "en_cok_favorilenen") && (
             <KayanRaf
               key={`favori_${aktifTanburBolumu}`}
-              baslik={<h2 className="text-base font-bold text-gray-900 md:text-lg">En Çok Favorilenenler</h2>}
+              baslik={<h2 className="text-base font-bold text-[var(--tema-yerel-ana-sayfa-ana-metin-01)] md:text-lg">En Çok Favorilenenler</h2>}
               videolar={enCokFavorilenen}
               onVideoClick={handleVideoClick}
               onBegeni={handleBegeni}
@@ -585,7 +585,7 @@ export default function UttAnaSayfa({ user, rol, adSoyad, kategoriBilgisi, temel
           {enCokIzlenen.length > 0 && (aktifTanburBolumu === "tumu" || aktifTanburBolumu === "en_cok_izlenen") && (
             <KayanRaf
               key={`izlenen_${aktifTanburBolumu}`}
-              baslik={<h2 className="text-base font-bold text-gray-900 md:text-lg">En Çok İzlenenler</h2>}
+              baslik={<h2 className="text-base font-bold text-[var(--tema-yerel-ana-sayfa-ana-metin-01)] md:text-lg">En Çok İzlenenler</h2>}
               videolar={enCokIzlenen}
               onVideoClick={handleVideoClick}
               onBegeni={handleBegeni}

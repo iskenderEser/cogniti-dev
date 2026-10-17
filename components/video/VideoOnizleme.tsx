@@ -111,11 +111,11 @@ export default function VideoOnizleme({
         />
       </VideoCercevesi>
       {bitisAsamasi !== "yok" && (
-        <div className="absolute inset-0 z-20 flex animate-in items-center justify-center bg-[#10233a]/75 text-white fade-in duration-200">
+        <div className="absolute inset-0 z-20 flex animate-in items-center justify-center bg-[var(--tema-oynatici-video-bitis-ortusu)] text-[var(--tema-oynatici-video-ters-metin)] fade-in duration-200">
           <div className="flex flex-col items-center text-center">
             <CheckCircle2 className="size-10" />
             <strong className="mt-3 text-base">Video tamamlandı</strong>
-            <span className="mt-1 text-xs font-semibold text-white/75">Listeye dönülüyor…</span>
+            <span className="mt-1 text-xs font-semibold text-[var(--tema-oynatici-video-bitis-aciklama)]">Listeye dönülüyor…</span>
           </div>
         </div>
       )}

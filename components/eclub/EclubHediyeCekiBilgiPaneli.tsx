@@ -56,17 +56,17 @@ export default function EclubHediyeCekiBilgiPaneli() {
             <button ref={kapat} type="button" className={styles.kapat} aria-label="Bilgi panelini kapat" onClick={() => setAcik(false)}><X size={18} /></button>
           </header>
           <div className={styles.metin}>
-<dl className="grid grid-cols-1 gap-3 text-xs leading-relaxed text-slate-600">
-              <div className="min-w-0 rounded-2xl border border-indigo-100 bg-gradient-to-br from-indigo-50/70 via-white to-white p-4 shadow-sm">
-                <dt className="font-bold text-slate-900">Eczane Havuz Puanı</dt>
+<dl className="grid grid-cols-1 gap-3 text-xs leading-relaxed text-[var(--tema-yerel-eclub-ana-metin-20)]">
+              <div className="min-w-0 rounded-2xl border border-[var(--tema-yerel-eclub-cizgi-44)] bg-gradient-to-br from-[var(--tema-yerel-eclub-secim-zemin-19)]/70 via-[var(--tema-yerel-eclub-kart-01)] to-[var(--tema-yerel-eclub-kart-01)] p-4 shadow-sm">
+                <dt className="font-bold text-[var(--tema-yerel-eclub-ana-metin-19)]">Eczane Havuz Puanı</dt>
                 <dd className="mt-3">Platformda tamamladığınız yayınlar sonrası kazandığınız puanlar, firmanın belirlediği oranda hediye çekine dönüştürülür. Eczane havuz puanı olarak tanımlanır.</dd>
               </div>
-              <div className="min-w-0 rounded-2xl border border-indigo-100 bg-gradient-to-br from-indigo-50/70 via-white to-white p-4 shadow-sm">
-                <dt className="font-bold text-slate-900">Puan Limitleri ve Puanların Devri</dt>
+              <div className="min-w-0 rounded-2xl border border-[var(--tema-yerel-eclub-cizgi-44)] bg-gradient-to-br from-[var(--tema-yerel-eclub-secim-zemin-19)]/70 via-[var(--tema-yerel-eclub-kart-01)] to-[var(--tema-yerel-eclub-kart-01)] p-4 shadow-sm">
+                <dt className="font-bold text-[var(--tema-yerel-eclub-ana-metin-19)]">Puan Limitleri ve Puanların Devri</dt>
                 <dd className="mt-3">Firma, her yayın için hediye çeki talebinde kullanılabilecek en az ve en çok puanı belirler. Talepler bu limitler dahilinde verilebilir. Sipariş zorunlu yayınlar hariç diğer yayınlardan kazanılan puanlar, devredilebilir. Bir önceki yıldan kalan kullanılmamış puanlar, 8 Ocak’ta silinir.</dd>
               </div>
-              <div className="min-w-0 rounded-2xl border border-indigo-100 bg-gradient-to-br from-indigo-50/70 via-white to-white p-4 shadow-sm">
-                <dt className="font-bold text-slate-900">Sipariş ve Hediye Çeki İlişkisi</dt>
+              <div className="min-w-0 rounded-2xl border border-[var(--tema-yerel-eclub-cizgi-44)] bg-gradient-to-br from-[var(--tema-yerel-eclub-secim-zemin-19)]/70 via-[var(--tema-yerel-eclub-kart-01)] to-[var(--tema-yerel-eclub-kart-01)] p-4 shadow-sm">
+                <dt className="font-bold text-[var(--tema-yerel-eclub-ana-metin-19)]">Sipariş ve Hediye Çeki İlişkisi</dt>
                 <dd className="mt-3 space-y-2">
                   <p>Firma, her yayın için sipariş koşulunu belirleyebilir. Üç seçenek vardır:</p>
                   <ul className="list-disc space-y-1 pl-4">
@@ -76,8 +76,8 @@ export default function EclubHediyeCekiBilgiPaneli() {
                   </ul>
                 </dd>
               </div>
-              <div className="min-w-0 rounded-2xl border border-indigo-100 bg-gradient-to-br from-indigo-50/70 via-white to-white p-4 shadow-sm">
-                <dt className="font-bold text-slate-900">Talep Takibi ve İptali</dt>
+              <div className="min-w-0 rounded-2xl border border-[var(--tema-yerel-eclub-cizgi-44)] bg-gradient-to-br from-[var(--tema-yerel-eclub-secim-zemin-19)]/70 via-[var(--tema-yerel-eclub-kart-01)] to-[var(--tema-yerel-eclub-kart-01)] p-4 shadow-sm">
+                <dt className="font-bold text-[var(--tema-yerel-eclub-ana-metin-19)]">Talep Takibi ve İptali</dt>
                 <dd className="mt-3 space-y-2">
                   <p>Hediye çeki talebini yalnızca eczane sahibi oluşturabilir.</p>
                   <p>Hediye çeki talebinizin durumunu <strong>Hediye Çeki Takibi</strong> alanından takip edebilirsiniz.</p>

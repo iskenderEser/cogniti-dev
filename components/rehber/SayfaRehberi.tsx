@@ -141,7 +141,7 @@ export default function SayfaRehberi({
             key={eslesme.index}
             href={url}
             onClick={() => handleKapat()}
-            className="font-extrabold text-blue-600 hover:text-blue-800 underline underline-offset-2 inline"
+            className="font-extrabold text-[var(--tema-rehber-eylem)] hover:text-[var(--tema-rehber-eylem-hover)] underline underline-offset-2 inline"
           >
             {linkMetni}
           </Link>
@@ -169,7 +169,7 @@ export default function SayfaRehberi({
             e.stopPropagation();
             setAktifAltModal(altModal);
           }}
-          className="font-bold text-blue-600 hover:text-blue-800 underline underline-offset-2 inline cursor-pointer"
+          className="font-bold text-[var(--tema-rehber-eylem)] hover:text-[var(--tema-rehber-eylem-hover)] underline underline-offset-2 inline cursor-pointer"
         >
           {linkKelime}
         </button>
@@ -199,8 +199,8 @@ export default function SayfaRehberi({
         title="Bu ekran ne işe yarar?"
         className={`inline-flex items-center justify-center font-serif font-bold italic select-none rounded-full transition-all duration-150 cursor-pointer ${
           acik
-            ? "bg-blue-600 text-white shadow-md scale-105"
-            : "bg-blue-50 text-[#bc2d0d] hover:bg-blue-100 hover:text-[#991b1b] hover:scale-105 active:scale-95 border border-blue-200/90 shadow-sm"
+            ? "bg-[var(--tema-rehber-eylem)] text-[var(--tema-rehber-ters-metin)] shadow-md scale-105"
+            : "bg-[var(--tema-rehber-vurgu-zemin)] text-[var(--tema-rehber-vurgu)] hover:bg-[var(--tema-rehber-hover-zemin)] hover:text-[var(--tema-rehber-vurgu-hover)] hover:scale-105 active:scale-95 border border-[var(--tema-rehber-vurgu-cizgi)]/90 shadow-sm"
         } ${boyutSiniflari[boyut]}`}
         style={{ fontFamily: "'Georgia', 'Cambria', 'Times New Roman', serif" }}
       >
@@ -218,25 +218,25 @@ export default function SayfaRehberi({
             role="dialog"
             aria-modal="false"
             aria-label={aktifAltModal ? aktifAltModal.baslik : rehber.baslik}
-            className="fixed bg-white rounded-2xl shadow-2xl border border-gray-200 p-5 animate-in fade-in zoom-in-95 duration-150 text-left"
+            className="fixed bg-[var(--tema-rehber-yuzey)] rounded-2xl shadow-2xl border border-[var(--tema-rehber-cizgi)] p-5 animate-in fade-in zoom-in-95 duration-150 text-left"
             style={{
               top: `${konum.top}px`,
               left: `${konum.left}px`,
               width: `${konum.width}px`,
               zIndex: 99999,
               fontFamily: "'Nunito', sans-serif",
-              boxShadow: "0 20px 35px -10px rgba(0, 0, 0, 0.22), 0 2px 8px rgba(0, 0, 0, 0.08)",
+              boxShadow: "var(--tema-rehber-golge)",
             }}
           >
             {aktifAltModal ? (
               /* --- ALT MODAL (Örn: ÜRETİM VARYANTLARI) GÖRÜNÜMÜ --- */
               <div>
                 {/* Başlık ve Geri / Kapat */}
-                <div className="flex items-center justify-between pb-3 border-b border-gray-100">
+                <div className="flex items-center justify-between pb-3 border-b border-[var(--tema-rehber-ic-cizgi)]">
                   <button
                     type="button"
                     onClick={() => setAktifAltModal(null)}
-                    className="inline-flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-blue-800 hover:bg-blue-50 px-2 py-1 rounded-lg transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-1 text-xs font-bold text-[var(--tema-rehber-eylem)] hover:text-[var(--tema-rehber-eylem-hover)] hover:bg-[var(--tema-rehber-vurgu-zemin)] px-2 py-1 rounded-lg transition-colors cursor-pointer"
                   >
                     <ChevronLeft size={15} strokeWidth={2.5} />
                     Geri Dön
@@ -245,7 +245,7 @@ export default function SayfaRehberi({
                     type="button"
                     onClick={handleKapat}
                     aria-label="Kapat"
-                    className="text-gray-400 hover:text-gray-700 hover:bg-gray-100 p-1.5 rounded-full transition-colors cursor-pointer"
+                    className="text-[var(--tema-rehber-soluk-metin)] hover:text-[var(--tema-rehber-kontrol-metin)] hover:bg-[var(--tema-rehber-notr-hover)] p-1.5 rounded-full transition-colors cursor-pointer"
                   >
                     <X size={16} strokeWidth={2.5} />
                   </button>
@@ -253,14 +253,14 @@ export default function SayfaRehberi({
 
                 {/* Alt Modal Başlığı */}
                 <div className="mt-3">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--tema-rehber-eylem)] bg-[var(--tema-rehber-vurgu-zemin)] px-2 py-0.5 rounded-md">
                     Detay Rehberi
                   </span>
-                  <h3 className="text-sm font-extrabold text-gray-900 leading-tight mt-1">
+                  <h3 className="text-sm font-extrabold text-[var(--tema-rehber-baslik)] leading-tight mt-1">
                     {aktifAltModal.baslik}
                   </h3>
                   {aktifAltModal.altBaslik && (
-                    <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                    <p className="text-xs text-[var(--tema-rehber-ikincil-metin)] mt-1 leading-relaxed">
                       {aktifAltModal.altBaslik}
                     </p>
                   )}
@@ -271,19 +271,19 @@ export default function SayfaRehberi({
                   {aktifAltModal.kartlar.map((k) => (
                     <div
                       key={k.kod}
-                      className="p-3 rounded-xl bg-gray-50/80 border border-gray-100 hover:bg-gray-50 transition-colors"
+                      className="p-3 rounded-xl bg-[var(--tema-rehber-notr-zemin)]/80 border border-[var(--tema-rehber-ic-cizgi)] hover:bg-[var(--tema-rehber-notr-zemin)] transition-colors"
                     >
                       <div className="flex items-center justify-between gap-2 mb-1">
-                        <span className="text-xs font-extrabold text-gray-900">
+                        <span className="text-xs font-extrabold text-[var(--tema-rehber-baslik)]">
                           {k.baslik}
                         </span>
                         {k.rozet && (
-                          <span className="text-[10px] font-semibold bg-white text-gray-600 border border-gray-200 px-2 py-0.5 rounded-full whitespace-nowrap shadow-2xs">
+                          <span className="text-[10px] font-semibold bg-[var(--tema-rehber-yuzey)] text-[var(--tema-rehber-metin)] border border-[var(--tema-rehber-cizgi)] px-2 py-0.5 rounded-full whitespace-nowrap shadow-2xs">
                             {k.rozet}
                           </span>
                         )}
                       </div>
-                      <p className="text-xs text-gray-600 leading-relaxed m-0">
+                      <p className="text-xs text-[var(--tema-rehber-metin)] leading-relaxed m-0">
                         {k.aciklama}
                       </p>
                     </div>
@@ -295,16 +295,16 @@ export default function SayfaRehberi({
               /* --- ANA REHBER GÖRÜNÜMÜ --- */
               <div>
                 {/* Başlık ve Kapat [X] Butonu */}
-                <div className="flex items-start justify-between gap-3 pb-3 border-b border-gray-100">
+                <div className="flex items-start justify-between gap-3 pb-3 border-b border-[var(--tema-rehber-ic-cizgi)]">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 rounded-xl bg-[var(--tema-rehber-vurgu-zemin)] text-[var(--tema-rehber-eylem)] flex items-center justify-center flex-shrink-0">
                       <Compass size={18} strokeWidth={2.2} />
                     </div>
                     <div>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--tema-rehber-eylem)] bg-[var(--tema-rehber-vurgu-zemin)] px-2 py-0.5 rounded-md">
                         Sayfa Rehberi
                       </span>
-                      <h3 className="text-sm font-extrabold text-gray-900 leading-tight mt-0.5">
+                      <h3 className="text-sm font-extrabold text-[var(--tema-rehber-baslik)] leading-tight mt-0.5">
                         {rehber.baslik}
                       </h3>
                     </div>
@@ -313,36 +313,36 @@ export default function SayfaRehberi({
                     type="button"
                     onClick={handleKapat}
                     aria-label="Rehberi Kapat"
-                    className="text-gray-400 hover:text-gray-700 hover:bg-gray-100 p-1.5 rounded-full transition-colors cursor-pointer"
+                    className="text-[var(--tema-rehber-soluk-metin)] hover:text-[var(--tema-rehber-kontrol-metin)] hover:bg-[var(--tema-rehber-notr-hover)] p-1.5 rounded-full transition-colors cursor-pointer"
                   >
                     <X size={16} strokeWidth={2.5} />
                   </button>
                 </div>
 
                 {/* Özet Açıklama */}
-                <p className="text-xs sm:text-[13px] text-gray-600 leading-relaxed mt-3">
+                <p className="text-xs sm:text-[13px] text-[var(--tema-rehber-metin)] leading-relaxed mt-3">
                   {metinFormatla(rehber.ozet, rehber.linkKelime, rehber.altModal)}
                 </p>
 
                 {/* Maddeler / Ne Nerede Yapılır? */}
                 {rehber.maddeler.length > 0 && (
                   <div className="mt-4 space-y-2.5 max-h-[320px] overflow-y-auto pr-1">
-                    <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wide">
+                    <div className="text-[11px] font-bold text-[var(--tema-rehber-soluk-metin)] uppercase tracking-wide">
                       Neler Yapabilirsiniz?
                     </div>
                     {rehber.maddeler.map((m, idx) => (
                       <div
                         key={idx}
-                        className="flex items-start gap-2.5 p-2 rounded-xl bg-gray-50/80 hover:bg-gray-50 transition-colors border border-gray-100/80"
+                        className="flex items-start gap-2.5 p-2 rounded-xl bg-[var(--tema-rehber-notr-zemin)]/80 hover:bg-[var(--tema-rehber-notr-zemin)] transition-colors border border-[var(--tema-rehber-ic-cizgi)]/80"
                       >
                         <span className="text-sm flex-shrink-0 leading-tight mt-0.5">
                           {m.ikon ?? "📌"}
                         </span>
                         <div className="text-xs leading-normal">
-                          <strong className="text-gray-900 font-bold block mb-0.5">
+                          <strong className="text-[var(--tema-rehber-baslik)] font-bold block mb-0.5">
                             {m.baslik}
                           </strong>
-                          <span className="text-gray-600">
+                          <span className="text-[var(--tema-rehber-metin)]">
                             {metinFormatla(m.aciklama, m.linkKelime, m.altModal)}
                           </span>
                         </div>
@@ -353,10 +353,10 @@ export default function SayfaRehberi({
 
                 {/* İpucu / Püf Noktası Kutusu */}
                 {rehber.ipucu && (
-                  <div className="mt-4 p-3 bg-amber-50/70 border border-amber-200/80 rounded-xl flex items-start gap-2 text-xs text-amber-900">
-                    <Lightbulb size={16} className="text-amber-600 flex-shrink-0 mt-0.5" />
+                  <div className="mt-4 p-3 bg-[var(--tema-rehber-ipucu-zemin)]/70 border border-[var(--tema-rehber-ipucu-cizgi)]/80 rounded-xl flex items-start gap-2 text-xs text-[var(--tema-rehber-ipucu-metin)]">
+                    <Lightbulb size={16} className="text-[var(--tema-rehber-ipucu-ikon)] flex-shrink-0 mt-0.5" />
                     <div className="leading-relaxed">
-                      <strong className="font-bold text-amber-950">İpucu: </strong>
+                      <strong className="font-bold text-[var(--tema-rehber-ipucu-baslik)]">İpucu: </strong>
                       <span>{metinFormatla(rehber.ipucu)}</span>
                     </div>
                   </div>

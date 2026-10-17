@@ -108,9 +108,9 @@ export function UttKayanVideoRafi<T extends UttVideo>({
         type="button"
         aria-label="Sola kaydır"
         onClick={() => kaydir(-1)}
-        className="absolute inset-y-0 left-0 z-10 flex w-16 cursor-pointer items-center justify-start bg-gradient-to-r from-gray-50 via-gray-50/70 to-transparent opacity-0 transition-opacity group-hover:opacity-100"
+        className="absolute inset-y-0 left-0 z-10 flex w-16 cursor-pointer items-center justify-start bg-gradient-to-r from-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-06)] via-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-06)]/70 to-transparent opacity-0 transition-opacity group-hover:opacity-100"
       >
-        <svg className="h-7 w-7 text-gray-800 drop-shadow-sm" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+        <svg className="h-7 w-7 text-[var(--tema-yerel-ortak-sayfa-ana-metin-13)] drop-shadow-sm" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
         </svg>
       </button>
@@ -132,9 +132,9 @@ export function UttKayanVideoRafi<T extends UttVideo>({
         type="button"
         aria-label="Sağa kaydır"
         onClick={() => kaydir(1)}
-        className="absolute inset-y-0 right-0 z-10 flex w-16 cursor-pointer items-center justify-end bg-gradient-to-l from-gray-50 via-gray-50/70 to-transparent opacity-0 transition-opacity group-hover:opacity-100"
+        className="absolute inset-y-0 right-0 z-10 flex w-16 cursor-pointer items-center justify-end bg-gradient-to-l from-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-06)] via-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-06)]/70 to-transparent opacity-0 transition-opacity group-hover:opacity-100"
       >
-        <svg className="h-7 w-7 text-gray-800 drop-shadow-sm" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+        <svg className="h-7 w-7 text-[var(--tema-yerel-ortak-sayfa-ana-metin-13)] drop-shadow-sm" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
         </svg>
       </button>

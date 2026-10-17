@@ -23,7 +23,7 @@ const BOS_SECENEKLER: CekTakipApiYaniti["filtre_secenekleri"] = {
 
 export default function HediyeTakipIstemcisi({ ilkTakipTuru = "cek", ilkDurum }: { ilkTakipTuru?: HediyeTakipTuru; ilkDurum?: string }) {
   const { kullanici, yukleniyor } = useAuth();
-  if (yukleniyor) return <div className="flex min-h-full items-center justify-center bg-gray-50"><LoaderCircle className="size-6 animate-spin text-gray-500" /></div>;
+  if (yukleniyor) return <div className="flex min-h-full items-center justify-center bg-[var(--tema-yerel-eclub-sayfa-zemini-02)]"><LoaderCircle className="size-6 animate-spin text-[var(--tema-yerel-eclub-yardimci-metin-08)]" /></div>;
   if ((kullanici?.rol ?? "").toLowerCase() === "bm") return <BmHediyeTakipIstemcisi ilkTakipTuru={ilkTakipTuru} ilkDurum={ilkDurum} />;
   if ((kullanici?.rol ?? "").toLowerCase() === "tm") return <BmHediyeTakipIstemcisi rol="tm" />;
   return <UttHediyeTakipIstemcisi />;
@@ -144,11 +144,11 @@ function UttHediyeTakipIstemcisi() {
   const cekFiltresiVar = Object.values(cekFiltreleri).some(Boolean);
 
   return (
-    <div className="min-h-full overflow-x-hidden bg-gray-50" style={{ fontFamily: "'Nunito', sans-serif" }}>
+    <div className="min-h-full overflow-x-hidden bg-[var(--tema-yerel-eclub-sayfa-zemini-02)]" style={{ fontFamily: "'Nunito', sans-serif" }}>
       <main className="mx-auto flex max-w-[1480px] flex-col gap-5 px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
         <header>
-          <h1 className="text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]">Hediye Takibi</h1>
-          <p className="mt-1 max-w-3xl text-sm leading-5 text-[#6b7f9b]">Hediye çeki ve sipariş süreçlerini tek alandan takip edin.</p>
+          <h1 className="text-2xl font-extrabold tracking-[-0.025em] text-[var(--tema-yerel-eclub-ana-metin-01)] md:text-[28px]">Hediye Takibi</h1>
+          <p className="mt-1 max-w-3xl text-sm leading-5 text-[var(--tema-yerel-eclub-yardimci-metin-01)]">Hediye çeki ve sipariş süreçlerini tek alandan takip edin.</p>
         </header>
 
         <TakipStatKartlari takipTuru={takipTuru} cekStatlari={cekVerisi?.statlar} siparisStatlari={siparisStatlari} />

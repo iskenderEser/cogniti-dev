@@ -15,7 +15,7 @@ import EChart, { type EChartTiklama } from "@/components/grafik/EChart";
 import type { EChartsCoreOption } from "echarts/core";
 import { useEffect, useMemo, useRef, useState } from "react";
 
-const RENKLER = ["#378ADD", "#1D9E75", "#EF9F27", "#D4537E", "#7F77DD", "#D85A30", "#639922"];
+const RENKLER = ["var(--tema-cizim-dagilim-1)", "var(--tema-cizim-dagilim-2)", "var(--tema-cizim-dagilim-3)", "var(--tema-cizim-dagilim-4)", "var(--tema-cizim-dagilim-5)", "var(--tema-cizim-dagilim-6)", "var(--tema-cizim-dagilim-7)"];
 
 type Mod = "pie" | "bar" | "line" | "tablo";
 
@@ -76,10 +76,10 @@ export default function DagilimGrafik({
 
   const option = useMemo<EChartsCoreOption>(() => {
     const kaynak: (string | number)[][] = [["ad", "puan"], ...veri.map((k) => [k.ad, k.puan])];
-    const palet = paletli ? veri.map((k) => k.renk ?? "#888780") : RENKLER;
+    const palet = paletli ? veri.map((k) => k.renk ?? "var(--tema-cizim-dagilim-eksik)") : RENKLER;
     const ortak = {
       color: palet,
-      textStyle: { color: "#6b7280", fontFamily: "inherit" },
+      textStyle: { color: "var(--tema-cizim-dagilim-metin)", fontFamily: "inherit" },
       dataset: { source: kaynak },
       animationDuration: 700,
       animationEasing: "cubicOut" as const,
@@ -96,14 +96,16 @@ export default function DagilimGrafik({
         ...ortak,
         tooltip: {
           trigger: "item",
+          backgroundColor: "var(--tema-cizim-tooltip-kart)",
+          textStyle: { color: "var(--tema-cizim-tooltip-metin)" },
           formatter: (parametre: { name?: string; percent?: number; data?: { gercekPuan?: number } }) =>
             `${parametre.name ?? ""}: ${parametre.data?.gercekPuan ?? 0} (${parametre.percent ?? 0}%)`,
         },
         series: [{
           id: "dagilim", type: "pie", radius: ["46%", "72%"],
-          itemStyle: { borderRadius: 6, borderColor: "#fff", borderWidth: 2 },
+          itemStyle: { borderRadius: 6, borderColor: "var(--tema-cizim-dagilim-kart)", borderWidth: 2 },
           label: {
-            color: "#374151",
+            color: "var(--tema-cizim-dagilim-etiket)",
             formatter: (parametre: { name?: string; data?: { gercekPuan?: number } }) =>
               `${parametre.name ?? ""}\n${parametre.data?.gercekPuan ?? 0}`,
             fontSize: 12,
@@ -117,29 +119,29 @@ export default function DagilimGrafik({
     // bar + line ortak eksenler (apsis/ordinat başlıklı)
     const eksenli = {
       ...ortak,
-      tooltip: { trigger: "item", formatter: "{b}: {@puan}" },
+      tooltip: { trigger: "item", backgroundColor: "var(--tema-cizim-tooltip-kart)", textStyle: { color: "var(--tema-cizim-tooltip-metin)" }, formatter: "{b}: {@puan}" },
       grid: { left: 8, right: 8, top: 28, bottom: darGrafik ? 54 : 34, containLabel: true },
       xAxis: {
         type: "category" as const,
         name: apsisAdi,
         nameLocation: "middle" as const,
         nameGap: darGrafik ? 54 : 30,
-        nameTextStyle: { color: "#9ca3af", fontSize: 11 },
+        nameTextStyle: { color: "var(--tema-cizim-dagilim-soluk)", fontSize: 11 },
         axisLabel: {
-          color: "#6b7280",
+          color: "var(--tema-cizim-dagilim-metin)",
           fontSize: eksenFontu,
           interval: 0,
           rotate: darGrafik ? 32 : 0,
           hideOverlap: true,
         },
-        axisLine: { lineStyle: { color: "#e5e7eb" } },
+        axisLine: { lineStyle: { color: "var(--tema-cizim-dagilim-eksen)" } },
       },
       yAxis: {
         type: "value" as const,
         name: ordinatAdi, nameLocation: "end" as const, nameGap: 12,
-        nameTextStyle: { color: "#9ca3af", fontSize: 11 },
-        axisLabel: { color: "#9ca3af", fontSize: eksenFontu },
-        splitLine: { lineStyle: { color: "#f1f1ee" } },
+        nameTextStyle: { color: "var(--tema-cizim-dagilim-soluk)", fontSize: 11 },
+        axisLabel: { color: "var(--tema-cizim-dagilim-soluk)", fontSize: eksenFontu },
+        splitLine: { lineStyle: { color: "var(--tema-cizim-dagilim-ayirici)" } },
       },
     };
     if (mod === "bar") {
@@ -148,7 +150,7 @@ export default function DagilimGrafik({
         series: [{
           id: "dagilim", type: "bar", colorBy: "data", barWidth: "52%",
           itemStyle: { borderRadius: [6, 6, 0, 0] },
-          label: { show: true, position: "top", color: paletli ? "inherit" : "#374151", fontSize: veriFontu, formatter: "{@puan}" },
+          label: { show: true, position: "top", color: paletli ? "inherit" : "var(--tema-cizim-dagilim-etiket)", fontSize: veriFontu, formatter: "{@puan}" },
           universalTransition: true,
           encode: { x: "ad", y: "puan" },
         }],
@@ -158,14 +160,14 @@ export default function DagilimGrafik({
       ...eksenli,
       series: [{
         id: "dagilim", type: "line", smooth: true, symbolSize: 9, colorBy: paletli ? "data" : "series",
-        lineStyle: { width: 3, color: paletli ? "#94A3B8" : "#378ADD" },
+        lineStyle: { width: 3, color: paletli ? "var(--tema-cizim-dagilim-cizgi)" : "var(--tema-cizim-dagilim-1)" },
         itemStyle: {
           color: paletli
             ? (parametre: { dataIndex: number }) => palet[parametre.dataIndex % palet.length]
-            : "#378ADD",
+            : "var(--tema-cizim-dagilim-1)",
         },
-        areaStyle: { color: "rgba(55,138,221,0.10)" },
-        label: { show: true, position: "top", color: "#374151", fontSize: veriFontu, formatter: "{@puan}" },
+        areaStyle: { color: "var(--tema-cizim-dagilim-alan)" },
+        label: { show: true, position: "top", color: "var(--tema-cizim-dagilim-etiket)", fontSize: veriFontu, formatter: "{@puan}" },
         universalTransition: true,
         encode: { x: "ad", y: "puan" },
       }],
@@ -188,9 +190,9 @@ export default function DagilimGrafik({
   const grafikGovdesi = mod === "tablo" ? (
     <table className="w-full text-sm" style={{ borderCollapse: "collapse" }}>
       <thead>
-        <tr style={{ borderBottom: "0.5px solid #e5e7eb" }}>
-          <th className="text-left py-2" style={{ color: "#9ca3af", fontWeight: 500 }}>{apsisAdi}</th>
-          <th className="text-right py-2" style={{ color: "#9ca3af", fontWeight: 500 }}>{ordinatAdi}</th>
+        <tr style={{ borderBottom: "0.5px solid var(--tema-cizim-dagilim-eksen)" }}>
+          <th className="text-left py-2" style={{ color: "var(--tema-cizim-dagilim-soluk)", fontWeight: 500 }}>{apsisAdi}</th>
+          <th className="text-right py-2" style={{ color: "var(--tema-cizim-dagilim-soluk)", fontWeight: 500 }}>{ordinatAdi}</th>
         </tr>
       </thead>
       <tbody>
@@ -199,11 +201,11 @@ export default function DagilimGrafik({
             key={k.ad}
             onClick={onSecim ? () => onSecim(k.ad === secili ? null : k.ad) : undefined}
             data-etkilesimli={onSecim ? "true" : "false"}
-            className={onSecim ? "hover:bg-gray-50" : ""}
-            style={{ borderBottom: "0.5px solid #f1f1ee", background: k.ad === secili ? "rgba(86,174,255,0.08)" : "transparent" }}
+            className={onSecim ? "hover:bg-[var(--tema-cizim-dagilim-hover)]" : ""}
+            style={{ borderBottom: "0.5px solid var(--tema-cizim-dagilim-ayirici)", background: k.ad === secili ? "var(--tema-cizim-dagilim-secili)" : "transparent" }}
           >
-            <td className="py-2" style={{ color: k.renk ?? "#374151" }}>{k.ad}</td>
-            <td className="text-right py-2 font-medium" style={{ color: k.renk ?? "#374151" }}>{k.puan.toLocaleString("tr-TR")}</td>
+            <td className="py-2" style={{ color: k.renk ?? "var(--tema-cizim-dagilim-etiket)" }}>{k.ad}</td>
+            <td className="text-right py-2 font-medium" style={{ color: k.renk ?? "var(--tema-cizim-dagilim-etiket)" }}>{k.puan.toLocaleString("tr-TR")}</td>
           </tr>
         ))}
       </tbody>

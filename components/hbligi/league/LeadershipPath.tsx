@@ -11,8 +11,8 @@ import styles from "./league.module.css";
 const IKON = [Target, CircleX, FastForward];
 const ONCELIK_STIL: Record<LiderlikHedefi["oncelik"], string> = {
   "Öncelikli": "bg-primary/10 text-primary",
-  "Odaklan": "bg-amber-100 text-amber-700",
-  "İyileştir": "bg-emerald-100 text-emerald-700",
+  "Odaklan": "bg-[var(--tema-yerel-lig-islevsel-zemin-24)] text-[var(--tema-yerel-lig-islevsel-metin-23)]",
+  "İyileştir": "bg-[var(--tema-yerel-lig-islevsel-zemin-25)] text-[var(--tema-yerel-lig-islevsel-metin-01)]",
 };
 
 export default function LeadershipPath({ hedefler }: { hedefler: LiderlikHedefi[] }) {
@@ -23,19 +23,19 @@ export default function LeadershipPath({ hedefler }: { hedefler: LiderlikHedefi[
           {hedefler.map((h, i) => {
             const Icon = IKON[i % IKON.length];
             return (
-              <div key={i} className="flex items-center gap-2.5 rounded-xl bg-[#f7f9fc] px-2.5 py-2">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white shadow-sm">
-                  <Icon className="h-4 w-4 text-[#5b7fa2]" />
+              <div key={i} className="flex items-center gap-2.5 rounded-xl bg-[var(--tema-yerel-lig-sayfa-zemini-03)] px-2.5 py-2">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--tema-yerel-lig-kart-01)] shadow-sm">
+                  <Icon className="h-4 w-4 text-[var(--tema-yerel-lig-yardimci-metin-26)]" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="truncate text-xs font-extrabold text-[#243650]">{h.baslik}</span>
+                    <span className="truncate text-xs font-extrabold text-[var(--tema-yerel-lig-ana-metin-16)]">{h.baslik}</span>
                     <Badge className={`shrink-0 text-[10px] font-semibold ${ONCELIK_STIL[h.oncelik]}`} variant="secondary">
                       {h.oncelik}
                     </Badge>
                   </div>
-                  <div className="mt-0.5 text-[10px] font-medium text-[#8290a3]">
-                    Tahmini Etki: <span className="font-semibold" style={{ color: "#16a34a" }}>+{h.etki} puan</span>
+                  <div className="mt-0.5 text-[10px] font-medium text-[var(--tema-yerel-lig-yardimci-metin-27)]">
+                    Tahmini Etki: <span className="font-semibold" style={{ color: "var(--tema-yerel-lig-islevsel-metin-09)" }}>+{h.etki} puan</span>
                   </div>
                 </div>
                 <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
@@ -43,7 +43,7 @@ export default function LeadershipPath({ hedefler }: { hedefler: LiderlikHedefi[
             );
           })}
         </div>
-        <button className="mt-2 flex items-center justify-center gap-1 text-xs font-extrabold text-[#3589d8]">
+        <button className="mt-2 flex items-center justify-center gap-1 text-xs font-extrabold text-[var(--tema-yerel-lig-eylem-metin-11)]">
           Tüm Önerilere Git <ChevronRight className="h-4 w-4" />
         </button>
     </section>

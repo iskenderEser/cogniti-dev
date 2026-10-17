@@ -1,9 +1,20 @@
+import { hesaplananRenk } from "@/lib/tema/cizimRenkleri";
+import type { HesaplananRenkAnahtari } from "@/lib/tema/hesaplananRenkler.generated";
+
 const GUN_MS = 24 * 60 * 60 * 1000;
 const ISTANBUL_OFFSET_MS = 3 * 60 * 60 * 1000;
 const TOPLAM_GUN = 15;
-const YESIL = [22, 163, 74] as const;
-const SARI = [217, 147, 0] as const;
-const KIRMIZI = [220, 38, 38] as const;
+
+/** Üç uç CSS'den gelir; ara renk hesabı ve yuvarlama sırası korunur. */
+export function eclubHoykRenkPaleti(coz: (ad: HesaplananRenkAnahtari) => string = hesaplananRenk) {
+  const rgb = (ad: HesaplananRenkAnahtari): readonly number[] => {
+    const deger = coz(ad);
+    if (/^#[\da-f]{6}$/i.test(deger)) return [1, 3, 5].map((i) => parseInt(deger.slice(i, i + 2), 16));
+    return deger.match(/[\d.]+/g)!.slice(0, 3).map(Number);
+  };
+  return { yesil: rgb("--tema-cizim-sure-baslangic"), sari: rgb("--tema-cizim-sure-orta"), kirmizi: rgb("--tema-cizim-sure-bitis") };
+}
+const VARSAYILAN_PALET = eclubHoykRenkPaleti();
 
 function sinirla(deger: number, alt: number, ust: number): number {
   return Math.max(alt, Math.min(ust, deger));
@@ -13,12 +24,12 @@ function karistir(ilk: readonly number[], son: readonly number[], oran: number):
   return ilk.map((deger, indeks) => Math.round(deger + (son[indeks] - deger) * oran));
 }
 
-export function eclubHoykRengi(konum: number, kirmizilasma = 0): string {
+export function eclubHoykRengi(konum: number, kirmizilasma = 0, palet = VARSAYILAN_PALET): string {
   const oran = sinirla(konum, 0, 1);
   const ara = oran <= 0.5
-    ? karistir(YESIL, SARI, oran * 2)
-    : karistir(SARI, KIRMIZI, (oran - 0.5) * 2);
-  return `rgb(${karistir(ara, KIRMIZI, sinirla(kirmizilasma, 0, 1)).join(",")})`;
+    ? karistir(palet.yesil, palet.sari, oran * 2)
+    : karistir(palet.sari, palet.kirmizi, (oran - 0.5) * 2);
+  return `rgb(${karistir(ara, palet.kirmizi, sinirla(kirmizilasma, 0, 1)).join(",")})`;
 }
 
 export function eclubHoykUcRengi(gecenGun: number): string {

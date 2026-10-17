@@ -3,9 +3,9 @@
   container-type: inline-size;
   min-height: 100%;
   background:
-    radial-gradient(circle at 84% 2%, rgba(86, 174, 255, 0.12), transparent 25%),
-    linear-gradient(145deg, #f8fbff 0%, #f5f7fa 48%, #fbfcfe 100%);
-  color: #10213d;
+    radial-gradient(circle at 84% 2%, var(--tema-yerel-eclub-dekoratif-zemin-01), transparent 25%),
+    linear-gradient(145deg, var(--tema-yerel-eclub-sayfa-zemini-11) 0%, var(--tema-yerel-eclub-sayfa-zemini-12) 48%, var(--tema-yerel-eclub-sayfa-zemini-09) 100%);
+  color: var(--tema-yerel-eclub-ana-metin-12);
   overflow-x: clip;
 }
 
@@ -39,17 +39,17 @@
   align-items: center;
   gap: 7px;
   margin-top: 4px;
-  color: #78889d;
+  color: var(--tema-yerel-eclub-yardimci-metin-19);
   font-size: 12px;
   font-weight: 700;
 }
 
 .teamButton {
-  border: 1px solid #dce5ee;
+  border: 1px solid var(--tema-yerel-eclub-cizgi-22);
   border-radius: 8px;
   padding: 3px 7px;
-  color: #5d7897;
-  background: #fff;
+  color: var(--tema-yerel-eclub-yardimci-metin-20);
+  background: var(--tema-yerel-eclub-kart-03);
   font-size: 9px;
   font-weight: 800;
 }
@@ -62,19 +62,19 @@
 
 .teamInput {
   width: min(230px, 58vw);
-  border: 1px solid #d9e4ef;
+  border: 1px solid var(--tema-yerel-eclub-cizgi-23);
   border-radius: 9px;
   padding: 6px 9px;
-  color: #30475f;
-  background: #fff;
+  color: var(--tema-yerel-eclub-ana-metin-13);
+  background: var(--tema-yerel-eclub-kart-03);
   font-size: 11px;
   font-weight: 700;
   outline: none;
 }
 
 .teamInput:focus {
-  border-color: #56aeff;
-  box-shadow: 0 0 0 3px rgba(86, 174, 255, 0.12);
+  border-color: var(--tema-yerel-eclub-cizgi-24);
+  box-shadow: 0 0 0 3px var(--tema-yerel-eclub-golge-05);
 }
 
 .editorAction {
@@ -85,15 +85,15 @@
 }
 
 .editorAction {
-  border: 1px solid #dce5ee;
-  color: #5d7897;
-  background: #fff;
+  border: 1px solid var(--tema-yerel-eclub-cizgi-22);
+  color: var(--tema-yerel-eclub-yardimci-metin-20);
+  background: var(--tema-yerel-eclub-kart-03);
 }
 
 .editorPrimary {
-  border-color: #237ac8;
-  color: #fff;
-  background: #237ac8;
+  border-color: var(--tema-yerel-eclub-cizgi-17);
+  color: var(--tema-yerel-eclub-ters-metin-02);
+  background: var(--tema-yerel-eclub-eylem-zemin-01);
 }
 
 
@@ -108,9 +108,9 @@
 .statCard,
 .panel {
   min-width: 0;
-  border: 1px solid rgba(148, 163, 184, 0.2);
-  background: rgba(255, 255, 255, 0.96);
-  box-shadow: 0 8px 28px rgba(36, 64, 98, 0.055);
+  border: 1px solid var(--tema-yerel-eclub-cizgi-25);
+  background: var(--tema-yerel-eclub-kart-04);
+  box-shadow: 0 8px 28px var(--tema-yerel-eclub-golge-06);
 }
 
 .statCard {
@@ -128,12 +128,12 @@
   flex: 0 0 auto;
   place-items: center;
   border-radius: 12px;
-  color: #237ac8;
-  background: #edf6ff;
+  color: var(--tema-yerel-eclub-eylem-metin-01);
+  background: var(--tema-yerel-eclub-secim-zemin-09);
 }
 
 .statLabel {
-  color: #7d8ea2;
+  color: var(--tema-yerel-eclub-yardimci-metin-04);
   font-size: 9px;
   font-weight: 850;
   letter-spacing: 0.05em;
@@ -142,7 +142,7 @@
 
 .statValue {
   margin-top: 2px;
-  color: #20324c;
+  color: var(--tema-yerel-eclub-ana-metin-14);
   font-size: 20px;
   font-weight: 950;
   line-height: 1;
@@ -150,7 +150,7 @@
 
 .statDetail {
   margin-top: 3px;
-  color: #91a0b1;
+  color: var(--tema-yerel-eclub-yardimci-metin-21);
   font-size: 9px;
   font-weight: 700;
 }
@@ -168,11 +168,11 @@
   justify-content: space-between;
   gap: 12px;
   padding: 17px 19px;
-  border-bottom: 1px solid #edf1f5;
+  border-bottom: 1px solid var(--tema-yerel-eclub-cizgi-06);
 }
 
 .eyebrow {
-  color: #66809f;
+  color: var(--tema-yerel-eclub-yardimci-metin-22);
   font-size: 9px;
   font-weight: 850;
   letter-spacing: 0.11em;
@@ -181,14 +181,14 @@
 
 .panelTitle {
   margin-top: 2px;
-  color: #20324c;
+  color: var(--tema-yerel-eclub-ana-metin-14);
   font-size: 15px;
   font-weight: 900;
 }
 
 .panelDescription {
   margin-top: 2px;
-  color: #8190a3;
+  color: var(--tema-yerel-eclub-yardimci-metin-23);
   font-size: 10px;
   font-weight: 650;
 }
@@ -203,10 +203,10 @@
   justify-content: center;
   margin-bottom: 14px;
   overflow: hidden;
-  border: 1px solid rgba(148, 163, 184, 0.2);
+  border: 1px solid var(--tema-yerel-eclub-cizgi-25);
   border-radius: 18px;
-  background: #082c69;
-  box-shadow: 0 8px 28px rgba(36, 64, 98, 0.055);
+  background: var(--tema-yerel-eclub-eylem-zemin-05);
+  box-shadow: 0 8px 28px var(--tema-yerel-eclub-golge-06);
 }
 
 .leagueBanner::before {
@@ -216,14 +216,14 @@
   content: "";
   background: repeating-linear-gradient(
     104deg,
-    #02112d 0%,
-    #05285c 7%,
-    #2c66ad 13%,
-    #08377c 19%,
-    #031434 27%,
-    #062253 34%,
-    #4776b8 41%,
-    #083272 48%
+    var(--tema-yerel-eclub-dekoratif-zemin-02) 0%,
+    var(--tema-yerel-eclub-dekoratif-zemin-03) 7%,
+    var(--tema-yerel-eclub-dekoratif-zemin-04) 13%,
+    var(--tema-yerel-eclub-dekoratif-zemin-05) 19%,
+    var(--tema-yerel-eclub-dekoratif-zemin-06) 27%,
+    var(--tema-yerel-eclub-dekoratif-zemin-07) 34%,
+    var(--tema-yerel-eclub-dekoratif-zemin-08) 41%,
+    var(--tema-yerel-eclub-dekoratif-zemin-09) 48%
   );
   filter: blur(10px);
   transform: rotate(-3deg) skewY(-5deg) scale(1.08);
@@ -235,13 +235,13 @@
   inset: 0;
   content: "";
   background:
-    radial-gradient(ellipse at 23% 22%, rgba(255, 255, 255, 0.3) 0%, transparent 23%),
-    radial-gradient(ellipse at 47% 84%, rgba(0, 10, 42, 0.46) 0%, transparent 31%),
-    radial-gradient(ellipse at 73% 18%, rgba(255, 255, 255, 0.24) 0%, transparent 25%),
-    radial-gradient(ellipse at 94% 78%, rgba(0, 12, 47, 0.42) 0%, transparent 29%);
+    radial-gradient(ellipse at 23% 22%, var(--tema-yerel-eclub-kart-05) 0%, transparent 23%),
+    radial-gradient(ellipse at 47% 84%, var(--tema-yerel-eclub-dekoratif-zemin-10) 0%, transparent 31%),
+    radial-gradient(ellipse at 73% 18%, var(--tema-yerel-eclub-kart-06) 0%, transparent 25%),
+    radial-gradient(ellipse at 94% 78%, var(--tema-yerel-eclub-dekoratif-zemin-11) 0%, transparent 29%);
   box-shadow:
-    inset 0 18px 30px rgba(255, 255, 255, 0.12),
-    inset 0 -24px 34px rgba(0, 9, 38, 0.36);
+    inset 0 18px 30px var(--tema-yerel-eclub-golge-07),
+    inset 0 -24px 34px var(--tema-yerel-eclub-golge-08);
 }
 
 .leagueBannerHeader {
@@ -259,12 +259,12 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  color: #f8fafc;
+  color: var(--tema-yerel-eclub-yardimci-metin-24);
   font-size: clamp(11px, 1.65vw, 16px);
   font-weight: 900;
   line-height: 1.05;
   letter-spacing: -0.02em;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
+  text-shadow: 0 2px 10px var(--tema-yerel-eclub-golge-09);
 }
 
 .leagueBannerArtwork {
@@ -349,24 +349,24 @@
 }
 
 .plateSilver {
-  fill: #2f3945;
-  stroke: rgba(255, 255, 255, 0.94);
+  fill: var(--tema-yerel-eclub-islevsel-metin-14);
+  stroke: var(--tema-yerel-eclub-islevsel-metin-15);
   stroke-width: 1.25px;
-  filter: drop-shadow(0 2.5px 1.4px rgba(15, 20, 27, 0.72));
+  filter: drop-shadow(0 2.5px 1.4px var(--tema-yerel-eclub-islevsel-metin-16));
 }
 
 .plateGold {
-  fill: #603000;
-  stroke: rgba(255, 229, 139, 0.95);
+  fill: var(--tema-yerel-eclub-islevsel-metin-17);
+  stroke: var(--tema-yerel-eclub-islevsel-metin-18);
   stroke-width: 1.25px;
-  filter: drop-shadow(0 2.5px 1.4px rgba(55, 25, 0, 0.74));
+  filter: drop-shadow(0 2.5px 1.4px var(--tema-yerel-eclub-islevsel-metin-19));
 }
 
 .plateBronze {
-  fill: #572716;
-  stroke: rgba(255, 194, 151, 0.94);
+  fill: var(--tema-yerel-eclub-islevsel-metin-20);
+  stroke: var(--tema-yerel-eclub-islevsel-metin-21);
   stroke-width: 1.25px;
-  filter: drop-shadow(0 2.5px 1.4px rgba(45, 18, 10, 0.74));
+  filter: drop-shadow(0 2.5px 1.4px var(--tema-yerel-eclub-islevsel-metin-22));
 }
 
 .tableWrap {
@@ -378,11 +378,11 @@
 
 .updateNotice {
   margin-bottom: 12px;
-  border: 1px solid #fde68a;
+  border: 1px solid var(--tema-yerel-eclub-islevsel-cizgi-06);
   border-radius: 12px;
   padding: 8px 12px;
-  color: #92400e;
-  background: #fffbeb;
+  color: var(--tema-yerel-eclub-islevsel-metin-23);
+  background: var(--tema-yerel-eclub-islevsel-zemin-13);
   font-size: 11px;
   font-weight: 700;
 }
@@ -396,8 +396,8 @@
 
 .table th {
   padding: 10px 12px;
-  color: #7d8ea2;
-  background: #f7f9fc;
+  color: var(--tema-yerel-eclub-yardimci-metin-04);
+  background: var(--tema-yerel-eclub-sayfa-zemini-03);
   font-size: 9px;
   font-weight: 850;
   letter-spacing: 0.04em;
@@ -407,13 +407,13 @@
 
 .table td {
   padding: 11px 12px;
-  border-top: 1px solid #edf1f5;
-  color: #40556d;
+  border-top: 1px solid var(--tema-yerel-eclub-cizgi-06);
+  color: var(--tema-yerel-eclub-ana-metin-02);
   font-weight: 750;
 }
 
 .openRow {
-  background: #f8fbfe;
+  background: var(--tema-yerel-eclub-sayfa-zemini-06);
 }
 
 .rankBadge {
@@ -422,8 +422,8 @@
   height: 25px;
   place-items: center;
   border-radius: 9px;
-  color: #4881b0;
-  background: #edf6fd;
+  color: var(--tema-yerel-eclub-eylem-metin-04);
+  background: var(--tema-yerel-eclub-secim-zemin-10);
   font-size: 9px;
   font-weight: 950;
 }
@@ -435,7 +435,7 @@
   flex-direction: column;
   padding: 0 25px 0 0;
   border: 0;
-  color: #40556d;
+  color: var(--tema-yerel-eclub-ana-metin-02);
   background: transparent;
   text-align: left;
 }
@@ -447,7 +447,7 @@
 
 .personButton small {
   margin-top: 2px;
-  color: #91a0b1;
+  color: var(--tema-yerel-eclub-yardimci-metin-21);
   font-size: 8px;
   font-weight: 700;
 }
@@ -456,7 +456,7 @@
   position: absolute;
   top: 50%;
   right: 0;
-  color: #6f91ad;
+  color: var(--tema-yerel-eclub-yardimci-metin-05);
   transform: translateY(-50%);
   transition: transform 0.18s ease;
 }
@@ -466,15 +466,15 @@
 }
 
 .positive {
-  color: #208a66 !important;
+  color: var(--tema-yerel-eclub-islevsel-metin-24) !important;
 }
 
 .negative {
-  color: #d45c4b !important;
+  color: var(--tema-yerel-eclub-islevsel-metin-25) !important;
 }
 
 .score {
-  color: #217bc3 !important;
+  color: var(--tema-yerel-eclub-eylem-metin-05) !important;
   font-weight: 950 !important;
 }
 
@@ -485,9 +485,9 @@
 
 .detailWrap {
   overflow: hidden;
-  border: 1px solid #dfe8f1;
+  border: 1px solid var(--tema-yerel-eclub-cizgi-05);
   border-radius: 13px;
-  background: #fff;
+  background: var(--tema-yerel-eclub-kart-03);
 }
 
 .detailHeader,
@@ -501,8 +501,8 @@
 }
 
 .detailHeader {
-  color: #7d8ea2;
-  background: #f4f8fc;
+  color: var(--tema-yerel-eclub-yardimci-metin-04);
+  background: var(--tema-yerel-eclub-sayfa-zemini-13);
   font-size: 8px;
   font-weight: 850;
   letter-spacing: 0.04em;
@@ -510,18 +510,18 @@
 }
 
 .detailRow {
-  color: #40556d;
+  color: var(--tema-yerel-eclub-ana-metin-02);
   font-size: 10px;
   font-weight: 750;
 }
 
 .detailRow + .detailRow {
-  border-top: 1px solid #edf1f5;
+  border-top: 1px solid var(--tema-yerel-eclub-cizgi-06);
 }
 
 .detailName {
   overflow: hidden;
-  color: #30475f;
+  color: var(--tema-yerel-eclub-ana-metin-13);
   font-weight: 900;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -529,7 +529,7 @@
 
 .empty {
   padding: 34px 18px;
-  color: #8a9aab;
+  color: var(--tema-yerel-eclub-yardimci-metin-25);
   font-size: 11px;
   font-weight: 700;
   text-align: center;

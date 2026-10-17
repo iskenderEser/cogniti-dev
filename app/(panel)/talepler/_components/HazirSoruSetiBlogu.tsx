@@ -23,10 +23,10 @@ interface HazirSoruSetiBloguProps {
 
 export function HazirSoruSetiBlogu({ buyukluk, secenekSayisi, taslaklar, onDegis, onIceAktar }: HazirSoruSetiBloguProps) {
   return (
-    <div className="border border-gray-200 rounded-lg overflow-hidden">
-      <div className="px-3 py-2.5 bg-gray-50 border-b border-gray-100">
-        <span className="text-xs font-semibold text-gray-700">Soru Seti</span>
-        <span className="text-xs text-gray-400 ml-2">
+    <div className="border border-[var(--tema-yerel-uretim-cizgi-01)] rounded-lg overflow-hidden">
+      <div className="px-3 py-2.5 bg-[var(--tema-yerel-uretim-sayfa-zemini-01)] border-b border-[var(--tema-yerel-uretim-cizgi-03)]">
+        <span className="text-xs font-semibold text-[var(--tema-yerel-uretim-ana-metin-03)]">Soru Seti</span>
+        <span className="text-xs text-[var(--tema-yerel-uretim-yardimci-metin-02)] ml-2">
           (video onaylandığında sistem seti otomatik işler — tam {buyukluk} soru girilmeli)
         </span>
       </div>

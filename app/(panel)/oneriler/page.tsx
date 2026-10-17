@@ -16,19 +16,19 @@ function UyeOnerilerIskeleti() {
   return (
     <div className="mx-auto max-w-7xl animate-pulse px-4 py-6 sm:px-6 lg:px-8">
       <div className="mb-6 space-y-2">
-        <div className="h-8 w-52 rounded-lg bg-gray-200" />
-        <div className="h-4 w-72 max-w-full rounded bg-gray-200" />
+        <div className="h-8 w-52 rounded-lg bg-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-05)]" />
+        <div className="h-4 w-72 max-w-full rounded bg-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-05)]" />
       </div>
       <div className="mb-6 grid grid-cols-1 gap-2 sm:grid-cols-3 md:gap-3">
-        <div className="h-28 rounded-2xl bg-white shadow-sm" />
-        <div className="h-28 rounded-2xl bg-white shadow-sm" />
-        <div className="h-28 rounded-2xl bg-white shadow-sm sm:col-span-1" />
+        <div className="h-28 rounded-2xl bg-[var(--tema-yerel-ortak-sayfa-kart-01)] shadow-sm" />
+        <div className="h-28 rounded-2xl bg-[var(--tema-yerel-ortak-sayfa-kart-01)] shadow-sm" />
+        <div className="h-28 rounded-2xl bg-[var(--tema-yerel-ortak-sayfa-kart-01)] shadow-sm sm:col-span-1" />
       </div>
       <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <div className="h-10 w-44 rounded-[14px] bg-white shadow-sm" />
+        <div className="h-10 w-44 rounded-[14px] bg-[var(--tema-yerel-ortak-sayfa-kart-01)] shadow-sm" />
         <div className="flex min-w-0 justify-end gap-2">
-          <div className="h-10 min-w-0 flex-1 rounded-[14px] bg-white shadow-sm sm:w-[30rem] sm:flex-none" />
-          <div className="h-10 w-24 shrink-0 rounded-lg bg-white shadow-sm" />
+          <div className="h-10 min-w-0 flex-1 rounded-[14px] bg-[var(--tema-yerel-ortak-sayfa-kart-01)] shadow-sm sm:w-[30rem] sm:flex-none" />
+          <div className="h-10 w-24 shrink-0 rounded-lg bg-[var(--tema-yerel-ortak-sayfa-kart-01)] shadow-sm" />
         </div>
       </div>
       <UttYayinKartIskeletleri izgaraClassName="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" />
@@ -62,8 +62,8 @@ function OnerilerIcerik() {
 
   if (authYukleniyor || !kullanici) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50">
-        <svg className="h-6 w-6 animate-spin text-gray-500" fill="none" viewBox="0 0 24 24">
+      <div className="flex min-h-screen items-center justify-center bg-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-06)]">
+        <svg className="h-6 w-6 animate-spin text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-11)]" fill="none" viewBox="0 0 24 24">
           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
         </svg>
@@ -77,8 +77,8 @@ function OnerilerIcerik() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50">
-        <svg className="h-6 w-6 animate-spin text-gray-500" fill="none" viewBox="0 0 24 24">
+      <div className="flex min-h-screen items-center justify-center bg-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-06)]">
+        <svg className="h-6 w-6 animate-spin text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-11)]" fill="none" viewBox="0 0 24 24">
           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
         </svg>
@@ -88,8 +88,8 @@ function OnerilerIcerik() {
 
   if (!isBM && !isTM && !isUTT) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
-        <div className="rounded-xl border border-gray-200 bg-white px-5 py-4 text-sm text-gray-600">
+      <div className="flex min-h-screen items-center justify-center bg-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-06)] px-4">
+        <div className="rounded-xl border border-[var(--tema-yerel-ortak-sayfa-cizgi-06)] bg-[var(--tema-yerel-ortak-sayfa-kart-01)] px-5 py-4 text-sm text-[var(--tema-yerel-ortak-sayfa-ana-metin-08)]">
           Bu sayfaya yalnız TM, BM, UTT ve KD_UTT rolleri erişebilir.
         </div>
       </div>
@@ -97,7 +97,7 @@ function OnerilerIcerik() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20 md:pb-0" style={{ fontFamily: "'Nunito', sans-serif" }}>
+    <div className="min-h-screen bg-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-06)] pb-20 md:pb-0" style={{ fontFamily: "'Nunito', sans-serif" }}>
       {/* BM Görünümü */}
       {isBM && (
         <BmOneriTakibi
@@ -145,5 +145,5 @@ function OnerilerIcerik() {
 }
 
 export default function OnerilerPage() {
-  return <Suspense fallback={<div className="min-h-screen bg-gray-50" />}><OnerilerIcerik /></Suspense>;
+  return <Suspense fallback={<div className="min-h-screen bg-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-06)]" />}><OnerilerIcerik /></Suspense>;
 }

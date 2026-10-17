@@ -51,7 +51,7 @@ export default function BmLeaguePage({ veri, periyotSecici, yenileButonu }: { ve
         <CompetitorComparison eclubAcik={veri.eclub_acik === true} key={kapsam} satirlar={satirlar} benimId=""
           baslik={kapsam === "bolge" ? `${veri.kapsam_adi} Bölge Ligi` : "Takım Bölgeleri Ligi"}
           ayrintiGoster={kapsam === "bolge"} />
-        {satirlar.length === 0 && <p className={`${styles.panel} p-6 text-center text-xs text-[#7b8ca5]`}>Seçili kapsamda temsilci bulunamadı.</p>}
+        {satirlar.length === 0 && <p className={`${styles.panel} p-6 text-center text-xs text-[var(--tema-yerel-lig-yardimci-metin-20)]`}>Seçili kapsamda temsilci bulunamadı.</p>}
         </div>
       </div>
     </div>

@@ -98,7 +98,7 @@ const DIKEY_OLCU = "w-full md:w-auto md:h-[min(78vh,720px)] md:mx-auto";
  * YALNIZ DİKEYDE uygulanır: yatay videoda kutu kabı zaten tamamen doldurur,
  * zemin hiç görünmez. Koşulsuz verilseydi bile görünmezdi ama niyet okunmazdı.
  */
-const PILLARBOX = "bg-gray-900";
+const PILLARBOX = "bg-[var(--tema-oynatici-video-yan-zemin)]";
 
 export default function VideoCercevesi({
   videoUrl,
@@ -148,13 +148,13 @@ export default function VideoCercevesi({
       >
         {children}
         {etkilesimKatmani?.yalnizPlayButonu ? (
-          <div className="absolute inset-0 z-10 flex items-center justify-center bg-[#10233a]/20">
+          <div className="absolute inset-0 z-10 flex items-center justify-center bg-[var(--tema-oynatici-video-ilk-ortu)]">
             <button
               type="button"
               onClick={etkilesimKatmani.onClick}
               aria-label={etkilesimKatmani.ariaLabel}
               data-etkilesimli="true"
-              className="flex size-14 items-center justify-center rounded-full border-0 bg-[#10233a]/80 text-white shadow-lg transition hover:scale-105 hover:bg-[#10233a]/95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+              className="flex size-14 items-center justify-center rounded-full border-0 bg-[var(--tema-oynatici-video-play-zemini)] text-[var(--tema-oynatici-video-ters-metin)] shadow-lg transition hover:scale-105 hover:bg-[var(--tema-oynatici-video-play-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--tema-oynatici-video-play-halka)]"
             >
               <Play className="ml-0.5 size-6 fill-current" />
             </button>
@@ -165,7 +165,7 @@ export default function VideoCercevesi({
             onClick={etkilesimKatmani.onClick}
             aria-label={etkilesimKatmani.ariaLabel}
             data-etkilesimli="true"
-            className="absolute inset-0 z-10 border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#56aeff]"
+            className="absolute inset-0 z-10 border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--tema-oynatici-video-odak)]"
           />
         ) : null}
       </div>

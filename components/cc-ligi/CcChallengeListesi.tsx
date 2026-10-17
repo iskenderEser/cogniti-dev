@@ -34,11 +34,11 @@ interface Props {
   hata: (mesaj: string, adim?: string, detay?: string) => void;
 }
 
-const BORDO = "#bc2d0d";
-const YESIL = "#16a34a";
-const SARI_TEXT = "#854d0e";
-const KOYU_METIN = "#111827";
-const GRI_METIN = "#737373";
+const BORDO = "var(--tema-yerel-lig-islevsel-metin-08)";
+const YESIL = "var(--tema-yerel-lig-islevsel-metin-09)";
+const SARI_TEXT = "var(--tema-yerel-lig-islevsel-metin-10)";
+const KOYU_METIN = "var(--tema-yerel-lig-ana-metin-01)";
+const GRI_METIN = "var(--tema-yerel-lig-yardimci-metin-01)";
 
 export default function CcChallengeListesi({ yil, ay, hata }: Props) {
   const [kayitlar, setKayitlar] = useState<ChallengeKaydi[]>([]);
@@ -81,25 +81,25 @@ export default function CcChallengeListesi({ yil, ay, hata }: Props) {
   const durumStili = (durum: string) => {
     switch (durum) {
       case "İzlendi":
-        return { renk: YESIL, arka: "#f0fdf4", kenar: "#bbf7d0" };
+        return { renk: YESIL, arka: "var(--tema-yerel-lig-islevsel-zemin-10)", kenar: "var(--tema-yerel-lig-islevsel-cizgi-06)" };
       case "Bekliyor":
-        return { renk: SARI_TEXT, arka: "#fefce8", kenar: "#fde68a" };
+        return { renk: SARI_TEXT, arka: "var(--tema-yerel-lig-islevsel-zemin-11)", kenar: "var(--tema-yerel-lig-islevsel-cizgi-07)" };
       case "Süresi Doldu":
-        return { renk: BORDO, arka: "#fef2f2", kenar: "#fecaca" };
+        return { renk: BORDO, arka: "var(--tema-yerel-lig-islevsel-zemin-12)", kenar: "var(--tema-yerel-lig-islevsel-cizgi-08)" };
       default:
-        return { renk: GRI_METIN, arka: "#f3f4f6", kenar: "#e5e7eb" };
+        return { renk: GRI_METIN, arka: "var(--tema-yerel-lig-islevsel-zemin-13)", kenar: "var(--tema-yerel-lig-islevsel-cizgi-09)" };
     }
   };
 
   return (
     <div
-      className="bg-white border border-gray-200 rounded-xl overflow-hidden mt-4"
+      className="bg-[var(--tema-yerel-lig-kart-01)] border border-[var(--tema-yerel-lig-cizgi-02)] rounded-xl overflow-hidden mt-4"
       style={{ fontFamily: "'Nunito', sans-serif" }}
     >
       {/* Başlık */}
       <div
         className="px-4 py-3 border-b"
-        style={{ borderColor: "#f3f4f6", background: "#fafafa" }}
+        style={{ borderColor: "var(--tema-yerel-lig-cizgi-06)", background: "var(--tema-yerel-lig-sayfa-zemini-08)" }}
       >
         <div className="text-sm font-semibold" style={{ color: KOYU_METIN }}>
           Challenge Listesi — Bu Ay
@@ -128,40 +128,40 @@ export default function CcChallengeListesi({ yil, ay, hata }: Props) {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr style={{ background: "#f9fafb", color: KOYU_METIN }}>
+              <tr style={{ background: "var(--tema-yerel-lig-sayfa-zemini-01)", color: KOYU_METIN }}>
                 <th
                   className="text-left px-3 py-2.5 text-xs font-semibold border-b"
-                  style={{ borderColor: "#e5e7eb" }}
+                  style={{ borderColor: "var(--tema-yerel-lig-cizgi-05)" }}
                 >
                   Challenger (Gönderen)
                 </th>
                 <th
                   className="text-left px-3 py-2.5 text-xs font-semibold border-b"
-                  style={{ borderColor: "#e5e7eb" }}
+                  style={{ borderColor: "var(--tema-yerel-lig-cizgi-05)" }}
                 >
                   Challengee (Alan)
                 </th>
                 <th
                   className="text-left px-3 py-2.5 text-xs font-semibold border-b"
-                  style={{ borderColor: "#e5e7eb" }}
+                  style={{ borderColor: "var(--tema-yerel-lig-cizgi-05)" }}
                 >
                   Video
                 </th>
                 <th
                   className="text-left px-3 py-2.5 text-xs font-semibold border-b"
-                  style={{ borderColor: "#e5e7eb" }}
+                  style={{ borderColor: "var(--tema-yerel-lig-cizgi-05)" }}
                 >
                   Challenge Tarihi
                 </th>
                 <th
                   className="text-center px-3 py-2.5 text-xs font-semibold border-b"
-                  style={{ borderColor: "#e5e7eb" }}
+                  style={{ borderColor: "var(--tema-yerel-lig-cizgi-05)" }}
                 >
                   Durum
                 </th>
                 <th
                   className="text-left px-3 py-2.5 text-xs font-semibold border-b"
-                  style={{ borderColor: "#e5e7eb" }}
+                  style={{ borderColor: "var(--tema-yerel-lig-cizgi-05)" }}
                 >
                   İzleme Tarihi
                 </th>
@@ -174,7 +174,7 @@ export default function CcChallengeListesi({ yil, ay, hata }: Props) {
                   <tr
                     key={k.challenge_id}
                     style={{
-                      background: i % 2 === 0 ? "white" : "#fafafa",
+                      background: i % 2 === 0 ? "var(--tema-yerel-lig-kart-02)" : "var(--tema-yerel-lig-sayfa-zemini-08)",
                       color: KOYU_METIN,
                     }}
                   >

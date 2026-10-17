@@ -92,13 +92,13 @@
   border-radius: 4px;
   padding: 0;
   background: transparent;
-  color: #7c8fa4;
+  color: var(--tema-yerel-eclub-yardimci-metin-27);
   cursor: pointer;
 }
 
 .depoSil:hover:not(:disabled) {
-  background: #fef2f2;
-  color: #dc2626;
+  background: var(--tema-yerel-eclub-islevsel-zemin-14);
+  color: var(--tema-yerel-eclub-islevsel-metin-04);
 }
 
 .depoSil:disabled {

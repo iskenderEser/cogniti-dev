@@ -181,9 +181,9 @@ export default function UrunDetayPage() {
 
   if (authYukleniyor || !yetkiKontrolEdildi) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#f7f9fc]">
+      <div className="flex min-h-screen items-center justify-center bg-[var(--tema-yerel-magaza-sayfa-zemini-01)]">
         <svg
-          className="h-6 w-6 animate-spin text-[#7a8da5]"
+          className="h-6 w-6 animate-spin text-[var(--tema-yerel-magaza-yardimci-metin-01)]"
           fill="none"
           viewBox="0 0 24 24"
         >
@@ -195,48 +195,48 @@ export default function UrunDetayPage() {
   }
 
   return (
-    <div className="min-h-full bg-[#f7f9fc] pb-20 md:pb-8" style={{ fontFamily: "'Nunito', sans-serif" }}>
+    <div className="min-h-full bg-[var(--tema-yerel-magaza-sayfa-zemini-01)] pb-20 md:pb-8" style={{ fontFamily: "'Nunito', sans-serif" }}>
       <HataMesajiContainer mesajlar={mesajlar} />
 
       <main className="mx-auto flex w-full max-w-5xl flex-col gap-5 px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
         {/* Geri Dönüş Linki */}
         <Link
           href="/store"
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-[#71859d] transition-colors hover:text-[#237ac8]"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-[var(--tema-yerel-magaza-yardimci-metin-02)] transition-colors hover:text-[var(--tema-yerel-magaza-eylem-metin-01)]"
         >
           <ChevronLeft size={16} /> HBStore&apos;a Dön
         </Link>
 
         {yukleniyor ? (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-[#dfe7f1] bg-white py-20 text-center shadow-[0_6px_18px_rgba(31,55,90,0.035)]">
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-[var(--tema-yerel-magaza-cizgi-01)] bg-[var(--tema-yerel-magaza-kart-01)] py-20 text-center shadow-[0_6px_18px_var(--tema-yerel-magaza-golge-01)]">
             <svg
-              className="h-7 w-7 animate-spin text-[#237ac8]"
+              className="h-7 w-7 animate-spin text-[var(--tema-yerel-magaza-eylem-metin-01)]"
               fill="none"
               viewBox="0 0 24 24"
             >
               <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
             </svg>
-            <p className="mt-3 text-xs font-extrabold text-[#627791]">Ürün detayları yükleniyor...</p>
+            <p className="mt-3 text-xs font-extrabold text-[var(--tema-yerel-magaza-yardimci-metin-03)]">Ürün detayları yükleniyor...</p>
           </div>
         ) : !urun ? (
-          <div className="rounded-2xl border border-[#dfe7f1] bg-white p-12 text-center shadow-[0_6px_18px_rgba(31,55,90,0.035)]">
-            <h3 className="text-base font-extrabold text-[#203653]">Ürün bulunamadı</h3>
-            <p className="mt-1 text-xs font-semibold text-[#8090a4]">İstediğiniz ürün mevcut değil veya kaldırılmış olabilir.</p>
+          <div className="rounded-2xl border border-[var(--tema-yerel-magaza-cizgi-01)] bg-[var(--tema-yerel-magaza-kart-01)] p-12 text-center shadow-[0_6px_18px_var(--tema-yerel-magaza-golge-01)]">
+            <h3 className="text-base font-extrabold text-[var(--tema-yerel-magaza-ana-metin-01)]">Ürün bulunamadı</h3>
+            <p className="mt-1 text-xs font-semibold text-[var(--tema-yerel-magaza-yardimci-metin-04)]">İstediğiniz ürün mevcut değil veya kaldırılmış olabilir.</p>
             <Link
               href="/store"
-              className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-[#237ac8] px-4 py-2 text-xs font-extrabold text-white hover:bg-[#1d69aa]"
+              className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-[var(--tema-yerel-magaza-eylem-zemin-01)] px-4 py-2 text-xs font-extrabold text-[var(--tema-yerel-magaza-ters-metin-01)] hover:bg-[var(--tema-yerel-magaza-eylem-zemin-02)]"
             >
               HBStore&apos;a Dön
             </Link>
           </div>
         ) : !urun.aktif_mi ? (
-          <div className="rounded-2xl border border-[#dfe7f1] bg-white p-12 text-center shadow-[0_6px_18px_rgba(31,55,90,0.035)]">
-            <h3 className="text-base font-extrabold text-[#203653]">Bu ürün şu an satışta değil</h3>
-            <p className="mt-1 text-xs font-semibold text-[#8090a4]">Ürün geçici olarak siparişe kapatılmıştır.</p>
+          <div className="rounded-2xl border border-[var(--tema-yerel-magaza-cizgi-01)] bg-[var(--tema-yerel-magaza-kart-01)] p-12 text-center shadow-[0_6px_18px_var(--tema-yerel-magaza-golge-01)]">
+            <h3 className="text-base font-extrabold text-[var(--tema-yerel-magaza-ana-metin-01)]">Bu ürün şu an satışta değil</h3>
+            <p className="mt-1 text-xs font-semibold text-[var(--tema-yerel-magaza-yardimci-metin-04)]">Ürün geçici olarak siparişe kapatılmıştır.</p>
             <Link
               href="/store"
-              className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-[#237ac8] px-4 py-2 text-xs font-extrabold text-white hover:bg-[#1d69aa]"
+              className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-[var(--tema-yerel-magaza-eylem-zemin-01)] px-4 py-2 text-xs font-extrabold text-[var(--tema-yerel-magaza-ters-metin-01)] hover:bg-[var(--tema-yerel-magaza-eylem-zemin-02)]"
             >
               Diğer Ürünlere Göz At
             </Link>
@@ -245,7 +245,7 @@ export default function UrunDetayPage() {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-12">
             {/* Sol: Görsel */}
             <div className="flex flex-col gap-3 md:col-span-6">
-              <div className="relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-2xl border border-[#dfe7f1] bg-white p-6 shadow-[0_6px_18px_rgba(31,55,90,0.035)]">
+              <div className="relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-2xl border border-[var(--tema-yerel-magaza-cizgi-01)] bg-[var(--tema-yerel-magaza-kart-01)] p-6 shadow-[0_6px_18px_var(--tema-yerel-magaza-golge-01)]">
                 {urun.gorsel_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -254,7 +254,7 @@ export default function UrunDetayPage() {
                     className="h-full w-full object-contain"
                   />
                 ) : (
-                  <div className="flex flex-col items-center gap-2 text-[#9aa9b9]">
+                  <div className="flex flex-col items-center gap-2 text-[var(--tema-yerel-magaza-yardimci-metin-05)]">
                     <Package size={48} strokeWidth={1.5} />
                     <span className="text-xs font-bold">Görsel Yok</span>
                   </div>
@@ -263,15 +263,15 @@ export default function UrunDetayPage() {
                 {/* Stok Rozeti */}
                 <div className="absolute right-3.5 top-3.5">
                   {urun.stok === 0 ? (
-                    <span className="rounded-full bg-[#b42318] px-3 py-1 text-[10px] font-black text-white shadow-sm">
+                    <span className="rounded-full bg-[var(--tema-yerel-magaza-islevsel-zemin-01)] px-3 py-1 text-[10px] font-black text-[var(--tema-yerel-magaza-ters-metin-01)] shadow-sm">
                       Tükendi
                     </span>
                   ) : urun.stok <= STOK_AZ_ESIK ? (
-                    <span className="rounded-full bg-[#fef3c7] px-3 py-1 text-[10px] font-extrabold text-[#92400e] shadow-sm">
+                    <span className="rounded-full bg-[var(--tema-yerel-magaza-islevsel-zemin-02)] px-3 py-1 text-[10px] font-extrabold text-[var(--tema-yerel-magaza-islevsel-metin-01)] shadow-sm">
                       Son {urun.stok} Ürün
                     </span>
                   ) : (
-                    <span className="rounded-full bg-[#ecfdf3] px-3 py-1 text-[10px] font-extrabold text-[#027a48] shadow-sm">
+                    <span className="rounded-full bg-[var(--tema-yerel-magaza-islevsel-zemin-03)] px-3 py-1 text-[10px] font-extrabold text-[var(--tema-yerel-magaza-islevsel-metin-02)] shadow-sm">
                       Stokta Var
                     </span>
                   )}
@@ -282,24 +282,24 @@ export default function UrunDetayPage() {
             {/* Sağ: Bilgi & Satın Alma */}
             <div className="flex flex-col gap-4 md:col-span-6">
               {/* Ürün Tanım Kartı */}
-              <div className="flex flex-col gap-3 rounded-2xl border border-[#dfe7f1] bg-white p-5 shadow-[0_6px_18px_rgba(31,55,90,0.035)]">
+              <div className="flex flex-col gap-3 rounded-2xl border border-[var(--tema-yerel-magaza-cizgi-01)] bg-[var(--tema-yerel-magaza-kart-01)] p-5 shadow-[0_6px_18px_var(--tema-yerel-magaza-golge-01)]">
                 {urun.kategori_adi && (
-                  <span className="w-fit rounded-lg bg-[#eef6fd] px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider text-[#237ac8]">
+                  <span className="w-fit rounded-lg bg-[var(--tema-yerel-magaza-secim-zemin-01)] px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider text-[var(--tema-yerel-magaza-eylem-metin-01)]">
                     {urun.kategori_adi}
                   </span>
                 )}
-                <h1 className="text-xl font-black text-[#1a2d42] md:text-2xl">
+                <h1 className="text-xl font-black text-[var(--tema-yerel-magaza-ana-metin-02)] md:text-2xl">
                   {urun.ad}
                 </h1>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-2xl font-black text-[#16865f]">
+                  <span className="text-2xl font-black text-[var(--tema-yerel-magaza-islevsel-metin-03)]">
                     {urun.puan_fiyati.toLocaleString("tr-TR")}
                   </span>
-                  <span className="text-sm font-extrabold text-[#16865f]">HapPuan</span>
+                  <span className="text-sm font-extrabold text-[var(--tema-yerel-magaza-islevsel-metin-03)]">HapPuan</span>
                 </div>
 
                 {urun.aciklama && (
-                  <div className="border-t border-[#f0f4f8] pt-3 text-xs font-semibold leading-relaxed text-[#6c7f96] whitespace-pre-line">
+                  <div className="border-t border-[var(--tema-yerel-magaza-cizgi-02)] pt-3 text-xs font-semibold leading-relaxed text-[var(--tema-yerel-magaza-yardimci-metin-06)] whitespace-pre-line">
                     {urun.aciklama}
                   </div>
                 )}
@@ -307,10 +307,10 @@ export default function UrunDetayPage() {
 
               {/* Satın Alma Form Kartı */}
               {urun.stok > 0 && (
-                <div className="flex flex-col gap-4 rounded-2xl border border-[#dfe7f1] bg-white p-5 shadow-[0_6px_18px_rgba(31,55,90,0.035)]">
+                <div className="flex flex-col gap-4 rounded-2xl border border-[var(--tema-yerel-magaza-cizgi-01)] bg-[var(--tema-yerel-magaza-kart-01)] p-5 shadow-[0_6px_18px_var(--tema-yerel-magaza-golge-01)]">
                   {/* Adet Seçici */}
                   <div>
-                    <label className="mb-1.5 block text-xs font-extrabold uppercase tracking-wider text-[#7a8da5]">
+                    <label className="mb-1.5 block text-xs font-extrabold uppercase tracking-wider text-[var(--tema-yerel-magaza-yardimci-metin-01)]">
                       Sipariş Adedi
                     </label>
                     <div className="flex items-center gap-2">
@@ -318,7 +318,7 @@ export default function UrunDetayPage() {
                         type="button"
                         onClick={() => setAdet((a) => Math.max(1, a - 1))}
                         disabled={adet <= 1}
-                        className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#dce5ee] bg-[#f8fafc] text-sm font-bold text-[#475b75] hover:bg-[#edf3f8] disabled:opacity-40"
+                        className="flex h-9 w-9 items-center justify-center rounded-xl border border-[var(--tema-yerel-magaza-cizgi-03)] bg-[var(--tema-yerel-magaza-sayfa-zemini-02)] text-sm font-bold text-[var(--tema-yerel-magaza-ana-metin-03)] hover:bg-[var(--tema-yerel-magaza-secim-zemin-02)] disabled:opacity-40"
                       >
                         <Minus size={14} />
                       </button>
@@ -333,17 +333,17 @@ export default function UrunDetayPage() {
                             setAdet(v);
                           }
                         }}
-                        className="h-9 w-16 rounded-xl border border-[#dce5ee] bg-white text-center text-sm font-black text-[#1f334d] focus:border-[#237ac8] focus:outline-none"
+                        className="h-9 w-16 rounded-xl border border-[var(--tema-yerel-magaza-cizgi-03)] bg-[var(--tema-yerel-magaza-kart-01)] text-center text-sm font-black text-[var(--tema-yerel-magaza-ana-metin-04)] focus:border-[var(--tema-yerel-magaza-cizgi-04)] focus:outline-none"
                       />
                       <button
                         type="button"
                         onClick={() => setAdet((a) => Math.min(urun.stok, a + 1))}
                         disabled={adet >= urun.stok}
-                        className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#dce5ee] bg-[#f8fafc] text-sm font-bold text-[#475b75] hover:bg-[#edf3f8] disabled:opacity-40"
+                        className="flex h-9 w-9 items-center justify-center rounded-xl border border-[var(--tema-yerel-magaza-cizgi-03)] bg-[var(--tema-yerel-magaza-sayfa-zemini-02)] text-sm font-bold text-[var(--tema-yerel-magaza-ana-metin-03)] hover:bg-[var(--tema-yerel-magaza-secim-zemin-02)] disabled:opacity-40"
                       >
                         <Plus size={14} />
                       </button>
-                      <span className="ml-2 text-xs font-semibold text-[#8a9bb0]">
+                      <span className="ml-2 text-xs font-semibold text-[var(--tema-yerel-magaza-yardimci-metin-07)]">
                         (Maks. {urun.stok} stok)
                       </span>
                     </div>
@@ -352,19 +352,19 @@ export default function UrunDetayPage() {
                   {/* Adres Seçici */}
                   <div>
                     <div className="mb-1.5 flex items-center justify-between">
-                      <label className="block text-xs font-extrabold uppercase tracking-wider text-[#7a8da5]">
+                      <label className="block text-xs font-extrabold uppercase tracking-wider text-[var(--tema-yerel-magaza-yardimci-metin-01)]">
                         Teslimat Adresi
                       </label>
                       <Link
                         href="/store/adreslerim"
-                        className="text-xs font-bold text-[#237ac8] hover:underline"
+                        className="text-xs font-bold text-[var(--tema-yerel-magaza-eylem-metin-01)] hover:underline"
                       >
                         Adresleri Yönet
                       </Link>
                     </div>
 
                     {adresler.length === 0 ? (
-                      <div className="rounded-xl border border-[#fde68a] bg-[#fefce8] p-3 text-xs font-semibold text-[#92400e]">
+                      <div className="rounded-xl border border-[var(--tema-yerel-magaza-islevsel-cizgi-01)] bg-[var(--tema-yerel-magaza-sayfa-zemini-03)] p-3 text-xs font-semibold text-[var(--tema-yerel-magaza-islevsel-metin-01)]">
                         Kayıtlı teslimat adresiniz bulunmuyor.{" "}
                         <Link href="/store/adreslerim" className="font-extrabold underline">
                           Adres ekleyin
@@ -382,16 +382,16 @@ export default function UrunDetayPage() {
                   </div>
 
                   {/* Özet Şerit */}
-                  <div className="flex flex-col gap-2 rounded-xl bg-[#f8fafc] p-3.5 text-xs">
-                    <div className="flex items-center justify-between text-[#7b8da5]">
+                  <div className="flex flex-col gap-2 rounded-xl bg-[var(--tema-yerel-magaza-sayfa-zemini-02)] p-3.5 text-xs">
+                    <div className="flex items-center justify-between text-[var(--tema-yerel-magaza-yardimci-metin-08)]">
                       <span className="font-semibold">Toplam Tutar:</span>
-                      <strong className="text-sm font-black text-[#1a2d42]">
+                      <strong className="text-sm font-black text-[var(--tema-yerel-magaza-ana-metin-02)]">
                         {toplamPuan.toLocaleString("tr-TR")} Puan
                       </strong>
                     </div>
-                    <div className="flex items-center justify-between text-[#7b8da5]">
+                    <div className="flex items-center justify-between text-[var(--tema-yerel-magaza-yardimci-metin-08)]">
                       <span className="font-semibold">Mevcut Bakiyeniz:</span>
-                      <strong className={`font-black ${toplamPuan > bakiye ? "text-[#b42318]" : "text-[#16865f]"}`}>
+                      <strong className={`font-black ${toplamPuan > bakiye ? "text-[var(--tema-yerel-magaza-islevsel-metin-04)]" : "text-[var(--tema-yerel-magaza-islevsel-metin-03)]"}`}>
                         {bakiye.toLocaleString("tr-TR")} Puan
                       </strong>
                     </div>
@@ -399,13 +399,13 @@ export default function UrunDetayPage() {
 
                   {/* HBStore Günleri Kapalı Bilgi Uyarısı */}
                   {!storeAcik && (
-                    <div className="rounded-xl border border-[#fed7aa] bg-[#fffaf5] p-3.5 text-xs font-semibold text-[#9a3412]">
-                      <p className="flex items-center gap-1.5 font-extrabold text-[#c2410c]">
+                    <div className="rounded-xl border border-[var(--tema-yerel-magaza-islevsel-cizgi-02)] bg-[var(--tema-yerel-magaza-islevsel-zemin-04)] p-3.5 text-xs font-semibold text-[var(--tema-yerel-magaza-islevsel-metin-05)]">
+                      <p className="flex items-center gap-1.5 font-extrabold text-[var(--tema-yerel-magaza-islevsel-metin-06)]">
                         <span>⏳</span> HBStore Günleri Kapalı
                       </p>
-                      <p className="mt-1 leading-relaxed text-[#7c2d12]">
+                      <p className="mt-1 leading-relaxed text-[var(--tema-yerel-magaza-islevsel-metin-07)]">
                         HBStore siparişleri yalnızca HBStore Günleri&apos;nde alınmaktadır. Sonraki sipariş dönemi:{" "}
-                        <strong className="font-extrabold text-[#9a3412]">{takvim?.sonrakiDonemEtiketi ?? "HBStore Günleri"}</strong>
+                        <strong className="font-extrabold text-[var(--tema-yerel-magaza-islevsel-metin-05)]">{takvim?.sonrakiDonemEtiketi ?? "HBStore Günleri"}</strong>
                         {takvim ? ` (${takvim.kalanSureMetni} kaldı)` : ""}.
                       </p>
                     </div>
@@ -418,12 +418,12 @@ export default function UrunDetayPage() {
                     disabled={!storeAcik || adresler.length === 0 || !seciliAdresId || toplamPuan > bakiye}
                     className={`flex w-full items-center justify-center gap-2 rounded-xl py-3 text-xs font-extrabold transition-colors ${
                       !storeAcik
-                        ? "cursor-not-allowed border border-[#e2e8f0] bg-[#f1f5f9] text-[#94a3b8]"
+                        ? "cursor-not-allowed border border-[var(--tema-yerel-magaza-cizgi-05)] bg-[var(--tema-yerel-magaza-sayfa-zemini-04)] text-[var(--tema-yerel-magaza-yardimci-metin-09)]"
                         : toplamPuan > bakiye
-                        ? "cursor-not-allowed bg-[#fee4e2] text-[#b42318]"
+                        ? "cursor-not-allowed bg-[var(--tema-yerel-magaza-islevsel-zemin-05)] text-[var(--tema-yerel-magaza-islevsel-metin-04)]"
                         : adresler.length === 0
-                        ? "cursor-not-allowed bg-[#e2e8f0] text-[#94a3b8]"
-                        : "bg-[#237ac8] text-white shadow-sm hover:bg-[#1d69aa]"
+                        ? "cursor-not-allowed bg-[var(--tema-yerel-magaza-secim-zemin-03)] text-[var(--tema-yerel-magaza-yardimci-metin-09)]"
+                        : "bg-[var(--tema-yerel-magaza-eylem-zemin-01)] text-[var(--tema-yerel-magaza-ters-metin-01)] shadow-sm hover:bg-[var(--tema-yerel-magaza-eylem-zemin-02)]"
                     }`}
                   >
                     <ShoppingBag size={16} />
@@ -444,33 +444,33 @@ export default function UrunDetayPage() {
 
       {/* Onay Modalı */}
       {onayModal && urun && seciliAdres && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="flex w-full max-w-md flex-col gap-4 rounded-2xl border border-[#dfe7f1] bg-white p-6 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--tema-yerel-magaza-ortu-01)]/50 p-4">
+          <div className="flex w-full max-w-md flex-col gap-4 rounded-2xl border border-[var(--tema-yerel-magaza-cizgi-01)] bg-[var(--tema-yerel-magaza-kart-01)] p-6 shadow-2xl">
             <div>
-              <div className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-wider text-[#3589d8]">
+              <div className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-wider text-[var(--tema-yerel-magaza-eylem-metin-02)]">
                 <Sparkles size={14} /> Sipariş Onayı
               </div>
-              <h2 className="mt-1 text-lg font-extrabold text-[#1a2d42]">
+              <h2 className="mt-1 text-lg font-extrabold text-[var(--tema-yerel-magaza-ana-metin-02)]">
                 Siparişi Tamamlamak İstiyor Musunuz?
               </h2>
             </div>
 
-            <p className="text-xs font-semibold leading-relaxed text-[#627791]">
-              <strong className="text-[#1a2d42]">{adet} adet {urun.ad}</strong> için toplam{" "}
-              <strong className="text-[#16865f]">{toplamPuan.toLocaleString("tr-TR")} HapPuan</strong> bakiyenizden düşülecektir.
+            <p className="text-xs font-semibold leading-relaxed text-[var(--tema-yerel-magaza-yardimci-metin-03)]">
+              <strong className="text-[var(--tema-yerel-magaza-ana-metin-02)]">{adet} adet {urun.ad}</strong> için toplam{" "}
+              <strong className="text-[var(--tema-yerel-magaza-islevsel-metin-03)]">{toplamPuan.toLocaleString("tr-TR")} HapPuan</strong> bakiyenizden düşülecektir.
             </p>
 
-            <div className="rounded-xl border border-[#e4ecf3] bg-[#f8fafc] p-3.5 text-xs text-[#5f738c]">
-              <span className="block text-[10px] font-extrabold uppercase tracking-wider text-[#8a9bb0]">
+            <div className="rounded-xl border border-[var(--tema-yerel-magaza-cizgi-06)] bg-[var(--tema-yerel-magaza-sayfa-zemini-02)] p-3.5 text-xs text-[var(--tema-yerel-magaza-yardimci-metin-10)]">
+              <span className="block text-[10px] font-extrabold uppercase tracking-wider text-[var(--tema-yerel-magaza-yardimci-metin-07)]">
                 Teslimat Adresi
               </span>
-              <strong className="mt-1 block text-sm text-[#1e3450]">{seciliAdres.alici_adi}</strong>
-              <span className="block text-[11px] font-medium text-[#7b8ca5]">{seciliAdres.telefon}</span>
-              <p className="mt-1 text-xs text-[#475b75]">{seciliAdres.adres_detay}</p>
-              <span className="mt-0.5 block text-xs font-bold text-[#203653]">{seciliAdres.ilce} / {seciliAdres.il}</span>
+              <strong className="mt-1 block text-sm text-[var(--tema-yerel-magaza-ana-metin-05)]">{seciliAdres.alici_adi}</strong>
+              <span className="block text-[11px] font-medium text-[var(--tema-yerel-magaza-yardimci-metin-11)]">{seciliAdres.telefon}</span>
+              <p className="mt-1 text-xs text-[var(--tema-yerel-magaza-ana-metin-03)]">{seciliAdres.adres_detay}</p>
+              <span className="mt-0.5 block text-xs font-bold text-[var(--tema-yerel-magaza-ana-metin-01)]">{seciliAdres.ilce} / {seciliAdres.il}</span>
             </div>
 
-            <p className="text-[11px] font-semibold text-[#8a9bb0]">
+            <p className="text-[11px] font-semibold text-[var(--tema-yerel-magaza-yardimci-metin-07)]">
               ℹ️ Siparişinizi 12 saat içinde iptal edebilirsiniz. Kargo sürecine geçtikten sonra iptal işlemi yapılamaz.
             </p>
 
@@ -479,7 +479,7 @@ export default function UrunDetayPage() {
                 type="button"
                 onClick={() => setOnayModal(false)}
                 disabled={siparisVeriliyor}
-                className="rounded-xl border border-[#dce5ee] bg-white px-4 py-2.5 text-xs font-extrabold text-[#5f738c] hover:bg-[#f8fafc]"
+                className="rounded-xl border border-[var(--tema-yerel-magaza-cizgi-03)] bg-[var(--tema-yerel-magaza-kart-01)] px-4 py-2.5 text-xs font-extrabold text-[var(--tema-yerel-magaza-yardimci-metin-10)] hover:bg-[var(--tema-yerel-magaza-sayfa-zemini-02)]"
               >
                 Vazgeç
               </button>
@@ -487,7 +487,7 @@ export default function UrunDetayPage() {
                 type="button"
                 onClick={handleOnayla}
                 disabled={siparisVeriliyor}
-                className="rounded-xl bg-[#237ac8] px-5 py-2.5 text-xs font-extrabold text-white shadow-sm hover:bg-[#1d69aa] disabled:opacity-50"
+                className="rounded-xl bg-[var(--tema-yerel-magaza-eylem-zemin-01)] px-5 py-2.5 text-xs font-extrabold text-[var(--tema-yerel-magaza-ters-metin-01)] shadow-sm hover:bg-[var(--tema-yerel-magaza-eylem-zemin-02)] disabled:opacity-50"
               >
                 {siparisVeriliyor ? "Sipariş Veriliyor..." : "Onayla ve Siparişi Tamamla"}
               </button>

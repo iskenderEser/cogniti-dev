@@ -24,8 +24,8 @@ interface Props {
   secimGoster?: boolean;
 }
 
-const bilgi = "max-w-full rounded-md border border-[#e1e9f3] bg-[#f5f8fc] px-1.5 py-0.5 text-[10px] font-normal leading-tight text-[#405976] sm:text-[8px]";
-const satisSartiBilgi = "max-w-full rounded-md border border-[#e1e9f3] bg-[#f5f8fc] px-1.5 py-0.5 text-[9px] font-normal leading-tight text-[#405976] sm:text-[7px]";
+const bilgi = "max-w-full rounded-md border border-[var(--tema-hoyk-kosul-cizgi)] bg-[var(--tema-hoyk-kosul-zemin)] px-1.5 py-0.5 text-[10px] font-normal leading-tight text-[var(--tema-hoyk-gonderim-metin)] sm:text-[8px]";
+const satisSartiBilgi = "max-w-full rounded-md border border-[var(--tema-hoyk-kosul-cizgi)] bg-[var(--tema-hoyk-kosul-zemin)] px-1.5 py-0.5 text-[9px] font-normal leading-tight text-[var(--tema-hoyk-gonderim-metin)] sm:text-[7px]";
 
 export function EclubYayinGonderimKarti({ yayin, yeni, secili, secilebilir, gonderilenSayisi, hedefKisiSayisi, gonderilecekGoster, gonderimDetayiGoster, gonderimDetayiAcik, gonderimKayitlari, simdi, onSecim, onOnizle, onGonderimDetayiAc, onGonderimDetayiKapat, secimGoster = true }: Props) {
   const cekli = yayin.cek_karsiligi_var_mi === true;
@@ -38,9 +38,9 @@ export function EclubYayinGonderimKarti({ yayin, yeni, secili, secilebilir, gond
       yayin={yayin}
       onClick={onOnizle ? () => onOnizle() : undefined}
       ariaLabel={`${yayin.urun_adi} öğrenme içeriğini önizle`}
-      className={`h-full ${secili ? "border-[#237ac8] ring-2 ring-[#237ac8]/20" : ""}`}
+      className={`h-full ${secili ? "border-[var(--tema-hoyk-secim-cizgi)] ring-2 ring-[var(--tema-hoyk-secim-halka)]" : ""}`}
       durumGoster={yeni}
-      solUstRozet={yeni ? <span className="font-extrabold text-blue-600">Yeni</span> : undefined}
+      solUstRozet={yeni ? <span className="font-extrabold text-[var(--tema-hoyk-durum-yeni)]">Yeni</span> : undefined}
       etkilesimGoster
       etkilesimAktif={false}
       tarihGoster
@@ -48,12 +48,12 @@ export function EclubYayinGonderimKarti({ yayin, yeni, secili, secilebilir, gond
       puanGoster
       extraPuanGoster={false}
       talepNoGoster={false}
-      tarihSatiriSagAksiyon={yayin.talep_no != null ? <span className="shrink-0 font-mono text-xs text-[#bc2d0d] sm:text-[10px]">{talepIdGoster(yayin.firma_adi, yayin.talep_no)}</span> : undefined}
+      tarihSatiriSagAksiyon={yayin.talep_no != null ? <span className="shrink-0 font-mono text-xs text-[var(--tema-hoyk-talep-metni)] sm:text-[10px]">{talepIdGoster(yayin.firma_adi, yayin.talep_no)}</span> : undefined}
       donguGoster={false}
-      thumbnailAltBant={!incelemeTamamlandi ? <span className="block w-full rounded-md bg-[#fff3f1] px-1.5 py-0.5 text-center text-[9px] font-medium leading-3 text-[#ad625c]">Göndermek için yayını tamamlayın</span> : undefined}
-      puanSatiriSagAksiyon={<span className="inline-flex shrink-0 rounded-md border border-[#dce7f2] bg-[#f2f7fc] px-1.5 py-0.5 text-[10px] font-normal leading-tight text-[#405976] sm:text-[9px]">{gonderilecekGoster ? hedefKisiSayisi - gonderilenSayisi : gonderilenSayisi}/{hedefKisiSayisi} {gonderilecekGoster ? "Gönderilecek" : "Gönderilen"}</span>}
+      thumbnailAltBant={!incelemeTamamlandi ? <span className="block w-full rounded-md bg-[var(--tema-hoyk-inceleme-uyari-zemin)] px-1.5 py-0.5 text-center text-[9px] font-medium leading-3 text-[var(--tema-hoyk-inceleme-uyari-metin)]">Göndermek için yayını tamamlayın</span> : undefined}
+      puanSatiriSagAksiyon={<span className="inline-flex shrink-0 rounded-md border border-[var(--tema-hoyk-gonderim-cizgi)] bg-[var(--tema-hoyk-gonderim-zemin)] px-1.5 py-0.5 text-[10px] font-normal leading-tight text-[var(--tema-hoyk-gonderim-metin)] sm:text-[9px]">{gonderilecekGoster ? hedefKisiSayisi - gonderilenSayisi : gonderilenSayisi}/{hedefKisiSayisi} {gonderilecekGoster ? "Gönderilecek" : "Gönderilen"}</span>}
       altEkIcerik={
-        <div className="mt-2 border-t border-[#e8eef5] pt-2" aria-label="Yayın bilgileri ve koşulları">
+        <div className="mt-2 border-t border-[var(--tema-hoyk-ek-icerik-cizgi)] pt-2" aria-label="Yayın bilgileri ve koşulları">
           <div className="flex flex-wrap items-start justify-between gap-1">
             {yayin.cek_karsiligi_var_mi === false ? (
               <span className={bilgi}>Çeksiz Puan · Yalnız lig</span>
@@ -75,12 +75,12 @@ export function EclubYayinGonderimKarti({ yayin, yeni, secili, secilebilir, gond
               ))}
             </div>
           )}
-          {secimGoster && <div className="mt-2 flex gap-1.5 border-t border-[#e8eef5] pt-2" onClick={event => event.stopPropagation()}>
-            <button type="button" onClick={onOnizle} className="min-w-0 flex-1 rounded-lg border border-[#dbe4ef] bg-white px-2 py-1.5 text-xs font-bold text-[#526780] hover:bg-[#f5f8fc] sm:text-[10px]">
+          {secimGoster && <div className="mt-2 flex gap-1.5 border-t border-[var(--tema-hoyk-ek-icerik-cizgi)] pt-2" onClick={event => event.stopPropagation()}>
+            <button type="button" onClick={onOnizle} className="min-w-0 flex-1 rounded-lg border border-[var(--tema-hoyk-onizleme-cizgi)] bg-[var(--tema-hoyk-zemin)] px-2 py-1.5 text-xs font-bold text-[var(--tema-hoyk-secim-pasif-metni)] hover:bg-[var(--tema-hoyk-kosul-zemin)] sm:text-[10px]">
               Önizle
             </button>
             <button type="button" onClick={onSecim} disabled={!secilebilir} aria-pressed={secili} aria-label={`${yayin.urun_adi} yayınını gönderim için ${secili ? "seçimden çıkar" : "seç"}`}
-              className={`min-w-0 flex-1 rounded-lg border px-2 py-1.5 text-xs font-extrabold sm:text-[10px] ${secili ? "border-[#237ac8] bg-[#eaf3fd] text-[#1d65aa]" : "border-[#237ac8] bg-[#237ac8] text-white"} disabled:cursor-not-allowed disabled:border-[#dbe4ef] disabled:bg-[#f2f5f8] disabled:text-[#8a9bad]`}>
+              className={`min-w-0 flex-1 rounded-lg border px-2 py-1.5 text-xs font-extrabold sm:text-[10px] ${secili ? "border-[var(--tema-hoyk-secim-cizgi)] bg-[var(--tema-hoyk-secim-zemin)] text-[var(--tema-hoyk-secim-metni)]" : "border-[var(--tema-hoyk-secim-cizgi)] bg-[var(--tema-hoyk-secim-eylemi)] text-[var(--tema-hoyk-ters-metin)]"} disabled:cursor-not-allowed disabled:border-[var(--tema-hoyk-onizleme-cizgi)] disabled:bg-[var(--tema-hoyk-secim-kapali-zemin)] disabled:text-[var(--tema-hoyk-secim-kapali-metin)]`}>
               {secili ? "✓ Seçildi" : "Seç"}
             </button>
           </div>}

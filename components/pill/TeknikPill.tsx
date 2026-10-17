@@ -9,7 +9,7 @@
 
 import { Pill } from "./Pill";
 
-const TEKNIK_RENK = { bg: "#f9fafb", metin: "#4b5563", kenar: "#e5e7eb" };
+const TEKNIK_RENK = { bg: "var(--tema-zemin)", metin: "var(--tema-pill-notr-metin)", kenar: "var(--tema-cizgi)" };
 
 export function TeknikPill({ teknikAdi, className }: { teknikAdi: string | null | undefined; className?: string }) {
   if (!teknikAdi || teknikAdi === "-") return null;

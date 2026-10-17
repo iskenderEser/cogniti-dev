@@ -138,7 +138,7 @@ export default function UreticiAnaSayfa({ user, rol, adSoyad }: Props) {
   // "inceleme bekleniyor" demekti. Renk yalnız durumda anlam taşır.
 
   // Boş durum örnek satırındaki soluk pill'lerin rengi (gerçek veri değil, tanıtım).
-  const ORNEK_RENK: PillRenk = { bg: "#f3f4f6", metin: "#9ca3af", kenar: "#e5e7eb" };
+  const ORNEK_RENK: PillRenk = { bg: "var(--tema-yerel-ana-sayfa-sayfa-zemini-01)", metin: "var(--tema-yerel-ana-sayfa-yardimci-metin-06)", kenar: "var(--tema-yerel-ana-sayfa-cizgi-09)" };
 
   // Satır türetimi ve liste kancası, yükleme dönüşünün ÜSTÜNDE durmak zorunda:
   // React kancaları koşulsuz çağrılmalı, erken return'ün altına konamaz.
@@ -190,7 +190,7 @@ export default function UreticiAnaSayfa({ user, rol, adSoyad }: Props) {
   if (loading) {
     return (
       <div className="flex items-center justify-center p-20">
-        <svg className="animate-spin w-6 h-6 text-gray-500" fill="none" viewBox="0 0 24 24">
+        <svg className="animate-spin w-6 h-6 text-[var(--tema-yerel-ana-sayfa-yardimci-metin-03)]" fill="none" viewBox="0 0 24 24">
           <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
           <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
         </svg>
@@ -234,22 +234,22 @@ export default function UreticiAnaSayfa({ user, rol, adSoyad }: Props) {
   // Boş durum: hiç talep yoksa (üretim başlamadan önce) tabloyu tanıtan soluk örnek
   // satır + açıklama gösterilir; filtre yüzünden boşsa normal "içerik yok" mesajı kalır.
   const bosMesaj = (
-    <div className="p-10 text-center text-sm text-gray-400">Bu kategoride içerik bulunmuyor.</div>
+    <div className="p-10 text-center text-sm text-[var(--tema-yerel-ana-sayfa-yardimci-metin-01)]">Bu kategoride içerik bulunmuyor.</div>
   );
   const ornekSatirDesktop = (
     <>
       <div className="grid gap-3 px-5 py-3 items-center" style={{ gridTemplateColumns: gridCols, opacity: 0.5 }} aria-hidden="true">
-        <div className="text-xs text-gray-400 italic truncate text-center">FirmaAdı_10001</div>
-        <div className="text-sm font-semibold text-gray-400 italic truncate text-center">Ürün / Eğitim adı</div>
-        {teknikGoster && <div className="text-xs text-gray-400 italic truncate text-center">Teknik adı</div>}
+        <div className="text-xs text-[var(--tema-yerel-ana-sayfa-yardimci-metin-01)] italic truncate text-center">FirmaAdı_10001</div>
+        <div className="text-sm font-semibold text-[var(--tema-yerel-ana-sayfa-yardimci-metin-01)] italic truncate text-center">Ürün / Eğitim adı</div>
+        {teknikGoster && <div className="text-xs text-[var(--tema-yerel-ana-sayfa-yardimci-metin-01)] italic truncate text-center">Teknik adı</div>}
         <div className="text-center"><Pill renk={ORNEK_RENK}>Hazır Öğrenme Aracı</Pill></div>
         <div className="text-center"><Pill renk={ORNEK_RENK}>UTT</Pill></div>
         <div className="text-center"><Pill renk={ORNEK_RENK}>Senaryo</Pill></div>
         <div className="text-center"><Pill renk={ORNEK_RENK} sarabilir>Onayınız Bekleniyor</Pill></div>
-        <span className="text-xs text-gray-400 italic text-center">—</span>
-        <span className="text-gray-200 text-base">›</span>
+        <span className="text-xs text-[var(--tema-yerel-ana-sayfa-yardimci-metin-01)] italic text-center">—</span>
+        <span className="text-[var(--tema-yerel-ana-sayfa-yardimci-metin-07)] text-base">›</span>
       </div>
-      <div className="px-5 py-4 text-center text-xs text-gray-400 border-t border-gray-100">
+      <div className="px-5 py-4 text-center text-xs text-[var(--tema-yerel-ana-sayfa-yardimci-metin-01)] border-t border-[var(--tema-yerel-ana-sayfa-cizgi-10)]">
         Henüz üretimin yok. İlk talebini açtığında üretim akışın burada görünecek.
       </div>
     </>
@@ -257,17 +257,17 @@ export default function UreticiAnaSayfa({ user, rol, adSoyad }: Props) {
   const ornekSatirMobil = (
     <>
       <div className="px-4 py-3" style={{ opacity: 0.5 }} aria-hidden="true">
-        <div className="text-xs text-gray-400 italic mb-1">FirmaAdı_10001</div>
-        <div className="text-sm font-bold text-gray-400 italic mb-1.5">Ürün / Eğitim adı</div>
+        <div className="text-xs text-[var(--tema-yerel-ana-sayfa-yardimci-metin-01)] italic mb-1">FirmaAdı_10001</div>
+        <div className="text-sm font-bold text-[var(--tema-yerel-ana-sayfa-yardimci-metin-01)] italic mb-1.5">Ürün / Eğitim adı</div>
         <div className="flex gap-2 items-center flex-wrap">
           <Pill renk={ORNEK_RENK} sarabilir>Onayınız Bekleniyor</Pill>
           <Pill renk={ORNEK_RENK}>Senaryo</Pill>
           <Pill renk={ORNEK_RENK}>UTT</Pill>
-          {teknikGoster && <span className="text-xs text-gray-400 italic">Teknik adı</span>}
+          {teknikGoster && <span className="text-xs text-[var(--tema-yerel-ana-sayfa-yardimci-metin-01)] italic">Teknik adı</span>}
         </div>
-        <div className="text-xs text-gray-400 mt-1 italic">—</div>
+        <div className="text-xs text-[var(--tema-yerel-ana-sayfa-yardimci-metin-01)] mt-1 italic">—</div>
       </div>
-      <div className="px-4 py-4 text-center text-xs text-gray-400 border-t border-gray-100">
+      <div className="px-4 py-4 text-center text-xs text-[var(--tema-yerel-ana-sayfa-yardimci-metin-01)] border-t border-[var(--tema-yerel-ana-sayfa-cizgi-10)]">
         Henüz üretimin yok. İlk talebini açtığında üretim akışın burada görünecek.
       </div>
     </>
@@ -279,9 +279,9 @@ export default function UreticiAnaSayfa({ user, rol, adSoyad }: Props) {
       {/* Karşılama */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-2 mb-6">
         <div>
-          <h1 className="text-lg md:text-xl font-extrabold text-gray-900 m-0">Merhaba {ad}, 👋</h1>
-          <p className="text-sm text-gray-500 mt-1">
-            {takimAdi && <strong style={{ color: "#56aeff", fontWeight: 700 }}>{takimAdi} · </strong>}
+          <h1 className="text-lg md:text-xl font-extrabold text-[var(--tema-yerel-ana-sayfa-ana-metin-01)] m-0">Merhaba {ad}, 👋</h1>
+          <p className="text-sm text-[var(--tema-yerel-ana-sayfa-yardimci-metin-03)] mt-1">
+            {takimAdi && <strong style={{ color: "var(--tema-yerel-ana-sayfa-eylem-metin-03)", fontWeight: 700 }}>{takimAdi} · </strong>}
             {ROL_ADLARI[rol.toLowerCase()] ?? rol.toUpperCase()}
           </p>
         </div>
@@ -291,32 +291,32 @@ export default function UreticiAnaSayfa({ user, rol, adSoyad }: Props) {
       {/* Stat kartlar */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-5">
         {([
-          { label: "Sizden Onay Bekleyen", value: istat.inceleme_bekleyen, sub: "Senaryo, video veya soru seti", renk: "#bc2d0d", git: "/yayin-takip" },
-          { label: "Yayına Alınmayı Bekleyen", value: istat.yayin_bekleyen, sub: "Onaylı, yayına alınmadı", renk: "#f59e0b", filtre: "yayin-bekleyen" },
-          { label: "Yayında Olanlar", value: istat.yayinda, sub: "UTT'ler izleyebilir", renk: "#16a34a", filtre: "yayinda" },
-          { label: "Toplam Talep", value: istat.toplam, sub: "Tüm içerik kalemleri", renk: "#56aeff", filtre: "tumu" },
+          { label: "Sizden Onay Bekleyen", value: istat.inceleme_bekleyen, sub: "Senaryo, video veya soru seti", renk: "var(--tema-yerel-ana-sayfa-islevsel-metin-13)", git: "/yayin-takip" },
+          { label: "Yayına Alınmayı Bekleyen", value: istat.yayin_bekleyen, sub: "Onaylı, yayına alınmadı", renk: "var(--tema-yerel-ana-sayfa-islevsel-metin-07)", filtre: "yayin-bekleyen" },
+          { label: "Yayında Olanlar", value: istat.yayinda, sub: "UTT'ler izleyebilir", renk: "var(--tema-yerel-ana-sayfa-islevsel-metin-06)", filtre: "yayinda" },
+          { label: "Toplam Talep", value: istat.toplam, sub: "Tüm içerik kalemleri", renk: "var(--tema-yerel-ana-sayfa-eylem-metin-03)", filtre: "tumu" },
         ] as { label: string; value: number; sub: string; renk: string; filtre?: string; git?: string }[]).map(k => (
           <div
             key={k.filtre ?? k.git}
             onClick={() => (k.git ? router.push(k.git) : setAktifFiltre(aktifFiltre === k.filtre ? "tumu" : k.filtre!))}
-            className="bg-white border border-gray-200 rounded-xl p-3 md:p-5 cursor-pointer transition-shadow duration-150"
+            className="bg-[var(--tema-yerel-ana-sayfa-kart-01)] border border-[var(--tema-yerel-ana-sayfa-cizgi-04)] rounded-xl p-3 md:p-5 cursor-pointer transition-shadow duration-150"
             style={{
               borderLeft: `3px solid ${k.renk}`,
-              boxShadow: aktifFiltre === k.filtre ? `0 0 0 2px ${k.renk}33` : "none",
+              boxShadow: aktifFiltre === k.filtre ? `0 0 0 2px color-mix(in srgb, ${k.renk} 20%, transparent)` : "none",
             }}
           >
-            <div className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">{k.label}</div>
-            <div className="text-2xl md:text-3xl font-extrabold text-gray-900 leading-none">{k.value}</div>
-            <div className="hidden md:block text-xs text-gray-500 mt-1.5">{k.sub}</div>
+            <div className="text-xs font-bold text-[var(--tema-yerel-ana-sayfa-yardimci-metin-01)] uppercase tracking-wide mb-2">{k.label}</div>
+            <div className="text-2xl md:text-3xl font-extrabold text-[var(--tema-yerel-ana-sayfa-ana-metin-01)] leading-none">{k.value}</div>
+            <div className="hidden md:block text-xs text-[var(--tema-yerel-ana-sayfa-yardimci-metin-03)] mt-1.5">{k.sub}</div>
           </div>
         ))}
       </div>
 
       {/* Mobilde Odak Bilgi Alanı */}
       {aktifFiltre !== "tumu" && (
-        <div className="mb-4 flex items-center justify-between rounded-2xl border border-blue-200/80 bg-blue-50/90 px-4 py-2.5 text-xs font-bold text-blue-900 shadow-xs sm:hidden">
+        <div className="mb-4 flex items-center justify-between rounded-2xl border border-[var(--tema-yerel-ana-sayfa-cizgi-06)]/80 bg-[var(--tema-yerel-ana-sayfa-secim-zemin-03)]/90 px-4 py-2.5 text-xs font-bold text-[var(--tema-yerel-ana-sayfa-ana-metin-03)] shadow-xs sm:hidden">
           <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-blue-600 animate-pulse" />
+            <span className="h-2 w-2 rounded-full bg-[var(--tema-yerel-ana-sayfa-eylem-zemin-04)] animate-pulse" />
             <span className="text-xs font-black">
               Odak: {tanburBolumleri.find((b) => b.id === aktifFiltre)?.etiket ?? (aktifFiltre === "yayin-bekleyen" ? "Yayına Alınmayı Bekleyenler" : aktifFiltre === "yayinda" ? "Yayında Olanlar" : aktifFiltre)}
             </span>
@@ -324,7 +324,7 @@ export default function UreticiAnaSayfa({ user, rol, adSoyad }: Props) {
           <button
             type="button"
             onClick={() => setAktifFiltre("tumu")}
-            className="rounded-lg bg-white px-2.5 py-1 text-[11px] font-extrabold text-blue-600 shadow-xs hover:bg-blue-100 active:scale-95 cursor-pointer"
+            className="rounded-lg bg-[var(--tema-yerel-ana-sayfa-kart-01)] px-2.5 py-1 text-[11px] font-extrabold text-[var(--tema-yerel-ana-sayfa-eylem-metin-04)] shadow-xs hover:bg-[var(--tema-yerel-ana-sayfa-secim-zemin-04)] active:scale-95 cursor-pointer"
           >
             Tümünü Göster
           </button>
@@ -334,14 +334,14 @@ export default function UreticiAnaSayfa({ user, rol, adSoyad }: Props) {
       {/* İçerik tablosu başlık */}
       <div className="mb-3 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="inline-flex items-center">
-          <span className="text-base font-bold text-gray-900">Yayın Listesi</span>
+          <span className="text-base font-bold text-[var(--tema-yerel-ana-sayfa-ana-metin-01)]">Yayın Listesi</span>
           <SayfaRehberi anahtar="uretici-yayin-listesi" className="ml-1.5 -translate-y-1.5" />
         </div>
         <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
           {aktifFiltre !== "tumu" && (
             <button
               onClick={() => setAktifFiltre("tumu")}
-              className="text-xs text-gray-500 bg-transparent border border-gray-200 rounded-full px-3 py-1 cursor-pointer"
+              className="text-xs text-[var(--tema-yerel-ana-sayfa-yardimci-metin-03)] bg-transparent border border-[var(--tema-yerel-ana-sayfa-cizgi-04)] rounded-full px-3 py-1 cursor-pointer"
               style={{ fontFamily: "'Nunito', sans-serif" }}
             >
               Filtreyi Kaldır
@@ -351,7 +351,7 @@ export default function UreticiAnaSayfa({ user, rol, adSoyad }: Props) {
         </div>
       </div>
 
-      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+      <div className="bg-[var(--tema-yerel-ana-sayfa-kart-01)] border border-[var(--tema-yerel-ana-sayfa-cizgi-04)] rounded-xl overflow-hidden">
 
         {/* Mobile: kart görünümü */}
         <div className="md:hidden">
@@ -364,12 +364,12 @@ export default function UreticiAnaSayfa({ user, rol, adSoyad }: Props) {
                   key={`${s.talep_id}-${i}`}
                   onClick={() => router.push(satirYolu(s))}
                   className="px-4 py-3 cursor-pointer"
-                  style={{ borderBottom: i < filtrelenmis.length - 1 ? "1px solid #f3f4f6" : "none" }}
+                  style={{ borderBottom: i < filtrelenmis.length - 1 ? "1px solid var(--tema-yerel-ana-sayfa-cizgi-05)" : "none" }}
                 >
-                  <div className="text-xs text-gray-500 mb-1">{talepIdGoster(s.firma_adi, s.talep_no)}</div>
+                  <div className="text-xs text-[var(--tema-yerel-ana-sayfa-yardimci-metin-03)] mb-1">{talepIdGoster(s.firma_adi, s.talep_no)}</div>
                   {/* Mobilde sütun yok: varyant rozeti adın altında kalır. */}
                   <div className="flex items-center gap-1.5 flex-wrap min-w-0 mb-1.5">
-                    <span className="text-sm font-bold text-gray-900">{s.urun_adi}</span>
+                    <span className="text-sm font-bold text-[var(--tema-yerel-ana-sayfa-ana-metin-01)]">{s.urun_adi}</span>
                     <VaryantPill hazirVideo={s.hazir_video} hazirSoruSeti={s.hazir_soru_seti} ogrenmeAraciTuru={s.ogrenme_araci_turu} />
                   </div>
                   {/* Durum tam metindir, kısaltılmaz — mobilde kendi satırından başlar
@@ -378,9 +378,9 @@ export default function UreticiAnaSayfa({ user, rol, adSoyad }: Props) {
                     <DurumPill kod={s.durum_kodu} rol={rol} tarih={s.tarih} girdi={{ ogrenmeAraciTuru: s.ogrenme_araci_turu }} />
                     <AsamaPill asama={s.asama} ogrenmeAraciTuru={s.ogrenme_araci_turu} />
                     <HedefRolPilleri hedefRoller={s.hedef_roller} />
-                    {teknikGoster && <span className="text-xs text-gray-500">{s.teknik_adi}</span>}
+                    {teknikGoster && <span className="text-xs text-[var(--tema-yerel-ana-sayfa-yardimci-metin-03)]">{s.teknik_adi}</span>}
                   </div>
-                  <div className="text-xs text-gray-400 mt-1">{formatTarih(s.tarih)}</div>
+                  <div className="text-xs text-[var(--tema-yerel-ana-sayfa-yardimci-metin-01)] mt-1">{formatTarih(s.tarih)}</div>
                 </div>
               );
             })
@@ -389,9 +389,9 @@ export default function UreticiAnaSayfa({ user, rol, adSoyad }: Props) {
 
         {/* Desktop: tablo görünümü */}
         <div className="hidden md:block">
-          <div className="grid gap-3 px-5 py-2.5 bg-gray-50 border-b border-gray-200" style={{ gridTemplateColumns: gridCols }}>
+          <div className="grid gap-3 px-5 py-2.5 bg-[var(--tema-yerel-ana-sayfa-sayfa-zemini-02)] border-b border-[var(--tema-yerel-ana-sayfa-cizgi-04)]" style={{ gridTemplateColumns: gridCols }}>
             {["ID", "Ürün / Eğitim", ...(teknikGoster ? ["TEKNİK"] : []), "ÜRETİM YÖNTEMİ", "HEDEF ROL", "AŞAMA", "DURUM", "YAYIN TARİHİ", ""].map((h, i) => (
-              <div key={i} className="text-xs font-bold text-gray-400 uppercase tracking-wide text-center">{h}</div>
+              <div key={i} className="text-xs font-bold text-[var(--tema-yerel-ana-sayfa-yardimci-metin-01)] uppercase tracking-wide text-center">{h}</div>
             ))}
           </div>
           {filtrelenmis.length === 0 ? (
@@ -402,26 +402,26 @@ export default function UreticiAnaSayfa({ user, rol, adSoyad }: Props) {
                 <div
                   key={`${s.talep_id}-${i}`}
                   onClick={() => router.push(satirYolu(s))}
-                  className="grid gap-3 px-5 py-3 items-center cursor-pointer bg-white hover:bg-gray-50 transition-colors duration-100"
+                  className="grid gap-3 px-5 py-3 items-center cursor-pointer bg-[var(--tema-yerel-ana-sayfa-kart-01)] hover:bg-[var(--tema-yerel-ana-sayfa-sayfa-zemini-02)] transition-colors duration-100"
                   style={{
                     gridTemplateColumns: gridCols,
-                    borderBottom: i < filtrelenmis.length - 1 ? "1px solid #f3f4f6" : "none",
+                    borderBottom: i < filtrelenmis.length - 1 ? "1px solid var(--tema-yerel-ana-sayfa-cizgi-05)" : "none",
                   }}
                 >
                   {/* Tüm hücreler ortalı (İskender kararı 27.07): başlık ile içerik
                       aynı eksende dursun. Pill'ler inline-flex olduğu için text-center
                       onları da ortalar; varyant hücresi flex olduğundan justify-center. */}
-                  <div className="text-xs text-gray-500 truncate text-center" title={talepIdGoster(s.firma_adi, s.talep_no)}>{talepIdGoster(s.firma_adi, s.talep_no)}</div>
+                  <div className="text-xs text-[var(--tema-yerel-ana-sayfa-yardimci-metin-03)] truncate text-center" title={talepIdGoster(s.firma_adi, s.talep_no)}>{talepIdGoster(s.firma_adi, s.talep_no)}</div>
                   <div className="min-w-0">
-                    <span className="text-sm font-bold text-gray-900 truncate block text-center">{s.urun_adi}</span>
+                    <span className="text-sm font-bold text-[var(--tema-yerel-ana-sayfa-ana-metin-01)] truncate block text-center">{s.urun_adi}</span>
                   </div>
-                  {teknikGoster && <div className="text-xs text-gray-500 truncate text-center">{s.teknik_adi}</div>}
+                  {teknikGoster && <div className="text-xs text-[var(--tema-yerel-ana-sayfa-yardimci-metin-03)] truncate text-center">{s.teknik_adi}</div>}
                   <div className="flex justify-center"><VaryantPill hazirVideo={s.hazir_video} hazirSoruSeti={s.hazir_soru_seti} ogrenmeAraciTuru={s.ogrenme_araci_turu} kendiSatirinda={false} /></div>
                   <div className="text-center"><HedefRolPilleri hedefRoller={s.hedef_roller} /></div>
                   <div className="text-center"><AsamaPill asama={s.asama} ogrenmeAraciTuru={s.ogrenme_araci_turu} /></div>
                   <div className="text-center"><DurumPill kod={s.durum_kodu} rol={rol} tarih={s.tarih} girdi={{ ogrenmeAraciTuru: s.ogrenme_araci_turu }} /></div>
-                  <span className="text-xs text-gray-400 whitespace-nowrap text-center">{formatTarih(s.tarih)}</span>
-                  <span className="text-gray-300 text-base">›</span>
+                  <span className="text-xs text-[var(--tema-yerel-ana-sayfa-yardimci-metin-01)] whitespace-nowrap text-center">{formatTarih(s.tarih)}</span>
+                  <span className="text-[var(--tema-yerel-ana-sayfa-yardimci-metin-05)] text-base">›</span>
                 </div>
               );
             })

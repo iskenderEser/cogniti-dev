@@ -36,8 +36,8 @@ function SahaVideoKarti({ video, onVideoSec, onBegeni, onFavori }: { video: Saha
       durumGoster={false}
       donguGoster={false}
       hoverOverlay={
-        <span className="absolute inset-0 flex items-center justify-center bg-black/5 transition-colors group-hover:bg-black/15">
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-black/60 text-white shadow-sm transition-transform group-hover:scale-105">
+        <span className="absolute inset-0 flex items-center justify-center bg-[var(--tema-hoyk-saha-ortu)] transition-colors group-hover:bg-[var(--tema-hoyk-saha-ortu-hover)]">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--tema-hoyk-saha-play)] text-[var(--tema-hoyk-ters-metin)] shadow-sm transition-transform group-hover:scale-105">
             <svg aria-hidden="true" width="9" height="11" viewBox="0 0 10 12" fill="currentColor"><path d="M0 0l10 6-10 6z" /></svg>
           </span>
         </span>
@@ -73,14 +73,14 @@ function KayanRaf({
   if (videolar.length === 0) return bosBasliklariGoster ? (
     <section className="mb-6">
       <div className="mb-2 flex items-center gap-1">{baslik}</div>
-      <p className="text-xs font-semibold text-gray-400">{bosMesaj}</p>
+      <p className="text-xs font-semibold text-[var(--tema-yerel-ana-sayfa-yardimci-metin-01)]">{bosMesaj}</p>
     </section>
   ) : null;
 
   const masaustuIcerik = (
     <div className="group relative">
-      <button type="button" aria-label="Sola kaydır" onClick={() => kaydir(-1)} className="absolute inset-y-0 left-0 z-10 flex w-16 items-center justify-start bg-gradient-to-r from-gray-50 via-gray-50/70 to-transparent opacity-0 transition-opacity group-hover:opacity-100">
-        <svg className="h-7 w-7 text-gray-800 drop-shadow-sm" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
+      <button type="button" aria-label="Sola kaydır" onClick={() => kaydir(-1)} className="absolute inset-y-0 left-0 z-10 flex w-16 items-center justify-start bg-gradient-to-r from-[var(--tema-yerel-ana-sayfa-sayfa-zemini-02)] via-[var(--tema-yerel-ana-sayfa-sayfa-zemini-02)]/70 to-transparent opacity-0 transition-opacity group-hover:opacity-100">
+        <svg className="h-7 w-7 text-[var(--tema-yerel-ana-sayfa-ana-metin-02)] drop-shadow-sm" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
       </button>
       <div ref={raf} className="-mx-1 flex snap-x gap-2 overflow-x-auto px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {videolar.map((video) => (
@@ -89,8 +89,8 @@ function KayanRaf({
           </div>
         ))}
       </div>
-      <button type="button" aria-label="Sağa kaydır" onClick={() => kaydir(1)} className="absolute inset-y-0 right-0 z-10 flex w-16 items-center justify-end bg-gradient-to-l from-gray-50 via-gray-50/70 to-transparent opacity-0 transition-opacity group-hover:opacity-100">
-        <svg className="h-7 w-7 text-gray-800 drop-shadow-sm" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+      <button type="button" aria-label="Sağa kaydır" onClick={() => kaydir(1)} className="absolute inset-y-0 right-0 z-10 flex w-16 items-center justify-end bg-gradient-to-l from-[var(--tema-yerel-ana-sayfa-sayfa-zemini-02)] via-[var(--tema-yerel-ana-sayfa-sayfa-zemini-02)]/70 to-transparent opacity-0 transition-opacity group-hover:opacity-100">
+        <svg className="h-7 w-7 text-[var(--tema-yerel-ana-sayfa-ana-metin-02)] drop-shadow-sm" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
       </button>
     </div>
   );
@@ -134,8 +134,8 @@ function SabitBolum({
 }) {
   if (videolar.length === 0) return bosBasliklariGoster ? (
     <section className="mb-6">
-      <h2 className="mb-2 text-base font-bold text-gray-900 md:text-lg">{baslik}</h2>
-      <p className="text-xs font-semibold text-gray-400">{bosMesaj}</p>
+      <h2 className="mb-2 text-base font-bold text-[var(--tema-yerel-ana-sayfa-ana-metin-01)] md:text-lg">{baslik}</h2>
+      <p className="text-xs font-semibold text-[var(--tema-yerel-ana-sayfa-yardimci-metin-01)]">{bosMesaj}</p>
     </section>
   ) : null;
 
@@ -156,7 +156,7 @@ function SabitBolum({
           <SahaVideoKarti video={video} onVideoSec={onVideoSec} onBegeni={onBegeni} onFavori={onFavori} />
         </div>
       )}
-      baslik={<h2 className="text-base font-bold text-gray-900 md:text-lg">{baslik}</h2>}
+      baslik={<h2 className="text-base font-bold text-[var(--tema-yerel-ana-sayfa-ana-metin-01)] md:text-lg">{baslik}</h2>}
       sayacGoster={true}
       sifirlamaAnahtari={sifirlamaAnahtari}
       className="mb-6"
@@ -228,15 +228,15 @@ export default function SahaVideoRaflari({ videolar, onVideoSec, kapsulFiltre = 
       </div>}
 
       {aktifTanburBolumu !== "tumu" && (
-        <div className="mb-4 flex items-center justify-between rounded-2xl border border-blue-200/80 bg-blue-50/90 px-4 py-2.5 text-xs font-bold text-blue-900 shadow-xs sm:hidden">
+        <div className="mb-4 flex items-center justify-between rounded-2xl border border-[var(--tema-yerel-ana-sayfa-cizgi-06)]/80 bg-[var(--tema-yerel-ana-sayfa-secim-zemin-03)]/90 px-4 py-2.5 text-xs font-bold text-[var(--tema-yerel-ana-sayfa-ana-metin-03)] shadow-xs sm:hidden">
           <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-blue-600 animate-pulse" />
+            <span className="h-2 w-2 rounded-full bg-[var(--tema-yerel-ana-sayfa-eylem-zemin-04)] animate-pulse" />
             <span className="text-xs font-black">Odak: {tanburBolumleri.find((b) => b.id === aktifTanburBolumu)?.etiket}</span>
           </div>
           <button
             type="button"
             onClick={() => setAktifTanburBolumu("tumu")}
-            className="rounded-lg bg-white px-2.5 py-1 text-[11px] font-extrabold text-blue-600 shadow-xs hover:bg-blue-100 active:scale-95"
+            className="rounded-lg bg-[var(--tema-yerel-ana-sayfa-kart-01)] px-2.5 py-1 text-[11px] font-extrabold text-[var(--tema-yerel-ana-sayfa-eylem-metin-04)] shadow-xs hover:bg-[var(--tema-yerel-ana-sayfa-secim-zemin-04)] active:scale-95"
           >
             Tümünü Göster
           </button>
@@ -246,7 +246,7 @@ export default function SahaVideoRaflari({ videolar, onVideoSec, kapsulFiltre = 
       {(aktifTanburBolumu === "tumu" || aktifTanburBolumu === "tumu_rafi") && (
         <KayanRaf
           key={`tumu_${aktifTanburBolumu}`}
-          baslik={<><span className="text-base font-bold text-gray-900 md:text-lg">Tümü</span><span aria-hidden="true" className="text-lg text-gray-900">›</span></>}
+          baslik={<><span className="text-base font-bold text-[var(--tema-yerel-ana-sayfa-ana-metin-01)] md:text-lg">Tümü</span><span aria-hidden="true" className="text-lg text-[var(--tema-yerel-ana-sayfa-ana-metin-01)]">›</span></>}
           videolar={raflar.tumuRafi}
           onVideoSec={onVideoSec}
           onBegeni={onBegeni}
@@ -259,7 +259,7 @@ export default function SahaVideoRaflari({ videolar, onVideoSec, kapsulFiltre = 
       {kisiselIzlemeBasliklari && (aktifTanburBolumu === "tumu" || aktifTanburBolumu === "son_izlediklerim") && (
         <KayanRaf
           key={`son_${aktifTanburBolumu}`}
-          baslik={<h2 className="text-base font-bold text-gray-900 md:text-lg">En Son İzlediklerim</h2>}
+          baslik={<h2 className="text-base font-bold text-[var(--tema-yerel-ana-sayfa-ana-metin-01)] md:text-lg">En Son İzlediklerim</h2>}
           videolar={sonIzlenenler}
           onVideoSec={onVideoSec}
           onBegeni={onBegeni}
@@ -314,7 +314,7 @@ export default function SahaVideoRaflari({ videolar, onVideoSec, kapsulFiltre = 
         return (
           <KayanRaf
             key={`${raf.tur}_${aktifTanburBolumu}`}
-            baslik={<h2 className="text-base font-bold text-gray-900 md:text-lg">{TUR_BASLIK[raf.tur]}</h2>}
+            baslik={<h2 className="text-base font-bold text-[var(--tema-yerel-ana-sayfa-ana-metin-01)] md:text-lg">{TUR_BASLIK[raf.tur]}</h2>}
             videolar={raf.videolar}
             onVideoSec={onVideoSec}
             onBegeni={onBegeni}

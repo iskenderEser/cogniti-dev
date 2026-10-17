@@ -32,12 +32,12 @@ export default function ModulDurumKarti(p: ModulDurumKartiProps) {
         padding: "20px",
         maxWidth: "640px",
         fontFamily: "'Nunito', sans-serif",
-        background: "white",
+        background: "var(--tema-yerel-yonetim-kart-01)",
       }}
     >
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <span style={{ fontSize: "15px", fontWeight: 700, color: "#111" }}>{p.baslik}</span>
+          <span style={{ fontSize: "15px", fontWeight: 700, color: "var(--tema-yerel-yonetim-ana-metin-01)" }}>{p.baslik}</span>
           {p.acik !== null && (
             <span
               style={{
@@ -45,9 +45,9 @@ export default function ModulDurumKarti(p: ModulDurumKartiProps) {
                 fontWeight: 700,
                 padding: "2px 10px",
                 borderRadius: "999px",
-                background: p.acik ? "#f0fdf4" : "#fef2f2",
-                color: p.acik ? "#166534" : RENK_BORDO,
-                border: `1px solid ${p.acik ? "#bbf7d0" : "#fecaca"}`,
+                background: p.acik ? "var(--tema-yerel-yonetim-islevsel-zemin-07)" : "var(--tema-yerel-yonetim-islevsel-zemin-01)",
+                color: p.acik ? "var(--tema-yerel-yonetim-islevsel-metin-10)" : "var(--tema-yerel-yonetim-hata-vurgu)",
+                border: `1px solid ${p.acik ? "var(--tema-yerel-yonetim-islevsel-cizgi-04)" : "var(--tema-yerel-yonetim-islevsel-cizgi-02)"}`,
               }}
             >
               {p.acik ? "Açık" : "Kapalı"}
@@ -66,7 +66,7 @@ export default function ModulDurumKarti(p: ModulDurumKartiProps) {
               borderRadius: "8px",
               fontSize: "12px",
               fontWeight: 700,
-              color: p.acik ? "#737373" : "white",
+              color: p.acik ? "var(--tema-yerel-yonetim-yardimci-metin-01)" : "var(--tema-yerel-yonetim-ters-metin-01)",
               cursor: p.toggleLoading ? "not-allowed" : "pointer",
               fontFamily: "'Nunito', sans-serif",
             }}
@@ -76,12 +76,12 @@ export default function ModulDurumKarti(p: ModulDurumKartiProps) {
         )}
       </div>
 
-      <p style={{ fontSize: "13px", color: "#737373", margin: "10px 0 0 0", lineHeight: 1.6 }}>
+      <p style={{ fontSize: "13px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)", margin: "10px 0 0 0", lineHeight: 1.6 }}>
         {p.aciklama}
       </p>
 
       {(p.m4NotuGoster ?? true) && (
-        <p style={{ fontSize: "12px", color: "#9ca3af", margin: "12px 0 0 0" }}>
+        <p style={{ fontSize: "12px", color: "var(--tema-yerel-yonetim-yardimci-metin-04)", margin: "12px 0 0 0" }}>
           Bu modülün içerik görünümü ve müdahale araçları M4 fazında bu sekmeye eklenecek
           (admin_modernizasyon_is_plani.md — B.3).
         </p>

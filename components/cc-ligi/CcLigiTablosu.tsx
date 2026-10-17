@@ -39,12 +39,12 @@ interface Props {
   yukleniyor: boolean;
 }
 
-const BORDO = "#bc2d0d";
-const YESIL = "#16a34a";
-const YESIL_ARKA = "#f0fdf4";
-const KIRMIZI_ARKA = "#fef2f2";
-const KOYU_METIN = "#111827";
-const GRI_METIN = "#737373";
+const BORDO = "var(--tema-yerel-lig-islevsel-metin-08)";
+const YESIL = "var(--tema-yerel-lig-islevsel-metin-09)";
+const YESIL_ARKA = "var(--tema-yerel-lig-islevsel-zemin-10)";
+const KIRMIZI_ARKA = "var(--tema-yerel-lig-islevsel-zemin-12)";
+const KOYU_METIN = "var(--tema-yerel-lig-ana-metin-01)";
+const GRI_METIN = "var(--tema-yerel-lig-yardimci-metin-01)";
 
 export default function CcLigiTablosu({ satirlar, yukleniyor }: Props) {
   const [acikAkordiyon, setAcikAkordiyon] = useState<string | null>(null);
@@ -65,7 +65,7 @@ export default function CcLigiTablosu({ satirlar, yukleniyor }: Props) {
   if (yukleniyor) {
     return (
       <div
-        className="bg-white border border-gray-200 rounded-xl p-10 text-center text-sm"
+        className="bg-[var(--tema-yerel-lig-kart-01)] border border-[var(--tema-yerel-lig-cizgi-02)] rounded-xl p-10 text-center text-sm"
         style={{ color: GRI_METIN, fontFamily: "'Nunito', sans-serif" }}
       >
         Yükleniyor...
@@ -76,7 +76,7 @@ export default function CcLigiTablosu({ satirlar, yukleniyor }: Props) {
   if (satirlar.length === 0) {
     return (
       <div
-        className="bg-white border border-gray-200 rounded-xl p-10 text-center text-sm"
+        className="bg-[var(--tema-yerel-lig-kart-01)] border border-[var(--tema-yerel-lig-cizgi-02)] rounded-xl p-10 text-center text-sm"
         style={{ color: GRI_METIN, fontFamily: "'Nunito', sans-serif" }}
       >
         Bu periyotta sıralama verisi yok.
@@ -86,7 +86,7 @@ export default function CcLigiTablosu({ satirlar, yukleniyor }: Props) {
 
   return (
     <div
-      className="bg-white border border-gray-200 rounded-xl overflow-hidden"
+      className="bg-[var(--tema-yerel-lig-kart-01)] border border-[var(--tema-yerel-lig-cizgi-02)] rounded-xl overflow-hidden"
       style={{ fontFamily: "'Nunito', sans-serif" }}
     >
       {/* Dikey mobil görünüm (akordiyon) — sadece dar ekranda görünür */}
@@ -96,9 +96,9 @@ export default function CcLigiTablosu({ satirlar, yukleniyor }: Props) {
           className="grid items-center px-3 py-2.5 text-xs font-semibold border-b"
           style={{
             gridTemplateColumns: "40px 1fr 70px 70px 70px 28px",
-            background: "#f9fafb",
+            background: "var(--tema-yerel-lig-sayfa-zemini-01)",
             color: KOYU_METIN,
-            borderColor: "#e5e7eb",
+            borderColor: "var(--tema-yerel-lig-cizgi-05)",
           }}
         >
           <div>Sıra</div>
@@ -120,11 +120,11 @@ export default function CcLigiTablosu({ satirlar, yukleniyor }: Props) {
           const kayip = toplamKayip(s);
 
           return (
-            <div key={s.kullanici_id} className="border-b" style={{ borderColor: "#f3f4f6" }}>
+            <div key={s.kullanici_id} className="border-b" style={{ borderColor: "var(--tema-yerel-lig-cizgi-06)" }}>
               {/* Ana satır */}
               <button
                 onClick={() => setAcikAkordiyon(acik ? null : s.kullanici_id)}
-                className="w-full grid items-center px-3 py-2.5 text-sm bg-white cursor-pointer border-none text-left"
+                className="w-full grid items-center px-3 py-2.5 text-sm bg-[var(--tema-yerel-lig-kart-01)] cursor-pointer border-none text-left"
                 style={{
                   gridTemplateColumns: "40px 1fr 70px 70px 70px 28px",
                   color: KOYU_METIN,
@@ -152,14 +152,14 @@ export default function CcLigiTablosu({ satirlar, yukleniyor }: Props) {
                 <div
                   className="px-3 py-3 grid gap-2"
                   style={{
-                    background: "#f9fafb",
+                    background: "var(--tema-yerel-lig-sayfa-zemini-01)",
                     gridTemplateColumns: "1fr 1fr",
                   }}
                 >
                   {/* Kazanım blok */}
                   <div
                     className="px-3 py-2.5 rounded-lg"
-                    style={{ background: YESIL_ARKA, border: `0.5px solid #bbf7d0` }}
+                    style={{ background: YESIL_ARKA, border: `0.5px solid var(--tema-yerel-lig-islevsel-cizgi-06)` }}
                   >
                     <div
                       className="text-xs font-semibold mb-1.5"
@@ -177,7 +177,7 @@ export default function CcLigiTablosu({ satirlar, yukleniyor }: Props) {
                   {/* Kayıp blok */}
                   <div
                     className="px-3 py-2.5 rounded-lg"
-                    style={{ background: KIRMIZI_ARKA, border: `0.5px solid #fecaca` }}
+                    style={{ background: KIRMIZI_ARKA, border: `0.5px solid var(--tema-yerel-lig-islevsel-cizgi-08)` }}
                   >
                     <div
                       className="text-xs font-semibold mb-1.5"
@@ -200,18 +200,18 @@ export default function CcLigiTablosu({ satirlar, yukleniyor }: Props) {
       <div className="hidden md:block overflow-x-auto">
         <table className="w-full text-sm" style={{ fontFamily: "'Nunito', sans-serif" }}>
           <thead>
-            <tr style={{ background: "#f9fafb", color: KOYU_METIN }}>
-              <th className="text-left px-3 py-2.5 text-xs font-semibold border-b" style={{ borderColor: "#e5e7eb" }}>Sıra</th>
-              <th className="text-left px-3 py-2.5 text-xs font-semibold border-b" style={{ borderColor: "#e5e7eb" }}>Ad Soyad</th>
-              <th className="text-right px-2 py-2.5 text-xs font-semibold border-b" style={{ borderColor: "#e5e7eb", color: YESIL, background: YESIL_ARKA }}>İzleme</th>
-              <th className="text-right px-2 py-2.5 text-xs font-semibold border-b" style={{ borderColor: "#e5e7eb", color: YESIL, background: YESIL_ARKA }}>Cevaplama</th>
-              <th className="text-right px-2 py-2.5 text-xs font-semibold border-b" style={{ borderColor: "#e5e7eb", color: YESIL, background: YESIL_ARKA }}>Extra</th>
-              <th className="text-right px-2 py-2.5 text-xs font-semibold border-b" style={{ borderColor: "#e5e7eb", color: YESIL, background: YESIL_ARKA }}>Gönderme</th>
-              <th className="text-right px-2 py-2.5 text-xs font-semibold border-b" style={{ borderColor: "#e5e7eb", color: YESIL, background: YESIL_ARKA }}>Referral</th>
-              <th className="text-right px-2 py-2.5 text-xs font-semibold border-b" style={{ borderColor: "#e5e7eb", color: BORDO, background: KIRMIZI_ARKA }}>İleri Sarma</th>
-              <th className="text-right px-2 py-2.5 text-xs font-semibold border-b" style={{ borderColor: "#e5e7eb", color: BORDO, background: KIRMIZI_ARKA }}>Yanlış Cevap</th>
-              <th className="text-right px-2 py-2.5 text-xs font-semibold border-b" style={{ borderColor: "#e5e7eb", color: BORDO, background: KIRMIZI_ARKA }}>Challenge Kaybı</th>
-              <th className="text-right px-3 py-2.5 text-xs font-bold border-b" style={{ borderColor: "#e5e7eb" }}>Net</th>
+            <tr style={{ background: "var(--tema-yerel-lig-sayfa-zemini-01)", color: KOYU_METIN }}>
+              <th className="text-left px-3 py-2.5 text-xs font-semibold border-b" style={{ borderColor: "var(--tema-yerel-lig-cizgi-05)" }}>Sıra</th>
+              <th className="text-left px-3 py-2.5 text-xs font-semibold border-b" style={{ borderColor: "var(--tema-yerel-lig-cizgi-05)" }}>Ad Soyad</th>
+              <th className="text-right px-2 py-2.5 text-xs font-semibold border-b" style={{ borderColor: "var(--tema-yerel-lig-cizgi-05)", color: YESIL, background: YESIL_ARKA }}>İzleme</th>
+              <th className="text-right px-2 py-2.5 text-xs font-semibold border-b" style={{ borderColor: "var(--tema-yerel-lig-cizgi-05)", color: YESIL, background: YESIL_ARKA }}>Cevaplama</th>
+              <th className="text-right px-2 py-2.5 text-xs font-semibold border-b" style={{ borderColor: "var(--tema-yerel-lig-cizgi-05)", color: YESIL, background: YESIL_ARKA }}>Extra</th>
+              <th className="text-right px-2 py-2.5 text-xs font-semibold border-b" style={{ borderColor: "var(--tema-yerel-lig-cizgi-05)", color: YESIL, background: YESIL_ARKA }}>Gönderme</th>
+              <th className="text-right px-2 py-2.5 text-xs font-semibold border-b" style={{ borderColor: "var(--tema-yerel-lig-cizgi-05)", color: YESIL, background: YESIL_ARKA }}>Referral</th>
+              <th className="text-right px-2 py-2.5 text-xs font-semibold border-b" style={{ borderColor: "var(--tema-yerel-lig-cizgi-05)", color: BORDO, background: KIRMIZI_ARKA }}>İleri Sarma</th>
+              <th className="text-right px-2 py-2.5 text-xs font-semibold border-b" style={{ borderColor: "var(--tema-yerel-lig-cizgi-05)", color: BORDO, background: KIRMIZI_ARKA }}>Yanlış Cevap</th>
+              <th className="text-right px-2 py-2.5 text-xs font-semibold border-b" style={{ borderColor: "var(--tema-yerel-lig-cizgi-05)", color: BORDO, background: KIRMIZI_ARKA }}>Challenge Kaybı</th>
+              <th className="text-right px-3 py-2.5 text-xs font-bold border-b" style={{ borderColor: "var(--tema-yerel-lig-cizgi-05)" }}>Net</th>
             </tr>
           </thead>
           <tbody>
@@ -219,7 +219,7 @@ export default function CcLigiTablosu({ satirlar, yukleniyor }: Props) {
               <tr
                 key={s.kullanici_id}
                 style={{
-                  background: i % 2 === 0 ? "white" : "#fafafa",
+                  background: i % 2 === 0 ? "var(--tema-yerel-lig-kart-02)" : "var(--tema-yerel-lig-sayfa-zemini-08)",
                   color: KOYU_METIN,
                 }}
               >

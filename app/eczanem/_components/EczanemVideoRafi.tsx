@@ -47,7 +47,7 @@ export function AracMerkezIkonu({ tur }: { tur: EczanemAracTuru }) {
 export function IcerikDurumRozeti({ video }: { video: EczanemMusteriVideo }) {
   if (video.izlendi) {
     return (
-      <Badge className="absolute left-2 top-2 border border-white/40 bg-[#166534]/90 text-[11px] font-black text-white shadow-sm backdrop-blur-sm sm:text-[9px]">
+      <Badge className="absolute left-2 top-2 border border-[var(--tema-yerel-eczanem-cizgi-35)]/40 bg-[var(--tema-yerel-eczanem-islevsel-zemin-36)]/90 text-[11px] font-black text-[var(--tema-yerel-eczanem-ters-metin-01)] shadow-sm backdrop-blur-sm sm:text-[9px]">
         ✓ Tamamlandı
       </Badge>
     );
@@ -58,14 +58,14 @@ export function IcerikDurumRozeti({ video }: { video: EczanemMusteriVideo }) {
         ? ` · ${sureYaz(video.son_konum_saniye)}`
         : "";
     return (
-      <Badge className="absolute left-2 top-2 flex items-center gap-1 border border-[#efd59f] bg-[#fff7e8]/95 text-[11px] font-extrabold text-[#956417] shadow-sm sm:text-[9px]">
+      <Badge className="absolute left-2 top-2 flex items-center gap-1 border border-[var(--tema-yerel-eczanem-islevsel-cizgi-16)] bg-[var(--tema-yerel-eczanem-islevsel-zemin-05)]/95 text-[11px] font-extrabold text-[var(--tema-yerel-eczanem-islevsel-metin-32)] shadow-sm sm:text-[9px]">
         <Clock3 className="size-3 sm:size-2.5" />
         <span>Devam Et{sureMetni}</span>
       </Badge>
     );
   }
   return (
-    <Badge className="absolute left-2 top-2 border border-[#cbe4f9] bg-[#edf6fd]/95 text-[11px] font-black text-[#1d69ad] shadow-sm sm:text-[9px]">
+    <Badge className="absolute left-2 top-2 border border-[var(--tema-yerel-eczanem-cizgi-36)] bg-[var(--tema-yerel-eczanem-secim-zemin-01)]/95 text-[11px] font-black text-[var(--tema-yerel-eczanem-eylem-metin-02)] shadow-sm sm:text-[9px]">
       Yeni
     </Badge>
   );
@@ -122,8 +122,8 @@ export default function EczanemVideoRafi({
         donguGoster={false}
         solUstRozet={<IcerikDurumRozeti video={video} />}
         hoverOverlay={
-          <span className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,transparent_40%,rgba(15,35,56,0.65)_100%)]">
-            <span className="absolute bottom-2.5 left-2.5 flex size-8 items-center justify-center rounded-full bg-white/95 text-[#bc2d0d] shadow-md transition-transform group-hover:scale-110">
+          <span className="pointer-events-none absolute inset-0 bg-[var(--tema-hoyk-eczanem-ortu)]">
+            <span className="absolute bottom-2.5 left-2.5 flex size-8 items-center justify-center rounded-full bg-[var(--tema-hoyk-eczanem-play-zemin)] text-[var(--tema-hoyk-talep-metni)] shadow-md transition-transform group-hover:scale-110">
               <AracMerkezIkonu tur={video.arac_turu} />
             </span>
           </span>
@@ -131,26 +131,26 @@ export default function EczanemVideoRafi({
         altEkIcerik={
           <div className="mt-2 space-y-1.5">
             {video.eczane_adi && (
-              <p className="truncate text-xs font-semibold text-[#8fa0b2] sm:text-[10px]" title={video.eczane_adi}>
+              <p className="truncate text-xs font-semibold text-[var(--tema-hoyk-eczanem-eczane)] sm:text-[10px]" title={video.eczane_adi}>
                 {video.eczane_adi}
               </p>
             )}
-            <div className="grid grid-cols-3 divide-x divide-[#e3e9ef] rounded-lg border border-[#e5ebf1] bg-[#f8fafc] px-1 py-1 text-center">
+            <div className="grid grid-cols-3 divide-x divide-[var(--tema-hoyk-eczanem-ayirici)] rounded-lg border border-[var(--tema-hoyk-eczanem-ozet-cizgi)] bg-[var(--tema-hoyk-eczanem-ozet-zemin)] px-1 py-1 text-center">
               <div className="px-0.5">
-                <span className="block text-[11px] font-extrabold uppercase tracking-wide text-[#8a99aa] sm:text-[7px]">Tamamlama</span>
-                <strong className="mt-0.5 block text-xs font-black tabular-nums text-[#286fae] sm:text-[10px]">
+                <span className="block text-[11px] font-extrabold uppercase tracking-wide text-[var(--tema-hoyk-eczanem-ozet-etiket)] sm:text-[7px]">Tamamlama</span>
+                <strong className="mt-0.5 block text-xs font-black tabular-nums text-[var(--tema-hoyk-eczanem-tamamlama)] sm:text-[10px]">
                   {Number(video.video_puani ?? 0).toLocaleString("tr-TR")} p
                 </strong>
               </div>
               <div className="px-0.5">
-                <span className="block text-[11px] font-extrabold uppercase tracking-wide text-[#8a99aa] sm:text-[7px]">Soru</span>
-                <strong className="mt-0.5 block text-xs font-black tabular-nums text-[#654db0] sm:text-[10px]">
+                <span className="block text-[11px] font-extrabold uppercase tracking-wide text-[var(--tema-hoyk-eczanem-ozet-etiket)] sm:text-[7px]">Soru</span>
+                <strong className="mt-0.5 block text-xs font-black tabular-nums text-[var(--tema-hoyk-eczanem-soru)] sm:text-[10px]">
                   {Number(video.soru_sayisi ?? 0).toLocaleString("tr-TR")} ad
                 </strong>
               </div>
               <div className="px-0.5">
-                <span className="block text-[11px] font-extrabold uppercase tracking-wide text-[#8a99aa] sm:text-[7px]">Her Doğru</span>
-                <strong className="mt-0.5 block text-xs font-black tabular-nums text-[#16865f] sm:text-[10px]">
+                <span className="block text-[11px] font-extrabold uppercase tracking-wide text-[var(--tema-hoyk-eczanem-ozet-etiket)] sm:text-[7px]">Her Doğru</span>
+                <strong className="mt-0.5 block text-xs font-black tabular-nums text-[var(--tema-hoyk-eczanem-dogru)] sm:text-[10px]">
                   {Number(video.soru_puani ?? 0).toLocaleString("tr-TR")} p
                 </strong>
               </div>
@@ -168,10 +168,10 @@ export default function EczanemVideoRafi({
         type="button"
         aria-label="Sola kaydır"
         onClick={() => kaydir(-1)}
-        className="absolute inset-y-0 left-0 z-10 hidden sm:flex w-16 cursor-pointer items-center justify-start bg-gradient-to-r from-gray-50 via-gray-50/70 to-transparent opacity-0 transition-opacity group-hover:opacity-100"
+        className="absolute inset-y-0 left-0 z-10 hidden sm:flex w-16 cursor-pointer items-center justify-start bg-gradient-to-r from-[var(--tema-yerel-eczanem-sayfa-zemini-05)] via-[var(--tema-yerel-eczanem-sayfa-zemini-05)]/70 to-transparent opacity-0 transition-opacity group-hover:opacity-100"
       >
         <svg
-          className="h-7 w-7 text-gray-800 drop-shadow-sm"
+          className="h-7 w-7 text-[var(--tema-yerel-eczanem-ana-metin-21)] drop-shadow-sm"
           fill="none"
           stroke="currentColor"
           strokeWidth={2.5}
@@ -194,10 +194,10 @@ export default function EczanemVideoRafi({
         type="button"
         aria-label="Sağa kaydır"
         onClick={() => kaydir(1)}
-        className="absolute inset-y-0 right-0 z-10 hidden sm:flex w-16 cursor-pointer items-center justify-end bg-gradient-to-l from-gray-50 via-gray-50/70 to-transparent opacity-0 transition-opacity group-hover:opacity-100"
+        className="absolute inset-y-0 right-0 z-10 hidden sm:flex w-16 cursor-pointer items-center justify-end bg-gradient-to-l from-[var(--tema-yerel-eczanem-sayfa-zemini-05)] via-[var(--tema-yerel-eczanem-sayfa-zemini-05)]/70 to-transparent opacity-0 transition-opacity group-hover:opacity-100"
       >
         <svg
-          className="h-7 w-7 text-gray-800 drop-shadow-sm"
+          className="h-7 w-7 text-[var(--tema-yerel-eczanem-ana-metin-21)] drop-shadow-sm"
           fill="none"
           stroke="currentColor"
           strokeWidth={2.5}
@@ -224,14 +224,14 @@ export default function EczanemVideoRafi({
         </div>
       )}
       baslik={
-        <h2 className="truncate text-base font-black tracking-[-0.015em] text-[#1e344a] md:text-lg">
+        <h2 className="truncate text-base font-black tracking-[-0.015em] text-[var(--tema-yerel-eczanem-ana-metin-20)] md:text-lg">
           {baslik}
         </h2>
       }
       sayacGoster={true}
       sifirlamaAnahtari={sifirlamaAnahtari}
       bosDurum={
-        <div className="flex min-h-24 items-center rounded-2xl border border-dashed border-[#d6e1eb] bg-white/70 px-5 text-xs font-bold text-[#8796a8]">
+        <div className="flex min-h-24 items-center rounded-2xl border border-dashed border-[var(--tema-yerel-eczanem-cizgi-37)] bg-[var(--tema-yerel-eczanem-kart-01)]/70 px-5 text-xs font-bold text-[var(--tema-yerel-eczanem-yardimci-metin-10)]">
           {bosMesaj}
         </div>
       }

@@ -128,8 +128,8 @@ export default function MobilDrawer(props: MobilDrawerProps) {
           padding: girintili ? "10px 12px 10px 20px" : "10px 12px",
           fontSize: "14px",
           fontWeight: aktif ? 700 : 600,
-          color: aktif ? "#185fa5" : "#374151",
-          background: aktif ? "rgba(86,174,255,0.12)" : "transparent",
+          color: aktif ? "var(--tema-menu-secili-metin)" : "var(--tema-gezinme-metin)",
+          background: aktif ? "var(--tema-menu-secili-zemin)" : "transparent",
           fontFamily: "'Nunito', sans-serif",
           minHeight: "44px",
         }}
@@ -137,8 +137,8 @@ export default function MobilDrawer(props: MobilDrawerProps) {
         <span>{etiket}</span>
         {sayi && sayi > 0 ? (
           <span
-            className="flex items-center justify-center rounded-full text-white"
-            style={{ minWidth: "18px", height: "18px", padding: "0 5px", background: "#bc2d0d", fontSize: "10px", fontWeight: 700, lineHeight: 1 }}
+            className="flex items-center justify-center rounded-full text-[var(--tema-ters-metin)]"
+            style={{ minWidth: "18px", height: "18px", padding: "0 5px", background: "var(--tema-vurgu)", fontSize: "10px", fontWeight: 700, lineHeight: 1 }}
           >
             {sayi > 99 ? "99+" : sayi}
           </span>
@@ -169,12 +169,12 @@ export default function MobilDrawer(props: MobilDrawerProps) {
           })}
           aria-expanded={altAcik}
           className="flex w-full cursor-pointer items-center justify-between border-none bg-transparent text-left"
-          style={{ padding: girintili ? "10px 12px 4px 20px" : "10px 12px 4px", minHeight: "44px", fontSize: "14px", fontWeight: 700, color: "#374151", fontFamily: "'Nunito', sans-serif" }}
+          style={{ padding: girintili ? "10px 12px 4px 20px" : "10px 12px 4px", minHeight: "44px", fontSize: "14px", fontWeight: 700, color: "var(--tema-gezinme-metin)", fontFamily: "'Nunito', sans-serif" }}
         >
           <span>{oge.etiket}</span>
           <span className="flex items-center gap-2">
             {sayi > 0 && (
-              <span className="flex items-center justify-center rounded-full text-white" style={{ minWidth: "18px", height: "18px", padding: "0 5px", background: "#bc2d0d", fontSize: "10px", fontWeight: 700, lineHeight: 1 }}>
+              <span className="flex items-center justify-center rounded-full text-[var(--tema-ters-metin)]" style={{ minWidth: "18px", height: "18px", padding: "0 5px", background: "var(--tema-vurgu)", fontSize: "10px", fontWeight: 700, lineHeight: 1 }}>
                 {sayi > 99 ? "99+" : sayi}
               </span>
             )}
@@ -196,19 +196,19 @@ export default function MobilDrawer(props: MobilDrawerProps) {
     <div
       onClick={props.onKapat}
       className="fixed inset-0 z-[60] md:hidden"
-      style={{ background: "rgba(0,0,0,0.45)" }}
+      style={{ background: "var(--tema-mobil-menu-ortu)" }}
     >
       <div
         onClick={(e) => e.stopPropagation()}
         className="absolute top-0 left-0 h-full overflow-y-auto"
-        style={{ width: "270px", maxWidth: "85vw", background: "#ffffff", boxShadow: "2px 0 16px rgba(0,0,0,0.15)", padding: "14px 12px" }}
+        style={{ width: "270px", maxWidth: "85vw", background: "var(--tema-yan-zemin)", boxShadow: "2px 0 16px var(--tema-mobil-menu-golge)", padding: "14px 12px" }}
       >
         {/* Kapat */}
         <div className="flex justify-end mb-1">
           <button
             onClick={props.onKapat}
             className="bg-transparent border-none cursor-pointer"
-            style={{ fontSize: "20px", color: "#737373", lineHeight: 1, padding: "2px 6px" }}
+            style={{ fontSize: "20px", color: "var(--tema-yardimci-metin)", lineHeight: 1, padding: "2px 6px" }}
           >
             ×
           </button>
@@ -221,7 +221,7 @@ export default function MobilDrawer(props: MobilDrawerProps) {
           ))}
         </div>
 
-        <div className="h-px my-3" style={{ background: "#f0f0f0" }} />
+        <div className="h-px my-3" style={{ background: "var(--tema-mobil-menu-ayirici)" }} />
 
         {/* Fonksiyonel ağaç */}
         <div className="flex flex-col gap-4">
@@ -244,10 +244,10 @@ export default function MobilDrawer(props: MobilDrawerProps) {
                   type="button"
                   onClick={() => grupToggle(grup.baslik)}
                   className="flex w-full cursor-pointer items-center justify-between border-none bg-transparent"
-                  style={{ minHeight: "44px", fontSize: "12px", fontWeight: 800, color: grup.baslik === "HBStore" ? "#ff6200" : "#111827", textTransform: "uppercase", letterSpacing: "0.06em", padding: "2px 12px 4px", fontFamily: "'Nunito', sans-serif" }}
+                  style={{ minHeight: "44px", fontSize: "12px", fontWeight: 800, color: grup.baslik === "HBStore" ? "var(--tema-hbstore-vurgu)" : "var(--tema-baslik)", textTransform: "uppercase", letterSpacing: "0.06em", padding: "2px 12px 4px", fontFamily: "'Nunito', sans-serif" }}
                 >
                   <span>{grup.baslik}</span>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#111827" strokeWidth={2.5}
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--tema-baslik)" strokeWidth={2.5}
                     style={{ transform: acik ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6" />
                   </svg>
@@ -258,11 +258,11 @@ export default function MobilDrawer(props: MobilDrawerProps) {
           })}
         </div>
 
-        <div className="h-px my-3" style={{ background: "#f0f0f0" }} />
+        <div className="h-px my-3" style={{ background: "var(--tema-mobil-menu-ayirici)" }} />
         <button
           onClick={cikis}
           className="w-full flex items-center gap-2 rounded-lg border-none bg-transparent px-3 py-2.5 text-left font-semibold cursor-pointer"
-          style={{ color: "#bc2d0d", fontSize: "14px", fontFamily: "'Nunito', sans-serif" }}
+          style={{ color: "var(--tema-vurgu)", fontSize: "14px", fontFamily: "'Nunito', sans-serif" }}
         >
           <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />

@@ -34,8 +34,8 @@ function StatKarti({
   etiket,
   deger,
   detay,
-  renk = "#237ac8",
-  zemin = "#edf6fd",
+  renk = "var(--tema-yerel-magaza-eylem-metin-01)",
+  zemin = "var(--tema-yerel-magaza-secim-zemin-04)",
 }: {
   ikon: React.ComponentType<{ className?: string; size?: number }>;
   etiket: string;
@@ -46,13 +46,13 @@ function StatKarti({
 }) {
   return (
     <article
-      className="flex items-start justify-between gap-3 rounded-2xl border border-[#dfe7f1] bg-white p-4 shadow-[0_6px_18px_rgba(31,55,90,0.035)]"
+      className="flex items-start justify-between gap-3 rounded-2xl border border-[var(--tema-yerel-magaza-cizgi-01)] bg-[var(--tema-yerel-magaza-kart-01)] p-4 shadow-[0_6px_18px_var(--tema-yerel-magaza-golge-01)]"
       style={{ borderLeft: `4px solid ${renk}` }}
     >
       <div className="min-w-0">
-        <span className="text-[10px] font-extrabold uppercase tracking-[0.08em] text-[#7d8fa5]">{etiket}</span>
-        <strong className="mt-1 block text-2xl font-black tracking-tight text-[#1e3450]">{deger}</strong>
-        <span className="mt-1 block truncate text-xs font-semibold text-[#8292a7]">{detay}</span>
+        <span className="text-[10px] font-extrabold uppercase tracking-[0.08em] text-[var(--tema-yerel-magaza-yardimci-metin-14)]">{etiket}</span>
+        <strong className="mt-1 block text-2xl font-black tracking-tight text-[var(--tema-yerel-magaza-ana-metin-05)]">{deger}</strong>
+        <span className="mt-1 block truncate text-xs font-semibold text-[var(--tema-yerel-magaza-yardimci-metin-15)]">{detay}</span>
       </div>
       <span
         className="flex size-10 shrink-0 items-center justify-center rounded-xl"
@@ -221,9 +221,9 @@ export default function SiparislerimPage() {
 
   if (authYukleniyor || !yetkiKontrolEdildi) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#f7f9fc]">
+      <div className="flex min-h-screen items-center justify-center bg-[var(--tema-yerel-magaza-sayfa-zemini-01)]">
         <svg
-          className="h-6 w-6 animate-spin text-[#7a8da5]"
+          className="h-6 w-6 animate-spin text-[var(--tema-yerel-magaza-yardimci-metin-01)]"
           fill="none"
           viewBox="0 0 24 24"
         >
@@ -235,16 +235,16 @@ export default function SiparislerimPage() {
   }
 
   return (
-    <div className="min-h-full bg-[#f7f9fc] pb-20 md:pb-8" style={{ fontFamily: "'Nunito', sans-serif" }}>
+    <div className="min-h-full bg-[var(--tema-yerel-magaza-sayfa-zemini-01)] pb-20 md:pb-8" style={{ fontFamily: "'Nunito', sans-serif" }}>
       <HataMesajiContainer mesajlar={mesajlar} />
 
       <main className="mx-auto flex w-full max-w-[1480px] flex-col gap-5 px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
         <SayfaYenileBasligi className="flex flex-wrap items-end justify-between gap-4"
-          baslik={<h1 className="text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]">
+          baslik={<h1 className="text-2xl font-extrabold tracking-[-0.025em] text-[var(--tema-yerel-magaza-ana-metin-06)] md:text-[28px]">
             Siparişlerim
           </h1>}
 
-          aciklama={<><p className="mt-1 max-w-3xl text-xs font-semibold leading-5 text-[#7b8da3] md:text-sm">
+          aciklama={<><p className="mt-1 max-w-3xl text-xs font-semibold leading-5 text-[var(--tema-yerel-magaza-yardimci-metin-12)] md:text-sm">
             Verdiğiniz siparişlerin durumlarını, kargo takibini ve teslimat dökümünü inceleyin.
           </p></>}
           aksiyon={<YenileButonu
@@ -256,13 +256,13 @@ export default function SiparislerimPage() {
 
             <Link
               href="/store"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-[#d7e1ec] bg-white px-3.5 py-2 text-xs font-extrabold text-[#45627f] shadow-sm transition-colors hover:bg-[#f6f9fc]"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--tema-yerel-magaza-cizgi-07)] bg-[var(--tema-yerel-magaza-kart-01)] px-3.5 py-2 text-xs font-extrabold text-[var(--tema-yerel-magaza-ana-metin-07)] shadow-sm transition-colors hover:bg-[var(--tema-yerel-magaza-sayfa-zemini-05)]"
             >
               <ShoppingBag size={14} /> HBStore&apos;a Dön
             </Link>
             <Link
               href="/store/adreslerim"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-[#d7e1ec] bg-white px-3.5 py-2 text-xs font-extrabold text-[#45627f] shadow-sm transition-colors hover:bg-[#f6f9fc]"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--tema-yerel-magaza-cizgi-07)] bg-[var(--tema-yerel-magaza-kart-01)] px-3.5 py-2 text-xs font-extrabold text-[var(--tema-yerel-magaza-ana-metin-07)] shadow-sm transition-colors hover:bg-[var(--tema-yerel-magaza-sayfa-zemini-05)]"
             >
               <MapPin size={14} /> Adreslerim
             </Link>
@@ -275,51 +275,51 @@ export default function SiparislerimPage() {
             etiket="Toplam Siparişim"
             deger={ozet.toplam}
             detay="HBStore'dan verilen tüm siparişler"
-            renk="#237ac8"
-            zemin="#edf6fd"
+            renk="var(--tema-yerel-magaza-eylem-metin-01)"
+            zemin="var(--tema-yerel-magaza-secim-zemin-04)"
           />
           <StatKarti
             ikon={Truck}
             etiket="Aktif Siparişler"
             deger={ozet.aktif}
             detay="Hazırlanan ve kargodaki gönderiler"
-            renk="#b7791f"
-            zemin="#fff7e8"
+            renk="var(--tema-yerel-magaza-islevsel-metin-12)"
+            zemin="var(--tema-yerel-magaza-islevsel-zemin-17)"
           />
           <StatKarti
             ikon={CheckCircle2}
             etiket="Teslim Edilenler"
             deger={ozet.teslim}
             detay="Başarıyla tamamlanan siparişler"
-            renk="#16865f"
-            zemin="#edf9f4"
+            renk="var(--tema-yerel-magaza-islevsel-metin-03)"
+            zemin="var(--tema-yerel-magaza-islevsel-zemin-15)"
           />
         </section>
 
         {yukleniyor ? (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-[#dfe7f1] bg-white py-20 text-center shadow-[0_6px_18px_rgba(31,55,90,0.035)]">
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-[var(--tema-yerel-magaza-cizgi-01)] bg-[var(--tema-yerel-magaza-kart-01)] py-20 text-center shadow-[0_6px_18px_var(--tema-yerel-magaza-golge-01)]">
             <svg
-              className="h-7 w-7 animate-spin text-[#237ac8]"
+              className="h-7 w-7 animate-spin text-[var(--tema-yerel-magaza-eylem-metin-01)]"
               fill="none"
               viewBox="0 0 24 24"
             >
               <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
             </svg>
-            <p className="mt-3 text-xs font-extrabold text-[#627791]">Sipariş geçmişi yükleniyor...</p>
+            <p className="mt-3 text-xs font-extrabold text-[var(--tema-yerel-magaza-yardimci-metin-03)]">Sipariş geçmişi yükleniyor...</p>
           </div>
         ) : siparisler.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-[#dfe7f1] bg-white py-16 text-center shadow-[0_6px_18px_rgba(31,55,90,0.035)]">
-            <span className="flex size-12 items-center justify-center rounded-2xl bg-[#f0f4f9] text-[#7a8da5]">
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-[var(--tema-yerel-magaza-cizgi-01)] bg-[var(--tema-yerel-magaza-kart-01)] py-16 text-center shadow-[0_6px_18px_var(--tema-yerel-magaza-golge-01)]">
+            <span className="flex size-12 items-center justify-center rounded-2xl bg-[var(--tema-yerel-magaza-sayfa-zemini-06)] text-[var(--tema-yerel-magaza-yardimci-metin-01)]">
               <Package size={24} />
             </span>
-            <h3 className="mt-3 text-sm font-extrabold text-[#203653]">Henüz siparişiniz yok</h3>
-            <p className="mt-1 max-w-sm text-xs font-semibold text-[#7b8da5]">
+            <h3 className="mt-3 text-sm font-extrabold text-[var(--tema-yerel-magaza-ana-metin-01)]">Henüz siparişiniz yok</h3>
+            <p className="mt-1 max-w-sm text-xs font-semibold text-[var(--tema-yerel-magaza-yardimci-metin-08)]">
               HBStore&apos;dan puanlarınızla ürün seçip ilk siparişinizi hemen oluşturabilirsiniz.
             </p>
             <Link
               href="/store"
-              className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-[#237ac8] px-4 py-2 text-xs font-extrabold text-white shadow-sm hover:bg-[#1d69aa]"
+              className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-[var(--tema-yerel-magaza-eylem-zemin-01)] px-4 py-2 text-xs font-extrabold text-[var(--tema-yerel-magaza-ters-metin-01)] shadow-sm hover:bg-[var(--tema-yerel-magaza-eylem-zemin-02)]"
             >
               HBStore&apos;a Git
             </Link>
@@ -338,27 +338,27 @@ export default function SiparislerimPage() {
               return (
                 <article
                   key={s.siparis_id}
-                  className="flex flex-col overflow-hidden rounded-2xl border border-[#dfe7f1] bg-white shadow-[0_6px_18px_rgba(31,55,90,0.035)] transition-all hover:border-[#cbd8e6]"
+                  className="flex flex-col overflow-hidden rounded-2xl border border-[var(--tema-yerel-magaza-cizgi-01)] bg-[var(--tema-yerel-magaza-kart-01)] shadow-[0_6px_18px_var(--tema-yerel-magaza-golge-01)] transition-all hover:border-[var(--tema-yerel-magaza-cizgi-08)]"
                 >
                   <div className="flex flex-col gap-4 p-4 sm:flex-row sm:items-start sm:justify-between md:p-5">
                     <div className="flex items-start gap-3.5">
-                      <div className="relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-[#e8eff6] bg-[#f8fafc] p-1.5 sm:size-20">
+                      <div className="relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-[var(--tema-yerel-magaza-cizgi-13)] bg-[var(--tema-yerel-magaza-sayfa-zemini-02)] p-1.5 sm:size-20">
                         {urunGorsel ? (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img src={urunGorsel} alt={urunAdi} className="h-full w-full object-contain" />
                         ) : (
-                          <Package size={24} className="text-[#9aa9b9]" />
+                          <Package size={24} className="text-[var(--tema-yerel-magaza-yardimci-metin-05)]" />
                         )}
                       </div>
 
                       <div className="min-w-0 flex-1">
-                        <strong className="block text-sm font-extrabold text-[#1a2d42] md:text-base">
+                        <strong className="block text-sm font-extrabold text-[var(--tema-yerel-magaza-ana-metin-02)] md:text-base">
                           {urunAdi}
                         </strong>
-                        <div className="mt-1 flex flex-wrap items-center gap-2 text-xs font-semibold text-[#7c8ea5]">
+                        <div className="mt-1 flex flex-wrap items-center gap-2 text-xs font-semibold text-[var(--tema-yerel-magaza-yardimci-metin-16)]">
                           <span>{s.adet} Adet</span>
                           <span>·</span>
-                          <strong className="text-[#16865f]">
+                          <strong className="text-[var(--tema-yerel-magaza-islevsel-metin-03)]">
                             {s.toplam_puan.toLocaleString("tr-TR")} HapPuan
                           </strong>
                           <span>·</span>
@@ -382,9 +382,9 @@ export default function SiparislerimPage() {
                   </div>
 
                   {s.durum === "kargoda" && (
-                    <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#f0f4f8] bg-[#fdfaf5] px-4 py-3 md:px-5">
-                      <div className="flex items-center gap-2 text-xs font-semibold text-[#8c6014]">
-                        <Truck size={16} className="text-[#b7791f]" />
+                    <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--tema-yerel-magaza-cizgi-02)] bg-[var(--tema-yerel-magaza-sayfa-zemini-12)] px-4 py-3 md:px-5">
+                      <div className="flex items-center gap-2 text-xs font-semibold text-[var(--tema-yerel-magaza-islevsel-metin-13)]">
+                        <Truck size={16} className="text-[var(--tema-yerel-magaza-islevsel-metin-12)]" />
                         <span>Kargo Firması: <strong>{s.kargo_firmasi}</strong></span>
                         {s.kargo_takip_no && (
                           <span>(Takip No: <strong>{s.kargo_takip_no}</strong>)</span>
@@ -397,7 +397,7 @@ export default function SiparislerimPage() {
                             href={kargoUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-xs font-extrabold text-[#237ac8] hover:underline"
+                            className="inline-flex items-center gap-1 text-xs font-extrabold text-[var(--tema-yerel-magaza-eylem-metin-01)] hover:underline"
                           >
                             Kargo Takip <ExternalLink size={12} />
                           </a>
@@ -406,7 +406,7 @@ export default function SiparislerimPage() {
                           type="button"
                           onClick={() => setTeslimEdilecek(s)}
                           disabled={teslimIslemi}
-                          className="rounded-xl bg-[#16865f] px-3 py-1.5 text-xs font-extrabold text-white shadow-sm hover:bg-[#126f4f]"
+                          className="rounded-xl bg-[var(--tema-yerel-magaza-islevsel-zemin-18)] px-3 py-1.5 text-xs font-extrabold text-[var(--tema-yerel-magaza-ters-metin-01)] shadow-sm hover:bg-[var(--tema-yerel-magaza-islevsel-zemin-19)]"
                         >
                           Teslim Aldım ✓
                         </button>
@@ -414,11 +414,11 @@ export default function SiparislerimPage() {
                     </div>
                   )}
 
-                  <div className="flex flex-col gap-2 border-t border-[#edf1f5] bg-[#f8fafc] px-4 py-3 text-xs sm:flex-row sm:items-center sm:justify-between md:px-5">
-                    <div className="flex items-start gap-2 text-[#647891]">
-                      <MapPin size={14} className="mt-0.5 shrink-0 text-[#8ba0b7]" />
+                  <div className="flex flex-col gap-2 border-t border-[var(--tema-yerel-magaza-cizgi-09)] bg-[var(--tema-yerel-magaza-sayfa-zemini-02)] px-4 py-3 text-xs sm:flex-row sm:items-center sm:justify-between md:px-5">
+                    <div className="flex items-start gap-2 text-[var(--tema-yerel-magaza-yardimci-metin-23)]">
+                      <MapPin size={14} className="mt-0.5 shrink-0 text-[var(--tema-yerel-magaza-yardimci-metin-24)]" />
                       <span>
-                        <strong className="text-[#203653]">{adres.baslik}:</strong> {adres.alici_adi} · {adres.telefon} — {adres.adres_detay} ({adres.ilce} / {adres.il})
+                        <strong className="text-[var(--tema-yerel-magaza-ana-metin-01)]">{adres.baslik}:</strong> {adres.alici_adi} · {adres.telefon} — {adres.adres_detay} ({adres.ilce} / {adres.il})
                       </span>
                     </div>
 
@@ -427,7 +427,7 @@ export default function SiparislerimPage() {
                         type="button"
                         onClick={() => setIptalEdilecek(s)}
                         disabled={iptalIslemi}
-                        className="shrink-0 text-xs font-extrabold text-[#b42318] hover:underline"
+                        className="shrink-0 text-xs font-extrabold text-[var(--tema-yerel-magaza-islevsel-metin-04)] hover:underline"
                       >
                         Siparişi İptal Et
                       </button>
@@ -441,20 +441,20 @@ export default function SiparislerimPage() {
       </main>
 
       {iptalEdilecek && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="flex w-full max-w-md flex-col gap-4 rounded-2xl border border-[#dfe7f1] bg-white p-6 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--tema-yerel-magaza-ortu-01)]/50 p-4">
+          <div className="flex w-full max-w-md flex-col gap-4 rounded-2xl border border-[var(--tema-yerel-magaza-cizgi-01)] bg-[var(--tema-yerel-magaza-kart-01)] p-6 shadow-2xl">
             <div>
-              <div className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-wider text-[#b42318]">
+              <div className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-wider text-[var(--tema-yerel-magaza-islevsel-metin-04)]">
                 <XCircle size={14} /> Sipariş İptali
               </div>
-              <h2 className="mt-1 text-lg font-extrabold text-[#1a2d42]">
+              <h2 className="mt-1 text-lg font-extrabold text-[var(--tema-yerel-magaza-ana-metin-02)]">
                 Siparişi İptal Etmek İstiyor Musunuz?
               </h2>
             </div>
 
-            <p className="text-xs font-semibold leading-relaxed text-[#627791]">
-              <strong className="text-[#1a2d42]">{iptalEdilecek.store_urunler?.ad}</strong> siparişiniz iptal edilecek ve harcanan{" "}
-              <strong className="text-[#16865f]">{iptalEdilecek.toplam_puan.toLocaleString("tr-TR")} HapPuan</strong> bakiyenize anında iade edilecektir.
+            <p className="text-xs font-semibold leading-relaxed text-[var(--tema-yerel-magaza-yardimci-metin-03)]">
+              <strong className="text-[var(--tema-yerel-magaza-ana-metin-02)]">{iptalEdilecek.store_urunler?.ad}</strong> siparişiniz iptal edilecek ve harcanan{" "}
+              <strong className="text-[var(--tema-yerel-magaza-islevsel-metin-03)]">{iptalEdilecek.toplam_puan.toLocaleString("tr-TR")} HapPuan</strong> bakiyenize anında iade edilecektir.
             </p>
 
             <div className="flex gap-2.5 justify-end pt-2">
@@ -462,7 +462,7 @@ export default function SiparislerimPage() {
                 type="button"
                 onClick={() => setIptalEdilecek(null)}
                 disabled={iptalIslemi}
-                className="rounded-xl border border-[#dce5ee] bg-white px-4 py-2.5 text-xs font-extrabold text-[#5f738c] hover:bg-[#f8fafc]"
+                className="rounded-xl border border-[var(--tema-yerel-magaza-cizgi-03)] bg-[var(--tema-yerel-magaza-kart-01)] px-4 py-2.5 text-xs font-extrabold text-[var(--tema-yerel-magaza-yardimci-metin-10)] hover:bg-[var(--tema-yerel-magaza-sayfa-zemini-02)]"
               >
                 Vazgeç
               </button>
@@ -470,7 +470,7 @@ export default function SiparislerimPage() {
                 type="button"
                 onClick={handleIptalOnayla}
                 disabled={iptalIslemi}
-                className="rounded-xl bg-[#b42318] px-5 py-2.5 text-xs font-extrabold text-white shadow-sm hover:bg-[#991b1b] disabled:opacity-50"
+                className="rounded-xl bg-[var(--tema-yerel-magaza-islevsel-zemin-01)] px-5 py-2.5 text-xs font-extrabold text-[var(--tema-yerel-magaza-ters-metin-01)] shadow-sm hover:bg-[var(--tema-yerel-magaza-islevsel-zemin-10)] disabled:opacity-50"
               >
                 {iptalIslemi ? "İptal Ediliyor..." : "Siparişi İptal Et"}
               </button>
@@ -480,19 +480,19 @@ export default function SiparislerimPage() {
       )}
 
       {teslimEdilecek && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="flex w-full max-w-md flex-col gap-4 rounded-2xl border border-[#dfe7f1] bg-white p-6 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--tema-yerel-magaza-ortu-01)]/50 p-4">
+          <div className="flex w-full max-w-md flex-col gap-4 rounded-2xl border border-[var(--tema-yerel-magaza-cizgi-01)] bg-[var(--tema-yerel-magaza-kart-01)] p-6 shadow-2xl">
             <div>
-              <div className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-wider text-[#16865f]">
+              <div className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-wider text-[var(--tema-yerel-magaza-islevsel-metin-03)]">
                 <CheckCircle2 size={14} /> Teslimat Onayı
               </div>
-              <h2 className="mt-1 text-lg font-extrabold text-[#1a2d42]">
+              <h2 className="mt-1 text-lg font-extrabold text-[var(--tema-yerel-magaza-ana-metin-02)]">
                 Ürünü Teslim Aldığınızı Onaylıyor Musunuz?
               </h2>
             </div>
 
-            <p className="text-xs font-semibold leading-relaxed text-[#627791]">
-              <strong className="text-[#1a2d42]">{teslimEdilecek.store_urunler?.ad}</strong> siparişiniz teslim edildi olarak kaydedilecektir.
+            <p className="text-xs font-semibold leading-relaxed text-[var(--tema-yerel-magaza-yardimci-metin-03)]">
+              <strong className="text-[var(--tema-yerel-magaza-ana-metin-02)]">{teslimEdilecek.store_urunler?.ad}</strong> siparişiniz teslim edildi olarak kaydedilecektir.
             </p>
 
             <div className="flex gap-2.5 justify-end pt-2">
@@ -500,7 +500,7 @@ export default function SiparislerimPage() {
                 type="button"
                 onClick={() => setTeslimEdilecek(null)}
                 disabled={teslimIslemi}
-                className="rounded-xl border border-[#dce5ee] bg-white px-4 py-2.5 text-xs font-extrabold text-[#5f738c] hover:bg-[#f8fafc]"
+                className="rounded-xl border border-[var(--tema-yerel-magaza-cizgi-03)] bg-[var(--tema-yerel-magaza-kart-01)] px-4 py-2.5 text-xs font-extrabold text-[var(--tema-yerel-magaza-yardimci-metin-10)] hover:bg-[var(--tema-yerel-magaza-sayfa-zemini-02)]"
               >
                 Vazgeç
               </button>
@@ -508,7 +508,7 @@ export default function SiparislerimPage() {
                 type="button"
                 onClick={handleTeslimOnayla}
                 disabled={teslimIslemi}
-                className="rounded-xl bg-[#16865f] px-5 py-2.5 text-xs font-extrabold text-white shadow-sm hover:bg-[#126f4f] disabled:opacity-50"
+                className="rounded-xl bg-[var(--tema-yerel-magaza-islevsel-zemin-18)] px-5 py-2.5 text-xs font-extrabold text-[var(--tema-yerel-magaza-ters-metin-01)] shadow-sm hover:bg-[var(--tema-yerel-magaza-islevsel-zemin-19)] disabled:opacity-50"
               >
                 {teslimIslemi ? "İşleniyor..." : "Teslim Aldım"}
               </button>

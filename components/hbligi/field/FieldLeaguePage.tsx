@@ -63,12 +63,12 @@ const BIRIM_ETIKETI: Record<SahaBirimTuru, string> = {
 };
 
 const PUAN_RENKLERI = {
-  izleme: "#1aa160",
-  cevaplama: "#6d5ce8",
-  oneri: "#f59e0b",
-  extra: "#2f9ae9",
-  eclub: "#237ac8",
-  kayip: "#e44c4c",
+  izleme: "var(--tema-cizim-lig-izleme)",
+  cevaplama: "var(--tema-cizim-lig-cevaplama)",
+  oneri: "var(--tema-cizim-lig-oneri)",
+  extra: "var(--tema-cizim-lig-extra)",
+  eclub: "var(--tema-cizim-lig-eclub)",
+  kayip: "var(--tema-cizim-lig-kayip)",
 };
 
 function aktifMi(satir: SahaLigKullanici): boolean {
@@ -212,7 +212,7 @@ export default function FieldLeaguePage({
   ];
   const grafikKalemleri = puanKalemleri.filter((kalem) => kalem.deger > 0);
   const grafikOption = {
-    tooltip: { trigger: "item" as const, formatter: "{b}: {c}" },
+    tooltip: { trigger: "item" as const, backgroundColor: "var(--tema-cizim-tooltip-kart)", textStyle: { color: "var(--tema-cizim-tooltip-metin)" }, formatter: "{b}: {c}" },
     series: [{
       type: "pie" as const,
       radius: ["63%", "88%"],

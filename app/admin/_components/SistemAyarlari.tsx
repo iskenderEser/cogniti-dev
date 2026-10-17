@@ -119,7 +119,7 @@ export default function SistemAyarlari({ hata, basari }: SistemAyarlariProps) {
   };
 
   if (loading) {
-    return <p style={{ fontSize: "13px", color: "#737373" }}>Ayarlar yükleniyor…</p>;
+    return <p style={{ fontSize: "13px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)" }}>Ayarlar yükleniyor…</p>;
   }
 
   const eclubAyarlar = ECLUB_GONDERI_AYARLARI
@@ -130,10 +130,10 @@ export default function SistemAyarlari({ hata, basari }: SistemAyarlariProps) {
 
   return (
     <div>
-      <h2 style={{ fontSize: "16px", fontWeight: 700, color: "#111", marginBottom: "4px" }}>
+      <h2 style={{ fontSize: "16px", fontWeight: 700, color: "var(--tema-yerel-yonetim-ana-metin-01)", marginBottom: "4px" }}>
         Sistem Ayarları
       </h2>
-      <p style={{ fontSize: "12px", color: "#737373", marginBottom: "16px" }}>
+      <p style={{ fontSize: "12px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)", marginBottom: "16px" }}>
         Değerler tüm firmalara aynı uygulanır. Yeni ayar eklemek migration işidir; buradan yalnızca mevcut değerler güncellenir.
       </p>
 
@@ -143,17 +143,17 @@ export default function SistemAyarlari({ hata, basari }: SistemAyarlariProps) {
           maxWidth: 980,
           marginBottom: "24px",
           padding: "16px",
-          border: "0.5px solid #fde68a",
+          border: "0.5px solid var(--tema-yerel-yonetim-islevsel-cizgi-06)",
           borderRadius: "12px",
-          background: "#fffbeb",
+          background: "var(--tema-yerel-yonetim-islevsel-zemin-02)",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px", flexWrap: "wrap" }}>
           <div style={{ minWidth: 0 }}>
-            <h3 style={{ margin: 0, fontSize: "15px", fontWeight: 800, color: "#111" }}>
+            <h3 style={{ margin: 0, fontSize: "15px", fontWeight: 800, color: "var(--tema-yerel-yonetim-ana-metin-01)" }}>
               Test: Mesai kuralını atla
             </h3>
-            <p style={{ margin: "4px 0 0", fontSize: "12px", lineHeight: 1.5, color: "#737373" }}>
+            <p style={{ margin: "4px 0 0", fontSize: "12px", lineHeight: 1.5, color: "var(--tema-yerel-yonetim-yardimci-metin-01)" }}>
               Açıkken mesai günü/saati kuralı atlanır — izleme her zaman kayıt olur, puan ve sorular çalışır.
               Kapalıyken gerçek kural işler (mesai dışı → kayıt yok, bilgilendirme modalı). Yalnız test/geliştirme içindir; canlıda etkisizdir.
             </p>
@@ -173,8 +173,8 @@ export default function SistemAyarlari({ hata, basari }: SistemAyarlariProps) {
               fontSize: "13px",
               fontWeight: 800,
               cursor: mesaiBypass === null || bypassKaydediliyor ? "not-allowed" : "pointer",
-              background: mesaiBypass ? "#16a34a" : "#e5e7eb",
-              color: mesaiBypass ? "white" : "#6b7280",
+              background: mesaiBypass ? "var(--tema-yerel-yonetim-islevsel-zemin-08)" : "var(--tema-yerel-yonetim-sayfa-zemini-05)",
+              color: mesaiBypass ? "var(--tema-yerel-yonetim-ters-metin-01)" : "var(--tema-yerel-yonetim-yardimci-metin-02)",
               fontFamily: "'Nunito', sans-serif",
             }}
           >
@@ -183,7 +183,7 @@ export default function SistemAyarlari({ hata, basari }: SistemAyarlariProps) {
                 width: "9px",
                 height: "9px",
                 borderRadius: "999px",
-                background: mesaiBypass ? "white" : "#9ca3af",
+                background: mesaiBypass ? "var(--tema-yerel-yonetim-kart-01)" : "var(--tema-yerel-yonetim-sayfa-zemini-06)",
               }}
             />
             {mesaiBypass === null ? "..." : bypassKaydediliyor ? "..." : mesaiBypass ? "AÇIK" : "KAPALI"}
@@ -201,10 +201,10 @@ export default function SistemAyarlari({ hata, basari }: SistemAyarlariProps) {
           background: RENK_BORDO_ZEMIN,
         }}
       >
-        <h3 style={{ margin: 0, fontSize: "15px", fontWeight: 800, color: "#111" }}>
+        <h3 style={{ margin: 0, fontSize: "15px", fontWeight: 800, color: "var(--tema-yerel-yonetim-ana-metin-01)" }}>
           E-Club Yayın Gönderim Kuralları
         </h3>
-        <p style={{ margin: "4px 0 14px", fontSize: "12px", color: "#737373" }}>
+        <p style={{ margin: "4px 0 14px", fontSize: "12px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)" }}>
           Yayın tamamlama süresi yeni kurguda 15 gündür. Gönderim kotaları ve tekrar aralığı ortak kurallarla uygulanır.
         </p>
 
@@ -218,19 +218,19 @@ export default function SistemAyarlari({ hata, basari }: SistemAyarlariProps) {
                   flexDirection: "column",
                   minHeight: "154px",
                   padding: "13px",
-                  border: "0.5px solid #e5e7eb",
+                  border: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)",
                   borderRadius: "10px",
-                  background: "#fff",
+                  background: "var(--tema-yerel-yonetim-kart-03)",
                 }}
               >
-                <label htmlFor={`ayar-${ayar.anahtar}`} style={{ fontSize: "13px", fontWeight: 800, color: "#111" }}>
+                <label htmlFor={`ayar-${ayar.anahtar}`} style={{ fontSize: "13px", fontWeight: 800, color: "var(--tema-yerel-yonetim-ana-metin-01)" }}>
                   {tanim.baslik}
                 </label>
-                <p style={{ flex: 1, margin: "4px 0 12px", fontSize: "11px", lineHeight: 1.45, color: "#737373" }}>
+                <p style={{ flex: 1, margin: "4px 0 12px", fontSize: "11px", lineHeight: 1.45, color: "var(--tema-yerel-yonetim-yardimci-metin-01)" }}>
                   {tanim.aciklama}
                 </p>
                 <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                  <div style={{ display: "flex", flex: 1, alignItems: "center", overflow: "hidden", border: "0.5px solid #d1d5db", borderRadius: "7px", background: "#fff" }}>
+                  <div style={{ display: "flex", flex: 1, alignItems: "center", overflow: "hidden", border: "0.5px solid var(--tema-yerel-yonetim-cizgi-02)", borderRadius: "7px", background: "var(--tema-yerel-yonetim-kart-03)" }}>
                     <input
                       id={`ayar-${ayar.anahtar}`}
                       type="number"
@@ -239,9 +239,9 @@ export default function SistemAyarlari({ hata, basari }: SistemAyarlariProps) {
                       inputMode="numeric"
                       value={tanim.varsayilan}
                       readOnly
-                      style={{ minWidth: 0, width: "100%", border: "none", outline: "none", padding: "7px 9px", fontSize: "13px", fontWeight: 700, color: "#111", fontFamily: "'Nunito', sans-serif" }}
+                      style={{ minWidth: 0, width: "100%", border: "none", outline: "none", padding: "7px 9px", fontSize: "13px", fontWeight: 700, color: "var(--tema-yerel-yonetim-ana-metin-01)", fontFamily: "'Nunito', sans-serif" }}
                     />
-                    <span style={{ padding: "0 9px", fontSize: "11px", color: "#737373", borderLeft: "0.5px solid #e5e7eb" }}>
+                    <span style={{ padding: "0 9px", fontSize: "11px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)", borderLeft: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)" }}>
                       {tanim.birim}
                     </span>
                   </div>
@@ -252,8 +252,8 @@ export default function SistemAyarlari({ hata, basari }: SistemAyarlariProps) {
         </div>
       </section>
 
-      <div style={{ border: "0.5px solid #e5e7eb", borderRadius: "10px", overflow: "hidden", maxWidth: 860 }}>
-        <div style={{ display: "grid", gridTemplateColumns: "240px 1fr 180px 90px", gap: "0", background: "#f9fafb", padding: "10px 14px", fontSize: "12px", fontWeight: 700, color: "#374151" }}>
+      <div style={{ border: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)", borderRadius: "10px", overflow: "hidden", maxWidth: 860 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "240px 1fr 180px 90px", gap: "0", background: "var(--tema-yerel-yonetim-sayfa-zemini-02)", padding: "10px 14px", fontSize: "12px", fontWeight: 700, color: "var(--tema-yerel-yonetim-ana-metin-03)" }}>
           <span>Anahtar</span>
           <span>Açıklama</span>
           <span>Değer</span>
@@ -261,15 +261,15 @@ export default function SistemAyarlari({ hata, basari }: SistemAyarlariProps) {
         </div>
         {genelAyarlar.map((a) => (
           <div key={a.anahtar}
-            style={{ display: "grid", gridTemplateColumns: "240px 1fr 180px 90px", alignItems: "center", padding: "10px 14px", borderTop: "0.5px solid #e5e7eb", fontSize: "12px" }}>
-            <span style={{ fontWeight: 700, color: "#111", wordBreak: "break-all" }}>{a.anahtar}</span>
-            <span style={{ color: "#737373", paddingRight: "12px" }}>{a.aciklama ?? "-"}</span>
+            style={{ display: "grid", gridTemplateColumns: "240px 1fr 180px 90px", alignItems: "center", padding: "10px 14px", borderTop: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)", fontSize: "12px" }}>
+            <span style={{ fontWeight: 700, color: "var(--tema-yerel-yonetim-ana-metin-01)", wordBreak: "break-all" }}>{a.anahtar}</span>
+            <span style={{ color: "var(--tema-yerel-yonetim-yardimci-metin-01)", paddingRight: "12px" }}>{a.aciklama ?? "-"}</span>
             <input
               value={duzenlenen[a.anahtar] ?? ""}
               onChange={(e) => setDuzenlenen((prev) => ({ ...prev, [a.anahtar]: e.target.value }))}
               style={{
-                border: "0.5px solid #d1d5db", borderRadius: "6px", padding: "6px 8px",
-                fontSize: "12px", color: "#111", fontFamily: "'Nunito', sans-serif", width: "150px",
+                border: "0.5px solid var(--tema-yerel-yonetim-cizgi-02)", borderRadius: "6px", padding: "6px 8px",
+                fontSize: "12px", color: "var(--tema-yerel-yonetim-ana-metin-01)", fontFamily: "'Nunito', sans-serif", width: "150px",
               }}
             />
             <button
@@ -277,8 +277,8 @@ export default function SistemAyarlari({ hata, basari }: SistemAyarlariProps) {
               disabled={kaydeden === a.anahtar || degerMetni(a.deger) === (duzenlenen[a.anahtar] ?? "")}
               style={{
                 padding: "6px 12px", border: "none", borderRadius: "6px", fontSize: "12px", fontWeight: 600,
-                background: degerMetni(a.deger) === (duzenlenen[a.anahtar] ?? "") ? "#f3f4f6" : RENK_BORDO,
-                color: degerMetni(a.deger) === (duzenlenen[a.anahtar] ?? "") ? "#9ca3af" : "white",
+                background: degerMetni(a.deger) === (duzenlenen[a.anahtar] ?? "") ? "var(--tema-yerel-yonetim-sayfa-zemini-04)" : RENK_BORDO,
+                color: degerMetni(a.deger) === (duzenlenen[a.anahtar] ?? "") ? "var(--tema-yerel-yonetim-yardimci-metin-04)" : "var(--tema-yerel-yonetim-ters-metin-01)",
                 cursor: degerMetni(a.deger) === (duzenlenen[a.anahtar] ?? "") ? "not-allowed" : "pointer",
                 fontFamily: "'Nunito', sans-serif",
               }}

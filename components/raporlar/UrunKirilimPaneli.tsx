@@ -25,14 +25,14 @@ export interface UrunKirilim {
 }
 
 const PUAN_RENKLERI = {
-  tamamlama: "#378ADD",
-  dogruCevap: "#1D9E75",
-  oneri: "#EF9F27",
-  extra: "#7F77DD",
-  eclub: "#0F9FA8",
-  ileriSarma: "#D85A30",
-  yanlisCevap: "#E24B4A",
-  oneriKaybi: "#BC2D0D",
+  tamamlama: "var(--tema-yerel-rapor-islevsel-metin-43)",
+  dogruCevap: "var(--tema-yerel-rapor-islevsel-metin-10)",
+  oneri: "var(--tema-yerel-rapor-islevsel-metin-44)",
+  extra: "var(--tema-yerel-rapor-islevsel-metin-45)",
+  eclub: "var(--tema-yerel-rapor-islevsel-metin-46)",
+  ileriSarma: "var(--tema-yerel-rapor-islevsel-metin-47)",
+  yanlisCevap: "var(--tema-yerel-rapor-islevsel-metin-48)",
+  oneriKaybi: "var(--tema-yerel-rapor-islevsel-metin-49)",
 } as const;
 
 function kirilim(u: UrunKirilim, tamamlamaEtiketi: string): DagilimKalem[] {
@@ -74,14 +74,14 @@ export default function UrunKirilimPaneli({ urunler, modern = false, tamamlamaEt
               onClick={() => setSeciliId(u.urun_id)}
               className="whitespace-nowrap rounded-md px-2 py-1 text-left text-xs leading-tight transition-colors md:whitespace-normal"
               style={{
-                border: modern ? "1px solid transparent" : "0.5px solid #e5e7eb",
-                background: aktif ? (modern ? "#e7f3ff" : "rgba(86,174,255,0.12)") : (modern ? "#f6f8fb" : "#fff"),
-                color: aktif ? "#185fa5" : "#374151",
+                border: modern ? "1px solid transparent" : "0.5px solid var(--tema-yerel-rapor-cizgi-42)",
+                background: aktif ? (modern ? "var(--tema-yerel-rapor-secim-zemin-16)" : "var(--tema-yerel-rapor-eylem-zemin-04)") : (modern ? "var(--tema-yerel-rapor-sayfa-zemini-05)" : "var(--tema-yerel-rapor-kart-02)"),
+                color: aktif ? "var(--tema-yerel-rapor-eylem-metin-14)" : "var(--tema-yerel-rapor-ana-metin-23)",
                 fontWeight: aktif ? 600 : 400,
               }}
             >
               <span>{u.urun_adi}</span>
-              <span className="block" style={{ fontSize: 10, color: aktif ? "#185fa5" : "#9ca3af" }}>
+              <span className="block" style={{ fontSize: 10, color: aktif ? "var(--tema-yerel-rapor-eylem-metin-14)" : "var(--tema-yerel-rapor-yardimci-metin-68)" }}>
                 {u.toplam_net_puan.toLocaleString("tr-TR")} puan
               </span>
             </button>

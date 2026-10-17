@@ -129,19 +129,19 @@ export default function UyeOnerilerGorunumu({
     sinif: string;
   } => {
     if (o.izlendi_mi) {
-      return { etiket: "✓ İzlendi", soluk: false, sinif: "font-bold text-gray-700" };
+      return { etiket: "✓ İzlendi", soluk: false, sinif: "font-bold text-[var(--tema-hoyk-durum-izlendi)]" };
     }
     if (isSuresiGecti(o)) {
-      return { etiket: "Süresi Geçti", soluk: true, sinif: "font-extrabold text-red-600" };
+      return { etiket: "Süresi Geçti", soluk: true, sinif: "font-extrabold text-[var(--tema-hoyk-oneri-sure-doldu)]" };
     }
     if (isHenuzBaslamadi(o)) {
       return {
         etiket: `${formatTarihKisa(o.oneri_baslangic)}'da Açılacak`,
         soluk: true,
-        sinif: "font-extrabold text-amber-600",
+        sinif: "font-extrabold text-[var(--tema-hoyk-durum-devam)]",
       };
     }
-    return { etiket: "İzlenecek", soluk: false, sinif: "font-extrabold text-blue-600" };
+    return { etiket: "İzlenecek", soluk: false, sinif: "font-extrabold text-[var(--tema-hoyk-durum-yeni)]" };
   };
 
   const hoverIkonu = (aracTuru?: string | null) => {
@@ -181,9 +181,9 @@ export default function UyeOnerilerGorunumu({
         puanYaniRozet={
           o.izlendi_mi ? (
             <span
-              className="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-extrabold text-[#0a1b39] shadow-sm sm:px-1.5 sm:text-[9px]"
+              className="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-extrabold text-[var(--tema-hoyk-oneri-puan-metni)] shadow-sm sm:px-1.5 sm:text-[9px]"
               style={{
-                background: "linear-gradient(to right, #d4af37 0%, #ecd077 50%, #fae896 100%)",
+                background: "var(--tema-hoyk-oneri-puan-zemini)",
               }}
               title="Kazanılan öneri puanı: +10 Puan"
             >
@@ -194,21 +194,21 @@ export default function UyeOnerilerGorunumu({
           ) : null
         }
         altEkIcerik={
-          <div className="mt-2 border-t border-gray-100 pt-2">
+          <div className="mt-2 border-t border-[var(--tema-hoyk-ic-cizgi)] pt-2">
             <div
               className="grid grid-cols-3 gap-1 rounded-lg px-2 py-1.5 select-none"
               style={{
-                background: "rgba(0,0,0,0.03)",
-                boxShadow: "inset 0 0 0 0.5px rgba(0,0,0,0.08)",
+                background: "var(--tema-hoyk-oneri-bilgi-zemini)",
+                boxShadow: "inset 0 0 0 0.5px var(--tema-hoyk-kapsul-cizgi)",
               }}
             >
               {/* 1. Öneren */}
               <div className="flex flex-col min-w-0 pr-1">
-                <span className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider sm:text-[8px]">
+                <span className="text-[11px] font-semibold text-[var(--tema-hoyk-soluk-metin)] uppercase tracking-wider sm:text-[8px]">
                   Öneren
                 </span>
                 <span
-                  className="truncate text-xs font-bold text-[#1e3a8a] sm:text-[10px]"
+                  className="truncate text-xs font-bold text-[var(--tema-hoyk-oneren-metni)] sm:text-[10px]"
                   title={onerenMetni}
                 >
                   {onerenMetni}
@@ -216,21 +216,21 @@ export default function UyeOnerilerGorunumu({
               </div>
 
               {/* 2. Başlangıç */}
-              <div className="flex flex-col text-center border-x border-gray-200/60 px-1 min-w-0">
-                <span className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider sm:text-[8px]">
+              <div className="flex flex-col text-center border-x border-[var(--tema-hoyk-oneri-ayirici)] px-1 min-w-0">
+                <span className="text-[11px] font-semibold text-[var(--tema-hoyk-soluk-metin)] uppercase tracking-wider sm:text-[8px]">
                   Başlangıç
                 </span>
-                <span className="text-xs font-bold text-gray-700 whitespace-nowrap sm:text-[10px]">
+                <span className="text-xs font-bold text-[var(--tema-hoyk-oneri-tarih-metni)] whitespace-nowrap sm:text-[10px]">
                   {formatTarihNoktali(o.oneri_baslangic)}
                 </span>
               </div>
 
               {/* 3. Bitiş */}
               <div className="flex flex-col text-right min-w-0 pl-1">
-                <span className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider sm:text-[8px]">
+                <span className="text-[11px] font-semibold text-[var(--tema-hoyk-soluk-metin)] uppercase tracking-wider sm:text-[8px]">
                   Bitiş
                 </span>
-                <span className="text-xs font-bold text-gray-700 whitespace-nowrap sm:text-[10px]">
+                <span className="text-xs font-bold text-[var(--tema-hoyk-oneri-tarih-metni)] whitespace-nowrap sm:text-[10px]">
                   {formatTarihNoktali(o.oneri_bitis)}
                 </span>
               </div>
@@ -239,8 +239,8 @@ export default function UyeOnerilerGorunumu({
         }
         hoverOverlay={
           !durumStil.soluk ? (
-            <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-[#237ac8] shadow-lg">
+            <div className="absolute inset-0 flex items-center justify-center bg-[var(--tema-hoyk-oneri-ortu)] opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--tema-hoyk-zemin)] text-[var(--tema-hoyk-onizleme-simge)] shadow-lg">
                 {hoverIkonu(o.arac_turu)}
               </div>
             </div>
@@ -262,12 +262,12 @@ export default function UyeOnerilerGorunumu({
       {/* ─── Başlık & Yenileme Alanı ─── */}
       <SayfaYenileBasligi className="mb-6"
         baslik={<div className="flex items-center gap-2">
-          <h1 className="text-2xl font-black tracking-tight text-gray-900 md:text-3xl">
+          <h1 className="text-2xl font-black tracking-tight text-[var(--tema-yerel-ortak-sayfa-ana-metin-07)] md:text-3xl">
             Önerilen Yayınlar
           </h1>
           <SayfaRehberi anahtar="oneriler" />
         </div>}
-        aciklama={<p className="mt-1 text-sm font-medium text-gray-500">
+        aciklama={<p className="mt-1 text-sm font-medium text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-11)]">
           Bölge Müdürünüz tarafından önerilen yayınları görebilirsiniz.
         </p>}
         aksiyon={<YenileButonu yenileniyor={yenileniyor} onYenile={onYenile} />}
@@ -281,24 +281,24 @@ export default function UyeOnerilerGorunumu({
             label: "Bekleyen",
             deger: izlenecekSayisi,
             sub: "Süresi aktif öneriler",
-            renk: "#237ac8",
-            zemin: "#edf6fd",
+            renk: "var(--tema-yerel-ortak-sayfa-islevsel-metin-09)",
+            zemin: "var(--tema-yerel-ortak-sayfa-islevsel-zemin-08)",
           },
           {
             id: "tamamlanan" as const,
             label: "Tamamlanan",
             deger: tamamlananSayisi,
             sub: "Öneri puanı kazanıldı",
-            renk: "#16a34a",
-            zemin: "#f0fdf4",
+            renk: "var(--tema-yerel-ortak-sayfa-islevsel-metin-10)",
+            zemin: "var(--tema-yerel-ortak-sayfa-islevsel-zemin-09)",
           },
           {
             id: "suresi_dolan" as const,
             label: "Süresi Dolan",
             deger: suresiDolanSayisi,
             sub: "Tamamlanmayanlar",
-            renk: "#a33f32",
-            zemin: "#fff1f0",
+            renk: "var(--tema-yerel-ortak-sayfa-islevsel-metin-11)",
+            zemin: "var(--tema-yerel-ortak-sayfa-islevsel-zemin-10)",
           },
         ].map((kart) => {
           const secili = aktifFiltre === kart.id;
@@ -307,22 +307,22 @@ export default function UyeOnerilerGorunumu({
               type="button"
               key={kart.id}
               onClick={() => setAktifFiltre(kart.id)}
-              className={`group relative cursor-pointer rounded-2xl border border-[#dfe7f1] bg-white p-3 text-left shadow-[0_4px_14px_rgba(31,55,90,0.035)] transition-all hover:-translate-y-0.5 hover:shadow-md md:p-4`}
+              className={`group relative cursor-pointer rounded-2xl border border-[var(--tema-yerel-ortak-sayfa-cizgi-01)] bg-[var(--tema-yerel-ortak-sayfa-kart-01)] p-3 text-left shadow-[0_4px_14px_var(--tema-yerel-ortak-sayfa-golge-01)] transition-all hover:-translate-y-0.5 hover:shadow-md md:p-4`}
               style={
                 {
                   borderLeftWidth: "4px",
                   borderLeftColor: kart.renk,
-                  boxShadow: secili ? `0 0 0 2px ${kart.renk}33, 0 8px 20px rgba(0,0,0,0.06)` : undefined,
+                  boxShadow: secili ? `0 0 0 2px color-mix(in srgb, ${kart.renk} 20%, transparent), 0 8px 20px var(--tema-yerel-ortak-sayfa-golge-02)` : undefined,
                 } as CSSProperties
               }
             >
-              <div className="text-[11px] font-bold uppercase tracking-wider text-gray-400">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-12)]">
                 {kart.label}
               </div>
-              <div className="mt-1 text-2xl font-extrabold text-gray-900 md:text-3xl">
+              <div className="mt-1 text-2xl font-extrabold text-[var(--tema-yerel-ortak-sayfa-ana-metin-07)] md:text-3xl">
                 {kart.deger}
               </div>
-              <div className="mt-1 text-[11px] font-medium text-gray-500">{kart.sub}</div>
+              <div className="mt-1 text-[11px] font-medium text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-11)]">{kart.sub}</div>
             </button>
           );
         })}

@@ -30,12 +30,12 @@ function OzetKarti({ ikon: Icon, etiket, deger, detay, renk, zemin }: {
   renk: string;
   zemin: string;
 }) {
-  return <Card className="gap-0 border border-gray-200 border-l-[3px] py-0 shadow-sm" style={{ borderLeftColor: renk }}>
+  return <Card className="gap-0 border border-[var(--tema-yerel-eczanem-cizgi-06)] border-l-[3px] py-0 shadow-sm" style={{ borderLeftColor: renk }}>
     <CardContent className="flex items-start justify-between gap-3 p-4 md:p-5">
       <div>
-        <p className="text-xs font-bold uppercase tracking-wide text-gray-400">{etiket}</p>
-        <p className="mt-2 text-2xl font-extrabold leading-none text-gray-900 md:text-3xl">{deger.toLocaleString("tr-TR")}</p>
-        <p className="mt-1.5 text-[11px] leading-snug text-gray-500 md:text-xs">{detay}</p>
+        <p className="text-xs font-bold uppercase tracking-wide text-[var(--tema-yerel-eczanem-yardimci-metin-03)]">{etiket}</p>
+        <p className="mt-2 text-2xl font-extrabold leading-none text-[var(--tema-yerel-eczanem-ana-metin-02)] md:text-3xl">{deger.toLocaleString("tr-TR")}</p>
+        <p className="mt-1.5 text-[11px] leading-snug text-[var(--tema-yerel-eczanem-yardimci-metin-04)] md:text-xs">{detay}</p>
       </div>
       <span className="flex size-9 shrink-0 items-center justify-center rounded-xl" style={{ color: renk, background: zemin }}><Icon className="size-4.5" /></span>
     </CardContent>
@@ -194,34 +194,34 @@ export default function EczanemDagitimPage() {
     return sonuc;
   };
 
-  if (ilkYukleme) return <div className="flex min-h-full items-center justify-center bg-gray-50"><span className="size-6 animate-spin rounded-full border-2 border-[#d7e4ef] border-t-[#3589d8]" /></div>;
+  if (ilkYukleme) return <div className="flex min-h-full items-center justify-center bg-[var(--tema-yerel-eczanem-sayfa-zemini-05)]"><span className="size-6 animate-spin rounded-full border-2 border-[var(--tema-yerel-eczanem-cizgi-08)] border-t-[var(--tema-yerel-eczanem-cizgi-09)]" /></div>;
 
   if (aktifYayin) return <div className="mx-auto flex max-w-[1480px] flex-col gap-4 px-3 py-4 pb-20 md:px-6 md:py-5 md:pb-8 lg:px-8 lg:py-7">
-    <button type="button" onClick={() => setAktifYayin(null)} className="flex w-fit items-center gap-1.5 border-0 bg-transparent p-0 text-sm font-semibold text-gray-500 hover:text-gray-700"><ChevronLeft className="size-4" /> Öğrenme içerikleri</button>
-    <Card className="gap-0 overflow-hidden border-gray-200 py-0 shadow-sm">
-      <div className="border-b border-gray-100 px-4 py-4 md:px-5"><CardTitle className="text-base text-gray-900">{aktifYayin.urun_adi}</CardTitle><CardDescription className="mt-1">{aktifYayin.teknik_adi || "Eczanem öğrenme içeriği"}</CardDescription></div>
+    <button type="button" onClick={() => setAktifYayin(null)} className="flex w-fit items-center gap-1.5 border-0 bg-transparent p-0 text-sm font-semibold text-[var(--tema-yerel-eczanem-yardimci-metin-04)] hover:text-[var(--tema-yerel-eczanem-ana-metin-13)]"><ChevronLeft className="size-4" /> Öğrenme içerikleri</button>
+    <Card className="gap-0 overflow-hidden border-[var(--tema-yerel-eczanem-islevsel-cizgi-07)] py-0 shadow-sm">
+      <div className="border-b border-[var(--tema-yerel-eczanem-cizgi-20)] px-4 py-4 md:px-5"><CardTitle className="text-base text-[var(--tema-yerel-eczanem-ana-metin-02)]">{aktifYayin.urun_adi}</CardTitle><CardDescription className="mt-1">{aktifYayin.teknik_adi || "Eczanem öğrenme içeriği"}</CardDescription></div>
       <OgrenmeAraciOnizleme key={aktifYayin.yayin_id} yayinId={aktifYayin.yayin_id} aracId={aktifYayin.arac_id} aracTuru={aktifYayin.arac_turu} videoUrl={aktifYayin.video_url} urunAdi={aktifYayin.urun_adi} hata={hata} onBitti={() => setAktifYayin(null)} />
     </Card>
     <HataMesajiContainer mesajlar={mesajlar} />
   </div>;
 
-  return <div className="min-h-full bg-gray-50" style={{ fontFamily: "'Nunito', sans-serif" }}>
+  return <div className="min-h-full bg-[var(--tema-yerel-eczanem-sayfa-zemini-05)]" style={{ fontFamily: "'Nunito', sans-serif" }}>
     <div className="mx-auto flex max-w-[1480px] flex-col gap-5 px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
       <SayfaYenileBasligi className="flex flex-wrap items-end justify-between gap-4"
-        baslik={<div className="inline-flex items-center"><h1 className="text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]">Üye Yayınları</h1><SayfaRehberi anahtar="eczanem-eczane-dagitim" className="ml-1.5 -translate-y-1.5" /></div>}
-        aciklama={<p className="mt-1 max-w-3xl text-sm leading-5 text-[#6b7f9b]">Yayınları inceleyebilir ve üyelere gönderebilirsiniz</p>}
+        baslik={<div className="inline-flex items-center"><h1 className="text-2xl font-extrabold tracking-[-0.025em] text-[var(--tema-yerel-eczanem-ana-metin-04)] md:text-[28px]">Üye Yayınları</h1><SayfaRehberi anahtar="eczanem-eczane-dagitim" className="ml-1.5 -translate-y-1.5" /></div>}
+        aciklama={<p className="mt-1 max-w-3xl text-sm leading-5 text-[var(--tema-yerel-eczanem-yardimci-metin-07)]">Yayınları inceleyebilir ve üyelere gönderebilirsiniz</p>}
         aksiyon={<YenileButonu yenileniyor={yenileniyor} onYenile={() => void veriCek()} disabled={topluGonderiliyor} />}
       />
 
       <EczanemSayfaBanner alan="uye-yayinlari" />
 
-      {veriHatasi && !veri ? <Card className="gap-3 border-[#f2c9c9] bg-[#fffafa] py-8 text-center shadow-none">
-        <CardContent className="flex flex-col items-center px-5"><span className="flex size-11 items-center justify-center rounded-2xl bg-[#fdecec] text-[#b42318]"><CircleAlert /></span><CardTitle className="mt-3 text-base text-[#7f1d1d]">Veriler yüklenemedi</CardTitle><CardDescription className="mt-1">{veriHatasi}</CardDescription><Button className="mt-4 bg-[#237ac8] hover:bg-[#1d69ad]" onClick={() => void veriCek()}>Tekrar dene</Button></CardContent>
+      {veriHatasi && !veri ? <Card className="gap-3 border-[var(--tema-yerel-eczanem-islevsel-cizgi-01)] bg-[var(--tema-yerel-eczanem-islevsel-zemin-03)] py-8 text-center shadow-none">
+        <CardContent className="flex flex-col items-center px-5"><span className="flex size-11 items-center justify-center rounded-2xl bg-[var(--tema-yerel-eczanem-islevsel-zemin-04)] text-[var(--tema-yerel-eczanem-islevsel-metin-01)]"><CircleAlert /></span><CardTitle className="mt-3 text-base text-[var(--tema-yerel-eczanem-islevsel-metin-04)]">Veriler yüklenemedi</CardTitle><CardDescription className="mt-1">{veriHatasi}</CardDescription><Button className="mt-4 bg-[var(--tema-yerel-eczanem-eylem-zemin-01)] hover:bg-[var(--tema-yerel-eczanem-eylem-zemin-02)]" onClick={() => void veriCek()}>Tekrar dene</Button></CardContent>
       </Card> : <>
         <section aria-label="Eczanem danışan gönderim özeti" className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3">
-          <OzetKarti ikon={Send} etiket="Gönderime Hazır Yayın" deger={gonderilebilirYayinlar.length} detay={`${yayinlar.length} yayın eczanenize ulaştı`} renk="#237ac8" zemin="#edf6fd" />
-          <OzetKarti ikon={UsersRound} etiket="Aktif Üye" deger={danisanSayisi} detay="Eczane listenizde" renk="#16865f" zemin="#eaf7f2" />
-          <OzetKarti ikon={CheckCircle2} etiket="Gönderilen Yayın" deger={gonderilenYayinlar.length} detay="En az bir üyeye gönderilen" renk="#b7791f" zemin="#fff7e6" />
+          <OzetKarti ikon={Send} etiket="Gönderime Hazır Yayın" deger={gonderilebilirYayinlar.length} detay={`${yayinlar.length} yayın eczanenize ulaştı`} renk="var(--tema-yerel-eczanem-eylem-metin-01)" zemin="var(--tema-yerel-eczanem-secim-zemin-01)" />
+          <OzetKarti ikon={UsersRound} etiket="Aktif Üye" deger={danisanSayisi} detay="Eczane listenizde" renk="var(--tema-yerel-eczanem-islevsel-metin-02)" zemin="var(--tema-yerel-eczanem-islevsel-zemin-01)" />
+          <OzetKarti ikon={CheckCircle2} etiket="Gönderilen Yayın" deger={gonderilenYayinlar.length} detay="En az bir üyeye gönderilen" renk="var(--tema-yerel-eczanem-islevsel-metin-03)" zemin="var(--tema-yerel-eczanem-islevsel-zemin-02)" />
         </section>
 
         <PeriyotButonlari<GonderimFiltresi>
@@ -232,7 +232,7 @@ export default function EczanemDagitimPage() {
           className="w-fit flex-none"
         />
 
-        {gonderimSonucu && <div role="status" className={`rounded-xl border px-4 py-3 text-xs ${gonderimSonucu.gonderilenKayit > 0 ? "border-[#c8ead7] bg-[#eff9f4] text-[#276a4d]" : "border-[#f0dbc0] bg-[#fff9ed] text-[#8c5b20]"}`}>
+        {gonderimSonucu && <div role="status" className={`rounded-xl border px-4 py-3 text-xs ${gonderimSonucu.gonderilenKayit > 0 ? "border-[var(--tema-yerel-eczanem-islevsel-cizgi-08)] bg-[var(--tema-yerel-eczanem-islevsel-zemin-20)] text-[var(--tema-yerel-eczanem-islevsel-metin-22)]" : "border-[var(--tema-yerel-eczanem-islevsel-cizgi-09)] bg-[var(--tema-yerel-eczanem-islevsel-zemin-21)] text-[var(--tema-yerel-eczanem-islevsel-metin-23)]"}`}>
           <strong>{gonderimSonucu.gonderilenKayit > 0 ? `${gonderimSonucu.gonderilenYayin} yayın için ${gonderimSonucu.gonderilenKayit} danışan gönderimi tamamlandı.` : "Gönderim tamamlanamadı."}</strong>
           {gonderimSonucu.atlanan > 0 && <span className="ml-1">{gonderimSonucu.atlanan} gönderim atlandı.</span>}
           {gonderimSonucu.hatalar.length > 0 && <details className="mt-2"><summary className="cursor-pointer font-bold">Atlanan gönderimlerin nedenleri</summary><ul className="mt-2 list-disc space-y-1 pl-4">{gonderimSonucu.hatalar.map((satir, index) => <li key={`${index}-${satir}`}>{satir}</li>)}</ul></details>}
@@ -240,8 +240,8 @@ export default function EczanemDagitimPage() {
 
         <section>
           <div className="mb-3"><UttYayinTuruToggle yayinlar={durumFiltreliYayinlar} deger={aktifYayinTuru} onDegistir={(tur) => { setAktifYayinTuru(tur); secimSifirla(); setGonderimSonucu(null); }} className="w-fit flex-none" /></div>
-          <div className="mb-3"><h2 className="text-base font-extrabold text-[#203653]">Üyelere Gönderilecek Yayınlar</h2><p className="mt-0.5 text-[11px] font-semibold text-[#7b8da5]">{gorunenYayinlar.length} yayın gösteriliyor</p></div>
-          {gorunenYayinlar.length === 0 ? <div className="rounded-2xl border border-[#dfe7f1] bg-white px-4 py-14 text-center text-sm font-semibold text-[#8090a4]">{aktifYayinTuru !== "tumu" ? "Seçilen yayın türünde bu listede yayın bulunmuyor." : gonderimFiltresi === "gonderilebilir" ? "Şu anda gönderime hazır yayın bulunmuyor." : gonderimFiltresi === "gonderilen" ? "Henüz danışanlara gönderilmiş yayın bulunmuyor." : "Eczanenize ulaşmış Eczanem yayını bulunmuyor."}</div> :
+          <div className="mb-3"><h2 className="text-base font-extrabold text-[var(--tema-yerel-eczanem-ana-metin-03)]">Üyelere Gönderilecek Yayınlar</h2><p className="mt-0.5 text-[11px] font-semibold text-[var(--tema-yerel-eczanem-yardimci-metin-01)]">{gorunenYayinlar.length} yayın gösteriliyor</p></div>
+          {gorunenYayinlar.length === 0 ? <div className="rounded-2xl border border-[var(--tema-yerel-eczanem-cizgi-05)] bg-[var(--tema-yerel-eczanem-kart-01)] px-4 py-14 text-center text-sm font-semibold text-[var(--tema-yerel-eczanem-yardimci-metin-05)]">{aktifYayinTuru !== "tumu" ? "Seçilen yayın türünde bu listede yayın bulunmuyor." : gonderimFiltresi === "gonderilebilir" ? "Şu anda gönderime hazır yayın bulunmuyor." : gonderimFiltresi === "gonderilen" ? "Henüz danışanlara gönderilmiş yayın bulunmuyor." : "Eczanenize ulaşmış Eczanem yayını bulunmuyor."}</div> :
             <MobilYayinAkisi kayitlar={gorunenYayinlar} kayitAnahtari={(yayin) => yayin.yayin_id} renderKart={yayinKarti} sayacGoster={false} sifirlamaAnahtari={`${gonderimFiltresi}-${aktifYayinTuru}`}
               masaustuIcerik={<div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">{gorunenYayinlar.map((yayin) => <div key={yayin.yayin_id} className="min-w-0">{yayinKarti(yayin)}</div>)}</div>} />}
         </section>

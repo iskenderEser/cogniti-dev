@@ -127,17 +127,17 @@ export default function SolListe(props: SolListeProps) {
           padding: `7px 10px 7px ${10 + seviye * 8}px`,
           fontSize: "14px",
           fontWeight: aktif ? 700 : 600,
-          color: aktif ? "#185fa5" : "#374151",
-          background: aktif ? "rgba(86,174,255,0.12)" : isHover ? "rgba(0,0,0,0.05)" : "transparent",
-          boxShadow: aktif ? "inset 0 0 0 1px rgba(86,174,255,0.35)" : "none",
+          color: aktif ? "var(--tema-menu-secili-metin)" : "var(--tema-gezinme-metin)",
+          background: aktif ? "var(--tema-menu-secili-zemin)" : isHover ? "var(--tema-menu-hover)" : "transparent",
+          boxShadow: aktif ? "inset 0 0 0 1px var(--tema-menu-secili-halka)" : "none",
           fontFamily: "'Nunito', sans-serif",
         }}
       >
         <span>{oge.etiket}</span>
         {sayi > 0 && (
           <span
-            className="flex items-center justify-center rounded-full text-white"
-            style={{ minWidth: "18px", height: "18px", padding: "0 5px", background: "#bc2d0d", fontSize: "10px", fontWeight: 700, lineHeight: 1 }}
+            className="flex items-center justify-center rounded-full text-[var(--tema-ters-metin)]"
+            style={{ minWidth: "18px", height: "18px", padding: "0 5px", background: "var(--tema-vurgu)", fontSize: "10px", fontWeight: 700, lineHeight: 1 }}
           >
             {sayi > 99 ? "99+" : sayi}
           </span>
@@ -166,12 +166,12 @@ export default function SolListe(props: SolListeProps) {
           })}
           aria-expanded={altAcik}
           className="flex w-full cursor-pointer items-center justify-between border-none bg-transparent text-left"
-          style={{ padding: `7px 10px 3px ${10 + seviye * 8}px`, fontSize: "14px", fontWeight: 700, color: "#374151", fontFamily: "'Nunito', sans-serif" }}
+          style={{ padding: `7px 10px 3px ${10 + seviye * 8}px`, fontSize: "14px", fontWeight: 700, color: "var(--tema-gezinme-metin)", fontFamily: "'Nunito', sans-serif" }}
         >
           <span>{oge.etiket}</span>
           <span className="flex items-center gap-2">
             {sayi > 0 && (
-              <span className="flex items-center justify-center rounded-full text-white" style={{ minWidth: "18px", height: "18px", padding: "0 5px", background: "#bc2d0d", fontSize: "10px", fontWeight: 700, lineHeight: 1 }}>
+              <span className="flex items-center justify-center rounded-full text-[var(--tema-ters-metin)]" style={{ minWidth: "18px", height: "18px", padding: "0 5px", background: "var(--tema-vurgu)", fontSize: "10px", fontWeight: 700, lineHeight: 1 }}>
                 {sayi > 99 ? "99+" : sayi}
               </span>
             )}
@@ -191,7 +191,7 @@ export default function SolListe(props: SolListeProps) {
     <aside
       data-panel-sidebar
       className="hidden md:block flex-shrink-0 overflow-y-auto"
-      style={{ width: "240px", borderRight: "0.5px solid #e5e7eb", padding: "16px 12px", background: "#ffffff" }}
+      style={{ width: "240px", borderRight: "0.5px solid var(--tema-cizgi)", padding: "16px 12px", background: "var(--tema-yan-zemin)" }}
     >
       <div className="flex flex-col gap-4">
         {gruplar.map((grup) => {
@@ -214,10 +214,10 @@ export default function SolListe(props: SolListeProps) {
                 onClick={() => grupToggle(grup.baslik)}
                 aria-expanded={acik}
                 className="w-full flex items-center justify-between bg-transparent border-none cursor-pointer"
-                style={{ fontSize: "12px", fontWeight: 800, color: "#111827", textTransform: "uppercase", letterSpacing: "0.06em", padding: "2px 10px 4px", fontFamily: "'Nunito', sans-serif" }}
+                style={{ fontSize: "12px", fontWeight: 800, color: "var(--tema-baslik)", textTransform: "uppercase", letterSpacing: "0.06em", padding: "2px 10px 4px", fontFamily: "'Nunito', sans-serif" }}
               >
                 <span>{grup.baslik}</span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#111827" strokeWidth={2.5}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--tema-baslik)" strokeWidth={2.5}
                   style={{ transform: acik ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6" />
                 </svg>

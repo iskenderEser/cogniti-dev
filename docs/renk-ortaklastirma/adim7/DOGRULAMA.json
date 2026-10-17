@@ -1,0 +1,1175 @@
+{
+  "adim": 7,
+  "tarih": "2026-10-17",
+  "durum": "TAMAMLANDI",
+  "uygulama": "Yerel kaynaklar güncellendi; canlı dağıtım yapılmadı.",
+  "kapsam": {
+    "tsx": 22,
+    "css_module": 2,
+    "tema_css": 1,
+    "bilesen_ortaklastirma": false,
+    "degismeyen_mevcut_kopruler": [
+      "components/ui/collapsible.tsx",
+      "components/panel/YayinSonucBildirimi.tsx"
+    ],
+    "yeni_test_dosyasi": "tests/yardimciGorunumTema.hedef.test.ts"
+  },
+  "tema": {
+    "degisken": 185,
+    "temaya_gore_degisen": 129,
+    "iki_temada_ayni": 56,
+    "yeni_bildirim": 314,
+    "onceki_bildirim": 631,
+    "korunan_bildirim": 631,
+    "renkler": {
+      "--tema-kart-cizgi": {
+        "mavi": "currentColor",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-tablo-cizgi": {
+        "mavi": "currentColor",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-pencere-ortu": {
+        "mavi": "color-mix(in oklab, var(--color-black) 50%, transparent)",
+        "yesil": "color-mix(in oklab, var(--color-black) 50%, transparent)"
+      },
+      "--tema-pencere-cizgi": {
+        "mavi": "currentColor",
+        "yesil": "var(--tema-modal-cizgisi)"
+      },
+      "--tema-pencere-zemini": {
+        "mavi": "var(--background)",
+        "yesil": "var(--tema-modal-zemini)"
+      },
+      "--tema-ipucu-zemini": {
+        "mavi": "var(--foreground)",
+        "yesil": "var(--tema-metin)"
+      },
+      "--tema-ipucu-metni": {
+        "mavi": "var(--background)",
+        "yesil": "var(--tema-eylem-metin)"
+      },
+      "--tema-bildirim-hata-zemin": {
+        "mavi": "#fef2f2",
+        "yesil": "#fef2f2"
+      },
+      "--tema-bildirim-hata-cizgi": {
+        "mavi": "#fecaca",
+        "yesil": "#fecaca"
+      },
+      "--tema-bildirim-hata-metin": {
+        "mavi": "#bc2d0d",
+        "yesil": "#bc2d0d"
+      },
+      "--tema-bildirim-basari-zemin": {
+        "mavi": "#f0fdf4",
+        "yesil": "#f0fdf4"
+      },
+      "--tema-bildirim-basari-cizgi": {
+        "mavi": "#bbf7d0",
+        "yesil": "#bbf7d0"
+      },
+      "--tema-bildirim-basari-metin": {
+        "mavi": "#16a34a",
+        "yesil": "#16a34a"
+      },
+      "--tema-bildirim-uyari-zemin": {
+        "mavi": "#fefce8",
+        "yesil": "#fefce8"
+      },
+      "--tema-bildirim-uyari-cizgi": {
+        "mavi": "#fde68a",
+        "yesil": "#fde68a"
+      },
+      "--tema-bildirim-uyari-metin": {
+        "mavi": "#854d0e",
+        "yesil": "#854d0e"
+      },
+      "--tema-bildirim-bilgi-zemin": {
+        "mavi": "#eff6ff",
+        "yesil": "#eff6ff"
+      },
+      "--tema-bildirim-bilgi-cizgi": {
+        "mavi": "#bfdbfe",
+        "yesil": "#bfdbfe"
+      },
+      "--tema-bildirim-bilgi-metin": {
+        "mavi": "#1d4ed8",
+        "yesil": "#1d4ed8"
+      },
+      "--tema-iskelet-kart": {
+        "mavi": "#fff",
+        "yesil": "var(--tema-kart)"
+      },
+      "--tema-iskelet-sayfa": {
+        "mavi": "#f7f9fc",
+        "yesil": "var(--tema-zemin)"
+      },
+      "--tema-iskelet-baslik": {
+        "mavi": "#dfe8f2",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-iskelet-satir": {
+        "mavi": "#e8eef5",
+        "yesil": "var(--tema-bilgi-zemini)"
+      },
+      "--tema-iskelet-cizgi": {
+        "mavi": "#dfe7f1",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-iskelet-ic-cizgi": {
+        "mavi": "#dce6f3",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-iskelet-lig-sayfa": {
+        "mavi": "#f6f8fb",
+        "yesil": "var(--tema-zemin)"
+      },
+      "--tema-iskelet-lig-satir": {
+        "mavi": "var(--color-slate-200)",
+        "yesil": "var(--tema-bilgi-zemini)"
+      },
+      "--tema-iskelet-lig-banner": {
+        "mavi": "var(--color-slate-300)",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-iskelet-cc-sayfa": {
+        "mavi": "#f9fafb",
+        "yesil": "var(--tema-zemin)"
+      },
+      "--tema-iskelet-cc-etiket": {
+        "mavi": "#e5eaf0",
+        "yesil": "var(--tema-bilgi-zemini)"
+      },
+      "--tema-iskelet-cc-baslik": {
+        "mavi": "#dfe6ee",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-iskelet-cc-aciklama": {
+        "mavi": "#e8edf3",
+        "yesil": "var(--tema-bilgi-zemini)"
+      },
+      "--tema-iskelet-cc-banner": {
+        "mavi": "#dce4ed",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-iskelet-cc-bilgi": {
+        "mavi": "#e7eef8",
+        "yesil": "var(--tema-bilgi-zemini)"
+      },
+      "--tema-iskelet-cc-kazanim": {
+        "mavi": "#e7f4ee",
+        "yesil": "#e7f4ee"
+      },
+      "--tema-iskelet-cc-kayip": {
+        "mavi": "#f7eaec",
+        "yesil": "#f7eaec"
+      },
+      "--tema-iskelet-tclub-ilk": {
+        "mavi": "#f8fbff",
+        "yesil": "var(--tema-zemin)"
+      },
+      "--tema-iskelet-tclub-orta": {
+        "mavi": "#f6f8fb",
+        "yesil": "var(--tema-zemin)"
+      },
+      "--tema-iskelet-tclub-son": {
+        "mavi": "#fbfcfe",
+        "yesil": "var(--tema-zemin)"
+      },
+      "--tema-bos-durum-cizgi": {
+        "mavi": "var(--color-gray-200)",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-bos-durum-kesik-cizgi": {
+        "mavi": "var(--color-gray-300)",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-bos-durum-zemin": {
+        "mavi": "#fff",
+        "yesil": "var(--tema-yuzey)"
+      },
+      "--tema-bos-durum-soluk-metin": {
+        "mavi": "var(--color-gray-400)",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-bos-durum-metin": {
+        "mavi": "var(--color-gray-500)",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-iskelet-yayin-cizgi": {
+        "mavi": "var(--color-gray-200)",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-iskelet-yayin-kapak": {
+        "mavi": "var(--color-gray-200)",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-iskelet-yayin-satir": {
+        "mavi": "var(--color-gray-100)",
+        "yesil": "var(--tema-bilgi-zemini)"
+      },
+      "--tema-akordiyon-yuzey": {
+        "mavi": "#fff",
+        "yesil": "var(--tema-yuzey)"
+      },
+      "--tema-akordiyon-cc-baslik": {
+        "mavi": "#10213d",
+        "yesil": "var(--tema-baslik)"
+      },
+      "--tema-akordiyon-cc-aciklama": {
+        "mavi": "#627d98",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-akordiyon-cc-cizgi": {
+        "mavi": "#e2e8f0",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-akordiyon-cc-simge-zemin": {
+        "mavi": "#ebf4ff",
+        "yesil": "var(--tema-secili)"
+      },
+      "--tema-akordiyon-eylem": {
+        "mavi": "#237ac8",
+        "yesil": "var(--tema-eylem)"
+      },
+      "--tema-akordiyon-cc-kart-cizgi": {
+        "mavi": "#e0e8f2",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-akordiyon-cc-takim-acik": {
+        "mavi": "#f4f8fc",
+        "yesil": "var(--tema-secili)"
+      },
+      "--tema-akordiyon-cc-ic-cizgi": {
+        "mavi": "#e2edf8",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-akordiyon-cc-ic-zemin": {
+        "mavi": "#fafcff",
+        "yesil": "var(--tema-zemin)"
+      },
+      "--tema-akordiyon-cc-hover": {
+        "mavi": "#fafcff",
+        "yesil": "var(--tema-secili)"
+      },
+      "--tema-akordiyon-cc-katilim-zemini": {
+        "mavi": "#eef6ff",
+        "yesil": "var(--tema-bilgi-zemini)"
+      },
+      "--tema-akordiyon-cc-kazanim": {
+        "mavi": "#107c41",
+        "yesil": "#107c41"
+      },
+      "--tema-akordiyon-cc-kayip": {
+        "mavi": "#c5221f",
+        "yesil": "#c5221f"
+      },
+      "--tema-akordiyon-cc-ok-cizgi": {
+        "mavi": "#d6e3f0",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-akordiyon-cc-detay-etiket": {
+        "mavi": "#486581",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-akordiyon-cc-soluk-metin": {
+        "mavi": "#829ab1",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-akordiyon-cc-bm-cizgi": {
+        "mavi": "#dbe6f2",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-akordiyon-cc-bm-acik": {
+        "mavi": "#f0f6fc",
+        "yesil": "var(--tema-secili)"
+      },
+      "--tema-akordiyon-cc-detay-zemini": {
+        "mavi": "#f8fbfe",
+        "yesil": "var(--tema-zemin)"
+      },
+      "--tema-akordiyon-cc-bm-hover": {
+        "mavi": "#f8fbfe",
+        "yesil": "var(--tema-secili)"
+      },
+      "--tema-akordiyon-cc-bolge-zemini": {
+        "mavi": "#e8f1f9",
+        "yesil": "var(--tema-bilgi-zemini)"
+      },
+      "--tema-akordiyon-cc-bolge-metni": {
+        "mavi": "#2d557a",
+        "yesil": "var(--tema-bilgi-metni)"
+      },
+      "--tema-akordiyon-cc-karne-cizgi": {
+        "mavi": "#e4edf5",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-akordiyon-sira-cizgi": {
+        "mavi": "#edf2f7",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-akordiyon-ic-soluk-zemin": {
+        "mavi": "#f8fafc",
+        "yesil": "var(--tema-zemin)"
+      },
+      "--tema-akordiyon-notr-simge-zemin": {
+        "mavi": "#f1f5f9",
+        "yesil": "var(--tema-bilgi-zemini)"
+      },
+      "--tema-akordiyon-notr-metin": {
+        "mavi": "#475569",
+        "yesil": "var(--tema-metin)"
+      },
+      "--tema-akordiyon-ikincil-metin": {
+        "mavi": "#64748b",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-akordiyon-hb-ust-etiket": {
+        "mavi": "#71859d",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-akordiyon-hb-baslik": {
+        "mavi": "#20324c",
+        "yesil": "var(--tema-baslik)"
+      },
+      "--tema-akordiyon-hb-aciklama": {
+        "mavi": "#8190a3",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-akordiyon-hb-takim-acik": {
+        "mavi": "#edf6fd",
+        "yesil": "var(--tema-secili)"
+      },
+      "--tema-akordiyon-hb-takim-hover": {
+        "mavi": "#f8fafc",
+        "yesil": "var(--tema-secili)"
+      },
+      "--tema-akordiyon-hb-takim-simge-zemin": {
+        "mavi": "#e2f0fc",
+        "yesil": "var(--tema-secili)"
+      },
+      "--tema-akordiyon-hb-kazanim": {
+        "mavi": "#16865f",
+        "yesil": "#16865f"
+      },
+      "--tema-akordiyon-hb-kayip": {
+        "mavi": "#d44b40",
+        "yesil": "#d44b40"
+      },
+      "--tema-akordiyon-hb-kazanim-zemin": {
+        "mavi": "#f0fdf4",
+        "yesil": "#f0fdf4"
+      },
+      "--tema-akordiyon-hb-bolge-acik": {
+        "mavi": "#e6f4ea",
+        "yesil": "var(--tema-secili)"
+      },
+      "--tema-akordiyon-hb-bolge-hover": {
+        "mavi": "#fafafa",
+        "yesil": "var(--tema-secili)"
+      },
+      "--tema-akordiyon-hb-net": {
+        "mavi": "#0f172a",
+        "yesil": "var(--tema-baslik)"
+      },
+      "--tema-akordiyon-hb-kisi": {
+        "mavi": "#1e293b",
+        "yesil": "var(--tema-metin)"
+      },
+      "--tema-akordiyon-hb-bolge-metni": {
+        "mavi": "#556981",
+        "yesil": "var(--tema-metin)"
+      },
+      "--tema-akordiyon-hb-soluk-metin": {
+        "mavi": "#94a3b8",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-akordiyon-hb-karne-zemin": {
+        "mavi": "#fffdf5",
+        "yesil": "#fffdf5"
+      },
+      "--tema-akordiyon-hb-karne-cizgi": {
+        "mavi": "#fef3c7",
+        "yesil": "#fef3c7"
+      },
+      "--tema-akordiyon-hb-oneri-kazanimi": {
+        "mavi": "#d97706",
+        "yesil": "#d97706"
+      },
+      "--tema-akordiyon-hb-utt-acik": {
+        "mavi": "#fffbeb",
+        "yesil": "#fffbeb"
+      },
+      "--tema-akordiyon-hb-utt-hover": {
+        "mavi": "#f1f5f9",
+        "yesil": "var(--tema-secili)"
+      },
+      "--tema-lig-sira-altin-zemin": {
+        "mavi": "#fef3c7",
+        "yesil": "#fef3c7"
+      },
+      "--tema-lig-sira-cc-altin": {
+        "mavi": "#b45309",
+        "yesil": "#b45309"
+      },
+      "--tema-lig-sira-altin-cizgi": {
+        "mavi": "#fde68a",
+        "yesil": "#fde68a"
+      },
+      "--tema-lig-sira-bronz-zemin": {
+        "mavi": "#ffedd5",
+        "yesil": "#ffedd5"
+      },
+      "--tema-lig-sira-cc-bronz": {
+        "mavi": "#c2410c",
+        "yesil": "#c2410c"
+      },
+      "--tema-lig-sira-bronz-cizgi": {
+        "mavi": "#fed7aa",
+        "yesil": "#fed7aa"
+      },
+      "--tema-lig-sira-hb-altin": {
+        "mavi": "#92400e",
+        "yesil": "#92400e"
+      },
+      "--tema-lig-sira-hb-bronz": {
+        "mavi": "#9a3412",
+        "yesil": "#9a3412"
+      },
+      "--tema-lig-sira-gumus-zemin": {
+        "mavi": "#f1f5f9",
+        "yesil": "#f1f5f9"
+      },
+      "--tema-lig-sira-gumus-metin": {
+        "mavi": "#475569",
+        "yesil": "#475569"
+      },
+      "--tema-lig-sira-gumus-cizgi": {
+        "mavi": "#e2e8f0",
+        "yesil": "#e2e8f0"
+      },
+      "--tema-akordiyon-cc-kart-golge": {
+        "mavi": "rgba(16,33,61,0.04)",
+        "yesil": "color-mix(in srgb, var(--tema-eylem) 4%, transparent)"
+      },
+      "--tema-akordiyon-cc-bm-golge": {
+        "mavi": "rgba(0,0,0,0.02)",
+        "yesil": "rgba(0,0,0,0.02)"
+      },
+      "--tema-akordiyon-panel-cizgi": {
+        "mavi": "rgba(148, 163, 184, 0.2)",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-akordiyon-panel-zemin": {
+        "mavi": "rgba(255, 255, 255, 0.96)",
+        "yesil": "color-mix(in srgb, var(--tema-yuzey) 96%, transparent)"
+      },
+      "--tema-akordiyon-panel-golge": {
+        "mavi": "rgba(36, 64, 98, 0.06)",
+        "yesil": "color-mix(in srgb, var(--tema-eylem) 6%, transparent)"
+      },
+      "--tema-akordiyon-panel-simge-zemini": {
+        "mavi": "#edf6ff",
+        "yesil": "var(--tema-secili)"
+      },
+      "--tema-akordiyon-tablo-baslik-metni": {
+        "mavi": "#7d8ea2",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-akordiyon-tablo-baslik-zemini": {
+        "mavi": "#f7f9fc",
+        "yesil": "var(--tema-bilgi-zemini)"
+      },
+      "--tema-akordiyon-tablo-cizgi": {
+        "mavi": "#edf1f5",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-akordiyon-tablo-metin": {
+        "mavi": "#40556d",
+        "yesil": "var(--tema-metin)"
+      },
+      "--tema-akordiyon-tablo-hover": {
+        "mavi": "#f8fbfe",
+        "yesil": "var(--tema-secili)"
+      },
+      "--tema-gonderim-detay-zemin": {
+        "mavi": "#f8fbff",
+        "yesil": "var(--tema-zemin)"
+      },
+      "--tema-gonderim-detay-yuzey": {
+        "mavi": "#fff",
+        "yesil": "var(--tema-yuzey)"
+      },
+      "--tema-gonderim-detay-panel-cizgi": {
+        "mavi": "#b9d3e9",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-gonderim-detay-baslik-cizgi": {
+        "mavi": "#e4ecf4",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-gonderim-detay-satir-cizgi": {
+        "mavi": "#dfe9f2",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-gonderim-detay-acik-sekme-cizgi": {
+        "mavi": "#d6e0ea",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-gonderim-detay-kapali-sekme-cizgi": {
+        "mavi": "#9fc5e4",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-gonderim-detay-kapali-sekme-zemin": {
+        "mavi": "#dcecf8",
+        "yesil": "var(--tema-secili)"
+      },
+      "--tema-gonderim-detay-kapali-sekme-metin": {
+        "mavi": "#24618f",
+        "yesil": "var(--tema-secili-metin)"
+      },
+      "--tema-gonderim-detay-baslik-yardimci": {
+        "mavi": "#526a86",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-gonderim-detay-baslik": {
+        "mavi": "#29445f",
+        "yesil": "var(--tema-baslik)"
+      },
+      "--tema-gonderim-detay-kisi-metni": {
+        "mavi": "#2e4663",
+        "yesil": "var(--tema-metin)"
+      },
+      "--tema-gonderim-detay-eczane-metni": {
+        "mavi": "#7b8da5",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-gonderim-detay-tarih-metni": {
+        "mavi": "#8a9bb0",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-gonderim-detay-bos-metin": {
+        "mavi": "#a8b4c2",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-gonderim-detay-bitis-metni": {
+        "mavi": "#647991",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-gonderim-detay-eczaci-metni": {
+        "mavi": "#607b96",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-gonderim-detay-hata-metni": {
+        "mavi": "#a2643c",
+        "yesil": "#a2643c"
+      },
+      "--tema-gonderim-detay-acik-hover": {
+        "mavi": "#f1f5f9",
+        "yesil": "var(--tema-secili)"
+      },
+      "--tema-gonderim-detay-kapali-hover": {
+        "mavi": "#cfe5f5",
+        "yesil": "var(--tema-secili)"
+      },
+      "--tema-gonderim-detay-izleyen": {
+        "mavi": "var(--color-emerald-700)",
+        "yesil": "var(--color-emerald-700)"
+      },
+      "--tema-gonderim-detay-bekleyen": {
+        "mavi": "var(--color-amber-700)",
+        "yesil": "var(--color-amber-700)"
+      },
+      "--tema-gonderim-detay-izlemeyen": {
+        "mavi": "var(--color-red-700)",
+        "yesil": "var(--color-red-700)"
+      },
+      "--tema-gonderim-detay-sure-doldu": {
+        "mavi": "var(--color-red-600)",
+        "yesil": "var(--color-red-600)"
+      },
+      "--tema-gonderim-detay-sure-bekleyen": {
+        "mavi": "var(--color-amber-600)",
+        "yesil": "var(--color-amber-600)"
+      },
+      "--tema-gonderim-detay-golge": {
+        "mavi": "rgba(31,74,111,.18)",
+        "yesil": "color-mix(in srgb, var(--tema-eylem) 18%, transparent)"
+      },
+      "--tema-yayin-detay-ortu": {
+        "mavi": "color-mix(in oklab, var(--color-black) 60%, transparent)",
+        "yesil": "color-mix(in oklab, var(--color-black) 60%, transparent)"
+      },
+      "--tema-yayin-detay-yuzey": {
+        "mavi": "#fff",
+        "yesil": "var(--tema-modal-zemini)"
+      },
+      "--tema-yayin-detay-ust-zemin": {
+        "mavi": "#fbfcfd",
+        "yesil": "var(--tema-yuzey)"
+      },
+      "--tema-yayin-detay-govde-zemin": {
+        "mavi": "#f8fafc",
+        "yesil": "var(--tema-zemin)"
+      },
+      "--tema-yayin-detay-dis-cizgi": {
+        "mavi": "#dbe4ee",
+        "yesil": "var(--tema-modal-cizgisi)"
+      },
+      "--tema-yayin-detay-ust-cizgi": {
+        "mavi": "#e9eff5",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-yayin-detay-cizgi": {
+        "mavi": "#e2e8f0",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-yayin-detay-bos-cizgi": {
+        "mavi": "#cbd5e1",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-yayin-detay-simge-zemini": {
+        "mavi": "#eef5fc",
+        "yesil": "var(--tema-secili)"
+      },
+      "--tema-yayin-detay-ust-etiket": {
+        "mavi": "#19335a",
+        "yesil": "var(--tema-metin)"
+      },
+      "--tema-yayin-detay-baslik": {
+        "mavi": "#0e1e36",
+        "yesil": "var(--tema-baslik)"
+      },
+      "--tema-yayin-detay-eylem": {
+        "mavi": "#237ac8",
+        "yesil": "var(--tema-eylem)"
+      },
+      "--tema-yayin-detay-eylem-hover": {
+        "mavi": "#1d69aa",
+        "yesil": "var(--tema-eylem-hover)"
+      },
+      "--tema-yayin-detay-aciklama": {
+        "mavi": "#64748b",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-yayin-detay-koyu-metin": {
+        "mavi": "#1e293b",
+        "yesil": "var(--tema-metin)"
+      },
+      "--tema-yayin-detay-alan-etiket": {
+        "mavi": "#7e8f9f",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-yayin-detay-soluk-metin": {
+        "mavi": "#94a3b8",
+        "yesil": "var(--tema-ikincil-metin)"
+      },
+      "--tema-yayin-detay-tarih": {
+        "mavi": "#334155",
+        "yesil": "var(--tema-metin)"
+      },
+      "--tema-yayin-detay-secenek-metni": {
+        "mavi": "#475569",
+        "yesil": "var(--tema-metin)"
+      },
+      "--tema-yayin-detay-soluk-zemin": {
+        "mavi": "#f1f5f9",
+        "yesil": "var(--tema-bilgi-zemini)"
+      },
+      "--tema-yayin-detay-kapat-hover": {
+        "mavi": "#f1f5f9",
+        "yesil": "var(--tema-secili)"
+      },
+      "--tema-yayin-detay-iptal-hover": {
+        "mavi": "var(--color-gray-50)",
+        "yesil": "var(--tema-secili)"
+      },
+      "--tema-yayin-detay-kapat-metin-hover": {
+        "mavi": "#0f172a",
+        "yesil": "var(--tema-metin)"
+      },
+      "--tema-yayin-detay-soru-numara-zemin": {
+        "mavi": "#eff6ff",
+        "yesil": "var(--tema-secili)"
+      },
+      "--tema-yayin-detay-soru-numara-metin": {
+        "mavi": "#2563eb",
+        "yesil": "var(--tema-secili-metin)"
+      },
+      "--tema-yayin-detay-secenek-cizgi": {
+        "mavi": "#f1f5f9",
+        "yesil": "var(--tema-cizgi)"
+      },
+      "--tema-yayin-detay-secenek-harf-zemin": {
+        "mavi": "#e2e8f0",
+        "yesil": "var(--tema-bilgi-zemini)"
+      },
+      "--tema-yayin-detay-ters-metin": {
+        "mavi": "#fff",
+        "yesil": "#fff"
+      },
+      "--tema-yayin-detay-durum-zemin": {
+        "mavi": "#ecfdf5",
+        "yesil": "#ecfdf5"
+      },
+      "--tema-yayin-detay-durum-metin": {
+        "mavi": "#167453",
+        "yesil": "#167453"
+      },
+      "--tema-yayin-detay-durum-cizgi": {
+        "mavi": "#bbf7d0",
+        "yesil": "#bbf7d0"
+      },
+      "--tema-yayin-detay-hata-simge": {
+        "mavi": "var(--color-red-500)",
+        "yesil": "var(--color-red-500)"
+      },
+      "--tema-yayin-detay-hata-metin": {
+        "mavi": "var(--color-red-600)",
+        "yesil": "var(--color-red-600)"
+      },
+      "--tema-yayin-detay-dogru-cizgi": {
+        "mavi": "#86efac",
+        "yesil": "#86efac"
+      },
+      "--tema-yayin-detay-dogru-halka": {
+        "mavi": "#86efac",
+        "yesil": "#86efac"
+      },
+      "--tema-yayin-detay-dogru-zemin": {
+        "mavi": "#f0fdf4",
+        "yesil": "#f0fdf4"
+      },
+      "--tema-yayin-detay-dogru-metin": {
+        "mavi": "#166534",
+        "yesil": "#166534"
+      },
+      "--tema-yayin-detay-dogru-harf": {
+        "mavi": "#22c55e",
+        "yesil": "#22c55e"
+      },
+      "--tema-yayin-detay-dogru-isaret": {
+        "mavi": "#15803d",
+        "yesil": "#15803d"
+      },
+      "--tema-akordiyon-hb-karne-etiket": {
+        "mavi": "#92400e",
+        "yesil": "#92400e"
+      },
+      "--tema-yayin-detay-eylem-metni": {
+        "mavi": "#fff",
+        "yesil": "var(--tema-eylem-metin)"
+      }
+    }
+  },
+  "kaynak": {
+    "renk_disi_fark": 0,
+    "geri_cozumleme_ayni": 24,
+    "dosyalar": [
+      {
+        "dosya": "app/(panel)/eclub/yayinlar/_components/EclubGonderimDetayKarti.tsx",
+        "once_sha256": "e6c615f899db7d0585763de07b79483cc5a6c2c447cbab6642e716a18a80fbf9",
+        "sonra_sha256": "60d201971237deb88ab7c24db13b6dc885ec4476a1c1122949c263a3a17eed0d",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "app/(panel)/eczanem/eczane/uye-yayinlari/_components/EczaneDanisanYayinKarti.tsx",
+        "once_sha256": "c197f96c722892a1f75e0e1ba9fccf1c0a99cd14874c399c3b96bc220d80ce49",
+        "sonra_sha256": "266fd5006c61fae4ea9ea3ce0b395a8d7670e8ca2b4e5e5a57bd91e8315b3560",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "app/(panel)/eczanem/yayinlar/_components/EczanemYayinGonderimKarti.tsx",
+        "once_sha256": "98ee8ded1c3a768b69231c41c73e58f8700f8506de4aa9ee9fb1b18921bc5433",
+        "sonra_sha256": "253ad5458f36797113508a75626edfda57bafe20499239e096d04b1b91730cf8",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "app/(panel)/raporlar/bm/bm-report.module.css",
+        "once_sha256": "58ffac5afb58da77427634c78b71c8a484bfe54b302196f60fff896a9b072041",
+        "sonra_sha256": "aff1d6d60e3f184071aa73f75e85e3b885515d1ead114c0db13fd957549b13e6",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "app/(panel)/raporlar/utt/utt-report.module.css",
+        "once_sha256": "9c640db88c7eecb0b55bbff48c3c3d361327941d3cc179e6dd6c10885db82fd9",
+        "sonra_sha256": "a40a38b3819230f59f4bd2e932be76fbd8c83953cb920257bc39cc7110e9f657",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "components/HataMesaji.tsx",
+        "once_sha256": "eb58a4587228f67157783af0eed3691269d1cd71abe9da71db3b8fbfa555c328",
+        "sonra_sha256": "b007eb6cd4a587722b20d91caae321644b3677a685a332278d4ca2f02d131558",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "components/cc-ligi/CcLigiSkeleton.tsx",
+        "once_sha256": "a9aa24497f53ea368a8b1663afdc1eb988ae71057410f9f59945943da14346af",
+        "sonra_sha256": "7417173187261ffa7d23405c75c4d06547eead1d3069cf81de84ef9e99442d0c",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "components/cc-ligi/CcTakimLigAkordeonu.tsx",
+        "once_sha256": "340b7c39bd227e91d40e264e3cc6d13187621fc456d7d00b777fdc9a25a9260a",
+        "sonra_sha256": "953e5d8dac3b4358fb60bbe5ea9f341c59a8cbc6afd648e43737aa690d8e742f",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "components/eclub/EclubAnaSayfaSkeleton.tsx",
+        "once_sha256": "65dcab1d881f9edc57976a90211e6543906c56fe123568d326ff23c903aca247",
+        "sonra_sha256": "0ce7847baaa965ac8d19e65a45e61269491dba5eae03a3ddfbd3348a97a3e383",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "components/eclub/EclubFirmaCekTakibiSkeleton.tsx",
+        "once_sha256": "edf7cb31a77de30bcd529551947e5d8e720ee79e9fc90f68a622a16d0d033f0e",
+        "sonra_sha256": "e3e4c44d9c6da72a7fbf520783997e9f5963746f0ed0468d5f58b4b714a38bcb",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "components/eclub/EclubFirmaCekTalebiSkeleton.tsx",
+        "once_sha256": "8c99f5cc97bd8b0993b14448fcbed6e3e9d54e7c310feaa11f557b049fe9dfe5",
+        "sonra_sha256": "e7ec8579852b8c4a9a058dd94a445d7469775cabeb791a9e71dd2ec236476647",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "components/eclub/EclubFirmaPerformansSkeleton.tsx",
+        "once_sha256": "9e19e9206bed4cbd4b50db5176a19eb896d39880478b1784525cb7f228cf1ef0",
+        "sonra_sha256": "65136dbf92bcdefe1aa34896e1f75715300025a5d73f60be3e921d937ce53c16",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "components/eclub/EclubFirmaYayinlarSkeleton.tsx",
+        "once_sha256": "8291fc5617deeb5a7e12ca0a26fd4d911c25e53a07d371a7e308a2ecbff9de82",
+        "sonra_sha256": "166165a310292527d938620ecd31d58e708205d128fb6a1538b37a4e2516be3f",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "components/eclub/EclubFirmalarSkeleton.tsx",
+        "once_sha256": "234c133409907a9d5aafdedb3c675fe28b2e62c65f95e27276069a495016a7da",
+        "sonra_sha256": "7fa21f84537f49be05996a8c12cb256fb45b477ea243ef9f93a69d6be1cd3b31",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "components/eclub/EclubLigiSkeleton.tsx",
+        "once_sha256": "0379f55b8a0e48908c9c0bb058b7f4ec18115d571ad30effa30236c744e216b8",
+        "sonra_sha256": "5f4958325999636f31071ed083ff8be1cb4199a62847b470062562391161114d",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "components/hbligi/field/TakimLigAkordeonu.tsx",
+        "once_sha256": "fb4ac1c83bc31ce51bf2b09584b19a53eac5684d23cfe610c9e23a9329712ce4",
+        "sonra_sha256": "39658555604284feeea5dc782a301ecb99abfbff6e02346cf01f70c012a04cee",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "components/raporlar/YayinDetayModal.tsx",
+        "once_sha256": "d04b2252ade58a3187936b9aa1059219541d591adad3880b9fc881cc10936657",
+        "sonra_sha256": "42fd561fd14993d74925115f85c27622c9dcd12da294aa7d5fd0b15c6418461f",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "components/tclub/TClubPageSkeleton.tsx",
+        "once_sha256": "52be84065323b99c6bcc594c9502f87554572e48c34c1cf62976c6353d4dab44",
+        "sonra_sha256": "4129ac1c8ca4d0f83374c9a4f1a3a9881fbac17d6bd538cda450cebd992b0a10",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "components/ui/alert-dialog.tsx",
+        "once_sha256": "670196d287f96b346f761928b0d0cb544734752c94d6b66313878e381ec16b43",
+        "sonra_sha256": "eabf5531bba80ee47e725f9d94513d7e017cd504fd81cdf28bfecd0faacc59d0",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "components/ui/card.tsx",
+        "once_sha256": "c48dd3b96be90a7066f1aebf294f0af9d00ebcdc367d5d4aca55429ade570c1c",
+        "sonra_sha256": "0210ba1618e901cba84c49ab65b1d8af71787bbd601a9ad36f462520132b3722",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "components/ui/table.tsx",
+        "once_sha256": "20e5a7f224959c6b75802995706a97e9da171f693d4b6b1b436388fcd9df96f3",
+        "sonra_sha256": "a66603a2b60b1d10c3c82a4c2a4dba4906242aef0e9f61cd5d6d71e52f66a8dc",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "components/ui/tooltip.tsx",
+        "once_sha256": "a0784eb77831a799fad7991df4f1b666f876201565a80175e1aa68733574a2e4",
+        "sonra_sha256": "15bb4dd808f2257aeea9e135346cde5e14019d682083d85cd9343c9d442aa9ea",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "components/yayin/MobilYayinAkisi.tsx",
+        "once_sha256": "41633f9f95789cdacefd852482cd8381f69ae7518d6d89e3182fd80bfa5e39e4",
+        "sonra_sha256": "f5904232bd71214d112370cd476575e0ac4e45f4d5bdc89c1a2e597751bcdcde",
+        "renk_disi_fark": 0
+      },
+      {
+        "dosya": "components/yayin/UttYayinListeOrtaklari.tsx",
+        "once_sha256": "127fe1758da4b0dbc61ced79807eab5c2a74e2ee56af94bcb7c6c4de485f9200",
+        "sonra_sha256": "cf8fc60b459a9004fb741a2819df3115c41dd7cc2f9257766d161600d2f8b6c8",
+        "renk_disi_fark": 0
+      }
+    ],
+    "kalan_sabit_renk_cozumlemesi": [
+      {
+        "dosya": "components/cc-ligi/CcTakimLigAkordeonu.tsx",
+        "degisken": "--tema-lig-sira-gumus-cizgi",
+        "deger": "#e2e8f0"
+      }
+    ]
+  },
+  "css": {
+    "derleme_basarili": true,
+    "uyari": [],
+    "utility": {
+      "ayni": 391,
+      "eksik": [],
+      "fark": []
+    },
+    "bildirim_renkleri": {
+      "ayni": 12,
+      "fark": []
+    },
+    "yeni_kenarlik_siniflari": {
+      "siniflar": [
+        "border-[var(--tema-kart-cizgi)]",
+        "border-[var(--tema-tablo-cizgi)]",
+        "border-[var(--tema-pencere-cizgi)]"
+      ],
+      "onceki_preflight_border": "0 solid",
+      "mavi_karsilik": "currentColor",
+      "preflight_dogrulandi": true
+    },
+    "css_module": [
+      {
+        "file": "app/(panel)/raporlar/utt/utt-report.module.css",
+        "declarations": 264,
+        "colorChanges": [
+          {
+            "selector": ".panel",
+            "prop": "border"
+          },
+          {
+            "selector": ".panel",
+            "prop": "background"
+          },
+          {
+            "selector": ".panel",
+            "prop": "box-shadow"
+          },
+          {
+            "selector": ".sectionIcon",
+            "prop": "color"
+          },
+          {
+            "selector": ".sectionIcon",
+            "prop": "background"
+          }
+        ]
+      },
+      {
+        "file": "app/(panel)/raporlar/bm/bm-report.module.css",
+        "declarations": 429,
+        "colorChanges": [
+          {
+            "selector": ".table th",
+            "prop": "color"
+          },
+          {
+            "selector": ".table th",
+            "prop": "background"
+          },
+          {
+            "selector": ".table td",
+            "prop": "border-top"
+          },
+          {
+            "selector": ".table td",
+            "prop": "color"
+          },
+          {
+            "selector": ".table tbody tr:hover",
+            "prop": "background"
+          }
+        ]
+      }
+    ],
+    "css_module_toplam_bildirim": 693,
+    "mevcut_serilestirme_bulgusu": {
+      "hata": "Missed semicolon",
+      "onceki_adimlarla_ayni": true,
+      "kaynak": "docs/renk-envanteri/renk-katalogu.html",
+      "bildirim_sha256": "c47b273f42f3799b10979608021ff44848926d3e476eea026063c914c3f5ade3",
+      "genel_css_temiz_iddiasi": false
+    }
+  },
+  "test": {
+    "yeni": {
+      "basarili": 7,
+      "basarisiz": 0
+    },
+    "mevcut": {
+      "basarili": 55,
+      "basarisiz": 1
+    },
+    "toplam": 63,
+    "basarili": 62,
+    "basarisiz": 1,
+    "yeni_basarisizlik": 0,
+    "mevcut_basarisizlik": {
+      "test": "mutlu: C-Club mobil stat kartları net üstte, kazanım ve kayıp altta iki sütundur",
+      "neden": "Test eski ureticiMi sınıf dizgesini bekliyor; test ve sayfa bu adımda değiştirilmedi, ikisi de Git HEAD ile aynı.",
+      "kaynak_kaniti": [
+        {
+          "dosya": "tests/ccVeriKaynaklari.smoke.test.ts",
+          "HEAD_ile_ayni": true,
+          "sha256": "0b79be75fb271055130b5b49a346d2a813cce352b6367ff06cdd9a953dad4cf9"
+        },
+        {
+          "dosya": "app/(panel)/cc-ligi/page.tsx",
+          "HEAD_ile_ayni": true,
+          "sha256": "6a972f02bc118323af21c0738c80ef4fab867335fe9f153ae372490be552e0b7"
+        }
+      ]
+    },
+    "calistirilan_dosyalar": [
+      "tests/yardimciGorunumTema.hedef.test.ts",
+      "tests/temaAltyapisi.hedef.test.ts",
+      "tests/ccVeriKaynaklari.smoke.test.ts",
+      "tests/mobilYayinAkisi.smoke.test.ts",
+      "tests/tclubMobil.smoke.test.ts",
+      "tests/yayinDetayModalErisimSozlesmesi.hedef.test.ts",
+      "tests/eclubBmYayinlari.hedef.test.ts",
+      "tests/eclubGonderilecekVideolar.smoke.test.ts",
+      "tests/eclubCekUygulamaBildirimi.hedef.test.ts",
+      "tests/eclubCekTeslimatOutbox.hedef.test.ts"
+    ],
+    "yontem": "Gerçek Tailwind/PostCSS hedef kuralları, seçilen gerçek CSS Module kuralları, Happy DOM/React ve gerçek Radix Portal. Yayın detayı için sahte HTTP yanıtı; SQL/DB çalıştırılmadı."
+  },
+  "portal": {
+    "kok_kapsam": "html[data-tema]",
+    "acikken_mavi_yesil_mavi": true,
+    "gercek_radix_portallari": true,
+    "iptal_eylem_odak_geri_donus": true,
+    "tooltip_oku_ve_escape": true,
+    "tarayici_ekran_goruntusu": false
+  },
+  "typecheck": {
+    "komut": "npm run typecheck:build",
+    "basarili": true
+  },
+  "lint": {
+    "dosya": 23,
+    "hata": 1,
+    "uyari": 8,
+    "yeni_bulgu": 0,
+    "oncekiyle_ayni": true,
+    "bulgular": [
+      {
+        "dosya": "components/cc-ligi/CcTakimLigAkordeonu.tsx",
+        "bulgular": [
+          {
+            "ruleId": "@typescript-eslint/no-unused-vars",
+            "line": 11,
+            "column": 10,
+            "severity": 1,
+            "message": "'Fragment' is defined but never used."
+          },
+          {
+            "ruleId": "@typescript-eslint/no-unused-vars",
+            "line": 12,
+            "column": 37,
+            "severity": 1,
+            "message": "'Layers' is defined but never used."
+          },
+          {
+            "ruleId": "@typescript-eslint/no-unused-vars",
+            "line": 12,
+            "column": 61,
+            "severity": 1,
+            "message": "'User' is defined but never used."
+          },
+          {
+            "ruleId": "@typescript-eslint/no-unused-vars",
+            "line": 16,
+            "column": 8,
+            "severity": 1,
+            "message": "'bmStyles' is defined but never used."
+          },
+          {
+            "ruleId": "@typescript-eslint/no-unused-vars",
+            "line": 17,
+            "column": 8,
+            "severity": 1,
+            "message": "'styles' is defined but never used."
+          },
+          {
+            "ruleId": "@typescript-eslint/no-unused-vars",
+            "line": 33,
+            "column": 11,
+            "severity": 1,
+            "message": "'TakimGrup' is defined but never used."
+          }
+        ]
+      },
+      {
+        "dosya": "components/hbligi/field/TakimLigAkordeonu.tsx",
+        "bulgular": [
+          {
+            "ruleId": "@typescript-eslint/no-unused-vars",
+            "line": 13,
+            "column": 67,
+            "severity": 1,
+            "message": "'Users' is defined but never used."
+          },
+          {
+            "ruleId": "@typescript-eslint/no-unused-vars",
+            "line": 38,
+            "column": 11,
+            "severity": 1,
+            "message": "'TakimGrup' is defined but never used."
+          }
+        ]
+      },
+      {
+        "dosya": "components/raporlar/YayinDetayModal.tsx",
+        "bulgular": [
+          {
+            "ruleId": "react-hooks/set-state-in-effect",
+            "line": 59,
+            "column": 7,
+            "severity": 2,
+            "message": "Error: Calling setState synchronously within an effect can trigger cascading renders\n\nEffects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:\n* Update external systems with the latest state from React.\n* Subscribe for updates from some external system, calling setState in a callback function when external state changes.\n\nCalling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).\n\n/Users/iskendereser/Desktop/hapbilgi/components/raporlar/YayinDetayModal.tsx:59:7\n  57 |   useEffect(() => {\n  58 |     if (!yayinId) {\n> 59 |       setDetay(null);\n     |       ^^^^^^^^ Avoid calling setState() directly within an effect\n  60 |       setHata(null);\n  61 |       return;\n  62 |     }"
+          }
+        ]
+      }
+    ]
+  },
+  "cek_teslimati": {
+    "inceleme": "Kaynak ve mevcut hedef testler; alıcı/teslimat akışında renk değişikliği yok.",
+    "eposta": "Aktif ana eczacı",
+    "push": "İlgili eczanede aktif bağı ve HapBilgi hesabı olan E-Club kişileri",
+    "gercek_gonderim": false
+  },
+  "korunanlar": [
+    "DOM, metin, ölçü, yazı, responsive ve animasyon sınıfları",
+    "Tablo kolonları, sıralama ve grup/net puan hesapları",
+    "Sıra madalyaları, kazanım/kayıp ve bildirim türü ayrımları",
+    "Pulse ve erişilebilir yüklenme metinleri",
+    "İzleme, ilerleme, puan, API/SQL ve alıcı akışları",
+    "Hediye Takibi test verileri ve iki aylık sınır"
+  ],
+  "yapilmayanlar": [
+    "Tüm rollerde gerçek oturumla uçtan uca test",
+    "Yeni mobil/masaüstü ekran görüntüsü kontrolü",
+    "Canlı veritabanı veya yerel PostgreSQL çalıştırma",
+    "Test verisi oluşturma/silme veya fiziksel test",
+    "Gerçek e-posta/push gönderimi",
+    "Çek Talebi haftalık puan hesabının canlı doğrulaması",
+    "Canlı dağıtım",
+    "8. adım"
+  ]
+}

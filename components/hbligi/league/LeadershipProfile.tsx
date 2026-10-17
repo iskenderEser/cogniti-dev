@@ -22,8 +22,8 @@ function Sutun({ baslik, kalemler, tip }: { baslik: string; kalemler: ProfilKale
         <div className={styles.profileItems}>
           {kalemler.map((k, i) => {
             const Icon = ikonlar[i % ikonlar.length];
-            return <div key={i} className={`rounded-xl p-2 ${guclu ? "bg-[#f0faf5]" : "bg-[#fff6f2]"}`}>
-              <div className={`mb-1 flex h-7 w-7 items-center justify-center rounded-full ${guclu ? "bg-[#daf3e6]" : "bg-[#ffe2d9]"}`}>
+            return <div key={i} className={`rounded-xl p-2 ${guclu ? "bg-[var(--tema-yerel-lig-islevsel-zemin-26)]" : "bg-[var(--tema-yerel-lig-islevsel-zemin-27)]"}`}>
+              <div className={`mb-1 flex h-7 w-7 items-center justify-center rounded-full ${guclu ? "bg-[var(--tema-yerel-lig-islevsel-zemin-28)]" : "bg-[var(--tema-yerel-lig-islevsel-zemin-29)]"}`}>
                 <Icon className="h-3.5 w-3.5" style={{ color: renk }} />
               </div>
               <div className={styles.profileTitle}>{k.baslik}</div>

@@ -32,24 +32,24 @@ interface UrunTeknikYonetimiProps {
 }
 
 const baslikStyle: React.CSSProperties = {
-  fontSize: "14px", fontWeight: 700, color: "#111",
+  fontSize: "14px", fontWeight: 700, color: "var(--tema-yerel-yonetim-ana-metin-01)",
   marginBottom: "12px", fontFamily: "'Nunito', sans-serif",
 };
 
 const bosListeStyle: React.CSSProperties = {
-  fontSize: "13px", color: "#737373", fontFamily: "'Nunito', sans-serif",
+  fontSize: "13px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)", fontFamily: "'Nunito', sans-serif",
 };
 
 const listeSatirStyle: React.CSSProperties = {
   display: "flex", alignItems: "center", gap: "8px",
-  padding: "8px 10px", background: "#fafafa",
-  border: "0.5px solid #e5e7eb", borderRadius: "6px",
+  padding: "8px 10px", background: "var(--tema-yerel-yonetim-sayfa-zemini-07)",
+  border: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)", borderRadius: "6px",
 };
 
 const silButonStyle = (loading: boolean): React.CSSProperties => ({
   padding: "4px 10px",
-  background: loading ? "#d1d5db" : "#fee2e2",
-  color: "#dc2626", border: "none", borderRadius: "4px",
+  background: loading ? "var(--tema-yerel-yonetim-sayfa-zemini-01)" : "var(--tema-yerel-yonetim-islevsel-zemin-06)",
+  color: "var(--tema-yerel-yonetim-islevsel-metin-09)", border: "none", borderRadius: "4px",
   fontSize: "12px", fontWeight: 600,
   cursor: loading ? "not-allowed" : "pointer",
   fontFamily: "'Nunito', sans-serif",
@@ -85,8 +85,8 @@ export default function UrunTeknikYonetimi(p: UrunTeknikYonetimiProps) {
             disabled={!p.yeniUrunAdi.trim() || !p.yeniUrunTakimId || p.urunEkleLoading}
             style={{
               ...btnBase,
-              background: !p.yeniUrunAdi.trim() || !p.yeniUrunTakimId || p.urunEkleLoading ? "#d1d5db" : RENK_BORDO,
-              color: "white", border: "none", marginTop: "8px",
+              background: !p.yeniUrunAdi.trim() || !p.yeniUrunTakimId || p.urunEkleLoading ? "var(--tema-yerel-yonetim-sayfa-zemini-01)" : RENK_BORDO,
+              color: "var(--tema-yerel-yonetim-ters-metin-01)", border: "none", marginTop: "8px",
             }}
           >
             {p.urunEkleLoading ? "Ekleniyor..." : "Ürün Ekle"}
@@ -100,10 +100,10 @@ export default function UrunTeknikYonetimi(p: UrunTeknikYonetimiProps) {
             {p.urunler.map(u => (
               <div key={u.urun_id} style={listeSatirStyle}>
                 <div style={{ flex: 1 }}>
-                  <span style={{ fontSize: "13px", fontWeight: 600, color: "#111", fontFamily: "'Nunito', sans-serif" }}>
+                  <span style={{ fontSize: "13px", fontWeight: 600, color: "var(--tema-yerel-yonetim-ana-metin-01)", fontFamily: "'Nunito', sans-serif" }}>
                     {u.urun_adi}
                   </span>
-                  <span style={{ fontSize: "11px", color: "#737373", marginLeft: "8px", fontFamily: "'Nunito', sans-serif" }}>
+                  <span style={{ fontSize: "11px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)", marginLeft: "8px", fontFamily: "'Nunito', sans-serif" }}>
                     ({p.takimAdi(u.takim_id)})
                   </span>
                 </div>
@@ -139,8 +139,8 @@ export default function UrunTeknikYonetimi(p: UrunTeknikYonetimiProps) {
             disabled={!p.yeniTeknikAdi.trim() || p.teknikEkleLoading}
             style={{
               ...btnBase,
-              background: !p.yeniTeknikAdi.trim() || p.teknikEkleLoading ? "#d1d5db" : RENK_BORDO,
-              color: "white", border: "none", marginTop: "8px",
+              background: !p.yeniTeknikAdi.trim() || p.teknikEkleLoading ? "var(--tema-yerel-yonetim-sayfa-zemini-01)" : RENK_BORDO,
+              color: "var(--tema-yerel-yonetim-ters-metin-01)", border: "none", marginTop: "8px",
             }}
           >
             {p.teknikEkleLoading ? "Ekleniyor..." : "Teknik Ekle"}
@@ -154,7 +154,7 @@ export default function UrunTeknikYonetimi(p: UrunTeknikYonetimiProps) {
             {p.teknikler.map(t => (
               <div key={t.teknik_id} style={listeSatirStyle}>
                 <div style={{ flex: 1 }}>
-                  <span style={{ fontSize: "13px", fontWeight: 600, color: "#111", fontFamily: "'Nunito', sans-serif" }}>
+                  <span style={{ fontSize: "13px", fontWeight: 600, color: "var(--tema-yerel-yonetim-ana-metin-01)", fontFamily: "'Nunito', sans-serif" }}>
                     {t.teknik_adi}
                   </span>
                 </div>

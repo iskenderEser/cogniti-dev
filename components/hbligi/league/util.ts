@@ -12,8 +12,8 @@ export function harfler(ad: string): string {
 
 /** Sıra rengi — altın / gümüş / bronz / nötr. */
 export function siraRenk(rank: number): string {
-  if (rank === 1) return "#f59e0b";
-  if (rank === 2) return "#9ca3af";
-  if (rank === 3) return "#b45309";
-  return "#e5e7eb";
+  if (rank === 1) return "var(--tema-yerel-lig-sira-altin)";
+  if (rank === 2) return "var(--tema-yerel-lig-sira-gumus)";
+  if (rank === 3) return "var(--tema-yerel-lig-sira-bronz)";
+  return "var(--tema-yerel-lig-sira-diger)";
 }

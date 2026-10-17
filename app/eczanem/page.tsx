@@ -184,7 +184,7 @@ function EczanemPanelIcerik() {
     finally { setSiliniyor(false); }
   };
 
-  if (yukleniyor || !kullanici || !musteri) return <div className="flex min-h-screen items-center justify-center bg-[#f5f8fb]"><span className="size-7 animate-spin rounded-full border-2 border-[#d8e5f0] border-t-[#237ac8]" aria-label="Oturum yükleniyor" /></div>;
+  if (yukleniyor || !kullanici || !musteri) return <div className="flex min-h-screen items-center justify-center bg-[var(--tema-yerel-eczanem-sayfa-zemini-23)]"><span className="size-7 animate-spin rounded-full border-2 border-[var(--tema-yerel-eczanem-cizgi-39)] border-t-[var(--tema-yerel-eczanem-cizgi-02)]" aria-label="Oturum yükleniyor" /></div>;
 
   const secimAnahtari =
     secim.tip === "tum"
@@ -210,7 +210,7 @@ function EczanemPanelIcerik() {
   const musteriAd = kullanici.ad ? adSoyadBicimle(kullanici.ad) : "";
 
   return (
-    <div className="min-h-screen bg-[#f5f8fb] pb-12" style={{ fontFamily: "'Nunito', sans-serif" }}>
+    <div className="min-h-screen bg-[var(--tema-yerel-eczanem-sayfa-zemini-23)] pb-12" style={{ fontFamily: "'Nunito', sans-serif" }}>
       <HataMesajiContainer mesajlar={mesajlar} />
       <EczanemMusteriNavbar
         ad={kullanici.adSoyad || kullanici.ad || "Müşteri"}
@@ -237,27 +237,27 @@ function EczanemPanelIcerik() {
               aria-controls="eczanem-mobil-drawer"
               aria-expanded={mobilDrawerAcik}
               onClick={() => setMobilDrawerAcik(true)}
-              className="inline-flex items-center gap-2 rounded-xl border border-[#dfe7ef] bg-white px-3.5 py-2 text-xs font-black text-[#2e475d] shadow-sm transition hover:bg-[#f6f9fb] active:bg-[#edf2f7]"
+              className="inline-flex items-center gap-2 rounded-xl border border-[var(--tema-yerel-eczanem-cizgi-33)] bg-[var(--tema-yerel-eczanem-kart-01)] px-3.5 py-2 text-xs font-black text-[var(--tema-yerel-eczanem-ana-metin-23)] shadow-sm transition hover:bg-[var(--tema-yerel-eczanem-sayfa-zemini-24)] active:bg-[var(--tema-yerel-eczanem-sayfa-zemini-25)]"
             >
-              <Layers className="size-4 text-[#bc2d0d]" />
+              <Layers className="size-4 text-[var(--tema-yerel-eczanem-vurgu-metin-01)]" />
               <span>İçerikler</span>
             </button>
           </div>
 
-          <section className="relative overflow-hidden rounded-3xl bg-[linear-gradient(125deg,#173b63_0%,#237ac8_56%,#43a5d7_100%)] px-5 py-6 text-white shadow-[0_12px_32px_rgba(35,122,200,0.18)] md:px-8 md:py-8">
-            <div className="absolute -right-16 -top-24 size-64 rounded-full border-[32px] border-white/5" /><div className="absolute -bottom-24 right-28 size-52 rounded-full bg-white/5" />
+          <section className="relative overflow-hidden rounded-3xl bg-[linear-gradient(125deg,var(--tema-yerel-eczanem-eylem-zemin-11)_0%,var(--tema-yerel-eczanem-eylem-zemin-01)_56%,var(--tema-yerel-eczanem-eylem-zemin-12)_100%)] px-5 py-6 text-[var(--tema-yerel-eczanem-ters-metin-01)] shadow-[0_12px_32px_var(--tema-yerel-eczanem-golge-06)] md:px-8 md:py-8">
+            <div className="absolute -right-16 -top-24 size-64 rounded-full border-[32px] border-[var(--tema-yerel-eczanem-cizgi-35)]/5" /><div className="absolute -bottom-24 right-28 size-52 rounded-full bg-[var(--tema-yerel-eczanem-kart-01)]/5" />
             <SayfaYenileBasligi className="relative"
               altAksiyon={<TarihPill />}
-              ustBilgi={<p className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#cae8ff]"><Sparkles className="size-3.5" /> HapBilgi Eczanem</p>}
+              ustBilgi={<p className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-[0.18em] text-[var(--tema-yerel-eczanem-yardimci-metin-41)]"><Sparkles className="size-3.5" /> HapBilgi Eczanem</p>}
               baslik={<h1 className="text-2xl font-black tracking-[-0.025em] md:text-3xl">{musteriAd ? `Merhaba ${musteriAd}` : "Merhaba"}</h1>}
-              aciklama={<p className="mt-2 max-w-xl text-xs font-semibold leading-5 text-white/78 md:text-sm md:leading-6">Eczanenizden gelen öğrenme içeriklerini inceleyin; size özel içerik akışınızı tek sayfada yönetin.</p>}
+              aciklama={<p className="mt-2 max-w-xl text-xs font-semibold leading-5 text-[var(--tema-yerel-eczanem-ters-metin-01)]/78 md:text-sm md:leading-6">Eczanenizden gelen öğrenme içeriklerini inceleyin; size özel içerik akışınızı tek sayfada yönetin.</p>}
               aksiyon={<YenileButonu yenileniyor={videoYukleniyor || videoYenileniyor} onYenile={() => videolariCek(true)} />}
             />
           </section>
           <EclubGecisKarti hata={hata} basari={basari} />
-          {videoHatasi && <div className="rounded-2xl border border-[#f0d1d1] bg-[#fff7f7] px-4 py-3 text-xs font-bold text-[#a74646]">{videoHatasi}{videoHazir ? " · Son başarılı içerik akışı gösteriliyor." : ""}</div>}
+          {videoHatasi && <div className="rounded-2xl border border-[var(--tema-yerel-eczanem-islevsel-cizgi-17)] bg-[var(--tema-yerel-eczanem-islevsel-zemin-10)] px-4 py-3 text-xs font-bold text-[var(--tema-yerel-eczanem-islevsel-metin-08)]">{videoHatasi}{videoHazir ? " · Son başarılı içerik akışı gösteriliyor." : ""}</div>}
           {videoYukleniyor && !videoHazir ? (
-            <div className="flex min-h-72 items-center justify-center gap-2 text-xs font-extrabold text-[#8190a3]"><span className="size-4 animate-spin rounded-full border-2 border-[#d7e4ef] border-t-[#3589d8]" /> Öğrenme içerikleri hazırlanıyor…</div>
+            <div className="flex min-h-72 items-center justify-center gap-2 text-xs font-extrabold text-[var(--tema-yerel-eczanem-yardimci-metin-35)]"><span className="size-4 animate-spin rounded-full border-2 border-[var(--tema-yerel-eczanem-cizgi-08)] border-t-[var(--tema-yerel-eczanem-cizgi-09)]" /> Öğrenme içerikleri hazırlanıyor…</div>
           ) : seciliVideo ? (
             <EczanemVideoOynatici video={seciliVideo} onKapat={() => { setSeciliVideo(null); router.push("/eczanem", { scroll: false }); void videolariCek(); }} onTamamlandi={() => videolariCek()} hata={hata} basari={basari} />
           ) : (
@@ -269,17 +269,17 @@ function EczanemPanelIcerik() {
               />
               <YayinTuruFiltresi secili={aktifYayinTuru} onSec={setAktifYayinTuru} sayilar={turSayilari} />
               {filtrelenmisVideolar.length === 0 && secim.tip !== "tum" ? (
-                <div className="flex flex-col items-center justify-center gap-3.5 rounded-2xl border border-dashed border-[#d8e3ed] bg-white p-8 text-center shadow-sm">
-                  <div className="flex size-11 items-center justify-center rounded-2xl bg-[#fef2f2] text-[#bc2d0d]">
+                <div className="flex flex-col items-center justify-center gap-3.5 rounded-2xl border border-dashed border-[var(--tema-yerel-eczanem-cizgi-40)] bg-[var(--tema-yerel-eczanem-kart-01)] p-8 text-center shadow-sm">
+                  <div className="flex size-11 items-center justify-center rounded-2xl bg-[var(--tema-yerel-eczanem-islevsel-zemin-32)] text-[var(--tema-yerel-eczanem-vurgu-metin-01)]">
                     <Layers className="size-5" />
                   </div>
-                  <p className="text-sm font-bold text-[#475569]">
+                  <p className="text-sm font-bold text-[var(--tema-yerel-eczanem-ana-metin-24)]">
                     Bu kapsamda öğrenme içeriği bulunmuyor.
                   </p>
                   <button
                     type="button"
                     onClick={() => setSecim({ tip: "tum" })}
-                    className="inline-flex items-center gap-2 rounded-xl bg-[#bc2d0d] px-4 py-2 text-xs font-black text-white shadow-sm transition hover:bg-[#9f2409] active:bg-[#851e07]"
+                    className="inline-flex items-center gap-2 rounded-xl bg-[var(--tema-yerel-eczanem-vurgu-zemin-01)] px-4 py-2 text-xs font-black text-[var(--tema-yerel-eczanem-ters-metin-01)] shadow-sm transition hover:bg-[var(--tema-yerel-eczanem-islevsel-zemin-37)] active:bg-[var(--tema-yerel-eczanem-islevsel-zemin-38)]"
                   >
                     <Layers className="size-3.5" />
                     <span>Tüm İçerikler</span>
@@ -299,14 +299,14 @@ function EczanemPanelIcerik() {
           )}
         </div>
       </main>
-      <AlertDialog open={silmeModalAcik} onOpenChange={(acik) => { if (!acik) silmeModaliniKapat(); }}><AlertDialogContent><form onSubmit={hesabimiSil}><AlertDialogHeader><AlertDialogTitle className="text-[#8f3030]">Hesabınızı silmek istediğinize emin misiniz?</AlertDialogTitle><AlertDialogDescription className="leading-6">Bu işlem geri alınamaz. Hesabınız, puanlarınız, siparişleriniz ve HapBilgi’deki tüm kayıtlarınız kalıcı olarak silinir.</AlertDialogDescription></AlertDialogHeader><label className="mt-5 block text-xs font-extrabold text-[#536981]" htmlFor="hesap-silme-sifre">Mevcut şifreniz</label><Input id="hesap-silme-sifre" type="password" value={silmeSifresi} onChange={(event) => setSilmeSifresi(event.target.value)} autoComplete="current-password" required disabled={siliniyor} className="mt-2 h-10 focus-visible:border-[#b84444] focus-visible:ring-[#b84444]/20" placeholder="Şifrenizi girin" />{silmeHatasi && <div className="mt-3 rounded-xl border border-[#efcaca] bg-[#fff3f3] px-3 py-2 text-xs font-bold text-[#a43f3f]">{silmeHatasi}</div>}<AlertDialogFooter className="mt-6"><AlertDialogCancel type="button" onClick={silmeModaliniKapat} disabled={siliniyor}>Vazgeç</AlertDialogCancel><Button type="submit" disabled={siliniyor || !silmeSifresi} className="bg-[#b84444] font-extrabold hover:bg-[#9f3636]">{siliniyor ? "Siliniyor…" : "Evet, hesabımı sil"}</Button></AlertDialogFooter></form></AlertDialogContent></AlertDialog>
+      <AlertDialog open={silmeModalAcik} onOpenChange={(acik) => { if (!acik) silmeModaliniKapat(); }}><AlertDialogContent><form onSubmit={hesabimiSil}><AlertDialogHeader><AlertDialogTitle className="text-[var(--tema-yerel-eczanem-islevsel-metin-39)]">Hesabınızı silmek istediğinize emin misiniz?</AlertDialogTitle><AlertDialogDescription className="leading-6">Bu işlem geri alınamaz. Hesabınız, puanlarınız, siparişleriniz ve HapBilgi’deki tüm kayıtlarınız kalıcı olarak silinir.</AlertDialogDescription></AlertDialogHeader><label className="mt-5 block text-xs font-extrabold text-[var(--tema-yerel-eczanem-yardimci-metin-42)]" htmlFor="hesap-silme-sifre">Mevcut şifreniz</label><Input id="hesap-silme-sifre" type="password" value={silmeSifresi} onChange={(event) => setSilmeSifresi(event.target.value)} autoComplete="current-password" required disabled={siliniyor} className="mt-2 h-10 focus-visible:border-[var(--tema-yerel-eczanem-islevsel-cizgi-22)] focus-visible:ring-[var(--tema-yerel-eczanem-islevsel-odak-02)]/20" placeholder="Şifrenizi girin" />{silmeHatasi && <div className="mt-3 rounded-xl border border-[var(--tema-yerel-eczanem-islevsel-cizgi-23)] bg-[var(--tema-yerel-eczanem-islevsel-zemin-39)] px-3 py-2 text-xs font-bold text-[var(--tema-yerel-eczanem-islevsel-metin-40)]">{silmeHatasi}</div>}<AlertDialogFooter className="mt-6"><AlertDialogCancel type="button" onClick={silmeModaliniKapat} disabled={siliniyor}>Vazgeç</AlertDialogCancel><Button type="submit" disabled={siliniyor || !silmeSifresi} className="bg-[var(--tema-yerel-eczanem-islevsel-zemin-16)] font-extrabold hover:bg-[var(--tema-yerel-eczanem-islevsel-zemin-17)]">{siliniyor ? "Siliniyor…" : "Evet, hesabımı sil"}</Button></AlertDialogFooter></form></AlertDialogContent></AlertDialog>
     </div>
   );
 }
 
 export default function EczanemPanelPage() {
   return (
-    <Suspense fallback={<div className="flex min-h-screen items-center justify-center bg-[#f5f8fb]"><span className="size-7 animate-spin rounded-full border-2 border-[#d8e5f0] border-t-[#237ac8]" aria-label="Sayfa yükleniyor" /></div>}>
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center bg-[var(--tema-yerel-eczanem-sayfa-zemini-23)]"><span className="size-7 animate-spin rounded-full border-2 border-[var(--tema-yerel-eczanem-cizgi-39)] border-t-[var(--tema-yerel-eczanem-cizgi-02)]" aria-label="Sayfa yükleniyor" /></div>}>
       <EczanemPanelIcerik />
     </Suspense>
   );

@@ -49,9 +49,9 @@ export default function EczanemNasilCalisirPage() {
 
   if (yukleniyor || !kullanici || !musteri) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-white">
+      <div className="flex min-h-screen items-center justify-center bg-[var(--tema-yerel-eczanem-kart-01)]">
         <span
-          className="size-7 animate-spin rounded-full border-2 border-[#e5e5e5] border-t-[#bc2d0d]"
+          className="size-7 animate-spin rounded-full border-2 border-[var(--tema-yerel-eczanem-cizgi-38)] border-t-[var(--tema-yerel-eczanem-vurgu-cizgi-01)]"
           aria-label="Oturum yükleniyor"
         />
       </div>
@@ -64,7 +64,7 @@ export default function EczanemNasilCalisirPage() {
   const ilerlemeAciklamasi = sonAdim ? "Döngüyü yeniden başlat" : `${sonrakiAdim.baslik} adımını göster`;
 
   return (
-    <div className="min-h-screen bg-white" style={{ fontFamily: "'Nunito', sans-serif" }}>
+    <div className="min-h-screen bg-[var(--tema-yerel-eczanem-kart-01)]" style={{ fontFamily: "'Nunito', sans-serif" }}>
       <EczanemMusteriNavbar
         ad={kullanici.adSoyad || kullanici.ad || "Müşteri"}
         telefon={kullanici.telefon}
@@ -246,26 +246,26 @@ export default function EczanemNasilCalisirPage() {
           <div
             className="mt-8 flex flex-col items-center justify-between gap-4 rounded-2xl border p-6 sm:flex-row md:p-7"
             style={{
-              borderColor: "var(--bilgi-cizgi, #e5e5e5)",
-              background: "var(--bilgi-yumusak, #f4f5f6)",
+              borderColor: "var(--bilgi-cizgi, var(--tema-yerel-eczanem-cizgi-38))",
+              background: "var(--bilgi-yumusak, var(--tema-yerel-eczanem-sayfa-zemini-22))",
             }}
           >
             <div>
               <h2
                 className="flex items-center gap-2 text-base font-extrabold"
-                style={{ color: "var(--bilgi-metin, #343434)" }}
+                style={{ color: "var(--bilgi-metin, var(--tema-yerel-eczanem-ana-metin-22))" }}
               >
-                <CheckCircle2 className="size-5" style={{ color: "var(--bilgi-vurgu, #bc2d0d)" }} />
+                <CheckCircle2 className="size-5" style={{ color: "var(--bilgi-vurgu, var(--tema-yerel-eczanem-vurgu-metin-01))" }} />
                 Kazanılan puanlarınızı kontrol etmek ister misiniz?
               </h2>
-              <p className="mt-1 text-xs font-semibold" style={{ color: "var(--bilgi-ikincil, #717478)" }}>
+              <p className="mt-1 text-xs font-semibold" style={{ color: "var(--bilgi-ikincil, var(--tema-yerel-eczanem-yardimci-metin-40))" }}>
                 Puanlarım sayfasından biriken puanlarınızı inceleyebilir ve eczanenize iletmek üzere talep oluşturabilirsiniz.
               </p>
             </div>
             <Link
               href="/eczanem/puanlarim"
-              className="inline-flex h-10 shrink-0 items-center justify-center rounded-full px-6 text-xs font-bold text-white shadow-sm transition-opacity hover:opacity-90"
-              style={{ background: "var(--bilgi-vurgu, #bc2d0d)", fontFamily: "'Nunito', sans-serif" }}
+              className="inline-flex h-10 shrink-0 items-center justify-center rounded-full px-6 text-xs font-bold text-[var(--tema-yerel-eczanem-ters-metin-01)] shadow-sm transition-opacity hover:opacity-90"
+              style={{ background: "var(--bilgi-vurgu, var(--tema-yerel-eczanem-vurgu-zemin-01))", fontFamily: "'Nunito', sans-serif" }}
             >
               Puanlarıma Git
             </Link>

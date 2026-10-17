@@ -1,0 +1,20 @@
+{
+  "tarih": "2026-10-17",
+  "sira": 2,
+  "durum": "TAMAMLANDI",
+  "konu": "Yönetici eğitim kartının varsayılan CSS vurgu tanımı",
+  "dosya": "app/(panel)/raporlar/yonetici/yonetici-report.module.css",
+  "ortak_kaynak": "--tema-yerel-rapor-eylem-metin-11",
+  "mavi": "#2f8ed8",
+  "yesil": "#355545",
+  "mavi_bildirimi_karsilastirmasi": 634,
+  "mavi_fark": 0,
+  "renk_disi_fark": 0,
+  "tema_gecis_ve_ozel_vurgu_kontrolu": 5,
+  "ozel_vurgu_degistirilmedi": true,
+  "yeni_degisken_eklenmedi": true,
+  "mevcut_aktif_yonetici_raporu": "DavranisRaporu rol=yonetici",
+  "not": "Değişen educationTypeCard stili mevcut aktif yönetici raporunda kullanılmıyor; gerçek rapor ekranında görsel değişiklik iddia edilmez.",
+  "gercek_tarayıcı": "YAPILMADI",
+  "ucuncu_ise_gecildi": false
+}

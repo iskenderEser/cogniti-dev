@@ -93,10 +93,10 @@ export function VideoYukleme({
     <div>
       <div className="flex items-center gap-2.5 mb-1.5">
         <label
-          className="flex items-center gap-1 bg-white border rounded-lg px-3 py-1.5 text-xs font-semibold cursor-pointer whitespace-nowrap"
-          style={{ borderColor: "#56aeff", color: "#56aeff" }}
+          className="flex items-center gap-1 bg-[var(--tema-yerel-uretim-kart-01)] border rounded-lg px-3 py-1.5 text-xs font-semibold cursor-pointer whitespace-nowrap"
+          style={{ borderColor: "var(--tema-yerel-uretim-cizgi-04)", color: "var(--tema-yerel-uretim-eylem-metin-01)" }}
         >
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#56aeff" strokeWidth="2">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--tema-yerel-uretim-eylem-metin-01)" strokeWidth="2">
             <line x1="12" y1="5" x2="12" y2="19" />
             <line x1="5" y1="12" x2="19" y2="12" />
           </svg>
@@ -109,13 +109,13 @@ export function VideoYukleme({
             className="hidden"
           />
         </label>
-        <span className="text-xs text-gray-400">{aciklama ?? ayar.aciklama}</span>
+        <span className="text-xs text-[var(--tema-yerel-uretim-yardimci-metin-02)]">{aciklama ?? ayar.aciklama}</span>
       </div>
       {bekleyen && (() => {
         const rozet = dosyaTipiRenk(bekleyen.preview.dosya_adi);
         return (
           <div className="flex flex-wrap gap-1.5">
-            <div className="flex items-center gap-1 bg-gray-50 border border-gray-200 rounded-full py-1 pl-2 pr-2.5">
+            <div className="flex items-center gap-1 bg-[var(--tema-yerel-uretim-sayfa-zemini-01)] border border-[var(--tema-yerel-uretim-cizgi-01)] rounded-full py-1 pl-2 pr-2.5">
               <div
                 className="w-4 h-4 rounded flex items-center justify-center flex-shrink-0"
                 style={{ background: rozet.bg }}
@@ -124,14 +124,14 @@ export function VideoYukleme({
                   {rozet.etiket}
                 </span>
               </div>
-              <span className="text-xs text-gray-700 max-w-40 truncate">{bekleyen.preview.dosya_adi}</span>
+              <span className="text-xs text-[var(--tema-yerel-uretim-ana-metin-03)] max-w-40 truncate">{bekleyen.preview.dosya_adi}</span>
               <svg
                 onClick={onSil}
                 width="12"
                 height="12"
                 viewBox="0 0 24 24"
                 fill="none"
-                stroke="#9ca3af"
+                stroke="var(--tema-yerel-uretim-islevsel-metin-24)"
                 strokeWidth="2"
                 className="cursor-pointer flex-shrink-0"
               >
@@ -144,10 +144,10 @@ export function VideoYukleme({
       })()}
       {yuklemeYuzdesi !== null && (
         <div className="mt-2">
-          <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-            <div className="h-full rounded-full transition-all" style={{ width: `${yuklemeYuzdesi}%`, background: "#56aeff" }} />
+          <div className="w-full bg-[var(--tema-yerel-uretim-sayfa-zemini-08)] rounded-full h-2 overflow-hidden">
+            <div className="h-full rounded-full transition-all" style={{ width: `${yuklemeYuzdesi}%`, background: "var(--tema-yerel-uretim-eylem-zemin-07)" }} />
           </div>
-          <p className="text-xs text-gray-500 m-0 mt-1">
+          <p className="text-xs text-[var(--tema-yerel-uretim-yardimci-metin-01)] m-0 mt-1">
             {ayar.yukleniyorMetni} %{yuklemeYuzdesi}
           </p>
         </div>

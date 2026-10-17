@@ -13,7 +13,7 @@ import { createClient } from "@/lib/supabase/client";
 import { guvenliCikisYap } from "@/lib/auth/guvenliCikis";
 import { useEffect, useState } from "react";
 
-const BORDO = "#bc2d0d";
+const BORDO = "var(--tema-yerel-giris-vurgu-metin-01)";
 
 export default function SifreYenilePage() {
   const [tamamlandi, setTamamlandi] = useState(false);
@@ -58,19 +58,19 @@ export default function SifreYenilePage() {
 
   return (
     <div
-      className="min-h-screen bg-white flex flex-col items-center justify-center px-6 py-10"
+      className="min-h-screen bg-[var(--tema-yerel-giris-kart-01)] flex flex-col items-center justify-center px-6 py-10"
       style={{ fontFamily: "'Nunito', sans-serif" }}
     >
       <div className="w-full max-w-sm">
         <img src="/hapbilgi-dikey-TM-1-logo.png" alt="hapbilgi" className="object-contain mx-auto mb-8" style={{ height: 144 }} />
 
         {oturumHazir === null && (
-          <p className="text-sm text-gray-500 text-center">Bağlantı doğrulanıyor...</p>
+          <p className="text-sm text-[var(--tema-yerel-giris-yardimci-metin-01)] text-center">Bağlantı doğrulanıyor...</p>
         )}
 
         {oturumHazir === false && (
           <div className="text-center">
-            <p className="text-sm text-gray-700 mb-4">
+            <p className="text-sm text-[var(--tema-yerel-giris-ana-metin-04)] mb-4">
               Bağlantı geçersiz ya da süresi dolmuş. Giriş sayfasındaki &quot;Şifremi unuttum&quot; ile yeni bağlantı isteyebilirsiniz.
             </p>
             <a href="/login" className="text-xs no-underline font-semibold" style={{ color: BORDO }}>← Giriş sayfasına dön</a>
@@ -78,8 +78,8 @@ export default function SifreYenilePage() {
         )}
 
         {oturumHazir === true && tamamlandi && (
-          <div className="bg-green-50 border border-green-200 rounded-xl px-4 py-3">
-            <p className="text-sm text-green-700 m-0">
+          <div className="bg-[var(--tema-yerel-giris-islevsel-zemin-02)] border border-[var(--tema-yerel-giris-islevsel-cizgi-02)] rounded-xl px-4 py-3">
+            <p className="text-sm text-[var(--tema-yerel-giris-islevsel-metin-01)] m-0">
               Şifreniz güncellendi. Giriş sayfasına yönlendiriliyorsunuz...
             </p>
           </div>

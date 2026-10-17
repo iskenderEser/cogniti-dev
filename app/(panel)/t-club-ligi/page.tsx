@@ -288,11 +288,11 @@ export default function HBLigiPage() {
 
   if (!veri) {
     return (
-      <div className="flex h-full min-h-0 items-center justify-center bg-[#f6f8fb] p-6">
-        <div className="max-w-md rounded-2xl border border-red-100 bg-white p-6 text-center shadow-sm">
-          <div className="text-sm font-extrabold text-[#a43737]">T-Club Ligi yüklenemedi</div>
-          <p className="mt-1 text-xs font-semibold text-[#7d8ba0]">{hata ?? "Beklenmeyen bir hata oluştu."}</p>
-          <button type="button" onClick={() => void veriCek(true)} className="mt-4 min-h-11 rounded-xl bg-[#2f9ae9] px-4 py-2 text-xs font-extrabold text-white">
+      <div className="flex h-full min-h-0 items-center justify-center bg-[var(--tema-yerel-lig-sayfa-zemini-04)] p-6">
+        <div className="max-w-md rounded-2xl border border-[var(--tema-yerel-lig-islevsel-cizgi-03)] bg-[var(--tema-yerel-lig-kart-01)] p-6 text-center shadow-sm">
+          <div className="text-sm font-extrabold text-[var(--tema-yerel-lig-islevsel-metin-05)]">T-Club Ligi yüklenemedi</div>
+          <p className="mt-1 text-xs font-semibold text-[var(--tema-yerel-lig-yardimci-metin-08)]">{hata ?? "Beklenmeyen bir hata oluştu."}</p>
+          <button type="button" onClick={() => void veriCek(true)} className="mt-4 min-h-11 rounded-xl bg-[var(--tema-yerel-lig-eylem-zemin-01)] px-4 py-2 text-xs font-extrabold text-[var(--tema-yerel-lig-ters-metin-01)]">
             Yeniden dene
           </button>
         </div>
@@ -302,7 +302,7 @@ export default function HBLigiPage() {
 
   if (veri.tip === "utt") {
     return (
-      <div className="h-full min-h-0 overflow-y-auto md:overflow-hidden bg-[linear-gradient(135deg,#f8fbff_0%,#f6f8fb_48%,#fbfcfe_100%)]" style={{ fontFamily: "'Nunito', sans-serif" }}>
+      <div className="h-full min-h-0 overflow-y-auto md:overflow-hidden bg-[linear-gradient(135deg,var(--tema-yerel-lig-sayfa-zemini-05)_0%,var(--tema-yerel-lig-sayfa-zemini-04)_48%,var(--tema-yerel-lig-sayfa-zemini-06)_100%)]" style={{ fontFamily: "'Nunito', sans-serif" }}>
         <div className="mx-auto min-h-full max-w-[1440px] px-3 py-3 md:h-full md:min-h-0 md:px-5 md:py-3">
           <LeaguePage
             ligler={veri.ligler ?? { bolge: veri.lig, takim: veri.lig, firma: veri.lig }}
@@ -318,10 +318,10 @@ export default function HBLigiPage() {
 
   if (veri.gorunum === "uretici") {
     return (
-      <div className="h-full min-h-0 overflow-y-auto bg-[linear-gradient(135deg,#f8fbff_0%,#f6f8fb_48%,#fbfcfe_100%)]" style={{ fontFamily: "'Nunito', sans-serif" }}>
+      <div className="h-full min-h-0 overflow-y-auto bg-[linear-gradient(135deg,var(--tema-yerel-lig-islevsel-zemin-05)_0%,var(--tema-yerel-lig-islevsel-zemin-06)_48%,var(--tema-yerel-lig-islevsel-zemin-07)_100%)]" style={{ fontFamily: "'Nunito', sans-serif" }}>
         <div className="mx-auto min-h-full max-w-[1440px] px-3 py-3 md:px-5 md:py-3">
           {(yenileniyor || hata) && (
-            <div className={`mb-3 rounded-xl border px-3 py-2 text-[11px] font-bold ${hata ? "border-amber-200 bg-amber-50 text-amber-800" : "border-blue-100 bg-blue-50 text-blue-700"}`} role="status">
+            <div className={`mb-3 rounded-xl border px-3 py-2 text-[11px] font-bold ${hata ? "border-[var(--tema-yerel-lig-islevsel-cizgi-04)] bg-[var(--tema-yerel-lig-islevsel-zemin-08)] text-[var(--tema-yerel-lig-islevsel-metin-06)]" : "border-[var(--tema-yerel-lig-islevsel-cizgi-05)] bg-[var(--tema-yerel-lig-islevsel-zemin-09)] text-[var(--tema-yerel-lig-islevsel-metin-07)]"}`} role="status">
               {hata ? `${hata} Mevcut veriler gösterilmeye devam ediyor.` : "Seçiminize göre lig verileri güncelleniyor…"}
             </div>
           )}
@@ -338,9 +338,9 @@ export default function HBLigiPage() {
 
   if (veri.gorunum === "bm" || veri.gorunum === "tm" || veri.gorunum === "yonetici") {
     return (
-      <div className="h-full min-h-0 overflow-y-auto md:overflow-hidden bg-[linear-gradient(135deg,#f8fbff_0%,#f6f8fb_48%,#fbfcfe_100%)]" style={{ fontFamily: "'Nunito', sans-serif" }}>
+      <div className="h-full min-h-0 overflow-y-auto md:overflow-hidden bg-[linear-gradient(135deg,var(--tema-yerel-lig-islevsel-zemin-05)_0%,var(--tema-yerel-lig-islevsel-zemin-06)_48%,var(--tema-yerel-lig-islevsel-zemin-07)_100%)]" style={{ fontFamily: "'Nunito', sans-serif" }}>
         <div className="mx-auto min-h-full max-w-[1440px] px-3 py-3 md:flex md:h-full md:min-h-0 md:flex-col md:px-5 md:py-3">
-          {hata && <p role="status" className="mb-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">{hata} Mevcut veriler gösterilmeye devam ediyor.</p>}
+          {hata && <p role="status" className="mb-3 rounded-xl border border-[var(--tema-yerel-lig-islevsel-cizgi-04)] bg-[var(--tema-yerel-lig-islevsel-zemin-08)] px-3 py-2 text-xs text-[var(--tema-yerel-lig-islevsel-metin-06)]">{hata} Mevcut veriler gösterilmeye devam ediyor.</p>}
           {veri.gorunum === "bm"
             ? <BmLeaguePage key={veri.kapsam_adi} veri={veri} periyotSecici={periyotSecici} yenileButonu={yenileButonu} />
             : <TmLeaguePage key={veri.kapsam_adi} veri={veri} periyotSecici={periyotSecici} yenileButonu={yenileButonu} />}
@@ -350,7 +350,7 @@ export default function HBLigiPage() {
   }
 
   return (
-    <div className="h-full min-h-0 overflow-y-auto bg-[linear-gradient(135deg,#f8fbff_0%,#f5f8fc_48%,#fbfcfe_100%)]" style={{ fontFamily: "'Nunito', sans-serif" }}>
+    <div className="h-full min-h-0 overflow-y-auto bg-[linear-gradient(135deg,var(--tema-yerel-lig-sayfa-zemini-05)_0%,var(--tema-yerel-lig-sayfa-zemini-07)_48%,var(--tema-yerel-lig-sayfa-zemini-06)_100%)]" style={{ fontFamily: "'Nunito', sans-serif" }}>
       <div className="mx-auto min-h-full max-w-[1500px] px-3 py-3 md:h-full md:min-h-0 md:px-5 md:py-3">
         <FieldLeaguePage key={`${veri.gorunum}-${veri.kapsam_adi}`} veri={veri} periyotSecici={periyotSecici} yenileButonu={yenileButonu} />
       </div>

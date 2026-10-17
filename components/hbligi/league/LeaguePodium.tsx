@@ -17,7 +17,7 @@ function DegisimBadge({ d }: { d: number | null }) {
   return (
     <span
       className={`inline-flex items-center text-[9px] font-black ${
-        yukari ? "text-emerald-600" : "text-rose-600"
+        yukari ? "text-[var(--tema-yerel-lig-islevsel-metin-24)]" : "text-[var(--tema-yerel-lig-islevsel-metin-21)]"
       }`}
     >
       {yukari ? (
@@ -60,7 +60,7 @@ export default function LeaguePodium({ top3 }: { top3: SiraliSatir[] }) {
                 className="w-full h-full object-cover rounded-full"
               />
             ) : (
-              <span className="text-[clamp(11px,1.3vw,18px)] font-black text-[#172033]">
+              <span className="text-[clamp(11px,1.3vw,18px)] font-black text-[var(--tema-yerel-lig-ana-metin-17)]">
                 {harfler(ikinci.ad)}
               </span>
             )}
@@ -70,11 +70,11 @@ export default function LeaguePodium({ top3 }: { top3: SiraliSatir[] }) {
             className="absolute z-10 flex flex-col items-center justify-evenly px-0.5 text-center [container-type:inline-size]"
             style={{ left: "14.8%", top: "64.0%", width: "17.2%", height: "20.5%" }}
           >
-            <div className="w-full truncate text-[clamp(7px,9cqi,16px)] font-bold uppercase leading-tight text-[#555e6b]">
+            <div className="w-full truncate text-[clamp(7px,9cqi,16px)] font-bold uppercase leading-tight text-[var(--tema-yerel-lig-ana-metin-18)]">
               {ikinci.ad.toLocaleUpperCase("tr-TR")}
             </div>
             <div className="flex items-center gap-1 mt-0.5">
-              <span className="text-[clamp(6px,7.5cqi,14px)] font-bold tabular-nums text-[#555e6b] leading-none">
+              <span className="text-[clamp(6px,7.5cqi,14px)] font-bold tabular-nums text-[var(--tema-yerel-lig-ana-metin-18)] leading-none">
                 {ikinci.toplam_puan.toLocaleString("tr-TR")} PUAN
               </span>
               <DegisimBadge d={ikinci.degisim} />
@@ -99,7 +99,7 @@ export default function LeaguePodium({ top3 }: { top3: SiraliSatir[] }) {
                 className="w-full h-full object-cover rounded-full"
               />
             ) : (
-              <span className="text-[clamp(12px,1.5vw,21px)] font-black text-[#172033]">
+              <span className="text-[clamp(12px,1.5vw,21px)] font-black text-[var(--tema-yerel-lig-ana-metin-17)]">
                 {harfler(lider.ad)}
               </span>
             )}
@@ -109,11 +109,11 @@ export default function LeaguePodium({ top3 }: { top3: SiraliSatir[] }) {
             className="absolute z-10 flex flex-col items-center justify-evenly px-1 text-center [container-type:inline-size]"
             style={{ left: "39.5%", top: "64.0%", width: "21.0%", height: "20.5%" }}
           >
-            <div className="w-full truncate text-[clamp(8px,8.5cqi,18px)] font-bold uppercase leading-tight text-[#7a4300] [text-shadow:0_1px_2px_rgba(80,48,0,0.25)]">
+            <div className="w-full truncate text-[clamp(8px,8.5cqi,18px)] font-bold uppercase leading-tight text-[var(--tema-yerel-lig-islevsel-metin-25)] [text-shadow:0_1px_2px_rgba(80,48,0,0.25)]">
               {lider.ad}
             </div>
             <div className="flex items-center gap-1 mt-0.5">
-              <span className="text-[clamp(7px,7cqi,15px)] font-semibold tabular-nums text-[#7a4300] leading-none">
+              <span className="text-[clamp(7px,7cqi,15px)] font-semibold tabular-nums text-[var(--tema-yerel-lig-islevsel-metin-25)] leading-none">
                 {lider.toplam_puan.toLocaleString("tr-TR")} Puan
               </span>
               <DegisimBadge d={lider.degisim} />
@@ -138,7 +138,7 @@ export default function LeaguePodium({ top3 }: { top3: SiraliSatir[] }) {
                 className="w-full h-full object-cover rounded-full"
               />
             ) : (
-              <span className="text-[clamp(11px,1.3vw,18px)] font-black text-[#172033]">
+              <span className="text-[clamp(11px,1.3vw,18px)] font-black text-[var(--tema-yerel-lig-ana-metin-17)]">
                 {harfler(ucuncu.ad)}
               </span>
             )}
@@ -148,11 +148,11 @@ export default function LeaguePodium({ top3 }: { top3: SiraliSatir[] }) {
             className="absolute z-10 flex flex-col items-center justify-evenly px-0.5 text-center [container-type:inline-size]"
             style={{ left: "67.9%", top: "64.0%", width: "17.2%", height: "20.5%" }}
           >
-            <div className="w-full truncate text-[clamp(7px,9cqi,16px)] font-bold uppercase leading-tight text-[#a65324]">
+            <div className="w-full truncate text-[clamp(7px,9cqi,16px)] font-bold uppercase leading-tight text-[var(--tema-yerel-lig-islevsel-metin-26)]">
               {ucuncu.ad.toLocaleUpperCase("tr-TR")}
             </div>
             <div className="flex items-center gap-1 mt-0.5">
-              <span className="text-[clamp(6px,7.5cqi,14px)] font-bold tabular-nums text-[#a65324] leading-none">
+              <span className="text-[clamp(6px,7.5cqi,14px)] font-bold tabular-nums text-[var(--tema-yerel-lig-islevsel-metin-26)] leading-none">
                 {ucuncu.toplam_puan.toLocaleString("tr-TR")} PUAN
               </span>
               <DegisimBadge d={ucuncu.degisim} />

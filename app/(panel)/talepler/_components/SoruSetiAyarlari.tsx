@@ -35,7 +35,7 @@ export function SoruSetiAyarlari({
   return (
     <div className="flex flex-col md:flex-row gap-3">
       <div className="flex-1">
-        <label className="text-xs text-gray-500 block mb-1">{buyuklukEtiketi}</label>
+        <label className="text-xs text-[var(--tema-yerel-uretim-yardimci-metin-01)] block mb-1">{buyuklukEtiketi}</label>
         <SadeFormSecimi value={buyukluk} onChange={(e) => onBuyuklukChange(Number(e.target.value))} aria-label={buyuklukEtiketi} className="w-full">
           {SORU_SETI_BUYUKLUGU_SECENEKLERI.map((s) => (
             <option key={s} value={s}>{s} soru</option>
@@ -43,7 +43,7 @@ export function SoruSetiAyarlari({
         </SadeFormSecimi>
       </div>
       <div className="flex-1">
-        <label className="text-xs text-gray-500 block mb-1">Seçenek / Soru</label>
+        <label className="text-xs text-[var(--tema-yerel-uretim-yardimci-metin-01)] block mb-1">Seçenek / Soru</label>
         <SadeFormSecimi value={secenek} onChange={(e) => onSecenekChange(Number(e.target.value))} aria-label="Seçenek / Soru" className="w-full">
           {[2, 3, 4].map((s) => (
             <option key={s} value={s}>{s} seçenek</option>
@@ -51,7 +51,7 @@ export function SoruSetiAyarlari({
         </SadeFormSecimi>
       </div>
       <div className="flex-1">
-        <label className="text-xs text-gray-500 block mb-1">
+        <label className="text-xs text-[var(--tema-yerel-uretim-yardimci-metin-01)] block mb-1">
           {videoBasiEtiketi}
         </label>
         <SadeFormSecimi value={videoBasi} onChange={(e) => onVideoBasiChange(Number(e.target.value))} aria-label={videoBasiEtiketi} className="w-full">

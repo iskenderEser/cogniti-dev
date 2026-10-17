@@ -20,9 +20,9 @@ import { BookOpen, Inbox, Send, Ticket, type LucideIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from "react";
 
-const CC_RENK = "#237ac8";
-const GRI_METIN = "#737373";
-const GRI_ZEMIN = "#f9fafb";
+const CC_RENK = "var(--tema-yerel-lig-eylem-metin-02)";
+const GRI_METIN = "var(--tema-yerel-lig-yardimci-metin-01)";
+const GRI_ZEMIN = "var(--tema-yerel-lig-sayfa-zemini-01)";
 
 type Tab = "izlenecek" | "gonder" | "bekleyen" | "gonderilen";
 const CC_SEKMELERI: Array<{ key: Tab; label: string; mobilLabel: string }> = [
@@ -399,13 +399,13 @@ export default function ChallengeClubPage() {
             <div className="inline-flex items-center">
               <h1
                 className="m-0 text-2xl font-extrabold tracking-[-0.03em]"
-                style={{ color: "#203653" }}
+                style={{ color: "var(--tema-yerel-lig-ana-metin-04)" }}
               >
                 Challenge Club
               </h1>
               <SayfaRehberi anahtar="challenge-club" className="ml-1.5 -translate-y-1" />
             </div>
-            <p className="mt-1 max-w-2xl text-xs font-semibold leading-5" style={{ color: "#8190a3" }}>
+            <p className="mt-1 max-w-2xl text-xs font-semibold leading-5" style={{ color: "var(--tema-yerel-lig-yardimci-metin-04)" }}>
               Tamamladığınız yayınları diğer BM’lere challenge olarak gönderebilir, size gelenleri takip edebilirsiniz.
             </p>
           </div>
@@ -413,14 +413,14 @@ export default function ChallengeClubPage() {
 
         {/* Stat kartlar */}
         <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
-          <StatKart ikon={BookOpen} etiket="Yayınlar" deger={videolar.length} detay="Challenge Club içerikleri" renk={CC_RENK} zemin="#edf6fd" />
-          <StatKart ikon={Inbox} etiket="Gelen Challenge" deger={bekleyenSayisi} detay="Süresi devam eden" renk="#d78022" zemin="#fff6e8" />
-          <StatKart ikon={Send} etiket="Gönderdiğim Challenge" deger={gonderdiklerim.length} detay="Bu ay" renk="#16865f" zemin="#ebf8f2" />
-          <StatKart ikon={Ticket} etiket="Challenge Limiti" deger={quota?.kalan ?? 0} detay="Aylık gönderim kotası" renk="#237ac8" zemin="#edf6fd" />
+          <StatKart ikon={BookOpen} etiket="Yayınlar" deger={videolar.length} detay="Challenge Club içerikleri" renk={CC_RENK} zemin="var(--tema-yerel-lig-secim-zemin-02)" />
+          <StatKart ikon={Inbox} etiket="Gelen Challenge" deger={bekleyenSayisi} detay="Süresi devam eden" renk="var(--tema-yerel-lig-islevsel-metin-03)" zemin="var(--tema-yerel-lig-islevsel-zemin-03)" />
+          <StatKart ikon={Send} etiket="Gönderdiğim Challenge" deger={gonderdiklerim.length} detay="Bu ay" renk="var(--tema-yerel-lig-islevsel-metin-04)" zemin="var(--tema-yerel-lig-islevsel-zemin-04)" />
+          <StatKart ikon={Ticket} etiket="Challenge Limiti" deger={quota?.kalan ?? 0} detay="Aylık gönderim kotası" renk="var(--tema-yerel-lig-eylem-metin-02)" zemin="var(--tema-yerel-lig-secim-zemin-02)" />
         </section>
 
         {/* İşlem sekmeleri; yayın türü filtresi ayrı görsel düzeyde kalır. */}
-        <div className="mb-4 max-w-[68rem] border-b border-[#dfe7f1]">
+        <div className="mb-4 max-w-[68rem] border-b border-[var(--tema-yerel-lig-cizgi-03)]">
           <SadeKontrolGrubu aria-label="Challenge Club bölümü" tur="sekme">
             {CC_SEKMELERI.map((sekme) => {
               const aktif = aktifTab === sekme.key;
@@ -511,14 +511,14 @@ function StatKart({
   zemin: string;
 }) {
   return (
-    <article className="rounded-2xl border border-[#dfe7f1] bg-white p-3.5 shadow-[0_5px_16px_rgba(31,55,90,0.035)]">
+    <article className="rounded-2xl border border-[var(--tema-yerel-lig-cizgi-03)] bg-[var(--tema-yerel-lig-kart-01)] p-3.5 shadow-[0_5px_16px_var(--tema-yerel-lig-golge-01)]">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <div className="text-[10px] font-extrabold uppercase tracking-[0.05em] text-[#8190a3]">{etiket}</div>
+          <div className="text-[10px] font-extrabold uppercase tracking-[0.05em] text-[var(--tema-yerel-lig-yardimci-metin-04)]">{etiket}</div>
           <div className="mt-1 text-2xl font-black tabular-nums" style={{ color: renk }}>
             {typeof deger === "number" ? deger.toLocaleString("tr-TR") : deger}
           </div>
-          {detay && <div className="mt-0.5 truncate text-[10px] font-semibold text-[#8796a8]">{detay}</div>}
+          {detay && <div className="mt-0.5 truncate text-[10px] font-semibold text-[var(--tema-yerel-lig-yardimci-metin-05)]">{detay}</div>}
         </div>
         <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl" style={{ color: renk, background: zemin }}>
           <Icon size={16} />
@@ -530,11 +530,11 @@ function StatKart({
 
 function BosDurum({ ikon: Icon, metin }: { ikon: LucideIcon; metin: string }) {
   return (
-    <div className="rounded-2xl border border-dashed border-[#d8e2ec] bg-white px-5 py-12 text-center">
-      <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-2xl bg-[#f1f6fa] text-[#8ba0b5]">
+    <div className="rounded-2xl border border-dashed border-[var(--tema-yerel-lig-cizgi-04)] bg-[var(--tema-yerel-lig-kart-01)] px-5 py-12 text-center">
+      <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--tema-yerel-lig-sayfa-zemini-02)] text-[var(--tema-yerel-lig-yardimci-metin-06)]">
         <Icon size={20} />
       </span>
-      <h2 className="mt-3 text-sm font-extrabold text-[#40556d]">{metin}</h2>
+      <h2 className="mt-3 text-sm font-extrabold text-[var(--tema-yerel-lig-ana-metin-05)]">{metin}</h2>
     </div>
   );
 }
@@ -544,14 +544,14 @@ export function CcRaf({ children }: { children: ReactNode }) {
   const kaydir = (yon: number) => raf.current?.scrollBy({ left: yon * raf.current.clientWidth * 0.85, behavior: "smooth" });
   return (
     <div className="group relative">
-      <button type="button" aria-label="Sola kaydır" onClick={() => kaydir(-1)} className="absolute inset-y-0 left-0 z-10 hidden md:flex w-16 cursor-pointer items-center justify-start bg-gradient-to-r from-[#f9fafb] via-[#f9fafb]/70 to-transparent opacity-0 transition-opacity group-hover:opacity-100">
-        <svg className="h-7 w-7 text-gray-800 drop-shadow-sm" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
+      <button type="button" aria-label="Sola kaydır" onClick={() => kaydir(-1)} className="absolute inset-y-0 left-0 z-10 hidden md:flex w-16 cursor-pointer items-center justify-start bg-gradient-to-r from-[var(--tema-yerel-lig-sayfa-zemini-01)] via-[var(--tema-yerel-lig-sayfa-zemini-01)]/70 to-transparent opacity-0 transition-opacity group-hover:opacity-100">
+        <svg className="h-7 w-7 text-[var(--tema-yerel-lig-ana-metin-06)] drop-shadow-sm" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
       </button>
       <div ref={raf} className="flex snap-x gap-2.5 overflow-x-auto px-1 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {children}
       </div>
-      <button type="button" aria-label="Sağa kaydır" onClick={() => kaydir(1)} className="absolute inset-y-0 right-0 z-10 hidden md:flex w-16 cursor-pointer items-center justify-end bg-gradient-to-l from-[#f9fafb] via-[#f9fafb]/70 to-transparent opacity-0 transition-opacity group-hover:opacity-100">
-        <svg className="h-7 w-7 text-gray-800 drop-shadow-sm" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+      <button type="button" aria-label="Sağa kaydır" onClick={() => kaydir(1)} className="absolute inset-y-0 right-0 z-10 hidden md:flex w-16 cursor-pointer items-center justify-end bg-gradient-to-l from-[var(--tema-yerel-lig-sayfa-zemini-01)] via-[var(--tema-yerel-lig-sayfa-zemini-01)]/70 to-transparent opacity-0 transition-opacity group-hover:opacity-100">
+        <svg className="h-7 w-7 text-[var(--tema-yerel-lig-ana-metin-06)] drop-shadow-sm" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
       </button>
     </div>
   );
@@ -569,7 +569,7 @@ export function KartMeta({ children, renk }: { children: ReactNode; renk?: strin
   return (
     <span
       className="truncate rounded-lg px-2 py-1 text-center text-xs font-semibold sm:text-[10px]"
-      style={{ background: "#f7f9fc", color: renk ?? "#70849d", border: "0.5px solid #e5e7eb" }}
+      style={{ background: "var(--tema-yerel-lig-sayfa-zemini-03)", color: renk ?? "var(--tema-yerel-lig-yardimci-metin-07)", border: "0.5px solid var(--tema-yerel-lig-cizgi-05)" }}
     >
       {children}
     </span>

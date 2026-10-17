@@ -61,19 +61,19 @@ export function TalepDetayi({
 
   if (!talep) {
     return (
-      <div className="overflow-hidden rounded-2xl border border-[#dfe7f2] bg-white shadow-[0_10px_28px_rgba(31,55,90,0.045)]">
-        <div className="border-b border-[#e8eef5] px-5 py-4">
+      <div className="overflow-hidden rounded-2xl border border-[var(--tema-yerel-uretim-cizgi-09)] bg-[var(--tema-yerel-uretim-kart-01)] shadow-[0_10px_28px_var(--tema-yerel-uretim-golge-01)]">
+        <div className="border-b border-[var(--tema-yerel-uretim-cizgi-10)] px-5 py-4">
           <div className="inline-flex items-center">
-            <h2 className="mt-0.5 text-base font-extrabold text-[#203653]">Yayın Takip Adımları</h2>
+            <h2 className="mt-0.5 text-base font-extrabold text-[var(--tema-yerel-uretim-ana-metin-05)]">Yayın Takip Adımları</h2>
             <SayfaRehberi anahtar="talepler-uretim-gorunumu" className="ml-1.5 -translate-y-1.5" />
           </div>
         </div>
         <div className="px-6 py-14 text-center">
-          <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eef6ff] text-[#4b91d8]">
+          <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--tema-yerel-uretim-secim-zemin-06)] text-[var(--tema-yerel-uretim-eylem-metin-08)]">
             <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-6 w-6"><path d="M4 5h16v14H4zM8 9h8M8 13h5" /><path d="m15 16 2 2 4-4" /></svg>
           </span>
-          <p className="mt-3 text-sm font-extrabold text-[#425672]">Takip etmek istediğiniz yayını seçin</p>
-          <p className="mx-auto mt-1 max-w-xs text-xs leading-5 text-[#8292a8]">Yayın takip listesinden bir kayıt seçtiğinizde tüm üretim adımları burada açılır.</p>
+          <p className="mt-3 text-sm font-extrabold text-[var(--tema-yerel-uretim-ana-metin-07)]">Takip etmek istediğiniz yayını seçin</p>
+          <p className="mx-auto mt-1 max-w-xs text-xs leading-5 text-[var(--tema-yerel-uretim-yardimci-metin-14)]">Yayın takip listesinden bir kayıt seçtiğinizde tüm üretim adımları burada açılır.</p>
         </div>
       </div>
     );
@@ -140,18 +140,18 @@ export function TalepDetayi({
     !podcastTranskriptTercihiCoz(talep.ogrenme_araci_tercihleri);
 
   return (
-    <section aria-labelledby="talep-takip-baslik" className="overflow-hidden rounded-2xl border border-[#dfe7f2] bg-white shadow-[0_10px_28px_rgba(31,55,90,0.045)]">
-      <div className="border-b border-[#e8eef5] px-4 py-4 md:px-5">
+    <section aria-labelledby="talep-takip-baslik" className="overflow-hidden rounded-2xl border border-[var(--tema-yerel-uretim-cizgi-09)] bg-[var(--tema-yerel-uretim-kart-01)] shadow-[0_10px_28px_var(--tema-yerel-uretim-golge-01)]">
+      <div className="border-b border-[var(--tema-yerel-uretim-cizgi-10)] px-4 py-4 md:px-5">
         <div className="inline-flex items-center">
-          <h2 id="talep-takip-baslik" className="mt-0.5 text-base font-extrabold text-[#203653]">Yayın Takip Adımları</h2>
+          <h2 id="talep-takip-baslik" className="mt-0.5 text-base font-extrabold text-[var(--tema-yerel-uretim-ana-metin-05)]">Yayın Takip Adımları</h2>
           <SayfaRehberi anahtar="talepler-uretim-gorunumu" className="ml-1.5 -translate-y-1.5" />
         </div>
       </div>
       {/* Künye */}
-      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[#e8eef5] px-4 py-4 md:px-5">
+      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[var(--tema-yerel-uretim-cizgi-10)] px-4 py-4 md:px-5">
         <div className="min-w-0">
-          <span className="block text-lg font-extrabold tracking-[-0.015em] text-[#1f3552]">{baslik}</span>
-          <span className="mt-1 block text-xs font-semibold text-[#8292a8]">
+          <span className="block text-lg font-extrabold tracking-[-0.015em] text-[var(--tema-yerel-uretim-ana-metin-14)]">{baslik}</span>
+          <span className="mt-1 block text-xs font-semibold text-[var(--tema-yerel-uretim-yardimci-metin-14)]">
             {talepIdGoster(talep.firma_adi, talep.talep_no)} · {formatTarih(talep.created_at)}
           </span>
           <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
@@ -166,19 +166,19 @@ export function TalepDetayi({
           </div>
         </div>
 
-        <div className="min-w-[220px] flex-1 rounded-2xl border border-[#dce8f5] bg-[#f6faff] px-3.5 py-3 sm:max-w-[290px]">
-          <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#6f8daf]">Şu anda</p>
+        <div className="min-w-[220px] flex-1 rounded-2xl border border-[var(--tema-yerel-uretim-cizgi-22)] bg-[var(--tema-yerel-uretim-sayfa-zemini-10)] px-3.5 py-3 sm:max-w-[290px]">
+          <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-[var(--tema-yerel-uretim-yardimci-metin-15)]">Şu anda</p>
           <div className="mt-2 grid grid-cols-2 gap-3">
             <div>
-              <span className="block text-[10px] font-bold text-[#8a99ad]">Aktif aşama</span>
-              <span className="mt-0.5 block text-sm font-extrabold text-[#29415f]">{aktif?.etiket ?? "—"}</span>
+              <span className="block text-[10px] font-bold text-[var(--tema-yerel-uretim-yardimci-metin-16)]">Aktif aşama</span>
+              <span className="mt-0.5 block text-sm font-extrabold text-[var(--tema-yerel-uretim-ana-metin-15)]">{aktif?.etiket ?? "—"}</span>
             </div>
             <div>
-              <span className="block text-[10px] font-bold text-[#8a99ad]">Sorumlu</span>
-              <span className="mt-0.5 block text-sm font-extrabold text-[#29415f]">{sorumlu}</span>
+              <span className="block text-[10px] font-bold text-[var(--tema-yerel-uretim-yardimci-metin-16)]">Sorumlu</span>
+              <span className="mt-0.5 block text-sm font-extrabold text-[var(--tema-yerel-uretim-ana-metin-15)]">{sorumlu}</span>
             </div>
           </div>
-          {aktifDurum && <p className="mt-2 border-t border-[#dfebf7] pt-2 text-xs font-bold text-[#507094]">{aktifDurum.metin}</p>}
+          {aktifDurum && <p className="mt-2 border-t border-[var(--tema-yerel-uretim-cizgi-23)] pt-2 text-xs font-bold text-[var(--tema-yerel-uretim-yardimci-metin-17)]">{aktifDurum.metin}</p>}
         </div>
       </div>
 
@@ -186,10 +186,10 @@ export function TalepDetayi({
       <div className="px-4 py-4 md:px-5">
         <div className="mb-3.5 flex items-end justify-between gap-3">
           <div>
-            <p className="text-[10px] font-extrabold uppercase tracking-[0.15em] text-[#7390b3]">Talep → Yayın</p>
-            <h3 className="mt-0.5 text-sm font-extrabold text-[#2b405c]">Üretim Akışı</h3>
+            <p className="text-[10px] font-extrabold uppercase tracking-[0.15em] text-[var(--tema-yerel-uretim-yardimci-metin-18)]">Talep → Yayın</p>
+            <h3 className="mt-0.5 text-sm font-extrabold text-[var(--tema-yerel-uretim-ana-metin-16)]">Üretim Akışı</h3>
           </div>
-          <span className="text-[10px] font-semibold text-[#8a99ad]">5 adım</span>
+          <span className="text-[10px] font-semibold text-[var(--tema-yerel-uretim-yardimci-metin-16)]">5 adım</span>
         </div>
         <UretimSeridi
           adimlar={adimlar}
@@ -231,7 +231,7 @@ export function TalepDetayi({
         <button
           type="button"
           onClick={() => router.push("/yayin-yonetimi")}
-          className="mt-3 flex w-full items-center justify-between gap-3 border-t border-[#e8eef5] pt-3 text-left text-xs font-semibold text-[#647994] transition-colors hover:text-[#287fce]"
+          className="mt-3 flex w-full items-center justify-between gap-3 border-t border-[var(--tema-yerel-uretim-cizgi-10)] pt-3 text-left text-xs font-semibold text-[var(--tema-yerel-uretim-yardimci-metin-12)] transition-colors hover:text-[var(--tema-yerel-uretim-eylem-metin-04)]"
         >
           <span>Soru seti onaylandıktan sonra iş Yayın Yönetimi&apos;ne geçer.</span>
           <span aria-hidden="true" className="text-lg">›</span>

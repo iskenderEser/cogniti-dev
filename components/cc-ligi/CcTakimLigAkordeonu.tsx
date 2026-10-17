@@ -139,7 +139,7 @@ export default function CcTakimLigAkordeonu({
 
   if (yukleniyor) {
     return (
-      <div className="rounded-2xl border border-[#e2e8f0] bg-white p-12 text-center text-sm font-bold text-[#627d98]">
+      <div className="rounded-2xl border border-[var(--tema-akordiyon-cc-cizgi)] bg-[var(--tema-akordiyon-yuzey)] p-12 text-center text-sm font-bold text-[var(--tema-akordiyon-cc-aciklama)]">
         C-Club Takımlar Ligi yükleniyor...
       </div>
     );
@@ -147,7 +147,7 @@ export default function CcTakimLigAkordeonu({
 
   if (takimlar.length === 0) {
     return (
-      <div className="rounded-2xl border border-[#e2e8f0] bg-white p-12 text-center text-sm font-bold text-[#627d98]">
+      <div className="rounded-2xl border border-[var(--tema-akordiyon-cc-cizgi)] bg-[var(--tema-akordiyon-yuzey)] p-12 text-center text-sm font-bold text-[var(--tema-akordiyon-cc-aciklama)]">
         Bu periyotta sıralama verisi bulunmuyor.
       </div>
     );
@@ -157,12 +157,12 @@ export default function CcTakimLigAkordeonu({
     <section className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#ebf4ff] text-[#237ac8]">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--tema-akordiyon-cc-simge-zemin)] text-[var(--tema-akordiyon-eylem)]">
             <Trophy className="h-4 w-4" />
           </div>
           <div>
-            <h3 className="text-sm font-extrabold text-[#10213d]">C-Club Takımlar Ligi</h3>
-            <p className="text-[11px] font-semibold text-[#627d98]">{aciklama}</p>
+            <h3 className="text-sm font-extrabold text-[var(--tema-akordiyon-cc-baslik)]">C-Club Takımlar Ligi</h3>
+            <p className="text-[11px] font-semibold text-[var(--tema-akordiyon-cc-aciklama)]">{aciklama}</p>
           </div>
         </div>
         <SayfaRehberi anahtar="cclub-ligi" />
@@ -176,7 +176,7 @@ export default function CcTakimLigAkordeonu({
           return (
             <div
               key={takim.takim_id}
-              className="overflow-hidden rounded-2xl border border-[#e0e8f2] bg-white shadow-[0_2px_8px_rgba(16,33,61,0.04)] transition-all"
+              className="overflow-hidden rounded-2xl border border-[var(--tema-akordiyon-cc-kart-cizgi)] bg-[var(--tema-akordiyon-yuzey)] shadow-[0_2px_8px_var(--tema-akordiyon-cc-kart-golge)] transition-all"
             >
               {/* 1. KADEME: TAKIM KARTI */}
               <button
@@ -186,19 +186,19 @@ export default function CcTakimLigAkordeonu({
                   setAcikBm(null);
                 }}
                 className={`flex w-full items-center justify-between gap-4 p-4 text-left transition-colors ${
-                  takimAcik ? 'bg-[#f4f8fc] border-b border-[#e2edf8]' : 'hover:bg-[#fafcff]'
+                  takimAcik ? 'bg-[var(--tema-akordiyon-cc-takim-acik)] border-b border-[var(--tema-akordiyon-cc-ic-cizgi)]' : 'hover:bg-[var(--tema-akordiyon-cc-hover)]'
                 }`}
               >
                 <div className="flex items-center gap-3.5 min-w-0">
                   <div
                     className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl font-black text-sm ${
                       takim.sira === 1
-                        ? 'bg-[#fef3c7] text-[#b45309] border border-[#fde68a]'
+                        ? 'bg-[var(--tema-lig-sira-altin-zemin)] text-[var(--tema-lig-sira-cc-altin)] border border-[var(--tema-lig-sira-altin-cizgi)]'
                         : takim.sira === 2
-                        ? 'bg-[#f1f5f9] text-[#475569] border border-[#e2e8f0]'
+                        ? 'bg-[var(--tema-lig-sira-gumus-zemin)] text-[var(--tema-lig-sira-gumus-metin)] border border-[var(--tema-lig-sira-gumus-cizgi)]'
                         : takim.sira === 3
-                        ? 'bg-[#ffedd5] text-[#c2410c] border border-[#fed7aa]'
-                        : 'bg-[#f8fafc] text-[#64748b] border border-[#edf2f7]'
+                        ? 'bg-[var(--tema-lig-sira-bronz-zemin)] text-[var(--tema-lig-sira-cc-bronz)] border border-[var(--tema-lig-sira-bronz-cizgi)]'
+                        : 'bg-[var(--tema-akordiyon-ic-soluk-zemin)] text-[var(--tema-akordiyon-ikincil-metin)] border border-[var(--tema-akordiyon-sira-cizgi)]'
                     }`}
                   >
                     #{takim.sira}
@@ -206,27 +206,27 @@ export default function CcTakimLigAkordeonu({
 
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="font-extrabold text-base tracking-[-0.01em] text-[#10213d] truncate">
+                      <span className="font-extrabold text-base tracking-[-0.01em] text-[var(--tema-akordiyon-cc-baslik)] truncate">
                         {takim.takim_adi}
                       </span>
-                      <span className="inline-flex items-center gap-1 rounded-md bg-[#eef6ff] px-2 py-0.5 text-[10px] font-extrabold text-[#237ac8]">
+                      <span className="inline-flex items-center gap-1 rounded-md bg-[var(--tema-akordiyon-cc-katilim-zemini)] px-2 py-0.5 text-[10px] font-extrabold text-[var(--tema-akordiyon-eylem)]">
                         <Users className="h-3 w-3" /> {takim.aktif_bm} / {takim.toplam_bm} Aktif BM (%{katilimYuzdesi})
                       </span>
                     </div>
-                    <div className="flex items-center gap-3 mt-1 text-[11px] font-semibold text-[#627d98]">
-                      <span>Kazanılan: <strong className="text-[#107c41]">+{formatPuan(takim.kazanim)}</strong></span>
+                    <div className="flex items-center gap-3 mt-1 text-[11px] font-semibold text-[var(--tema-akordiyon-cc-aciklama)]">
+                      <span>Kazanılan: <strong className="text-[var(--tema-akordiyon-cc-kazanim)]">+{formatPuan(takim.kazanim)}</strong></span>
                       <span>·</span>
-                      <span>Kayıp: <strong className="text-[#c5221f]">−{formatPuan(takim.kayip)}</strong></span>
+                      <span>Kayıp: <strong className="text-[var(--tema-akordiyon-cc-kayip)]">−{formatPuan(takim.kayip)}</strong></span>
                     </div>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-4 shrink-0">
                   <div className="text-right">
-                    <div className="text-xs font-extrabold uppercase tracking-wider text-[#627d98]">Net CC Puanı</div>
-                    <div className="text-lg font-black text-[#10213d]">{formatPuan(takim.net)} p</div>
+                    <div className="text-xs font-extrabold uppercase tracking-wider text-[var(--tema-akordiyon-cc-aciklama)]">Net CC Puanı</div>
+                    <div className="text-lg font-black text-[var(--tema-akordiyon-cc-baslik)]">{formatPuan(takim.net)} p</div>
                   </div>
-                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-white border border-[#d6e3f0] text-[#486581]">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--tema-akordiyon-yuzey)] border border-[var(--tema-akordiyon-cc-ok-cizgi)] text-[var(--tema-akordiyon-cc-detay-etiket)]">
                     {takimAcik ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                   </div>
                 </div>
@@ -234,12 +234,12 @@ export default function CcTakimLigAkordeonu({
 
               {/* 2. KADEME: AÇILAN TAKIMIN BÖLGE MÜDÜRLERİ */}
               {takimAcik && (
-                <div className="p-4 space-y-3 bg-[#fafcff]">
-                  <div className="flex items-center justify-between px-2 pb-1 border-b border-[#e2edf8]">
-                    <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#486581]">
+                <div className="p-4 space-y-3 bg-[var(--tema-akordiyon-cc-ic-zemin)]">
+                  <div className="flex items-center justify-between px-2 pb-1 border-b border-[var(--tema-akordiyon-cc-ic-cizgi)]">
+                    <span className="text-[11px] font-extrabold uppercase tracking-wider text-[var(--tema-akordiyon-cc-detay-etiket)]">
                       {takim.takim_adi} Bölge Müdürlükleri ({takim.bmler.length} BM)
                     </span>
-                    <span className="text-[10px] font-bold text-[#829ab1]">Detay için BM satırına tıklayın</span>
+                    <span className="text-[10px] font-bold text-[var(--tema-akordiyon-cc-soluk-metin)]">Detay için BM satırına tıklayın</span>
                   </div>
 
                   <div className="space-y-2">
@@ -249,25 +249,25 @@ export default function CcTakimLigAkordeonu({
                       return (
                         <div
                           key={bm.kullanici_id}
-                          className="overflow-hidden rounded-xl border border-[#dbe6f2] bg-white transition-all shadow-[0_1px_3px_rgba(0,0,0,0.02)]"
+                          className="overflow-hidden rounded-xl border border-[var(--tema-akordiyon-cc-bm-cizgi)] bg-[var(--tema-akordiyon-yuzey)] transition-all shadow-[0_1px_3px_var(--tema-akordiyon-cc-bm-golge)]"
                         >
                           <button
                             type="button"
                             onClick={() => setAcikBm(bmAcik ? null : bm.kullanici_id)}
                             className={`flex w-full items-center justify-between gap-3 p-3 text-left transition-colors ${
-                              bmAcik ? 'bg-[#f0f6fc]' : 'hover:bg-[#f8fbfe]'
+                              bmAcik ? 'bg-[var(--tema-akordiyon-cc-bm-acik)]' : 'hover:bg-[var(--tema-akordiyon-cc-bm-hover)]'
                             }`}
                           >
                             <div className="flex items-center gap-3 min-w-0">
                               <span
                                 className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-xs font-black ${
                                   bm.sira === 1
-                                    ? 'bg-[#fef3c7] text-[#b45309]'
+                                    ? 'bg-[var(--tema-lig-sira-altin-zemin)] text-[var(--tema-lig-sira-cc-altin)]'
                                     : bm.sira === 2
-                                    ? 'bg-[#f1f5f9] text-[#475569]'
+                                    ? 'bg-[var(--tema-lig-sira-gumus-zemin)] text-[var(--tema-lig-sira-gumus-metin)]'
                                     : bm.sira === 3
-                                    ? 'bg-[#ffedd5] text-[#c2410c]'
-                                    : 'bg-[#f8fafc] text-[#64748b]'
+                                    ? 'bg-[var(--tema-lig-sira-bronz-zemin)] text-[var(--tema-lig-sira-cc-bronz)]'
+                                    : 'bg-[var(--tema-akordiyon-ic-soluk-zemin)] text-[var(--tema-akordiyon-ikincil-metin)]'
                                 }`}
                               >
                                 #{bm.sira}
@@ -275,26 +275,26 @@ export default function CcTakimLigAkordeonu({
 
                               <div className="min-w-0">
                                 <div className="flex items-center gap-2">
-                                  <span className="font-extrabold text-xs text-[#10213d] truncate">
+                                  <span className="font-extrabold text-xs text-[var(--tema-akordiyon-cc-baslik)] truncate">
                                     {bm.ad} {bm.soyad}
                                   </span>
-                                  <span className="inline-flex items-center gap-1 rounded bg-[#e8f1f9] px-1.5 py-0.5 text-[9px] font-bold text-[#2d557a]">
+                                  <span className="inline-flex items-center gap-1 rounded bg-[var(--tema-akordiyon-cc-bolge-zemini)] px-1.5 py-0.5 text-[9px] font-bold text-[var(--tema-akordiyon-cc-bolge-metni)]">
                                     <MapPin className="h-2.5 w-2.5" /> {bm.bolge_adi || 'Bölge'}
                                   </span>
                                 </div>
-                                <div className="flex items-center gap-2 mt-0.5 text-[10px] font-semibold text-[#829ab1]">
-                                  <span>Kazanılan: <strong className="text-[#107c41]">+{formatPuan(bm.kazanim)}</strong></span>
+                                <div className="flex items-center gap-2 mt-0.5 text-[10px] font-semibold text-[var(--tema-akordiyon-cc-soluk-metin)]">
+                                  <span>Kazanılan: <strong className="text-[var(--tema-akordiyon-cc-kazanim)]">+{formatPuan(bm.kazanim)}</strong></span>
                                   <span>·</span>
-                                  <span>Kayıp: <strong className="text-[#c5221f]">−{formatPuan(bm.kayip)}</strong></span>
+                                  <span>Kayıp: <strong className="text-[var(--tema-akordiyon-cc-kayip)]">−{formatPuan(bm.kayip)}</strong></span>
                                 </div>
                               </div>
                             </div>
 
                             <div className="flex items-center gap-3 shrink-0">
                               <div className="text-right">
-                                <span className="text-sm font-black text-[#10213d]">{formatPuan(bm.toplam_net_puan)} p</span>
+                                <span className="text-sm font-black text-[var(--tema-akordiyon-cc-baslik)]">{formatPuan(bm.toplam_net_puan)} p</span>
                               </div>
-                              <div className="text-[#829ab1]">
+                              <div className="text-[var(--tema-akordiyon-cc-soluk-metin)]">
                                 {bmAcik ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5" />}
                               </div>
                             </div>
@@ -302,25 +302,25 @@ export default function CcTakimLigAkordeonu({
 
                           {/* BM KARNE DETAYI */}
                           {bmAcik && (
-                            <div className="p-3 border-t border-[#e2edf8] bg-[#f8fbfe] text-[11px]">
+                            <div className="p-3 border-t border-[var(--tema-akordiyon-cc-ic-cizgi)] bg-[var(--tema-akordiyon-cc-detay-zemini)] text-[11px]">
                               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                                <div className="rounded-lg bg-white border border-[#e4edf5] p-2">
-                                  <span className="block text-[9px] font-extrabold uppercase text-[#627d98]">Video İzleme</span>
-                                  <strong className="text-xs font-black text-[#107c41]">+{formatPuan(bm.izleme_puani)} p</strong>
+                                <div className="rounded-lg bg-[var(--tema-akordiyon-yuzey)] border border-[var(--tema-akordiyon-cc-karne-cizgi)] p-2">
+                                  <span className="block text-[9px] font-extrabold uppercase text-[var(--tema-akordiyon-cc-aciklama)]">Video İzleme</span>
+                                  <strong className="text-xs font-black text-[var(--tema-akordiyon-cc-kazanim)]">+{formatPuan(bm.izleme_puani)} p</strong>
                                 </div>
-                                <div className="rounded-lg bg-white border border-[#e4edf5] p-2">
-                                  <span className="block text-[9px] font-extrabold uppercase text-[#627d98]">Doğru Cevap</span>
-                                  <strong className="text-xs font-black text-[#107c41]">+{formatPuan(bm.cevaplama_puani)} p</strong>
+                                <div className="rounded-lg bg-[var(--tema-akordiyon-yuzey)] border border-[var(--tema-akordiyon-cc-karne-cizgi)] p-2">
+                                  <span className="block text-[9px] font-extrabold uppercase text-[var(--tema-akordiyon-cc-aciklama)]">Doğru Cevap</span>
+                                  <strong className="text-xs font-black text-[var(--tema-akordiyon-cc-kazanim)]">+{formatPuan(bm.cevaplama_puani)} p</strong>
                                 </div>
-                                <div className="rounded-lg bg-white border border-[#e4edf5] p-2">
-                                  <span className="block text-[9px] font-extrabold uppercase text-[#627d98]">CC Gönderim & Referral</span>
-                                  <strong className="text-xs font-black text-[#107c41]">
+                                <div className="rounded-lg bg-[var(--tema-akordiyon-yuzey)] border border-[var(--tema-akordiyon-cc-karne-cizgi)] p-2">
+                                  <span className="block text-[9px] font-extrabold uppercase text-[var(--tema-akordiyon-cc-aciklama)]">CC Gönderim & Referral</span>
+                                  <strong className="text-xs font-black text-[var(--tema-akordiyon-cc-kazanim)]">
                                     +{formatPuan(Number(bm.cc_gonderme_puani || 0) + Number(bm.cc_referral_puani || 0))} p
                                   </strong>
                                 </div>
-                                <div className="rounded-lg bg-white border border-[#e4edf5] p-2">
-                                  <span className="block text-[9px] font-extrabold uppercase text-[#627d98]">Davranış Kaybı</span>
-                                  <strong className="text-xs font-black text-[#c5221f]">−{formatPuan(bm.kayip)} p</strong>
+                                <div className="rounded-lg bg-[var(--tema-akordiyon-yuzey)] border border-[var(--tema-akordiyon-cc-karne-cizgi)] p-2">
+                                  <span className="block text-[9px] font-extrabold uppercase text-[var(--tema-akordiyon-cc-aciklama)]">Davranış Kaybı</span>
+                                  <strong className="text-xs font-black text-[var(--tema-akordiyon-cc-kayip)]">−{formatPuan(bm.kayip)} p</strong>
                                 </div>
                               </div>
                             </div>

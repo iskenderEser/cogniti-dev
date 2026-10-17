@@ -19,7 +19,7 @@ const SEKMELER: { id: GirisSecimi; etiket: string }[] = [
 
 export default function SekmeBari({ girisSecimi, setGirisSecimi }: SekmeBariProps) {
   return (
-    <div style={{ display: "flex", gap: "4px", marginBottom: "20px", borderBottom: "0.5px solid #e5e7eb" }}>
+    <div style={{ display: "flex", gap: "4px", marginBottom: "20px", borderBottom: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)" }}>
       {SEKMELER.map(s => (
         <button
           key={s.id}
@@ -29,7 +29,7 @@ export default function SekmeBari({ girisSecimi, setGirisSecimi }: SekmeBariProp
             background: "transparent",
             border: "none",
             borderBottom: girisSecimi === s.id ? `2px solid ${RENK_BORDO}` : "2px solid transparent",
-            color: girisSecimi === s.id ? RENK_BORDO : "#737373",
+            color: girisSecimi === s.id ? RENK_BORDO : "var(--tema-yerel-yonetim-yardimci-metin-01)",
             fontSize: "13px",
             fontWeight: girisSecimi === s.id ? 700 : 500,
             cursor: "pointer",

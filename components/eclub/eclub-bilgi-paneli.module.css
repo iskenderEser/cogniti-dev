@@ -5,11 +5,11 @@
   right: 0;
   z-index: 60;
   width: min(var(--bilgi-genisligi), calc(100vw - 48px));
-  background: white;
-  border: 1px solid #dfe7f1;
+  background: var(--tema-yerel-eclub-kart-07);
+  border: 1px solid var(--tema-yerel-eclub-cizgi-03);
   border-right: 0;
   border-radius: 18px 0 0 18px;
-  box-shadow: -8px 8px 32px rgb(31 55 90 / 12%);
+  box-shadow: -8px 8px 32px var(--tema-yerel-eclub-golge-14);
   transform: translateX(100%);
   transition: transform 220ms ease;
   font-family: 'Nunito', sans-serif;
@@ -27,22 +27,22 @@
   width: 36px;
   min-height: 168px;
   padding: 12px 6px;
-  border: 1px solid #cfe3f4;
+  border: 1px solid var(--tema-yerel-eclub-cizgi-01);
   border-right: 0;
   border-radius: 12px 0 0 12px;
-  background: #edf6fd;
-  color: #237ac8;
-  box-shadow: -3px 3px 12px rgb(31 55 90 / 8%);
+  background: var(--tema-yerel-eclub-secim-zemin-10);
+  color: var(--tema-yerel-eclub-eylem-metin-01);
+  box-shadow: -3px 3px 12px var(--tema-yerel-eclub-golge-15);
   cursor: pointer;
 }
-.kulakcik:hover { background: #dfeffc; }
-.kulakcik:focus-visible { outline: 2px solid #237ac8; outline-offset: 2px; }
+.kulakcik:hover { background: var(--tema-yerel-eclub-secim-zemin-20); }
+.kulakcik:focus-visible { outline: 2px solid var(--tema-yerel-eclub-odak-03); outline-offset: 2px; }
 .etiket { writing-mode: vertical-rl; font-size: 12px; font-weight: 800; }
 .icerik { display: flex; flex-direction: column; height: 100%; overflow: hidden; border-radius: inherit; }
-.baslik { display: flex; align-items: center; gap: 8px; padding: 16px; border-bottom: 1px solid #e7edf4; }
-.baslik h2 { flex: 1; font-size: 14px; line-height: 20px; font-weight: 800; color: #203653; }
-.kapat { display: grid; place-items: center; width: 32px; height: 32px; flex-shrink: 0; border-radius: 8px; color: #40556d; cursor: pointer; }
-.kapat:hover { background: #edf6fd; }
+.baslik { display: flex; align-items: center; gap: 8px; padding: 16px; border-bottom: 1px solid var(--tema-yerel-eclub-cizgi-18); }
+.baslik h2 { flex: 1; font-size: 14px; line-height: 20px; font-weight: 800; color: var(--tema-yerel-eclub-ana-metin-06); }
+.kapat { display: grid; place-items: center; width: 32px; height: 32px; flex-shrink: 0; border-radius: 8px; color: var(--tema-yerel-eclub-ana-metin-02); cursor: pointer; }
+.kapat:hover { background: var(--tema-yerel-eclub-secim-zemin-10); }
 .metin { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 16px; }
 @media (max-width: 639px) {
   .panel { top: 76px; bottom: 12px; }

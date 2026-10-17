@@ -121,10 +121,10 @@ export default function BmAnaSayfa({ user, adSoyad }: Props) {
   const istat = gecerliVeri?.istatistikler ?? null;
   const sayi = (deger: number) => deger.toLocaleString("tr-TR");
   const kartlar = [
-    { label: "Öğrenmeye Katılım", value: istat ? `${sayi(istat.ogrenmeye_katilan_utt)} / ${sayi(istat.toplam_utt)}` : "—", sub: istat ? `${istat.katilim_yuzdesi === null ? "Katılım oranı hesaplanamıyor" : `%${sayi(istat.katilim_yuzdesi)} katılım`} · Aktif UTT` : "", renk: "#2f7fc7", href: "/raporlar/bm" },
-    { label: "Tamamlanan Öğrenme", value: istat ? sayi(istat.tamamlanan_ogrenme) : "—", sub: istat ? "Tamamlanan oturum · Tekrarlar dahil" : "", renk: "#16a34a", href: "/raporlar/bm" },
-    { label: "Öneri Takibi", value: istat ? `${sayi(istat.tamamlanan_oneri)} / ${sayi(istat.toplam_oneri)}` : "—", sub: istat ? `${sayi(istat.bekleyen_oneri)} bekleyen · ${sayi(istat.suresi_gecmis_oneri)} süresi geçmiş` : "", renk: "#f59e0b", href: "/oneriler" },
-    { label: "Net Saha Puanı", value: istat ? sayi(istat.net_saha_puani) : "—", sub: istat ? `${sayi(istat.kazanilan_puan)} kazanım · ${sayi(istat.kaybedilen_puan)} kayıp` : "", renk: "#8b5cf6", href: "/raporlar/bm" },
+    { label: "Öğrenmeye Katılım", value: istat ? `${sayi(istat.ogrenmeye_katilan_utt)} / ${sayi(istat.toplam_utt)}` : "—", sub: istat ? `${istat.katilim_yuzdesi === null ? "Katılım oranı hesaplanamıyor" : `%${sayi(istat.katilim_yuzdesi)} katılım`} · Aktif UTT` : "", renk: "var(--tema-yerel-ana-sayfa-islevsel-metin-05)", href: "/raporlar/bm" },
+    { label: "Tamamlanan Öğrenme", value: istat ? sayi(istat.tamamlanan_ogrenme) : "—", sub: istat ? "Tamamlanan oturum · Tekrarlar dahil" : "", renk: "var(--tema-yerel-ana-sayfa-islevsel-metin-06)", href: "/raporlar/bm" },
+    { label: "Öneri Takibi", value: istat ? `${sayi(istat.tamamlanan_oneri)} / ${sayi(istat.toplam_oneri)}` : "—", sub: istat ? `${sayi(istat.bekleyen_oneri)} bekleyen · ${sayi(istat.suresi_gecmis_oneri)} süresi geçmiş` : "", renk: "var(--tema-yerel-ana-sayfa-islevsel-metin-07)", href: "/oneriler" },
+    { label: "Net Saha Puanı", value: istat ? sayi(istat.net_saha_puani) : "—", sub: istat ? `${sayi(istat.kazanilan_puan)} kazanım · ${sayi(istat.kaybedilen_puan)} kayıp` : "", renk: "var(--tema-yerel-ana-sayfa-islevsel-metin-08)", href: "/raporlar/bm" },
   ];
   const ad = adSoyad.split(" ")[0] || "BM";
 
@@ -134,8 +134,8 @@ export default function BmAnaSayfa({ user, adSoyad }: Props) {
       {/* Karşılama */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 mb-6">
         <div>
-          <h1 className="text-lg md:text-xl font-extrabold text-gray-900 m-0">Merhaba {ad}, 👋</h1>
-          <p className="text-sm text-gray-500 mt-1">{ROL_ADLARI["bm"]}</p>
+          <h1 className="text-lg md:text-xl font-extrabold text-[var(--tema-yerel-ana-sayfa-ana-metin-01)] m-0">Merhaba {ad}, 👋</h1>
+          <p className="text-sm text-[var(--tema-yerel-ana-sayfa-yardimci-metin-03)] mt-1">{ROL_ADLARI["bm"]}</p>
         </div>
 
         <div className="flex items-start gap-1.5 flex-wrap md:flex-col md:items-end">
@@ -148,9 +148,9 @@ export default function BmAnaSayfa({ user, adSoyad }: Props) {
                 onClick={() => router.push("/store")}
                 className="inline-flex items-center justify-center gap-1.5 text-[10px] font-bold px-3 py-1 rounded-full border transition-all hover:opacity-85 shadow-xs cursor-pointer select-none whitespace-nowrap text-center"
                 style={{
-                  backgroundColor: takvim.acik ? "#f0fdf4" : onGunKala ? "#1e3a8a" : "#fffbeb",
-                  borderColor: takvim.acik ? "#bbf7d0" : onGunKala ? "#1e3a8a" : "#fef3c7",
-                  color: takvim.acik ? "#166534" : onGunKala ? "#ffffff" : "#92400e",
+                  backgroundColor: takvim.acik ? "var(--tema-yerel-ana-sayfa-islevsel-zemin-04)" : onGunKala ? "var(--tema-yerel-ana-sayfa-eylem-zemin-01)" : "var(--tema-yerel-ana-sayfa-islevsel-zemin-05)",
+                  borderColor: takvim.acik ? "var(--tema-yerel-ana-sayfa-islevsel-cizgi-01)" : onGunKala ? "var(--tema-yerel-ana-sayfa-cizgi-03)" : "var(--tema-yerel-ana-sayfa-islevsel-cizgi-02)",
+                  color: takvim.acik ? "var(--tema-yerel-ana-sayfa-islevsel-metin-09)" : onGunKala ? "var(--tema-yerel-ana-sayfa-ters-metin-01)" : "var(--tema-yerel-ana-sayfa-islevsel-metin-10)",
                 }}
                 title={
                   takvim.acik
@@ -162,8 +162,8 @@ export default function BmAnaSayfa({ user, adSoyad }: Props) {
                   <span
                     className="w-2 h-2 rounded-full shrink-0"
                     style={{
-                      backgroundColor: takvim.acik ? "#16a34a" : "#f59e0b",
-                      boxShadow: takvim.acik ? "0 0 6px #16a34a" : "none",
+                      backgroundColor: takvim.acik ? "var(--tema-yerel-ana-sayfa-islevsel-zemin-06)" : "var(--tema-yerel-ana-sayfa-islevsel-zemin-07)",
+                      boxShadow: takvim.acik ? "0 0 6px var(--tema-yerel-ana-sayfa-islevsel-golge-01)" : "none",
                     }}
                   />
                 )}
@@ -177,7 +177,7 @@ export default function BmAnaSayfa({ user, adSoyad }: Props) {
       </div>
 
       {/* Stat kartlar */}
-      <div role="status" aria-live="polite" className="mb-2 h-4 truncate text-xs leading-4 text-gray-500" title={veriHatasi ?? undefined}>
+      <div role="status" aria-live="polite" className="mb-2 h-4 truncate text-xs leading-4 text-[var(--tema-yerel-ana-sayfa-yardimci-metin-03)]" title={veriHatasi ?? undefined}>
         {loading ? "İstatistikler yükleniyor…" : veriHatasi ?? ""}
       </div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-5" aria-busy={loading}>
@@ -186,12 +186,12 @@ export default function BmAnaSayfa({ user, adSoyad }: Props) {
             key={k.label}
             type="button"
             onClick={() => router.push(k.href)}
-            className="bg-white border border-gray-200 rounded-xl p-3 md:p-5 text-left transition-shadow duration-150 hover:shadow-md"
+            className="bg-[var(--tema-yerel-ana-sayfa-kart-01)] border border-[var(--tema-yerel-ana-sayfa-cizgi-04)] rounded-xl p-3 md:p-5 text-left transition-shadow duration-150 hover:shadow-md"
             style={{ borderLeft: `3px solid ${k.renk}` }}
           >
-            <div className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">{k.label}</div>
-            <div className="truncate text-2xl md:text-3xl font-extrabold text-gray-900 leading-none" title={k.value}>{k.value}</div>
-            <div className="hidden md:block min-h-4 truncate text-xs text-gray-500 mt-1.5" title={k.sub || undefined}>{k.sub || "\u00a0"}</div>
+            <div className="text-xs font-bold text-[var(--tema-yerel-ana-sayfa-yardimci-metin-01)] uppercase tracking-wide mb-2">{k.label}</div>
+            <div className="truncate text-2xl md:text-3xl font-extrabold text-[var(--tema-yerel-ana-sayfa-ana-metin-01)] leading-none" title={k.value}>{k.value}</div>
+            <div className="hidden md:block min-h-4 truncate text-xs text-[var(--tema-yerel-ana-sayfa-yardimci-metin-03)] mt-1.5" title={k.sub || undefined}>{k.sub || "\u00a0"}</div>
           </button>
         ))}
       </div>
@@ -201,7 +201,7 @@ export default function BmAnaSayfa({ user, adSoyad }: Props) {
         <button
           type="button"
           onClick={() => router.push("/yayindaki-videolar")}
-          className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#2f7fc7] px-4 py-2.5 text-xs font-extrabold text-white shadow-sm transition-colors hover:bg-[#256daf]"
+          className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-[var(--tema-yerel-ana-sayfa-eylem-zemin-02)] px-4 py-2.5 text-xs font-extrabold text-[var(--tema-yerel-ana-sayfa-ters-metin-02)] shadow-sm transition-colors hover:bg-[var(--tema-yerel-ana-sayfa-eylem-zemin-03)]"
         >
           <Plus size={15} strokeWidth={2.5} aria-hidden="true" /> Yayın Öneriniz
         </button>

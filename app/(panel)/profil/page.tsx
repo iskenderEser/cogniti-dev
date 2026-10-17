@@ -175,8 +175,8 @@ export default function ProfilPage() {
 
   if (authYukleniyor || !kullanici || loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <svg className="animate-spin w-6 h-6 text-gray-500" fill="none" viewBox="0 0 24 24">
+      <div className="min-h-screen bg-[var(--tema-yerel-hesap-sayfa-zemini-01)] flex items-center justify-center">
+        <svg className="animate-spin w-6 h-6 text-[var(--tema-yerel-hesap-yardimci-metin-02)]" fill="none" viewBox="0 0 24 24">
           <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
           <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
         </svg>
@@ -185,8 +185,8 @@ export default function ProfilPage() {
   }
 
   const SolPanel = () => (
-    <div className={`w-full flex-shrink-0 p-6 flex flex-col border-b md:border-b-0 border-gray-100 ${isEclubKisi ? "md:w-full" : "md:w-72"}`}>
-      <div className="text-sm font-semibold text-gray-900 mb-5">Profil Ayarları</div>
+    <div className={`w-full flex-shrink-0 p-6 flex flex-col border-b md:border-b-0 border-[var(--tema-yerel-hesap-cizgi-03)] ${isEclubKisi ? "md:w-full" : "md:w-72"}`}>
+      <div className="text-sm font-semibold text-[var(--tema-yerel-hesap-ana-metin-01)] mb-5">Profil Ayarları</div>
 
       {/* Fotoğraf + bilgiler */}
       <div className="flex flex-col items-center gap-2 mb-6">
@@ -196,12 +196,12 @@ export default function ProfilPage() {
               src={profil.fotograf_url}
               alt="profil"
               className="w-20 h-20 rounded-full object-cover"
-              style={{ border: "3px solid #56aeff" }}
+              style={{ border: "3px solid var(--tema-yerel-hesap-cizgi-06)" }}
             />
           ) : (
             <div
               className="w-20 h-20 rounded-full flex items-center justify-center text-2xl font-bold"
-              style={{ background: "#b5d4f4", border: "3px solid #56aeff", color: "#1d4ed8" }}
+              style={{ background: "var(--tema-yerel-hesap-secim-zemin-02)", border: "3px solid var(--tema-yerel-hesap-cizgi-06)", color: "var(--tema-yerel-hesap-eylem-metin-02)" }}
             >
               {profil?.ad?.[0]}{profil?.soyad?.[0]}
             </div>
@@ -210,13 +210,13 @@ export default function ProfilPage() {
             <>
               <div
                 onClick={() => dosyaInputRef.current?.click()}
-                className="absolute bottom-0 right-0 w-6 h-6 rounded-full flex items-center justify-center border-2 border-white"
+                className="absolute bottom-0 right-0 w-6 h-6 rounded-full flex items-center justify-center border-2 border-[var(--tema-yerel-hesap-cizgi-07)]"
                 style={{
-                  background: fotografLoading ? "#9ca3af" : "#56aeff",
+                  background: fotografLoading ? "var(--tema-yerel-hesap-sayfa-zemini-02)" : "var(--tema-yerel-hesap-eylem-zemin-02)",
                   cursor: fotografLoading ? "wait" : "pointer",
                 }}
               >
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--tema-yerel-hesap-ters-metin-02)" strokeWidth="2">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                   <polyline points="17 8 12 3 7 8"/>
                   <line x1="12" y1="3" x2="12" y2="15"/>
@@ -231,20 +231,20 @@ export default function ProfilPage() {
           <div
             onClick={handleFotografSil}
             className="text-xs underline cursor-pointer"
-            style={{ color: "#bc2d0d" }}
+            style={{ color: "var(--tema-yerel-hesap-islevsel-metin-03)" }}
           >
             Fotoğrafı sil
           </div>
         )}
 
         <div className="text-center">
-          <div className="text-sm font-semibold text-gray-900">{profil?.ad} {profil?.soyad}</div>
-          <div className="text-xs text-gray-500 mt-0.5">{profil?.eposta}</div>
+          <div className="text-sm font-semibold text-[var(--tema-yerel-hesap-ana-metin-01)]">{profil?.ad} {profil?.soyad}</div>
+          <div className="text-xs text-[var(--tema-yerel-hesap-yardimci-metin-02)] mt-0.5">{profil?.eposta}</div>
         </div>
 
         <div
           className="text-[10px] px-3 py-0.5 rounded-full"
-          style={{ background: "rgba(188,45,13,0.08)", color: "#bc2d0d", border: "0.5px solid rgba(188,45,13,0.25)" }}
+          style={{ background: "var(--tema-yerel-hesap-islevsel-zemin-03)", color: "var(--tema-yerel-hesap-vurgu-metin-01)", border: "0.5px solid var(--tema-yerel-hesap-islevsel-cizgi-03)" }}
         >
           {profil?.rol ? eclubKisiRolEtiketi(profil.rol) : ""}
         </div>
@@ -252,60 +252,60 @@ export default function ProfilPage() {
         <div className="w-full flex flex-col gap-2 mt-1">
           {profil?.firma_adi && (
             <div className="flex justify-between gap-4">
-              <span className="text-xs text-gray-500">Firma</span>
-              <span className="text-xs font-semibold text-gray-900 text-right">{profil.firma_adi}</span>
+              <span className="text-xs text-[var(--tema-yerel-hesap-yardimci-metin-02)]">Firma</span>
+              <span className="text-xs font-semibold text-[var(--tema-yerel-hesap-ana-metin-01)] text-right">{profil.firma_adi}</span>
             </div>
           )}
           {profil?.eczane_adi && (
             <div className="flex justify-between gap-4">
-              <span className="text-xs text-gray-500">Eczane</span>
-              <span className="text-xs font-semibold text-gray-900 text-right">{profil.eczane_adi}</span>
+              <span className="text-xs text-[var(--tema-yerel-hesap-yardimci-metin-02)]">Eczane</span>
+              <span className="text-xs font-semibold text-[var(--tema-yerel-hesap-ana-metin-01)] text-right">{profil.eczane_adi}</span>
             </div>
           )}
           {profil?.telefon && (
             <div className="flex justify-between gap-4">
-              <span className="text-xs text-gray-500">Telefon</span>
-              <span className="text-xs font-semibold text-gray-900">{profil.telefon}</span>
+              <span className="text-xs text-[var(--tema-yerel-hesap-yardimci-metin-02)]">Telefon</span>
+              <span className="text-xs font-semibold text-[var(--tema-yerel-hesap-ana-metin-01)]">{profil.telefon}</span>
             </div>
           )}
           {profil?.takim_adi && (
             <div className="flex justify-between">
-              <span className="text-xs text-gray-500">Takım</span>
-              <span className="text-xs font-semibold text-gray-900">{profil.takim_adi}</span>
+              <span className="text-xs text-[var(--tema-yerel-hesap-yardimci-metin-02)]">Takım</span>
+              <span className="text-xs font-semibold text-[var(--tema-yerel-hesap-ana-metin-01)]">{profil.takim_adi}</span>
             </div>
           )}
           {profil?.bolge_adi && (
             <div className="flex justify-between">
-              <span className="text-xs text-gray-500">Bölge</span>
-              <span className="text-xs font-semibold text-gray-900">{profil.bolge_adi}</span>
+              <span className="text-xs text-[var(--tema-yerel-hesap-yardimci-metin-02)]">Bölge</span>
+              <span className="text-xs font-semibold text-[var(--tema-yerel-hesap-ana-metin-01)]">{profil.bolge_adi}</span>
             </div>
           )}
         </div>
       </div>
 
       {/* Fotoğraf kuralları */}
-      {!isEclubKisi && <div className="border-t border-gray-100 pt-5 mb-6">
-        <div className="text-xs font-semibold text-gray-900 mb-2">Fotoğraf kuralları</div>
+      {!isEclubKisi && <div className="border-t border-[var(--tema-yerel-hesap-cizgi-03)] pt-5 mb-6">
+        <div className="text-xs font-semibold text-[var(--tema-yerel-hesap-ana-metin-01)] mb-2">Fotoğraf kuralları</div>
         <div className="flex flex-col gap-1">
           {["300×300 piksel veya üzeri", "Beyaz veya şeffaf arka plan", "Maksimum 2 MB", "JPG veya PNG formatı", "Yüz net görünmeli"].map(k => (
-            <div key={k} className="text-xs text-gray-500">• {k}</div>
+            <div key={k} className="text-xs text-[var(--tema-yerel-hesap-yardimci-metin-02)]">• {k}</div>
           ))}
         </div>
       </div>}
 
       {/* Şifre değiştir */}
-      <div className="border-t border-gray-100 pt-5 flex-1 flex flex-col">
-        <div className="text-xs font-semibold text-gray-900 mb-3">Şifre Değiştir</div>
+      <div className="border-t border-[var(--tema-yerel-hesap-cizgi-03)] pt-5 flex-1 flex flex-col">
+        <div className="text-xs font-semibold text-[var(--tema-yerel-hesap-ana-metin-01)] mb-3">Şifre Değiştir</div>
         <form onSubmit={handleSifreDegistir} className="flex flex-col gap-2 flex-1">
           {[
             { label: "Mevcut şifre", value: mevcutSifre, onChange: setMevcutSifre },
             { label: "Yeni şifre", value: yeniSifre, onChange: setYeniSifre },
             { label: "Şifre tekrar", value: yeniSifreTekrar, onChange: setYeniSifreTekrar },
           ].map(({ label, value, onChange }) => (
-            <div key={label} className="flex border border-gray-200 rounded-lg overflow-hidden">
+            <div key={label} className="flex border border-[var(--tema-yerel-hesap-cizgi-01)] rounded-lg overflow-hidden">
               <div
-                className="text-xs font-semibold flex items-center px-2 flex-shrink-0 border-r border-gray-200"
-                style={{ background: "#eff6ff", color: "#1d4ed8", minWidth: "100px", fontFamily: "'Nunito', sans-serif" }}
+                className="text-xs font-semibold flex items-center px-2 flex-shrink-0 border-r border-[var(--tema-yerel-hesap-cizgi-01)]"
+                style={{ background: "var(--tema-yerel-hesap-secim-zemin-03)", color: "var(--tema-yerel-hesap-eylem-metin-02)", minWidth: "100px", fontFamily: "'Nunito', sans-serif" }}
               >
                 {label}
               </div>
@@ -315,7 +315,7 @@ export default function ProfilPage() {
                 onChange={e => onChange(e.target.value)}
                 placeholder="••••••••"
                 required
-                className="flex-1 border-none outline-none px-2 py-2 text-xs bg-white"
+                className="flex-1 border-none outline-none px-2 py-2 text-xs bg-[var(--tema-yerel-hesap-kart-01)]"
                 style={{ fontFamily: "'Nunito', sans-serif" }}
               />
             </div>
@@ -325,9 +325,9 @@ export default function ProfilPage() {
             <button
               type="submit"
               disabled={sifreLoading}
-              className="text-white border-none rounded-lg px-4 py-2 text-xs font-semibold"
+              className="text-[var(--tema-yerel-hesap-ters-metin-01)] border-none rounded-lg px-4 py-2 text-xs font-semibold"
               style={{
-                background: "#56aeff",
+                background: "var(--tema-yerel-hesap-eylem-zemin-02)",
                 cursor: "pointer",
                 opacity: sifreLoading ? 0.6 : 1,
                 fontFamily: "'Nunito', sans-serif",
@@ -343,22 +343,22 @@ export default function ProfilPage() {
 
   const SagPanel = () => (
     <div className="flex-1 p-6 flex flex-col">
-      <div className="text-sm font-semibold text-gray-900 mb-5">HB Performansım</div>
+      <div className="text-sm font-semibold text-[var(--tema-yerel-hesap-ana-metin-01)] mb-5">HB Performansım</div>
 
       {isUTT && izleme ? (
         <>
           {/* İzleme sayıları */}
           <div className="mb-6">
-            <div className="text-xs text-gray-400 font-light mb-2">İzleme sayıları</div>
+            <div className="text-xs text-[var(--tema-yerel-hesap-yardimci-metin-01)] font-light mb-2">İzleme sayıları</div>
             <div className="grid grid-cols-3 gap-2">
               {[
                 { baslik: "Haftalık", deger: izleme.haftalik },
                 { baslik: "Aylık", deger: izleme.aylik },
                 { baslik: "YTD", deger: izleme.ytd },
               ].map(({ baslik, deger }) => (
-                <div key={baslik} className="bg-gray-50 rounded-xl p-3 md:p-5">
-                  <div className="text-xs text-gray-500 mb-2">{baslik}</div>
-                  <div className="text-2xl md:text-3xl font-semibold text-gray-900">{deger}</div>
+                <div key={baslik} className="bg-[var(--tema-yerel-hesap-sayfa-zemini-01)] rounded-xl p-3 md:p-5">
+                  <div className="text-xs text-[var(--tema-yerel-hesap-yardimci-metin-02)] mb-2">{baslik}</div>
+                  <div className="text-2xl md:text-3xl font-semibold text-[var(--tema-yerel-hesap-ana-metin-01)]">{deger}</div>
                 </div>
               ))}
             </div>
@@ -366,8 +366,8 @@ export default function ProfilPage() {
 
           {/* Puan dağılımı */}
           {puanDagilimi && (
-            <div className="border-t border-gray-100 pt-6 mb-6">
-              <div className="text-xs text-gray-400 font-light mb-2">Puan Dağılımı</div>
+            <div className="border-t border-[var(--tema-yerel-hesap-cizgi-03)] pt-6 mb-6">
+              <div className="text-xs text-[var(--tema-yerel-hesap-yardimci-metin-01)] font-light mb-2">Puan Dağılımı</div>
               <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
                 {[
                   { baslik: "∑ İzleme", deger: puanDagilimi.izleme_puani },
@@ -376,9 +376,9 @@ export default function ProfilPage() {
                   { baslik: "∑ Extra", deger: puanDagilimi.extra_puani },
                   { baslik: "∑ E-Club", deger: puanDagilimi.eclub_puani },
                 ].map(({ baslik, deger }) => (
-                  <div key={baslik} className="bg-gray-50 rounded-xl p-3 md:p-5">
-                    <div className="text-xs text-gray-500 mb-2">{baslik}</div>
-                    <div className="text-xl md:text-2xl font-semibold" style={{ color: "#56aeff" }}>{deger}</div>
+                  <div key={baslik} className="bg-[var(--tema-yerel-hesap-sayfa-zemini-01)] rounded-xl p-3 md:p-5">
+                    <div className="text-xs text-[var(--tema-yerel-hesap-yardimci-metin-02)] mb-2">{baslik}</div>
+                    <div className="text-xl md:text-2xl font-semibold" style={{ color: "var(--tema-yerel-hesap-eylem-metin-03)" }}>{deger}</div>
                   </div>
                 ))}
               </div>
@@ -387,10 +387,10 @@ export default function ProfilPage() {
 
           {/* Sıralamam */}
           {siralama && (
-            <div className="border-t border-gray-100 pt-6 flex-1 flex flex-col">
+            <div className="border-t border-[var(--tema-yerel-hesap-cizgi-03)] pt-6 flex-1 flex flex-col">
               <div className="flex items-baseline gap-2 mb-4">
-                <span className="text-xs font-semibold text-gray-900">Sıralamam</span>
-                <span className="hidden md:inline text-xs font-light italic text-gray-400">toplam izleme puanına göre sıralamadır</span>
+                <span className="text-xs font-semibold text-[var(--tema-yerel-hesap-ana-metin-01)]">Sıralamam</span>
+                <span className="hidden md:inline text-xs font-light italic text-[var(--tema-yerel-hesap-yardimci-metin-01)]">toplam izleme puanına göre sıralamadır</span>
               </div>
               <div className="flex flex-col gap-2 flex-1">
                 {[
@@ -398,9 +398,9 @@ export default function ProfilPage() {
                   { baslik: "Takım sırası", deger: siralama.takim_sirasi },
                   { baslik: "Bölge sırası", deger: siralama.bolge_sirasi },
                 ].map(({ baslik, deger }) => (
-                  <div key={baslik} className="flex items-center justify-between px-4 py-3 bg-gray-50 rounded-xl">
-                    <span className="text-xs text-gray-500">{baslik}</span>
-                    <span className="text-base font-semibold" style={{ color: "#56aeff" }}>{deger ? `#${deger}` : "—"}</span>
+                  <div key={baslik} className="flex items-center justify-between px-4 py-3 bg-[var(--tema-yerel-hesap-sayfa-zemini-01)] rounded-xl">
+                    <span className="text-xs text-[var(--tema-yerel-hesap-yardimci-metin-02)]">{baslik}</span>
+                    <span className="text-base font-semibold" style={{ color: "var(--tema-yerel-hesap-eylem-metin-03)" }}>{deger ? `#${deger}` : "—"}</span>
                   </div>
                 ))}
               </div>
@@ -408,7 +408,7 @@ export default function ProfilPage() {
           )}
         </>
       ) : (
-        <div className="flex-1 flex items-center justify-center text-sm text-gray-400">
+        <div className="flex-1 flex items-center justify-center text-sm text-[var(--tema-yerel-hesap-yardimci-metin-01)]">
           Performans verisi sadece UTT rolü için görüntülenir.
         </div>
       )}
@@ -416,11 +416,11 @@ export default function ProfilPage() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50" style={{ fontFamily: "'Nunito', sans-serif" }}>
+    <div className="min-h-screen bg-[var(--tema-yerel-hesap-sayfa-zemini-01)]" style={{ fontFamily: "'Nunito', sans-serif" }}>
       <div className={`${isEclubKisi ? "max-w-xl" : "max-w-5xl"} mx-auto px-3 py-3 pb-20 md:px-6 md:py-6 md:pb-6`}>
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden flex flex-col md:flex-row md:min-h-[600px]">
+        <div className="bg-[var(--tema-yerel-hesap-kart-01)] rounded-xl border border-[var(--tema-yerel-hesap-cizgi-01)] overflow-hidden flex flex-col md:flex-row md:min-h-[600px]">
           {SolPanel()}
-          {!isEclubKisi && <div className="hidden md:block w-px bg-gray-100 flex-shrink-0" />}
+          {!isEclubKisi && <div className="hidden md:block w-px bg-[var(--tema-yerel-hesap-sayfa-zemini-03)] flex-shrink-0" />}
           {!isEclubKisi && SagPanel()}
         </div>
       </div>

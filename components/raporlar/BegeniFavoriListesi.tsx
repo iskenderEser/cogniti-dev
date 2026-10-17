@@ -3,10 +3,10 @@
 
 import { Heart } from 'lucide-react';
 
-const BEGENI_RENGI = '#ef4444';
-const FAVORI_RENGI = '#2563eb';
-const GRI_METIN = '#737373';
-const KOYU_METIN = '#111827';
+const BEGENI_RENGI = 'var(--tema-cizim-begeni)';
+const FAVORI_RENGI = 'var(--tema-cizim-favori)';
+const GRI_METIN = 'var(--tema-cizim-rapor-yardimci)';
+const KOYU_METIN = 'var(--tema-cizim-rapor-baslik)';
 
 interface VideoItem {
   yayin_id: string;
@@ -40,21 +40,21 @@ export default function BegeniFavoriListesi({
 
   return (
     <div className={birlesik
-      ? "flex h-full flex-col justify-center rounded-2xl border border-[#e8edf3] bg-white p-4 shadow-[0_8px_26px_rgba(36,64,98,0.05)]"
+      ? "flex h-full flex-col justify-center rounded-2xl border border-[var(--tema-yerel-rapor-cizgi-16)] bg-[var(--tema-yerel-rapor-kart-04)] p-4 shadow-[0_8px_26px_var(--tema-yerel-rapor-golge-14)]"
       : "mb-5"}
     >
       {birlesik && (
         <div className="flex items-start justify-between gap-4">
-          <h2 className="text-base font-extrabold text-[#20324c]">
+          <h2 className="text-base font-extrabold text-[var(--tema-yerel-rapor-ana-metin-06)]">
             Ayın Beğenilenleri ve Favorilenleri
           </h2>
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#edf6ff] text-[#237ac8]">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--tema-yerel-rapor-secim-zemin-08)] text-[var(--tema-yerel-rapor-eylem-metin-06)]">
             <Heart className="h-4 w-4" />
           </div>
         </div>
       )}
       {!basligiGizle && (
-        <div className={`mb-2 text-xs font-bold uppercase tracking-wider ${modern ? "text-[#66809f]" : ""}`} style={modern ? undefined : { color: GRI_METIN }}>
+        <div className={`mb-2 text-xs font-bold uppercase tracking-wider ${modern ? "text-[var(--tema-yerel-rapor-yardimci-metin-61)]" : ""}`} style={modern ? undefined : { color: GRI_METIN }}>
           beğeni & favori sıralaması
         </div>
       )}
@@ -63,8 +63,8 @@ export default function BegeniFavoriListesi({
         {/* En Çok Beğenilen */}
         <div className={birlesik
           ? "min-w-0"
-          : `${modern ? "rounded-2xl border border-[#e8edf3] bg-white shadow-[0_8px_26px_rgba(36,64,98,0.05)]" : "rounded-xl border"} p-4`}
-          style={modern || birlesik ? undefined : { borderColor: '#e5e7eb' }}
+          : `${modern ? "rounded-2xl border border-[var(--tema-yerel-rapor-cizgi-16)] bg-[var(--tema-yerel-rapor-kart-04)] shadow-[0_8px_26px_var(--tema-yerel-rapor-golge-14)]" : "rounded-xl border"} p-4`}
+          style={modern || birlesik ? undefined : { borderColor: 'var(--tema-yerel-rapor-cizgi-42)' }}
         >
           <div className="flex items-center gap-2 mb-3">
             <svg width="14" height="14" viewBox="0 0 24 24" fill={BEGENI_RENGI} stroke={BEGENI_RENGI} strokeWidth="2">
@@ -89,7 +89,7 @@ export default function BegeniFavoriListesi({
                   </div>
                   <div className="flex items-center gap-1.5 flex-shrink-0">
                     {isUtt && v.benim_begenim && (
-                      <span className="text-[10px] px-1.5 py-0.5 rounded-full" style={{ background: '#FEE2E2', color: BEGENI_RENGI }}>senin</span>
+                      <span className="text-[10px] px-1.5 py-0.5 rounded-full" style={{ background: 'var(--tema-cizim-begeni-rozet)', color: BEGENI_RENGI }}>senin</span>
                     )}
                     <span className="text-xs font-medium" style={{ color: BEGENI_RENGI }}>{v.begeni_sayisi}</span>
                   </div>
@@ -101,9 +101,9 @@ export default function BegeniFavoriListesi({
 
         {/* En Çok Favoriye Eklenen */}
         <div className={birlesik
-          ? "min-w-0 border-l border-[#e8edf3] pl-4"
-          : `${modern ? "rounded-2xl border border-[#e8edf3] bg-white shadow-[0_8px_26px_rgba(36,64,98,0.05)]" : "rounded-xl border"} p-4`}
-          style={modern || birlesik ? undefined : { borderColor: '#e5e7eb' }}
+          ? "min-w-0 border-l border-[var(--tema-yerel-rapor-cizgi-16)] pl-4"
+          : `${modern ? "rounded-2xl border border-[var(--tema-yerel-rapor-cizgi-16)] bg-[var(--tema-yerel-rapor-kart-04)] shadow-[0_8px_26px_var(--tema-yerel-rapor-golge-14)]" : "rounded-xl border"} p-4`}
+          style={modern || birlesik ? undefined : { borderColor: 'var(--tema-yerel-rapor-cizgi-42)' }}
         >
           <div className="flex items-center gap-2 mb-3">
             <svg width="14" height="14" viewBox="0 0 24 24" fill={FAVORI_RENGI} stroke={FAVORI_RENGI} strokeWidth="2">
@@ -128,7 +128,7 @@ export default function BegeniFavoriListesi({
                   </div>
                   <div className="flex items-center gap-1.5 flex-shrink-0">
                     {isUtt && v.benim_favorim && (
-                      <span className="text-[10px] px-1.5 py-0.5 rounded-full" style={{ background: '#DBEAFE', color: FAVORI_RENGI }}>senin</span>
+                      <span className="text-[10px] px-1.5 py-0.5 rounded-full" style={{ background: 'var(--tema-cizim-favori-rozet)', color: FAVORI_RENGI }}>senin</span>
                     )}
                     <span className="text-xs font-medium" style={{ color: FAVORI_RENGI }}>{v.favori_sayisi}</span>
                   </div>

@@ -157,8 +157,8 @@ export default function KullanicilarPage() {
 
   if (authYukleniyor || !oturumKullanici || loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <svg className="animate-spin w-6 h-6 text-gray-400" fill="none" viewBox="0 0 24 24">
+      <div className="min-h-screen bg-[var(--tema-yerel-hesap-sayfa-zemini-01)] flex items-center justify-center">
+        <svg className="animate-spin w-6 h-6 text-[var(--tema-yerel-hesap-yardimci-metin-01)]" fill="none" viewBox="0 0 24 24">
           <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
           <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
         </svg>
@@ -167,43 +167,43 @@ export default function KullanicilarPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 font-[Nunito]">
+    <div className="min-h-screen bg-[var(--tema-yerel-hesap-sayfa-zemini-01)] font-[Nunito]">
       <div className="max-w-5xl mx-auto px-4 py-6 flex flex-col gap-5">
-        <SayfaYenileBasligi baslik={<h1 className="text-2xl font-extrabold text-gray-900">Kullanıcılar</h1>}
+        <SayfaYenileBasligi baslik={<h1 className="text-2xl font-extrabold text-[var(--tema-yerel-hesap-ana-metin-01)]">Kullanıcılar</h1>}
           aksiyon={<YenileButonu yenileniyor={yenileniyor} onYenile={() => veriCek()} disabled={formAcik || formLoading} />} />
 
         {/* Düzenleme formu */}
         {formAcik && duzenle && (
-          <div className="bg-white border border-gray-200 rounded-xl p-5">
+          <div className="bg-[var(--tema-yerel-hesap-kart-01)] border border-[var(--tema-yerel-hesap-cizgi-01)] rounded-xl p-5">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-sm font-semibold text-gray-900">Kullanıcı Düzenle</span>
-              <button onClick={formSifirla} className="text-gray-400 hover:text-gray-600 text-lg bg-transparent border-none cursor-pointer">✕</button>
+              <span className="text-sm font-semibold text-[var(--tema-yerel-hesap-ana-metin-01)]">Kullanıcı Düzenle</span>
+              <button onClick={formSifirla} className="text-[var(--tema-yerel-hesap-yardimci-metin-01)] hover:text-[var(--tema-yerel-hesap-ana-metin-02)] text-lg bg-transparent border-none cursor-pointer">✕</button>
             </div>
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-3">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs text-gray-500 block mb-1">Ad</label>
+                  <label className="text-xs text-[var(--tema-yerel-hesap-yardimci-metin-02)] block mb-1">Ad</label>
                   <input type="text" value={ad} onChange={(e) => setAd(e.target.value)} required
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm font-[Nunito] outline-none focus:border-blue-300" />
+                    className="w-full border border-[var(--tema-yerel-hesap-cizgi-01)] rounded-lg px-3 py-2 text-sm font-[Nunito] outline-none focus:border-[var(--tema-yerel-hesap-cizgi-02)]" />
                 </div>
                 <div>
-                  <label className="text-xs text-gray-500 block mb-1">Soyad</label>
+                  <label className="text-xs text-[var(--tema-yerel-hesap-yardimci-metin-02)] block mb-1">Soyad</label>
                   <input type="text" value={soyad} onChange={(e) => setSoyad(e.target.value)} required
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm font-[Nunito] outline-none focus:border-blue-300" />
+                    className="w-full border border-[var(--tema-yerel-hesap-cizgi-01)] rounded-lg px-3 py-2 text-sm font-[Nunito] outline-none focus:border-[var(--tema-yerel-hesap-cizgi-02)]" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs text-gray-500 block mb-1">Rol</label>
+                  <label className="text-xs text-[var(--tema-yerel-hesap-yardimci-metin-02)] block mb-1">Rol</label>
                   <SadeFormSecimi value={secilenRol} onChange={(e) => setSecilenRol(e.target.value)} required aria-label="Rol" className="w-full">
                     <option value="">Seçiniz</option>
                     {ROLLER.map(r => <option key={r} value={r}>{r}</option>)}
                   </SadeFormSecimi>
                 </div>
                 <div>
-                  <label className="text-xs text-gray-500 block mb-1">Firma</label>
+                  <label className="text-xs text-[var(--tema-yerel-hesap-yardimci-metin-02)] block mb-1">Firma</label>
                   <SadeFormSecimi value={secilenFirma} onChange={(e) => { setSecilenFirma(e.target.value); setSecilenTakim(""); setSecilenBolge(""); }} required aria-label="Firma" className="w-full">
                     <option value="">Seçiniz</option>
                     {hiyerarsi.firmalar.map(f => <option key={f.firma_id} value={f.firma_id}>{f.firma_adi}</option>)}
@@ -213,14 +213,14 @@ export default function KullanicilarPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs text-gray-500 block mb-1">Takım (opsiyonel)</label>
+                  <label className="text-xs text-[var(--tema-yerel-hesap-yardimci-metin-02)] block mb-1">Takım (opsiyonel)</label>
                   <SadeFormSecimi value={secilenTakim} onChange={(e) => { setSecilenTakim(e.target.value); setSecilenBolge(""); }} aria-label="Takım (opsiyonel)" className="w-full">
                     <option value="">Seçiniz</option>
                     {filtreliTakimlar.map(t => <option key={t.takim_id} value={t.takim_id}>{t.takim_adi}</option>)}
                   </SadeFormSecimi>
                 </div>
                 <div>
-                  <label className="text-xs text-gray-500 block mb-1">Bölge (opsiyonel)</label>
+                  <label className="text-xs text-[var(--tema-yerel-hesap-yardimci-metin-02)] block mb-1">Bölge (opsiyonel)</label>
                   <SadeFormSecimi value={secilenBolge} onChange={(e) => setSecilenBolge(e.target.value)} aria-label="Bölge (opsiyonel)" className="w-full">
                     <option value="">Seçiniz</option>
                     {filtreliBolgeler.map(b => <option key={b.bolge_id} value={b.bolge_id}>{b.bolge_adi}</option>)}
@@ -230,12 +230,12 @@ export default function KullanicilarPage() {
 
               <div className="flex justify-end gap-2 mt-1">
                 <button type="button" onClick={formSifirla}
-                  className="px-4 py-2 rounded-lg border border-gray-200 bg-transparent text-gray-500 text-xs cursor-pointer font-[Nunito] hover:bg-gray-50">
+                  className="px-4 py-2 rounded-lg border border-[var(--tema-yerel-hesap-cizgi-01)] bg-transparent text-[var(--tema-yerel-hesap-yardimci-metin-02)] text-xs cursor-pointer font-[Nunito] hover:bg-[var(--tema-yerel-hesap-sayfa-zemini-01)]">
                   İptal
                 </button>
                 <button type="submit" disabled={formLoading}
-                  className="px-5 py-2 rounded-lg bg-blue-400 text-white text-xs font-semibold cursor-pointer font-[Nunito] disabled:opacity-60"
-                  style={{ background: '#56aeff' }}>
+                  className="px-5 py-2 rounded-lg bg-[var(--tema-yerel-hesap-eylem-zemin-01)] text-[var(--tema-yerel-hesap-ters-metin-01)] text-xs font-semibold cursor-pointer font-[Nunito] disabled:opacity-60"
+                  style={{ background: 'var(--tema-yerel-hesap-eylem-zemin-02)' }}>
                   {formLoading ? "Kaydediliyor..." : "Güncelle"}
                 </button>
               </div>
@@ -244,11 +244,11 @@ export default function KullanicilarPage() {
         )}
 
         {/* Kullanıcı listesi */}
-        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-          <div className="px-5 py-3 border-b border-gray-200 flex items-center justify-between">
+        <div className="bg-[var(--tema-yerel-hesap-kart-01)] border border-[var(--tema-yerel-hesap-cizgi-01)] rounded-xl overflow-hidden">
+          <div className="px-5 py-3 border-b border-[var(--tema-yerel-hesap-cizgi-01)] flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="text-sm font-semibold text-gray-900">Kullanıcılar</span>
-              <span className="text-xs text-gray-400">{liste.toplam} kayıt</span>
+              <span className="text-sm font-semibold text-[var(--tema-yerel-hesap-ana-metin-01)]">Kullanıcılar</span>
+              <span className="text-xs text-[var(--tema-yerel-hesap-yardimci-metin-01)]">{liste.toplam} kayıt</span>
             </div>
             <div className="flex flex-wrap items-center justify-end gap-2">
               <ListeArama arama={liste.arama} />
@@ -256,7 +256,7 @@ export default function KullanicilarPage() {
           </div>
 
           {liste.toplam === 0 ? (
-            <div className="p-10 text-center text-gray-400 text-sm">
+            <div className="p-10 text-center text-[var(--tema-yerel-hesap-yardimci-metin-01)] text-sm">
               {kullanicilar.length === 0 ? "Henüz kullanıcı bulunmuyor." : "Aramanıza uyan kullanıcı bulunamadı."}
             </div>
           ) : (
@@ -265,43 +265,43 @@ export default function KullanicilarPage() {
               <div className="hidden md:block overflow-x-auto">
                 <table className="w-full border-collapse text-xs">
                   <thead>
-                    <tr className="border-b border-gray-100 bg-gray-50">
-                      <th className="text-left px-5 py-2.5 text-gray-400 font-medium text-xs">Ad Soyad</th>
-                      <th className="text-left px-3 py-2.5 text-gray-400 font-medium text-xs">E-posta</th>
-                      <th className="text-left px-3 py-2.5 text-gray-400 font-medium text-xs">Rol</th>
-                      <th className="text-left px-3 py-2.5 text-gray-400 font-medium text-xs">Bölge / Takım</th>
-                      <th className="text-left px-3 py-2.5 text-gray-400 font-medium text-xs">Durum</th>
+                    <tr className="border-b border-[var(--tema-yerel-hesap-cizgi-03)] bg-[var(--tema-yerel-hesap-sayfa-zemini-01)]">
+                      <th className="text-left px-5 py-2.5 text-[var(--tema-yerel-hesap-yardimci-metin-01)] font-medium text-xs">Ad Soyad</th>
+                      <th className="text-left px-3 py-2.5 text-[var(--tema-yerel-hesap-yardimci-metin-01)] font-medium text-xs">E-posta</th>
+                      <th className="text-left px-3 py-2.5 text-[var(--tema-yerel-hesap-yardimci-metin-01)] font-medium text-xs">Rol</th>
+                      <th className="text-left px-3 py-2.5 text-[var(--tema-yerel-hesap-yardimci-metin-01)] font-medium text-xs">Bölge / Takım</th>
+                      <th className="text-left px-3 py-2.5 text-[var(--tema-yerel-hesap-yardimci-metin-01)] font-medium text-xs">Durum</th>
                       <th className="px-5 py-2.5"></th>
                     </tr>
                   </thead>
                   <tbody>
                     {liste.gorunen.map((k) => (
-                      <tr key={k.kullanici_id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
-                        <td className="px-5 py-3 text-gray-900 font-medium whitespace-nowrap">{k.ad} {k.soyad}</td>
-                        <td className="px-3 py-3 text-gray-400 text-xs">{k.eposta}</td>
+                      <tr key={k.kullanici_id} className="border-b border-[var(--tema-yerel-hesap-cizgi-04)] hover:bg-[var(--tema-yerel-hesap-sayfa-zemini-01)] transition-colors">
+                        <td className="px-5 py-3 text-[var(--tema-yerel-hesap-ana-metin-01)] font-medium whitespace-nowrap">{k.ad} {k.soyad}</td>
+                        <td className="px-3 py-3 text-[var(--tema-yerel-hesap-yardimci-metin-01)] text-xs">{k.eposta}</td>
                         <td className="px-3 py-3">
-                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-100">{k.rol}</span>
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--tema-yerel-hesap-secim-zemin-01)] text-[var(--tema-yerel-hesap-eylem-metin-01)] border border-[var(--tema-yerel-hesap-cizgi-05)]">{k.rol}</span>
                         </td>
-                        <td className="px-3 py-3 text-gray-400 text-xs">
+                        <td className="px-3 py-3 text-[var(--tema-yerel-hesap-yardimci-metin-01)] text-xs">
                           {k.bolge_adi && <div>{k.bolge_adi}</div>}
-                          {k.takim_adi && <div className="text-gray-300">{k.takim_adi}</div>}
+                          {k.takim_adi && <div className="text-[var(--tema-yerel-hesap-yardimci-metin-03)]">{k.takim_adi}</div>}
                         </td>
                         <td className="px-3 py-3">
-                          <span className={`text-[10px] px-2 py-0.5 rounded-full border ${k.aktif_mi ? 'bg-green-50 text-green-700 border-green-100' : 'bg-red-50 border-red-100'}`}
-                            style={{ color: k.aktif_mi ? '#16a34a' : '#bc2d0d' }}>
+                          <span className={`text-[10px] px-2 py-0.5 rounded-full border ${k.aktif_mi ? 'bg-[var(--tema-yerel-hesap-islevsel-zemin-01)] text-[var(--tema-yerel-hesap-islevsel-metin-01)] border-[var(--tema-yerel-hesap-islevsel-cizgi-01)]' : 'bg-[var(--tema-yerel-hesap-islevsel-zemin-02)] border-[var(--tema-yerel-hesap-islevsel-cizgi-02)]'}`}
+                            style={{ color: k.aktif_mi ? 'var(--tema-yerel-hesap-islevsel-metin-02)' : 'var(--tema-yerel-hesap-islevsel-metin-03)' }}>
                             {k.aktif_mi ? "Aktif" : "Pasif"}
                           </span>
                         </td>
                         <td className="px-5 py-3">
                           <div className="flex gap-1.5 justify-end">
                             <button onClick={() => handleDuzenle(k)}
-                              className="px-2.5 py-1 rounded border border-gray-200 bg-transparent text-gray-500 text-xs cursor-pointer font-[Nunito] hover:bg-gray-50">
+                              className="px-2.5 py-1 rounded border border-[var(--tema-yerel-hesap-cizgi-01)] bg-transparent text-[var(--tema-yerel-hesap-yardimci-metin-02)] text-xs cursor-pointer font-[Nunito] hover:bg-[var(--tema-yerel-hesap-sayfa-zemini-01)]">
                               Düzenle
                             </button>
                             {k.aktif_mi && k.kullanici_id !== oturumKullanici.id && (
                               <button onClick={() => handlePasifYap(k.kullanici_id, `${k.ad} ${k.soyad}`)}
-                                className="px-2.5 py-1 rounded border border-red-100 bg-transparent text-xs cursor-pointer font-[Nunito]"
-                                style={{ color: '#bc2d0d' }}>
+                                className="px-2.5 py-1 rounded border border-[var(--tema-yerel-hesap-islevsel-cizgi-02)] bg-transparent text-xs cursor-pointer font-[Nunito]"
+                                style={{ color: 'var(--tema-yerel-hesap-vurgu-metin-01)' }}>
                                 Pasif
                               </button>
                             )}
@@ -314,33 +314,33 @@ export default function KullanicilarPage() {
               </div>
 
               {/* Mobile kart görünümü */}
-              <div className="md:hidden divide-y divide-gray-100">
+              <div className="md:hidden divide-y divide-[var(--tema-yerel-hesap-cizgi-03)]">
                 {liste.gorunen.map((k) => (
                   <div key={k.kullanici_id} className="px-4 py-3">
                     <div className="flex items-start justify-between gap-2 mb-1.5">
                       <div>
-                        <div className="text-sm font-semibold text-gray-900">{k.ad} {k.soyad}</div>
-                        <div className="text-xs text-gray-400 mt-0.5">{k.eposta}</div>
+                        <div className="text-sm font-semibold text-[var(--tema-yerel-hesap-ana-metin-01)]">{k.ad} {k.soyad}</div>
+                        <div className="text-xs text-[var(--tema-yerel-hesap-yardimci-metin-01)] mt-0.5">{k.eposta}</div>
                       </div>
-                      <span className={`text-[10px] px-2 py-0.5 rounded-full border shrink-0 ${k.aktif_mi ? 'bg-green-50 text-green-700 border-green-100' : 'bg-red-50 border-red-100'}`}
-                        style={{ color: k.aktif_mi ? '#16a34a' : '#bc2d0d' }}>
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full border shrink-0 ${k.aktif_mi ? 'bg-[var(--tema-yerel-hesap-islevsel-zemin-01)] text-[var(--tema-yerel-hesap-islevsel-metin-01)] border-[var(--tema-yerel-hesap-islevsel-cizgi-01)]' : 'bg-[var(--tema-yerel-hesap-islevsel-zemin-02)] border-[var(--tema-yerel-hesap-islevsel-cizgi-02)]'}`}
+                        style={{ color: k.aktif_mi ? 'var(--tema-yerel-hesap-islevsel-metin-02)' : 'var(--tema-yerel-hesap-islevsel-metin-03)' }}>
                         {k.aktif_mi ? "Aktif" : "Pasif"}
                       </span>
                     </div>
                     <div className="flex items-center gap-2 mb-2.5">
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-100">{k.rol}</span>
-                      {k.bolge_adi && <span className="text-xs text-gray-400">{k.bolge_adi}</span>}
-                      {k.takim_adi && <span className="text-xs text-gray-300">{k.takim_adi}</span>}
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--tema-yerel-hesap-secim-zemin-01)] text-[var(--tema-yerel-hesap-eylem-metin-01)] border border-[var(--tema-yerel-hesap-cizgi-05)]">{k.rol}</span>
+                      {k.bolge_adi && <span className="text-xs text-[var(--tema-yerel-hesap-yardimci-metin-01)]">{k.bolge_adi}</span>}
+                      {k.takim_adi && <span className="text-xs text-[var(--tema-yerel-hesap-yardimci-metin-03)]">{k.takim_adi}</span>}
                     </div>
                     <div className="flex gap-1.5">
                       <button onClick={() => handleDuzenle(k)}
-                        className="px-3 py-1.5 rounded border border-gray-200 bg-transparent text-gray-500 text-xs cursor-pointer font-[Nunito]">
+                        className="px-3 py-1.5 rounded border border-[var(--tema-yerel-hesap-cizgi-01)] bg-transparent text-[var(--tema-yerel-hesap-yardimci-metin-02)] text-xs cursor-pointer font-[Nunito]">
                         Düzenle
                       </button>
                       {k.aktif_mi && k.kullanici_id !== oturumKullanici.id && (
                         <button onClick={() => handlePasifYap(k.kullanici_id, `${k.ad} ${k.soyad}`)}
-                          className="px-3 py-1.5 rounded border border-red-100 bg-transparent text-xs cursor-pointer font-[Nunito]"
-                          style={{ color: '#bc2d0d' }}>
+                          className="px-3 py-1.5 rounded border border-[var(--tema-yerel-hesap-islevsel-cizgi-02)] bg-transparent text-xs cursor-pointer font-[Nunito]"
+                          style={{ color: 'var(--tema-yerel-hesap-vurgu-metin-01)' }}>
                           Pasif
                         </button>
                       )}

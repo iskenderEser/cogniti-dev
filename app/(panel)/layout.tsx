@@ -214,8 +214,8 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
 
   if (yukleniyor || !kullanici) {
     return (
-      <div style={{ minHeight: "100vh", background: "#f9fafb", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <svg className="animate-spin" style={{ width: 24, height: 24, color: "#737373" }} fill="none" viewBox="0 0 24 24">
+      <div style={{ minHeight: "100vh", background: "var(--tema-zemin)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <svg className="animate-spin" style={{ width: 24, height: 24, color: "var(--tema-yardimci-metin)" }} fill="none" viewBox="0 0 24 24">
           <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
           <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
         </svg>
@@ -255,7 +255,7 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
 
   return (
     <HapbiProvider>
-      <div style={{ height: "100vh", background: "#f9fafb", fontFamily: "'Nunito', sans-serif", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+      <div style={{ height: "100vh", background: "var(--tema-zemin)", fontFamily: "'Nunito', sans-serif", display: "flex", flexDirection: "column", overflow: "hidden" }}>
         <PanelNavbar
           adSoyad={kullanici.adSoyad}
           email={kullanici.email}

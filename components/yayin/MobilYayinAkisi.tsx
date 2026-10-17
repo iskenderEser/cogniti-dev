@@ -159,7 +159,7 @@ export default function MobilYayinAkisi<T>({
       <div className={`w-full ${className}`}>
         {yukleniyorIcerik ?? (
           <div className="flex items-center justify-center py-10">
-            <svg className="h-6 w-6 animate-spin text-gray-400" fill="none" viewBox="0 0 24 24">
+            <svg className="h-6 w-6 animate-spin text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-12)]" fill="none" viewBox="0 0 24 24">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
             </svg>
@@ -173,7 +173,7 @@ export default function MobilYayinAkisi<T>({
   if (hataMesaji) {
     return (
       <div className={`w-full ${className}`}>
-        <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-center text-xs font-bold text-red-700">
+        <div className="rounded-xl border border-[var(--tema-yerel-ortak-sayfa-islevsel-cizgi-04)] bg-[var(--tema-yerel-ortak-sayfa-islevsel-zemin-23)] p-4 text-center text-xs font-bold text-[var(--tema-yerel-ortak-sayfa-islevsel-metin-20)]">
           {hataMesaji}
         </div>
       </div>
@@ -187,7 +187,7 @@ export default function MobilYayinAkisi<T>({
         {baslik && (
           <div className="truncate">
             {typeof baslik === "string" ? (
-              <h2 id={baslikId} className="text-base font-bold text-gray-900 md:text-lg truncate">
+              <h2 id={baslikId} className="text-base font-bold text-[var(--tema-yerel-ortak-sayfa-ana-metin-07)] md:text-lg truncate">
                 {baslik}
               </h2>
             ) : (
@@ -198,7 +198,7 @@ export default function MobilYayinAkisi<T>({
           </div>
         )}
         {sayacGoster && toplamKayit > 0 && (
-          <span className="shrink-0 rounded-full bg-gray-100 px-2 py-0.5 text-[11px] font-bold text-gray-500">
+          <span className="shrink-0 rounded-full bg-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-14)] px-2 py-0.5 text-[11px] font-bold text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-11)]">
             {toplamKayit}
           </span>
         )}
@@ -212,7 +212,7 @@ export default function MobilYayinAkisi<T>({
     <div className={`flex flex-col gap-3 ${masaustuIcerik ? "sm:hidden" : ""} w-full`}>
       {toplamKayit === 0 ? (
         bosDurum ?? (
-          <div className="rounded-xl border border-dashed border-gray-200 bg-white p-8 text-center text-xs text-gray-400">
+          <div className="rounded-xl border border-dashed border-[var(--tema-bos-durum-cizgi)] bg-[var(--tema-bos-durum-zemin)] p-8 text-center text-xs text-[var(--tema-bos-durum-soluk-metin)]">
             Görüntülenecek içerik bulunmuyor.
           </div>
         )
@@ -236,10 +236,10 @@ export default function MobilYayinAkisi<T>({
                 e.stopPropagation();
                 setEkstraSayisi((onceki) => onceki + guvenliAdim);
               }}
-              className="mt-1 flex w-full items-center justify-center gap-1.5 rounded-xl border border-gray-200 bg-white py-2.5 text-xs font-extrabold text-gray-700 shadow-xs transition-colors hover:bg-gray-50 hover:text-gray-900 active:scale-[0.99] cursor-pointer"
+              className="mt-1 flex w-full items-center justify-center gap-1.5 rounded-xl border border-[var(--tema-yerel-ortak-sayfa-cizgi-06)] bg-[var(--tema-yerel-ortak-sayfa-kart-01)] py-2.5 text-xs font-extrabold text-[var(--tema-yerel-ortak-sayfa-ana-metin-11)] shadow-xs transition-colors hover:bg-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-06)] hover:text-[var(--tema-yerel-ortak-sayfa-ana-metin-07)] active:scale-[0.99] cursor-pointer"
             >
               <span>Daha Fazla Göster (+{hesaplama.acilacakSayi})</span>
-              <span className="text-[10px] font-medium text-gray-400">
+              <span className="text-[10px] font-medium text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-12)]">
                 ({hesaplama.kalanSayisi} içerik kaldı)
               </span>
             </button>
@@ -252,7 +252,7 @@ export default function MobilYayinAkisi<T>({
   return (
     <section className={`w-full ${className}`} id={bolumId} aria-labelledby={baslikId}>
       {baslikJSX}
-      {aciklama && <div className="text-xs text-gray-500 mb-1">{aciklama}</div>}
+      {aciklama && <div className="text-xs text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-11)] mb-1">{aciklama}</div>}
       {mobilGövde}
       {masaustuIcerik && <div className="hidden sm:block w-full">{masaustuIcerik}</div>}
     </section>

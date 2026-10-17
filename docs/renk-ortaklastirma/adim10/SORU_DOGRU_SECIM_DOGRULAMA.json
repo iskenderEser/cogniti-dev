@@ -1,0 +1,17 @@
+{
+  "tarih": "2026-10-17",
+  "sira": 3,
+  "durum": "TAMAMLANDI",
+  "konu": "Soru seti formu doğru cevap seçim rengi",
+  "dosya": "components/SoruSetiFormu.tsx",
+  "ortak_kaynak": "--tema-yerel-uretim-islevsel-metin-01",
+  "iki_temadaki_renk": "#16a34a",
+  "yeni_degisken_eklenmedi": true,
+  "renk_disi_fark": 0,
+  "iki_tema_renk_secim_degistirme_temizleme_kontrolu": 10,
+  "metin_ve_secenekler_korundu": true,
+  "yeni_lint_bulgusu": 0,
+  "mevcut_lint": [],
+  "typecheck": "npm run typecheck:build: BASARILI",
+  "gercek_tarayıcı": "YAPILMADI"
+}

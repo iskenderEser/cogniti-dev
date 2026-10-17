@@ -12,9 +12,9 @@ export default function EczanemHapbilgiNedirPage() {
 
   if (yukleniyor || !kullanici || !musteri) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-white">
+      <div className="flex min-h-screen items-center justify-center bg-[var(--tema-yerel-eczanem-kart-01)]">
         <span
-          className="size-7 animate-spin rounded-full border-2 border-[#e5e5e5] border-t-[#bc2d0d]"
+          className="size-7 animate-spin rounded-full border-2 border-[var(--tema-yerel-eczanem-cizgi-38)] border-t-[var(--tema-yerel-eczanem-vurgu-cizgi-01)]"
           aria-label="Oturum yükleniyor"
         />
       </div>
@@ -22,7 +22,7 @@ export default function EczanemHapbilgiNedirPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white" style={{ fontFamily: "'Nunito', sans-serif" }}>
+    <div className="min-h-screen bg-[var(--tema-yerel-eczanem-kart-01)]" style={{ fontFamily: "'Nunito', sans-serif" }}>
       <EczanemMusteriNavbar
         ad={kullanici.adSoyad || kullanici.ad || "Müşteri"}
         telefon={kullanici.telefon}

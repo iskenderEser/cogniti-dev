@@ -6,6 +6,7 @@ import { GridComponent, TooltipComponent, MarkLineComponent } from "echarts/comp
 import { SVGRenderer } from "echarts/renderers";
 import { eclubPerformansDonemi, eclubPerformansiHesapla } from "@/lib/eclub/performans";
 import { eclubPerformansGrafikSecenegi } from "@/lib/eclub/performansGrafik";
+import { grafikRenkleriniCoz } from "@/lib/tema/cizimRenkleri";
 
 echarts.use([LineChart, ScatterChart, GridComponent, TooltipComponent, MarkLineComponent, SVGRenderer]);
 test("ECharts dört sabit satırı ve sekiz haftayı masaüstü ve mobil genişlikte çizer", () => {
@@ -14,7 +15,7 @@ test("ECharts dört sabit satırı ve sekiz haftayı masaüstü ve mobil genişl
   for (const width of [1100, 330]) {
     const chart = echarts.init(null, null, { renderer: "svg", ssr: true, width, height: 365 });
     try {
-      chart.setOption(eclubPerformansGrafikSecenegi(veri, "podcast", 2, width < 700));
+      chart.setOption(grafikRenkleriniCoz(eclubPerformansGrafikSecenegi(veri, "podcast", 2, width < 700)));
       const svg = chart.renderToSVGString();
       for (const name of ["Video", "Podcast", "Görsel", "Literatür", "Bu hafta"]) assert.ok(svg.includes(name),name);
       const first = chart.convertToPixel({ gridIndex: 0 }, [1,0]) as number[];

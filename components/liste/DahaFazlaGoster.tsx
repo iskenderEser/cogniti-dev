@@ -20,14 +20,14 @@ export function DahaFazlaGoster({ dahaVar, gorunenSayi, toplam, onGoster }: Prop
   if (!dahaVar) return null;
 
   return (
-    <div className="px-5 py-3 border-t border-gray-100 flex items-center justify-center gap-3">
-      <span className="text-xs text-gray-400">
+    <div className="px-5 py-3 border-t border-[var(--tema-yerel-ortak-sayfa-cizgi-08)] flex items-center justify-center gap-3">
+      <span className="text-xs text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-12)]">
         {gorunenSayi} / {toplam}
       </span>
       <button
         type="button"
         onClick={onGoster}
-        className="text-xs font-semibold text-gray-600 bg-white border border-gray-200 rounded-full px-4 py-1.5 cursor-pointer transition-colors hover:bg-gray-50"
+        className="text-xs font-semibold text-[var(--tema-yerel-ortak-sayfa-ana-metin-08)] bg-[var(--tema-yerel-ortak-sayfa-kart-01)] border border-[var(--tema-yerel-ortak-sayfa-cizgi-06)] rounded-full px-4 py-1.5 cursor-pointer transition-colors hover:bg-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-06)]"
       >
         Daha Fazla Göster
       </button>

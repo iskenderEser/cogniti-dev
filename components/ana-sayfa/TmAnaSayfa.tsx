@@ -53,7 +53,7 @@ function TemsilciYayinRafi({ bolumId, baslik, videolar, onVideoSec, sifirlamaAna
       kayitlar={videolar}
       kayitAnahtari={(video) => video.yayin_id}
       renderKart={kart}
-      baslik={<h2 className="text-base font-bold text-gray-900 md:text-lg">{baslik}</h2>}
+      baslik={<h2 className="text-base font-bold text-[var(--tema-yerel-ana-sayfa-ana-metin-01)] md:text-lg">{baslik}</h2>}
       sayacGoster
       sifirlamaAnahtari={sifirlamaAnahtari}
       bolumId={`tm-temsilci-${bolumId}`}
@@ -63,8 +63,8 @@ function TemsilciYayinRafi({ bolumId, baslik, videolar, onVideoSec, sifirlamaAna
           {([-1, 1] as const).map((yon) => (
             <button key={yon} type="button" aria-label={yon === -1 ? "Sola kaydır" : "Sağa kaydır"}
               onClick={() => raf.current?.scrollBy({ left: yon * raf.current.clientWidth * 0.85, behavior: "smooth" })}
-              className={`absolute inset-y-0 z-10 flex w-16 cursor-pointer items-center opacity-0 transition-opacity group-hover:opacity-100 ${yon === -1 ? "left-0 justify-start bg-gradient-to-r from-gray-50" : "right-0 justify-end bg-gradient-to-l from-gray-50"}`}>
-              <span className="text-3xl text-gray-800">{yon === -1 ? "‹" : "›"}</span>
+              className={`absolute inset-y-0 z-10 flex w-16 cursor-pointer items-center opacity-0 transition-opacity group-hover:opacity-100 ${yon === -1 ? "left-0 justify-start bg-gradient-to-r from-[var(--tema-yerel-ana-sayfa-sayfa-zemini-02)]" : "right-0 justify-end bg-gradient-to-l from-[var(--tema-yerel-ana-sayfa-sayfa-zemini-02)]"}`}>
+              <span className="text-3xl text-[var(--tema-yerel-ana-sayfa-ana-metin-02)]">{yon === -1 ? "‹" : "›"}</span>
             </button>
           ))}
           <div ref={raf} className="-mx-1 flex snap-x gap-2 overflow-x-auto px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -96,9 +96,9 @@ function TemsilciYayinAlani({ videolar, aracTuru, onVideoSec }: {
   return (
     <>
       {gecerliBolum !== "tumu" && (
-        <div className="mb-4 flex items-center justify-between gap-3 rounded-xl border border-blue-100 bg-blue-50 px-3 py-2">
-          <span className="text-xs font-bold text-blue-700">{raflar.find((raf) => raf.id === gecerliBolum)?.baslik}</span>
-          <button type="button" onClick={() => setAktifBolum("tumu")} className="rounded-lg bg-white px-2.5 py-1 text-[11px] font-extrabold text-blue-600 shadow-xs">Tümünü Göster</button>
+        <div className="mb-4 flex items-center justify-between gap-3 rounded-xl border border-[var(--tema-yerel-ana-sayfa-cizgi-07)] bg-[var(--tema-yerel-ana-sayfa-secim-zemin-03)] px-3 py-2">
+          <span className="text-xs font-bold text-[var(--tema-yerel-ana-sayfa-eylem-metin-05)]">{raflar.find((raf) => raf.id === gecerliBolum)?.baslik}</span>
+          <button type="button" onClick={() => setAktifBolum("tumu")} className="rounded-lg bg-[var(--tema-yerel-ana-sayfa-kart-01)] px-2.5 py-1 text-[11px] font-extrabold text-[var(--tema-yerel-ana-sayfa-eylem-metin-04)] shadow-xs">Tümünü Göster</button>
         </div>
       )}
       {raflar.filter((raf) => gecerliBolum === "tumu" || gecerliBolum === raf.id).map((raf) => (
@@ -197,10 +197,10 @@ function TmAnaSayfaIcerigi({ user, adSoyad }: Props) {
   const istat = gecerliVeri?.istatistikler ?? null;
   const sayi = (deger: number) => deger.toLocaleString("tr-TR");
   const kartlar = [
-    { label: "Öğrenmeye Katılım", value: istat ? `${sayi(istat.ogrenmeye_katilan_utt)} / ${sayi(istat.toplam_utt)}` : "—", sub: istat ? `${istat.katilim_yuzdesi === null ? "Katılım oranı hesaplanamıyor" : `%${sayi(istat.katilim_yuzdesi)} katılım`} · Aktif UTT` : "", renk: "#2f7fc7", href: "/raporlar/tm" },
-    { label: "Tamamlanan Öğrenme", value: istat ? sayi(istat.tamamlanan_ogrenme) : "—", sub: istat ? "Tamamlanan oturum · Tekrarlar dahil" : "", renk: "#16a34a", href: "/raporlar/tm" },
-    { label: "Öneri Takibi", value: istat ? `${sayi(istat.tamamlanan_oneri)} / ${sayi(istat.toplam_oneri)}` : "—", sub: istat ? `${sayi(istat.bekleyen_oneri)} bekleyen · ${sayi(istat.suresi_gecmis_oneri)} süresi geçmiş` : "", renk: "#f59e0b", href: "/oneriler" },
-    { label: "Net Saha Puanı", value: istat ? sayi(istat.net_saha_puani) : "—", sub: istat ? `${sayi(istat.kazanilan_puan)} kazanım · ${sayi(istat.kaybedilen_puan)} kayıp` : "", renk: "#8b5cf6", href: "/raporlar/tm" },
+    { label: "Öğrenmeye Katılım", value: istat ? `${sayi(istat.ogrenmeye_katilan_utt)} / ${sayi(istat.toplam_utt)}` : "—", sub: istat ? `${istat.katilim_yuzdesi === null ? "Katılım oranı hesaplanamıyor" : `%${sayi(istat.katilim_yuzdesi)} katılım`} · Aktif UTT` : "", renk: "var(--tema-yerel-ana-sayfa-islevsel-metin-05)", href: "/raporlar/tm" },
+    { label: "Tamamlanan Öğrenme", value: istat ? sayi(istat.tamamlanan_ogrenme) : "—", sub: istat ? "Tamamlanan oturum · Tekrarlar dahil" : "", renk: "var(--tema-yerel-ana-sayfa-islevsel-metin-06)", href: "/raporlar/tm" },
+    { label: "Öneri Takibi", value: istat ? `${sayi(istat.tamamlanan_oneri)} / ${sayi(istat.toplam_oneri)}` : "—", sub: istat ? `${sayi(istat.bekleyen_oneri)} bekleyen · ${sayi(istat.suresi_gecmis_oneri)} süresi geçmiş` : "", renk: "var(--tema-yerel-ana-sayfa-islevsel-metin-07)", href: "/oneriler" },
+    { label: "Net Saha Puanı", value: istat ? sayi(istat.net_saha_puani) : "—", sub: istat ? `${sayi(istat.kazanilan_puan)} kazanım · ${sayi(istat.kaybedilen_puan)} kayıp` : "", renk: "var(--tema-yerel-ana-sayfa-islevsel-metin-08)", href: "/raporlar/tm" },
   ];
   const ad = adSoyad.split(" ")[0] || "TM";
 
@@ -208,14 +208,14 @@ function TmAnaSayfaIcerigi({ user, adSoyad }: Props) {
     <div className="mx-auto max-w-6xl px-3 py-4 pb-20 md:px-6 md:py-5 md:pb-5 lg:px-8 lg:py-7">
       <div className="mb-6 flex flex-col justify-between gap-2 md:flex-row md:items-end">
         <div>
-          <h1 className="m-0 text-lg font-extrabold text-gray-900 md:text-xl">Merhaba {ad}, 👋</h1>
-          <p className="mt-1 text-sm text-gray-500">{ROL_ADLARI["tm"]}</p>
+          <h1 className="m-0 text-lg font-extrabold text-[var(--tema-yerel-ana-sayfa-ana-metin-01)] md:text-xl">Merhaba {ad}, 👋</h1>
+          <p className="mt-1 text-sm text-[var(--tema-yerel-ana-sayfa-yardimci-metin-03)]">{ROL_ADLARI["tm"]}</p>
         </div>
         <TarihPill />
       </div>
 
       {/* Stat kartlar */}
-      <div role="status" aria-live="polite" className="mb-2 h-4 truncate text-xs leading-4 text-gray-500" title={veriHatasi ?? undefined}>
+      <div role="status" aria-live="polite" className="mb-2 h-4 truncate text-xs leading-4 text-[var(--tema-yerel-ana-sayfa-yardimci-metin-03)]" title={veriHatasi ?? undefined}>
         {loading ? "İstatistikler yükleniyor…" : veriHatasi ?? ""}
       </div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-5" aria-busy={loading}>
@@ -224,17 +224,17 @@ function TmAnaSayfaIcerigi({ user, adSoyad }: Props) {
             key={k.label}
             type="button"
             onClick={() => router.push(k.href)}
-            className="bg-white border border-gray-200 rounded-xl p-3 md:p-5 text-left transition-shadow duration-150 hover:shadow-md"
+            className="bg-[var(--tema-yerel-ana-sayfa-kart-01)] border border-[var(--tema-yerel-ana-sayfa-cizgi-04)] rounded-xl p-3 md:p-5 text-left transition-shadow duration-150 hover:shadow-md"
             style={{ borderLeft: `3px solid ${k.renk}` }}
           >
-            <div className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">{k.label}</div>
-            <div className="truncate text-2xl md:text-3xl font-extrabold text-gray-900 leading-none" title={k.value}>{k.value}</div>
-            <div className="hidden md:block min-h-4 truncate text-xs text-gray-500 mt-1.5" title={k.sub || undefined}>{k.sub || "\u00a0"}</div>
+            <div className="text-xs font-bold text-[var(--tema-yerel-ana-sayfa-yardimci-metin-01)] uppercase tracking-wide mb-2">{k.label}</div>
+            <div className="truncate text-2xl md:text-3xl font-extrabold text-[var(--tema-yerel-ana-sayfa-ana-metin-01)] leading-none" title={k.value}>{k.value}</div>
+            <div className="hidden md:block min-h-4 truncate text-xs text-[var(--tema-yerel-ana-sayfa-yardimci-metin-03)] mt-1.5" title={k.sub || undefined}>{k.sub || "\u00a0"}</div>
           </button>
         ))}
       </div>
 
-      <div className="mb-4 max-w-[68rem] border-b border-[#dfe7f1]">
+      <div className="mb-4 max-w-[68rem] border-b border-[var(--tema-yerel-ana-sayfa-cizgi-08)]">
         <SadeKontrolGrubu aria-label="TM yayın rolü" tur="sekme">
           {TM_YAYIN_SEKMELERI.map((sekme) => {
             const aktif = aktifYayinSekmesi === sekme.key;
@@ -256,7 +256,7 @@ function TmAnaSayfaIcerigi({ user, adSoyad }: Props) {
       </div>
       <section aria-label="Seçili rolün yayınları" className="min-h-[calc(100dvh-5rem)] [overflow-anchor:none]">
         {yayinDurumu ? (
-          <p role="status" className="py-6 text-center text-sm text-gray-500">{yayinDurumu}</p>
+          <p role="status" className="py-6 text-center text-sm text-[var(--tema-yerel-ana-sayfa-yardimci-metin-03)]">{yayinDurumu}</p>
         ) : aktifYayinSekmesi === "temsilciler" ? (
           <TemsilciYayinAlani key={user.id} videolar={seciliYayinlar} aracTuru={aracTuru} onVideoSec={videoAc} />
         ) : (

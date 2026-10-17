@@ -42,12 +42,12 @@ function OzetKarti({ ikon: Icon, etiket, deger, detay, renk, zemin }: {
   renk: string;
   zemin: string;
 }) {
-  return <Card className="gap-0 border border-gray-200 border-l-[3px] py-0 shadow-sm" style={{ borderLeftColor: renk }}>
+  return <Card className="gap-0 border border-[var(--tema-yerel-eczanem-cizgi-06)] border-l-[3px] py-0 shadow-sm" style={{ borderLeftColor: renk }}>
     <CardContent className="flex items-start justify-between gap-3 p-4 md:p-5">
       <div>
-        <p className="text-xs font-bold uppercase tracking-wide text-gray-400">{etiket}</p>
-        <p className="mt-2 text-2xl font-extrabold leading-none text-gray-900 md:text-3xl">{deger}</p>
-        <p className="mt-1.5 text-[11px] leading-snug text-gray-500 md:text-xs">{detay}</p>
+        <p className="text-xs font-bold uppercase tracking-wide text-[var(--tema-yerel-eczanem-yardimci-metin-03)]">{etiket}</p>
+        <p className="mt-2 text-2xl font-extrabold leading-none text-[var(--tema-yerel-eczanem-ana-metin-02)] md:text-3xl">{deger}</p>
+        <p className="mt-1.5 text-[11px] leading-snug text-[var(--tema-yerel-eczanem-yardimci-metin-04)] md:text-xs">{detay}</p>
       </div>
       <span className="flex size-9 shrink-0 items-center justify-center rounded-xl" style={{ color: renk, background: zemin }}><Icon className="size-4.5" /></span>
     </CardContent>
@@ -228,23 +228,23 @@ export default function EczanemUttMutabakatPage() {
     }
   };
 
-  return <div className="min-h-full bg-gray-50" style={{ fontFamily: "'Nunito', sans-serif" }}>
+  return <div className="min-h-full bg-[var(--tema-yerel-eczanem-sayfa-zemini-05)]" style={{ fontFamily: "'Nunito', sans-serif" }}>
     <div className="mx-auto flex max-w-[1480px] flex-col gap-5 px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
       <SayfaYenileBasligi className="flex flex-wrap items-end justify-between gap-4"
         baslik={<div className="inline-flex items-center">
-          <h1 className="text-2xl font-extrabold tracking-[-0.025em] text-[#172b4d] md:text-[28px]">Eczanem Mutabakat</h1>
+          <h1 className="text-2xl font-extrabold tracking-[-0.025em] text-[var(--tema-yerel-eczanem-ana-metin-04)] md:text-[28px]">Eczanem Mutabakat</h1>
           <SayfaRehberi anahtar="eczanem-utt-mutabakat" className="ml-1.5 -translate-y-1.5" />
         </div>}
 
-        aciklama={<><p className="mt-1 max-w-3xl text-sm leading-5 text-[#6b7f9b]">Onaylı indirimleri yayın ve tarife kayıtlarıyla karşılaştırıp UTT kararınızı verin.</p></>}
+        aciklama={<><p className="mt-1 max-w-3xl text-sm leading-5 text-[var(--tema-yerel-eczanem-yardimci-metin-07)]">Onaylı indirimleri yayın ve tarife kayıtlarıyla karşılaştırıp UTT kararınızı verin.</p></>}
         aksiyon={<YenileButonu yenileniyor={yukleniyor} onYenile={() => setYenileme((deger) => deger + 1)} />}
 
       />
 
       {veri && <section aria-label="Mutabakat dönem özeti" className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3">
-        <OzetKarti ikon={FileText} etiket="Toplam İndirim Adedi" deger={sayi(veri.toplam)} detay="Mutabakat ayı içinde eczanelerinizin onayladığı indirim adedi" renk="#237ac8" zemin="#edf6fd" />
-        <OzetKarti ikon={Coins} etiket="Onaylanan İndirim Puanı" deger={sayi(veri.toplam_puan)} detay="Eczanelerinizin mutabakat ayı içinde indirim için onayladıkları puan toplamı" renk="#16865f" zemin="#eaf7f2" />
-        <OzetKarti ikon={Banknote} etiket="Uygulanan Toplam İndirim" deger={para(veri.toplam_indirim_tl)} detay="Eczanelerinizin onayladığı indirim puanları karşılığında uyguladığı toplam indirim tutarı" renk="#b7791f" zemin="#fff7e6" />
+        <OzetKarti ikon={FileText} etiket="Toplam İndirim Adedi" deger={sayi(veri.toplam)} detay="Mutabakat ayı içinde eczanelerinizin onayladığı indirim adedi" renk="var(--tema-yerel-eczanem-eylem-metin-01)" zemin="var(--tema-yerel-eczanem-secim-zemin-01)" />
+        <OzetKarti ikon={Coins} etiket="Onaylanan İndirim Puanı" deger={sayi(veri.toplam_puan)} detay="Eczanelerinizin mutabakat ayı içinde indirim için onayladıkları puan toplamı" renk="var(--tema-yerel-eczanem-islevsel-metin-02)" zemin="var(--tema-yerel-eczanem-islevsel-zemin-01)" />
+        <OzetKarti ikon={Banknote} etiket="Uygulanan Toplam İndirim" deger={para(veri.toplam_indirim_tl)} detay="Eczanelerinizin onayladığı indirim puanları karşılığında uyguladığı toplam indirim tutarı" renk="var(--tema-yerel-eczanem-islevsel-metin-03)" zemin="var(--tema-yerel-eczanem-islevsel-zemin-02)" />
       </section>}
 
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -258,20 +258,20 @@ export default function EczanemUttMutabakatPage() {
         <MutabakatZamaniSecici deger={donem} disabled={false} onDegistir={(secim) => { setDonem(secim); filtreDegisti(); }} />
       </div>
 
-      {bildirim && <p role="status" className="text-xs font-bold text-[#2b668f]">{bildirim}</p>}
-      {yukleniyor && <p role="status" className="rounded-2xl border border-[#dfe7f1] bg-white px-4 py-8 text-center text-sm font-semibold text-[#8090a4]">Mutabakat kayıtları yükleniyor…</p>}
-      {hata && <Card role="alert" className="gap-3 border-[#f2c9c9] bg-[#fffafa] py-8 text-center shadow-none">
+      {bildirim && <p role="status" className="text-xs font-bold text-[var(--tema-yerel-eczanem-eylem-metin-05)]">{bildirim}</p>}
+      {yukleniyor && <p role="status" className="rounded-2xl border border-[var(--tema-yerel-eczanem-cizgi-05)] bg-[var(--tema-yerel-eczanem-kart-01)] px-4 py-8 text-center text-sm font-semibold text-[var(--tema-yerel-eczanem-yardimci-metin-05)]">Mutabakat kayıtları yükleniyor…</p>}
+      {hata && <Card role="alert" className="gap-3 border-[var(--tema-yerel-eczanem-islevsel-cizgi-01)] bg-[var(--tema-yerel-eczanem-islevsel-zemin-03)] py-8 text-center shadow-none">
         <CardContent className="flex flex-col items-center px-5">
-          <span className="flex size-11 items-center justify-center rounded-2xl bg-[#fdecec] text-[#b42318]"><CircleAlert /></span>
-          <CardTitle className="mt-3 text-base text-[#7f1d1d]">Veriler yüklenemedi</CardTitle>
+          <span className="flex size-11 items-center justify-center rounded-2xl bg-[var(--tema-yerel-eczanem-islevsel-zemin-04)] text-[var(--tema-yerel-eczanem-islevsel-metin-01)]"><CircleAlert /></span>
+          <CardTitle className="mt-3 text-base text-[var(--tema-yerel-eczanem-islevsel-metin-04)]">Veriler yüklenemedi</CardTitle>
           <CardDescription className="mt-1">{hata}</CardDescription>
-          <Button className="mt-4 bg-[#237ac8] hover:bg-[#1d69ad]" onClick={() => setYenileme((deger) => deger + 1)}>Tekrar dene</Button>
+          <Button className="mt-4 bg-[var(--tema-yerel-eczanem-eylem-zemin-01)] hover:bg-[var(--tema-yerel-eczanem-eylem-zemin-02)]" onClick={() => setYenileme((deger) => deger + 1)}>Tekrar dene</Button>
         </CardContent>
       </Card>}
       {!yukleniyor && !hata && <section aria-label="Mutabakat işlemleri">
         <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
-          <div><h2 className="text-base font-extrabold text-[#203653]">İndirim Onay Tablosu</h2>
-            <p className="mt-0.5 text-[11px] font-semibold text-[#7b8da5]">{veri?.eczaneler.length ?? 0} / {veri?.toplam_eczane ?? 0} eczane gösteriliyor · {veri?.toplam ?? 0} indirim işlemi</p></div>
+          <div><h2 className="text-base font-extrabold text-[var(--tema-yerel-eczanem-ana-metin-03)]">İndirim Onay Tablosu</h2>
+            <p className="mt-0.5 text-[11px] font-semibold text-[var(--tema-yerel-eczanem-yardimci-metin-01)]">{veri?.eczaneler.length ?? 0} / {veri?.toplam_eczane ?? 0} eczane gösteriliyor · {veri?.toplam ?? 0} indirim işlemi</p></div>
           <div className="flex flex-wrap items-center justify-end gap-2">
             <PeriyotButonlari<"akordiyon" | "duz"> secenekler={[{ key: "akordiyon", label: "Akordiyon Tablo" }, { key: "duz", label: "Düz Tablo" }]} deger={gorunum} onDegistir={gorunumDegistir} ariaLabel="Mutabakat tablo görünümü" className="w-fit flex-none" />
             <MutabakatExcelButonu rol="utt" donem={donem} kayitlar={duzVeri?.kayitlar ?? []} />
@@ -288,27 +288,27 @@ export default function EczanemUttMutabakatPage() {
           onUrunDegistir={setDuzUrunId}
           onKarar={(secili, karar) => { void kararVer(secili, karar); }}
           onOnayaGonder={(secili) => { void bmOnayinaGonder(secili); }}
-          bosIcerik={<div className="px-4 py-14 text-center text-sm font-semibold text-[#8090a4]">Bu dönem ve filtrede gösterilecek mutabakat işlemi yok.</div>}
-        /> : veri?.eczaneler.length === 0 ? <div className="rounded-2xl border border-[#dfe7f1] bg-white px-4 py-14 text-center text-sm font-semibold text-[#8090a4]">
+          bosIcerik={<div className="px-4 py-14 text-center text-sm font-semibold text-[var(--tema-yerel-eczanem-yardimci-metin-05)]">Bu dönem ve filtrede gösterilecek mutabakat işlemi yok.</div>}
+        /> : veri?.eczaneler.length === 0 ? <div className="rounded-2xl border border-[var(--tema-yerel-eczanem-cizgi-05)] bg-[var(--tema-yerel-eczanem-kart-01)] px-4 py-14 text-center text-sm font-semibold text-[var(--tema-yerel-eczanem-yardimci-metin-05)]">
           Bu dönem ve durumda onaylı indirim işlemi bulunmuyor.
-        </div> : <div className="overflow-hidden rounded-2xl border border-[#dfe7f1] bg-white shadow-sm">
-          <div className="hidden grid-cols-[minmax(200px,2fr)_160px_180px_190px_30px] gap-3 border-b border-[#e8eef5] bg-[#f5f8fc] px-4 py-2 text-[11px] font-extrabold uppercase text-[#7b8da5] lg:grid">
+        </div> : <div className="overflow-hidden rounded-2xl border border-[var(--tema-yerel-eczanem-cizgi-05)] bg-[var(--tema-yerel-eczanem-kart-01)] shadow-sm">
+          <div className="hidden grid-cols-[minmax(200px,2fr)_160px_180px_190px_30px] gap-3 border-b border-[var(--tema-yerel-eczanem-cizgi-04)] bg-[var(--tema-yerel-eczanem-sayfa-zemini-04)] px-4 py-2 text-[11px] font-extrabold uppercase text-[var(--tema-yerel-eczanem-yardimci-metin-01)] lg:grid">
             <span>Eczane Adı</span><span className="text-center">Toplam İşlem Adedi</span><span className="text-center">Toplam Onaylanan Puan</span><span className="text-center">Toplam İndirim Tutarı</span><span />
           </div>
-          {veri?.eczaneler.map((eczane) => <div key={eczane.eczane_id} className="border-b border-[#e8eef5] last:border-b-0">
+          {veri?.eczaneler.map((eczane) => <div key={eczane.eczane_id} className="border-b border-[var(--tema-yerel-eczanem-cizgi-04)] last:border-b-0">
             <button type="button" aria-expanded={acikEczaneId === eczane.eczane_id}
               aria-controls={`eczane-islemleri-${eczane.eczane_id}`}
               onClick={() => eczaneAcKapat(eczane.eczane_id)}
-              className="relative grid w-full grid-cols-2 gap-2 px-4 py-3 pr-10 text-left text-xs text-[#405976] hover:bg-[#f8fbff] focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#237ac8] sm:grid-cols-3 lg:grid-cols-[minmax(200px,2fr)_160px_180px_190px_30px] lg:items-center lg:gap-3 lg:pr-4">
-              <span className="col-span-full min-w-0 lg:col-span-1"><strong className="block text-sm font-extrabold text-[#203653]">{eczane.eczane_adi || "Eczane"}</strong></span>
+              className="relative grid w-full grid-cols-2 gap-2 px-4 py-3 pr-10 text-left text-xs text-[var(--tema-yerel-eczanem-ana-metin-01)] hover:bg-[var(--tema-yerel-eczanem-sayfa-zemini-03)] focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--tema-yerel-eczanem-odak-01)] sm:grid-cols-3 lg:grid-cols-[minmax(200px,2fr)_160px_180px_190px_30px] lg:items-center lg:gap-3 lg:pr-4">
+              <span className="col-span-full min-w-0 lg:col-span-1"><strong className="block text-sm font-extrabold text-[var(--tema-yerel-eczanem-ana-metin-03)]">{eczane.eczane_adi || "Eczane"}</strong></span>
               <span className="lg:text-center"><span className="lg:hidden">İşlem: </span>{sayi(eczane.islem_sayisi)}</span>
               <span className="hidden sm:block lg:text-center"><span className="lg:hidden">Puan: </span>{sayi(eczane.toplam_puan)}</span>
               <span className="lg:text-center"><span className="lg:hidden">Tutar: </span>{para(eczane.toplam_indirim_tl)}</span>
-              <ChevronDown className={`absolute right-4 top-4 size-4 text-[#237ac8] transition-transform lg:static ${acikEczaneId === eczane.eczane_id ? "rotate-180" : ""}`} aria-hidden="true" />
+              <ChevronDown className={`absolute right-4 top-4 size-4 text-[var(--tema-yerel-eczanem-eylem-metin-01)] transition-transform lg:static ${acikEczaneId === eczane.eczane_id ? "rotate-180" : ""}`} aria-hidden="true" />
             </button>
-            {acikEczaneId === eczane.eczane_id && <div id={`eczane-islemleri-${eczane.eczane_id}`} className="border-t border-[#dfe7f1] bg-[#f8fbff] p-2 md:p-3">
-              {islemYukleniyor && <p role="status" className="px-3 py-4 text-xs text-[#7b8da5]">İşlemler yükleniyor…</p>}
-              {islemHatasi && <p role="alert" className="px-3 py-4 text-xs text-[#b42318]">{islemHatasi}</p>}
+            {acikEczaneId === eczane.eczane_id && <div id={`eczane-islemleri-${eczane.eczane_id}`} className="border-t border-[var(--tema-yerel-eczanem-cizgi-05)] bg-[var(--tema-yerel-eczanem-sayfa-zemini-03)] p-2 md:p-3">
+              {islemYukleniyor && <p role="status" className="px-3 py-4 text-xs text-[var(--tema-yerel-eczanem-yardimci-metin-01)]">İşlemler yükleniyor…</p>}
+              {islemHatasi && <p role="alert" className="px-3 py-4 text-xs text-[var(--tema-yerel-eczanem-islevsel-metin-01)]">{islemHatasi}</p>}
               {!islemYukleniyor && !islemHatasi && eczaneIslemleri && <MutabakatIslemTablosu
                 rol="utt"
                 kayitlar={eczaneIslemleri.kayitlar}
@@ -319,13 +319,13 @@ export default function EczanemUttMutabakatPage() {
                 onUrunDegistir={(urunId) => { setSeciliUrunId(urunId); setIslemSayfa(0); }}
                 onKarar={(secili, karar) => { void kararVer(secili, karar); }}
                 onOnayaGonder={(secili) => { void bmOnayinaGonder(secili); }}
-                bosIcerik={<div className="px-4 py-6 text-center text-xs text-[#7b8da5]">
+                bosIcerik={<div className="px-4 py-6 text-center text-xs text-[var(--tema-yerel-eczanem-yardimci-metin-01)]">
                   <p>{seciliUrunId ? "Bu ürün için gösterilecek işlem yok." : "Bu eczanede gösterilecek işlem yok."}</p>
-                  {seciliUrunId && <button type="button" onClick={() => { setSeciliUrunId(null); setIslemSayfa(0); }} className="mt-2 font-bold text-[#237ac8] underline">Tümünü göster</button>}
+                  {seciliUrunId && <button type="button" onClick={() => { setSeciliUrunId(null); setIslemSayfa(0); }} className="mt-2 font-bold text-[var(--tema-yerel-eczanem-eylem-metin-01)] underline">Tümünü göster</button>}
                 </div>}
-                altIcerik={eczaneIslemleri.toplam > UTT_MUTABAKAT_SAYFA_BOYUTU ? <nav aria-label={`${eczane.eczane_adi || "Eczane"} işlem sayfaları`} className="flex items-center justify-end gap-2 border-t border-[#e8eef5] px-3 py-2">
+                altIcerik={eczaneIslemleri.toplam > UTT_MUTABAKAT_SAYFA_BOYUTU ? <nav aria-label={`${eczane.eczane_adi || "Eczane"} işlem sayfaları`} className="flex items-center justify-end gap-2 border-t border-[var(--tema-yerel-eczanem-cizgi-04)] px-3 py-2">
                   <Button type="button" size="sm" variant="outline" disabled={islemSayfa === 0} onClick={() => setIslemSayfa((deger) => deger - 1)}>Önceki</Button>
-                  <span className="text-xs font-semibold text-[#526780]">{islemSayfa + 1} / {Math.ceil(eczaneIslemleri.toplam / UTT_MUTABAKAT_SAYFA_BOYUTU)}</span>
+                  <span className="text-xs font-semibold text-[var(--tema-yerel-eczanem-yardimci-metin-06)]">{islemSayfa + 1} / {Math.ceil(eczaneIslemleri.toplam / UTT_MUTABAKAT_SAYFA_BOYUTU)}</span>
                   <Button type="button" size="sm" variant="outline" disabled={(islemSayfa + 1) * UTT_MUTABAKAT_SAYFA_BOYUTU >= eczaneIslemleri.toplam} onClick={() => setIslemSayfa((deger) => deger + 1)}>Sonraki</Button>
                 </nav> : undefined}
               />}
@@ -335,7 +335,7 @@ export default function EczanemUttMutabakatPage() {
       </section>}
       {!yukleniyor && !hata && gorunum === "akordiyon" && veri && veri.toplam_eczane > UTT_MUTABAKAT_SAYFA_BOYUTU && <nav aria-label="Mutabakat eczane sayfaları" className="flex items-center justify-end gap-3">
         <Button type="button" variant="outline" disabled={sayfa === 0} onClick={() => { setAcikEczaneId(null); setSeciliUrunId(null); setEczaneIslemleri(null); setSayfa((deger) => deger - 1); }}>Önceki</Button>
-        <span className="text-xs font-semibold text-[#526780]">{sayfa + 1} / {Math.ceil(veri.toplam_eczane / UTT_MUTABAKAT_SAYFA_BOYUTU)}</span>
+        <span className="text-xs font-semibold text-[var(--tema-yerel-eczanem-yardimci-metin-06)]">{sayfa + 1} / {Math.ceil(veri.toplam_eczane / UTT_MUTABAKAT_SAYFA_BOYUTU)}</span>
         <Button type="button" variant="outline" disabled={(sayfa + 1) * UTT_MUTABAKAT_SAYFA_BOYUTU >= veri.toplam_eczane} onClick={() => { setAcikEczaneId(null); setSeciliUrunId(null); setEczaneIslemleri(null); setSayfa((deger) => deger + 1); }}>Sonraki</Button>
       </nav>}
     </div>

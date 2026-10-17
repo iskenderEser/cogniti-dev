@@ -115,7 +115,7 @@ function SelectItem({
       data-slot="select-item"
       className={cn(
         styles.option,
-        "relative pr-8 outline-hidden select-none focus:bg-[#edf6ff] focus:text-[#237ac8] data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2",
+        "relative pr-8 outline-hidden select-none focus:bg-[var(--tema-kontrol-hover)] focus:text-[var(--tema-kontrol-eylem)] data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2",
         className
       )}
       {...props}

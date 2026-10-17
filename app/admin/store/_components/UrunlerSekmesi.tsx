@@ -40,20 +40,20 @@ interface UrunlerSekmesiProps {
 
 const thStyle: React.CSSProperties = {
   padding: "8px 10px", textAlign: "left",
-  borderBottom: "0.5px solid #e5e7eb", fontWeight: 700,
-  color: "#374151", fontSize: "11px", whiteSpace: "nowrap",
-  background: "#f9fafb", fontFamily: "'Nunito', sans-serif",
+  borderBottom: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)", fontWeight: 700,
+  color: "var(--tema-yerel-yonetim-ana-metin-03)", fontSize: "11px", whiteSpace: "nowrap",
+  background: "var(--tema-yerel-yonetim-sayfa-zemini-02)", fontFamily: "'Nunito', sans-serif",
 };
 
 const tdStyle: React.CSSProperties = {
-  padding: "8px 10px", borderBottom: "0.5px solid #f3f4f6",
-  color: "#111", fontSize: "12px", fontFamily: "'Nunito', sans-serif",
+  padding: "8px 10px", borderBottom: "0.5px solid var(--tema-yerel-yonetim-cizgi-05)",
+  color: "var(--tema-yerel-yonetim-ana-metin-01)", fontSize: "12px", fontFamily: "'Nunito', sans-serif",
 };
 
 const silBtnStyle = (renk: string, loading: boolean): React.CSSProperties => ({
   padding: "3px 8px",
-  background: loading ? "#d1d5db" : renk,
-  color: "white", border: "none", borderRadius: "4px",
+  background: loading ? "var(--tema-yerel-yonetim-sayfa-zemini-01)" : renk,
+  color: "var(--tema-yerel-yonetim-ters-metin-01)", border: "none", borderRadius: "4px",
   fontSize: "10px", fontWeight: 600,
   cursor: loading ? "not-allowed" : "pointer",
   fontFamily: "'Nunito', sans-serif",
@@ -61,11 +61,11 @@ const silBtnStyle = (renk: string, loading: boolean): React.CSSProperties => ({
 
 const duzenleBtnStyle: React.CSSProperties = {
   padding: "3px 8px",
-  background: "white",
-  border: "0.5px solid #e5e7eb",
+  background: "var(--tema-yerel-yonetim-kart-01)",
+  border: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)",
   borderRadius: "4px",
   fontSize: "10px", fontWeight: 600,
-  color: "#374151",
+  color: "var(--tema-yerel-yonetim-ana-metin-03)",
   cursor: "pointer",
   fontFamily: "'Nunito', sans-serif",
 };
@@ -76,7 +76,7 @@ export default function UrunlerSekmesi(p: UrunlerSekmesiProps) {
   return (
     <div style={{ marginTop: "20px" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
-        <h3 style={{ fontSize: "14px", fontWeight: 700, color: "#111", margin: 0, fontFamily: "'Nunito', sans-serif" }}>
+        <h3 style={{ fontSize: "14px", fontWeight: 700, color: "var(--tema-yerel-yonetim-ana-metin-01)", margin: 0, fontFamily: "'Nunito', sans-serif" }}>
           Ürünler ({p.urunler.length})
         </h3>
         <button
@@ -84,7 +84,7 @@ export default function UrunlerSekmesi(p: UrunlerSekmesiProps) {
           style={{
             padding: "6px 12px",
             background: RENK_BORDO,
-            color: "white",
+            color: "var(--tema-yerel-yonetim-ters-metin-01)",
             border: "none",
             borderRadius: "6px",
             fontSize: "12px",
@@ -98,15 +98,15 @@ export default function UrunlerSekmesi(p: UrunlerSekmesiProps) {
       </div>
 
       {p.yukleniyor ? (
-        <p style={{ fontSize: "13px", color: "#737373", padding: "20px", textAlign: "center", fontFamily: "'Nunito', sans-serif" }}>
+        <p style={{ fontSize: "13px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)", padding: "20px", textAlign: "center", fontFamily: "'Nunito', sans-serif" }}>
           Yükleniyor...
         </p>
       ) : p.urunler.length === 0 ? (
-        <p style={{ fontSize: "13px", color: "#737373", padding: "20px", textAlign: "center", fontFamily: "'Nunito', sans-serif" }}>
+        <p style={{ fontSize: "13px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)", padding: "20px", textAlign: "center", fontFamily: "'Nunito', sans-serif" }}>
           Henüz ürün yok.
         </p>
       ) : (
-        <div style={{ overflow: "auto", border: "0.5px solid #e5e7eb", borderRadius: "8px" }}>
+        <div style={{ overflow: "auto", border: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)", borderRadius: "8px" }}>
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr>
@@ -126,26 +126,26 @@ export default function UrunlerSekmesi(p: UrunlerSekmesiProps) {
                     <div style={{
                       width: "44px", height: "44px",
                       borderRadius: "6px", overflow: "hidden",
-                      background: "#f9fafb",
+                      background: "var(--tema-yerel-yonetim-sayfa-zemini-02)",
                       display: "flex", alignItems: "center", justifyContent: "center",
                     }}>
                       {u.gorsel_url ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img src={u.gorsel_url} alt={u.ad} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                       ) : (
-                        <span style={{ fontSize: "10px", color: "#737373" }}>—</span>
+                        <span style={{ fontSize: "10px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)" }}>—</span>
                       )}
                     </div>
                   </td>
                   <td style={tdStyle}>{u.ad}</td>
-                  <td style={{ ...tdStyle, color: "#737373" }}>{u.store_kategoriler?.ad ?? "—"}</td>
-                  <td style={{ ...tdStyle, textAlign: "right", color: "#bc2d0d", fontWeight: 600 }}>{u.puan_fiyati}</td>
+                  <td style={{ ...tdStyle, color: "var(--tema-yerel-yonetim-yardimci-metin-01)" }}>{u.store_kategoriler?.ad ?? "—"}</td>
+                  <td style={{ ...tdStyle, textAlign: "right", color: "var(--tema-yerel-yonetim-vurgu-metin-01)", fontWeight: 600 }}>{u.puan_fiyati}</td>
                   <td style={{ ...tdStyle, textAlign: "right" }}>{u.stok}</td>
                   <td style={tdStyle}>
                     <span style={{
                       padding: "2px 8px",
-                      background: u.aktif_mi ? "#dcfce7" : "#fee2e2",
-                      color: u.aktif_mi ? "#16a34a" : "#dc2626",
+                      background: u.aktif_mi ? "var(--tema-yerel-yonetim-islevsel-zemin-05)" : "var(--tema-yerel-yonetim-islevsel-zemin-06)",
+                      color: u.aktif_mi ? "var(--tema-yerel-yonetim-islevsel-metin-07)" : "var(--tema-yerel-yonetim-islevsel-metin-09)",
                       borderRadius: "4px",
                       fontSize: "11px",
                       fontWeight: 600,
@@ -169,13 +169,13 @@ export default function UrunlerSekmesi(p: UrunlerSekmesiProps) {
                         <button
                           onClick={p.handleSilOnayla}
                           disabled={p.silmeIslemi}
-                          style={{ ...silBtnStyle("#dc2626", p.silmeIslemi), marginLeft: "4px" }}
+                          style={{ ...silBtnStyle("var(--tema-yerel-yonetim-islevsel-zemin-04)", p.silmeIslemi), marginLeft: "4px" }}
                         >
                           {p.silmeIslemi ? "..." : "Eminim"}
                         </button>
                         <button
                           onClick={() => p.setSilinecek(null)}
-                          style={{ ...silBtnStyle("#737373", false), marginLeft: "4px" }}
+                          style={{ ...silBtnStyle("var(--tema-yerel-yonetim-eylem-zemin-01)", false), marginLeft: "4px" }}
                         >
                           İptal
                         </button>
@@ -183,7 +183,7 @@ export default function UrunlerSekmesi(p: UrunlerSekmesiProps) {
                     ) : (
                       <button
                         onClick={() => p.setSilinecek(u)}
-                        style={{ ...silBtnStyle("#dc2626", false), marginLeft: "4px" }}
+                        style={{ ...silBtnStyle("var(--tema-yerel-yonetim-islevsel-zemin-04)", false), marginLeft: "4px" }}
                       >
                         Sil
                       </button>

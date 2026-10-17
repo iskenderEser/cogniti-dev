@@ -1,6 +1,6 @@
 # 📘 HapBilgi — BLUEBOOK
 ### İş Modeli, Mimari, İş Kuralları ve Teknik Envanter Anayasası
-*Son genel inceleme: 28 Eylül 2026 | Asistan bölümü ve ilgili envanter güncellemesi: 9 Eylül 2026 | Ortak yayın arayüzü, mobil akış ve tanbur güncellemesi: 21 Eylül 2026 | E-Club iş modeli ve teknik kapanış güncellemesi: 28 Eylül 2026 | Depo tercihleri kod güncellemesi: 29 Eylül 2026; canlı yapısal kontrol: 5 Ekim 2026 (13/13) | Zorunlu Sade Kontrol Aileleri kararı: 8 Ekim 2026 | E-Club yeni gönderim ve planlama belgeleri: 13 Ekim 2026; canlı son doğrulama bekliyor*
+*Son genel inceleme: 28 Eylül 2026 | Asistan bölümü ve ilgili envanter güncellemesi: 9 Eylül 2026 | Ortak yayın arayüzü, mobil akış ve tanbur güncellemesi: 21 Eylül 2026 | E-Club iş modeli ve teknik kapanış güncellemesi: 28 Eylül 2026 | Depo tercihleri kod güncellemesi: 29 Eylül 2026; canlı yapısal kontrol: 5 Ekim 2026 (13/13) | Zorunlu Sade Kontrol Aileleri kararı: 8 Ekim 2026 | E-Club yeni gönderim ve planlama belgeleri: 13 Ekim 2026; canlı son doğrulama bekliyor | Görsel renk envanteri ve doğrulama kaydı: 17 Ekim 2026*
 
 ---
 
@@ -3355,6 +3355,77 @@ Bu kayıt ortak geliştirme standardını ve referans uygulamaları tanımlar. B
 
 ---
 
+### 13.10. Görsel Renk Envanteri ve Tema Çalışmasının Referansı
+
+*İnceleme ve kayıt tarihi: 17 Ekim 2026 | Referans: repodaki mevcut çalışma ağacı; kaynak dosyalarının SHA-256 değerleri tam envanterde kayıtlıdır.*
+
+Kullanıcının talebiyle HapBilgi'nin görsel renk kullanımları dosya, satır, özellik ve durum bilgileriyle çıkarıldı. Zemin, metin, buton, kenarlık, ayırıcı, gölge, outline/ring, SVG/Canvas, grafik, gradyan, saydamlık ve filtreler; hover/focus/active/disabled/dark/aria/data durumları; bütün pill aileleri ve E-Club HOYK ilerleme çerçevesi incelemeye alındı. Ayrıntılı mevcut durum kaydı [HapBilgi görsel renk envanteri raporudur](renk-envanteri/RAPOR.md).
+
+#### Envanterin sayısal özeti
+
+| Ölçüt | Sonuç |
+| --- | --- |
+| Taranan kaynak dosyası / bulgu içeren dosya | **1.205 / 300** |
+| Dosya ve konum bilgisiyle inceleme kaydı | **18.971** |
+| Uygulama kaynağı / tema ve rehber çalışması / HTML tasarım prototipi kayıtları | **16.312 / 896 / 1.763** |
+| Katalogdaki renk, gradyan ve anahtar ifade | **1.765** |
+| Alpha dahil normalleştirilmiş HEX ifadeleri / uygulama kaynağındakiler | **1.377 / 1.024** |
+| Pill, rozet ve yuvarlak kontrol adayı | **469** |
+| CSS değişken tanımı / statik görsel varlığı | **172 / 18** |
+| AST/CSS ayrıştırma hatası | **0** |
+
+Bir kullanım, renk bileşeni ve tam stil ifadesi gibi birden fazla kayıt üretebilir; **18.971 ayrı renk yoktur**. 1.765 ifade de algısal olarak farklı renk sayısı değildir. 469 aday içinde yuvarlak ikon ve avatarlar bulunur; tamamı pill olarak sınıflandırılmamıştır. CSS değişken listesi, bağımlılıkların görülebilmesi için renk dışındaki tanımları da içerir. Demo/prototip kayıtları mevcut uygulama kaynaklarından ayrı etiketlenmiştir.
+
+#### Tema kararında dikkate alınacak doğrulanmış bulgular
+
+- **Mevcut site tek bir mavi/gri palet kullanmıyor.** Marka bordosu `#bc2d0d`, genel tema mavisi `#56aeff`, Sade Kontrol/E-Club mavisi `#237ac8` ve yayın/puan mavisi `#2563eb` farklı görevlerde bulunuyor. Beyaz ve açık yüzeyler ile eski ortak metin ailesi ve yeni E-Club metin ailesinin bütün tonları ayrıntılı raporda kaynaklarıyla kayıtlıdır.
+- **Önizleme ile mevcut site birebir aynı değil.** Örneğin mevcut aktif sol menü metni `#185fa5`, demodaki seçili metin `#1d4ed8` değerindedir. Önizlemedeki “Kırık beyaz–mavi” adı mevcut site renklerinin birebir kopyalandığı anlamına gelmez. Mevcut görünümü koruyacak seçeneğin referansı bu envanterdir.
+- **HOYK ilerleme çizgisi hesaplanmış bir renk akışıdır.** `lib/eclub/hoykSureCercevesi.ts` ve `components/eclub/EclubHoykSureCercevesi.tsx` kaynaklarında yeşil `#16a34a` → sarı `#d99300` → kırmızı `#dc2626` durakları kullanılır. Canvas çizgisi 3,5 px kalınlıkta, saat yönünde ve geçen gün/15 oranında uzar; ara renkler çevre konumuna göre hesaplanır. Uzunluk geçişi 450 ms, 15. gündeki bütünüyle kırmızıya karışma 320 ms'dir. Süresi geçmiş tamamlanmamış kartta 2 px sabit kırmızı, tamamlanmış kartta 2 px sabit `#2563eb` çerçeve bulunur. 0–15 günün uç renkleri ve açık oynatıcı durum pill'inin metin/zemin hesabı ayrı kaydedildi.
+- **Öğrenme aracı pill'lerinin alpha değeri de görünümün parçasıdır.** Video `#1d4ed8` / `#dbeafee8`, podcast `#7e22ce` / `#f3e8ffe8`, görsel `#047857` / `#d1fae5e8`, literatür `#b45309` / `#fef3c7e8` metin/zemin çiftlerini kullanır. `e8`, yaklaşık %90,98 opaklıktır; kenarlık, gölge ve blur ayrıca kayıtlıdır.
+- **Diğer pill aileleri ayrı anlamlar taşır.** Aşama, teknik tür, hazır araç/soru, hedef rol, üretim durumu, çek talebi/teslimatı/günü, tarih ve dönem kontrolleri kaynaklarıyla listelendi. Aynı üretim durumunun üretici ve İÜ görünümündeki renkleri farklı olabilir. Araç türünün performans grafiğindeki rengi, araç pill'indeki rengiyle her zaman aynı değildir. E-Club kart sarmalayıcısının ortak durum kapsülünü kapattığı koşullar da kayıtlıdır.
+- **Değerler kullanım bağlamıyla değerlendirilir.** Kurulu Tailwind sürümünün OKLCH karşılıkları, sınıf alpha ekleri, yerel CSS değişken kapsamları ve URL içine kodlanmış SVG rengi (`#7c8da4`) yakalandı. Aynı değişken adı farklı yerel kapsamlarda farklı anlam taşıyabilir; HEX metnini topluca değiştirmek bu ayrımları karşılamaz.
+
+#### Tam kayıtlar ve tekrar üretim
+
+| Belge / araç | İçerik |
+| --- | --- |
+| [Ayrıntılı rapor](renk-envanteri/RAPOR.md) | Renk aileleri, kaynaklar, HOYK hesabı, pill sözlükleri ve inceleme sınırları |
+| [Aranabilir görsel katalog](renk-envanteri/renk-katalogu.html) | 1.765 ifadenin renk örnekleri ve bütün kaynak konumları |
+| [Bütün renk ifadeleri](renk-envanteri/TUM_RENKLER.md) | Tam renk, gradyan ve ifade listesi |
+| [Dosya bazında bütün kullanımlar](renk-envanteri/DOSYA_BAZINDA_TUM_KULLANIMLAR.md) | Her kullanımın dosyası, satırı, özelliği ve koşulu |
+| [Pill ve yuvarlak kontroller](renk-envanteri/PILL_VE_YUVARLAK_KONTROLLER.md) | Adlandırılmış bileşenler ve inline adaylar |
+| [CSS değişkenleri](renk-envanteri/CSS_DEGISKENLERI.md) | Bütün tanımlar ve kapsamları |
+| [Tam CSV](renk-envanteri/tum-kullanimlar.csv) / [tam JSON](renk-envanteri/renk-envanteri.json) | 18.971 kayıt, bağlamlar, kaynak imzaları ve varlık listesi |
+| [Özel bileşen tabloları](renk-envanteri/ozel-bilesenler.json) | Kaynaktan doğrulanan rol/durum/pill eşlemeleri ve HOYK gün renkleri |
+| [Doğrulama sonucu](renk-envanteri/DOGRULAMA.json) / [ham HEX kapsam kontrolü](renk-envanteri/ham-hex-kapsam-kontrolu.json) | Bağımsız tarama, kritik bileşen kontrolleri ve yalnız yorumda kalan eşleşmeler |
+| [Envanter tarayıcısı](../scripts/denetim/renk-envanteri.mjs) | `node scripts/denetim/renk-envanteri.mjs` ile ana listeleri yeniden üretir; uygulama kaynaklarını değiştirmez |
+
+Tarayıcı TypeScript AST, PostCSS ve kurulu Tailwind tema tanımlarını kullanır. Bağımlılık/derleme çıktıları, test beklentileri ve düz metin belge örnekleri uygulama rengi sayılmaz. Raster görseller varlık olarak listelenir; fotoğraf pikselleri, uzaktan yüklenen kapak/banner/logolar, iframe içeriği ve tarayıcının kendi kontrolleri repo CSS paletine dahil değildir.
+
+#### Doğrulama ve çalışma durumu
+
+**Kaynak envanteri doğrulandı.** 1.205 dosyanın imzası eşleşti. Bağımsız ham HEX taramasındaki 6.024 eşleşmenin 6.012'si envanterde; kalan 12'si yalnız yorum satırı/bloklarında ve konumları kayıtlıdır. Açıkta kalan uygulama HEX kullanımı **0**. Katalog referansları, HOYK fonksiyonunun 0–15 gün çıktıları, dört araç pill'inin alpha değerleri, üretici/İÜ durum farkları, kodlanmış SVG ve CSV/JSON kayıt eşitliği kontrol edildi. Happy DOM'da katalog araması ve arama temizlenince tam listenin dönüşü doğrulandı; tarayıcı betiğinin ESLint kontrolü ve `git diff --check` başarılıdır. Bu doğrulama kaynak envanterini kapsar; bütün rollerin tarayıcıdan uçtan uca testi veya canlı veritabanı doğrulaması yapılmadı.
+
+**Tema çalışması iş planına göre uygulanıyor.** Kullanıcıyla kararlaştırılan yön, sayfalara dağılmış sabit renkleri kullanım amaçlarına göre ortak tema değişkenlerine bağlamaktır. [Renk Ortaklaştırması İş Planı](RENK_ORTAKLASTIRMA_IS_PLANI.md), bileşenleri birleştirmeden ilerleyecek on uygulama adımını, küçük teslim yöntemini ve hedefli doğrulamayı tanımlar. Ortak altyapı ve önizlemenin ardından kontroller ile menü/kabuk renkleri bağlandı; aşağıda ilk üç uygulama adımının sonuçları kayıtlıdır. Diğer ekranların dönüşümü ve hesap tercihinin kalıcılığı bekliyor; güncel kapsam [tema altyapısı kaydındadır](TEMA_ALTYAPISI.md). Envanter çalışması sırasında uygulamanın renkleri değiştirilmedi; sonraki uygulama sonuçları site genelinde tema dönüşümünün tamamlandığı anlamına gelmez.
+
+**17 Ekim 2026 — Güncel kullanıcı kararı: yalnız renk ve çift tema:** Bileşen ortaklaştırması yapılmayacak. Kullanıcı, sistemin karmaşıklığı nedeniyle bu yönü kapsamdan çıkardı; çalışma mevcut bileşen yapıları korunarak renk sistemi üzerinden devam edecek. Hazır tema altyapısı, renk envanteri ve kaynak eşlemeleri kullanılacak; sabit renkler kullanım amacı ve yerel kapsamına göre tema değişkenlerine bağlanacak. Önceki bileşen ortaklaştırma hazırlıkları tarihsel kaynak referansıdır. Güncel kapsam [tema altyapısı kaydındadır](TEMA_ALTYAPISI.md). İkinci temanın bütün ekranlara yayılması ve kalıcı kullanıcı tercihi henüz tamamlanmadı.
+
+**17 Ekim 2026 — Renk ortaklaştırması 1. adım tamamlandı:** Sade Kontrollerin ilk altı yerel rengi için `app/tema.css` içinde iki temanın ortak karşılıkları hazırlandı. Mavi değerler kaynak CSS ile aynı; yeşil karşılıklar mevcut onaylı paletten çözülür. Önceki 91 tema bildirimi ve kontrol CSS kaynağı korundu. Hedef testler 5/5, TypeScript, ESLint ve PostCSS/Tailwind derlemesi başarılı. [Eşleme ve doğrulama sonucu](RENK_ORTAKLASTIRMA_ADIM1.md). Kontrollerin bu değişkenlere bağlanması 2. adımdadır; gerçek ekran/rol kontrolü, veritabanı işlemi veya canlı dağıtım bu adımda yapılmadı.
+
+**17 Ekim 2026 — Renk ortaklaştırması 2. adım tamamlandı:** Sade Kontrollerin yerel renkleri, odak/ok/seçili metin ve gölge renkleri ortak kaynağa bağlandı; Radix Select'in yalnız iki focus renk sınıfı değişti. 221 CSS bildiriminin mavi karşılıkları ve renk dışı stilleri korundu; 57 aile dışı kullanım dosyasının 56'sı aynı, tek değişen Select kaynağıdır. Tema 6/6, davranış mavi 17/17 ve yeşil 17/17 olmak üzere 40 test başarılı; TypeScript, ESLint ve CSS derlemesi geçti. Bu bölümün renkleri ekran boyutuna göre değişmez; mevcut responsive kurallar korunmuştur. Gerçek masaüstünde iki tema, mobilde mavi görüntülendi; mobil yeşil, gerçek menü etkileşimi ve DOM ölçümü yapılmış sayılmaz. Önceki değerlendirmede ek tarayıcı kontrolleri gereksiz kapanış şartı yapılmıştı; kaynak ve gerekli test doğrulamasına göre 2. adım kapatıldı. Geçici layout/viewport değişiklikleri geri alındı; varsayılan mavi, veritabanı ve canlı yayın durumu korundu. [Ayrıntılı sonuç](RENK_ORTAKLASTIRMA_ADIM2.md).
+
+**17 Ekim 2026 — Renk ortaklaştırması 3. adım tamamlandı:** PanelNavbar, SolListe, MobilDrawer ve panel layout'unda yalnız 72 renk ifadesi ortak kaynağa bağlandı. Önceki 113 tema bildirimi, mevcut mavi değerler, renk dışı kaynak, rol/rota/menü davranışı ve HBStore'un turuncu kimliği korundu. Başlık bileşeni ve CSS'sinde renk tanımı olmadığından değişiklik gerekmedi. Menü testi 31 rol girdisini iki temada kapsıyor; seçili 21 testten 20'si başarılı. Değişmemiş HBStore metnindeki apostrof için bir mevcut test uyuşmazlığı ve ESLint'teki 2 mevcut hata/1 uyarı ayrıca kaydedildi; yeni lint bulgusu yok. TypeScript ve gerçek CSS derlemesi başarılı. Gerçek tarayıcı etkileşimi, veritabanı işlemi veya canlı dağıtım yapılmadı. [Eşleme ve doğrulama sonucu](RENK_ORTAKLASTIRMA_ADIM3.md).
+
+**17 Ekim 2026 — Renk ortaklaştırması 4. adım tamamlandı:** Yenile butonunun yüzey, çizgi, metin ve hover renkleri ortak kaynağa; `Button` hata varyantının beyaz metni mevcut `destructive-foreground` karşılığına bağlandı. `Input` ve `Label` zaten tema köprüsünden çalıştığı için kaynakları aynı kaldı. Önceki 157 tema bildirimi, 20 durum kuralı ve 56 statik bileşen çıktısı korundu; beş sınıfın mavi değer farkı ve renk dışı fark 0. Hedef testler 16/16, TypeScript ve değişen aileye yönelik ESLint başarılı. PostCSS/Tailwind çalıştırması başarılı; genel CSS'nin yeniden ayrıştırılmasında HTML renk kataloğundaki örnek metinden üretilen aynı mevcut hata önceki ve sonraki çıktıda görüldü. Bu ayrı bulgu çözülmüş veya genel CSS bütünüyle temiz sayılmadı. Gerçek tarayıcı kontrolü, veritabanı işlemi veya canlı dağıtım yapılmadı. [Eşlemeler, kontrol kapsamı ve mevcut CSS bulgusu](RENK_ORTAKLASTIRMA_ADIM4.md).
+
+**17 Ekim 2026 — Renk ortaklaştırması 5. adım tamamlandı:** Ortak pill, Badge, tarih, araç türü, üretim/rol/çek sözlükleri, çek günleri ve teslimat rozetleri renk kaynağına bağlandı. İki nötr değişken tema karşılığı alır; 112 işlevsel değişken iki temada mevcut paletini korur. Üretici/İÜ ayrımı, beş hedef rol, dört araç, yedi çek ve yedi teslimat durumu değişmedi. Araç pili `e8`, beyaz kenar %60 ve hedef rol halkalarının `33`/`22` alpha değerleri ortak karşılıklarda korunur. Önceki 165 tema bildirimi ve 16 tarih CSS bildirimi aynı; renk dışı kaynak farkı 0. 31 rol × 20 üretim durumu iki temada sınandı; 45/45 hedef test ve TypeScript başarılı. Lint: hata 0, bir mevcut `exhaustive-deps` uyarısı, yeni bulgu 0. Önceki genel CSS katalog hatası aynı. SQL/alıcı kuyruk akışı yalnız kaynak üzerinden kontrol edildi; gerçek e-posta/push teslimatı veya canlı dağıtım yapılmadı. [Eşlemeler ve doğrulama sonucu](RENK_ORTAKLASTIRMA_ADIM5.md).
+
+**17 Ekim 2026 — Bağlayıcı kullanıcı talimatı: görünüm, metrikler ve onay:** Renk çalışmasında mevcut metrik değerler, font ailesi/büyüklüğü/kalınlığı, her türlü nesnenin ölçüleri/konumları, pill yerleri/büyüklükleri, tablo yapıları ve davranışlar korunur. Mavi tema mevcut kullanım renklerini korur; yeşil karşılıklar onaylı palete göre ele alınır. İyileştirme veya eski standarda uyum gerekçesiyle renk çalışması dışında kendiliğinden değişiklik yapılamaz. Her adım sonunda yapılanların özeti ve doğrulama durumu sunulur; gerekli ekran kontrolü kullanıcıyla tamamlanır. Zorunlu fark, iki seçenek arasında karar veya bilinmeyen durum/nesne ile karşılaşıldığında ilgili işlem durdurulur, konu kullanıcıya sorulur ve açık onay gelmeden karara bağlı işe devam edilmez. Bu talimat, bu çalışma için önceki standart farklarının otomatik uygulanmasına izin veren yorumların önündedir.
+
+**17 Ekim 2026 — Kullanım bağlamı ve doğrudan teslim düzeltmesi:** HOYK ve diğer benzer bileşenler sayfa, rol, amaç ve duruma göre farklı kullanımlara sahip olabilir. Her kullanımın mevcut ölçü, yerleşim, prop, varyant ve yerel stil kapsamı korunur; yalnız renk karşılıkları bu bağlamda ele alınır. Bileşenler birleştirilmez. Tek ekranın platformun bütün kullanımlarını temsil ettiği varsayılmaz. UTT Ürün Eğitimleri görüntüleri yalnız o kullanımın tarihsel referansıdır. Hazır envanter ve kaynak eşlemelerinden küçük renk değişikliği hazırlanır, yalnız etkilenen kullanımların gerekli kontrolleri yapılır ve sonuç hemen sunulur. Tarayıcı erişimi veya yeni geniş araştırma, bütün çalışma için genel başlangıç şartı yapılmaz. Belirsizlikte kullanıcı onayı bekleme koşulu geçerlidir.
+
+---
+
 ## 🎯 GENEL SONUÇ VE KALİTE SİCİLİ
 
 **21 Eylül 2026** tarihi itibarıyla BLUEBOOK; HapBilgi’nin iş modelini, kullanıcı rollerini, yetki sınırlarını, T-Club, C-Club, E-Club, Eczanem, Store, üretim, yönetim, raporlama, HapBi ve öğrenme araçları süreçlerini güncel uygulama yapısıyla birlikte tanımlar.
@@ -3397,3 +3468,12 @@ Bu kayıt, doğrulanmış mevcut durumu ifade eder; mutlak kusursuzluk veya tama
 **9 Ekim 2026 — Kullanıcı kararı:** E-Club Ligi Excel indirme özelliği tüm rollerden kaldırıldı; indirme butonu ve dışa aktarma API uç noktası kaldırıldı.
 
 **9 Ekim 2026 — Kullanıcı kararı:** E-Club kişi ana sayfası `/eclub/ana-sayfa`, firma alt sayfaları `/eclub/ana-sayfa/firma/[firma_id]` adresine taşındı. Giriş, navbar, sidebar ve öneri bildirim bağlantıları güncellendi. Eski sayfa adresleri sorgu parametreleri korunarak yeni adreslere yönlendirilir; tüketim API adresleri korunur.
+
+
+**17 Ekim 2026 — Renk ortaklaştırması 6. adım tamamlandı:** HOYK, dört araç kapağı, Podcast/Görsel/Flip PDF/Video oynatıcı arayüzleri ve gerçek kart renk slotları ortak kaynağa bağlandı. Bileşen ortaklaştırması yapılmadı. 216 değişken/350 bildirim eklendi, önceki 281 bildirim korundu. 275 gerçek CSS ve 45 satır içi mavi karşılık aynı; 23 TSX kaynağında renk dışı fark 0. Gerçek görseller, süre anlamları ve 15 günlük hesap, video yükleme/GUID, izleme/puan akışları değişmedi. Yeni testler 6/6; toplam 64 testte 62 başarılı, adım öncesi kodla da aynı iki eski E-Club testi başarısız. TypeScript ve 26 dosyanın lint kontrolü başarılı. Önceki genel CSS katalog bulgusu aynı; gerçek rol oturumu, medya oynatımı veya canlı dağıtım yapılmadı. İlk altı plan kutusu işaretli; 7. adım başlamadı. [Sonuç ve kontrol sınırları](RENK_ORTAKLASTIRMA_ADIM6.md).
+
+
+**17 Ekim 2026 — Renk ortaklaştırması 7. adım tamamlandı:** Kart/tablo çizgileri, AlertDialog/Tooltip, dört bildirim türü, lig akordiyonları, dokuz skeleton ailesi, ortak boş durum ve gönderim/yayın detay görünümleri ortak renk kaynağına bağlandı. Bileşen ortaklaştırması yapılmadı. 185 değişken/314 bildirim eklendi; önceki 631 bildirim korundu. 391 derlenmiş CSS ve 12 bildirim rengi mavi karşılığıyla aynı; iki CSS Module’de 693 bildirim korunur, 24 kaynakta renk dışı fark 0. Yeni testler 7/7; toplam 63 testte 62 başarılı, değişmeyen C-Club kaynağında bir mevcut başarısızlık var. TypeScript başarılı; önceki bir lint hatası/sekiz uyarı ve genel CSS katalog bulgusu aynı, yeni bulgu yok. Gerçek Radix portalının açıkken kök temayı alması, iptal/eylem/odak ve Tooltip Escape davranışı sınandı. Hediye test verilerine, alıcı/teslimat ve puan akışlarına işlem yapılmadı; gerçek rol oturumu veya canlı dağıtım yok. İlk yedi kutu işaretli; 8. adım başlamadı. [Sonuç ve kontrol sınırları](RENK_ORTAKLASTIRMA_ADIM7.md).
+
+
+**17 Ekim 2026 — Renk ortaklaştırması 8. adım tamamlandı:** Grafik/SVG/Canvas renkleri ortak CSS kaynağına bağlandı. Mevcut ECharts açıkken tema değişimini aynı örnek üzerinde izler; HOYK çerçevesi gün/animasyon konumunu korur. CSS’den üretilen 99 çizim rengi sunucu/DOM dışı hesaplarda kullanılır; elle ikinci palet yoktur. SVG seçim oku da CSS'den beslenir. 100 değişken/152 bildirim eklendi; önceki 945 bildirim korundu. Araç, kazanım/kayıp, süre ve madalya anlamları aynı; bileşen ortaklaştırması yapılmadı. 94 mavi eşleme, 48 grafik seçeneği ve 1.128 HOYK renk örneği aynı. 47/47 test, TypeScript ve hedef lint başarılı. Önceki genel CSS katalog bulgusu aynı; gerçek tarayıcı/rol oturumu veya canlı dağıtım yok. İlk sekiz plan kutusu işaretli; 9. adım başlamadı. [Sonuç ve kontrol sınırları](RENK_ORTAKLASTIRMA_ADIM8.md).

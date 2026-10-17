@@ -54,14 +54,14 @@ export function ListeArama<T>({ arama, ipucu, genislik, yukseklik = "normal", cl
           value={aranan}
           onChange={(e) => aramaDegistir(e.target.value)}
           placeholder={ipucu ?? `${secili.etiket} ara`}
-          className={`max-w-full text-gray-700 bg-white border border-gray-200 rounded-lg pl-2.5 pr-7 py-1.5 outline-none focus:border-gray-300 ${yukseklik === "secim" ? "h-10 text-[11px] font-extrabold" : "text-xs"} ${genislik ?? "w-44"}`}
+          className={`max-w-full text-[var(--tema-yerel-ortak-sayfa-ana-metin-11)] bg-[var(--tema-yerel-ortak-sayfa-kart-01)] border border-[var(--tema-yerel-ortak-sayfa-cizgi-06)] rounded-lg pl-2.5 pr-7 py-1.5 outline-none focus:border-[var(--tema-yerel-ortak-sayfa-cizgi-11)] ${yukseklik === "secim" ? "h-10 text-[11px] font-extrabold" : "text-xs"} ${genislik ?? "w-44"}`}
         />
         {aranan && (
           // Temizleme: aramayı sıfırlar. Klavyeyle uğraşmadan tam listeye dönüş.
           <button
             type="button"
             onClick={() => aramaDegistir("")}
-            className="absolute right-1.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm leading-none cursor-pointer bg-transparent border-none"
+            className="absolute right-1.5 top-1/2 -translate-y-1/2 text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-12)] text-sm leading-none cursor-pointer bg-transparent border-none"
             aria-label="Aramayı temizle"
           >
             ×

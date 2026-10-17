@@ -3,7 +3,7 @@
   container-type: size;
   height: 100%;
   min-height: 0;
-  color: #10213d;
+  color: var(--tema-yerel-lig-ana-metin-02);
 }
 
 .dashboard {
@@ -51,10 +51,10 @@
 .panel {
   min-width: 0;
   overflow: hidden;
-  border: 1px solid rgba(148, 163, 184, 0.2);
+  border: 1px solid var(--tema-yerel-lig-cizgi-21);
   border-radius: 18px;
-  background: rgba(255, 255, 255, 0.96);
-  box-shadow: 0 8px 30px rgba(36, 64, 98, 0.06);
+  background: var(--tema-yerel-lig-kart-06);
+  box-shadow: 0 8px 30px var(--tema-yerel-lig-golge-05);
 }
 
 .metricsGrid,
@@ -76,11 +76,11 @@
   overflow: hidden;
   flex-direction: column;
   padding: 0;
-  border-color: rgba(255, 255, 255, 0.1);
+  border-color: var(--tema-yerel-lig-cizgi-22);
   background: transparent;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 12px 34px rgba(15, 23, 42, 0.18);
+    inset 0 1px 0 var(--tema-yerel-lig-golge-06),
+    0 12px 34px var(--tema-yerel-lig-golge-07);
 }
 
 .leadersBanner::before {
@@ -102,19 +102,19 @@
   display: grid;
   place-items: center;
   padding: 8px;
-  border: 1px solid rgba(245, 185, 66, 0.3);
+  border: 1px solid var(--tema-yerel-lig-islevsel-cizgi-11);
   border-radius: 9999px;
-  color: #f8bd45;
-  background: rgba(20, 23, 27, 0.5);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+  color: var(--tema-yerel-lig-islevsel-metin-31);
+  background: var(--tema-yerel-lig-eylem-zemin-04);
+  box-shadow: 0 4px 16px var(--tema-yerel-lig-golge-08);
 }
 
 .leadersBannerTitle {
-  color: #f8fafc;
+  color: var(--tema-yerel-lig-yardimci-metin-28);
   font-size: 16px;
   font-weight: 900;
   letter-spacing: -0.02em;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
+  text-shadow: 0 2px 10px var(--tema-yerel-lig-golge-09);
 }
 
 .leadersPodium {
@@ -129,14 +129,14 @@
 }
 
 .sectionHeading {
-  color: #10213d;
+  color: var(--tema-yerel-lig-ana-metin-02);
   font-size: 13px;
   font-weight: 800;
   letter-spacing: -0.01em;
 }
 
 .eyebrow {
-  color: #66809f;
+  color: var(--tema-yerel-lig-yardimci-metin-29);
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.1em;
@@ -145,7 +145,7 @@
 
 .softTile {
   border-radius: 14px;
-  background: #f7f9fc;
+  background: var(--tema-yerel-lig-sayfa-zemini-03);
 }
 
 .scrollArea {
@@ -245,7 +245,7 @@
 }
 
 .profileTitle {
-  color: #20324c;
+  color: var(--tema-yerel-lig-ana-metin-19);
   font-size: 13px;
   font-weight: 800;
   line-height: 1.2;
@@ -253,19 +253,19 @@
 
 .profileDescription {
   margin-top: 4px;
-  color: #718198;
+  color: var(--tema-yerel-lig-yardimci-metin-02);
   font-size: 11px;
   font-weight: 500;
   line-height: 1.35;
 }
 
 .profilePrimary {
-  border-bottom: 1px solid #edf0f4;
+  border-bottom: 1px solid var(--tema-yerel-lig-cizgi-19);
 }
 
 @container dashboard (min-width: 760px) {
   .profilePrimary {
-    border-right: 1px solid #edf0f4;
+    border-right: 1px solid var(--tema-yerel-lig-cizgi-19);
     border-bottom: 0;
   }
 }
@@ -369,11 +369,11 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    color: #f8fafc;
+    color: var(--tema-yerel-lig-yardimci-metin-28);
     font-size: clamp(7px, 2vw, 13px);
     line-height: 1.08;
     text-align: left;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.72);
+    text-shadow: 0 2px 8px var(--tema-yerel-lig-golge-10);
   }
 
   .profileItems {
@@ -391,7 +391,7 @@
   }
 
   .leadersBanner {
-    background: radial-gradient(ellipse at 50% 75%, #40301c 0%, #171b22 55%, #10151c 100%);
+    background: radial-gradient(ellipse at 50% 75%, var(--tema-yerel-lig-islevsel-zemin-33) 0%, var(--tema-yerel-lig-dekoratif-zemin-03) 55%, var(--tema-yerel-lig-dekoratif-zemin-04) 100%);
   }
 
   .leadersPodium {

@@ -38,7 +38,7 @@ test("YayinKarti: ürün adı mobilde 16px (text-base, leading-[22px]), masaüst
   const yayin = ornekYayinUret();
   const html = renderToStaticMarkup(createElement(YayinKarti, { yayin }));
 
-  assert.match(html, /text-base font-bold leading-\[22px\] text-gray-900 sm:text-xs sm:leading-normal/);
+  assert.match(html, /text-base font-bold leading-\[22px\] text-\[var\(--tema-hoyk-baslik\)\] sm:text-xs sm:leading-normal/);
   assert.match(html, /line-clamp-2/);
 });
 
@@ -46,7 +46,7 @@ test("YayinKarti: görünen ürün ID'si adın altında ince gri yazılır; tale
   const html = renderToStaticMarkup(createElement(YayinKarti, {
     yayin: ornekYayinUret({ urun_adi: "Normavas", gorunen_urun_id: "30-001", firma_adi: "Hepifarma", talep_no: 30079 }),
   }));
-  assert.match(html, /Normavas<\/h3><span class="block text-\[10px\] font-normal leading-4 text-gray-400"/);
+  assert.match(html, /Normavas<\/h3><span class="block text-\[10px\] font-normal leading-4 text-\[var\(--tema-hoyk-soluk-metin\)\]"/);
   assert.match(html, /30-001/);
   assert.match(html, /Hepifarma_30079/);
   assert.doesNotMatch(html, /Ürün ID: [0-9a-f]{8}-/);
@@ -64,7 +64,7 @@ test("YayinKarti: beğeni/favori metni ve ikonları mobilde 12px (text-xs, h-4 w
   const yayin = ornekYayinUret();
   const html = renderToStaticMarkup(createElement(YayinKarti, { yayin }));
 
-  assert.match(html, /text-xs text-gray-500 sm:text-\[10px\]/);
+  assert.match(html, /text-xs text-\[var\(--tema-hoyk-ikincil-metin\)\] sm:text-\[10px\]/);
   assert.match(html, /h-4 w-4 sm:h-3\.5 sm:w-3\.5/);
 });
 
@@ -72,8 +72,8 @@ test("YayinKarti: tarih ve talep numarası mobilde 12px (text-xs), masaüstünde
   const yayin = ornekYayinUret();
   const html = renderToStaticMarkup(createElement(YayinKarti, { yayin }));
 
-  assert.match(html, /text-xs text-gray-500 sm:text-\[10px\]/);
-  assert.match(html, /text-xs text-\[#bc2d0d\] sm:text-\[10px\]/);
+  assert.match(html, /text-xs text-\[var\(--tema-hoyk-ikincil-metin\)\] sm:text-\[10px\]/);
+  assert.match(html, /text-xs text-\[var\(--tema-hoyk-talep-metni\)\] sm:text-\[10px\]/);
 });
 
 test("YayinKarti: uzun ve kısa ay adlarında tarih gg.aa.yyyy görünür", () => {
@@ -89,7 +89,7 @@ test("YayinKarti: puan ve ekstra puan rozetleri mobilde 12px (text-xs, px-2), ma
   const yayin = ornekYayinUret();
   const html = renderToStaticMarkup(createElement(YayinKarti, { yayin }));
 
-  assert.match(html, /px-2 py-0\.5 text-xs font-extrabold text-white shadow-xs sm:px-1\.5 sm:text-\[9px\]/);
+  assert.match(html, /px-2 py-0\.5 text-xs font-extrabold text-\[var\(--tema-puan-metni\)\] shadow-xs sm:px-1\.5 sm:text-\[9px\]/);
   assert.match(html, /\+5 Extra/);
 });
 
@@ -97,7 +97,7 @@ test("YayinKarti: izlenme sayısı mobilde 12px (text-xs), masaüstünde 10px (s
   const yayin = ornekYayinUret();
   const html = renderToStaticMarkup(createElement(YayinKarti, { yayin }));
 
-  assert.match(html, /text-xs text-gray-500 sm:text-\[10px\]/);
+  assert.match(html, /text-xs text-\[var\(--tema-hoyk-ikincil-metin\)\] sm:text-\[10px\]/);
   assert.match(html, /142 izlenme/);
 });
 
@@ -108,7 +108,7 @@ test("YayinKarti: izlenme sayısı mobilde 12px (text-xs), masaüstünde 10px (s
 test("YayinTuruPill: standart kullanımda modal ve genel yerler için 9px korunur ve inline-flex içermez", () => {
   const html = renderToStaticMarkup(createElement(YayinTuruPill, { tur: "video" }));
 
-  assert.match(html, /rounded-full border border-white\/60 px-2 py-0\.5 text-\[9px\] font-extrabold shadow-sm backdrop-blur-sm/);
+  assert.match(html, /rounded-full border \S+ px-2 py-0\.5 text-\[9px\] font-extrabold shadow-sm backdrop-blur-sm/);
   assert.doesNotMatch(html, /inline-flex/);
   assert.doesNotMatch(html, /text-xs/);
   assert.doesNotMatch(html, /min-h-/);
@@ -138,7 +138,7 @@ test("YayinKarti: devam eden yayında 'Baştan İzle' mobilde 12px (text-xs), ma
   const yayin = ornekYayinUret({ durum: "devam" });
   const html = renderToStaticMarkup(createElement(YayinKarti, { yayin }));
 
-  assert.match(html, /text-xs font-bold text-amber-700 sm:text-\[10px\]/);
+  assert.match(html, /text-xs font-bold text-\[var\(--tema-hoyk-yeniden-metin\)\] sm:text-\[10px\]/);
   assert.match(html, /Baştan İzle/);
 });
 
@@ -184,12 +184,12 @@ test("Üye Önerileri: başlıklar mobilde 11px (sm:text-[8px]), değerler 12px 
   );
 
   // 11 px başlıklar (Öneren, Başlangıç, Bitiş)
-  assert.match(html, /text-\[11px\] font-semibold text-gray-400 uppercase tracking-wider sm:text-\[8px\]/);
+  assert.match(html, /text-\[11px\] font-semibold text-\[var\(--tema-hoyk-soluk-metin\)\] uppercase tracking-wider sm:text-\[8px\]/);
   // 12 px değerler
-  assert.match(html, /text-xs font-bold text-\[#1e3a8a\] sm:text-\[10px\]/);
-  assert.match(html, /text-xs font-bold text-gray-700 whitespace-nowrap sm:text-\[10px\]/);
+  assert.match(html, /text-xs font-bold text-\[var\(--tema-hoyk-oneren-metni\)\] sm:text-\[10px\]/);
+  assert.match(html, /text-xs font-bold text-\[var\(--tema-hoyk-oneri-tarih-metni\)\] whitespace-nowrap sm:text-\[10px\]/);
   // 12 px puan rozeti
-  assert.match(html, /text-xs font-extrabold text-\[#0a1b39\] shadow-sm sm:px-1\.5 sm:text-\[9px\]/);
+  assert.match(html, /text-xs font-extrabold text-\[var\(--tema-hoyk-oneri-puan-metni\)\] shadow-sm sm:px-1\.5 sm:text-\[9px\]/);
 });
 
 test("Eczanem: metrik başlıkları 11px (sm:text-[7px]), değerler 12px (sm:text-[10px]), eczane adı 12px (sm:text-[10px]) uygulanır", async () => {
@@ -228,11 +228,11 @@ test("Eczanem: metrik başlıkları 11px (sm:text-[7px]), değerler 12px (sm:tex
   );
 
   // 11 px metrik başlığı (Tamamlama / Soru / Her Doğru)
-  assert.match(html, /text-\[11px\] font-extrabold uppercase tracking-wide text-\[#8a99aa\] sm:text-\[7px\]/);
+  assert.match(html, /text-\[11px\] font-extrabold uppercase tracking-wide text-\[var\(--tema-hoyk-eczanem-ozet-etiket\)\] sm:text-\[7px\]/);
   // 12 px metrik değerleri
   assert.match(html, /text-xs font-black tabular-nums.*sm:text-\[10px\]/);
   // 12 px eczane adı
-  assert.match(html, /truncate text-xs font-semibold text-\[#8fa0b2\] sm:text-\[10px\]/);
+  assert.match(html, /truncate text-xs font-semibold text-\[var\(--tema-hoyk-eczanem-eczane\)\] sm:text-\[10px\]/);
 });
 
 test("Üretici kataloğu: üreten bilgisi 12px (sm:text-[10px]) uygulanır", async () => {
@@ -271,7 +271,7 @@ test("Üretici kataloğu: üreten bilgisi 12px (sm:text-[10px]) uygulanır", asy
   );
 
   // 12 px üreten bilgisi
-  assert.match(html, /truncate text-xs font-semibold text-gray-500 sm:text-\[10px\]/);
+  assert.match(html, /truncate text-xs font-semibold text-\[var\(--tema-hoyk-ikincil-metin\)\] sm:text-\[10px\]/);
 });
 
 test("Challenge Club: KartMeta 12px (text-xs) ve sm:text-[10px] uygulanır", async () => {
@@ -344,8 +344,8 @@ test("E-Club: video kartı durum etiketi 11px (text-[11px]) ve sm:text-[9px] uyg
   );
 
   assert.match(anaSayfaHtml, /text-\[11px\] font-normal text-white backdrop-blur-sm sm:text-\[9px\]/);
-  assert.match(anaSayfaHtml, /bg-\[#1e3a8a\] px-2 py-0\.5 text-xs font-normal text-white shadow-sm backdrop-blur-sm sm:text-\[9px\]/);
-  assert.match(anaSayfaHtml, /text-xs font-normal text-white shadow-xs sm:px-1\.5 sm:text-\[9px\]/);
+  assert.match(anaSayfaHtml, /bg-\[var\(--tema-hoyk-firma-zemin\)\] px-2 py-0\.5 text-xs font-normal text-\[var\(--tema-hoyk-ters-metin\)\] shadow-sm backdrop-blur-sm sm:text-\[9px\]/);
+  assert.match(anaSayfaHtml, /text-xs font-normal text-\[var\(--tema-puan-metni\)\] shadow-xs sm:px-1\.5 sm:text-\[9px\]/);
   assert.doesNotMatch(anaSayfaHtml, /font-(?:extrabold|medium)/);
   assert.doesNotMatch(anaSayfaHtml, /Ürün ID: 30-001/);
   assert.doesNotMatch(anaSayfaHtml, /font-normal text-gray-600/);

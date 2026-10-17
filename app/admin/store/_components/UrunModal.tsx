@@ -58,8 +58,8 @@ const BOS_FORM: FormState = {
 const MAKS_BOYUT_MB = 2;
 const IZINLI_FORMATLAR = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
-const KOYU_METIN = "#374151";
-const GRI_METIN = "#737373";
+const KOYU_METIN = "var(--tema-yerel-yonetim-ana-metin-03)";
+const GRI_METIN = "var(--tema-yerel-yonetim-yardimci-metin-01)";
 
 export default function UrunModal({
   acik,
@@ -209,7 +209,7 @@ export default function UrunModal({
   if (!acik) return null;
 
   const inputStili: React.CSSProperties = {
-    border: "0.5px solid #e5e7eb",
+    border: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)",
     fontFamily: "'Nunito', sans-serif",
     color: KOYU_METIN,
   };
@@ -219,21 +219,21 @@ export default function UrunModal({
   return (
     <div
       className="fixed inset-0 flex items-center justify-center z-50 p-4"
-      style={{ background: "rgba(0,0,0,0.5)" }}
+      style={{ background: "var(--tema-yerel-yonetim-ortu-04)" }}
     >
       <div
-        className="bg-white rounded-xl border border-gray-200 shadow-lg w-full max-w-lg flex flex-col"
+        className="bg-[var(--tema-yerel-yonetim-kart-04)] rounded-xl border border-[var(--tema-yerel-yonetim-cizgi-08)] shadow-lg w-full max-w-lg flex flex-col"
         style={{ maxHeight: "92vh" }}
       >
         {/* Başlık */}
-        <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
-          <div className="text-base font-semibold text-gray-900">
+        <div className="px-5 py-4 border-b border-[var(--tema-yerel-yonetim-cizgi-09)] flex items-center justify-between">
+          <div className="text-base font-semibold text-[var(--tema-yerel-yonetim-ana-metin-05)]">
             {mevcutUrun ? "Ürünü Düzenle" : "Yeni Ürün"}
           </div>
           <button
             onClick={onKapat}
             disabled={islemSuruyor}
-            className="text-gray-500 text-lg cursor-pointer border-none bg-transparent p-1"
+            className="text-[var(--tema-yerel-yonetim-yardimci-metin-06)] text-lg cursor-pointer border-none bg-transparent p-1"
             style={{ opacity: islemSuruyor ? 0.4 : 1 }}
           >
             ✕
@@ -244,21 +244,21 @@ export default function UrunModal({
         <div className="px-5 py-4 flex flex-col gap-3 overflow-y-auto">
           {/* Görsel alanı */}
           <div>
-            <label className="text-xs font-semibold text-gray-700 block mb-1.5">
+            <label className="text-xs font-semibold text-[var(--tema-yerel-yonetim-ana-metin-08)] block mb-1.5">
               Ürün Görseli (max {MAKS_BOYUT_MB} MB)
             </label>
             {form.gorsel_url ? (
-              <div className="relative rounded-lg overflow-hidden border" style={{ borderColor: "#e5e7eb" }}>
+              <div className="relative rounded-lg overflow-hidden border" style={{ borderColor: "var(--tema-yerel-yonetim-islevsel-cizgi-13)" }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={form.gorsel_url}
                   alt="Önizleme"
-                  className="w-full h-48 object-cover bg-gray-50"
+                  className="w-full h-48 object-cover bg-[var(--tema-yerel-yonetim-sayfa-zemini-08)]"
                 />
                 <button
                   onClick={handleGorselSil}
                   disabled={islemSuruyor}
-                  className="absolute top-2 right-2 px-2 py-1 rounded-lg text-white text-xs font-semibold cursor-pointer border-none"
+                  className="absolute top-2 right-2 px-2 py-1 rounded-lg text-[var(--tema-yerel-yonetim-islevsel-metin-26)] text-xs font-semibold cursor-pointer border-none"
                   style={{ background: RENK_BORDO, opacity: islemSuruyor ? 0.5 : 1 }}
                 >
                   Kaldır
@@ -277,8 +277,8 @@ export default function UrunModal({
                 style={{
                   border: surukleAktif
                     ? `1px dashed ${RENK_BORDO}`
-                    : "1px dashed #d1d5db",
-                  background: surukleAktif ? "#f0f9ff" : "#f9fafb",
+                    : "1px dashed var(--tema-yerel-yonetim-cizgi-02)",
+                  background: surukleAktif ? "var(--tema-yerel-yonetim-secim-zemin-02)" : "var(--tema-yerel-yonetim-sayfa-zemini-02)",
                   minHeight: "120px",
                   padding: "20px",
                 }}
@@ -316,7 +316,7 @@ export default function UrunModal({
 
           {/* Kategori */}
           <div>
-            <label className="text-xs font-semibold text-gray-700 block mb-1.5">
+            <label className="text-xs font-semibold text-[var(--tema-yerel-yonetim-ana-metin-08)] block mb-1.5">
               Kategori
             </label>
             <SadeFormSecimi value={form.kategori_id} onChange={(e) => handleChange("kategori_id", e.target.value)} disabled={islemSuruyor} aria-label="Kategori" className="w-full">
@@ -332,7 +332,7 @@ export default function UrunModal({
 
           {/* Ad */}
           <div>
-            <label className="text-xs font-semibold text-gray-700 block mb-1.5">
+            <label className="text-xs font-semibold text-[var(--tema-yerel-yonetim-ana-metin-08)] block mb-1.5">
               Ürün Adı
             </label>
             <input
@@ -340,7 +340,7 @@ export default function UrunModal({
               value={form.ad}
               onChange={(e) => handleChange("ad", e.target.value)}
               disabled={islemSuruyor}
-              className="w-full px-3 py-2 text-sm rounded-lg bg-white"
+              className="w-full px-3 py-2 text-sm rounded-lg bg-[var(--tema-yerel-yonetim-kart-04)]"
               style={inputStili}
               placeholder="Örn. Sapiens — Yuval Noah Harari"
             />
@@ -348,14 +348,14 @@ export default function UrunModal({
 
           {/* Açıklama */}
           <div>
-            <label className="text-xs font-semibold text-gray-700 block mb-1.5">
+            <label className="text-xs font-semibold text-[var(--tema-yerel-yonetim-ana-metin-08)] block mb-1.5">
               Açıklama (opsiyonel)
             </label>
             <textarea
               value={form.aciklama}
               onChange={(e) => handleChange("aciklama", e.target.value)}
               disabled={islemSuruyor}
-              className="w-full px-3 py-2 text-sm rounded-lg bg-white resize-none"
+              className="w-full px-3 py-2 text-sm rounded-lg bg-[var(--tema-yerel-yonetim-kart-04)] resize-none"
               style={{ ...inputStili, minHeight: "70px" }}
               placeholder="Kitabın kısa açıklaması..."
             />
@@ -364,7 +364,7 @@ export default function UrunModal({
           {/* Fiyat + Stok */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-semibold text-gray-700 block mb-1.5">
+              <label className="text-xs font-semibold text-[var(--tema-yerel-yonetim-ana-metin-08)] block mb-1.5">
                 HapPuan Fiyatı
               </label>
               <input
@@ -373,12 +373,12 @@ export default function UrunModal({
                 value={form.puan_fiyati}
                 onChange={(e) => handleChange("puan_fiyati", e.target.value === "" ? "" : Number(e.target.value))}
                 disabled={islemSuruyor}
-                className="w-full px-3 py-2 text-sm rounded-lg bg-white"
+                className="w-full px-3 py-2 text-sm rounded-lg bg-[var(--tema-yerel-yonetim-kart-04)]"
                 style={inputStili}
               />
             </div>
             <div>
-              <label className="text-xs font-semibold text-gray-700 block mb-1.5">
+              <label className="text-xs font-semibold text-[var(--tema-yerel-yonetim-ana-metin-08)] block mb-1.5">
                 Stok
               </label>
               <input
@@ -387,7 +387,7 @@ export default function UrunModal({
                 value={form.stok}
                 onChange={(e) => handleChange("stok", e.target.value === "" ? "" : Number(e.target.value))}
                 disabled={islemSuruyor}
-                className="w-full px-3 py-2 text-sm rounded-lg bg-white"
+                className="w-full px-3 py-2 text-sm rounded-lg bg-[var(--tema-yerel-yonetim-kart-04)]"
                 style={inputStili}
               />
             </div>
@@ -408,13 +408,13 @@ export default function UrunModal({
         </div>
 
         {/* Aksiyon */}
-        <div className="px-5 py-4 border-t border-gray-100 flex gap-2.5 justify-end">
+        <div className="px-5 py-4 border-t border-[var(--tema-yerel-yonetim-cizgi-09)] flex gap-2.5 justify-end">
           <button
             onClick={onKapat}
             disabled={islemSuruyor}
-            className="px-4 py-2 rounded-lg border bg-transparent text-gray-500 text-xs cursor-pointer"
+            className="px-4 py-2 rounded-lg border bg-transparent text-[var(--tema-yerel-yonetim-yardimci-metin-06)] text-xs cursor-pointer"
             style={{
-              border: "0.5px solid #e5e7eb",
+              border: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)",
               fontFamily: "'Nunito', sans-serif",
               opacity: islemSuruyor ? 0.4 : 1,
             }}
@@ -424,7 +424,7 @@ export default function UrunModal({
           <button
             onClick={handleKaydet}
             disabled={islemSuruyor}
-            className="px-5 py-2 rounded-lg border-none text-white text-xs font-semibold cursor-pointer"
+            className="px-5 py-2 rounded-lg border-none text-[var(--tema-yerel-yonetim-ters-metin-02)] text-xs font-semibold cursor-pointer"
             style={{
               background: RENK_BORDO,
               opacity: islemSuruyor ? 0.5 : 1,

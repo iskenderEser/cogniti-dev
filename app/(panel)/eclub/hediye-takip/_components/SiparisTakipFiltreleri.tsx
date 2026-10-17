@@ -15,7 +15,7 @@ export const BOS_SIPARIS_TAKIP_FILTRELERI: SiparisTakipFiltreDegerleri = {
   eczane_id: "", urun_id: "", durum: "", baslangic: "", bitis: "",
 };
 
-const etiketSinifi = "flex min-w-0 flex-col gap-1 text-[10px] font-extrabold uppercase tracking-[0.06em] text-[#7d8fa5]";
+const etiketSinifi = "flex min-w-0 flex-col gap-1 text-[10px] font-extrabold uppercase tracking-[0.06em] text-[var(--tema-yerel-eclub-yardimci-metin-15)]";
 
 export default function SiparisTakipFiltreleri({ deger, secenekler, onDegistir, uttler, uttId = "", onUttDegistir }: {
   deger: SiparisTakipFiltreDegerleri;
@@ -27,7 +27,7 @@ export default function SiparisTakipFiltreleri({ deger, secenekler, onDegistir, 
 }) {
   const degistir = (alan: keyof SiparisTakipFiltreDegerleri, value: string) => onDegistir({ ...deger, [alan]: value });
   return (
-    <section aria-label="Sipariş takibi filtreleri" className="rounded-2xl border border-[#dfe7f1] bg-white p-3 shadow-[0_6px_18px_rgba(31,55,90,0.035)] md:p-4">
+    <section aria-label="Sipariş takibi filtreleri" className="rounded-2xl border border-[var(--tema-yerel-eclub-cizgi-03)] bg-[var(--tema-yerel-eclub-kart-01)] p-3 shadow-[0_6px_18px_var(--tema-yerel-eclub-golge-04)] md:p-4">
       <div className={`grid grid-cols-1 gap-3 sm:grid-cols-2 ${uttler ? "lg:grid-cols-6" : "lg:grid-cols-5"}`}>
         {uttler && <label htmlFor="siparis-takip-utt" className={etiketSinifi}>Temsilciler
           <SadeKisiSecimi baslik="Temsilciler" bosSecenekEtiketi="Tüm Temsilciler" kisiler={uttler.map((utt) => ({ deger: utt.utt_id, adSoyad: utt.utt_adi }))} deger={uttId} onDegistir={(id) => onUttDegistir?.(id)} triggerProps={{ id: "siparis-takip-utt" }} className="w-full" />
@@ -61,7 +61,7 @@ export default function SiparisTakipFiltreleri({ deger, secenekler, onDegistir, 
         </label>
       </div>
       {(Object.values(deger).some(Boolean) || Boolean(uttId)) && <div className="mt-3 flex justify-end">
-        <button type="button" onClick={() => { onDegistir({ ...BOS_SIPARIS_TAKIP_FILTRELERI }); onUttDegistir?.(""); }} className="inline-flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-[11px] font-bold text-[#60758d] hover:bg-[#f1f5f9] hover:text-[#237ac8]">
+        <button type="button" onClick={() => { onDegistir({ ...BOS_SIPARIS_TAKIP_FILTRELERI }); onUttDegistir?.(""); }} className="inline-flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-[11px] font-bold text-[var(--tema-yerel-eclub-yardimci-metin-02)] hover:bg-[var(--tema-yerel-eclub-sayfa-zemini-08)] hover:text-[var(--tema-yerel-eclub-eylem-metin-01)]">
           <RotateCcw className="size-3.5" /> Filtreleri temizle
         </button>
       </div>}

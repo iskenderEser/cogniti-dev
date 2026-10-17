@@ -165,7 +165,7 @@ export default function BmEgitimYayinlari({ kategoriBilgisi }: { kategoriBilgisi
 
   if (aktifYayin) return (
     <div className="mx-auto max-w-6xl px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
-      <button type="button" onClick={() => setAktifYayin(null)} className="mb-4 text-sm font-bold text-[#2f7fc7] hover:underline">
+      <button type="button" onClick={() => setAktifYayin(null)} className="mb-4 text-sm font-bold text-[var(--tema-yerel-ortak-sayfa-eylem-metin-01)] hover:underline">
         ← {kategoriBilgisi.etiket}
       </button>
       <VideoOynatici key={aktifYayin.yayin_id} video={aktifYayin} tuketici={false} onizlemeYuzeyi aktifYayinDogrula onKapat={() => setAktifYayin(null)} onVeriYenile={() => {}} hata={hata} basari={() => {}} uyari={() => {}} />
@@ -175,26 +175,26 @@ export default function BmEgitimYayinlari({ kategoriBilgisi }: { kategoriBilgisi
 
   return (
     <div className="mx-auto max-w-6xl px-3 py-4 pb-20 md:px-6 md:py-5 md:pb-5 lg:px-8 lg:py-7">
-      {bmMi && <Link href="/oneriler" className="mb-3 inline-flex items-center gap-1 text-xs font-extrabold text-[#347eb9] hover:underline"><ArrowLeft className="size-3.5" /> Öneri Takibi</Link>}
-      {bmMi && <div className="mb-1 flex items-center gap-1.5 text-[11px] font-bold text-[#8395aa]"><span>Eğitim Yayınları</span><span aria-hidden="true">›</span><strong className="text-[#39749f]">{kategoriBilgisi.etiket}</strong></div>}
+      {bmMi && <Link href="/oneriler" className="mb-3 inline-flex items-center gap-1 text-xs font-extrabold text-[var(--tema-yerel-ortak-sayfa-eylem-metin-08)] hover:underline"><ArrowLeft className="size-3.5" /> Öneri Takibi</Link>}
+      {bmMi && <div className="mb-1 flex items-center gap-1.5 text-[11px] font-bold text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-16)]"><span>Eğitim Yayınları</span><span aria-hidden="true">›</span><strong className="text-[var(--tema-yerel-ortak-sayfa-eylem-metin-09)]">{kategoriBilgisi.etiket}</strong></div>}
       <SayfaYenileBasligi className="mb-5 flex items-start justify-between gap-3"
         baslik={<div className="inline-flex items-center">
-          <h1 className="m-0 text-xl font-extrabold text-gray-900 md:text-2xl">{kategoriBilgisi.etiket}</h1>
+          <h1 className="m-0 text-xl font-extrabold text-[var(--tema-yerel-ortak-sayfa-ana-metin-07)] md:text-2xl">{kategoriBilgisi.etiket}</h1>
           <SayfaRehberi anahtar="yayindaki-videolar" className="ml-1.5 -translate-y-0.5" />
         </div>}
 
-        aciklama={<><p className="mt-1 text-xs font-semibold text-gray-500">Yayındaki eğitim içeriklerini inceleyebilirsiniz.</p></>}
+        aciklama={<><p className="mt-1 text-xs font-semibold text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-11)]">Yayındaki eğitim içeriklerini inceleyebilirsiniz.</p></>}
         aksiyon={<YenileButonu yenileniyor={yenileniyor} onYenile={() => setYenileTetik((deger) => deger + 1)} />}
 
       />
 
-      {bmMi && <div className="mb-5 flex flex-wrap items-center justify-between gap-2 text-[11px] font-bold text-[#7c8da1]">
+      {bmMi && <div className="mb-5 flex flex-wrap items-center justify-between gap-2 text-[11px] font-bold text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-17)]">
         <span>{kategoriBilgisi.etiket} içindeki yayınlar</span>
       </div>}
 
-      {sonuc && <div role="status" className={`mb-5 flex items-start gap-3 rounded-xl border border-l-4 px-4 py-3 ${sonuc.kismi ? "border-amber-200 border-l-amber-600 bg-amber-50 text-amber-800" : "border-emerald-200 border-l-emerald-600 bg-emerald-50 text-emerald-800"}`}>
+      {sonuc && <div role="status" className={`mb-5 flex items-start gap-3 rounded-xl border border-l-4 px-4 py-3 ${sonuc.kismi ? "border-[var(--tema-yerel-ortak-sayfa-islevsel-cizgi-05)] border-l-[var(--tema-yerel-ortak-sayfa-islevsel-cizgi-06)] bg-[var(--tema-yerel-ortak-sayfa-islevsel-zemin-20)] text-[var(--tema-yerel-ortak-sayfa-islevsel-metin-17)]" : "border-[var(--tema-yerel-ortak-sayfa-islevsel-cizgi-07)] border-l-[var(--tema-yerel-ortak-sayfa-islevsel-cizgi-08)] bg-[var(--tema-yerel-ortak-sayfa-islevsel-zemin-21)] text-[var(--tema-yerel-ortak-sayfa-islevsel-metin-18)]"}`}>
         <Check className="mt-0.5 size-4 shrink-0" /><div className="min-w-0 flex-1"><strong className="block text-xs">{sonuc.baslik}</strong><p className="mt-1 text-[11px]">{sonuc.detay}</p></div>
-        <button type="button" onClick={() => setSonuc(null)} aria-label="Bilgi notunu kapat" className="shrink-0 rounded p-1 hover:bg-black/5"><X className="size-4" /></button>
+        <button type="button" onClick={() => setSonuc(null)} aria-label="Bilgi notunu kapat" className="shrink-0 rounded p-1 hover:bg-[var(--tema-yerel-ortak-sayfa-ortu-01)]/5"><X className="size-4" /></button>
       </div>}
 
       <div className="mb-5 flex min-w-0 flex-wrap items-center justify-between gap-3">
@@ -217,14 +217,14 @@ export default function BmEgitimYayinlari({ kategoriBilgisi }: { kategoriBilgisi
             etkilesimGoster={false}
             durumGoster={false}
             talepNoGoster={bmMi}
-            baslikSagAksiyon={!bmMi && yayin.talep_no != null ? <span className="shrink-0 font-mono text-xs text-[#bc2d0d] sm:text-[10px]">{talepIdGoster(yayin.firma_adi, yayin.talep_no)}</span> : undefined}
-            className={seciliYayinIdleri.includes(yayin.yayin_id) ? "ring-2 ring-[#237ac8]/30" : ""}
-            altEkIcerik={bmMi ? <div onClick={(event) => event.stopPropagation()} className="mt-2.5 flex items-center justify-between gap-2 border-t border-[#eef2f6] pt-2">
-              <label className="inline-flex cursor-pointer items-center gap-1.5 text-[10px] font-extrabold text-[#526780]">
-                <input type="checkbox" checked={seciliYayinIdleri.includes(yayin.yayin_id)} onChange={() => yayinSec(yayin.yayin_id)} aria-label={`${yayin.urun_adi} yayınını öneri için seç`} className="size-3.5 accent-[#2f7fc7]" />
+            baslikSagAksiyon={!bmMi && yayin.talep_no != null ? <span className="shrink-0 font-mono text-xs text-[var(--tema-hoyk-talep-metni)] sm:text-[10px]">{talepIdGoster(yayin.firma_adi, yayin.talep_no)}</span> : undefined}
+            className={seciliYayinIdleri.includes(yayin.yayin_id) ? "ring-2 ring-[var(--tema-hoyk-bm-secim-halka)]" : ""}
+            altEkIcerik={bmMi ? <div onClick={(event) => event.stopPropagation()} className="mt-2.5 flex items-center justify-between gap-2 border-t border-[var(--tema-hoyk-bm-alt-cizgi)] pt-2">
+              <label className="inline-flex cursor-pointer items-center gap-1.5 text-[10px] font-extrabold text-[var(--tema-hoyk-secim-pasif-metni)]">
+                <input type="checkbox" checked={seciliYayinIdleri.includes(yayin.yayin_id)} onChange={() => yayinSec(yayin.yayin_id)} aria-label={`${yayin.urun_adi} yayınını öneri için seç`} className="size-3.5 accent-[var(--tema-hoyk-bm-secim-kontrolu)]" />
                 Öneri için seç
               </label>
-              <button type="button" onClick={() => setAktifYayin(yayin)} className="text-[10px] font-extrabold text-[#7d8ba0] hover:text-[#2f7fc7]">Önizle ↗</button>
+              <button type="button" onClick={() => setAktifYayin(yayin)} className="text-[10px] font-extrabold text-[var(--tema-hoyk-bm-onizleme)] hover:text-[var(--tema-hoyk-bm-secim-kontrolu)]">Önizle ↗</button>
             </div> : undefined}
           />}
           sifirlamaAnahtari={`${kategoriBilgisi.slug}-${aktifTur}-${liste.arama.alanAnahtari}-${liste.arama.aranan}`}
@@ -232,11 +232,11 @@ export default function BmEgitimYayinlari({ kategoriBilgisi }: { kategoriBilgisi
           masaustuIzgaraClassName="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
         />
       )}
-      {bmMi && seciliYayinIdleri.length > 0 && <div role="status" className="fixed inset-x-4 bottom-4 z-30 mx-auto flex max-w-[650px] flex-wrap items-center gap-2.5 rounded-2xl bg-[#172b4d] px-3.5 py-3 text-white shadow-[0_16px_40px_rgba(23,43,77,0.3)] max-sm:inset-x-0 max-sm:bottom-0 max-sm:rounded-b-none">
+      {bmMi && seciliYayinIdleri.length > 0 && <div role="status" className="fixed inset-x-4 bottom-4 z-30 mx-auto flex max-w-[650px] flex-wrap items-center gap-2.5 rounded-2xl bg-[var(--tema-yerel-ortak-sayfa-eylem-zemin-10)] px-3.5 py-3 text-[var(--tema-yerel-ortak-sayfa-ters-metin-01)] shadow-[0_16px_40px_var(--tema-yerel-ortak-sayfa-golge-06)] max-sm:inset-x-0 max-sm:bottom-0 max-sm:rounded-b-none">
         <strong className="min-w-0 flex-1 text-[13px]">{seciliYayinIdleri.length} yayın seçildi</strong>
-        <span className="text-[10px] text-[#b8cade] max-sm:order-3 max-sm:w-full">En fazla 3 yayın · tek temsilci</span>
-        <button type="button" onClick={() => setSeciliYayinIdleri([])} className="rounded-lg px-2 py-2.5 text-[11px] font-extrabold text-[#d9e6f3] hover:bg-white/10">Seçimi temizle</button>
-        <button type="button" onClick={() => { setPanelHatasi(""); setPanelAcik(true); }} className="rounded-lg bg-white px-3 py-2.5 text-[11px] font-extrabold text-[#237ac8] hover:bg-[#edf6ff]">Gönderim oluştur →</button>
+        <span className="text-[10px] text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-18)] max-sm:order-3 max-sm:w-full">En fazla 3 yayın · tek temsilci</span>
+        <button type="button" onClick={() => setSeciliYayinIdleri([])} className="rounded-lg px-2 py-2.5 text-[11px] font-extrabold text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-19)] hover:bg-[var(--tema-yerel-ortak-sayfa-kart-01)]/10">Seçimi temizle</button>
+        <button type="button" onClick={() => { setPanelHatasi(""); setPanelAcik(true); }} className="rounded-lg bg-[var(--tema-yerel-ortak-sayfa-kart-01)] px-3 py-2.5 text-[11px] font-extrabold text-[var(--tema-yerel-ortak-sayfa-eylem-metin-06)] hover:bg-[var(--tema-yerel-ortak-sayfa-secim-zemin-07)]">Gönderim oluştur →</button>
       </div>}
       {bmMi && panelAcik && <BmOneriGonderimPaneli
         yayinlar={seciliYayinlar} alicilar={alicilar} limitler={limitler} alicilarYukleniyor={alicilarYukleniyor}

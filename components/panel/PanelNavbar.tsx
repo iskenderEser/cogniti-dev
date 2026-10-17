@@ -9,8 +9,10 @@
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useTema } from "@/app/providers/TemaProvider";
+import TemaSecici from "@/components/tema/TemaSecici";
 
-const BORDO = "#bc2d0d";
+const BORDO = "var(--tema-vurgu)";
 
 // UTT Kişisel Özet Kapsülü — tek şık rozet: Takım: 1 | Sipariş: 1.386
 function OzetKapsul({
@@ -24,17 +26,17 @@ function OzetKapsul({
     <div
       className="inline-flex items-center rounded-full leading-tight select-none py-1 px-3"
       style={{
-        background: "rgba(0,0,0,0.04)",
-        boxShadow: "inset 0 0 0 0.5px rgba(0,0,0,0.08)",
+        background: "var(--tema-ust-menu-pill-zemin)",
+        boxShadow: "inset 0 0 0 0.5px var(--tema-ust-menu-pill-cizgi)",
         fontFamily: "'Nunito', sans-serif",
       }}
     >
       {/* Takım Sırası */}
       <div className="flex items-center gap-1 whitespace-nowrap">
-        <span style={{ fontSize: 11, fontWeight: 600, color: "#6b7280" }}>
+        <span style={{ fontSize: 11, fontWeight: 600, color: "var(--tema-ikincil-metin)" }}>
           Takım Sırası:
         </span>
-        <span style={{ fontSize: 12, fontWeight: 700, color: "#111827" }}>
+        <span style={{ fontSize: 12, fontWeight: 700, color: "var(--tema-baslik)" }}>
           {ozet.takimSirasi ? `${ozet.takimSirasi}` : "-"}
         </span>
       </div>
@@ -42,13 +44,13 @@ function OzetKapsul({
       {/* Sipariş Puanı — yalnız HBStore aktifse */}
       {siparisPuaniGoster && (
         <>
-          <span style={{ color: "#d1d5db", margin: "0 8px", fontSize: 11, userSelect: "none" }}>|</span>
+          <span style={{ color: "var(--tema-ust-menu-ozet-ayirici)", margin: "0 8px", fontSize: 11, userSelect: "none" }}>|</span>
           {/* Sipariş Puanı */}
           <div className="flex items-center gap-1 whitespace-nowrap">
-            <span style={{ fontSize: 11, fontWeight: 600, color: "#6b7280" }}>
+            <span style={{ fontSize: 11, fontWeight: 600, color: "var(--tema-ikincil-metin)" }}>
               Sipariş:
             </span>
-            <span style={{ fontSize: 12, fontWeight: 700, color: "#111827" }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: "var(--tema-baslik)" }}>
               {ozet.siparisPuani.toLocaleString("tr-TR")} p
             </span>
           </div>
@@ -64,13 +66,13 @@ function OzetPill({ etiket, deger }: { etiket: string; deger: string }) {
     <div
       className="inline-flex items-center gap-1.5 rounded-full leading-tight select-none py-1.5 px-3.5"
       style={{
-        background: "rgba(0,0,0,0.04)",
-        boxShadow: "inset 0 0 0 0.5px rgba(0,0,0,0.08)",
+        background: "var(--tema-ust-menu-pill-zemin)",
+        boxShadow: "inset 0 0 0 0.5px var(--tema-ust-menu-pill-cizgi)",
         fontFamily: "'Nunito', sans-serif",
       }}
     >
-      <span style={{ fontSize: 11.5, fontWeight: 600, color: "#6b7280" }}>{etiket}</span>
-      <span style={{ fontSize: 12.5, fontWeight: 700, color: "#1f2937" }}>{deger}</span>
+      <span style={{ fontSize: 11.5, fontWeight: 600, color: "var(--tema-ikincil-metin)" }}>{etiket}</span>
+      <span style={{ fontSize: 12.5, fontWeight: 700, color: "var(--tema-metin)" }}>{deger}</span>
     </div>
   );
 }
@@ -90,6 +92,7 @@ interface PanelNavbarProps {
   firmaLogoUrl?: string | null;
   ogrenmePlatformuAktif?: boolean;
   firmaAdi?: string | null;
+  temaSeciciGoster?: boolean;
   onCikis: () => void;
   onHamburger?: () => void; // mobilde sol drawer'ı açar
 }
@@ -112,11 +115,13 @@ export default function PanelNavbar({
   firmaLogoUrl,
   ogrenmePlatformuAktif,
   firmaAdi,
+  temaSeciciGoster = true,
   onCikis,
   onHamburger,
 }: PanelNavbarProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const { tema, temaDegistir } = useTema();
   const [hover, setHover] = useState<string | null>(null);
 
   // Ana Sayfa navbarın sürekli görünen ana hedefidir. Butonla yapılan router.push
@@ -133,9 +138,9 @@ export default function PanelNavbar({
   const pillStyle = (key: string, aktif: boolean): React.CSSProperties => {
     const isHover = hover === key;
     return {
-      color: aktif ? BORDO : "#374151",
-      background: aktif ? "#fef2f2" : isHover ? "rgba(188,45,13,0.07)" : "rgba(0,0,0,0.04)",
-      boxShadow: aktif ? "inset 0 0 0 1px #fecaca" : "inset 0 0 0 0.5px rgba(0,0,0,0.08)",
+      color: aktif ? BORDO : "var(--tema-gezinme-metin)",
+      background: aktif ? "var(--tema-ust-menu-pill-secili-zemin)" : isHover ? "var(--tema-ust-menu-pill-hover)" : "var(--tema-ust-menu-pill-zemin)",
+      boxShadow: aktif ? "inset 0 0 0 1px var(--tema-ust-menu-pill-secili-cizgi)" : "inset 0 0 0 0.5px var(--tema-ust-menu-pill-cizgi)",
       fontFamily: "'Nunito', sans-serif",
     };
   };
@@ -146,8 +151,8 @@ export default function PanelNavbar({
 
   return (
     <nav
-      className="sticky top-0 z-50 border-b border-gray-200 px-2.5 py-2.5 sm:px-6 sm:py-3.5 min-h-[64px] sm:min-h-[76px] flex flex-col justify-center"
-      style={{ background: "rgba(255,255,255,0.85)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)", borderBottomColor: "#e5e7eb" }}
+      className="sticky top-0 z-50 border-b border-[var(--tema-cizgi)] px-2.5 py-2.5 sm:px-6 sm:py-3.5 min-h-[64px] sm:min-h-[76px] flex flex-col justify-center"
+      style={{ background: "var(--tema-ust-menu-zemin)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)", borderBottomColor: "var(--tema-cizgi)" }}
     >
       <div className="flex items-center justify-between gap-1.5 sm:gap-4">
         {/* Sol Kolon: Logo & Co-Branding (Ayraç sidebarın 240px sağ kenarı ile tam hizalıdır: 24px padding + 216px = 240px) */}
@@ -169,7 +174,7 @@ export default function PanelNavbar({
 
           {ogrenmePlatformuAktif && firmaLogoUrl && (
             <div className="flex items-center flex-shrink-0 select-none">
-              <div className="h-6 sm:h-7 xl:h-8 w-[1.5px] bg-slate-200 rounded-full mx-1.5 sm:mx-0" />
+              <div className="h-6 sm:h-7 xl:h-8 w-[1.5px] bg-[var(--tema-ust-menu-logo-ayirici)] rounded-full mx-1.5 sm:mx-0" />
               
               <div className="flex items-center flex-shrink-0 pl-0.5 sm:pl-3 xl:pl-4">
                 {/* Sabit Bounding Box (72px) */}
@@ -184,7 +189,7 @@ export default function PanelNavbar({
                 {/* Sabit Metin (8.5px) */}
                 <span
                   style={{ fontFamily: "'Nunito', sans-serif" }}
-                  className="text-[8.5px] sm:text-[9.5px] xl:text-[11.5px] font-normal text-[#64748b] tracking-tight whitespace-nowrap ml-1 sm:ml-2 xl:ml-2.5"
+                  className="text-[8.5px] sm:text-[9.5px] xl:text-[11.5px] font-normal text-[var(--tema-ust-menu-aciklama)] tracking-tight whitespace-nowrap ml-1 sm:ml-2 xl:ml-2.5"
                 >
                   resmi öğrenme platformu
                 </span>
@@ -214,7 +219,7 @@ export default function PanelNavbar({
             ))}
           </div>
 
-          <div className="h-5 w-[1px] bg-gray-200" />
+          <div className="h-5 w-[1px] bg-[var(--tema-ust-menu-ayirici)]" />
           {ozet && (
             <OzetKapsul ozet={ozet} siparisPuaniGoster={siparisPuaniGoster} />
           )}
@@ -226,10 +231,10 @@ export default function PanelNavbar({
             <button
               type="button"
               onClick={() => router.push("/store")}
-              className="inline-flex items-center justify-center rounded-full px-3 py-1 text-xs font-extrabold leading-tight text-white whitespace-nowrap cursor-pointer border-none transition-all duration-200 hover:-translate-y-px hover:brightness-105 active:translate-y-0"
+              className="inline-flex items-center justify-center rounded-full px-3 py-1 text-xs font-extrabold leading-tight text-[var(--tema-ters-metin)] whitespace-nowrap cursor-pointer border-none transition-all duration-200 hover:-translate-y-px hover:brightness-105 active:translate-y-0"
               style={{
-                background: "linear-gradient(135deg, #ff9a1f 0%, #ff6200 55%, #f04400 100%)",
-                boxShadow: "0 4px 12px rgba(255, 98, 0, 0.32), inset 0 1px 0 rgba(255,255,255,0.38)",
+                background: "var(--tema-hbstore-zemini)",
+                boxShadow: "0 4px 12px var(--tema-hbstore-golge), inset 0 1px 0 var(--tema-hbstore-parilti)",
                 fontFamily: "'Nunito', sans-serif",
               }}
               aria-label="HBStore'u aç"
@@ -241,11 +246,11 @@ export default function PanelNavbar({
           {/* Kullanıcı Adı + Avatar + Çıkış (0.5 cm / 22px sol boşlukla puanlardan ayrıldı) */}
           <div className="flex flex-col items-end gap-0.5 flex-shrink-0 ml-5 lg:ml-6">
             <div className="flex items-center gap-2">
-              {adSoyad && <span className="text-sm font-bold whitespace-nowrap" style={{ color: "#374151" }}>{adSoyad}</span>}
+              {adSoyad && <span className="text-sm font-bold whitespace-nowrap" style={{ color: "var(--tema-gezinme-metin)" }}>{adSoyad}</span>}
               <div
                 onClick={() => router.push("/profil")}
                 className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold cursor-pointer shrink-0"
-                style={{ background: "#d4d4d4", color: "#374151", border: "1px solid #c9c9c9" }}
+                style={{ background: "var(--tema-gezinme-avatar-zemin)", color: "var(--tema-gezinme-metin)", border: "1px solid var(--tema-gezinme-avatar-cizgi)" }}
               >
                 {bashHarfler}
               </div>
@@ -270,7 +275,7 @@ export default function PanelNavbar({
           <div
             onClick={() => router.push("/profil")}
             className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold cursor-pointer"
-            style={{ background: "#d4d4d4", color: "#374151" }}
+            style={{ background: "var(--tema-gezinme-avatar-zemin)", color: "var(--tema-gezinme-metin)" }}
           >
             {bashHarfler}
           </div>
@@ -279,12 +284,13 @@ export default function PanelNavbar({
             aria-label="Menü"
             className="flex flex-col gap-1 p-1 bg-transparent border-none cursor-pointer"
           >
-            <span className="block w-4 bg-gray-700" style={{ height: "1.5px" }} />
-            <span className="block w-4 bg-gray-700" style={{ height: "1.5px" }} />
-            <span className="block w-4 bg-gray-700" style={{ height: "1.5px" }} />
+            <span className="block w-4 bg-[var(--tema-ust-menu-simge)]" style={{ height: "1.5px" }} />
+            <span className="block w-4 bg-[var(--tema-ust-menu-simge)]" style={{ height: "1.5px" }} />
+            <span className="block w-4 bg-[var(--tema-ust-menu-simge)]" style={{ height: "1.5px" }} />
           </button>
         </div>
       </div>
+      {temaSeciciGoster && <TemaSecici tema={tema} onTemaDegistir={temaDegistir} />}
     </nav>
   );
 }

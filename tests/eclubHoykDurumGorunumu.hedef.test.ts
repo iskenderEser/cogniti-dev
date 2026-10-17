@@ -93,8 +93,8 @@ test("E-Club HOYK tamamlanmışsa mavi kalır; tamamlanmamışsa süresine göre
       oneri: { ...gecmisOneri, oneri_durumu: oneriDurumu },
       simdi: Date.parse("2026-10-15T12:00:00+03:00"),
     }));
-    assert.match(html, /border-\[2px\] border-\[#dc2626\]/);
-    assert.doesNotMatch(html, /<canvas|border-\[#2563eb\]/);
+    assert.match(html, /border-\[2px\] border-\[var\(--tema-hoyk-sure-doldu\)\]/);
+    assert.doesNotMatch(html, /<canvas|border-\[var\(--tema-hoyk-tamamlandi\)\]/);
   }
 
   for (const tamamlananOneri of [oneri, gecmisOneri, { ...gecmisOneri, oneri_durumu: "suresi_gecmis" as const }]) {
@@ -103,7 +103,7 @@ test("E-Club HOYK tamamlanmışsa mavi kalır; tamamlanmamışsa süresine göre
       oneri: { ...tamamlananOneri, izlendi_mi: true },
       simdi: Date.parse("2026-10-15T12:00:00+03:00"),
     }));
-    assert.match(tamamlananHtml, /border-\[2px\] border-\[#2563eb\]/);
-    assert.doesNotMatch(tamamlananHtml, /border-\[#dc2626\]|<canvas/);
+    assert.match(tamamlananHtml, /border-\[2px\] border-\[var\(--tema-hoyk-tamamlandi\)\]/);
+    assert.doesNotMatch(tamamlananHtml, /border-\[var\(--tema-hoyk-sure-doldu\)\]|<canvas/);
   }
 });

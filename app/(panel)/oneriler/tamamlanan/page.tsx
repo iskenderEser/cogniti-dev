@@ -23,8 +23,8 @@ export default function TamamlananOnerilerPage() {
 
   if (authYukleniyor || !kullanici || loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50">
-        <svg className="h-6 w-6 animate-spin text-gray-500" fill="none" viewBox="0 0 24 24">
+      <div className="flex min-h-screen items-center justify-center bg-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-06)]">
+        <svg className="h-6 w-6 animate-spin text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-11)]" fill="none" viewBox="0 0 24 24">
           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
         </svg>
@@ -34,8 +34,8 @@ export default function TamamlananOnerilerPage() {
 
   if (!isUTT) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
-        <div className="rounded-xl border border-gray-200 bg-white px-5 py-4 text-sm text-gray-600">
+      <div className="flex min-h-screen items-center justify-center bg-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-06)] px-4">
+        <div className="rounded-xl border border-[var(--tema-yerel-ortak-sayfa-cizgi-06)] bg-[var(--tema-yerel-ortak-sayfa-kart-01)] px-5 py-4 text-sm text-[var(--tema-yerel-ortak-sayfa-ana-metin-08)]">
           Bu sayfaya yalnız UTT ve KD_UTT rolleri erişebilir.
         </div>
       </div>
@@ -43,7 +43,7 @@ export default function TamamlananOnerilerPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20 md:pb-0" style={{ fontFamily: "'Nunito', sans-serif" }}>
+    <div className="min-h-screen bg-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-06)] pb-20 md:pb-0" style={{ fontFamily: "'Nunito', sans-serif" }}>
       <UyeOnerilerGorunumu
         oneriler={oneriler}
         varsayilanSekme="tamamlanan"

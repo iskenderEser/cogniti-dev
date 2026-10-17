@@ -26,13 +26,13 @@ import MobilYayinAkisi from "@/components/yayin/MobilYayinAkisi";
 
 function ListeBasligi({ baslik, aciklama, sayi, arama }: { baslik: string; aciklama?: string; sayi: number; arama: ReactNode }) {
   return (
-    <div className="mb-3 flex flex-col gap-3 rounded-2xl border border-[#dfe7f1] bg-white px-4 py-3.5 shadow-[0_6px_18px_rgba(31,55,90,0.035)] sm:flex-row sm:items-center sm:justify-between">
+    <div className="mb-3 flex flex-col gap-3 rounded-2xl border border-[var(--tema-yerel-uretim-cizgi-36)] bg-[var(--tema-yerel-uretim-kart-01)] px-4 py-3.5 shadow-[0_6px_18px_var(--tema-yerel-uretim-golge-07)] sm:flex-row sm:items-center sm:justify-between">
       <div>
-        <h2 className="text-base font-extrabold text-[#203653]">{baslik}</h2>
-        {aciklama && <p className="mt-0.5 text-xs text-[#7b8da5]">{aciklama}</p>}
+        <h2 className="text-base font-extrabold text-[var(--tema-yerel-uretim-ana-metin-05)]">{baslik}</h2>
+        {aciklama && <p className="mt-0.5 text-xs text-[var(--tema-yerel-uretim-yardimci-metin-41)]">{aciklama}</p>}
       </div>
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-        <span className="w-fit rounded-full bg-[#eef5fd] px-2.5 py-1 text-[10px] font-extrabold text-[#4479b7]">{sayi} kayıt</span>
+        <span className="w-fit rounded-full bg-[var(--tema-yerel-uretim-secim-zemin-04)] px-2.5 py-1 text-[10px] font-extrabold text-[var(--tema-yerel-uretim-eylem-metin-05)]">{sayi} kayıt</span>
         {arama}
       </div>
     </div>
@@ -41,11 +41,11 @@ function ListeBasligi({ baslik, aciklama, sayi, arama }: { baslik: string; acikl
 
 function BosListe({ mesaj }: { mesaj: string }) {
   return (
-    <div className="rounded-2xl border border-[#dfe7f1] bg-white px-6 py-12 text-center shadow-[0_6px_18px_rgba(31,55,90,0.03)]">
-      <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-2xl bg-[#f0f5fb] text-[#7f96b3]">
+    <div className="rounded-2xl border border-[var(--tema-yerel-uretim-cizgi-36)] bg-[var(--tema-yerel-uretim-kart-01)] px-6 py-12 text-center shadow-[0_6px_18px_var(--tema-yerel-uretim-golge-09)]">
+      <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--tema-yerel-uretim-secim-zemin-05)] text-[var(--tema-yerel-uretim-yardimci-metin-08)]">
         <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-5 w-5"><path d="M4 5h16v14H4zM8 9h8M8 13h5" /></svg>
       </span>
-      <p className="mt-3 text-sm font-bold text-[#647994]">{mesaj}</p>
+      <p className="mt-3 text-sm font-bold text-[var(--tema-yerel-uretim-yardimci-metin-12)]">{mesaj}</p>
     </div>
   );
 }
@@ -161,8 +161,8 @@ function YayinYonetimiIcerik() {
   // Auth guard layout'ta; burada yalnız kimlik kontrolü sırasında tam ekran spinner.
   if (kimlikYukleniyor || !ureticiMi) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <svg className="animate-spin w-6 h-6 text-gray-500" fill="none" viewBox="0 0 24 24">
+      <div className="min-h-screen bg-[var(--tema-yerel-uretim-sayfa-zemini-01)] flex items-center justify-center">
+        <svg className="animate-spin w-6 h-6 text-[var(--tema-yerel-uretim-yardimci-metin-01)]" fill="none" viewBox="0 0 24 24">
           <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
           <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
         </svg>
@@ -174,7 +174,7 @@ function YayinYonetimiIcerik() {
 
   return (
     <>
-      <div className="min-h-full bg-[#f5f8fc]">
+      <div className="min-h-full bg-[var(--tema-yerel-uretim-sayfa-zemini-11)]">
       <div className="mx-auto flex max-w-[1480px] flex-col gap-5 px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
         <YayinKumandaPaneli
           aktifHedef={aktifAnaSekme}
@@ -191,12 +191,12 @@ function YayinYonetimiIcerik() {
         />
 
         {yy.loading ? (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-[#dfe7f1] bg-white py-16 text-center shadow-[0_6px_18px_rgba(31,55,90,0.03)]">
-            <svg className="h-7 w-7 animate-spin text-[#2583e2]" viewBox="0 0 24 24" fill="none">
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-[var(--tema-yerel-uretim-cizgi-36)] bg-[var(--tema-yerel-uretim-kart-01)] py-16 text-center shadow-[0_6px_18px_var(--tema-yerel-uretim-golge-09)]">
+            <svg className="h-7 w-7 animate-spin text-[var(--tema-yerel-uretim-eylem-metin-15)]" viewBox="0 0 24 24" fill="none">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
             </svg>
-            <p className="mt-3 text-xs font-bold text-[#647994]">Yayınlar hazırlanıyor...</p>
+            <p className="mt-3 text-xs font-bold text-[var(--tema-yerel-uretim-yardimci-metin-12)]">Yayınlar hazırlanıyor...</p>
           </div>
         ) : (
           <>
@@ -368,8 +368,8 @@ export default function YayinYonetimiPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <svg className="animate-spin w-6 h-6 text-gray-500" fill="none" viewBox="0 0 24 24">
+        <div className="min-h-screen bg-[var(--tema-yerel-uretim-sayfa-zemini-01)] flex items-center justify-center">
+          <svg className="animate-spin w-6 h-6 text-[var(--tema-yerel-uretim-yardimci-metin-01)]" fill="none" viewBox="0 0 24 24">
             <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
             <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
           </svg>

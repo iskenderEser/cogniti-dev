@@ -2,8 +2,10 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import vm from "node:vm";
+import postcss from "postcss";
 import { eclubPerformansGrafikSecenegi } from "@/lib/eclub/performansGrafik";
 import { eclubPerformansDonemi, ECLUB_PERFORMANS_TURLERI } from "@/lib/eclub/performans";
+import { grafikRenkleriniCoz } from "@/lib/tema/cizimRenkleri";
 
 type GrafikTasarimSecenegi = {
   grid: Record<string,unknown>;
@@ -26,7 +28,13 @@ function grafikTasariminiDogrula(value: unknown): asserts value is GrafikTasarim
 
 // Kullanıcının onayladığı HTML'den alınmış bağımsız tasarım referansı.
 const reference = JSON.parse(readFileSync("tests/fixtures/eclub-performans-onayli-tasarim.json","utf8"));
-const css = readFileSync("components/eclub/eclub-performans.module.css","utf8");
+const maviRenkler = new Map<string, string>();
+postcss.parse(readFileSync("node_modules/tailwindcss/theme.css", "utf8")).walkDecls(d => { maviRenkler.set(d.prop, d.value); });
+postcss.parse(readFileSync("app/tema.css", "utf8")).walkRules(r => {
+  if (r.selectors.includes('[data-tema="mavi"]')) r.walkDecls(d => { maviRenkler.set(d.prop, d.value); });
+});
+const maviDeger = (value: string): string => value.replace(/var\((--[\w-]+)\)/g, (match, key: string) => maviRenkler.has(key) ? maviDeger(maviRenkler.get(key)!) : match);
+const css = maviDeger(readFileSync("components/eclub/eclub-performans.module.css","utf8"));
 const classes = new Set(["heading","muted","period","stats","stat","card","chart-head","legend","chart-wrap","help","detail","detail-head","detail-title","type-icon","detail-meta","detail-total","table-head","person","identity","avatar","name","count","score","bar","right","empty","week-access"]);
 function rules(source: string) {
   const result = new Map<string,Map<string,string>>();
@@ -64,7 +72,7 @@ test("gerçek ECharts seçenekleri onaylanan HTML çizim fonksiyonuyla eşleşir
   for(const mobile of [false,true]) {
     let expected: unknown;
     vm.runInNewContext(reference.draw+"draw();",{innerWidth:mobile?390:1100,types,selected:{type:1,week:2},currentWeek:donem.aktifHafta,number:(v:number)=>v.toLocaleString("tr-TR"),chart:{setOption:(option:unknown)=>{expected=option;}}});
-    const actual: unknown = eclubPerformansGrafikSecenegi(veri,"podcast",2,mobile);
+    const actual: unknown = grafikRenkleriniCoz(eclubPerformansGrafikSecenegi(veri,"podcast",2,mobile));
     grafikTasariminiDogrula(expected);
     grafikTasariminiDogrula(actual);
     // JSON karşılaştırması fonksiyonları ve yalnız bağlama yönelik seri kimliklerini dışarıda bırakır.

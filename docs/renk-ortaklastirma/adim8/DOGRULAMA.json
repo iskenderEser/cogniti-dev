@@ -1,0 +1,645 @@
+{
+  "adim": 8,
+  "tarih": "2026-10-17",
+  "durum": "TAMAMLANDI",
+  "uygulama": "Yerel kaynaklar güncellendi; canlı dağıtım yapılmadı.",
+  "kapsam": {
+    "degisen_mevcut_ts_tsx": 13,
+    "css_module": 1,
+    "tema_css": 1,
+    "paket_scripti": 1,
+    "yeni_altyapi": [
+      "lib/tema/cizimRenkleri.ts",
+      "lib/tema/hesaplananRenkler.generated.ts",
+      "scripts/denetim/hesaplanan-renkleri-uret.mjs"
+    ],
+    "bilesen_ortaklastirma": false,
+    "degismeyen_kopru": "components/ui/progress.tsx"
+  },
+  "tema": {
+    "degisken": 100,
+    "hesaplanan_cizim_rengi": 99,
+    "css_svg_veri_url": 1,
+    "temaya_gore_degisen": 52,
+    "iki_temada_ayni": 48,
+    "yeni_bildirim": 152,
+    "onceki_bildirim": 945,
+    "korunan_bildirim": 945,
+    "toplam_bildirim": 1097,
+    "renkler": {
+      "--tema-cizim-dagilim-1": {
+        "mavi": "#378ADD",
+        "yesil": "var(--tema-eylem)",
+        "islevsel": false
+      },
+      "--tema-cizim-dagilim-2": {
+        "mavi": "#1D9E75",
+        "yesil": "var(--tema-bilgi-metni)",
+        "islevsel": false
+      },
+      "--tema-cizim-dagilim-3": {
+        "mavi": "#EF9F27",
+        "yesil": "var(--tema-toprak)",
+        "islevsel": false
+      },
+      "--tema-cizim-dagilim-4": {
+        "mavi": "#D4537E",
+        "yesil": "var(--tema-toprak-acik)",
+        "islevsel": false
+      },
+      "--tema-cizim-dagilim-5": {
+        "mavi": "#7F77DD",
+        "yesil": "var(--tema-secili-metin)",
+        "islevsel": false
+      },
+      "--tema-cizim-dagilim-6": {
+        "mavi": "#D85A30",
+        "yesil": "var(--tema-eylem-hover)",
+        "islevsel": false
+      },
+      "--tema-cizim-dagilim-7": {
+        "mavi": "#639922",
+        "yesil": "var(--tema-odak)",
+        "islevsel": false
+      },
+      "--tema-cizim-dagilim-eksik": {
+        "mavi": "#888780",
+        "yesil": "var(--tema-ikincil-metin)",
+        "islevsel": false
+      },
+      "--tema-cizim-dagilim-metin": {
+        "mavi": "#6b7280",
+        "yesil": "var(--tema-ikincil-metin)",
+        "islevsel": false
+      },
+      "--tema-cizim-dagilim-etiket": {
+        "mavi": "#374151",
+        "yesil": "var(--tema-metin)",
+        "islevsel": false
+      },
+      "--tema-cizim-dagilim-soluk": {
+        "mavi": "#9ca3af",
+        "yesil": "var(--tema-ikincil-metin)",
+        "islevsel": false
+      },
+      "--tema-cizim-dagilim-eksen": {
+        "mavi": "#e5e7eb",
+        "yesil": "var(--tema-cizgi)",
+        "islevsel": false
+      },
+      "--tema-cizim-dagilim-ayirici": {
+        "mavi": "#f1f1ee",
+        "yesil": "var(--tema-cizgi)",
+        "islevsel": false
+      },
+      "--tema-cizim-dagilim-kart": {
+        "mavi": "#fff",
+        "yesil": "var(--tema-kart)",
+        "islevsel": false
+      },
+      "--tema-cizim-dagilim-cizgi": {
+        "mavi": "#94A3B8",
+        "yesil": "var(--tema-ikincil-metin)",
+        "islevsel": false
+      },
+      "--tema-cizim-dagilim-alan": {
+        "mavi": "rgba(55,138,221,0.10)",
+        "yesil": "#3555451a",
+        "islevsel": false
+      },
+      "--tema-cizim-dagilim-secili": {
+        "mavi": "rgba(86,174,255,0.08)",
+        "yesil": "#35554514",
+        "islevsel": false
+      },
+      "--tema-cizim-dagilim-hover": {
+        "mavi": "var(--color-gray-50)",
+        "yesil": "var(--tema-zemin)",
+        "islevsel": false
+      },
+      "--tema-cizim-png-zemin": {
+        "mavi": "#fff",
+        "yesil": "var(--tema-kart)",
+        "islevsel": false
+      },
+      "--tema-cizim-png-cizgi": {
+        "mavi": "#e5e7eb",
+        "yesil": "var(--tema-cizgi)",
+        "islevsel": false
+      },
+      "--tema-cizim-png-dugme": {
+        "mavi": "rgba(255,255,255,0.9)",
+        "yesil": "#fcfdf8e6",
+        "islevsel": false
+      },
+      "--tema-cizim-png-metin": {
+        "mavi": "#6b7280",
+        "yesil": "var(--tema-ikincil-metin)",
+        "islevsel": false
+      },
+      "--tema-cizim-arac-video-renk": {
+        "mavi": "#237ac8",
+        "yesil": "#237ac8",
+        "islevsel": true
+      },
+      "--tema-cizim-arac-video-zemin": {
+        "mavi": "#edf5ff",
+        "yesil": "#edf5ff",
+        "islevsel": true
+      },
+      "--tema-cizim-arac-video-golge": {
+        "mavi": "#237ac840",
+        "yesil": "#237ac840",
+        "islevsel": true
+      },
+      "--tema-cizim-arac-podcast-renk": {
+        "mavi": "#8c65c9",
+        "yesil": "#8c65c9",
+        "islevsel": true
+      },
+      "--tema-cizim-arac-podcast-zemin": {
+        "mavi": "#f3effa",
+        "yesil": "#f3effa",
+        "islevsel": true
+      },
+      "--tema-cizim-arac-podcast-golge": {
+        "mavi": "#8c65c940",
+        "yesil": "#8c65c940",
+        "islevsel": true
+      },
+      "--tema-cizim-arac-gorsel-renk": {
+        "mavi": "#d99438",
+        "yesil": "#d99438",
+        "islevsel": true
+      },
+      "--tema-cizim-arac-gorsel-zemin": {
+        "mavi": "#fff6e8",
+        "yesil": "#fff6e8",
+        "islevsel": true
+      },
+      "--tema-cizim-arac-gorsel-golge": {
+        "mavi": "#d9943840",
+        "yesil": "#d9943840",
+        "islevsel": true
+      },
+      "--tema-cizim-arac-literatur-renk": {
+        "mavi": "#23947a",
+        "yesil": "#23947a",
+        "islevsel": true
+      },
+      "--tema-cizim-arac-literatur-zemin": {
+        "mavi": "#edf8f4",
+        "yesil": "#edf8f4",
+        "islevsel": true
+      },
+      "--tema-cizim-arac-literatur-golge": {
+        "mavi": "#23947a40",
+        "yesil": "#23947a40",
+        "islevsel": true
+      },
+      "--tema-cizim-performans-kart": {
+        "mavi": "#fff",
+        "yesil": "var(--tema-kart)",
+        "islevsel": false
+      },
+      "--tema-cizim-performans-cizgi": {
+        "mavi": "#e3eaf2",
+        "yesil": "var(--tema-cizgi)",
+        "islevsel": false
+      },
+      "--tema-cizim-performans-metin": {
+        "mavi": "#203653",
+        "yesil": "var(--tema-metin)",
+        "islevsel": false
+      },
+      "--tema-cizim-performans-eksen": {
+        "mavi": "#edf1f6",
+        "yesil": "var(--tema-cizgi)",
+        "islevsel": false
+      },
+      "--tema-cizim-performans-soluk": {
+        "mavi": "#8a99af",
+        "yesil": "var(--tema-ikincil-metin)",
+        "islevsel": false
+      },
+      "--tema-cizim-performans-hafta-cizgi": {
+        "mavi": "#9eb6d3",
+        "yesil": "var(--tema-bilgi-metni)",
+        "islevsel": false
+      },
+      "--tema-cizim-performans-hafta-metin": {
+        "mavi": "#6f89aa",
+        "yesil": "var(--tema-ikincil-metin)",
+        "islevsel": false
+      },
+      "--tema-cizim-performans-bos-cizgi": {
+        "mavi": "#dce5ef",
+        "yesil": "var(--tema-cizgi)",
+        "islevsel": false
+      },
+      "--tema-cizim-kazanc-izleme": {
+        "mavi": "#28b56b",
+        "yesil": "#28b56b",
+        "islevsel": true
+      },
+      "--tema-cizim-kazanc-cevaplama": {
+        "mavi": "#7c3aed",
+        "yesil": "#7c3aed",
+        "islevsel": true
+      },
+      "--tema-cizim-kazanc-oneri": {
+        "mavi": "#f59e0b",
+        "yesil": "#f59e0b",
+        "islevsel": true
+      },
+      "--tema-cizim-kazanc-eclub": {
+        "mavi": "#16a9c7",
+        "yesil": "#16a9c7",
+        "islevsel": true
+      },
+      "--tema-cizim-kazanc-negatif": {
+        "mavi": "#dc2626",
+        "yesil": "#dc2626",
+        "islevsel": true
+      },
+      "--tema-cizim-kayip-cubuk": {
+        "mavi": "#ef4444",
+        "yesil": "#ef4444",
+        "islevsel": true
+      },
+      "--tema-cizim-puan-cubuk-zemin": {
+        "mavi": "#e9eef5",
+        "yesil": "var(--tema-cizgi)",
+        "islevsel": false
+      },
+      "--tema-cizim-lig-izleme": {
+        "mavi": "#1aa160",
+        "yesil": "#1aa160",
+        "islevsel": true
+      },
+      "--tema-cizim-lig-cevaplama": {
+        "mavi": "#6d5ce8",
+        "yesil": "#6d5ce8",
+        "islevsel": true
+      },
+      "--tema-cizim-lig-oneri": {
+        "mavi": "#f59e0b",
+        "yesil": "#f59e0b",
+        "islevsel": true
+      },
+      "--tema-cizim-lig-extra": {
+        "mavi": "#2f9ae9",
+        "yesil": "#2f9ae9",
+        "islevsel": true
+      },
+      "--tema-cizim-lig-eclub": {
+        "mavi": "#237ac8",
+        "yesil": "#237ac8",
+        "islevsel": true
+      },
+      "--tema-cizim-lig-kayip": {
+        "mavi": "#e44c4c",
+        "yesil": "#e44c4c",
+        "islevsel": true
+      },
+      "--tema-cizim-lider-simge-zemin": {
+        "mavi": "#edf6ff",
+        "yesil": "var(--tema-secili)",
+        "islevsel": false
+      },
+      "--tema-cizim-lider-simge": {
+        "mavi": "#3187ed",
+        "yesil": "var(--tema-eylem)",
+        "islevsel": false
+      },
+      "--tema-cizim-lider-yol": {
+        "mavi": "#e9eef6",
+        "yesil": "var(--tema-cizgi)",
+        "islevsel": false
+      },
+      "--tema-cizim-lider-ilerleme": {
+        "mavi": "#3287ef",
+        "yesil": "var(--tema-eylem)",
+        "islevsel": false
+      },
+      "--tema-cizim-lider-etiket": {
+        "mavi": "#f3f8ff",
+        "yesil": "var(--tema-secili)",
+        "islevsel": false
+      },
+      "--tema-cizim-lider-etiket-cizgi": {
+        "mavi": "#d8e8fb",
+        "yesil": "var(--tema-cizgi)",
+        "islevsel": false
+      },
+      "--tema-cizim-lider-sen": {
+        "mavi": "#2f80ed",
+        "yesil": "var(--tema-eylem)",
+        "islevsel": false
+      },
+      "--tema-cizim-lider-puan": {
+        "mavi": "#10213d",
+        "yesil": "var(--tema-baslik)",
+        "islevsel": false
+      },
+      "--tema-cizim-lider-isaret-cizgi": {
+        "mavi": "#dbe8fa",
+        "yesil": "var(--tema-cizgi)",
+        "islevsel": false
+      },
+      "--tema-cizim-lider-yardimci": {
+        "mavi": "#8795aa",
+        "yesil": "var(--tema-ikincil-metin)",
+        "islevsel": false
+      },
+      "--tema-cizim-lider-bolme": {
+        "mavi": "#dde6f1",
+        "yesil": "var(--tema-cizgi)",
+        "islevsel": false
+      },
+      "--tema-cizim-lider-alt-zemin": {
+        "mavi": "#f5f8fc",
+        "yesil": "var(--tema-secili)",
+        "islevsel": false
+      },
+      "--tema-cizim-lider-isaret": {
+        "mavi": "white",
+        "yesil": "var(--tema-kart)",
+        "islevsel": false
+      },
+      "--tema-cizim-lider-altin-zemin": {
+        "mavi": "#fff8e8",
+        "yesil": "#fff8e8",
+        "islevsel": true
+      },
+      "--tema-cizim-lider-altin-cizgi": {
+        "mavi": "#f7cb70",
+        "yesil": "#f7cb70",
+        "islevsel": true
+      },
+      "--tema-cizim-lider-altin-simge": {
+        "mavi": "#e99a14",
+        "yesil": "#e99a14",
+        "islevsel": true
+      },
+      "--tema-cizim-madalya-gumus-koyu": {
+        "mavi": "#4b5563",
+        "yesil": "#4b5563",
+        "islevsel": true
+      },
+      "--tema-cizim-madalya-gumus-orta": {
+        "mavi": "#8c98a7",
+        "yesil": "#8c98a7",
+        "islevsel": true
+      },
+      "--tema-cizim-madalya-gumus-acik": {
+        "mavi": "#e5e7eb",
+        "yesil": "#e5e7eb",
+        "islevsel": true
+      },
+      "--tema-cizim-madalya-gumus-golge": {
+        "mavi": "#2f3742",
+        "yesil": "#2f3742",
+        "islevsel": true
+      },
+      "--tema-cizim-madalya-parlama": {
+        "mavi": "#ffffff",
+        "yesil": "#ffffff",
+        "islevsel": true
+      },
+      "--tema-cizim-madalya-gumus-kontur": {
+        "mavi": "#414b58",
+        "yesil": "#414b58",
+        "islevsel": true
+      },
+      "--tema-cizim-madalya-altin-koyu": {
+        "mavi": "#704000",
+        "yesil": "#704000",
+        "islevsel": true
+      },
+      "--tema-cizim-madalya-altin-orta": {
+        "mavi": "#b9780b",
+        "yesil": "#b9780b",
+        "islevsel": true
+      },
+      "--tema-cizim-madalya-altin-acik": {
+        "mavi": "#e7b746",
+        "yesil": "#e7b746",
+        "islevsel": true
+      },
+      "--tema-cizim-madalya-altin-golge": {
+        "mavi": "#5b3000",
+        "yesil": "#5b3000",
+        "islevsel": true
+      },
+      "--tema-cizim-madalya-altin-parlama": {
+        "mavi": "#ffe49a",
+        "yesil": "#ffe49a",
+        "islevsel": true
+      },
+      "--tema-cizim-madalya-altin-ust-kontur": {
+        "mavi": "#6a3900",
+        "yesil": "#6a3900",
+        "islevsel": true
+      },
+      "--tema-cizim-madalya-altin-alt-kontur": {
+        "mavi": "#623400",
+        "yesil": "#623400",
+        "islevsel": true
+      },
+      "--tema-cizim-madalya-donem-cizgi": {
+        "mavi": "#d6e2ef",
+        "yesil": "var(--tema-cizgi)",
+        "islevsel": false
+      },
+      "--tema-cizim-madalya-yil-cizgi": {
+        "mavi": "#dfe7f0",
+        "yesil": "var(--tema-cizgi)",
+        "islevsel": false
+      },
+      "--tema-cizim-madalya-donem-zemin": {
+        "mavi": "linear-gradient(140deg, #03142f 0%, #07549c 30%, #163f78 50%, #0862b0 70%, #020d21 100%)",
+        "yesil": "linear-gradient(140deg, #294636 0%, #355545 30%, #4f7254 50%, #65795f 70%, #2c4137 100%)",
+        "islevsel": false
+      },
+      "--tema-cizim-begeni": {
+        "mavi": "#ef4444",
+        "yesil": "#ef4444",
+        "islevsel": true
+      },
+      "--tema-cizim-favori": {
+        "mavi": "#2563eb",
+        "yesil": "#2563eb",
+        "islevsel": true
+      },
+      "--tema-cizim-rapor-yardimci": {
+        "mavi": "#737373",
+        "yesil": "var(--tema-ikincil-metin)",
+        "islevsel": false
+      },
+      "--tema-cizim-rapor-baslik": {
+        "mavi": "#111827",
+        "yesil": "var(--tema-baslik)",
+        "islevsel": false
+      },
+      "--tema-cizim-begeni-rozet": {
+        "mavi": "#FEE2E2",
+        "yesil": "#FEE2E2",
+        "islevsel": true
+      },
+      "--tema-cizim-favori-rozet": {
+        "mavi": "#DBEAFE",
+        "yesil": "#DBEAFE",
+        "islevsel": true
+      },
+      "--tema-cizim-sure-baslangic": {
+        "mavi": "#16a34a",
+        "yesil": "#16a34a",
+        "islevsel": true
+      },
+      "--tema-cizim-sure-orta": {
+        "mavi": "#d99300",
+        "yesil": "#d99300",
+        "islevsel": true
+      },
+      "--tema-cizim-sure-bitis": {
+        "mavi": "var(--tema-hoyk-sure-doldu)",
+        "yesil": "var(--tema-hoyk-sure-doldu)",
+        "islevsel": true
+      },
+      "--tema-cizim-sure-tamamlandi": {
+        "mavi": "var(--tema-hoyk-tamamlandi)",
+        "yesil": "var(--tema-hoyk-tamamlandi)",
+        "islevsel": true
+      },
+      "--tema-cizim-tooltip-kart": {
+        "mavi": "#fff",
+        "yesil": "var(--tema-kart)",
+        "islevsel": false
+      },
+      "--tema-cizim-tooltip-metin": {
+        "mavi": "#6d6e73",
+        "yesil": "var(--tema-metin)",
+        "islevsel": false
+      },
+      "--tema-svg-performans-secim-oku": {
+        "mavi": "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%237c8da4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E\")",
+        "yesil": "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2368766e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E\")",
+        "islevsel": false
+      }
+    }
+  },
+  "kaynak_ve_cizim": {
+    "mavi_renk_eslemesi": 94,
+    "renk_ve_tooltip_baglantisi_disinda_ayni_kaynaklar": [
+      "components/raporlar/DagilimGrafik.tsx",
+      "lib/eclub/performans.ts",
+      "lib/eclub/performansGrafik.ts",
+      "components/hbligi/league/ScoreComposition.tsx",
+      "components/hbligi/field/FieldLeaguePage.tsx",
+      "components/hbligi/producer/ProducerLeaguePage.tsx",
+      "components/hbligi/league/LeadershipScore.tsx",
+      "components/cc-ligi/CcLigiBanner.tsx",
+      "components/raporlar/BegeniFavoriListesi.tsx"
+    ],
+    "tema_adaptorleri": [
+      "components/grafik/EChart.tsx",
+      "components/eclub/EclubHoykSureCercevesi.tsx",
+      "lib/eclub/hoykSureCercevesi.ts"
+    ],
+    "ek_hesap_dogrulamasi": {
+      "hoykColorComparisons": 1128,
+      "performansOptionComparisons": 48,
+      "toolMetadataEqual": true,
+      "frameGeometryEqual": true,
+      "frameConstantsEqual": true,
+      "frameTimingEqual": true,
+      "playerNonColorEqual": true,
+      "progressUnchanged": true
+    }
+  },
+  "css": {
+    "mavi_utility_kullanimi": 13,
+    "mavi_utility_farkli_sinif": 9,
+    "eksik_utility": 0,
+    "derleme_uyarisi": [],
+    "svg_css_module": {
+      "file": "components/eclub/eclub-performans.module.css",
+      "declarations": 211,
+      "colorChanges": 1,
+      "blueEqual": true
+    },
+    "mevcut_serilestirme_bulgusu": {
+      "hata": "Missed semicolon",
+      "onceki_adimla_ayni": true,
+      "bildirim_sha256": "c47b273f42f3799b10979608021ff44848926d3e476eea026063c914c3f5ade3",
+      "kaynak": "docs/renk-envanteri/renk-katalogu.html",
+      "genel_css_temiz_iddiasi": false
+    }
+  },
+  "test": {
+    "yeni": {
+      "toplam": 6,
+      "basarili": 6,
+      "basarisiz": 0
+    },
+    "mevcut": {
+      "toplam": 41,
+      "basarili": 41,
+      "basarisiz": 0
+    },
+    "toplam": 47,
+    "basarili": 47,
+    "basarisiz": 0,
+    "calistirilan_dosyalar": [
+      "tests/grafikHesaplananTema.hedef.test.ts",
+      "tests/temaAltyapisi.hedef.test.ts",
+      "tests/eclubPerformansGrafik.hedef.test.ts",
+      "tests/eclubPerformansTasarim.hedef.test.ts",
+      "tests/eclubPerformansArayuz.hedef.test.ts",
+      "tests/eclubPerformans.hedef.test.ts",
+      "tests/eclubHoykDurumGorunumu.hedef.test.ts",
+      "tests/hoykOynaticiTema.hedef.test.ts",
+      "tests/hbligiKapsam.smoke.test.ts"
+    ],
+    "yontem": "Node test runner; Happy DOM içinde gerçek React/Radix/ECharts SVG, Canvas için kayıt tutan sahte 2D bağlam; ECharts gerçek SVG SSR (1100/330 px).",
+    "gercek_chrome_oturumu": false,
+    "canli_veritabani": false,
+    "butun_rollerde_gercek_oturum": false,
+    "uyarilar": [
+      "Değişmeyen DagilimGrafik grid.containLabel kullanımı için kurulu ECharts sürümü uyarı üretir.",
+      "Next/Image test taklidi unoptimized özniteliği için React uyarısı üretir."
+    ],
+    "onceki_test_guncellemeleri": "İki E-Club grafik testi CSS değişkenlerini mavi renge çözerek aynı bağımsız HTML tasarım referansıyla karşılaştırır. Referans değiştirilmedi."
+  },
+  "typecheck": {
+    "komut": "npm run typecheck:build",
+    "sonuc": "BAŞARILI",
+    "cikis_kodu": 0,
+    "uretilmis_renk_kontrolu": "--check başarılı"
+  },
+  "lint": {
+    "dosya": 20,
+    "hata": 0,
+    "uyari": 0,
+    "onceki_dosya": 16,
+    "onceki_hata": 0,
+    "onceki_uyari": 0
+  },
+  "korunanlar": [
+    "Grafik veri/değer/seri sırası, ölçek, boyut ve animasyon süreleri",
+    "HOYK 15 gün, Türkiye gece yarısı ve bitiş anı hesabı; çerçeve geometrisi; parlaklık/yazı seçimi",
+    "Araç, kazanım/kayıp, altın/gümüş ve süre renklerinin işlevsel anlamı",
+    "Ölçüm seçenekleri, rol/veri kapsamı ve puan hesapları",
+    "TUS/Bunny/GUID, yükleme, izleme, gönderim ve teslimat akışları"
+  ],
+  "sinirlar": [
+    "Renkler ve renk çözümleme takibi kapsamındadır; bileşen ortaklaştırması yapılmadı.",
+    "Gerçek tarayıcı piksel testi, gerçek medya/PNG indirme, e-posta/push teslimatı veya canlı puan karşılaştırması yapılmadı.",
+    "Kalan yerel sayfa renkleri ve tüm rollerde ekran kontrolleri 9. adımdadır."
+  ],
+  "sonraki": {
+    "adim": 9,
+    "durum": "BAŞLATILMADI"
+  }
+}

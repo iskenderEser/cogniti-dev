@@ -117,11 +117,11 @@ export const TUM_TURLER = [...TALEP_TURU_SIRA];
 // Liste tablosunda gösterilen tür rozeti (renk + etiket).
 export const TUR_ROZET: Record<TalepTuru, { bg: string; renk: string; border: string; etiket: string }> = {
   urun_egitimi: { bg: "transparent", renk: "transparent", border: "transparent", etiket: "" }, // ürün adı zaten gösteriliyor, rozet yok
-  satis_teknikleri: { bg: "#eff6ff", renk: "#1d4ed8", border: "#bfdbfe", etiket: "Satış Teknikleri" },
-  yonetim_egitimi: { bg: "#f5f3ff", renk: "#6d28d9", border: "#ddd6fe", etiket: "Yönetim Eğitimleri" },
-  medikal_egitim: { bg: "#fef2f2", renk: "#bc2d0d", border: "#fecaca", etiket: "Medikal Eğitim" },
-  urun_medikal_egitim: { bg: "#fdf4ff", renk: "#7e22ce", border: "#e9d5ff", etiket: "Ürün-Medikal" },
-  ik_egitimi: { bg: "#f0fdf4", renk: "#15803d", border: "#bbf7d0", etiket: "İK Eğitimi" },
+  satis_teknikleri: { bg: "var(--tema-yerel-uretim-islevsel-zemin-14)", renk: "var(--tema-yerel-uretim-islevsel-metin-43)", border: "var(--tema-yerel-uretim-islevsel-cizgi-26)", etiket: "Satış Teknikleri" },
+  yonetim_egitimi: { bg: "var(--tema-yerel-uretim-islevsel-zemin-16)", renk: "var(--tema-yerel-uretim-islevsel-metin-44)", border: "var(--tema-yerel-uretim-islevsel-cizgi-27)", etiket: "Yönetim Eğitimleri" },
+  medikal_egitim: { bg: "var(--tema-yerel-uretim-islevsel-zemin-09)", renk: "var(--tema-yerel-uretim-islevsel-metin-08)", border: "var(--tema-yerel-uretim-islevsel-cizgi-07)", etiket: "Medikal Eğitim" },
+  urun_medikal_egitim: { bg: "var(--tema-yerel-uretim-islevsel-zemin-33)", renk: "var(--tema-yerel-uretim-islevsel-metin-45)", border: "var(--tema-yerel-uretim-islevsel-cizgi-28)", etiket: "Ürün-Medikal" },
+  ik_egitimi: { bg: "var(--tema-yerel-uretim-islevsel-zemin-02)", renk: "var(--tema-yerel-uretim-islevsel-metin-04)", border: "var(--tema-yerel-uretim-islevsel-cizgi-02)", etiket: "İK Eğitimi" },
 };
 
 // Hedef rol görsel tasarımı (bant + pill için ortak renk/etiket sözlüğü).
@@ -131,37 +131,37 @@ export const TUR_ROZET: Record<TalepTuru, { bg: string; renk: string; border: st
 // Eczanem: amber (eczanenin kendi müşterisi — üçüncü katman).
 export const HEDEF_ROL_TASARIM: Record<HedefRol, { bg: string; renk: string; border: string; tamEtiket: string; kisaEtiket: string }> = {
   utt: {
-    bg: "#eff6ff",
-    renk: "#1d4ed8",
-    border: "#bfdbfe",
+    bg: "var(--tema-hedef-utt-zemin)",
+    renk: "var(--tema-hedef-utt-metin)",
+    border: "var(--tema-hedef-utt-cizgi)",
     tamEtiket: "Ürün Tanıtım Temsilcileri",
     kisaEtiket: "UTT",
   },
   bm: {
-    bg: "#fef2f2",
-    renk: "#bc2d0d",
-    border: "#fecaca",
+    bg: "var(--tema-hedef-bm-zemin)",
+    renk: "var(--tema-hedef-bm-metin)",
+    border: "var(--tema-hedef-bm-cizgi)",
     tamEtiket: "Bölge Müdürleri",
     kisaEtiket: "BM",
   },
   eczaci: {
-    bg: "#fff5f5",
-    renk: "#e30a17",
-    border: "#e30a17",
+    bg: "var(--tema-hedef-eczaci-zemin)",
+    renk: "var(--tema-hedef-eczaci-metin)",
+    border: "var(--tema-hedef-eczaci-cizgi)",
     tamEtiket: "Eczacılar",
     kisaEtiket: "Eczacı",
   },
   eczane_teknisyeni: {
-    bg: "#eaf7e4",
-    renk: "#10304a",
-    border: "#7ed957",
+    bg: "var(--tema-hedef-eczane_teknisyeni-zemin)",
+    renk: "var(--tema-hedef-eczane_teknisyeni-metin)",
+    border: "var(--tema-hedef-eczane_teknisyeni-cizgi)",
     tamEtiket: "Eczane Teknisyenleri",
     kisaEtiket: "Ecz. Tek.",
   },
   eczanem: {
-    bg: "#fffbeb",
-    renk: "#b45309",
-    border: "#fde68a",
+    bg: "var(--tema-hedef-eczanem-zemin)",
+    renk: "var(--tema-hedef-eczanem-metin)",
+    border: "var(--tema-hedef-eczanem-cizgi)",
     tamEtiket: "Eczane Müşterileri",
     kisaEtiket: "Eczanem",
   },
@@ -173,13 +173,13 @@ export const HEDEF_ROL_TASARIM: Record<HedefRol, { bg: string; renk: string; bor
 
 export const dosyaTipiRenk = (dosya_adi: string): { etiket: string; bg: string; renk: string } => {
   const ext = dosya_adi.split(".").pop()?.toLowerCase() ?? "";
-  if (ext === "pdf") return { etiket: "PDF", bg: "#fef2f2", renk: "#bc2d0d" };
-  if (["docx", "doc"].includes(ext)) return { etiket: "DOC", bg: "#eff6ff", renk: "#1d4ed8" };
-  if (["pptx", "ppt"].includes(ext)) return { etiket: "PPT", bg: "#fff7ed", renk: "#c2410c" };
-  if (["xlsx", "xls"].includes(ext)) return { etiket: "XLS", bg: "#f0fdf4", renk: "#15803d" };
-  if (ext === "txt") return { etiket: "TXT", bg: "#f9fafb", renk: "#374151" };
-  if (["png", "jpg", "jpeg", "webp"].includes(ext)) return { etiket: "IMG", bg: "#fdf4ff", renk: "#7e22ce" };
-  if (["mp4", "mov", "webm", "avi", "mkv"].includes(ext)) return { etiket: "VID", bg: "#f0fdf4", renk: "#16a34a" };
-  if (["mp3", "m4a", "aac"].includes(ext)) return { etiket: "POD", bg: "#f5f3ff", renk: "#6d28d9" };
-  return { etiket: ext.toUpperCase(), bg: "#f9fafb", renk: "#737373" };
+  if (ext === "pdf") return { etiket: "PDF", bg: "var(--tema-yerel-uretim-islevsel-zemin-09)", renk: "var(--tema-yerel-uretim-vurgu-metin-01)" };
+  if (["docx", "doc"].includes(ext)) return { etiket: "DOC", bg: "var(--tema-yerel-uretim-secim-zemin-02)", renk: "var(--tema-yerel-uretim-eylem-metin-02)" };
+  if (["pptx", "ppt"].includes(ext)) return { etiket: "PPT", bg: "var(--tema-yerel-uretim-islevsel-zemin-15)", renk: "var(--tema-yerel-uretim-islevsel-metin-36)" };
+  if (["xlsx", "xls"].includes(ext)) return { etiket: "XLS", bg: "var(--tema-yerel-uretim-islevsel-zemin-02)", renk: "var(--tema-yerel-uretim-islevsel-metin-04)" };
+  if (ext === "txt") return { etiket: "TXT", bg: "var(--tema-yerel-uretim-sayfa-zemini-25)", renk: "var(--tema-yerel-uretim-ana-metin-30)" };
+  if (["png", "jpg", "jpeg", "webp"].includes(ext)) return { etiket: "IMG", bg: "var(--tema-yerel-uretim-islevsel-zemin-33)", renk: "var(--tema-yerel-uretim-islevsel-metin-45)" };
+  if (["mp4", "mov", "webm", "avi", "mkv"].includes(ext)) return { etiket: "VID", bg: "var(--tema-yerel-uretim-islevsel-zemin-02)", renk: "var(--tema-yerel-uretim-islevsel-metin-01)" };
+  if (["mp3", "m4a", "aac"].includes(ext)) return { etiket: "POD", bg: "var(--tema-yerel-uretim-islevsel-zemin-16)", renk: "var(--tema-yerel-uretim-islevsel-metin-44)" };
+  return { etiket: ext.toUpperCase(), bg: "var(--tema-yerel-uretim-sayfa-zemini-25)", renk: "var(--tema-yerel-uretim-yardimci-metin-04)" };
 };

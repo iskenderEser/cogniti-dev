@@ -60,13 +60,13 @@ export type DurumKodu =
   | "sistem_hatasi";     // zincir kurulamadı ya da tanınmayan durum — insan müdahalesi
 
 // Palet mevcut ekranlardan devralındı; renk artık tek yerde tanımlıdır.
-const AKSIYON: DurumRenk = { bg: "#fff1f0", text: "#bc2d0d", border: "#fecaca" }; // top üreticide
-const BEKLEME: DurumRenk = { bg: "#f9fafb", text: "#737373", border: "#e5e7eb" }; // top İÜ'de / arşiv
-const REVIZYON: DurumRenk = { bg: "#fefce8", text: "#854d0e", border: "#fde68a" };
-const ONAY: DurumRenk = { bg: "#f0fdf4", text: "#16a34a", border: "#bbf7d0" };
-const CANLI: DurumRenk = { bg: "#eff6ff", text: "#1d4ed8", border: "#bfdbfe" };
-const PLANLI: DurumRenk = { bg: "#f5f3ff", text: "#6d28d9", border: "#ddd6fe" };
-const HATA: DurumRenk = { bg: "#fef2f2", text: "#bc2d0d", border: "#fecaca" };
+const AKSIYON: DurumRenk = { bg: "var(--tema-uretim-aksiyon-zemin)", text: "var(--tema-uretim-aksiyon-metin)", border: "var(--tema-uretim-aksiyon-cizgi)" }; // top üreticide
+const BEKLEME: DurumRenk = { bg: "var(--tema-uretim-bekleme-zemin)", text: "var(--tema-uretim-bekleme-metin)", border: "var(--tema-uretim-bekleme-cizgi)" }; // top İÜ'de / arşiv
+const REVIZYON: DurumRenk = { bg: "var(--tema-uretim-revizyon-zemin)", text: "var(--tema-uretim-revizyon-metin)", border: "var(--tema-uretim-revizyon-cizgi)" };
+const ONAY: DurumRenk = { bg: "var(--tema-uretim-onay-zemin)", text: "var(--tema-uretim-onay-metin)", border: "var(--tema-uretim-onay-cizgi)" };
+const CANLI: DurumRenk = { bg: "var(--tema-uretim-canli-zemin)", text: "var(--tema-uretim-canli-metin)", border: "var(--tema-uretim-canli-cizgi)" };
+const PLANLI: DurumRenk = { bg: "var(--tema-uretim-planli-zemin)", text: "var(--tema-uretim-planli-metin)", border: "var(--tema-uretim-planli-cizgi)" };
+const HATA: DurumRenk = { bg: "var(--tema-uretim-hata-zemin)", text: "var(--tema-uretim-hata-metin)", border: "var(--tema-uretim-hata-cizgi)" };
 
 const URETICI_DURUM: Record<DurumKodu, DurumMesaji> = {
   // 27.07 — metinler kısaldı ve tek dile oturdu (İskender kararı): en fazla iki

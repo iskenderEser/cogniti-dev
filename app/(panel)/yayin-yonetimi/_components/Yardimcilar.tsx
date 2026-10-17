@@ -71,7 +71,7 @@ export const OgrenmeAraciThumb = ({
       onClick={handleTikla}
       disabled={!tiklanabilir}
       aria-label={ariaLabel}
-      className={`group relative flex shrink-0 items-center justify-center overflow-hidden rounded-xl border border-[#dbe5f0] bg-[#e8eef5] p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#56aeff] disabled:cursor-default ${dikeyVideo ? "mx-auto h-auto max-w-full" : genis ? "aspect-[1600/693] w-full lg:aspect-[1360/693]" : "h-[72px] w-32"}`}
+      className={`group relative flex shrink-0 items-center justify-center overflow-hidden rounded-xl border border-[var(--tema-yerel-uretim-cizgi-45)] bg-[var(--tema-yerel-uretim-secim-zemin-14)] p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--tema-yerel-uretim-odak-01)] disabled:cursor-default ${dikeyVideo ? "mx-auto h-auto max-w-full" : genis ? "aspect-[1600/693] w-full lg:aspect-[1360/693]" : "h-[72px] w-32"}`}
       style={dikeyVideo ? { width: `min(100%, ${Math.round(280 * olculenOran)}px)`, aspectRatio: olculenOran } : undefined}
     >
       {resimGoster ? (
@@ -92,15 +92,15 @@ export const OgrenmeAraciThumb = ({
         <AracVarsayilanKapak aracTuru={tur} urunAdi={urun_adi} kucuk={!genis} className="absolute inset-0 h-full w-full" />
       )}
       {tiklanabilir && (
-        <div className={`absolute flex items-center justify-center rounded-full transition-transform group-hover:scale-110 ${genis ? "h-11 w-11" : "h-7 w-7"}`} style={{ background: "rgba(0,0,0,0.55)" }}>
+        <div className={`absolute flex items-center justify-center rounded-full transition-transform group-hover:scale-110 ${genis ? "h-11 w-11" : "h-7 w-7"}`} style={{ background: "var(--tema-yerel-uretim-ortu-03)" }}>
           {tur === "podcast" ? (
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--tema-yerel-uretim-ters-metin-02)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
           ) : tur === "gorsel" ? (
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--tema-yerel-uretim-ters-metin-02)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
           ) : tur === "flip_pdf" ? (
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--tema-yerel-uretim-ters-metin-02)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
           ) : (
-            <svg width="10" height="12" viewBox="0 0 10 12" fill="white"><path d="M0 0l10 6-10 6z" /></svg>
+            <svg width="10" height="12" viewBox="0 0 10 12" fill="var(--tema-yerel-uretim-ters-metin-02)"><path d="M0 0l10 6-10 6z" /></svg>
           )}
         </div>
       )}

@@ -53,13 +53,13 @@ export const CEK_TALEP_DURUM_META: Record<
   CekTalepDurumu,
   { etiket: string; metin: string; arka: string; kenar: string }
 > = {
-  beklemede: { etiket: "Beklemede (UTT)", metin: "#854d0e", arka: "#fefce8", kenar: "#fde68a" },
-  bm_onayinda: { etiket: "BM Onayında", metin: "#b45309", arka: "#fff7ed", kenar: "#fed7aa" },
-  tm_onayinda: { etiket: "TM Onayında", metin: "#6d28d9", arka: "#f5f3ff", kenar: "#ddd6fe" },
-  onaylandi: { etiket: "TM Onayladı", metin: "#065f46", arka: "#ecfdf5", kenar: "#a7f3d0" },
-  teslimat_bekliyor: { etiket: "TM Onayladı", metin: "#0f766e", arka: "#f0fdfa", kenar: "#99f6e4" },
-  cek_kodlari_gonderildi: { etiket: "Çek Kodu Gönderildi", metin: "#237ac8", arka: "#edf6fd", kenar: "#b6d9f5" },
-  iptal: { etiket: "İptal Edildi", metin: "#bc2d0d", arka: "#fef2f2", kenar: "#fecaca" },
+  beklemede: { etiket: "Beklemede (UTT)", metin: "var(--tema-cek-talep-beklemede-metin)", arka: "var(--tema-cek-talep-beklemede-zemin)", kenar: "var(--tema-cek-talep-beklemede-cizgi)" },
+  bm_onayinda: { etiket: "BM Onayında", metin: "var(--tema-cek-talep-bm_onayinda-metin)", arka: "var(--tema-cek-talep-bm_onayinda-zemin)", kenar: "var(--tema-cek-talep-bm_onayinda-cizgi)" },
+  tm_onayinda: { etiket: "TM Onayında", metin: "var(--tema-cek-talep-tm_onayinda-metin)", arka: "var(--tema-cek-talep-tm_onayinda-zemin)", kenar: "var(--tema-cek-talep-tm_onayinda-cizgi)" },
+  onaylandi: { etiket: "TM Onayladı", metin: "var(--tema-cek-talep-onaylandi-metin)", arka: "var(--tema-cek-talep-onaylandi-zemin)", kenar: "var(--tema-cek-talep-onaylandi-cizgi)" },
+  teslimat_bekliyor: { etiket: "TM Onayladı", metin: "var(--tema-cek-talep-teslimat_bekliyor-metin)", arka: "var(--tema-cek-talep-teslimat_bekliyor-zemin)", kenar: "var(--tema-cek-talep-teslimat_bekliyor-cizgi)" },
+  cek_kodlari_gonderildi: { etiket: "Çek Kodu Gönderildi", metin: "var(--tema-cek-talep-cek_kodlari_gonderildi-metin)", arka: "var(--tema-cek-talep-cek_kodlari_gonderildi-zemin)", kenar: "var(--tema-cek-talep-cek_kodlari_gonderildi-cizgi)" },
+  iptal: { etiket: "İptal Edildi", metin: "var(--tema-cek-talep-iptal-metin)", arka: "var(--tema-cek-talep-iptal-zemin)", kenar: "var(--tema-cek-talep-iptal-cizgi)" },
 };
 
 export const CEK_TALEP_ISLEMDE_DURUMLARI: readonly CekTalepDurumu[] = [

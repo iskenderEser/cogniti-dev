@@ -145,14 +145,14 @@ export default function EclubCekTaleplerimPage() {
         ustEtiket={firma?.firma_adi ?? ""}
         baslik="Çek Talepleri"
         aciklama="Hediye çeki taleplerinizi, onay durumlarını ve teslim edilen dijital çek kodlarını takip edin."
-        aksiyon={<Link href={firmaId ? eclubFirmaYolu(firma?.firma_adi ?? firmaId, "hediye-cekleri") : "/eclub/store"} className="inline-flex items-center gap-2 rounded-xl border border-[#cfe3f4] bg-white px-4 py-2.5 text-xs font-extrabold text-[#237ac8] shadow-sm hover:bg-[#f4f9fd]"><Store size={15} /> Hediye Çeki Ekranına Dön</Link>}
+        aksiyon={<Link href={firmaId ? eclubFirmaYolu(firma?.firma_adi ?? firmaId, "hediye-cekleri") : "/eclub/store"} className="inline-flex items-center gap-2 rounded-xl border border-[var(--tema-yerel-eclub-cizgi-01)] bg-[var(--tema-yerel-eclub-kart-01)] px-4 py-2.5 text-xs font-extrabold text-[var(--tema-yerel-eclub-eylem-metin-01)] shadow-sm hover:bg-[var(--tema-yerel-eclub-sayfa-zemini-01)]"><Store size={15} /> Hediye Çeki Ekranına Dön</Link>}
       />
 
       <section className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <EclubKisiStat ikon={Gift} etiket="Toplam Talep" deger={ozet.toplam} detay="Tüm çek talepleriniz" />
-        <EclubKisiStat ikon={Clock3} etiket="Onay Sürecinde" deger={ozet.onayda} detay="UTT, BM, TM veya kod bekleyen" renk="#a66215" zemin="#fff6e8" />
-        <EclubKisiStat ikon={CheckCircle2} etiket="Teslim Edilen" deger={ozet.teslim} detay="Kodu gönderilen çekler" renk="#16865f" zemin="#ebf8f2" />
-        <EclubKisiStat ikon={XCircle} etiket="İptal" deger={ozet.iptal} detay="İptal edilen talepler" renk="#bc4b4b" zemin="#fff0f0" />
+        <EclubKisiStat ikon={Clock3} etiket="Onay Sürecinde" deger={ozet.onayda} detay="UTT, BM, TM veya kod bekleyen" renk="var(--tema-yerel-eclub-islevsel-metin-01)" zemin="var(--tema-yerel-eclub-islevsel-zemin-01)" />
+        <EclubKisiStat ikon={CheckCircle2} etiket="Teslim Edilen" deger={ozet.teslim} detay="Kodu gönderilen çekler" renk="var(--tema-yerel-eclub-islevsel-metin-02)" zemin="var(--tema-yerel-eclub-islevsel-zemin-02)" />
+        <EclubKisiStat ikon={XCircle} etiket="İptal" deger={ozet.iptal} detay="İptal edilen talepler" renk="var(--tema-yerel-eclub-islevsel-metin-03)" zemin="var(--tema-yerel-eclub-islevsel-zemin-03)" />
       </section>
       </>}
 

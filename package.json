@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "typecheck:build": "next typegen && tsc -p tsconfig.build.json --noEmit --incremental false",
+    "typecheck:build": "node scripts/denetim/hesaplanan-renkleri-uret.mjs --check && next typegen && tsc -p tsconfig.build.json --noEmit --incremental false",
     "build": "npm run typecheck:build && HAPBILGI_TYPES_CHECKED=1 next build",
     "start": "next start",
     "lint": "eslint",

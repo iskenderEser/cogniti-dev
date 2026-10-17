@@ -68,9 +68,9 @@ export default function DurumAnahtari({ baslik, rol, asama, aktif, onSec, sayim,
   // durur, filtre şeridi kartın TAM genişliğini kullanır — pill'ler ne alt satıra
   // kayar ne de kırpılır. Çok dar ekranda şerit yatay kaydırılır.
   return (
-    <div className="px-4 md:px-5 py-3.5 border-b border-gray-100 flex flex-col gap-2.5">
-      <SayfaYenileBasligi baslik={<h1 className="text-lg font-semibold text-gray-900">{baslik}</h1>} aksiyon={aksiyon}
-        aciklama={<span className="text-xs text-gray-500">{sayim[aktif] ?? 0} kayıt</span>} />
+    <div className="px-4 md:px-5 py-3.5 border-b border-[var(--tema-yerel-ortak-sayfa-cizgi-08)] flex flex-col gap-2.5">
+      <SayfaYenileBasligi baslik={<h1 className="text-lg font-semibold text-[var(--tema-yerel-ortak-sayfa-ana-metin-07)]">{baslik}</h1>} aksiyon={aksiyon}
+        aciklama={<span className="text-xs text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-11)]">{sayim[aktif] ?? 0} kayıt</span>} />
       <div className="min-w-0">
         <SadeKontrolGrubu tur="kapsul">
           {piller.filter((p) => !(p.yalnizKayitVarsa && (sayim[p.kod] ?? 0) === 0 && aktif !== p.kod)).map((p) => {
@@ -80,7 +80,7 @@ export default function DurumAnahtari({ baslik, rol, asama, aktif, onSec, sayim,
             return (
               <SadeKontrolButonu key={p.kod} onClick={() => onSec(p.kod)} aria-pressed={secili}>
                 {m.metin}
-                <span style={{ background: m.renk.text, color: "#fff", borderRadius: 999, padding: "0 6px", fontSize: 10 }}>{n}</span>
+                <span style={{ background: m.renk.text, color: "var(--tema-ters-metin)", borderRadius: 999, padding: "0 6px", fontSize: 10 }}>{n}</span>
               </SadeKontrolButonu>
             );
           })}

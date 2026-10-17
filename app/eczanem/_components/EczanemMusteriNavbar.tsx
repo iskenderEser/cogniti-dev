@@ -14,7 +14,7 @@ interface Props {
   onHamburger?: () => void;
 }
 
-const BORDO = "#bc2d0d";
+const BORDO = "var(--tema-yerel-eczanem-vurgu-metin-01)";
 
 const BILGI_PILLERI: { key: string; etiket: string; href: string }[] = [
   { key: "ana-sayfa", etiket: "Ana Sayfa", href: "/eczanem" },
@@ -81,9 +81,9 @@ export default function EczanemMusteriNavbar({
   const pillStyle = (key: string, aktif: boolean): React.CSSProperties => {
     const isHover = hover === key;
     return {
-      color: aktif ? BORDO : "#374151",
-      background: aktif ? "#fef2f2" : isHover ? "rgba(188,45,13,0.07)" : "rgba(0,0,0,0.04)",
-      boxShadow: aktif ? "inset 0 0 0 1px #fecaca" : "inset 0 0 0 0.5px rgba(0,0,0,0.08)",
+      color: aktif ? BORDO : "var(--tema-yerel-eczanem-ana-metin-19)",
+      background: aktif ? "var(--tema-ust-menu-pill-secili-zemin)" : isHover ? "var(--tema-ust-menu-pill-hover)" : "var(--tema-yerel-eczanem-ortu-02)",
+      boxShadow: aktif ? "inset 0 0 0 1px var(--tema-ust-menu-pill-secili-cizgi)" : "inset 0 0 0 0.5px var(--tema-yerel-eczanem-golge-04)",
       fontFamily: "'Nunito', sans-serif",
     };
   };
@@ -97,12 +97,12 @@ export default function EczanemMusteriNavbar({
   return (
     <>
       <nav
-        className="sticky top-0 z-50 border-b border-gray-200 px-3 py-3 md:px-6 md:py-3.5 min-h-[76px] flex flex-col justify-center"
+        className="sticky top-0 z-50 border-b border-[var(--tema-yerel-eczanem-cizgi-06)] px-3 py-3 md:px-6 md:py-3.5 min-h-[76px] flex flex-col justify-center"
         style={{
-          background: "rgba(255,255,255,0.85)",
+          background: "var(--tema-yerel-eczanem-kart-02)",
           backdropFilter: "blur(12px)",
           WebkitBackdropFilter: "blur(12px)",
-          borderBottomColor: "#e5e7eb",
+          borderBottomColor: "var(--tema-yerel-eczanem-cizgi-30)",
           fontFamily: "'Nunito', sans-serif",
         }}
       >
@@ -161,14 +161,14 @@ export default function EczanemMusteriNavbar({
                 {ad && (
                   <span
                     className="text-sm font-bold group-hover:opacity-80 transition-opacity"
-                    style={{ color: "#374151", fontFamily: "'Nunito', sans-serif" }}
+                    style={{ color: "var(--tema-yerel-eczanem-ana-metin-19)", fontFamily: "'Nunito', sans-serif" }}
                   >
                     {ad}
                   </span>
                 )}
                 <div
-                  className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold transition-all group-hover:ring-2 group-hover:ring-gray-300"
-                  style={{ background: "#d4d4d4", color: "#374151", border: "1px solid #c9c9c9" }}
+                  className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold transition-all group-hover:ring-2 group-hover:ring-[var(--tema-yerel-eczanem-odak-02)]"
+                  style={{ background: "var(--tema-yerel-eczanem-sayfa-zemini-16)", color: "var(--tema-yerel-eczanem-ana-metin-19)", border: "1px solid var(--tema-yerel-eczanem-cizgi-31)" }}
                 >
                   {bashHarfler}
                 </div>
@@ -177,10 +177,10 @@ export default function EczanemMusteriNavbar({
               <div className="flex items-center gap-2">
                 {telefon && (
                   <>
-                    <span className="text-[11px] font-semibold text-gray-500 select-none">
+                    <span className="text-[11px] font-semibold text-[var(--tema-yerel-eczanem-yardimci-metin-04)] select-none">
                       ••• ••• {telefon.slice(-4)}
                     </span>
-                    <span style={{ color: "#d1d5db", fontSize: 11, userSelect: "none" }}>·</span>
+                    <span style={{ color: "var(--tema-yerel-eczanem-yardimci-metin-30)", fontSize: 11, userSelect: "none" }}>·</span>
                   </>
                 )}
                 <button
@@ -205,28 +205,28 @@ export default function EczanemMusteriNavbar({
               {profilAcik && (
                 <div
                   role="menu"
-                  className="absolute right-0 top-full mt-2 w-72 rounded-2xl border border-[#e5e7eb] bg-white p-3 shadow-lg z-50 animate-in fade-in zoom-in-95 duration-100"
+                  className="absolute right-0 top-full mt-2 w-72 rounded-2xl border border-[var(--tema-yerel-eczanem-cizgi-30)] bg-[var(--tema-yerel-eczanem-kart-01)] p-3 shadow-lg z-50 animate-in fade-in zoom-in-95 duration-100"
                   style={{ fontFamily: "'Nunito', sans-serif" }}
                 >
                   <div className="flex items-center gap-3 p-2">
                     <div
                       className="size-10 rounded-full flex items-center justify-center text-sm font-bold shrink-0"
-                      style={{ background: "#d4d4d4", color: "#374151", border: "1px solid #c9c9c9" }}
+                      style={{ background: "var(--tema-yerel-eczanem-sayfa-zemini-16)", color: "var(--tema-yerel-eczanem-ana-metin-19)", border: "1px solid var(--tema-yerel-eczanem-cizgi-31)" }}
                     >
                       {bashHarfler}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-bold text-gray-900">{ad}</p>
+                      <p className="truncate text-sm font-bold text-[var(--tema-yerel-eczanem-ana-metin-02)]">{ad}</p>
                       {telefon ? (
-                        <p className="mt-0.5 text-[11px] font-semibold text-gray-500">
+                        <p className="mt-0.5 text-[11px] font-semibold text-[var(--tema-yerel-eczanem-yardimci-metin-04)]">
                           ••• ••• {telefon.slice(-4)}
                         </p>
                       ) : (
-                        <p className="mt-0.5 text-[11px] font-semibold text-gray-400">Telefon bilgisi yok</p>
+                        <p className="mt-0.5 text-[11px] font-semibold text-[var(--tema-yerel-eczanem-yardimci-metin-03)]">Telefon bilgisi yok</p>
                       )}
                       <span
                         className="mt-1.5 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold"
-                        style={{ background: "#fef2f2", color: BORDO, border: "1px solid #fecaca" }}
+                        style={{ background: "var(--tema-ust-menu-pill-secili-zemin)", color: BORDO, border: "1px solid var(--tema-ust-menu-pill-secili-cizgi)" }}
                       >
                         Eczanem Üyesi
                       </span>
@@ -235,16 +235,16 @@ export default function EczanemMusteriNavbar({
 
                   {onHesapSil && (
                     <>
-                      <div className="my-2 border-t border-gray-100" />
+                      <div className="my-2 border-t border-[var(--tema-yerel-eczanem-cizgi-20)]" />
                       <button
                         type="button"
                         onClick={() => {
                           setProfilAcik(false);
                           onHesapSil();
                         }}
-                        className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold text-[#bc2d0d] transition hover:bg-red-50 cursor-pointer border-none bg-transparent text-left"
+                        className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold text-[var(--tema-yerel-eczanem-islevsel-metin-28)] transition hover:bg-[var(--tema-yerel-eczanem-islevsel-zemin-08)] cursor-pointer border-none bg-transparent text-left"
                       >
-                        <Trash2 className="size-3.5 text-[#bc2d0d]" />
+                        <Trash2 className="size-3.5 text-[var(--tema-yerel-eczanem-islevsel-metin-28)]" />
                         Hesabımı kalıcı olarak sil
                       </button>
                     </>
@@ -265,7 +265,7 @@ export default function EczanemMusteriNavbar({
               aria-expanded={yerelCekmece ? mobilMenuAcik : undefined}
               aria-controls={yerelCekmece ? "eczanem-mobil-drawer" : undefined}
               className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold cursor-pointer select-none border-none p-0"
-              style={{ background: "#d4d4d4", color: "#374151" }}
+              style={{ background: "var(--tema-yerel-eczanem-sayfa-zemini-16)", color: "var(--tema-yerel-eczanem-ana-metin-19)" }}
             >
               {bashHarfler}
             </button>
@@ -277,9 +277,9 @@ export default function EczanemMusteriNavbar({
               aria-controls={yerelCekmece ? "eczanem-mobil-drawer" : undefined}
               className="flex flex-col gap-1 p-1 bg-transparent border-none cursor-pointer"
             >
-              <span className="block w-4 bg-gray-700" style={{ height: "1.5px" }} />
-              <span className="block w-4 bg-gray-700" style={{ height: "1.5px" }} />
-              <span className="block w-4 bg-gray-700" style={{ height: "1.5px" }} />
+              <span className="block w-4 bg-[var(--tema-yerel-eczanem-eylem-zemin-09)]" style={{ height: "1.5px" }} />
+              <span className="block w-4 bg-[var(--tema-yerel-eczanem-eylem-zemin-09)]" style={{ height: "1.5px" }} />
+              <span className="block w-4 bg-[var(--tema-yerel-eczanem-eylem-zemin-09)]" style={{ height: "1.5px" }} />
             </button>
           </div>
         </div>
@@ -291,7 +291,7 @@ export default function EczanemMusteriNavbar({
           id="eczanem-mobil-drawer"
           onClick={() => setMobilMenuAcik(false)}
           className="fixed inset-0 z-[60] md:hidden"
-          style={{ background: "rgba(0,0,0,0.45)" }}
+          style={{ background: "var(--tema-yerel-eczanem-ortu-03)" }}
         >
           <div
             onClick={(e) => e.stopPropagation()}
@@ -299,8 +299,8 @@ export default function EczanemMusteriNavbar({
             style={{
               width: "270px",
               maxWidth: "85vw",
-              background: "#ffffff",
-              boxShadow: "2px 0 16px rgba(0,0,0,0.15)",
+              background: "var(--tema-yerel-eczanem-kart-03)",
+              boxShadow: "2px 0 16px var(--tema-yerel-eczanem-golge-05)",
               padding: "14px 12px",
               fontFamily: "'Nunito', sans-serif",
             }}
@@ -311,7 +311,7 @@ export default function EczanemMusteriNavbar({
                 type="button"
                 onClick={() => setMobilMenuAcik(false)}
                 className="bg-transparent border-none cursor-pointer"
-                style={{ fontSize: "20px", color: "#737373", lineHeight: 1, padding: "2px 6px" }}
+                style={{ fontSize: "20px", color: "var(--tema-yerel-eczanem-yardimci-metin-31)", lineHeight: 1, padding: "2px 6px" }}
                 aria-label="Menüyü kapat"
               >
                 ×
@@ -333,8 +333,8 @@ export default function EczanemMusteriNavbar({
                       padding: "10px 12px",
                       fontSize: "14px",
                       fontWeight: aktif ? 700 : 600,
-                      color: aktif ? "#185fa5" : "#374151",
-                      background: aktif ? "rgba(86,174,255,0.12)" : "transparent",
+                      color: aktif ? "var(--tema-yerel-eczanem-eylem-metin-08)" : "var(--tema-yerel-eczanem-ana-metin-19)",
+                      background: aktif ? "var(--tema-yerel-eczanem-eylem-zemin-10)" : "transparent",
                       fontFamily: "'Nunito', sans-serif",
                     }}
                   >
@@ -344,23 +344,23 @@ export default function EczanemMusteriNavbar({
               })}
             </div>
 
-            <div className="h-px my-3" style={{ background: "#f0f0f0" }} />
+            <div className="h-px my-3" style={{ background: "var(--tema-yerel-eczanem-sayfa-zemini-17)" }} />
 
             {/* Kullanıcı Profili ve Bilgisi */}
             <div className="px-3 py-2 flex flex-col gap-1.5">
               <div className="flex items-center gap-2.5">
                 <div
                   className="size-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
-                  style={{ background: "#d4d4d4", color: "#374151", border: "1px solid #c9c9c9" }}
+                  style={{ background: "var(--tema-yerel-eczanem-sayfa-zemini-16)", color: "var(--tema-yerel-eczanem-ana-metin-19)", border: "1px solid var(--tema-yerel-eczanem-cizgi-31)" }}
                 >
                   {bashHarfler}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-xs font-bold" style={{ color: "#374151" }}>
+                  <p className="truncate text-xs font-bold" style={{ color: "var(--tema-yerel-eczanem-ana-metin-19)" }}>
                     {ad}
                   </p>
                   {telefon ? (
-                    <p className="text-[11px] font-semibold text-gray-500">••• ••• {telefon.slice(-4)}</p>
+                    <p className="text-[11px] font-semibold text-[var(--tema-yerel-eczanem-yardimci-metin-04)]">••• ••• {telefon.slice(-4)}</p>
                   ) : null}
                 </div>
               </div>
@@ -372,15 +372,15 @@ export default function EczanemMusteriNavbar({
                     onHesapSil();
                   }}
                   className="mt-1 flex w-full items-center gap-2 rounded-lg border-none bg-transparent px-1 py-1.5 text-left text-xs font-semibold cursor-pointer"
-                  style={{ color: "#bc2d0d" }}
+                  style={{ color: "var(--tema-yerel-eczanem-islevsel-metin-28)" }}
                 >
-                  <Trash2 className="size-3.5 text-[#bc2d0d]" />
+                  <Trash2 className="size-3.5 text-[var(--tema-yerel-eczanem-islevsel-metin-28)]" />
                   Hesabımı kalıcı olarak sil
                 </button>
               )}
             </div>
 
-            <div className="h-px my-3" style={{ background: "#f0f0f0" }} />
+            <div className="h-px my-3" style={{ background: "var(--tema-yerel-eczanem-sayfa-zemini-17)" }} />
 
             {/* Çıkış Butonu */}
             <button
@@ -390,7 +390,7 @@ export default function EczanemMusteriNavbar({
                 void onCikis();
               }}
               className="w-full flex items-center gap-2 rounded-lg border-none bg-transparent px-3 py-2.5 text-left font-semibold cursor-pointer"
-              style={{ color: "#bc2d0d", fontSize: "14px", fontFamily: "'Nunito', sans-serif" }}
+              style={{ color: "var(--tema-yerel-eczanem-vurgu-metin-01)", fontSize: "14px", fontFamily: "'Nunito', sans-serif" }}
             >
               <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />

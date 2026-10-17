@@ -58,7 +58,7 @@ function renderHapbiMetin(metin: string, isUser = false, onLinkClick?: (url: str
     if (match[2] !== undefined) {
       // Bold
       nodes.push(
-        <strong key={`b-${keyIndex++}`} className={`font-bold ${isUser ? "text-white" : "text-gray-900"}`}>
+        <strong key={`b-${keyIndex++}`} className={`font-bold ${isUser ? "text-[var(--tema-yerel-ortak-sayfa-ters-metin-01)]" : "text-[var(--tema-yerel-ortak-sayfa-ana-metin-07)]"}`}>
           {renderHapbiMetin(match[2], isUser, onLinkClick)}
         </strong>
       );
@@ -95,8 +95,8 @@ function renderHapbiMetin(metin: string, isUser = false, onLinkClick?: (url: str
             onClick={() => onLinkClick?.(linkUrl)}
             className={`${
               isUser
-                ? "text-white underline font-bold hover:opacity-80"
-                : "text-[#185fa5] font-bold underline underline-offset-2 hover:text-[#0c447c]"
+                ? "text-[var(--tema-yerel-ortak-sayfa-ters-metin-01)] underline font-bold hover:opacity-80"
+                : "text-[var(--tema-yerel-ortak-sayfa-eylem-metin-04)] font-bold underline underline-offset-2 hover:text-[var(--tema-yerel-ortak-sayfa-ana-metin-12)]"
             } transition-colors cursor-pointer`}
           >
             {linkText}
@@ -108,8 +108,8 @@ function renderHapbiMetin(metin: string, isUser = false, onLinkClick?: (url: str
             onClick={() => onLinkClick?.(linkUrl)}
             className={`${
               isUser
-                ? "text-white underline font-bold hover:opacity-80"
-                : "text-[#185fa5] font-bold underline underline-offset-2 hover:text-[#0c447c]"
+                ? "text-[var(--tema-yerel-ortak-sayfa-ters-metin-01)] underline font-bold hover:opacity-80"
+                : "text-[var(--tema-yerel-ortak-sayfa-eylem-metin-04)] font-bold underline underline-offset-2 hover:text-[var(--tema-yerel-ortak-sayfa-ana-metin-12)]"
             } transition-colors cursor-pointer text-left inline p-0 bg-transparent border-none align-baseline`}
           >
             {linkText}
@@ -311,9 +311,9 @@ export default function HapbiChatModal() {
       ref={modalRef}
       role="dialog"
       aria-label="bi sohbeti"
-      className="hapbi-modal-container fixed z-50 flex flex-col overflow-hidden bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-orange-100 transition-all duration-300"
+      className="hapbi-modal-container fixed z-50 flex flex-col overflow-hidden bg-[var(--tema-yerel-ortak-sayfa-kart-01)]/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-[var(--tema-yerel-ortak-sayfa-islevsel-cizgi-02)] transition-all duration-300"
       style={{
-        boxShadow: "0 20px 40px -15px rgba(249, 115, 22, 0.25), 0 0 0 1px rgba(0,0,0,0.06)",
+        boxShadow: "0 20px 40px -15px var(--tema-yerel-ortak-sayfa-islevsel-golge-01), 0 0 0 1px var(--tema-yerel-ortak-sayfa-golge-02)",
         fontFamily: "'Nunito', sans-serif",
         ...(suruklenebilir
           ? {
@@ -341,23 +341,23 @@ export default function HapbiChatModal() {
         onPointerMove={chatSurukle}
         onPointerUp={chatSuruklemeyiBitir}
         onPointerCancel={chatSuruklemeyiIptalEt}
-        className={`flex items-center justify-between px-3.5 py-2.5 bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 text-white select-none flex-shrink-0 ${
+        className={`flex items-center justify-between px-3.5 py-2.5 bg-gradient-to-r from-[var(--tema-yerel-ortak-sayfa-islevsel-zemin-14)] via-[var(--tema-yerel-ortak-sayfa-islevsel-zemin-15)] to-[var(--tema-yerel-ortak-sayfa-islevsel-zemin-16)] text-[var(--tema-yerel-ortak-sayfa-ters-metin-01)] select-none flex-shrink-0 ${
           suruklenebilir ? (surukleniyor ? "cursor-grabbing" : "cursor-move") : ""
         }`}
         style={{ touchAction: suruklenebilir ? "none" : "auto" }}
       >
         <div className="flex items-center gap-2.5">
-          <div className="relative w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-md flex-shrink-0">
-            <span className="text-orange-600 font-black text-base tracking-tighter lowercase select-none">
+          <div className="relative w-8 h-8 rounded-full bg-[var(--tema-yerel-ortak-sayfa-kart-01)] flex items-center justify-center shadow-md flex-shrink-0">
+            <span className="text-[var(--tema-yerel-ortak-sayfa-islevsel-metin-15)] font-black text-base tracking-tighter lowercase select-none">
               bi
             </span>
-            <div className="absolute bottom-0 right-0 w-2 h-2 bg-emerald-400 rounded-full border border-white" />
+            <div className="absolute bottom-0 right-0 w-2 h-2 bg-[var(--tema-yerel-ortak-sayfa-islevsel-zemin-17)] rounded-full border border-[var(--tema-yerel-ortak-sayfa-cizgi-09)]" />
           </div>
-          <div className="flex items-center gap-1.5 text-xs text-white font-extrabold tracking-wide leading-none select-none">
+          <div className="flex items-center gap-1.5 text-xs text-[var(--tema-yerel-ortak-sayfa-ters-metin-01)] font-extrabold tracking-wide leading-none select-none">
             <span>Sor</span>
-            <span className="w-1 h-1 rounded-full bg-white/75 flex-shrink-0" />
+            <span className="w-1 h-1 rounded-full bg-[var(--tema-yerel-ortak-sayfa-kart-01)]/75 flex-shrink-0" />
             <span>Öğren</span>
-            <span className="w-1 h-1 rounded-full bg-white/75 flex-shrink-0" />
+            <span className="w-1 h-1 rounded-full bg-[var(--tema-yerel-ortak-sayfa-kart-01)]/75 flex-shrink-0" />
             <span>Değiştir</span>
           </div>
         </div>
@@ -368,15 +368,15 @@ export default function HapbiChatModal() {
           onClick={() => setChatAcik(false)}
           title="Sohbeti küçült"
           aria-label="Sohbeti küçült"
-          className="w-7 h-7 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center cursor-pointer border-none transition-colors"
+          className="w-7 h-7 rounded-full bg-[var(--tema-yerel-ortak-sayfa-kart-01)]/10 hover:bg-[var(--tema-yerel-ortak-sayfa-kart-01)]/25 text-[var(--tema-yerel-ortak-sayfa-ters-metin-01)] flex items-center justify-center cursor-pointer border-none transition-colors"
         >
           <Minus className="w-4 h-4" aria-hidden="true" />
         </button>
-        <button type="button" onClick={temizle} title="Yeni sohbet" aria-label="Yeni sohbet" className="w-7 h-7 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center cursor-pointer border-none transition-colors"><RotateCcw className="w-4 h-4" aria-hidden="true" /></button>
+        <button type="button" onClick={temizle} title="Yeni sohbet" aria-label="Yeni sohbet" className="w-7 h-7 rounded-full bg-[var(--tema-yerel-ortak-sayfa-kart-01)]/10 hover:bg-[var(--tema-yerel-ortak-sayfa-kart-01)]/25 text-[var(--tema-yerel-ortak-sayfa-ters-metin-01)] flex items-center justify-center cursor-pointer border-none transition-colors"><RotateCcw className="w-4 h-4" aria-hidden="true" /></button>
         <button
           type="button"
           onClick={() => setChatAcik(false)}
-          className="w-7 h-7 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center cursor-pointer border-none transition-colors"
+          className="w-7 h-7 rounded-full bg-[var(--tema-yerel-ortak-sayfa-kart-01)]/10 hover:bg-[var(--tema-yerel-ortak-sayfa-kart-01)]/25 text-[var(--tema-yerel-ortak-sayfa-ters-metin-01)] flex items-center justify-center cursor-pointer border-none transition-colors"
           title="Kapat"
           aria-label="Sohbeti kapat"
         >
@@ -386,7 +386,7 @@ export default function HapbiChatModal() {
       </div>
 
       {/* Mesaj Akış Alanı */}
-      <div className="flex-1 overflow-y-auto p-3 flex flex-col gap-2.5 bg-gradient-to-b from-orange-50/30 to-white">
+      <div className="flex-1 overflow-y-auto p-3 flex flex-col gap-2.5 bg-gradient-to-b from-[var(--tema-yerel-ortak-sayfa-islevsel-zemin-18)]/30 to-[var(--tema-yerel-ortak-sayfa-kart-01)]">
         {mesajlar.map((m) => {
           const isUser = m.rol === "user";
           return (
@@ -397,11 +397,11 @@ export default function HapbiChatModal() {
               <div
                 className={`max-w-[88%] rounded-2xl px-3 py-2 text-[13px] leading-relaxed shadow-sm ${
                   isUser
-                    ? "bg-[#237ac8] text-white rounded-br-none"
-                    : "bg-white text-gray-800 border border-gray-100 rounded-bl-none shadow-orange-500/5"
+                    ? "bg-[var(--tema-yerel-ortak-sayfa-eylem-zemin-04)] text-[var(--tema-yerel-ortak-sayfa-ters-metin-01)] rounded-br-none"
+                    : "bg-[var(--tema-yerel-ortak-sayfa-kart-01)] text-[var(--tema-yerel-ortak-sayfa-ana-metin-13)] border border-[var(--tema-yerel-ortak-sayfa-cizgi-08)] rounded-bl-none shadow-[color:var(--tema-yerel-ortak-sayfa-islevsel-golge-02)]/5"
                 }`}
               >
-                {m.hata && <span className="block text-[10px] font-bold text-amber-700 mb-1">Yanıt alınamadı</span>}
+                {m.hata && <span className="block text-[10px] font-bold text-[var(--tema-yerel-ortak-sayfa-islevsel-metin-16)] mb-1">Yanıt alınamadı</span>}
                 <div className="whitespace-pre-line font-medium leading-relaxed">
                   {renderHapbiMetin(m.metin, isUser, handleLinkTikla)}
                 </div>
@@ -412,17 +412,17 @@ export default function HapbiChatModal() {
                         key={link.url}
                         type="button"
                         onClick={() => handleLinkTikla(link.url)}
-                        className="inline-flex items-center gap-1.5 rounded-xl bg-blue-50/90 hover:bg-blue-100 active:bg-blue-200 border border-blue-200/80 px-3 py-1.5 text-xs font-bold text-[#185fa5] shadow-sm hover:text-[#0c447c] active:scale-95 transition-all cursor-pointer select-none"
+                        className="inline-flex items-center gap-1.5 rounded-xl bg-[var(--tema-yerel-ortak-sayfa-secim-zemin-04)]/90 hover:bg-[var(--tema-yerel-ortak-sayfa-secim-zemin-05)] active:bg-[var(--tema-yerel-ortak-sayfa-secim-zemin-06)] border border-[var(--tema-yerel-ortak-sayfa-cizgi-10)]/80 px-3 py-1.5 text-xs font-bold text-[var(--tema-yerel-ortak-sayfa-eylem-metin-04)] shadow-sm hover:text-[var(--tema-yerel-ortak-sayfa-ana-metin-12)] active:scale-95 transition-all cursor-pointer select-none"
                       >
                         <span>{link.etiket}</span>
-                        <span className="text-[11px] text-blue-400 font-normal">↗</span>
+                        <span className="text-[11px] text-[var(--tema-yerel-ortak-sayfa-eylem-metin-05)] font-normal">↗</span>
                       </button>
                     ))}
                   </div>
                 )}
                 {!!m.kaynaklar?.length && (
-                  <div className="mt-2 flex flex-col gap-1 border-t border-gray-100 pt-2">
-                    <span className="text-[10px] font-semibold text-gray-400">Başvurulan kaynaklar</span>
+                  <div className="mt-2 flex flex-col gap-1 border-t border-[var(--tema-yerel-ortak-sayfa-cizgi-08)] pt-2">
+                    <span className="text-[10px] font-semibold text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-12)]">Başvurulan kaynaklar</span>
                     {m.kaynaklar.map((k) =>
                       k.url ? (
                         <button
@@ -430,7 +430,7 @@ export default function HapbiChatModal() {
                           type="button"
                           onClick={() => handleLinkTikla(k.url)}
                           title={`Okuma zamanı: ${new Date(k.zaman).toLocaleString("tr-TR")}. Sayfada aynı dönemi seçin.`}
-                          className="text-[10px] text-[#185fa5] hover:underline cursor-pointer text-left p-0 bg-transparent border-none"
+                          className="text-[10px] text-[var(--tema-yerel-ortak-sayfa-eylem-metin-04)] hover:underline cursor-pointer text-left p-0 bg-transparent border-none"
                         >
                           {k.baslik}
                           {k.donem ? ` · ${k.donem}` : ""}
@@ -439,7 +439,7 @@ export default function HapbiChatModal() {
                         <span
                           key={k.id}
                           title={`Okuma zamanı: ${new Date(k.zaman).toLocaleString("tr-TR")}`}
-                          className="text-[10px] text-gray-500"
+                          className="text-[10px] text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-11)]"
                         >
                           {k.baslik}
                           {k.donem ? ` · ${k.donem}` : ""}
@@ -451,7 +451,7 @@ export default function HapbiChatModal() {
 
                 {/* Eğer mesajda yönlendirici aksiyon varsa */}
                 {m.aksiyon && (
-                  <div className="mt-2.5 pt-2 border-t border-gray-100">
+                  <div className="mt-2.5 pt-2 border-t border-[var(--tema-yerel-ortak-sayfa-cizgi-08)]">
                     <button
                       type="button"
                       onClick={() => {
@@ -459,21 +459,21 @@ export default function HapbiChatModal() {
                           handleLinkTikla(m.aksiyon.url);
                         }
                       }}
-                      className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 active:scale-95 text-white font-bold text-xs rounded-xl shadow-sm cursor-pointer border-none transition-all duration-200 hover:scale-[1.02]"
+                      className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-[var(--tema-yerel-ortak-sayfa-islevsel-zemin-14)] to-[var(--tema-yerel-ortak-sayfa-islevsel-zemin-15)] hover:from-[var(--tema-yerel-ortak-sayfa-islevsel-zemin-16)] hover:to-[var(--tema-yerel-ortak-sayfa-islevsel-zemin-19)] active:scale-95 text-[var(--tema-yerel-ortak-sayfa-ters-metin-01)] font-bold text-xs rounded-xl shadow-sm cursor-pointer border-none transition-all duration-200 hover:scale-[1.02]"
                     >
                       <span>{m.aksiyon.etiket}</span>
                     </button>
                   </div>
                 )}
               </div>
-              <span className="text-[10px] text-gray-400 px-1 font-semibold">{m.zaman}</span>
+              <span className="text-[10px] text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-12)] px-1 font-semibold">{m.zaman}</span>
             </div>
           );
         })}
 
         {yukleniyor && (
-          <div className="flex items-center gap-2 text-xs text-orange-600 font-bold bg-orange-50 px-3 py-2 rounded-xl self-start border border-orange-100 animate-pulse">
-            <div className="w-3.5 h-3.5 rounded-full border-2 border-orange-500 border-t-transparent animate-spin" />
+          <div className="flex items-center gap-2 text-xs text-[var(--tema-yerel-ortak-sayfa-islevsel-metin-15)] font-bold bg-[var(--tema-yerel-ortak-sayfa-islevsel-zemin-18)] px-3 py-2 rounded-xl self-start border border-[var(--tema-yerel-ortak-sayfa-islevsel-cizgi-02)] animate-pulse">
+            <div className="w-3.5 h-3.5 rounded-full border-2 border-[var(--tema-yerel-ortak-sayfa-islevsel-cizgi-03)] border-t-transparent animate-spin" />
             <span>bi kontrol ediyor...</span>
           </div>
         )}
@@ -484,7 +484,7 @@ export default function HapbiChatModal() {
       {/* Soru Giriş Alanı */}
       <form
         onSubmit={handleSubmit}
-        className="px-3 py-2 bg-white border-t border-gray-100 flex items-center gap-2 flex-shrink-0"
+        className="px-3 py-2 bg-[var(--tema-yerel-ortak-sayfa-kart-01)] border-t border-[var(--tema-yerel-ortak-sayfa-cizgi-08)] flex items-center gap-2 flex-shrink-0"
       >
         <input
           type="text"
@@ -494,12 +494,12 @@ export default function HapbiChatModal() {
           onChange={(e) => setGirdi(e.target.value)}
           placeholder="Değişimi başlatmak için bi' soru sorun..."
           disabled={yukleniyor}
-          className="flex-1 bg-gray-50 border border-gray-200 focus:border-orange-500 focus:bg-white rounded-xl px-3 py-2 text-xs font-medium text-gray-800 placeholder-gray-400 outline-none transition-all"
+          className="flex-1 bg-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-06)] border border-[var(--tema-yerel-ortak-sayfa-cizgi-06)] focus:border-[var(--tema-yerel-ortak-sayfa-islevsel-cizgi-03)] focus:bg-[var(--tema-yerel-ortak-sayfa-kart-01)] rounded-xl px-3 py-2 text-xs font-medium text-[var(--tema-yerel-ortak-sayfa-ana-metin-13)] placeholder-[var(--tema-yerel-ortak-sayfa-yardimci-metin-12)] outline-none transition-all"
         />
         <button
           type="submit"
           disabled={!girdi.trim() || yukleniyor}
-          className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 disabled:opacity-40 text-white font-bold text-xs px-3 py-2 rounded-xl cursor-pointer border-none shadow-sm transition-all flex items-center justify-center"
+          className="bg-gradient-to-r from-[var(--tema-yerel-ortak-sayfa-islevsel-zemin-14)] to-[var(--tema-yerel-ortak-sayfa-islevsel-zemin-15)] hover:from-[var(--tema-yerel-ortak-sayfa-islevsel-zemin-16)] hover:to-[var(--tema-yerel-ortak-sayfa-islevsel-zemin-19)] disabled:opacity-40 text-[var(--tema-yerel-ortak-sayfa-ters-metin-01)] font-bold text-xs px-3 py-2 rounded-xl cursor-pointer border-none shadow-sm transition-all flex items-center justify-center"
         >
           Gönder
         </button>

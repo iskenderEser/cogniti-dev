@@ -60,7 +60,7 @@ function IkiliUretimSecimi({ baslik, hazir, hazirEtiketi, onDegistir, kapsulClas
 
   return (
     <div className="min-w-0 flex-1">
-      <p className="mb-1.5 text-[11px] font-extrabold uppercase tracking-[0.12em] text-[#7a8da8]">{baslik}</p>
+      <p className="mb-1.5 text-[11px] font-extrabold uppercase tracking-[0.12em] text-[var(--tema-yerel-uretim-yardimci-metin-24)]">{baslik}</p>
       <SadeKontrolGrubu
         role="radiogroup"
         aria-label={`${baslik} üretim yöntemi`}
@@ -148,8 +148,8 @@ export function YeniTalepFormV2({ formu }: Props) {
     <div className="@container">
       <form onSubmit={formu.handleSubmit} className="flex flex-col gap-3">
         <div className="grid grid-cols-1 gap-3 @[780px]:grid-cols-2">
-          <section className="min-w-0 rounded-2xl border border-[#dfe8f3] bg-white px-4 py-3.5">
-            <h3 className="mb-3 text-sm font-extrabold text-[#263b58]">Ürün / Konu ve Teknik</h3>
+          <section className="min-w-0 rounded-2xl border border-[var(--tema-yerel-uretim-cizgi-08)] bg-[var(--tema-yerel-uretim-kart-01)] px-4 py-3.5">
+            <h3 className="mb-3 text-sm font-extrabold text-[var(--tema-yerel-uretim-ana-metin-04)]">Ürün / Konu ve Teknik</h3>
             <div className="grid grid-cols-1 gap-3 @[1000px]:grid-cols-3">
               <fieldset className="min-w-0">
                 <legend className="sr-only">İçerik Türü</legend>
@@ -189,14 +189,14 @@ export function YeniTalepFormV2({ formu }: Props) {
                   />
                   {formu.serbestAdGoster && (
                     <div>
-                      <label className="text-xs text-gray-500 block mb-1">
-                        Eğitim/İçerik Adı <span className="text-red-500">*</span>
+                      <label className="text-xs text-[var(--tema-yerel-uretim-yardimci-metin-01)] block mb-1">
+                        Eğitim/İçerik Adı <span className="text-[var(--tema-yerel-uretim-islevsel-metin-09)]">*</span>
                       </label>
                       <input
                         value={formu.serbestAd}
                         onChange={(e) => formu.setSerbestAd(e.target.value)}
                         placeholder="İzleyicinin göreceği ad"
-                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 bg-white box-border"
+                        className="w-full border border-[var(--tema-yerel-uretim-cizgi-01)] rounded-lg px-3 py-2 text-sm text-[var(--tema-yerel-uretim-ana-metin-01)] bg-[var(--tema-yerel-uretim-kart-01)] box-border"
                         style={{ fontFamily: "'Nunito', sans-serif" }}
                       />
                     </div>
@@ -208,11 +208,11 @@ export function YeniTalepFormV2({ formu }: Props) {
           <fieldset
             disabled={!yayinKitlesiAktif}
             aria-disabled={!yayinKitlesiAktif}
-            className="min-w-0 rounded-2xl border border-[#dfe8f3] bg-white px-4 py-3.5"
+            className="min-w-0 rounded-2xl border border-[var(--tema-yerel-uretim-cizgi-08)] bg-[var(--tema-yerel-uretim-kart-01)] px-4 py-3.5"
             style={{ opacity: yayinKitlesiAktif ? 1 : 0.58 }}
           >
             <legend className="sr-only">Yayın Kitlesi</legend>
-            <h3 className="mb-3 text-sm font-extrabold text-[#263b58]">Yayın Kitlesi</h3>
+            <h3 className="mb-3 text-sm font-extrabold text-[var(--tema-yerel-uretim-ana-metin-04)]">Yayın Kitlesi</h3>
             <div className={`grid grid-cols-1 gap-2 @[384px]:grid-cols-2 ${hedefRoller.length === 5 ? "@[780px]:grid-cols-6" : ""}`}>
               {hedefRoller.map((rolKey, index) => {
                 const tasarim = HEDEF_ROL_TASARIM[rolKey];
@@ -223,8 +223,8 @@ export function YeniTalepFormV2({ formu }: Props) {
                     key={rolKey}
                     className={`flex min-h-10 min-w-0 cursor-pointer items-center gap-2 rounded-xl border px-3 py-2 transition-all ${hedefRoller.length === 5 ? (index < 2 ? "@[780px]:col-span-3" : "@[780px]:col-span-2") : ""}`}
                     style={{
-                      background: secili ? tasarim.bg : "#fff",
-                      borderColor: secili ? tasarim.renk : "#e5e7eb",
+                      background: secili ? tasarim.bg : "var(--tema-yerel-uretim-kart-03)",
+                      borderColor: secili ? tasarim.renk : "var(--tema-yerel-uretim-cizgi-05)",
                     }}
                   >
                     <input
@@ -236,28 +236,28 @@ export function YeniTalepFormV2({ formu }: Props) {
                       className="cursor-pointer"
                       style={{ accentColor: tasarim.renk }}
                     />
-                    <span className="text-xs font-bold" style={{ color: secili ? tasarim.renk : "#425672" }}>
+                    <span className="text-xs font-bold" style={{ color: secili ? tasarim.renk : "var(--tema-yerel-uretim-ana-metin-07)" }}>
                       {tasarim.tamEtiket}
                     </span>
                   </label>
                 );
               })}
             </div>
-            <p className="mt-2 text-xs leading-4 text-[#7b8ca5]">Sadece Eczacı ve Eczane Teknisyenlerini birlikte tercih edebilirsiniz.</p>
+            <p className="mt-2 text-xs leading-4 text-[var(--tema-yerel-uretim-yardimci-metin-20)]">Sadece Eczacı ve Eczane Teknisyenlerini birlikte tercih edebilirsiniz.</p>
           </fieldset>
         </div>
 
         <fieldset
           disabled={!formAktif}
           aria-disabled={!formAktif}
-          className="min-w-0 rounded-2xl border border-[#dfe8f3] bg-white px-4 py-3.5"
+          className="min-w-0 rounded-2xl border border-[var(--tema-yerel-uretim-cizgi-08)] bg-[var(--tema-yerel-uretim-kart-01)] px-4 py-3.5"
           style={{ opacity: formAktif ? 1 : 0.58 }}
         >
           <legend className="sr-only">Yayın ve Üretim Yönetimi</legend>
-          <h3 className="mb-3 text-sm font-extrabold text-[#263b58]">Yayın ve Üretim Yönetimi</h3>
+          <h3 className="mb-3 text-sm font-extrabold text-[var(--tema-yerel-uretim-ana-metin-04)]">Yayın ve Üretim Yönetimi</h3>
           <div className="grid grid-cols-1 items-start gap-3 @[650px]:grid-cols-2 @[936px]:grid-cols-[minmax(301px,1fr)_minmax(264px,1fr)_minmax(312px,1fr)]">
             <div className="min-w-0 @[650px]:col-span-2 @[936px]:col-span-1">
-              <p className="mb-1.5 text-[11px] font-extrabold uppercase tracking-[0.12em] text-[#7a8da8]">Yayın Tipi</p>
+              <p className="mb-1.5 text-[11px] font-extrabold uppercase tracking-[0.12em] text-[var(--tema-yerel-uretim-yardimci-metin-24)]">Yayın Tipi</p>
               <SadeKontrolGrubu aria-label="Öğrenme aracı seçimi" tur="kapsul" className="w-fit max-w-full">
                 {(["video", "podcast", "gorsel", "flip_pdf"] as const).filter((tur) => formu.ogrenmeAraciBayraklari[tur]).map((tur) => {
                   const secenek = OGRENME_ARACI_SECENEKLERI[tur];
@@ -288,7 +288,7 @@ export function YeniTalepFormV2({ formu }: Props) {
           </div>
         </fieldset>
         {(formu.hazirVideo || formu.hazirSoruSeti) && (
-          <div className="rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-3 text-xs leading-relaxed text-amber-900">
+          <div className="rounded-xl border border-[var(--tema-yerel-uretim-islevsel-cizgi-06)] bg-[var(--tema-yerel-uretim-islevsel-zemin-04)] px-3.5 py-3 text-xs leading-relaxed text-[var(--tema-yerel-uretim-islevsel-metin-06)]">
             {formu.hazirVideo && formu.hazirSoruSeti &&
               `Hazır ${formu.ogrenmeAraciTuru === "podcast" ? "podcast" : formu.ogrenmeAraciTuru === "gorsel" ? "dijital broşür" : formu.ogrenmeAraciTuru === "flip_pdf" ? "literatür" : "video"} ve soru seti talebi oluşturuyorsunuz. Dosyalarınızı yükledikten sonra yayın yönetimi aşamasındaki işlemler sonrası yayına açabilirsiniz.`}
             {formu.hazirVideo && !formu.hazirSoruSeti &&
@@ -299,16 +299,16 @@ export function YeniTalepFormV2({ formu }: Props) {
         )}
 
         {/* Açıklama ve ek dosyalar: mobilde alt alta, geniş ekranda yan yana. */}
-        <section className="grid grid-cols-1 gap-3 rounded-2xl border border-[#dfe8f3] bg-white px-4 py-3.5 @[650px]:grid-cols-[minmax(0,1fr)_180px]">
+        <section className="grid grid-cols-1 gap-3 rounded-2xl border border-[var(--tema-yerel-uretim-cizgi-08)] bg-[var(--tema-yerel-uretim-kart-01)] px-4 py-3.5 @[650px]:grid-cols-[minmax(0,1fr)_180px]">
           <div className="min-w-0" style={{ opacity: formAktif ? 1 : 0.58, pointerEvents: formAktif ? "auto" : "none" }}>
-            <label className="mb-1.5 block text-xs font-extrabold text-[#425672]">Talep Açıklaması</label>
+            <label className="mb-1.5 block text-xs font-extrabold text-[var(--tema-yerel-uretim-ana-metin-07)]">Talep Açıklaması</label>
             <textarea
               value={formu.aciklama}
               onChange={(e) => formu.setAciklama(e.target.value)}
               placeholder="Açıklama yazınız"
               rows={2}
               disabled={!formAktif || ikiliHazir}
-              className="box-border w-full resize-y rounded-xl border border-[#dce5f0] bg-white px-3 py-2.5 text-sm text-gray-900 outline-none focus:border-[#56aeff] focus:ring-2 focus:ring-[#56aeff]/15 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-400"
+              className="box-border w-full resize-y rounded-xl border border-[var(--tema-yerel-uretim-cizgi-32)] bg-[var(--tema-yerel-uretim-kart-01)] px-3 py-2.5 text-sm text-[var(--tema-yerel-uretim-ana-metin-01)] outline-none focus:border-[var(--tema-yerel-uretim-cizgi-04)] focus:ring-2 focus:ring-[var(--tema-yerel-uretim-odak-01)]/15 disabled:cursor-not-allowed disabled:bg-[var(--tema-yerel-uretim-sayfa-zemini-07)] disabled:text-[var(--tema-yerel-uretim-yardimci-metin-02)]"
               style={{ fontFamily: "'Nunito', sans-serif" }}
             />
           </div>
@@ -383,7 +383,7 @@ export function YeniTalepFormV2({ formu }: Props) {
         <div className="-mt-2 flex justify-end">
           <div className="flex flex-col items-end gap-1.5">
             {!formu.gonderButonuEtkin && formu.gonderButonuPasifNedeni && (
-              <span className="max-w-xs rounded-lg border border-amber-200 bg-amber-50 px-2.5 py-1 text-right text-xs font-semibold text-amber-800">
+              <span className="max-w-xs rounded-lg border border-[var(--tema-yerel-uretim-islevsel-cizgi-06)] bg-[var(--tema-yerel-uretim-islevsel-zemin-04)] px-2.5 py-1 text-right text-xs font-semibold text-[var(--tema-yerel-uretim-islevsel-metin-25)]">
                 {formu.gonderButonuPasifNedeni}
               </span>
             )}
@@ -430,36 +430,36 @@ export function YeniTalepFormV2({ formu }: Props) {
 
       <AlertDialog open={videoIslemModalAcik}>
         <AlertDialogContent
-          className="max-w-sm border-[#dbe5ef] bg-white text-center"
+          className="max-w-sm border-[var(--tema-yerel-uretim-cizgi-33)] bg-[var(--tema-yerel-uretim-kart-01)] text-center"
           onEscapeKeyDown={(event) => event.preventDefault()}
         >
           <AlertDialogHeader className="items-center text-center sm:text-center">
             <span
               aria-hidden="true"
-              className="h-9 w-9 animate-spin rounded-full border-[3px] border-[#dcecff] border-t-[#56aeff]"
+              className="h-9 w-9 animate-spin rounded-full border-[3px] border-[var(--tema-yerel-uretim-cizgi-34)] border-t-[var(--tema-yerel-uretim-cizgi-04)]"
             />
-            <AlertDialogTitle className="text-[#203653]">
+            <AlertDialogTitle className="text-[var(--tema-yerel-uretim-ana-metin-05)]">
               {formu.videoIslemeBekleniyor ? "Video işleniyor" : "Video yükleniyor"}
             </AlertDialogTitle>
-            <AlertDialogDescription className={formu.videoIslemeBekleniyor ? "sr-only" : "text-[#687b90]"}>
+            <AlertDialogDescription className={formu.videoIslemeBekleniyor ? "sr-only" : "text-[var(--tema-yerel-uretim-yardimci-metin-25)]"}>
               {formu.videoIslemeBekleniyor
                 ? "Video işleniyor"
                 : `%${formu.videoYuklemeYuzdesi ?? 0}`}
             </AlertDialogDescription>
           </AlertDialogHeader>
           {!formu.videoIslemeBekleniyor && (
-            <Progress value={formu.videoYuklemeYuzdesi ?? 0} className="bg-[#dcecff] [&>div]:bg-[#56aeff]" />
+            <Progress value={formu.videoYuklemeYuzdesi ?? 0} className="bg-[var(--tema-yerel-uretim-secim-zemin-11)] [&>div]:bg-[var(--tema-yerel-uretim-eylem-zemin-07)]" />
           )}
         </AlertDialogContent>
       </AlertDialog>
       <AlertDialog open={formu.aracYuklemeBilgisi !== null}>
         <AlertDialogContent
-          className="max-w-sm border-[#dbe5ef] bg-white text-center"
+          className="max-w-sm border-[var(--tema-yerel-uretim-cizgi-33)] bg-[var(--tema-yerel-uretim-kart-01)] text-center"
           onEscapeKeyDown={(event) => event.preventDefault()}
         >
           <AlertDialogHeader className="items-center text-center sm:text-center">
-            <AlertDialogTitle className="text-[#203653]">Öğrenme aracı hazırlanıyor</AlertDialogTitle>
-            <AlertDialogDescription className="text-[#687b90]">
+            <AlertDialogTitle className="text-[var(--tema-yerel-uretim-ana-metin-05)]">Öğrenme aracı hazırlanıyor</AlertDialogTitle>
+            <AlertDialogDescription className="text-[var(--tema-yerel-uretim-yardimci-metin-25)]">
               {formu.aracYuklemeBilgisi?.asama === "checksum"
                 ? "Dosya doğrulanıyor"
                 : formu.aracYuklemeBilgisi?.asama === "dogrulama"
@@ -469,11 +469,11 @@ export function YeniTalepFormV2({ formu }: Props) {
                     : `${formu.aracYuklemeBilgisi?.dosyaRolu ?? "Dosya"} yükleniyor`}
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <Progress value={formu.aracYuklemeBilgisi?.yuzde ?? 0} className="bg-[#dcecff] [&>div]:bg-[#56aeff]" />
+          <Progress value={formu.aracYuklemeBilgisi?.yuzde ?? 0} className="bg-[var(--tema-yerel-uretim-secim-zemin-11)] [&>div]:bg-[var(--tema-yerel-uretim-eylem-zemin-07)]" />
           <button
             type="button"
             onClick={formu.ogrenmeAraciYuklemeyiIptalEt}
-            className="mx-auto rounded-lg border border-gray-200 bg-white px-4 py-2 text-xs font-semibold text-gray-600"
+            className="mx-auto rounded-lg border border-[var(--tema-yerel-uretim-cizgi-01)] bg-[var(--tema-yerel-uretim-kart-01)] px-4 py-2 text-xs font-semibold text-[var(--tema-yerel-uretim-ana-metin-02)]"
           >
             Durdur
           </button>

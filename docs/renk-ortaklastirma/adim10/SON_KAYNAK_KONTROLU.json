@@ -1,0 +1,675 @@
+{
+  "tarih": "2026-10-17",
+  "kapsam": "Mevcut uygulama kaynaklarında son renk kontrolü; kullanıcı tarafından dışarıda tutulan bilgi ve admin, demo, ortak tema ve üretilen palet hariç",
+  "taranan_dosya": 785,
+  "hatalar": [],
+  "adaylar": [
+    {
+      "dosya": "app/(panel)/raporlar/tclub-uretici/page.tsx",
+      "adet": 2,
+      "kayitlar": [
+        {
+          "satir": 119,
+          "ham": "green",
+          "tur": "css-anahtar-sozcuk",
+          "ozellik": "renk",
+          "baglam": "const renk = ton === \"green\" ? \"text-[var(--tema-yerel-rapor-islevsel-metin-06)]\" : ton === \"red\" ? \"text-[var(--tema-yerel-rapor-islevsel-metin-07)]\" : \"text-[var(--tema-yerel-rapor-eylem-metin-06)]\";"
+        },
+        {
+          "satir": 119,
+          "ham": "red",
+          "tur": "css-anahtar-sozcuk",
+          "ozellik": "renk",
+          "baglam": "…st renk = ton === \"green\" ? \"text-[var(--tema-yerel-rapor-islevsel-metin-06)]\" : ton === \"red\" ? \"text-[var(--tema-yerel-rapor-islevsel-metin-07)]\" : \"text-[var(--tema-yerel-rapor-eylem-metin-06)]\";"
+        }
+      ],
+      "durum": "ORTAK_KAYNAKTA",
+      "gerekce": "green/red renk değeri değil, ortak tema sınıfını seçen varyant adlarıdır."
+    },
+    {
+      "dosya": "components/cc-ligi/CcLigiBanner.tsx",
+      "adet": 18,
+      "kayitlar": [
+        {
+          "satir": 17,
+          "ham": "rgba(0,5,18,0.42)",
+          "tur": "css-renk-fonksiyonu",
+          "ozellik": "background",
+          "baglam": "\"linear-gradient(90deg, rgba(0,5,18,0.42) 0%, rgba(0,5,18,0) 23%, rgba(0,5,18,0) 77%, rgba(0,5,18,0.42) 100%)\","
+        },
+        {
+          "satir": 17,
+          "ham": "rgba(0,5,18,0)",
+          "tur": "css-renk-fonksiyonu",
+          "ozellik": "background",
+          "baglam": "\"linear-gradient(90deg, rgba(0,5,18,0.42) 0%, rgba(0,5,18,0) 23%, rgba(0,5,18,0) 77%, rgba(0,5,18,0.42) 100%)\","
+        },
+        {
+          "satir": 17,
+          "ham": "rgba(0,5,18,0)",
+          "tur": "css-renk-fonksiyonu",
+          "ozellik": "background",
+          "baglam": "\"linear-gradient(90deg, rgba(0,5,18,0.42) 0%, rgba(0,5,18,0) 23%, rgba(0,5,18,0) 77%, rgba(0,5,18,0.42) 100%)\","
+        },
+        {
+          "satir": 17,
+          "ham": "rgba(0,5,18,0.42)",
+          "tur": "css-renk-fonksiyonu",
+          "ozellik": "background",
+          "baglam": "…\"linear-gradient(90deg, rgba(0,5,18,0.42) 0%, rgba(0,5,18,0) 23%, rgba(0,5,18,0) 77%, rgba(0,5,18,0.42) 100%)\","
+        },
+        {
+          "satir": 18,
+          "ham": "rgba(255,255,255,0.28)",
+          "tur": "css-renk-fonksiyonu",
+          "ozellik": "background",
+          "baglam": "\"radial-gradient(circle at 42% 24%, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 48%)\","
+        },
+        {
+          "satir": 18,
+          "ham": "rgba(255,255,255,0)",
+          "tur": "css-renk-fonksiyonu",
+          "ozellik": "background",
+          "baglam": "\"radial-gradient(circle at 42% 24%, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 48%)\","
+        },
+        {
+          "satir": 90,
+          "ham": "rgba(0,0,0,0.62)",
+          "tur": "css-renk-fonksiyonu",
+          "ozellik": "background",
+          "baglam": "\"linear-gradient(90deg, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0) 27%, rgba(0,0,0,0) 73%, rgba(0,0,0,0.62) 100%)\","
+        },
+        {
+          "satir": 90,
+          "ham": "rgba(0,0,0,0)",
+          "tur": "css-renk-fonksiyonu",
+          "ozellik": "background",
+          "baglam": "\"linear-gradient(90deg, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0) 27%, rgba(0,0,0,0) 73%, rgba(0,0,0,0.62) 100%)\","
+        },
+        {
+          "satir": 90,
+          "ham": "rgba(0,0,0,0)",
+          "tur": "css-renk-fonksiyonu",
+          "ozellik": "background",
+          "baglam": "\"linear-gradient(90deg, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0) 27%, rgba(0,0,0,0) 73%, rgba(0,0,0,0.62) 100%)\","
+        },
+        {
+          "satir": 90,
+          "ham": "rgba(0,0,0,0.62)",
+          "tur": "css-renk-fonksiyonu",
+          "ozellik": "background",
+          "baglam": "…\"linear-gradient(90deg, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0) 27%, rgba(0,0,0,0) 73%, rgba(0,0,0,0.62) 100%)\","
+        },
+        {
+          "satir": 91,
+          "ham": "rgba(255,255,255,0.30)",
+          "tur": "css-renk-fonksiyonu",
+          "ozellik": "background",
+          "baglam": "\"radial-gradient(circle at 50% 46%, rgba(255,255,255,0.30) 0%, rgba(255,255,255,0.10) 38%, rgba(255,255,255,0) 68%)\","
+        },
+        {
+          "satir": 91,
+          "ham": "rgba(255,255,255,0.10)",
+          "tur": "css-renk-fonksiyonu",
+          "ozellik": "background",
+          "baglam": "\"radial-gradient(circle at 50% 46%, rgba(255,255,255,0.30) 0%, rgba(255,255,255,0.10) 38%, rgba(255,255,255,0) 68%)\","
+        },
+        {
+          "satir": 91,
+          "ham": "rgba(255,255,255,0)",
+          "tur": "css-renk-fonksiyonu",
+          "ozellik": "background",
+          "baglam": "…radial-gradient(circle at 50% 46%, rgba(255,255,255,0.30) 0%, rgba(255,255,255,0.10) 38%, rgba(255,255,255,0) 68%)\","
+        },
+        {
+          "satir": 92,
+          "ham": "#14171a",
+          "tur": "hex",
+          "ozellik": "background",
+          "baglam": "\"linear-gradient(140deg, #14171a 0%, #50555b 30%, #30343a 50%, #5d636a 70%, #101214 100%)\","
+        },
+        {
+          "satir": 92,
+          "ham": "#50555b",
+          "tur": "hex",
+          "ozellik": "background",
+          "baglam": "\"linear-gradient(140deg, #14171a 0%, #50555b 30%, #30343a 50%, #5d636a 70%, #101214 100%)\","
+        },
+        {
+          "satir": 92,
+          "ham": "#30343a",
+          "tur": "hex",
+          "ozellik": "background",
+          "baglam": "\"linear-gradient(140deg, #14171a 0%, #50555b 30%, #30343a 50%, #5d636a 70%, #101214 100%)\","
+        },
+        {
+          "satir": 92,
+          "ham": "#5d636a",
+          "tur": "hex",
+          "ozellik": "background",
+          "baglam": "\"linear-gradient(140deg, #14171a 0%, #50555b 30%, #30343a 50%, #5d636a 70%, #101214 100%)\","
+        },
+        {
+          "satir": 92,
+          "ham": "#101214",
+          "tur": "hex",
+          "ozellik": "background",
+          "baglam": "\"linear-gradient(140deg, #14171a 0%, #50555b 30%, #30343a 50%, #5d636a 70%, #101214 100%)\","
+        }
+      ],
+      "durum": "GEREKCELI_SABIT_GORSEL",
+      "gerekce": "Madalya bannerının metalik yüzey/ışık/gölge katmanlarıdır; madalya görseli iki temada aynı kalır."
+    },
+    {
+      "dosya": "components/hapbi/HapbiMaskot.tsx",
+      "adet": 10,
+      "kayitlar": [
+        {
+          "satir": 240,
+          "ham": "from-orange-500",
+          "tur": "tailwind-renk",
+          "ozellik": "from",
+          "baglam": "className=\"absolute inset-0 rounded-full bg-gradient-to-tr from-orange-500 to-amber-400 blur-md opacity-50 transition-all duration-300 group-hover:opacity-80 group-hover:blur-lg\""
+        },
+        {
+          "satir": 240,
+          "ham": "to-amber-400",
+          "tur": "tailwind-renk",
+          "ozellik": "to",
+          "baglam": "className=\"absolute inset-0 rounded-full bg-gradient-to-tr from-orange-500 to-amber-400 blur-md opacity-50 transition-all duration-300 group-hover:opacity-80 group-hover:blur-lg\""
+        },
+        {
+          "satir": 245,
+          "ham": "from-orange-600",
+          "tur": "tailwind-renk",
+          "ozellik": "from",
+          "baglam": "<div className=\"relative w-full h-full rounded-full bg-gradient-to-tr from-orange-600 via-orange-500 to-amber-500 flex items-center justify-center shadow-lg shadow-orange-500/30 border-2 border-white/90\">"
+        },
+        {
+          "satir": 245,
+          "ham": "via-orange-500",
+          "tur": "tailwind-renk",
+          "ozellik": "via",
+          "baglam": "…<div className=\"relative w-full h-full rounded-full bg-gradient-to-tr from-orange-600 via-orange-500 to-amber-500 flex items-center justify-center shadow-lg shadow-orange-500/30 border-2 border-white/90\">"
+        },
+        {
+          "satir": 245,
+          "ham": "to-amber-500",
+          "tur": "tailwind-renk",
+          "ozellik": "to",
+          "baglam": "…ame=\"relative w-full h-full rounded-full bg-gradient-to-tr from-orange-600 via-orange-500 to-amber-500 flex items-center justify-center shadow-lg shadow-orange-500/30 border-2 border-white/90\">"
+        },
+        {
+          "satir": 245,
+          "ham": "border-white/90",
+          "tur": "tailwind-renk",
+          "ozellik": "border",
+          "baglam": "…500 to-amber-500 flex items-center justify-center shadow-lg shadow-orange-500/30 border-2 border-white/90\">"
+        },
+        {
+          "satir": 246,
+          "ham": "text-white",
+          "tur": "tailwind-renk",
+          "ozellik": "text",
+          "baglam": "<span className=\"text-lg font-black tracking-tighter text-white select-none font-sans drop-shadow-sm lowercase\">"
+        },
+        {
+          "satir": 253,
+          "ham": "bg-emerald-500",
+          "tur": "tailwind-renk",
+          "ozellik": "bg",
+          "baglam": "className=\"absolute bottom-0 right-0 size-[11px] bg-emerald-500 rounded-full border border-white shadow-sm flex items-center justify-center\""
+        },
+        {
+          "satir": 253,
+          "ham": "border-white",
+          "tur": "tailwind-renk",
+          "ozellik": "border",
+          "baglam": "…className=\"absolute bottom-0 right-0 size-[11px] bg-emerald-500 rounded-full border border-white shadow-sm flex items-center justify-center\""
+        },
+        {
+          "satir": 256,
+          "ham": "bg-white",
+          "tur": "tailwind-renk",
+          "ozellik": "bg",
+          "baglam": "<div className=\"size-[3px] bg-white rounded-full animate-ping\" />"
+        }
+      ],
+      "durum": "GEREKCELI_SABIT_GORSEL",
+      "gerekce": "Turuncu bi kimliği ve hazır durum rozeti korunur; arayüz ipucu balonu ortak kaynağa bağlıdır."
+    },
+    {
+      "dosya": "components/hbligi/league/LeadershipProfile.tsx",
+      "adet": 2,
+      "kayitlar": [
+        {
+          "satir": 15,
+          "ham": "#16a34a",
+          "tur": "hex",
+          "ozellik": "renk",
+          "baglam": "const renk = guclu ? \"#16a34a\" : \"#ea580c\";"
+        },
+        {
+          "satir": 15,
+          "ham": "#ea580c",
+          "tur": "hex",
+          "ozellik": "renk",
+          "baglam": "const renk = guclu ? \"#16a34a\" : \"#ea580c\";"
+        }
+      ],
+      "durum": "AKTIF_KULLANIM_YOK",
+      "gerekce": "Aktif uygulama sayfalarında import/çağrı bulunmayan eski bileşen; aktif lig ekranının eksik rengi sayılmaz."
+    },
+    {
+      "dosya": "components/hbligi/league/league.module.css",
+      "adet": 2,
+      "kayitlar": [
+        {
+          "satir": 401,
+          "ham": "#000",
+          "tur": "hex",
+          "ozellik": "mask-image",
+          "baglam": "mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);"
+        },
+        {
+          "satir": 401,
+          "ham": "#000",
+          "tur": "hex",
+          "ozellik": "mask-image",
+          "baglam": "mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);"
+        }
+      ],
+      "durum": "TEKNIK_MASKE",
+      "gerekce": "mask-image içindeki siyah, görünür metin/yüzey rengi değil alfa maskesinin opak bölümüdür."
+    },
+    {
+      "dosya": "components/hbligi/producer/ProducerLeaguePage.tsx",
+      "adet": 3,
+      "kayitlar": [
+        {
+          "satir": 268,
+          "ham": "blue",
+          "tur": "css-anahtar-sozcuk",
+          "ozellik": "renk",
+          "baglam": "…psamNet.toLocaleString(\"tr-TR\")} aciklama=\"Kazanılan ve kaybedilen puanların farkı\" renk=\"blue\" icon={Gauge} />"
+        },
+        {
+          "satir": 269,
+          "ham": "green",
+          "tur": "css-anahtar-sozcuk",
+          "ozellik": "renk",
+          "baglam": "…aplama, extra yayın tamamlama, öneri yayın tamamlama ve E-Club puanlarının toplamı\" renk=\"green\" icon={ArrowUpRight} />"
+        },
+        {
+          "satir": 270,
+          "ham": "red",
+          "tur": "css-anahtar-sozcuk",
+          "ozellik": "renk",
+          "baglam": "…\"0\"} aciklama=\"Yanlış cevaplama, ileri sarma ve öneri kaçırma puanlarının toplamı\" renk=\"red\" icon={ArrowDownRight} />"
+        }
+      ],
+      "durum": "ORTAK_KAYNAKTA",
+      "gerekce": "blue/green/red varyant adlarıdır; StatCard içindeki tonlar ortak tema sınıflarını seçer."
+    },
+    {
+      "dosya": "components/kontrol/sade-kontroller.module.css",
+      "adet": 8,
+      "kayitlar": [
+        {
+          "satir": 16,
+          "ham": "blue",
+          "tur": "css-anahtar-sozcuk",
+          "ozellik": "color",
+          "baglam": "padding: 0 12px; color: var(--blue); font-size: 11px; font-weight: 800;"
+        },
+        {
+          "satir": 56,
+          "ham": "blue",
+          "tur": "css-anahtar-sozcuk",
+          "ozellik": "color",
+          "baglam": "…aria-selected=true], .option[data-state=checked] { background: var(--hover); color: var(--blue); }"
+        },
+        {
+          "satir": 58,
+          "ham": "blue",
+          "tur": "css-anahtar-sozcuk",
+          "ozellik": "accent-color",
+          "baglam": ".check input { flex-shrink: 0; accent-color: var(--blue); width: 16px; height: 16px; }"
+        },
+        {
+          "satir": 72,
+          "ham": "blue",
+          "tur": "css-anahtar-sozcuk",
+          "ozellik": "background",
+          "baglam": "background: var(--blue); color: var(--tema-kontrol-eylem-metin); box-shadow: 0 5px 14px var(--tema-kontrol-secili-golge);"
+        },
+        {
+          "satir": 80,
+          "ham": "blue",
+          "tur": "css-anahtar-sozcuk",
+          "ozellik": "border-bottom-color",
+          "baglam": "…button[aria-selected=true], .tabs button[aria-pressed=true] { border-bottom-color: var(--blue); color: var(--blue); }"
+        },
+        {
+          "satir": 80,
+          "ham": "blue",
+          "tur": "css-anahtar-sozcuk",
+          "ozellik": "color",
+          "baglam": "…d=true], .tabs button[aria-pressed=true] { border-bottom-color: var(--blue); color: var(--blue); }"
+        },
+        {
+          "satir": 85,
+          "ham": "blue",
+          "tur": "css-anahtar-sozcuk",
+          "ozellik": "color",
+          "baglam": ".year button { border: 0; background: transparent; color: var(--blue); padding: 8px 12px; cursor: pointer; }"
+        },
+        {
+          "satir": 102,
+          "ham": "blue",
+          "tur": "css-anahtar-sozcuk",
+          "ozellik": "color",
+          "baglam": "background: var(--surface); color: var(--blue); font-size: 11px; font-weight: 800;"
+        }
+      ],
+      "durum": "ORTAK_KAYNAKTA",
+      "gerekce": "Tarayıcı var(--blue) adını renk sandı; --blue zaten --tema-kontrol-eylem kaynağına bağlıdır."
+    },
+    {
+      "dosya": "components/rehber/YuruyenRehber.tsx",
+      "adet": 2,
+      "kayitlar": [
+        {
+          "satir": 208,
+          "ham": "#a16a35",
+          "tur": "hex",
+          "ozellik": "fill",
+          "baglam": "…th=\"7\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M 0 0 L 10 5 L 0 10 z\" fill=\"#a16a35\" /></marker></defs>"
+        },
+        {
+          "satir": 209,
+          "ham": "#a16a35",
+          "tur": "hex",
+          "ozellik": "stroke",
+          "baglam": "…${el.y - 28}, ${yerlesim.hedefNoktasi.x} ${yerlesim.hedefNoktasi.y}`} fill=\"none\" stroke=\"#a16a35\" strokeWidth=\"2\" strokeDasharray=\"4 5\" markerEnd=\"url(#cogniti-ok)\" />"
+        }
+      ],
+      "durum": "YALNIZ_DEMO",
+      "gerekce": "Yalnız rehber-demo tarafından kullanılır; gerçek sayfalardaki i rehberi SayfaRehberi bileşenidir."
+    },
+    {
+      "dosya": "components/rehber/rehber.module.css",
+      "adet": 37,
+      "kayitlar": [
+        {
+          "satir": 1,
+          "ham": "#253b36",
+          "tur": "hex",
+          "ozellik": "color",
+          "baglam": ".katman { position: fixed; inset: 0; z-index: 1000; pointer-events: none; color: #253b36; font-family: var(--font-nunito), sans-serif; }"
+        },
+        {
+          "satir": 2,
+          "ham": "#b68650",
+          "tur": "hex",
+          "ozellik": "border",
+          "baglam": ".vurgu { position: fixed; border: 2px solid #b68650; border-radius: 18px; box-shadow: 0 0 0 5px #b6865017, 0 0 30px #b6865014; transition: left .35s, top .35s, width .35s, height .35s; }"
+        },
+        {
+          "satir": 2,
+          "ham": "#b6865017",
+          "tur": "hex",
+          "ozellik": "box-shadow",
+          "baglam": "…{ position: fixed; border: 2px solid #b68650; border-radius: 18px; box-shadow: 0 0 0 5px #b6865017, 0 0 30px #b6865014; transition: left .35s, top .35s, width .35s, height .35s; }"
+        },
+        {
+          "satir": 2,
+          "ham": "#b6865014",
+          "tur": "hex",
+          "ozellik": "box-shadow",
+          "baglam": "…border: 2px solid #b68650; border-radius: 18px; box-shadow: 0 0 0 5px #b6865017, 0 0 30px #b6865014; transition: left .35s, top .35s, width .35s, height .35s; }"
+        },
+        {
+          "satir": 5,
+          "ham": "#1b342c18",
+          "tur": "hex",
+          "ozellik": "filter",
+          "baglam": "…; background-size: 400% 200%; background-repeat: no-repeat; filter: drop-shadow(0 7px 5px #1b342c18); }"
+        },
+        {
+          "satir": 6,
+          "ham": "#233e3426",
+          "tur": "hex",
+          "ozellik": "background",
+          "baglam": "…absolute; left: 15%; right: 15%; height: 8px; bottom: 2%; border-radius: 50%; background: #233e3426; filter: blur(4px); }"
+        },
+        {
+          "satir": 7,
+          "ham": "#e0d6c6",
+          "tur": "hex",
+          "ozellik": "border",
+          "baglam": "…ition: fixed; pointer-events: auto; padding: 18px; border-radius: 18px; border: 1px solid #e0d6c6; background: #fffefb; box-shadow: 0 12px 48px #283e3324, 0 2px 6px #283e3310; }"
+        },
+        {
+          "satir": 7,
+          "ham": "#fffefb",
+          "tur": "hex",
+          "ozellik": "background",
+          "baglam": "…-events: auto; padding: 18px; border-radius: 18px; border: 1px solid #e0d6c6; background: #fffefb; box-shadow: 0 12px 48px #283e3324, 0 2px 6px #283e3310; }"
+        },
+        {
+          "satir": 7,
+          "ham": "#283e3324",
+          "tur": "hex",
+          "ozellik": "box-shadow",
+          "baglam": "…der-radius: 18px; border: 1px solid #e0d6c6; background: #fffefb; box-shadow: 0 12px 48px #283e3324, 0 2px 6px #283e3310; }"
+        },
+        {
+          "satir": 7,
+          "ham": "#283e3310",
+          "tur": "hex",
+          "ozellik": "box-shadow",
+          "baglam": "…der: 1px solid #e0d6c6; background: #fffefb; box-shadow: 0 12px 48px #283e3324, 0 2px 6px #283e3310; }"
+        },
+        {
+          "satir": 9,
+          "ham": "#967346",
+          "tur": "hex",
+          "ozellik": "color",
+          "baglam": "…n-items: center; gap: 7px; font-size: 10px; letter-spacing: 2px; font-weight: 800; color: #967346; }"
+        },
+        {
+          "satir": 10,
+          "ham": "#89a38f",
+          "tur": "hex",
+          "ozellik": "background",
+          "baglam": ".imza > span { width: 7px; height: 7px; border-radius: 50%; background: #89a38f; box-shadow: 0 0 0 4px #89a38f17; }"
+        },
+        {
+          "satir": 10,
+          "ham": "#89a38f17",
+          "tur": "hex",
+          "ozellik": "box-shadow",
+          "baglam": "…{ width: 7px; height: 7px; border-radius: 50%; background: #89a38f; box-shadow: 0 0 0 4px #89a38f17; }"
+        },
+        {
+          "satir": 11,
+          "ham": "#64726b",
+          "tur": "hex",
+          "ozellik": "color",
+          "baglam": "…display: grid; place-items: center; width: 26px; height: 26px; border-radius: 7px; color: #64726b; border: 0; background: #f2f2eb; }"
+        },
+        {
+          "satir": 11,
+          "ham": "#f2f2eb",
+          "tur": "hex",
+          "ozellik": "background",
+          "baglam": "…er; width: 26px; height: 26px; border-radius: 7px; color: #64726b; border: 0; background: #f2f2eb; }"
+        },
+        {
+          "satir": 12,
+          "ham": "#a0784d",
+          "tur": "hex",
+          "ozellik": "color",
+          "baglam": ".adimEtiketi { margin: 0 0 8px; font-size: 10px; font-weight: 800; color: #a0784d; }"
+        },
+        {
+          "satir": 13,
+          "ham": "#88918b",
+          "tur": "hex",
+          "ozellik": "color",
+          "baglam": ".adimEtiketi > span { margin-left: 9px; color: #88918b; font-weight: 500; }"
+        },
+        {
+          "satir": 14,
+          "ham": "#253b36",
+          "tur": "hex",
+          "ozellik": "color",
+          "baglam": ".balon h2 { margin: 0 0 7px; font-size: 19px; line-height: 1.3; font-weight: 750; color: #253b36; }"
+        },
+        {
+          "satir": 15,
+          "ham": "#68766e",
+          "tur": "hex",
+          "ozellik": "color",
+          "baglam": ".aciklama { min-height: 56px; margin: 0; font-size: 13px; line-height: 1.6; color: #68766e; }"
+        },
+        {
+          "satir": 17,
+          "ham": "#ecece4",
+          "tur": "hex",
+          "ozellik": "background",
+          "baglam": ".adimCubuklari span { height: 3px; flex: 1; border-radius: 5px; background: #ecece4; }"
+        },
+        {
+          "satir": 18,
+          "ham": "#b68650",
+          "tur": "hex",
+          "ozellik": "background",
+          "baglam": ".adimCubuklari [data-aktif=true] { background: #b68650; }"
+        },
+        {
+          "satir": 19,
+          "ham": "#a4b8aa",
+          "tur": "hex",
+          "ozellik": "background",
+          "baglam": ".adimCubuklari [data-tamam=true] { background: #a4b8aa; }"
+        },
+        {
+          "satir": 22,
+          "ham": "#778378",
+          "tur": "hex",
+          "ozellik": "color",
+          "baglam": ".otomatik { margin-right: auto; color: #778378; border: 0; background: transparent; padding: 0; }"
+        },
+        {
+          "satir": 23,
+          "ham": "#e6e9df",
+          "tur": "hex",
+          "ozellik": "border",
+          "baglam": ".geri { width: 32px; border: 1px solid #e6e9df; color: #566c60; background: #fffefb; }"
+        },
+        {
+          "satir": 23,
+          "ham": "#566c60",
+          "tur": "hex",
+          "ozellik": "color",
+          "baglam": ".geri { width: 32px; border: 1px solid #e6e9df; color: #566c60; background: #fffefb; }"
+        },
+        {
+          "satir": 23,
+          "ham": "#fffefb",
+          "tur": "hex",
+          "ozellik": "background",
+          "baglam": ".geri { width: 32px; border: 1px solid #e6e9df; color: #566c60; background: #fffefb; }"
+        },
+        {
+          "satir": 25,
+          "ham": "#324f43",
+          "tur": "hex",
+          "ozellik": "background",
+          "baglam": ".ileri { padding: 0 12px; background: #324f43; color: #fff; border: 0; }"
+        },
+        {
+          "satir": 25,
+          "ham": "#fff",
+          "tur": "hex",
+          "ozellik": "color",
+          "baglam": ".ileri { padding: 0 12px; background: #324f43; color: #fff; border: 0; }"
+        },
+        {
+          "satir": 26,
+          "ham": "#a0784d",
+          "tur": "hex",
+          "ozellik": "outline",
+          "baglam": ".balon button:focus-visible { outline: 2px solid #a0784d; outline-offset: 3px; }"
+        },
+        {
+          "satir": 28,
+          "ham": "#355545",
+          "tur": "hex",
+          "ozellik": "color",
+          "baglam": "…-50%); text-align: center; white-space: nowrap; font-size: 14px; font-weight: 700; color: #355545; text-shadow: 0 1px 8px #fffefb; }"
+        },
+        {
+          "satir": 28,
+          "ham": "#fffefb",
+          "tur": "hex",
+          "ozellik": "text-shadow",
+          "baglam": "…-space: nowrap; font-size: 14px; font-weight: 700; color: #355545; text-shadow: 0 1px 8px #fffefb; }"
+        },
+        {
+          "satir": 29,
+          "ham": "#967346",
+          "tur": "hex",
+          "ozellik": "color",
+          "baglam": ".vedaMesaji > span { display: block; margin-top: 4px; color: #967346; font-size: 10px; letter-spacing: 1.5px; font-weight: 600; }"
+        },
+        {
+          "satir": 30,
+          "ham": "#e0d6c6",
+          "tur": "hex",
+          "ozellik": "border",
+          "baglam": "…s: auto; display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid #e0d6c6; border-radius: 50%; color: #64726b; background: #fffefb; box-shadow: 0 2px 6px #283e3310; }"
+        },
+        {
+          "satir": 30,
+          "ham": "#64726b",
+          "tur": "hex",
+          "ozellik": "color",
+          "baglam": "…center; width: 30px; height: 30px; border: 1px solid #e0d6c6; border-radius: 50%; color: #64726b; background: #fffefb; box-shadow: 0 2px 6px #283e3310; }"
+        },
+        {
+          "satir": 30,
+          "ham": "#fffefb",
+          "tur": "hex",
+          "ozellik": "background",
+          "baglam": "…height: 30px; border: 1px solid #e0d6c6; border-radius: 50%; color: #64726b; background: #fffefb; box-shadow: 0 2px 6px #283e3310; }"
+        },
+        {
+          "satir": 30,
+          "ham": "#283e3310",
+          "tur": "hex",
+          "ozellik": "box-shadow",
+          "baglam": "…d #e0d6c6; border-radius: 50%; color: #64726b; background: #fffefb; box-shadow: 0 2px 6px #283e3310; }"
+        },
+        {
+          "satir": 31,
+          "ham": "#a0784d",
+          "tur": "hex",
+          "ozellik": "outline",
+          "baglam": ".vedaAtla:focus-visible { outline: 2px solid #a0784d; outline-offset: 3px; }"
+        }
+      ],
+      "durum": "YALNIZ_DEMO",
+      "gerekce": "YuruyenRehber/KityVeda demo çizimlerinin CSS kaynağıdır; aktif platform renk işine dahil değildir."
+    }
+  ],
+  "durum": "KAYNAK_ORTAKLASTIRMA_KONTROLU_TAMAMLANDI",
+  "bekleyen_gerekcesiz_aktif_arayuz_rengi": 0,
+  "kullanici_kapsam_disi": [
+    "Bilgi sayfaları",
+    "Yönetim/admin sayfaları"
+  ],
+  "kontrol_siniri": "Kaynak AST/PostCSS denetimidir; gerçek tarayıcıda tüm sayfaların görsel onayı değildir. Önceki test/lint ve genel CSS katalog bulguları ayrı kayıtlarda korunur."
+}

@@ -70,20 +70,20 @@ interface KullaniciListesiProps {
 
 const thStyle: React.CSSProperties = {
   padding: "8px 10px", textAlign: "left",
-  borderBottom: "0.5px solid #e5e7eb", fontWeight: 700,
-  color: "#374151", fontSize: "11px", whiteSpace: "nowrap",
-  background: "#f9fafb", fontFamily: "'Nunito', sans-serif",
+  borderBottom: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)", fontWeight: 700,
+  color: "var(--tema-yerel-yonetim-ana-metin-03)", fontSize: "11px", whiteSpace: "nowrap",
+  background: "var(--tema-yerel-yonetim-sayfa-zemini-02)", fontFamily: "'Nunito', sans-serif",
 };
 
 const tdStyle: React.CSSProperties = {
-  padding: "8px 10px", borderBottom: "0.5px solid #f3f4f6",
-  color: "#111", fontSize: "12px", fontFamily: "'Nunito', sans-serif",
+  padding: "8px 10px", borderBottom: "0.5px solid var(--tema-yerel-yonetim-cizgi-05)",
+  color: "var(--tema-yerel-yonetim-ana-metin-01)", fontSize: "12px", fontFamily: "'Nunito', sans-serif",
 };
 
 const topluBtnStyle = (renk: string, loading: boolean): React.CSSProperties => ({
   padding: "4px 10px",
-  background: loading ? "#d1d5db" : renk,
-  color: "white", border: "none", borderRadius: "4px",
+  background: loading ? "var(--tema-yerel-yonetim-sayfa-zemini-01)" : renk,
+  color: "var(--tema-yerel-yonetim-ters-metin-01)", border: "none", borderRadius: "4px",
   fontSize: "11px", fontWeight: 600,
   cursor: loading ? "not-allowed" : "pointer",
   fontFamily: "'Nunito', sans-serif",
@@ -91,8 +91,8 @@ const topluBtnStyle = (renk: string, loading: boolean): React.CSSProperties => (
 
 const silBtnStyle = (renk: string, loading: boolean): React.CSSProperties => ({
   padding: "3px 8px",
-  background: loading ? "#d1d5db" : renk,
-  color: "white", border: "none", borderRadius: "4px",
+  background: loading ? "var(--tema-yerel-yonetim-sayfa-zemini-01)" : renk,
+  color: "var(--tema-yerel-yonetim-ters-metin-01)", border: "none", borderRadius: "4px",
   fontSize: "10px", fontWeight: 600,
   cursor: loading ? "not-allowed" : "pointer",
   fontFamily: "'Nunito', sans-serif",
@@ -100,14 +100,14 @@ const silBtnStyle = (renk: string, loading: boolean): React.CSSProperties => ({
 
 const yetkiLabelStyle: React.CSSProperties = {
   display: "inline-flex", alignItems: "center", gap: "3px",
-  fontSize: "10px", color: "#111",
+  fontSize: "10px", color: "var(--tema-yerel-yonetim-ana-metin-01)",
   fontFamily: "'Nunito', sans-serif", cursor: "pointer",
 };
 
 // Header'da inline kullanılan filtre select stili — başlık görünümünde
 const headerSelectStyle: React.CSSProperties = {
   border: "none", background: "transparent",
-  color: "#374151", fontSize: "11px", fontWeight: 700,
+  color: "var(--tema-yerel-yonetim-ana-metin-03)", fontSize: "11px", fontWeight: 700,
   fontFamily: "'Nunito', sans-serif",
   cursor: "pointer", outline: "none", padding: "0",
 };
@@ -117,7 +117,7 @@ const headerSelectStyle: React.CSSProperties = {
 export default function KullaniciListesi(p: KullaniciListesiProps) {
   return (
     <div style={{ marginTop: "20px" }}>
-      <h3 style={{ fontSize: "14px", fontWeight: 700, color: "#111", marginBottom: "12px", fontFamily: "'Nunito', sans-serif" }}>
+      <h3 style={{ fontSize: "14px", fontWeight: 700, color: "var(--tema-yerel-yonetim-ana-metin-01)", marginBottom: "12px", fontFamily: "'Nunito', sans-serif" }}>
         Kullanıcı Listesi ({p.filtrelenmisKullanicilar.length})
       </h3>
 
@@ -134,9 +134,9 @@ export default function KullaniciListesi(p: KullaniciListesiProps) {
           <button
             onClick={p.sifirlaFiltreler}
             style={{
-              padding: "4px 10px", background: "white",
-              border: "0.5px solid #e5e7eb", borderRadius: "6px",
-              fontSize: "11px", color: "#737373", cursor: "pointer",
+              padding: "4px 10px", background: "var(--tema-yerel-yonetim-kart-01)",
+              border: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)", borderRadius: "6px",
+              fontSize: "11px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)", cursor: "pointer",
               fontFamily: "'Nunito', sans-serif",
             }}
           >
@@ -151,20 +151,20 @@ export default function KullaniciListesi(p: KullaniciListesiProps) {
           <span style={{ fontSize: "12px", fontWeight: 600, color: RENK_BORDO, fontFamily: "'Nunito', sans-serif" }}>
             {p.seciliKullanicilar.size} seçili
           </span>
-          <button onClick={p.handleTopluPasif} disabled={p.topluIslemLoading} style={topluBtnStyle("#f59e0b", p.topluIslemLoading)}>
+          <button onClick={p.handleTopluPasif} disabled={p.topluIslemLoading} style={topluBtnStyle("var(--tema-yerel-yonetim-islevsel-zemin-03)", p.topluIslemLoading)}>
             {p.topluIslemLoading ? "..." : "Toplu Pasife Al"}
           </button>
           {p.topluSilOnay ? (
             <>
-              <button onClick={p.handleTopluSil} disabled={p.topluIslemLoading} style={topluBtnStyle("#dc2626", p.topluIslemLoading)}>
+              <button onClick={p.handleTopluSil} disabled={p.topluIslemLoading} style={topluBtnStyle("var(--tema-yerel-yonetim-islevsel-zemin-04)", p.topluIslemLoading)}>
                 {p.topluIslemLoading ? "Siliniyor..." : "Eminim, Sil"}
               </button>
-              <button onClick={() => p.setTopluSilOnay(false)} style={topluBtnStyle("#737373", false)}>
+              <button onClick={() => p.setTopluSilOnay(false)} style={topluBtnStyle("var(--tema-yerel-yonetim-eylem-zemin-01)", false)}>
                 İptal
               </button>
             </>
           ) : (
-            <button onClick={() => p.setTopluSilOnay(true)} style={topluBtnStyle("#dc2626", false)}>
+            <button onClick={() => p.setTopluSilOnay(true)} style={topluBtnStyle("var(--tema-yerel-yonetim-islevsel-zemin-04)", false)}>
               Toplu Sil
             </button>
           )}
@@ -173,11 +173,11 @@ export default function KullaniciListesi(p: KullaniciListesiProps) {
 
       {/* Tablo */}
       {p.filtrelenmisKullanicilar.length === 0 ? (
-        <p style={{ fontSize: "13px", color: "#737373", padding: "20px", textAlign: "center", fontFamily: "'Nunito', sans-serif" }}>
+        <p style={{ fontSize: "13px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)", padding: "20px", textAlign: "center", fontFamily: "'Nunito', sans-serif" }}>
           Gösterilecek kullanıcı yok.
         </p>
       ) : (
-        <div style={{ overflow: "auto", border: "0.5px solid #e5e7eb", borderRadius: "8px" }}>
+        <div style={{ overflow: "auto", border: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)", borderRadius: "8px" }}>
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr>
@@ -225,7 +225,7 @@ export default function KullaniciListesi(p: KullaniciListesiProps) {
                 // arka planla "kızarır" — göze sokulur (görsel vurgu kararı).
                 const eksik = kullaniciEksikMi(k.rol, k.takim_id ?? null, k.bolge_id ?? null, k.telefon ?? null);
                 return (
-                <tr key={k.kullanici_id} style={{ background: p.seciliKullanicilar.has(k.kullanici_id) ? RENK_BORDO_ZEMIN : eksik.eksik ? "#fffbeb" : "white" }}>
+                <tr key={k.kullanici_id} style={{ background: p.seciliKullanicilar.has(k.kullanici_id) ? RENK_BORDO_ZEMIN : eksik.eksik ? "var(--tema-yerel-yonetim-islevsel-zemin-02)" : "var(--tema-yerel-yonetim-kart-01)" }}>
                   <td style={tdStyle}>
                     <input type="checkbox" checked={p.seciliKullanicilar.has(k.kullanici_id)}
                       onChange={(e) => p.toggleSecim(k.kullanici_id, e.target.checked)} />
@@ -258,7 +258,7 @@ export default function KullaniciListesi(p: KullaniciListesiProps) {
                           maxLength={12}
                           style={{
                             ...filterSelectStyle, padding: "2px 6px", width: "130px",
-                            background: "#fffbeb", border: "0.5px solid #fcd34d", color: "#92400e",
+                            background: "var(--tema-yerel-yonetim-islevsel-zemin-02)", border: "0.5px solid var(--tema-yerel-yonetim-islevsel-cizgi-01)", color: "var(--tema-yerel-yonetim-islevsel-metin-01)",
                           }}
                           onInput={(e) => {
                             // Telefon kuralı (İskender, 23.07): 10 hane, ilk hane 5 zorunlu
@@ -312,8 +312,8 @@ export default function KullaniciListesi(p: KullaniciListesiProps) {
                       disabled={p.aktifToggleLoading === k.kullanici_id}
                       style={{
                         padding: "2px 8px",
-                        background: k.aktif_mi ? "#dcfce7" : "#fee2e2",
-                        color: k.aktif_mi ? "#16a34a" : "#dc2626",
+                        background: k.aktif_mi ? "var(--tema-yerel-yonetim-islevsel-zemin-05)" : "var(--tema-yerel-yonetim-islevsel-zemin-06)",
+                        color: k.aktif_mi ? "var(--tema-yerel-yonetim-islevsel-metin-07)" : "var(--tema-yerel-yonetim-islevsel-metin-09)",
                         border: "none", borderRadius: "4px",
                         fontSize: "11px", fontWeight: 600, cursor: "pointer",
                         fontFamily: "'Nunito', sans-serif",
@@ -344,16 +344,16 @@ export default function KullaniciListesi(p: KullaniciListesiProps) {
                       <>
                         <button onClick={() => p.handleSil(k.kullanici_id)}
                           disabled={p.silLoading === k.kullanici_id}
-                          style={silBtnStyle("#dc2626", p.silLoading === k.kullanici_id)}>
+                          style={silBtnStyle("var(--tema-yerel-yonetim-islevsel-zemin-04)", p.silLoading === k.kullanici_id)}>
                           {p.silLoading === k.kullanici_id ? "..." : "Eminim"}
                         </button>
                         <button onClick={() => p.setSilOnayId(null)}
-                          style={{ ...silBtnStyle("#737373", false), marginLeft: "4px" }}>
+                          style={{ ...silBtnStyle("var(--tema-yerel-yonetim-eylem-zemin-01)", false), marginLeft: "4px" }}>
                           İptal
                         </button>
                       </>
                     ) : (
-                      <button onClick={() => p.setSilOnayId(k.kullanici_id)} style={silBtnStyle("#dc2626", false)}>
+                      <button onClick={() => p.setSilOnayId(k.kullanici_id)} style={silBtnStyle("var(--tema-yerel-yonetim-islevsel-zemin-04)", false)}>
                         Sil
                       </button>
                     )}

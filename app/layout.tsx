@@ -3,6 +3,8 @@ import { Nunito } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/app/providers/AuthProvider";
 import { PushAbonelik } from "@/app/providers/PushAbonelik";
+import { VARSAYILAN_TEMA } from "@/lib/tema/temalar";
+import { TemaProvider } from "@/app/providers/TemaProvider";
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -25,11 +27,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="tr">
+    <html lang="tr" data-tema={VARSAYILAN_TEMA}>
       <body className={`${nunito.variable}`} style={{ fontFamily: "var(--font-nunito), sans-serif" }}>
         <AuthProvider>
-          {children}
-          <PushAbonelik />
+          <TemaProvider>
+            {children}
+            <PushAbonelik />
+          </TemaProvider>
         </AuthProvider>
       </body>
     </html>

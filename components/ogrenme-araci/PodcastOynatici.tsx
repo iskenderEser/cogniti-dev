@@ -98,7 +98,7 @@ export default function PodcastOynatici({ aracId, yayinId, bagId, urunAdi, ileri
 
   if (!erisim) {
     return (
-      <div className="rounded-xl bg-gray-50 p-6 text-center text-sm text-gray-500">
+      <div className="rounded-xl bg-[var(--tema-oynatici-zemin)] p-6 text-center text-sm text-[var(--tema-oynatici-ikincil-metin)]">
         Podcast hazırlanıyor…
       </div>
     );
@@ -112,7 +112,7 @@ export default function PodcastOynatici({ aracId, yayinId, bagId, urunAdi, ileri
         : "Podcast";
 
   return (
-    <div className="flex flex-col gap-3 rounded-xl border border-gray-200 bg-white p-4">
+    <div className="flex flex-col gap-3 rounded-xl border border-[var(--tema-oynatici-cizgi)] bg-[var(--tema-oynatici-yuzey)] p-4">
       <PodcastKapakGorseli
         kapakUrl={erisim.kapak_url}
         urunAdi={cozumlenenUrunAdi}
@@ -143,13 +143,13 @@ export default function PodcastOynatici({ aracId, yayinId, bagId, urunAdi, ileri
           Transkript yoksa panel, bağlantı veya hata mesajı gösterilmez.
           Metin güvenli düz içerik olarak render edilir; kullanıcı metni asla HTML olarak çalıştırılmaz. */}
       {erisim.transkript_metni && (
-        <details className="group rounded-xl border border-gray-200 bg-gray-50/70 p-3 text-sm transition">
-          <summary className="flex cursor-pointer select-none items-center justify-between font-semibold text-gray-800 outline-none hover:text-[#287fce]">
+        <details className="group rounded-xl border border-[var(--tema-oynatici-cizgi)] bg-[var(--tema-oynatici-transkript-zemini)] p-3 text-sm transition">
+          <summary className="flex cursor-pointer select-none items-center justify-between font-semibold text-[var(--tema-oynatici-koyu-metin)] outline-none hover:text-[var(--tema-oynatici-baglanti)]">
             <span>Podcast Transkripti</span>
-            <span className="text-xs text-[#287fce] group-open:hidden">Göster</span>
-            <span className="text-xs text-gray-500 hidden group-open:inline">Gizle</span>
+            <span className="text-xs text-[var(--tema-oynatici-baglanti)] group-open:hidden">Göster</span>
+            <span className="text-xs text-[var(--tema-oynatici-ikincil-metin)] hidden group-open:inline">Gizle</span>
           </summary>
-          <div className="mt-3 max-h-64 overflow-y-auto whitespace-pre-wrap rounded-lg border border-gray-100 bg-white p-3 font-sans text-xs leading-relaxed text-gray-700 select-text">
+          <div className="mt-3 max-h-64 overflow-y-auto whitespace-pre-wrap rounded-lg border border-[var(--tema-oynatici-ic-cizgi)] bg-[var(--tema-oynatici-yuzey)] p-3 font-sans text-xs leading-relaxed text-[var(--tema-oynatici-metin)] select-text">
             {erisim.transkript_metni.split("\n").map((satir, idx) => {
               if (!satir.trim()) {
                 return <div key={idx} className="h-2.5" />;
@@ -159,7 +159,7 @@ export default function PodcastOynatici({ aracId, yayinId, bagId, urunAdi, ileri
                 const etiket = match[1].replace(/\*\*/g, "");
                 return (
                   <div key={idx} className="py-0.5">
-                    <strong className="font-semibold text-gray-900">{etiket}</strong>
+                    <strong className="font-semibold text-[var(--tema-oynatici-baslik)]">{etiket}</strong>
                     <span> {match[2]}</span>
                   </div>
                 );
@@ -178,7 +178,7 @@ export default function PodcastOynatici({ aracId, yayinId, bagId, urunAdi, ileri
           href={erisim.transkript_url}
           target="_blank"
           rel="noreferrer"
-          className="text-center text-sm font-semibold text-[#287fce] hover:underline"
+          className="text-center text-sm font-semibold text-[var(--tema-oynatici-baglanti)] hover:underline"
         >
           Transkripti aç
         </a>

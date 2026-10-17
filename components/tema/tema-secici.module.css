@@ -1,0 +1,54 @@
+.dil {
+  position: absolute;
+  top: calc(100% - 1px);
+  left: 50%;
+  z-index: 51;
+  width: min(calc(120px + 3mm), calc(100vw - 24px));
+  height: 29.8480530875px;
+  transform: translate(-50%, -1.5mm);
+}
+
+.yuzey {
+  position: absolute;
+  inset: 1.5mm 0 0;
+  width: 100%;
+  height: calc(29.8480530875px - 1.5mm);
+  overflow: visible;
+  filter: drop-shadow(0 3px 3px color-mix(in srgb, var(--tema-metin) 5%, transparent));
+  pointer-events: none;
+}
+
+.dolgu { fill: var(--tema-ust-menu-zemin); }
+
+.secici {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 28.2346448125px;
+  padding-top: 2.4201124125px;
+}
+
+.secici button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 15.4282166296875px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.secici button:focus-visible { outline: 2px solid var(--tema-odak); outline-offset: 2px; }
+
+.mavi, .yesil { --anahtar-renk: var(--tema-secici-dolgu); }
+.anahtar { position: relative; width: 40px; height: 15.4282166296875px; flex-shrink: 0; border-radius: 999px; background: var(--anahtar-renk); box-shadow: inset 0 0 0 1px var(--tema-secici-vurgu); }
+.topuz { position: absolute; top: 1.6142462921875px; left: 1.7142462921875px; width: 20px; height: 12.0697240453125px; border-radius: 999px; background: var(--tema-secici-vurgu); transition: transform 160ms; }
+.secici button[aria-checked=true] .topuz { transform: translateX(16.571507415625px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .topuz { transition: none; }
+}

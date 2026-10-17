@@ -1,0 +1,614 @@
+{
+  "tarih": "2026-10-17",
+  "dosyalar": [
+    {
+      "path": "components/panel/PanelNavbar.tsx",
+      "degisen_renk_ifadesi": 37,
+      "renk_disi_fark": 0,
+      "once_sha256": "c88d5b7c23f8db10fd8ab84e7545aa6f362a4c1fcb3ba8ef8beea5364481fc3e",
+      "sonra_sha256": "504ca7eb3ec9ab56c20268912250e8b26bbf7e4efa3c1db0b93b73c4880e81a1"
+    },
+    {
+      "path": "components/panel/SolListe.tsx",
+      "degisen_renk_ifadesi": 14,
+      "renk_disi_fark": 0,
+      "once_sha256": "a456419b62f8b2cb4fda45c67f8a7b086b1618ea1cec85d89ee8b18da367a47b",
+      "sonra_sha256": "40d2923559b0498ffa8728492e39dba2a985786c78b58aa815e13322c9bb3d68"
+    },
+    {
+      "path": "components/panel/MobilDrawer.tsx",
+      "degisen_renk_ifadesi": 18,
+      "renk_disi_fark": 0,
+      "once_sha256": "6c406e96f399940e8a0f774fca102b0d2fc943473f968478f84c8a16aad3411b",
+      "sonra_sha256": "f931991a2a5f5322f3e3511bdae22243f50415b9855392700217ea8c332ea5c4"
+    },
+    {
+      "path": "app/(panel)/layout.tsx",
+      "degisen_renk_ifadesi": 3,
+      "renk_disi_fark": 0,
+      "once_sha256": "97a40bd4f930b52fd3c30f4ae5a6ad6b4b7856921d36384e613a925220280f58",
+      "sonra_sha256": "c7b3068b99e5d58831140e5b97a37cd3373038b192b0a1033c039d8cf700e8e9"
+    },
+    {
+      "path": "components/ui/sayfa-yenile-basligi.tsx",
+      "degisen_renk_ifadesi": 0,
+      "renk_disi_fark": 0,
+      "sha256": "aef4c38a279901efd77f9780f05296b127a5a039e42f1a8154ca1f5bb63f5b68"
+    },
+    {
+      "path": "components/ui/sayfa-yenile.module.css",
+      "degisen_renk_ifadesi": 0,
+      "renk_disi_fark": 0,
+      "sha256": "37cf67d5b6acc6ed0ec6705d851aa5a2e31b914708a72d4e19d58ee365df41c6"
+    },
+    {
+      "path": "components/panel/panelNav.config.ts",
+      "degisen_renk_ifadesi": 0,
+      "renk_disi_fark": 0,
+      "sha256": "e9bfb7cf0b83ad8865db26616ae196cb0e2c6a28b065457dcdbb599575754c1b"
+    }
+  ],
+  "korunan_onceki_tema_bildirimi": 113,
+  "eklenen_tema_bildirimi": 44,
+  "eklenen_degisken": 25,
+  "birebir_mavi_esleme": 40,
+  "mavi_deger_farki": 0,
+  "renk_disi_fark": 0,
+  "css_derlemesi": {
+    "basarili": true,
+    "uyari": 0,
+    "yeni_utility_siniflari": [
+      "border-[var(--tema-cizgi)]",
+      "bg-[var(--tema-ust-menu-logo-ayirici)]",
+      "bg-[var(--tema-ust-menu-ayirici)]",
+      "text-[var(--tema-ust-menu-aciklama)]",
+      "text-[var(--tema-ters-metin)]",
+      "bg-[var(--tema-ust-menu-simge)]"
+    ],
+    "korunan_tailwind_renkleri": [
+      "--color-slate-200",
+      "--color-gray-200",
+      "--color-gray-700"
+    ],
+    "utility_ozellikleri": [
+      {
+        "sinif": "border-[var(--tema-cizgi)]",
+        "prop": "border-color",
+        "value": "var(--tema-cizgi)"
+      },
+      {
+        "sinif": "bg-[var(--tema-ust-menu-logo-ayirici)]",
+        "prop": "background-color",
+        "value": "var(--tema-ust-menu-logo-ayirici)"
+      },
+      {
+        "sinif": "bg-[var(--tema-ust-menu-ayirici)]",
+        "prop": "background-color",
+        "value": "var(--tema-ust-menu-ayirici)"
+      },
+      {
+        "sinif": "text-[var(--tema-ust-menu-aciklama)]",
+        "prop": "color",
+        "value": "var(--tema-ust-menu-aciklama)"
+      },
+      {
+        "sinif": "text-[var(--tema-ters-metin)]",
+        "prop": "color",
+        "value": "var(--tema-ters-metin)"
+      },
+      {
+        "sinif": "bg-[var(--tema-ust-menu-simge)]",
+        "prop": "background-color",
+        "value": "var(--tema-ust-menu-simge)"
+      }
+    ]
+  },
+  "eklenen_eslemeler": [
+    {
+      "selector": ":root,\n[data-tema=\"mavi\"]",
+      "prop": "--tema-gezinme-metin",
+      "value": "#374151",
+      "important": false,
+      "cozulmus_mavi": "#374151"
+    },
+    {
+      "selector": ":root,\n[data-tema=\"mavi\"]",
+      "prop": "--tema-menu-secili-metin",
+      "value": "#185fa5",
+      "important": false,
+      "cozulmus_mavi": "#185fa5"
+    },
+    {
+      "selector": ":root,\n[data-tema=\"mavi\"]",
+      "prop": "--tema-menu-secili-zemin",
+      "value": "rgba(86,174,255,0.12)",
+      "important": false,
+      "cozulmus_mavi": "rgba(86,174,255,0.12)"
+    },
+    {
+      "selector": ":root,\n[data-tema=\"mavi\"]",
+      "prop": "--tema-menu-secili-halka",
+      "value": "rgba(86,174,255,0.35)",
+      "important": false,
+      "cozulmus_mavi": "rgba(86,174,255,0.35)"
+    },
+    {
+      "selector": ":root,\n[data-tema=\"mavi\"]",
+      "prop": "--tema-menu-hover",
+      "value": "rgba(0,0,0,0.05)",
+      "important": false,
+      "cozulmus_mavi": "rgba(0,0,0,0.05)"
+    },
+    {
+      "selector": ":root,\n[data-tema=\"mavi\"]",
+      "prop": "--tema-ust-menu-zemin",
+      "value": "rgba(255,255,255,0.85)",
+      "important": false,
+      "cozulmus_mavi": "rgba(255,255,255,0.85)"
+    },
+    {
+      "selector": ":root,\n[data-tema=\"mavi\"]",
+      "prop": "--tema-ust-menu-pill-zemin",
+      "value": "rgba(0,0,0,0.04)",
+      "important": false,
+      "cozulmus_mavi": "rgba(0,0,0,0.04)"
+    },
+    {
+      "selector": ":root,\n[data-tema=\"mavi\"]",
+      "prop": "--tema-ust-menu-pill-cizgi",
+      "value": "rgba(0,0,0,0.08)",
+      "important": false,
+      "cozulmus_mavi": "rgba(0,0,0,0.08)"
+    },
+    {
+      "selector": ":root,\n[data-tema=\"mavi\"]",
+      "prop": "--tema-ust-menu-pill-secili-zemin",
+      "value": "#fef2f2",
+      "important": false,
+      "cozulmus_mavi": "#fef2f2"
+    },
+    {
+      "selector": ":root,\n[data-tema=\"mavi\"]",
+      "prop": "--tema-ust-menu-pill-secili-cizgi",
+      "value": "#fecaca",
+      "important": false,
+      "cozulmus_mavi": "#fecaca"
+    },
+    {
+      "selector": ":root,\n[data-tema=\"mavi\"]",
+      "prop": "--tema-ust-menu-pill-hover",
+      "value": "rgba(188,45,13,0.07)",
+      "important": false,
+      "cozulmus_mavi": "rgba(188,45,13,0.07)"
+    },
+    {
+      "selector": ":root,\n[data-tema=\"mavi\"]",
+      "prop": "--tema-ust-menu-logo-ayirici",
+      "value": "var(--color-slate-200)",
+      "important": false,
+      "cozulmus_mavi": "oklch(92.9% 0.013 255.508)"
+    },
+    {
+      "selector": ":root,\n[data-tema=\"mavi\"]",
+      "prop": "--tema-ust-menu-ayirici",
+      "value": "var(--color-gray-200)",
+      "important": false,
+      "cozulmus_mavi": "oklch(92.8% 0.006 264.531)"
+    },
+    {
+      "selector": ":root,\n[data-tema=\"mavi\"]",
+      "prop": "--tema-ust-menu-ozet-ayirici",
+      "value": "#d1d5db",
+      "important": false,
+      "cozulmus_mavi": "#d1d5db"
+    },
+    {
+      "selector": ":root,\n[data-tema=\"mavi\"]",
+      "prop": "--tema-ust-menu-aciklama",
+      "value": "#64748b",
+      "important": false,
+      "cozulmus_mavi": "#64748b"
+    },
+    {
+      "selector": ":root,\n[data-tema=\"mavi\"]",
+      "prop": "--tema-ust-menu-simge",
+      "value": "var(--color-gray-700)",
+      "important": false,
+      "cozulmus_mavi": "oklch(37.3% 0.034 259.733)"
+    },
+    {
+      "selector": ":root,\n[data-tema=\"mavi\"]",
+      "prop": "--tema-gezinme-avatar-zemin",
+      "value": "#d4d4d4",
+      "important": false,
+      "cozulmus_mavi": "#d4d4d4"
+    },
+    {
+      "selector": ":root,\n[data-tema=\"mavi\"]",
+      "prop": "--tema-gezinme-avatar-cizgi",
+      "value": "#c9c9c9",
+      "important": false,
+      "cozulmus_mavi": "#c9c9c9"
+    },
+    {
+      "selector": ":root,\n[data-tema=\"mavi\"]",
+      "prop": "--tema-mobil-menu-ayirici",
+      "value": "#f0f0f0",
+      "important": false,
+      "cozulmus_mavi": "#f0f0f0"
+    },
+    {
+      "selector": "[data-tema=\"yesil\"]",
+      "prop": "--tema-gezinme-metin",
+      "value": "var(--tema-metin)",
+      "important": false
+    },
+    {
+      "selector": "[data-tema=\"yesil\"]",
+      "prop": "--tema-menu-secili-metin",
+      "value": "var(--tema-secili-metin)",
+      "important": false
+    },
+    {
+      "selector": "[data-tema=\"yesil\"]",
+      "prop": "--tema-menu-secili-zemin",
+      "value": "color-mix(in srgb, var(--tema-vurgu) 12%, transparent)",
+      "important": false
+    },
+    {
+      "selector": "[data-tema=\"yesil\"]",
+      "prop": "--tema-menu-secili-halka",
+      "value": "color-mix(in srgb, var(--tema-vurgu) 35%, transparent)",
+      "important": false
+    },
+    {
+      "selector": "[data-tema=\"yesil\"]",
+      "prop": "--tema-menu-hover",
+      "value": "color-mix(in srgb, var(--tema-vurgu) 5%, transparent)",
+      "important": false
+    },
+    {
+      "selector": "[data-tema=\"yesil\"]",
+      "prop": "--tema-ust-menu-zemin",
+      "value": "color-mix(in srgb, var(--tema-zemin) 85%, transparent)",
+      "important": false
+    },
+    {
+      "selector": "[data-tema=\"yesil\"]",
+      "prop": "--tema-ust-menu-pill-zemin",
+      "value": "color-mix(in srgb, var(--tema-vurgu) 4%, transparent)",
+      "important": false
+    },
+    {
+      "selector": "[data-tema=\"yesil\"]",
+      "prop": "--tema-ust-menu-pill-cizgi",
+      "value": "color-mix(in srgb, var(--tema-vurgu) 8%, transparent)",
+      "important": false
+    },
+    {
+      "selector": "[data-tema=\"yesil\"]",
+      "prop": "--tema-ust-menu-pill-secili-zemin",
+      "value": "var(--tema-secili)",
+      "important": false
+    },
+    {
+      "selector": "[data-tema=\"yesil\"]",
+      "prop": "--tema-ust-menu-pill-secili-cizgi",
+      "value": "var(--tema-cizgi)",
+      "important": false
+    },
+    {
+      "selector": "[data-tema=\"yesil\"]",
+      "prop": "--tema-ust-menu-pill-hover",
+      "value": "color-mix(in srgb, var(--tema-vurgu) 7%, transparent)",
+      "important": false
+    },
+    {
+      "selector": "[data-tema=\"yesil\"]",
+      "prop": "--tema-ust-menu-logo-ayirici",
+      "value": "var(--tema-cizgi)",
+      "important": false
+    },
+    {
+      "selector": "[data-tema=\"yesil\"]",
+      "prop": "--tema-ust-menu-ayirici",
+      "value": "var(--tema-cizgi)",
+      "important": false
+    },
+    {
+      "selector": "[data-tema=\"yesil\"]",
+      "prop": "--tema-ust-menu-ozet-ayirici",
+      "value": "var(--tema-cizgi)",
+      "important": false
+    },
+    {
+      "selector": "[data-tema=\"yesil\"]",
+      "prop": "--tema-ust-menu-aciklama",
+      "value": "var(--tema-ikincil-metin)",
+      "important": false
+    },
+    {
+      "selector": "[data-tema=\"yesil\"]",
+      "prop": "--tema-ust-menu-simge",
+      "value": "var(--tema-metin)",
+      "important": false
+    },
+    {
+      "selector": "[data-tema=\"yesil\"]",
+      "prop": "--tema-gezinme-avatar-zemin",
+      "value": "var(--tema-bilgi-zemini)",
+      "important": false
+    },
+    {
+      "selector": "[data-tema=\"yesil\"]",
+      "prop": "--tema-gezinme-avatar-cizgi",
+      "value": "var(--tema-cizgi)",
+      "important": false
+    },
+    {
+      "selector": "[data-tema=\"yesil\"]",
+      "prop": "--tema-mobil-menu-ayirici",
+      "value": "var(--tema-cizgi)",
+      "important": false
+    },
+    {
+      "selector": ":root,\n[data-tema=\"mavi\"],\n[data-tema=\"yesil\"]",
+      "prop": "--tema-mobil-menu-ortu",
+      "value": "rgba(0,0,0,0.45)",
+      "important": false,
+      "cozulmus_mavi": "rgba(0,0,0,0.45)"
+    },
+    {
+      "selector": ":root,\n[data-tema=\"mavi\"],\n[data-tema=\"yesil\"]",
+      "prop": "--tema-mobil-menu-golge",
+      "value": "rgba(0,0,0,0.15)",
+      "important": false,
+      "cozulmus_mavi": "rgba(0,0,0,0.15)"
+    },
+    {
+      "selector": ":root,\n[data-tema=\"mavi\"],\n[data-tema=\"yesil\"]",
+      "prop": "--tema-hbstore-vurgu",
+      "value": "#ff6200",
+      "important": false,
+      "cozulmus_mavi": "#ff6200"
+    },
+    {
+      "selector": ":root,\n[data-tema=\"mavi\"],\n[data-tema=\"yesil\"]",
+      "prop": "--tema-hbstore-zemini",
+      "value": "linear-gradient(135deg, #ff9a1f 0%, var(--tema-hbstore-vurgu) 55%, #f04400 100%)",
+      "important": false,
+      "cozulmus_mavi": "linear-gradient(135deg, #ff9a1f 0%, #ff6200 55%, #f04400 100%)"
+    },
+    {
+      "selector": ":root,\n[data-tema=\"mavi\"],\n[data-tema=\"yesil\"]",
+      "prop": "--tema-hbstore-golge",
+      "value": "rgba(255, 98, 0, 0.32)",
+      "important": false,
+      "cozulmus_mavi": "rgba(255, 98, 0, 0.32)"
+    },
+    {
+      "selector": ":root,\n[data-tema=\"mavi\"],\n[data-tema=\"yesil\"]",
+      "prop": "--tema-hbstore-parilti",
+      "value": "rgba(255,255,255,0.38)",
+      "important": false,
+      "cozulmus_mavi": "rgba(255,255,255,0.38)"
+    }
+  ],
+  "eslemeler": {
+    "components/panel/PanelNavbar.tsx": {
+      "\"#bc2d0d\"": "\"var(--tema-vurgu)\"",
+      "rgba(0,0,0,0.04)": "var(--tema-ust-menu-pill-zemin)",
+      "rgba(0,0,0,0.08)": "var(--tema-ust-menu-pill-cizgi)",
+      "\"#6b7280\"": "\"var(--tema-ikincil-metin)\"",
+      "\"#111827\"": "\"var(--tema-baslik)\"",
+      "\"#1f2937\"": "\"var(--tema-metin)\"",
+      "\"#d1d5db\"": "\"var(--tema-ust-menu-ozet-ayirici)\"",
+      "\"#374151\"": "\"var(--tema-gezinme-metin)\"",
+      "\"#fef2f2\"": "\"var(--tema-ust-menu-pill-secili-zemin)\"",
+      "rgba(188,45,13,0.07)": "var(--tema-ust-menu-pill-hover)",
+      "inset 0 0 0 1px #fecaca": "inset 0 0 0 1px var(--tema-ust-menu-pill-secili-cizgi)",
+      "rgba(255,255,255,0.85)": "var(--tema-ust-menu-zemin)",
+      "\"#e5e7eb\"": "\"var(--tema-cizgi)\"",
+      "border-gray-200": "border-[var(--tema-cizgi)]",
+      "bg-slate-200": "bg-[var(--tema-ust-menu-logo-ayirici)]",
+      "bg-gray-200": "bg-[var(--tema-ust-menu-ayirici)]",
+      "text-[#64748b]": "text-[var(--tema-ust-menu-aciklama)]",
+      "linear-gradient(135deg, #ff9a1f 0%, #ff6200 55%, #f04400 100%)": "var(--tema-hbstore-zemini)",
+      "rgba(255, 98, 0, 0.32)": "var(--tema-hbstore-golge)",
+      "rgba(255,255,255,0.38)": "var(--tema-hbstore-parilti)",
+      "text-white": "text-[var(--tema-ters-metin)]",
+      "\"#d4d4d4\"": "\"var(--tema-gezinme-avatar-zemin)\"",
+      "1px solid #c9c9c9": "1px solid var(--tema-gezinme-avatar-cizgi)",
+      "bg-gray-700": "bg-[var(--tema-ust-menu-simge)]"
+    },
+    "components/panel/SolListe.tsx": {
+      "\"#185fa5\"": "\"var(--tema-menu-secili-metin)\"",
+      "\"#374151\"": "\"var(--tema-gezinme-metin)\"",
+      "rgba(86,174,255,0.12)": "var(--tema-menu-secili-zemin)",
+      "rgba(0,0,0,0.05)": "var(--tema-menu-hover)",
+      "rgba(86,174,255,0.35)": "var(--tema-menu-secili-halka)",
+      "\"#bc2d0d\"": "\"var(--tema-vurgu)\"",
+      "text-white": "text-[var(--tema-ters-metin)]",
+      "0.5px solid #e5e7eb": "0.5px solid var(--tema-cizgi)",
+      "\"#ffffff\"": "\"var(--tema-yan-zemin)\"",
+      "\"#111827\"": "\"var(--tema-baslik)\""
+    },
+    "components/panel/MobilDrawer.tsx": {
+      "\"#185fa5\"": "\"var(--tema-menu-secili-metin)\"",
+      "\"#374151\"": "\"var(--tema-gezinme-metin)\"",
+      "rgba(86,174,255,0.12)": "var(--tema-menu-secili-zemin)",
+      "\"#bc2d0d\"": "\"var(--tema-vurgu)\"",
+      "text-white": "text-[var(--tema-ters-metin)]",
+      "rgba(0,0,0,0.45)": "var(--tema-mobil-menu-ortu)",
+      "rgba(0,0,0,0.15)": "var(--tema-mobil-menu-golge)",
+      "\"#ffffff\"": "\"var(--tema-yan-zemin)\"",
+      "\"#737373\"": "\"var(--tema-yardimci-metin)\"",
+      "\"#f0f0f0\"": "\"var(--tema-mobil-menu-ayirici)\"",
+      "\"#ff6200\"": "\"var(--tema-hbstore-vurgu)\"",
+      "\"#111827\"": "\"var(--tema-baslik)\""
+    },
+    "app/(panel)/layout.tsx": {
+      "\"#f9fafb\"": "\"var(--tema-zemin)\"",
+      "\"#737373\"": "\"var(--tema-yardimci-metin)\""
+    }
+  },
+  "lint": {
+    "kaynaklar": [
+      {
+        "path": "app/(panel)/layout.tsx",
+        "onceki_hata": 2,
+        "onceki_uyari": 0,
+        "yeni_bulgu": 0,
+        "bulgular": [
+          {
+            "ruleId": "react-hooks/set-state-in-effect",
+            "severity": 2,
+            "line": 74,
+            "column": 7
+          },
+          {
+            "ruleId": "react-hooks/preserve-manual-memoization",
+            "severity": 2,
+            "line": 91,
+            "column": 40
+          }
+        ]
+      },
+      {
+        "path": "components/panel/PanelNavbar.tsx",
+        "onceki_hata": 0,
+        "onceki_uyari": 1,
+        "yeni_bulgu": 0,
+        "bulgular": [
+          {
+            "ruleId": "@next/next/no-img-element",
+            "severity": 1,
+            "line": 177,
+            "column": 19
+          }
+        ]
+      },
+      {
+        "path": "components/panel/SolListe.tsx",
+        "onceki_hata": 0,
+        "onceki_uyari": 0,
+        "yeni_bulgu": 0,
+        "bulgular": []
+      },
+      {
+        "path": "components/panel/MobilDrawer.tsx",
+        "onceki_hata": 0,
+        "onceki_uyari": 0,
+        "yeni_bulgu": 0,
+        "bulgular": []
+      }
+    ],
+    "test_dosyalari": {
+      "hata": 0,
+      "uyari": 0
+    },
+    "onceki_hata": 2,
+    "onceki_uyari": 1,
+    "yeni_bulgu": 0
+  },
+  "durum": "TAMAMLANDI",
+  "rol_kapsami": {
+    "kaynak": "TUM_ROLLER ve ROL_ADLARI birleşimi",
+    "roller": [
+      "pm",
+      "jr_pm",
+      "kd_pm",
+      "med_md",
+      "egt_md",
+      "egt_yrd_md",
+      "egt_yon",
+      "egt_uz",
+      "ik_drk",
+      "ik_md",
+      "ik_yrd_md",
+      "ik_uz",
+      "ik_per",
+      "gm",
+      "gm_yrd",
+      "drk",
+      "paz_md",
+      "blm_md",
+      "grp_pm",
+      "sm",
+      "admin",
+      "tm",
+      "bm",
+      "utt",
+      "kd_utt",
+      "iu",
+      "eczaci",
+      "ikinci_eczaci",
+      "yardimci_eczaci",
+      "eczane_teknisyeni",
+      "musteri"
+    ],
+    "eclub_menu_kaynagi": "ECLUB_KISI_NAV",
+    "eclub_unvanlari": [
+      "eczaci",
+      "ikinci_eczaci",
+      "yardimci_eczaci",
+      "eczane_teknisyeni"
+    ],
+    "temalar": [
+      "mavi",
+      "yesil"
+    ],
+    "yontem": "Statik gerçek React bileşenleri ve ortak CSS; sahte bağımlılıklar; gerçek hesap oturumu değil"
+  },
+  "testler": {
+    "panel_renkleri": {
+      "basarili": 3,
+      "basarisiz": 0
+    },
+    "tema": {
+      "basarili": 6,
+      "basarisiz": 0
+    },
+    "firma_cobranding": {
+      "basarili": 6,
+      "basarisiz": 0
+    },
+    "mobil_hbstore": {
+      "basarili": 2,
+      "basarisiz": 0
+    },
+    "panel_navbar_ozet": {
+      "basarili": 3,
+      "basarisiz": 1
+    },
+    "toplam": {
+      "basarili": 20,
+      "basarisiz": 1
+    },
+    "onceki_test_bulgusu": {
+      "test": "tests/panelNavbarOzet.smoke.test.ts:98",
+      "kaynak": "lib/tclub/store/takvim.ts",
+      "beklenen": "HBStore Günleri’ne",
+      "mevcut": "HBStore Günlerine",
+      "iki_dosya_da_git_head_ile_ayni": true,
+      "renk_degisikligiyle_ilgisiz": true
+    }
+  },
+  "typecheck": {
+    "komut": "npm run typecheck:build",
+    "basarili": true
+  },
+  "sinirlar": {
+    "tarayici_etkilesimi_yapildi": false,
+    "ekran_goruntusu_alindi": false,
+    "gercek_kullanici_oturumu_yok": true,
+    "veritabani_islemi": false,
+    "canli_dagitim": false,
+    "adim4_baslatildi": false,
+    "happy_dom": "color-mix ve OKLCH hesaplanmaz; bu ifadeler palet çözümlemesi ve gerçek CSS derlemesiyle denetlendi"
+  },
+  "test_kaynak_imzalari": {
+    "tests/panelTemaRenkleri.hedef.test.ts": "859eaa7cefa43b58a32cb9f6fd388df7a046acdacbac1d07e07480bf1262b85a",
+    "tests/mobilHbstoreNavigasyonu.smoke.test.ts": "0b595a6966e4eef3fb94e3dc0c1803979416029071a5a671f34d5876992f8b95"
+  }
+}

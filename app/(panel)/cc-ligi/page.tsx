@@ -39,9 +39,9 @@ import SayfaRehberi from "@/components/rehber/SayfaRehberi";
 import type { AuthKullanici } from "@/types/auth";
 import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 
-const GRI_METIN = "#737373";
-const KOYU_METIN = "#111827";
-const GRI_ZEMIN = "#f9fafb";
+const GRI_METIN = "var(--tema-yerel-lig-yardimci-metin-01)";
+const KOYU_METIN = "var(--tema-yerel-lig-ana-metin-01)";
+const GRI_ZEMIN = "var(--tema-yerel-lig-sayfa-zemini-01)";
 const CC_LIG_ONBELLEK_SURESI = 60_000;
 const CC_LIG_OTURUM_PREFIXI = "hb_cc_lig_cache_";
 const ccLigOnbellegi = new Map<string, { veri: LigSatiri[]; zaman: number }>();
@@ -307,17 +307,17 @@ export default function CcLigiPage() {
         </div>
 
         <div className="mb-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <article className={`flex min-h-[104px] items-center gap-3 rounded-2xl border border-blue-100 bg-blue-50/70 p-4 text-blue-700`}>
-            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white/80 shadow-sm"><Gauge className="h-4 w-4" /></span>
-            <div className="min-w-0"><div className="text-[9px] font-black uppercase tracking-[0.12em] opacity-70">Firma C-Club Net Puanı</div><div className="mt-0.5 text-2xl font-black tabular-nums text-[#10213d]">{ligYukleniyor ? "—" : puanYaz(firmaNetPuani)}</div><div className="mt-1 text-[10px] font-bold leading-4 text-[#718198]">Kazanılan ve kaybedilen C-Club puanlarının farkı</div></div>
+          <article className={`flex min-h-[104px] items-center gap-3 rounded-2xl border border-[var(--tema-yerel-lig-cizgi-01)] bg-[var(--tema-yerel-lig-secim-zemin-01)]/70 p-4 text-[var(--tema-yerel-lig-eylem-metin-01)]`}>
+            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[var(--tema-yerel-lig-kart-01)]/80 shadow-sm"><Gauge className="h-4 w-4" /></span>
+            <div className="min-w-0"><div className="text-[9px] font-black uppercase tracking-[0.12em] opacity-70">Firma C-Club Net Puanı</div><div className="mt-0.5 text-2xl font-black tabular-nums text-[var(--tema-yerel-lig-ana-metin-02)]">{ligYukleniyor ? "—" : puanYaz(firmaNetPuani)}</div><div className="mt-1 text-[10px] font-bold leading-4 text-[var(--tema-yerel-lig-yardimci-metin-02)]">Kazanılan ve kaybedilen C-Club puanlarının farkı</div></div>
           </article>
-          <article className={`${ureticiMi ? "min-h-[148px] flex-col items-start gap-2 p-3" : "min-h-[104px] items-center gap-3 p-4"} flex rounded-2xl border border-emerald-100 bg-emerald-50/70 text-emerald-700 sm:min-h-[104px] sm:flex-row sm:items-center sm:gap-3 sm:p-4`}>
-            <span className={`grid shrink-0 place-items-center rounded-xl bg-white/80 shadow-sm ${ureticiMi ? "h-9 w-9 sm:h-10 sm:w-10" : "h-10 w-10"}`}><ArrowUpRight className="h-4 w-4" /></span>
-            <div className="min-w-0"><div className={`${ureticiMi ? "text-[8px] tracking-[0.1em] sm:text-[9px] sm:tracking-[0.12em]" : "text-[9px] tracking-[0.12em]"} font-black uppercase opacity-70`}>Firma C-Club Kazanılan Puanı</div><div className={`${ureticiMi ? "text-xl sm:text-2xl" : "text-2xl"} mt-0.5 font-black tabular-nums text-[#10213d]`}>{ligYukleniyor ? "—" : `+${puanYaz(firmaKazanilanPuani)}`}</div><div className={`${ureticiMi ? "text-[9px] leading-[13px] sm:text-[10px] sm:leading-4" : "text-[10px] leading-4"} mt-1 font-bold text-[#718198]`}>İzleme, cevaplama, extra, gönderme ve referral puanlarının toplamı</div></div>
+          <article className={`${ureticiMi ? "min-h-[148px] flex-col items-start gap-2 p-3" : "min-h-[104px] items-center gap-3 p-4"} flex rounded-2xl border border-[var(--tema-yerel-lig-islevsel-cizgi-01)] bg-[var(--tema-yerel-lig-islevsel-zemin-01)]/70 text-[var(--tema-yerel-lig-islevsel-metin-01)] sm:min-h-[104px] sm:flex-row sm:items-center sm:gap-3 sm:p-4`}>
+            <span className={`grid shrink-0 place-items-center rounded-xl bg-[var(--tema-yerel-lig-kart-01)]/80 shadow-sm ${ureticiMi ? "h-9 w-9 sm:h-10 sm:w-10" : "h-10 w-10"}`}><ArrowUpRight className="h-4 w-4" /></span>
+            <div className="min-w-0"><div className={`${ureticiMi ? "text-[8px] tracking-[0.1em] sm:text-[9px] sm:tracking-[0.12em]" : "text-[9px] tracking-[0.12em]"} font-black uppercase opacity-70`}>Firma C-Club Kazanılan Puanı</div><div className={`${ureticiMi ? "text-xl sm:text-2xl" : "text-2xl"} mt-0.5 font-black tabular-nums text-[var(--tema-yerel-lig-ana-metin-02)]`}>{ligYukleniyor ? "—" : `+${puanYaz(firmaKazanilanPuani)}`}</div><div className={`${ureticiMi ? "text-[9px] leading-[13px] sm:text-[10px] sm:leading-4" : "text-[10px] leading-4"} mt-1 font-bold text-[var(--tema-yerel-lig-yardimci-metin-02)]`}>İzleme, cevaplama, extra, gönderme ve referral puanlarının toplamı</div></div>
           </article>
-          <article className={`${ureticiMi ? "min-h-[148px] flex-col items-start gap-2 p-3" : "min-h-[104px] items-center gap-3 p-4"} flex rounded-2xl border border-rose-100 bg-rose-50/70 text-rose-700 sm:min-h-[104px] sm:flex-row sm:items-center sm:gap-3 sm:p-4`}>
-            <span className={`grid shrink-0 place-items-center rounded-xl bg-white/80 shadow-sm ${ureticiMi ? "h-9 w-9 sm:h-10 sm:w-10" : "h-10 w-10"}`}><ArrowDownRight className="h-4 w-4" /></span>
-            <div className="min-w-0"><div className={`${ureticiMi ? "text-[8px] tracking-[0.1em] sm:text-[9px] sm:tracking-[0.12em]" : "text-[9px] tracking-[0.12em]"} font-black uppercase opacity-70`}>Firma C-Club Kaybedilen Puanı</div><div className={`${ureticiMi ? "text-xl sm:text-2xl" : "text-2xl"} mt-0.5 font-black tabular-nums text-[#10213d]`}>{ligYukleniyor ? "—" : firmaKaybedilenPuani ? `−${puanYaz(firmaKaybedilenPuani)}` : "0"}</div><div className={`${ureticiMi ? "text-[9px] leading-[13px] sm:text-[10px] sm:leading-4" : "text-[10px] leading-4"} mt-1 font-bold text-[#718198]`}>İleri sarma, yanlış cevaplama ve challenge kaybı puanlarının toplamı</div></div>
+          <article className={`${ureticiMi ? "min-h-[148px] flex-col items-start gap-2 p-3" : "min-h-[104px] items-center gap-3 p-4"} flex rounded-2xl border border-[var(--tema-yerel-lig-islevsel-cizgi-02)] bg-[var(--tema-yerel-lig-islevsel-zemin-02)]/70 text-[var(--tema-yerel-lig-islevsel-metin-02)] sm:min-h-[104px] sm:flex-row sm:items-center sm:gap-3 sm:p-4`}>
+            <span className={`grid shrink-0 place-items-center rounded-xl bg-[var(--tema-yerel-lig-kart-01)]/80 shadow-sm ${ureticiMi ? "h-9 w-9 sm:h-10 sm:w-10" : "h-10 w-10"}`}><ArrowDownRight className="h-4 w-4" /></span>
+            <div className="min-w-0"><div className={`${ureticiMi ? "text-[8px] tracking-[0.1em] sm:text-[9px] sm:tracking-[0.12em]" : "text-[9px] tracking-[0.12em]"} font-black uppercase opacity-70`}>Firma C-Club Kaybedilen Puanı</div><div className={`${ureticiMi ? "text-xl sm:text-2xl" : "text-2xl"} mt-0.5 font-black tabular-nums text-[var(--tema-yerel-lig-ana-metin-02)]`}>{ligYukleniyor ? "—" : firmaKaybedilenPuani ? `−${puanYaz(firmaKaybedilenPuani)}` : "0"}</div><div className={`${ureticiMi ? "text-[9px] leading-[13px] sm:text-[10px] sm:leading-4" : "text-[10px] leading-4"} mt-1 font-bold text-[var(--tema-yerel-lig-yardimci-metin-02)]`}>İleri sarma, yanlış cevaplama ve challenge kaybı puanlarının toplamı</div></div>
           </article>
         </div>
 

@@ -111,12 +111,12 @@ export default function TakimBolgeUttAkordeon({ takimlar, periyot }: Props) {
     <section className={`${styles.panel} ${styles.section}`}>
       <div className={styles.sectionHeader}>
         <div>
-          <div className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#71859d]">Saha nabzı</div>
+          <div className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[var(--tema-yerel-rapor-yardimci-metin-14)]">Saha nabzı</div>
           <div className="inline-flex items-center">
-            <h2 className="text-base font-extrabold text-[#20324c]">Takım performans görünümü</h2>
+            <h2 className="text-base font-extrabold text-[var(--tema-yerel-rapor-ana-metin-06)]">Takım performans görünümü</h2>
             <SayfaRehberi anahtar="bm-performans-gorunumu" className="ml-1.5 -translate-y-1.5" />
           </div>
-          <p className="mt-0.5 text-[11px] font-medium text-[#8190a3]">
+          <p className="mt-0.5 text-[11px] font-medium text-[var(--tema-yerel-rapor-yardimci-metin-08)]">
             Şirket genelindeki takımların, bağlı bölgelerin ve UTT kadrolarının izleme ve net puan dökümü
           </p>
         </div>
@@ -190,14 +190,14 @@ export default function TakimBolgeUttAkordeon({ takimlar, periyot }: Props) {
 
                             {/* 2. Kademe: Bölgeler */}
                             {takimBolgeleri === 'loading' && (
-                              <div className="py-4 text-center text-xs font-semibold text-[#8190a3]">
+                              <div className="py-4 text-center text-xs font-semibold text-[var(--tema-yerel-rapor-yardimci-metin-08)]">
                                 Bölgeler hazırlanıyor…
                               </div>
                             )}
 
                             {Array.isArray(takimBolgeleri) && takimBolgeleri.length > 0 && (
                               <div className="mt-3 flex flex-col gap-2">
-                                <div className="text-[10px] font-extrabold uppercase tracking-wide text-[#61748d]">
+                                <div className="text-[10px] font-extrabold uppercase tracking-wide text-[var(--tema-yerel-rapor-yardimci-metin-29)]">
                                   Takıma Bağlı Bölgeler (BM)
                                 </div>
                                 {takimBolgeleri.map((bolge) => {
@@ -207,47 +207,47 @@ export default function TakimBolgeUttAkordeon({ takimlar, periyot }: Props) {
                                   return (
                                     <div
                                       key={bolge.birim_id}
-                                      className="rounded-xl border border-[#e2ebf4] bg-white overflow-hidden"
+                                      className="rounded-xl border border-[var(--tema-yerel-rapor-cizgi-29)] bg-[var(--tema-yerel-rapor-kart-04)] overflow-hidden"
                                     >
                                       <button
                                         type="button"
                                         onClick={() => void bolgeAc(bolge.birim_id)}
-                                        className="flex w-full items-center justify-between p-3 text-left hover:bg-[#f8fbfe] transition cursor-pointer border-none bg-transparent"
+                                        className="flex w-full items-center justify-between p-3 text-left hover:bg-[var(--tema-yerel-rapor-sayfa-zemini-01)] transition cursor-pointer border-none bg-transparent"
                                       >
                                         <div className="flex items-center gap-2.5">
                                           {bolgeAcik ? (
-                                            <ChevronDown size={15} className="text-[#237ac8]" />
+                                            <ChevronDown size={15} className="text-[var(--tema-yerel-rapor-eylem-metin-06)]" />
                                           ) : (
-                                            <ChevronRight size={15} className="text-[#8190a3]" />
+                                            <ChevronRight size={15} className="text-[var(--tema-yerel-rapor-yardimci-metin-08)]" />
                                           )}
-                                          <MapPin size={15} className="text-[#3589d8]" />
+                                          <MapPin size={15} className="text-[var(--tema-yerel-rapor-eylem-metin-08)]" />
                                           <div>
-                                            <strong className="block text-xs text-[#20324c]">{bolge.birim_adi}</strong>
-                                            <small className="text-[10px] font-semibold text-[#8190a3]">
+                                            <strong className="block text-xs text-[var(--tema-yerel-rapor-ana-metin-06)]">{bolge.birim_adi}</strong>
+                                            <small className="text-[10px] font-semibold text-[var(--tema-yerel-rapor-yardimci-metin-08)]">
                                               {bolge.aktif_utt}/{bolge.toplam_utt} aktif UTT
                                             </small>
                                           </div>
                                         </div>
                                         <div className="flex items-center gap-4 text-xs font-bold">
-                                          <span className="text-[#40556d]">{bolge.tamamlanan_izleme} izleme</span>
-                                          <span className="text-[#208a66]">+{formatPuan(bolge.kazanilan_toplam)}</span>
-                                          <span className="text-[#d45c4b]">−{formatPuan(bolge.kaybedilen_toplam)}</span>
-                                          <strong className="text-[#217bc3] text-sm">{formatPuan(bolge.net_puan)} p</strong>
+                                          <span className="text-[var(--tema-yerel-rapor-ana-metin-01)]">{bolge.tamamlanan_izleme} izleme</span>
+                                          <span className="text-[var(--tema-yerel-rapor-islevsel-metin-01)]">+{formatPuan(bolge.kazanilan_toplam)}</span>
+                                          <span className="text-[var(--tema-yerel-rapor-islevsel-metin-02)]">−{formatPuan(bolge.kaybedilen_toplam)}</span>
+                                          <strong className="text-[var(--tema-yerel-rapor-eylem-metin-02)] text-sm">{formatPuan(bolge.net_puan)} p</strong>
                                         </div>
                                       </button>
 
                                       {/* 3. Kademe: UTT Temsilcileri */}
                                       {bolgeAcik && (
-                                        <div className="border-t border-[#edf2f7] bg-[#fafcfe] p-3">
+                                        <div className="border-t border-[var(--tema-yerel-rapor-cizgi-27)] bg-[var(--tema-yerel-rapor-sayfa-zemini-23)] p-3">
                                           {bolgeUttleri === 'loading' && (
-                                            <div className="py-3 text-center text-xs font-semibold text-[#8190a3]">
+                                            <div className="py-3 text-center text-xs font-semibold text-[var(--tema-yerel-rapor-yardimci-metin-08)]">
                                               Temsilci sonuçları yükleniyor…
                                             </div>
                                           )}
 
                                           {Array.isArray(bolgeUttleri) && bolgeUttleri.length > 0 && (
                                             <div className="grid gap-1.5">
-                                              <div className="text-[9px] font-extrabold uppercase tracking-wide text-[#8190a3] px-1">
+                                              <div className="text-[9px] font-extrabold uppercase tracking-wide text-[var(--tema-yerel-rapor-yardimci-metin-08)] px-1">
                                                 Bölge Temsilcileri (UTT)
                                               </div>
                                               {bolgeUttleri.map((utt) => {
@@ -256,40 +256,40 @@ export default function TakimBolgeUttAkordeon({ takimlar, periyot }: Props) {
                                                 return (
                                                   <div
                                                     key={utt.birim_id}
-                                                    className="rounded-lg border border-[#e8eff6] bg-white p-2.5 text-xs"
+                                                    className="rounded-lg border border-[var(--tema-yerel-rapor-cizgi-34)] bg-[var(--tema-yerel-rapor-kart-04)] p-2.5 text-xs"
                                                   >
                                                     <div
                                                       className="flex items-center justify-between cursor-pointer"
                                                       onClick={() => setAcikUtt(uttDetayAcik ? null : utt.birim_id)}
                                                     >
                                                       <div className="flex items-center gap-2">
-                                                        <User size={13} className="text-[#64748b]" />
-                                                        <strong className="text-[#20324c]">{utt.birim_adi}</strong>
+                                                        <User size={13} className="text-[var(--tema-yerel-rapor-yardimci-metin-27)]" />
+                                                        <strong className="text-[var(--tema-yerel-rapor-ana-metin-06)]">{utt.birim_adi}</strong>
                                                       </div>
                                                       <div className="flex items-center gap-3 text-[11px] font-bold">
-                                                        <span className="text-[#64748b]">{utt.tamamlanan_izleme} izleme</span>
-                                                        <span className="text-[#208a66]">+{formatPuan(utt.kazanilan_toplam)}</span>
-                                                        <span className="text-[#d45c4b]">−{formatPuan(utt.kaybedilen_toplam)}</span>
-                                                        <strong className="text-[#217bc3]">{formatPuan(utt.net_puan)} p</strong>
+                                                        <span className="text-[var(--tema-yerel-rapor-yardimci-metin-27)]">{utt.tamamlanan_izleme} izleme</span>
+                                                        <span className="text-[var(--tema-yerel-rapor-islevsel-metin-01)]">+{formatPuan(utt.kazanilan_toplam)}</span>
+                                                        <span className="text-[var(--tema-yerel-rapor-islevsel-metin-02)]">−{formatPuan(utt.kaybedilen_toplam)}</span>
+                                                        <strong className="text-[var(--tema-yerel-rapor-eylem-metin-02)]">{formatPuan(utt.net_puan)} p</strong>
                                                         <ChevronDown
                                                           size={13}
-                                                          className={`text-[#8190a3] transition ${uttDetayAcik ? 'rotate-180 text-[#237ac8]' : ''}`}
+                                                          className={`text-[var(--tema-yerel-rapor-yardimci-metin-08)] transition ${uttDetayAcik ? 'rotate-180 text-[var(--tema-yerel-rapor-eylem-metin-06)]' : ''}`}
                                                         />
                                                       </div>
                                                     </div>
 
                                                     {/* Tekil UTT Davranış Detayı */}
                                                     {uttDetayAcik && (
-                                                      <div className="mt-2 grid grid-cols-2 gap-2 border-t border-[#edf2f7] pt-2 text-[10px]">
-                                                        <div className="rounded bg-[#f0fdf4] p-2">
-                                                          <div className="font-extrabold text-[#16865f] mb-1">Pozitif Davranışlar</div>
+                                                      <div className="mt-2 grid grid-cols-2 gap-2 border-t border-[var(--tema-yerel-rapor-cizgi-27)] pt-2 text-[10px]">
+                                                        <div className="rounded bg-[var(--tema-yerel-rapor-islevsel-zemin-20)] p-2">
+                                                          <div className="font-extrabold text-[var(--tema-yerel-rapor-islevsel-metin-06)] mb-1">Pozitif Davranışlar</div>
                                                           <div className="flex justify-between"><span>İzleme:</span><strong>+{utt.izleme_puani}</strong></div>
                                                           <div className="flex justify-between"><span>Doğru Cevap:</span><strong>+{utt.cevaplama_puani}</strong></div>
                                                           <div className="flex justify-between"><span>Öneri:</span><strong>+{utt.oneri_puani}</strong></div>
                                                           <div className="flex justify-between"><span>Extra:</span><strong>+{utt.extra_puan}</strong></div>
                                                         </div>
-                                                        <div className="rounded bg-[#fef2f2] p-2">
-                                                          <div className="font-extrabold text-[#bc2d0d] mb-1">Davranış Kayıpları</div>
+                                                        <div className="rounded bg-[var(--tema-yerel-rapor-islevsel-zemin-21)] p-2">
+                                                          <div className="font-extrabold text-[var(--tema-yerel-rapor-vurgu-metin-01)] mb-1">Davranış Kayıpları</div>
                                                           <div className="flex justify-between"><span>İleri Sarma:</span><strong>−{utt.ileri_sarma_kaybi}</strong></div>
                                                           <div className="flex justify-between"><span>Yanlış Cevap:</span><strong>−{utt.yanlis_cevap_kaybi}</strong></div>
                                                           <div className="flex justify-between"><span>Öneri Kaybı:</span><strong>−{utt.oneri_kaybi}</strong></div>

@@ -34,12 +34,12 @@ export default function BmPerformansGorunumu({
     <section className={`${styles.panel} ${styles.section}`}>
       <div className={styles.sectionHeader}>
         <div>
-          <div className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#71859d]">Saha nabzı</div>
+          <div className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[var(--tema-yerel-rapor-yardimci-metin-14)]">Saha nabzı</div>
           <div className="inline-flex items-center">
-            <h2 className="text-base font-extrabold text-[#20324c]">BM performans görünümü</h2>
+            <h2 className="text-base font-extrabold text-[var(--tema-yerel-rapor-ana-metin-06)]">BM performans görünümü</h2>
             <SayfaRehberi anahtar="bm-performans-gorunumu" className="ml-1.5 -translate-y-1.5" />
           </div>
-          <p className="mt-0.5 text-[11px] font-medium text-[#8190a3]">{aciklama}</p>
+          <p className="mt-0.5 text-[11px] font-medium text-[var(--tema-yerel-rapor-yardimci-metin-08)]">{aciklama}</p>
         </div>
         <div className={styles.sectionIcon}><Users className="h-4 w-4" /></div>
       </div>

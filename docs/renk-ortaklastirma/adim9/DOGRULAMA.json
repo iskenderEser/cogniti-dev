@@ -1,0 +1,1450 @@
+{
+  "tarih": "2026-10-17",
+  "durum": "KOD_VE_OTOMATIK_DOGRULAMA_HAZIR_GERCEK_ROL_GORSEL_KONTROLLERI_ACIK",
+  "kaynak_dosya_sayisi": 207,
+  "tsx": 187,
+  "ts": 6,
+  "css_module": 14,
+  "css": {
+    "sourceCount": 193,
+    "sourceNonColorDiff": 0,
+    "inlineCount": 4404,
+    "inlineDiff": [],
+    "moduleCount": 14,
+    "modules": [
+      {
+        "file": "app/(panel)/eclub/ligi/eclub-league.module.css",
+        "declarations": 328,
+        "colors": 70
+      },
+      {
+        "file": "app/(panel)/eclub/listem/_components/EczaneBlogu.module.css",
+        "declarations": 68,
+        "colors": 3
+      },
+      {
+        "file": "app/(panel)/eczanem/_components/MutabakatIslemTablosu.module.css",
+        "declarations": 116,
+        "colors": 2
+      },
+      {
+        "file": "app/(panel)/raporlar/bm/bm-report.module.css",
+        "declarations": 429,
+        "colors": 88
+      },
+      {
+        "file": "app/(panel)/raporlar/uretici/uretici-report.module.css",
+        "declarations": 185,
+        "colors": 48
+      },
+      {
+        "file": "app/(panel)/raporlar/utt/utt-report.module.css",
+        "declarations": 264,
+        "colors": 38
+      },
+      {
+        "file": "app/(panel)/raporlar/yonetici/yonetici-report.module.css",
+        "declarations": 634,
+        "colors": 142
+      },
+      {
+        "file": "app/admin/eclub/_components/eclub-banner-yonetimi.module.css",
+        "declarations": 73,
+        "colors": 15
+      },
+      {
+        "file": "components/eclub/eclub-bilgi-paneli.module.css",
+        "declarations": 75,
+        "colors": 13
+      },
+      {
+        "file": "components/eclub/eclub-kisi-banner.module.css",
+        "declarations": 47,
+        "colors": 8
+      },
+      {
+        "file": "components/eclub/eclub-performans.module.css",
+        "declarations": 211,
+        "colors": 34
+      },
+      {
+        "file": "components/hbligi/field/field.module.css",
+        "declarations": 357,
+        "colors": 80
+      },
+      {
+        "file": "components/hbligi/league/league.module.css",
+        "declarations": 213,
+        "colors": 22
+      },
+      {
+        "file": "components/panel/bilgi/bilgi.module.css",
+        "declarations": 403,
+        "colors": 3
+      }
+    ],
+    "priorDeclarations": 1097,
+    "preserved": 1097,
+    "newDeclarations": 3396,
+    "variableCount": 2089,
+    "functionalFixed": 782,
+    "utilityCompared": 5093,
+    "utilityUses": 5093,
+    "uniqueUtilities": 1570,
+    "missing": [],
+    "diff": [],
+    "warnings": [],
+    "serialization": {
+      "ok": false,
+      "reason": "Missed semicolon",
+      "hashes": [
+        "c47b273f42f3799b10979608021ff44848926d3e476eea026063c914c3f5ade3"
+      ]
+    }
+  },
+  "css_module_bildirim_toplami": 3403,
+  "temaya_uyarlanan_degiskene_sayisi": 1307,
+  "test": {
+    "toplam": 160,
+    "basarili": 158,
+    "basarisiz": 2,
+    "yeni": {
+      "toplam": 8,
+      "basarili": 8,
+      "basarisiz": 0
+    },
+    "once": {
+      "toplam": 149,
+      "basarili": 147,
+      "basarisiz": 2
+    },
+    "ayni_mevcut_basarisizliklar": [
+      "Kapsam 11 & 12: Video seçimi, oynatıcı, arama, filtre ve Daha Fazla Göster korunur",
+      "Yayın Raporları sayfası başlık, alt açıklama ve (varyantları) modal bağlantısını içerir"
+    ],
+    "dosyalar": [
+      "tests/temaAltyapisi.hedef.test.ts",
+      "tests/grafikHesaplananTema.hedef.test.ts",
+      "tests/tanburTumRoller.smoke.test.ts",
+      "tests/hedefRoller.smoke.test.ts",
+      "tests/icMusteriTelefonGirisi.smoke.test.ts",
+      "tests/profilFotoDogrula.smoke.test.ts",
+      "tests/hbligiKapsam.smoke.test.ts",
+      "tests/tclubUreticiRapor.smoke.test.ts",
+      "tests/ccYetkilendirmeGuvenligi.smoke.test.ts",
+      "tests/eclubPerformans.hedef.test.ts",
+      "tests/eclubPerformansTasarim.hedef.test.ts",
+      "tests/eclubPerformansArayuz.hedef.test.ts",
+      "tests/eclubPerformansGrafik.hedef.test.ts",
+      "tests/eclubHoykDurumGorunumu.hedef.test.ts",
+      "tests/eclubStoreAktifUyelikSiparis.smoke.test.ts",
+      "tests/eclubAdminCekOperasyonu.smoke.test.ts",
+      "tests/eclubCekTeslimatOutbox.hedef.test.ts",
+      "tests/adminEczanemUyeleri.hedef.test.ts",
+      "tests/yonetimYenileme.smoke.test.ts",
+      "tests/uretimDurumFiltresi.smoke.test.ts",
+      "tests/yayinYonetimiDurumNavigasyon.smoke.test.ts",
+      "tests/uretimVaryantlariModal.smoke.test.ts",
+      "tests/uretimGorevArayuzu.smoke.test.ts",
+      "tests/bmDavranisRaporu.smoke.test.ts",
+      "tests/tmDavranisRaporu.smoke.test.ts",
+      "tests/uttDavranisRaporu.smoke.test.ts",
+      "tests/yoneticiDavranisRaporu.smoke.test.ts",
+      "tests/eclubHediyeTakipGiris.hedef.test.ts",
+      "tests/eclubLigRaporPuanAyrimi.hedef.test.ts",
+      "tests/eczanemEczaneYonetim.smoke.test.ts",
+      "tests/eczanemUttYonetim.smoke.test.ts",
+      "tests/hbstoreFirmaUrun.smoke.test.ts",
+      "tests/eclubFizikselStoreKaldirma.hedef.test.ts",
+      "tests/panelTemaRenkleri.hedef.test.ts",
+      "tests/yerelSayfaTema.hedef.test.ts"
+    ]
+  },
+  "typecheck": {
+    "komut": "npm run typecheck:build",
+    "sonuc": "BASARILI",
+    "uretilen_renkler_guncel": true
+  },
+  "lint": {
+    "before": {
+      "files": 189,
+      "errors": 19,
+      "warnings": 30
+    },
+    "after": {
+      "files": 195,
+      "errors": 19,
+      "warnings": 30
+    },
+    "added": [],
+    "removed": []
+  },
+  "rol_kapsami": "ROL_KAPSAMI.json",
+  "eslemeler": "RENK_ESLEMELERI.json",
+  "korunanlar": {
+    "bilesen_ortaklastirma_yapilmadi": true,
+    "renk_disi_kaynak_farki": 0,
+    "yerlesim_olcu_font_davranis_veri_akisi_korundu": true,
+    "onceki_1097_tema_bildirimi_korundu": true,
+    "video_tus_asenkron_guid_degismedi": true,
+    "periyotlar_ve_bm_tm_haftalik_baslangic_degismedi": true
+  },
+  "aciklar": [
+    "31 rolün gerçek oturum ve iki tema görsel kontrolü tamamlanmadı.",
+    "Chrome mevcut /videolarim/urun ekranının mavi görüntüsü okundu; rol teyidi, gerçek menü etkileşimi ve yeşil görsel doğrulaması tamamlanmadı.",
+    "Canlı Çek Talebi toplamı ile performans verisi yeni gerçek kayıtlarla karşılaştırılmadı; sahte veriyle 1–8 hafta testleri geçti.",
+    "Genel CSS yeniden ayrıştırmasında önceki katalog kaynaklı Missed semicolon aynı SHA-256 ile sürer.",
+    "İki eski kaynak metni testi ve 19 lint hatası/30 uyarı değişiklik öncesiyle aynı."
+  ],
+  "yapilmayanlar": [
+    "Canlı dağıtım veya tam production build",
+    "Veritabanı/SQL veya test verisi temizliği",
+    "Gerçek e-posta/push teslimatı",
+    "Gerçek medya yükleme/oynatma",
+    "10. adım"
+  ],
+  "dosyalar": [
+    {
+      "file": "app/(panel)/ana-sayfa/page.tsx",
+      "once_sha256": "8ab4c76e00c6e6bd0efe3230b2ba7c20068e69520ce94ec4774ce4d6afb6a76a",
+      "sonra_sha256": "1e37134694181f2e85d7417006f849b72d96959e6d0fb092baadf94069b10d32",
+      "renk_esleme_sayisi": 2
+    },
+    {
+      "file": "app/(panel)/cc-ligi/page.tsx",
+      "once_sha256": "6a972f02bc118323af21c0738c80ef4fab867335fe9f153ae372490be552e0b7",
+      "sonra_sha256": "2fa1fa19dcef0f20721a1420c40cbc724ea43ab074d708c62a67c79ba7fafe5d",
+      "renk_esleme_sayisi": 15
+    },
+    {
+      "file": "app/(panel)/challenge-club/izle/[yayin_id]/page.tsx",
+      "once_sha256": "69648baf74be7452ff501d70094c99cb435c3f833a32348b0caacf7e2a69acc0",
+      "sonra_sha256": "e5935f4567f365b26b7e76820bfa352855efb1f9942fb06e618ec7c285899864",
+      "renk_esleme_sayisi": 4
+    },
+    {
+      "file": "app/(panel)/challenge-club/page.tsx",
+      "once_sha256": "04aaf4bc321ad53a175a1072de14fcf8e94c86073367ef12986e532e018eadba",
+      "sonra_sha256": "c577dc15b50c6b69ee78408d07f9f72eff1a68b7038bfac584e8e394186bd03e",
+      "renk_esleme_sayisi": 26
+    },
+    {
+      "file": "app/(panel)/eclub/ana-sayfa/page.tsx",
+      "once_sha256": "635178872c7189737ce18318c5ffc91725d6ad2cd7d47c10dc3398be105ed590",
+      "sonra_sha256": "38f1d938bef65f8f2452034391baaa2a4e608acc52b8ac9c1a2917edf6d13baa",
+      "renk_esleme_sayisi": 8
+    },
+    {
+      "file": "app/(panel)/eclub/cek-taleplerim/page.tsx",
+      "once_sha256": "18dba0114670972fa934f09956cd63a41853685e91f756b6a8e9b59a37d41d02",
+      "sonra_sha256": "14cad0d28cd7745a7a42e784f55ea1a81a8c96f6aaafe2b2efaf3ec588944c63",
+      "renk_esleme_sayisi": 7
+    },
+    {
+      "file": "app/(panel)/eclub/eczanelerim/_components/BmEclubTakimim.tsx",
+      "once_sha256": "ea5408c9369937de483451a98712a2b2b97b42ba41bb36a920c8056b207f6fca",
+      "sonra_sha256": "b9df151ddbb928cd47a5e99a461656b78e7d790560da8741422634c9c42ddef5",
+      "renk_esleme_sayisi": 23
+    },
+    {
+      "file": "app/(panel)/eclub/eczanelerim/page.tsx",
+      "once_sha256": "d7b83c444d3ffabdfd66421c40297fe59afa1de215eec82fa4980aa5f8d64052",
+      "sonra_sha256": "180894f59ead63b2cdefb78574d6357ba7f96bb11ad38ac88c295d028bdc383e",
+      "renk_esleme_sayisi": 72
+    },
+    {
+      "file": "app/(panel)/eclub/firmalar/page.tsx",
+      "once_sha256": "7fb1cce33786a8295b38245b3a28b818a388be81b7dcabee537bddab8c6a3174",
+      "sonra_sha256": "f0886c15458eadd59bac8a02ca54aeec0fee638eb23f391d202a2fafa0e9417f",
+      "renk_esleme_sayisi": 16
+    },
+    {
+      "file": "app/(panel)/eclub/hediye-takip/_components/BmHediyeTakipIstemcisi.tsx",
+      "once_sha256": "cbe3da070c0bd723c3ae977e3661f4cc283001f8372428f80cea079a227510ca",
+      "sonra_sha256": "b860e1e7650a2bcdfbeb9d737414cf9967b11316fa65f947ad68c25df74afa9e",
+      "renk_esleme_sayisi": 5
+    },
+    {
+      "file": "app/(panel)/eclub/hediye-takip/_components/CekTakipFiltreleri.tsx",
+      "once_sha256": "7d64a73c7460085bd091e3ba0da5c05c7112980c0ff67dfff62eb7b25f023487",
+      "sonra_sha256": "63003cfcc840f499f057422fed81b8d2f969bef84c1544b3cfef89612889c8df",
+      "renk_esleme_sayisi": 9
+    },
+    {
+      "file": "app/(panel)/eclub/hediye-takip/_components/CekTakipKarti.tsx",
+      "once_sha256": "59ea83afe06b53ebf17c857c18ae585b77cf003d5ae54e651865182bba22bf32",
+      "sonra_sha256": "fb4c60a0e09f2c0973cf059a926442c7590fe063743b53c89efe0e4dd21aa528",
+      "renk_esleme_sayisi": 30
+    },
+    {
+      "file": "app/(panel)/eclub/hediye-takip/_components/CekTakipListesi.tsx",
+      "once_sha256": "fc049b59b25681bd2b9c9dc019ad73c73b6eed930734d1428d20684b360a6af0",
+      "sonra_sha256": "36f5acc2734dd2441d60d781acc21d22414d0f20461aeb116fb55d164cf971d8",
+      "renk_esleme_sayisi": 25
+    },
+    {
+      "file": "app/(panel)/eclub/hediye-takip/_components/HediyeTakipIstemcisi.tsx",
+      "once_sha256": "3a50b060472a7c28cb7e4f0bdd2bad82e52dc40d2669dd86410c441249cd9fd7",
+      "sonra_sha256": "9af4d6dac0cdf28fbdc7920e7f59493f38a3a15ef28ace4454b1fd67afae376a",
+      "renk_esleme_sayisi": 5
+    },
+    {
+      "file": "app/(panel)/eclub/hediye-takip/_components/SiparisTakipFiltreleri.tsx",
+      "once_sha256": "3dc78d36f7710bc0af7ada2c99ed47a660a22ee0b10867c04a023d1771d6aaa3",
+      "sonra_sha256": "d2514747cc8b6e476ee108f20021307f285469ff109cc23a88d8f938797ab2a4",
+      "renk_esleme_sayisi": 3
+    },
+    {
+      "file": "app/(panel)/eclub/hediye-takip/_components/SiparisTakipListesi.tsx",
+      "once_sha256": "8db6be713497f1c070d5d5667f2d010f252ad275a2dd69bef14b86a2e1973ee4",
+      "sonra_sha256": "4d8c3e0f67e48271d987f70e1ceb2c9166d1632d81c5b326ad6e026790d83b37",
+      "renk_esleme_sayisi": 52
+    },
+    {
+      "file": "app/(panel)/eclub/hediye-takip/_components/TakipStatKartlari.tsx",
+      "once_sha256": "af39b59afac1c972a525f9c065cccdd5b0412655c87af798a645a1b502cb67ee",
+      "sonra_sha256": "5bd08e2e4b36d5500f39638d6c0d839b481b8df56ddfb56dca26262b3600f1ba",
+      "renk_esleme_sayisi": 20
+    },
+    {
+      "file": "app/(panel)/eclub/ligi/eclub-league.module.css",
+      "once_sha256": "c713ae70fcd8b362ba2453ba9a83fad2640dc519a30e1ec5a9b829d7efc44399",
+      "sonra_sha256": "99388e23122b8f8e9fc5e6e07b1d161b10b335f7346a0db75ff1cb7c36533eee",
+      "renk_esleme_sayisi": 70
+    },
+    {
+      "file": "app/(panel)/eclub/ligi/page.tsx",
+      "once_sha256": "bcf980f3609f0918a1f0793d59fb955612237a0382264bf90421243612ecf386",
+      "sonra_sha256": "b44a9bb08230d112b7a5c6b799f91db58a477f1895044595869fc5728268d468",
+      "renk_esleme_sayisi": 18
+    },
+    {
+      "file": "app/(panel)/eclub/listem/_components/EczaneBlogu.module.css",
+      "once_sha256": "8b57833f12e63ac557c787b43aa6a3228eb66bd012ad0ed66f9291994fd48e25",
+      "sonra_sha256": "e6afd21cbcc71a9f0e48e0df5cd5573a996b585757c775a16e0e7a8412d9c9d8",
+      "renk_esleme_sayisi": 3
+    },
+    {
+      "file": "app/(panel)/eclub/listem/_components/EczaneBlogu.tsx",
+      "once_sha256": "2063844b2d890053a3d7cc96415f5483b577deb0c9960cc168ca771fa90aae4b",
+      "sonra_sha256": "fa2e5060b93838e960c45b55326887fbf5bfa3865834dd7a9f90d5645cb856b0",
+      "renk_esleme_sayisi": 20
+    },
+    {
+      "file": "app/(panel)/eclub/panel/_components/EclubFirmaVideoKatalogu.tsx",
+      "once_sha256": "bc15196d36909c958980b3ac38b80c11e15efa3caf4407bae6cabd482e63bcdd",
+      "sonra_sha256": "0eaeeb1a5a899892b32b3d621b59c49c073e4794748e11e16b25c19b8b2c6a30",
+      "renk_esleme_sayisi": 6
+    },
+    {
+      "file": "app/(panel)/eclub/store/page.tsx",
+      "once_sha256": "7173ec0dc2921c6162602ae8cec5dd84b6ed2cf54c4876a6d924ed0250e3d3f4",
+      "sonra_sha256": "9495f0f32dc02e65a876b0416331c74b8ff028a07a89ecfc0490324d3355eeb7",
+      "renk_esleme_sayisi": 37
+    },
+    {
+      "file": "app/(panel)/eclub/yayinlar/_components/BmEclubYayinlari.tsx",
+      "once_sha256": "5e35d0c648618a14b0ccffeb6427d3235e8d7d83fc59ff15f03277ef7ac496b3",
+      "sonra_sha256": "146b58ae0619350e7c689f937f926ab69b389a40638e0e147a03ee86c36a3683",
+      "renk_esleme_sayisi": 14
+    },
+    {
+      "file": "app/(panel)/eclub/yayinlar/_components/EclubGonderimPaneli.tsx",
+      "once_sha256": "3bb70b39267b5ddbadeec994c0768ee30c5b8fae9db6f2de9f9b6b867f2cb9c4",
+      "sonra_sha256": "0c686891cadf23df1cad84c9c554ad1725dc77ca637ea6e58d8fc7f62d044843",
+      "renk_esleme_sayisi": 65
+    },
+    {
+      "file": "app/(panel)/eclub/yayinlar/_components/EclubPlanlananlar.tsx",
+      "once_sha256": "65a2773ada5107c0882e6346fc2cbc51d49a040b5524e9630d346c0a9ace2e91",
+      "sonra_sha256": "022f0362c96b70c5b4912efd84ccfc33f31783a6e37302fdd5503b4be2bd3b6f",
+      "renk_esleme_sayisi": 14
+    },
+    {
+      "file": "app/(panel)/eclub/yayinlar/page.tsx",
+      "once_sha256": "563b4c55db4a3e78bc48c22e040cd01d533d4143bbcaaa3c5cb6b4a8819eb286",
+      "sonra_sha256": "f4a337c2916a95fadc6dfe749d5c47841fd95c1a035a74a7fb6e9aaf6dffa1f8",
+      "renk_esleme_sayisi": 16
+    },
+    {
+      "file": "app/(panel)/eczanem/_components/MutabakatExcelButonu.tsx",
+      "once_sha256": "bc30db7eec780cec2df4eedef57dec4389c50fa384108bca98bd57fb26248cdf",
+      "sonra_sha256": "74ae785f719dc913c118e1f6ca0e6ad499e3211498cf0e5d5f85e128bde888a1",
+      "renk_esleme_sayisi": 2
+    },
+    {
+      "file": "app/(panel)/eczanem/_components/MutabakatIslemTablosu.module.css",
+      "once_sha256": "afea25c535b9d418fc7bc3c8356be0785966a1e87a92d84f8ca925da433b34a9",
+      "sonra_sha256": "82d30c2a33e3d9c74c55938f93c0231a9f66967efd777d41248d0fc712d84b8b",
+      "renk_esleme_sayisi": 2
+    },
+    {
+      "file": "app/(panel)/eczanem/_components/MutabakatIslemTablosu.tsx",
+      "once_sha256": "271808778bc8b8a2c1a479c40091e6cfbb3cde9742ed4d6e3be95de65d1c4f97",
+      "sonra_sha256": "9e40e115cc26263799f5ef7c19813d2a4bb1eb06d2ca3fc36fd4268ba3fcc3de",
+      "renk_esleme_sayisi": 10
+    },
+    {
+      "file": "app/(panel)/eczanem/bm/mutabakat/_components/BmMutabakatTakipClient.tsx",
+      "once_sha256": "309d25887e405fd99c4489729aad948c2536ce1fb9cf706fcf0a8d28b781671a",
+      "sonra_sha256": "7be7e8f1acb17095b4601b38dba0505328931a63fe7707eaae6a648b89ee1269",
+      "renk_esleme_sayisi": 66
+    },
+    {
+      "file": "app/(panel)/eczanem/eczane/_components/EczanemEczaneArayuz.tsx",
+      "once_sha256": "c61438849b5efcc4be3339778b3567326f013d896ac8ab5f8cf79c73894a917e",
+      "sonra_sha256": "a97e0b7da8d70fdb47bef80c4cc55a4aeab43a1e49f5120847f5779f87e8c5a8",
+      "renk_esleme_sayisi": 22
+    },
+    {
+      "file": "app/(panel)/eczanem/eczane/_components/EczanemSiparisKuyrugu.tsx",
+      "once_sha256": "29609181a35506fa93dc4df0eb9f41d70187f8c7eb96affef548b350fadf4ee2",
+      "sonra_sha256": "6b13af30e6d5fc2abe3778922440d44bbdbf94f6f6b557af5b1f873f9c6fe9fa",
+      "renk_esleme_sayisi": 46
+    },
+    {
+      "file": "app/(panel)/eczanem/eczane/uye-yayinlari/_components/EczaneDanisanGonderimPaneli.tsx",
+      "once_sha256": "753a0aa5ca5af2af34c3faeb0256947cc92f19520076649602a7e28b18e0adc8",
+      "sonra_sha256": "94872e60c3fe49f4f699694f84b68c749434767c224e925e6f6a9e4004be2f1b",
+      "renk_esleme_sayisi": 54
+    },
+    {
+      "file": "app/(panel)/eczanem/eczane/uye-yayinlari/page.tsx",
+      "once_sha256": "c87fb88e808a57044a7ad7b2aca7a0c2f9ca907dd96a8e900247770899b88467",
+      "sonra_sha256": "2a11a05fd8e849afa65385801927d02f93b21937287a5b05e342b0ab8e620392",
+      "renk_esleme_sayisi": 28
+    },
+    {
+      "file": "app/(panel)/eczanem/eczane/uyeler/page.tsx",
+      "once_sha256": "3a488170552aba5accd0a8ef6f13ab9cfdd8bc804372810a863478107d4befe5",
+      "sonra_sha256": "085069ec06b6d494868c2ba1a20eb3c92f7bc2efaf0e6a87d50d82b9c743a67f",
+      "renk_esleme_sayisi": 64
+    },
+    {
+      "file": "app/(panel)/eczanem/utt/mutabakat/page.tsx",
+      "once_sha256": "3704415df270610e6d2b98c43e1dfb82a6701b1d0f5d20a968b9f01923d10c3b",
+      "sonra_sha256": "353430014c524c19ac54313c29f6d7ee9840785f074d47930e41f9ff4c2c4ad5",
+      "renk_esleme_sayisi": 37
+    },
+    {
+      "file": "app/(panel)/eczanem/yayinlar/_components/EczanemGonderimPaneli.tsx",
+      "once_sha256": "3530ef5ccd38139dca24414dae25b55ddf8a546f72da09a56d4859fd2b11e7fc",
+      "sonra_sha256": "d7da87d9f377b8bec3ec4a5f9cbce2db49bad0a7e4d22e524d41196355e159f9",
+      "renk_esleme_sayisi": 54
+    },
+    {
+      "file": "app/(panel)/eczanem/yayinlar/page.tsx",
+      "once_sha256": "d69c08e7949c8a246b8c54b94454ab75ed743b71d6d1d0736f9b091993c05604",
+      "sonra_sha256": "b8c1d7658739b1ea064196c0e8483494207493d7ca33bee5616f2cafc35b541d",
+      "renk_esleme_sayisi": 28
+    },
+    {
+      "file": "app/(panel)/kullanicilar/page.tsx",
+      "once_sha256": "b10467eb3246fcde96840fd92db44fbd1916a9db6afd790356ecb775e59a03d4",
+      "sonra_sha256": "6f0ac903bf7181f5dbd3fcb166ed473246316cb0302bd265061f8ee7e26e7a16",
+      "renk_esleme_sayisi": 55
+    },
+    {
+      "file": "app/(panel)/onaylanan-talepler/page.tsx",
+      "once_sha256": "6ebce129a1faa94a3be63776369761518a684e742b8f1446ffb4be2419726b0a",
+      "sonra_sha256": "c4b3e884b8b60e868a2cac44f15614666f4701540c91003f57ce6d97b9b849a7",
+      "renk_esleme_sayisi": 39
+    },
+    {
+      "file": "app/(panel)/oneriler/_components/BmOneriTakibi.tsx",
+      "once_sha256": "ae8b832241623452fa4e23f83ca724c3f2dc086a8d69120e1e4e6874ef4512ba",
+      "sonra_sha256": "14e17b0a402bc0026746204684f8c9732a0b93af6a1c2d30768f1648bf89efea",
+      "renk_esleme_sayisi": 21
+    },
+    {
+      "file": "app/(panel)/oneriler/_components/TmOneriTakibi.tsx",
+      "once_sha256": "b46aec402011e1c6cec0019bea5c9ed9aab26f25198c8e59b7db26ef43f5984c",
+      "sonra_sha256": "1d9a80f928fcbec6f4ff0f7066768f8f7cc83e0037f159860697b247464ac95f",
+      "renk_esleme_sayisi": 81
+    },
+    {
+      "file": "app/(panel)/oneriler/_components/UyeOnerilerGorunumu.tsx",
+      "once_sha256": "0a64fcd65320cc0af9dadcbde201be5f90d3dd45d44614afa63eb3d546aafa92",
+      "sonra_sha256": "ec736235a382d337dd410c08b5fd762e488afb5b4c6e720e2d8b473ab50b0b77",
+      "renk_esleme_sayisi": 13
+    },
+    {
+      "file": "app/(panel)/oneriler/page.tsx",
+      "once_sha256": "6b99fd52d69acfd65c221f05cfe13bba045e8c21b33077356007f1dbbbecba0c",
+      "sonra_sha256": "c04dca86c5c27260f279d9a29f5032c8f82cf84b6e7bcc92ad5ae6f663fd5fc5",
+      "renk_esleme_sayisi": 16
+    },
+    {
+      "file": "app/(panel)/oneriler/tamamlanan/page.tsx",
+      "once_sha256": "e2275597629671dee0d1ad2e8457ea741deeb1d42d0022888bf425da8fe72f7c",
+      "sonra_sha256": "3aaaa896376cb66b31a9a1515189c4fdf578681bb7eae2b78b9899a10e08b0a4",
+      "renk_esleme_sayisi": 5
+    },
+    {
+      "file": "app/(panel)/profil/page.tsx",
+      "once_sha256": "1780503b7f0a77a54e69df666ea4bff0c8753792038fc106bb74216c869508ef",
+      "sonra_sha256": "785a9fff26d16aa424564b8409f49ace599c357ef302adec4457ac2feaac7816",
+      "renk_esleme_sayisi": 60
+    },
+    {
+      "file": "app/(panel)/raporlar/bm/bm-report.module.css",
+      "once_sha256": "aff1d6d60e3f184071aa73f75e85e3b885515d1ead114c0db13fd957549b13e6",
+      "sonra_sha256": "39ee8cee33893e0b0761045e7f0de8e58517b2140948d2eeb36d54cf0ff43fe3",
+      "renk_esleme_sayisi": 88
+    },
+    {
+      "file": "app/(panel)/raporlar/page.tsx",
+      "once_sha256": "d571fe83f7aa9afd9b55fad5ff67b0fd5e1d08ac5e70427199c97ed857ae1e28",
+      "sonra_sha256": "616f051592c6885ab0e616a462c0a82ae2256d3f606b6499e34b39425af80975",
+      "renk_esleme_sayisi": 1
+    },
+    {
+      "file": "app/(panel)/raporlar/tclub-uretici/page.tsx",
+      "once_sha256": "440e06e350d393c4a505d1659ae8cd5f8ddcddc64c1a99f896d0db908cbc1ddc",
+      "sonra_sha256": "c63a4abaa06f35440a85518c918a1329420b57ffb3c22cc8acb862a25cb6500d",
+      "renk_esleme_sayisi": 78
+    },
+    {
+      "file": "app/(panel)/raporlar/uretici/uretici-report.module.css",
+      "once_sha256": "0489502acd2bdeba71f11be5813664788bf32ba24322643aa406fa9dfe84ba2d",
+      "sonra_sha256": "fd14442004b6c5a07a9a2fbeeadea2d63ab7a7d989e03ee18168365e94739cea",
+      "renk_esleme_sayisi": 48
+    },
+    {
+      "file": "app/(panel)/raporlar/utt/utt-report.module.css",
+      "once_sha256": "a40a38b3819230f59f4bd2e932be76fbd8c83953cb920257bc39cc7110e9f657",
+      "sonra_sha256": "af6709eb01b2b7f08c5a1e360c1856770e67408da6dca73e561ee5dd7f3e5265",
+      "renk_esleme_sayisi": 38
+    },
+    {
+      "file": "app/(panel)/raporlar/yayin-raporlari/page.tsx",
+      "once_sha256": "9f1f22bd39c70426a20aa18cdc77f4d319ff293c87b13d3f1029903ade58099c",
+      "sonra_sha256": "2c14da9e518a8ecc3439fdfeba39b2bb4d9c4923b4df4642f5521b3b114d6272",
+      "renk_esleme_sayisi": 92
+    },
+    {
+      "file": "app/(panel)/raporlar/yonetici/_components/TakimBolgeUttAkordeon.tsx",
+      "once_sha256": "ca7a2d4cea2dac21d954d2367490e602af882e170d2d2012a03088b5894a32f4",
+      "sonra_sha256": "ecae819fd21e4add7fec2961eef7db95cc8354a62f64af5e15197d749b24ecdf",
+      "renk_esleme_sayisi": 33
+    },
+    {
+      "file": "app/(panel)/raporlar/yonetici/yonetici-report.module.css",
+      "once_sha256": "87d6ced49dfdd69f45d93d954e86c21411faa0d10ed89f2b08d2591a0c9f40c0",
+      "sonra_sha256": "3550f6f34b4ab8b197e21664b11ef903f46ccb1c494395e4d536fe9e9614a5c8",
+      "renk_esleme_sayisi": 142
+    },
+    {
+      "file": "app/(panel)/store/[urun_id]/page.tsx",
+      "once_sha256": "b6addab72d26960094f6988919001e11f0bba41a61c5fc3d3c0f6942f952d766",
+      "sonra_sha256": "29c7cbc62cba4cc650787ddab25da74e37796bb939755ffb7b7e416d7f762a27",
+      "renk_esleme_sayisi": 65
+    },
+    {
+      "file": "app/(panel)/store/adreslerim/page.tsx",
+      "once_sha256": "d1e73225553c1c94be1e53ac19fe9c4f9119651c6d599823afd542cb434092dc",
+      "sonra_sha256": "a110a6e0ea311cc9a1a9140e6faf1ceacc2b0c76f6427518461ddb0b1f649901",
+      "renk_esleme_sayisi": 40
+    },
+    {
+      "file": "app/(panel)/store/page.tsx",
+      "once_sha256": "93521db51be91a05f63b8b68cc441fe6ddc15938d9d562ebdbec8f170abad992",
+      "sonra_sha256": "703d6f3dc9a6281f106fd41241ae2a09c76a81bd04bf86cbce15535255d964b5",
+      "renk_esleme_sayisi": 57
+    },
+    {
+      "file": "app/(panel)/store/siparisler/_components/SiparisFiltreleri.tsx",
+      "once_sha256": "7198669f18edfe243ac73b5fac8a50ea08636731d750edbd1fe99ce4d14f1a56",
+      "sonra_sha256": "73448ec8f7b914d3b6f83fb1c7975518aa87c6547da551a69f4174b46fd4bc58",
+      "renk_esleme_sayisi": 5
+    },
+    {
+      "file": "app/(panel)/store/siparisler/_components/SiparisTablosu.tsx",
+      "once_sha256": "416119e5b4e34debdf1fac69222d2559fb7d8cc0853bb0d811b36b4735c90cdc",
+      "sonra_sha256": "201b4bdc4fecde91b3894cac28044f605fcc516ec865c7fbcffba3296b381040",
+      "renk_esleme_sayisi": 44
+    },
+    {
+      "file": "app/(panel)/store/siparisler/page.tsx",
+      "once_sha256": "f3720ea0672111c7ac3d56b65e629653b286624437d77cbf7462245cf81a768c",
+      "sonra_sha256": "7f98d618470f3c6d0bc7858abf7c8cc79ff38294216b1c3435ef146b5000a1fa",
+      "renk_esleme_sayisi": 5
+    },
+    {
+      "file": "app/(panel)/store/siparislerim/page.tsx",
+      "once_sha256": "19c5980a8f4f250c95e669a04bb2bd343d102b2c2ae807af295f93c23fb8f8d7",
+      "sonra_sha256": "a61cdfd0772c64c0e64d20a0cec1db7705b9dd105ca5593961b0fa6da5a4b43e",
+      "renk_esleme_sayisi": 60
+    },
+    {
+      "file": "app/(panel)/t-club-ligi/page.tsx",
+      "once_sha256": "883c0e33fe8bbbc6653dd86860a9730a666b25deda685877c7a1171d1cc7b525",
+      "sonra_sha256": "db25b9071b1a27a030d495a9e85c94ac5309d4e518ea00e8bfc2b89f218ae18a",
+      "renk_esleme_sayisi": 12
+    },
+    {
+      "file": "app/(panel)/talepler/_components/AdimIcerigi.tsx",
+      "once_sha256": "22be9bf28e43477dbb87152c56ea913259b3161d39e8d7ea1c5291030e29f0b0",
+      "sonra_sha256": "13f7bfcce540a3b2f19dc194a579e6684347e19dd55bd6ae27d03b6c36b03f1f",
+      "renk_esleme_sayisi": 31
+    },
+    {
+      "file": "app/(panel)/talepler/_components/AksiyonSeridi.tsx",
+      "once_sha256": "b9621e48f9b9a15ae8b1945aba7c6f7f42b909f9bc455c69a182f2be0128257d",
+      "sonra_sha256": "184bef57ea046d20aaea772257957004fb00916ae335c50d506944165bb009c5",
+      "renk_esleme_sayisi": 11
+    },
+    {
+      "file": "app/(panel)/talepler/_components/EkDosyaYukleme.tsx",
+      "once_sha256": "cc0e68e75b74a790309fb59b8b11853d320c4a06f378ed381beaf8f18e27342b",
+      "sonra_sha256": "40dcf77d0fc0f7a4a97e83e052d29133abe0f5b4d179cfb1f07d4d3fa72ae9a0",
+      "renk_esleme_sayisi": 6
+    },
+    {
+      "file": "app/(panel)/talepler/_components/FlipPdfTalepAlanlari.tsx",
+      "once_sha256": "7437a82e71beb50ade12428b543385b9358f42d33dd8b18c15161929f6c809db",
+      "sonra_sha256": "a0a8b7f8801d4fe44f08b8b6ad5febf8fde2912eae5a6e6fe1f3e5bbab1e5291",
+      "renk_esleme_sayisi": 8
+    },
+    {
+      "file": "app/(panel)/talepler/_components/GorselTalepAlanlari.tsx",
+      "once_sha256": "ce574c89dced80772e2777ae6b3079787b0f32862c374329d6691f5b0b3e0710",
+      "sonra_sha256": "dc1e8eb27f42a3ba6a03b680af813f5fffbc0859101c79e4d6def8802952a4c4",
+      "renk_esleme_sayisi": 7
+    },
+    {
+      "file": "app/(panel)/talepler/_components/HazirSoruSetiBlogu.tsx",
+      "once_sha256": "86f4dc09c715c4d7d4f1d117653d7602267aee5f7e24f82f972135b4eaf8d1cf",
+      "sonra_sha256": "90ebd769624af91fdd392b7719bdc0f99f67e011e52b25584a95eb1decdf7f65",
+      "renk_esleme_sayisi": 4
+    },
+    {
+      "file": "app/(panel)/talepler/_components/HazirVideoYukleme.tsx",
+      "once_sha256": "97507ed8e003fe9a706f5ad32783c45f441785ade9ea211faee4a28baa76215e",
+      "sonra_sha256": "23a24f38918e00b8263c2c03b07e6fcc249e4b19dc2cbe2b3689a506ac5d6c34",
+      "renk_esleme_sayisi": 3
+    },
+    {
+      "file": "app/(panel)/talepler/_components/IptalAkordiyonu.tsx",
+      "once_sha256": "9ef2fd82cbefa2f83a6b3f27ca843ad63d60afbbe67f941a0676a6a23ef0575a",
+      "sonra_sha256": "15e790bdb82fcff9d6955826efd5c4414a2b2685f1933ec26354e0c611631002",
+      "renk_esleme_sayisi": 20
+    },
+    {
+      "file": "app/(panel)/talepler/_components/IsListesi.tsx",
+      "once_sha256": "b3b7392526dc9fa98620c3de657dd7706288e8c624a9e83e84002bc9c9a493f7",
+      "sonra_sha256": "c86d1a52de4dfc4679684274792f767e1b7e4e69324402c7a82ccaae3604a0c2",
+      "renk_esleme_sayisi": 27
+    },
+    {
+      "file": "app/(panel)/talepler/_components/PodcastTalepAlanlari.tsx",
+      "once_sha256": "1afe387ea68eacca7780506a51c0891554f4a3ffff5ef478653ea468997d2ac8",
+      "sonra_sha256": "676ddd4631f9daae6747c68625e94044ab9fc0971f568ccb9fcd50e95523049f",
+      "renk_esleme_sayisi": 24
+    },
+    {
+      "file": "app/(panel)/talepler/_components/PodcastTranskriptEditoru.tsx",
+      "once_sha256": "b3510177499c83edf030756b8d88825d87d970b52a0996a64fb5a392f68a2a2f",
+      "sonra_sha256": "8252c499f9801917d5b7e1e8a82e0cd9567684a44bb836a098563508548ddd9b",
+      "renk_esleme_sayisi": 85
+    },
+    {
+      "file": "app/(panel)/talepler/_components/SoruSetiAyarlari.tsx",
+      "once_sha256": "28ea8268297592f3e7ee40bb46dc6782acbbfad8018c389661f69ce1999560b7",
+      "sonra_sha256": "2189865acca3536ba161bf73da1708f917f1dc5b76586764efc60331a9d3d132",
+      "renk_esleme_sayisi": 3
+    },
+    {
+      "file": "app/(panel)/talepler/_components/TalepDetayi.tsx",
+      "once_sha256": "e9bd1eb40825c176a12ba7fd6b2d2b4eb119e0ddcf698eb6a88572d5ecc4961d",
+      "sonra_sha256": "fb007c05c4228f0d14c9326c40d8d902c5fb685c0390f10e16b9a863995a7720",
+      "renk_esleme_sayisi": 23
+    },
+    {
+      "file": "app/(panel)/talepler/_components/TalepOnayModal.tsx",
+      "once_sha256": "7392718c0277a0816f72d5130bd358a858934caecb3fd47b9919ef67b71f8c22",
+      "sonra_sha256": "a464f6d5e5826e6aaa01005c9d321875845fef25a24fcc98d09f4db0183e2019",
+      "renk_esleme_sayisi": 11
+    },
+    {
+      "file": "app/(panel)/talepler/_components/UreticiRolGorunum.tsx",
+      "once_sha256": "7711eb5bff6be6398987c91e6997f1068872605430f3b8908b5c618b7785f074",
+      "sonra_sha256": "02c38efdeef258a17f822e0daf999e61d8203d4809c9f2c70a8312274fd71c00",
+      "renk_esleme_sayisi": 13
+    },
+    {
+      "file": "app/(panel)/talepler/_components/UretimSeridi.tsx",
+      "once_sha256": "25ad71f6bc4e145e12a7bb29625e5664f31914e34cec657d601bb8786fa47b53",
+      "sonra_sha256": "2184392b2476279b329d03cb29feb33f7dfc132b4c5ef5e87ad59f8066c150cc",
+      "renk_esleme_sayisi": 39
+    },
+    {
+      "file": "app/(panel)/talepler/_components/UrunTeknikSecici.tsx",
+      "once_sha256": "6314cd757b91002ae12b93666f26c178d4a5d68376c618cc99f09ee454f52e0f",
+      "sonra_sha256": "b79c46eb1b5fc3caf17606528564e10646a3f36ddb8cb6aadb7937b5883f73be",
+      "renk_esleme_sayisi": 14
+    },
+    {
+      "file": "app/(panel)/talepler/_components/VideoYukleme.tsx",
+      "once_sha256": "d72c4cb554a3a1ad1878f4a0f8ec0fdf60d2247959d743e588819e18989e305f",
+      "sonra_sha256": "69ffd5a583efbc42b8c66d991da16fc4fccdab56e10f3228415da89adec6c022",
+      "renk_esleme_sayisi": 11
+    },
+    {
+      "file": "app/(panel)/talepler/_components/YeniTalepAkordiyonu.tsx",
+      "once_sha256": "d56d3c33e3b8135123d39285519df3ec0d34abb29a600c2206cc082cb33154b8",
+      "sonra_sha256": "0d32acc5183db4ed591cb888dcd52297167da8993626732edf77b70797d2557b",
+      "renk_esleme_sayisi": 6
+    },
+    {
+      "file": "app/(panel)/talepler/_components/YeniTalepFormV2.tsx",
+      "once_sha256": "74cc3828c01a29a7b5dc9e5d7e447d6d2cb779d1586d7129649c1cb28ca074b3",
+      "sonra_sha256": "60e32c03cdaaf5f3d955e908882b44b4368c2b3aa68f424873e3aa61df70ef3f",
+      "renk_esleme_sayisi": 30
+    },
+    {
+      "file": "app/(panel)/talepler/_types.ts",
+      "once_sha256": "c8aa02962a27c93463ce9ba862d8e3a761420d60bc0c6ac903d7310dbc8fa3c2",
+      "sonra_sha256": "8ac64cb2d249a0d31a3aa60f2075646d95d78bcd1c06da0bbc96941437d5a799",
+      "renk_esleme_sayisi": 33
+    },
+    {
+      "file": "app/(panel)/uretim/gorevler/[gorev_id]/page.tsx",
+      "once_sha256": "207cbaa5ed3e575f892b250d73682d3477f40a39dacb411afe21f8d3d012b7f9",
+      "sonra_sha256": "4dcc6f750cf2e1acc415cf40167ab00a6ef9c52b793700bd15612ecc3c724404",
+      "renk_esleme_sayisi": 79
+    },
+    {
+      "file": "app/(panel)/yayin-yonetimi/_components/BekleyenSatir.tsx",
+      "once_sha256": "32390fbb45cfe3526c8788c59fd90aa99da48073b4150a5f51458c30eb1c8b4e",
+      "sonra_sha256": "925251ec7e69aa516f4b5e2436a7884ff483d81996b68e5da8b05d50010a9a05",
+      "renk_esleme_sayisi": 70
+    },
+    {
+      "file": "app/(panel)/yayin-yonetimi/_components/Modallar.tsx",
+      "once_sha256": "84ebef3c37e8165e6322bd23e3adfa3f6e40a1e726da6855bd185afd5940bea2",
+      "sonra_sha256": "0fe46629c4a594550dd3e17c633b40048c0052ca840bf8e1522a1cf954f46d6b",
+      "renk_esleme_sayisi": 23
+    },
+    {
+      "file": "app/(panel)/yayin-yonetimi/_components/SoruListesi.tsx",
+      "once_sha256": "cd0d4b1b0dc214aab50e5681e37f0d5ed61b167c8a972935b72a0b9f87733ec0",
+      "sonra_sha256": "4bac6c124c4fb7bdf7cb3ab8de9f364467ca5e7811479e4dee7e4ddbefecf5f0",
+      "renk_esleme_sayisi": 21
+    },
+    {
+      "file": "app/(panel)/yayin-yonetimi/_components/Yardimcilar.tsx",
+      "once_sha256": "1eb59af4dad93a4579011fcd63446645a10c8f1b4b592a20426ab0ca96af4654",
+      "sonra_sha256": "f5636b578ecc951d7b094fed8ab77ed43c1feb6b721c346935d471be6e17dcfb",
+      "renk_esleme_sayisi": 6
+    },
+    {
+      "file": "app/(panel)/yayin-yonetimi/_components/YayinKumandaPaneli.tsx",
+      "once_sha256": "7863c4863625ef260450fb652702ed725bdcbaeaeed80cb056e9f11d80a45f5b",
+      "sonra_sha256": "b18cf4b1f2217786518cb6a09e0966d8d25806a7ff31774099d894c7ee65c050",
+      "renk_esleme_sayisi": 17
+    },
+    {
+      "file": "app/(panel)/yayin-yonetimi/_components/YayinSatir.tsx",
+      "once_sha256": "327c0d8c2d245e76506235b224de1e6c0b9adcb0a9aa7c61bbffb19ba2fd6a44",
+      "sonra_sha256": "043f73ae4a6266f84469ae8dbd4894cc2e5b03cc76bd694701e4df01d9f2b81b",
+      "renk_esleme_sayisi": 64
+    },
+    {
+      "file": "app/(panel)/yayin-yonetimi/page.tsx",
+      "once_sha256": "bd091740f5644196d66b38812c1908958cc9fb312e57b13c41e14aa784c310a5",
+      "sonra_sha256": "8f16c913f035440399945fa44facbfe34dd5d7432537969120ff6f3015a21219",
+      "renk_esleme_sayisi": 15
+    },
+    {
+      "file": "app/admin/_components/FirmaSidebar.tsx",
+      "once_sha256": "17560ed6ff0d9b1638579428382d03cd3f2880714531d0fcf0f4dca513ae7779",
+      "sonra_sha256": "036d3839640bddc81bd57408a31b5e9c30d811cc8bda0d0b789abe086bd47173",
+      "renk_esleme_sayisi": 32
+    },
+    {
+      "file": "app/admin/_components/FirmaVeriSilModal.tsx",
+      "once_sha256": "e60b4951898c69b9fb2af71b892742be5d56aafa4469ae991c8a48349f87df08",
+      "sonra_sha256": "804bc753536f69eb74e7a4ec43f84d22ea2e53cb6f45c58612ed3af3ee58d439",
+      "renk_esleme_sayisi": 17
+    },
+    {
+      "file": "app/admin/_components/KullaniciDuzenleModal.tsx",
+      "once_sha256": "910ac84f0526d3286c0bdc334016b7a355ed4f0a7705ce47477cad4c5473b924",
+      "sonra_sha256": "fcd21577199b30a7874a9d558c3793915ed3066942bb9f9d02bf3843ef28f2ab",
+      "renk_esleme_sayisi": 19
+    },
+    {
+      "file": "app/admin/_components/KullaniciListesi.tsx",
+      "once_sha256": "a377111c346b7a0810ad5163e85392a11628033917eebdaa28598cf2dbbd9817",
+      "sonra_sha256": "c8090b5db8ba63dc509136aa895f0f4f3cc0949a7ca696845b9dac826713ab27",
+      "renk_esleme_sayisi": 33
+    },
+    {
+      "file": "app/admin/_components/LogoKimlikYonetimi.tsx",
+      "once_sha256": "85416db5d69bc5d849fee6aa39b4cfd774a1cf729be243074fed6fe01abd6f82",
+      "sonra_sha256": "d002688f238fd9df98ab468f4031c63372cd2b5faad6e8356b44cc6d5e9cec27",
+      "renk_esleme_sayisi": 44
+    },
+    {
+      "file": "app/admin/_components/ModulDurumKarti.tsx",
+      "once_sha256": "561284c182d19f97592ab06cdeb551459a93113d563a59f98f5329cf92044982",
+      "sonra_sha256": "c70be29de8b527c997c876315842213a0b21f0092b0a5b5f1a35614b5fc59322",
+      "renk_esleme_sayisi": 11
+    },
+    {
+      "file": "app/admin/_components/ModulSekmeBari.tsx",
+      "once_sha256": "60fd48b7b1826dc65b3e55d651e1591303f3355dea3ffc5ee2fc0dfb02ab6e4e",
+      "sonra_sha256": "25b870c400fa62acfed4628b362b200a9d819efec8665dcdba0b3d8defbe5191",
+      "renk_esleme_sayisi": 2
+    },
+    {
+      "file": "app/admin/_components/SekmeBari.tsx",
+      "once_sha256": "f7121f9f706f19b94e7977d2a446df82a9521c5193b1996f4c087368a6e60d7a",
+      "sonra_sha256": "bc756658af4a0c4d7719763da0728ca22e3640b909b62c9682f06ca0671f1133",
+      "renk_esleme_sayisi": 2
+    },
+    {
+      "file": "app/admin/_components/SistemAyarlari.tsx",
+      "once_sha256": "7a203ace83655bc6ab14b915db70a3f9cb01b216d4ca3ea45f3d8992ba6d1928",
+      "sonra_sha256": "dd4c952e464e779d82e4160bc54cf8b484ce1079b1a4425cb2d29548dd5f0eb2",
+      "renk_esleme_sayisi": 35
+    },
+    {
+      "file": "app/admin/_components/TakimBolgeFormu.tsx",
+      "once_sha256": "7456e65271dd49a73be7bb02c7e4b01a68f1f838b78b333c008f911b0277ad00",
+      "sonra_sha256": "0cc9f17dea2960167c185a61bcb8cd5f2198a125e5a9e07def2981bfac796b2e",
+      "renk_esleme_sayisi": 7
+    },
+    {
+      "file": "app/admin/_components/TekilGirisFormu.tsx",
+      "once_sha256": "001b936dba98c79514e0f2dc80b54a3507ee5d7f06cd5f0e374ce8fa4cf86aa9",
+      "sonra_sha256": "030d334a8b258e57c9dda3c270fc427384ff51a43f70797d2e2d01a62097e301",
+      "renk_esleme_sayisi": 5
+    },
+    {
+      "file": "app/admin/_components/TopluGirisFormu.tsx",
+      "once_sha256": "c4fd105cb54780301d0dcfbfda65fef7ac4265dd034faa77283ca6e2521dec7a",
+      "sonra_sha256": "bccb0ec9d3203534ca3c9be16271d2d5daa0aef1d5e58d8d1556c1fa721be0bf",
+      "renk_esleme_sayisi": 37
+    },
+    {
+      "file": "app/admin/_components/TopluTekilSilModal.tsx",
+      "once_sha256": "b2891d46b6f9742f7caf73c075b8b0e9c89bde27c149c41d1f61541296260585",
+      "sonra_sha256": "09fb887299a7049427894be6c492fe5200567260e09388b20047b07cd3410adb",
+      "renk_esleme_sayisi": 23
+    },
+    {
+      "file": "app/admin/_components/UrunTeknikYonetimi.tsx",
+      "once_sha256": "3ef54946eed7cc144cae98016db953125f7b40babeb178f4aa1333b88255e3b1",
+      "sonra_sha256": "21ce3340ba8b6b3320d083e1fd074e25e1e6998457dd6b2d054a3a7c211032a8",
+      "renk_esleme_sayisi": 14
+    },
+    {
+      "file": "app/admin/_components/global/EclubStorePaneli.tsx",
+      "once_sha256": "3a3ef74eb4b07cfa51d9fa53663b99fc0bb6f865c9cdebba187a66a93c583f7a",
+      "sonra_sha256": "4b0e6c7a5f35fd10ced1ff56cdcb915ae0f16bca86b9e42a09ac2e330031ae08",
+      "renk_esleme_sayisi": 2
+    },
+    {
+      "file": "app/admin/_components/global/HbStorePaneli.tsx",
+      "once_sha256": "d603293ebcd19483a48fb4409fcf4b2f72654f5dd471a15ecd05f16184da5186",
+      "sonra_sha256": "70877561eb86f6a58d4bbb3fd21a47f5967b2f1a7e865d29ab2656fd7840cdfb",
+      "renk_esleme_sayisi": 2
+    },
+    {
+      "file": "app/admin/_components/global/UretimAtamaPaneli.tsx",
+      "once_sha256": "1d28aabcd2fbba10e153f46c244db2b813bdec06b985bb1561c9c037af34e06e",
+      "sonra_sha256": "69a4bc0e725b2cc8a8f9d9d4b055f7c3fb05b331b9e818986ce0ec80d181724e",
+      "renk_esleme_sayisi": 32
+    },
+    {
+      "file": "app/admin/_constants.ts",
+      "once_sha256": "7325cb556478bb5e6710024f85a16a42ccb1f66023ec70f8f6330788b59d4630",
+      "sonra_sha256": "da2467fe6aa64fc6ddeda64cbe6964968322dfcb4aa9d96ad276e2b0fe017157",
+      "renk_esleme_sayisi": 15
+    },
+    {
+      "file": "app/admin/eclub-cek-teslimat/_components/EclubStoreSiparislerSekmesi.tsx",
+      "once_sha256": "86986f65f0f9a8d810eb9857a578292a252c917f94e5fd433ad3aa664c137485",
+      "sonra_sha256": "b2ed0e156799535a4672b8ae462e31b40958145811fdcb0dc7e45a8c6e835f7f",
+      "renk_esleme_sayisi": 22
+    },
+    {
+      "file": "app/admin/eclub/_components/EclubYonetimPaneli.tsx",
+      "once_sha256": "086433ce068e5021a8748805331a07ec2219a1012529b400b76dfe0ec450ec03",
+      "sonra_sha256": "69c3ffb6db32826e53da86e0e7807311e46adf9f22c20e6830ef5c48029d5515",
+      "renk_esleme_sayisi": 82
+    },
+    {
+      "file": "app/admin/eclub/_components/eclub-banner-yonetimi.module.css",
+      "once_sha256": "27e7a62e9411e4a43107b6413441b38c2a6bf4c3b84bc5d0e0a6616df6fcf200",
+      "sonra_sha256": "d008bac2e7fd01c9f709121cfbc50f510c0ed4a281db3f374aea7ae0227dc05e",
+      "renk_esleme_sayisi": 15
+    },
+    {
+      "file": "app/admin/eczanem/_components/EczanemUyeYonetimi.tsx",
+      "once_sha256": "cbacd4e1339739269bc2b278279afb135bdf740b11d81e63998ae7ee31b50a91",
+      "sonra_sha256": "0d936740558f58fcc5807e956a4b5ce1d45c63f8237160fba1958a3400e2b6af",
+      "renk_esleme_sayisi": 26
+    },
+    {
+      "file": "app/admin/page.tsx",
+      "once_sha256": "cc3eb3fc7fc7502387cad1dce29ebf9e1890f0bc8fc73ca3d7af968ca0ffda77",
+      "sonra_sha256": "95eb46f8106b2d6c5eb6c2b5d23f4a71802724180e409ca91680f19166a9b2fe",
+      "renk_esleme_sayisi": 3
+    },
+    {
+      "file": "app/admin/store/_components/FirmaErisimModal.tsx",
+      "once_sha256": "de0ce413a7f282ee2499bb1e1db7e850710af64eaf15422d4698e0a2aef67949",
+      "sonra_sha256": "95d13331e99dc66c8ac950871ada686f2c1456e44d01a815e074b682caea1867",
+      "renk_esleme_sayisi": 18
+    },
+    {
+      "file": "app/admin/store/_components/KategoriModal.tsx",
+      "once_sha256": "25939d288a25a7d08dc0deddd55e41e5779ee6961bf09e2fd8d0d9ec040e4fcf",
+      "sonra_sha256": "a2138bd835e56f496b2577239320d67e91cf917ad9af64aa19e8dd2f2fbacdf8",
+      "renk_esleme_sayisi": 16
+    },
+    {
+      "file": "app/admin/store/_components/KategorilerSekmesi.tsx",
+      "once_sha256": "9863e3c3dd5f04a0c5925bf87af87f76ec3570e977684040ef0d59cd06e905a0",
+      "sonra_sha256": "9e04e0fb50c803ecdd9c67e0ca777ebfcea8c18c0a75574cf30b1c14cbc55070",
+      "renk_esleme_sayisi": 22
+    },
+    {
+      "file": "app/admin/store/_components/SiparisYonetimModal.tsx",
+      "once_sha256": "daee3aca0a03b5ca5e124ad46485c9bd5f9669990a54e04720702b99653e525b",
+      "sonra_sha256": "2493d0af66acebbfa193c16d7b017c3bf01ac9eac487e9b3d8b7c3fc045fa134",
+      "renk_esleme_sayisi": 18
+    },
+    {
+      "file": "app/admin/store/_components/SiparislerSekmesi.tsx",
+      "once_sha256": "2858bec7b5c40da24ceda326ed3fa58c43071a7ca4690c306c272ddc6ee84c9a",
+      "sonra_sha256": "da3d1a5700aada0eee5bbf140372dfefc091f3187c7465bc5580b9fe54545786",
+      "renk_esleme_sayisi": 31
+    },
+    {
+      "file": "app/admin/store/_components/UrunModal.tsx",
+      "once_sha256": "233c0841e8019e369eb98294182715099ee8296f836e5db2124f325e41f0d311",
+      "sonra_sha256": "90c2701b3700afed8a7fcd8717146cb0a451928b614f1c7c57f897b305d50c6e",
+      "renk_esleme_sayisi": 28
+    },
+    {
+      "file": "app/admin/store/_components/UrunlerSekmesi.tsx",
+      "once_sha256": "147bf10c29094cb819f6b173836c69a03900a9cd5c0be98c21b2bd56ddc69709",
+      "sonra_sha256": "0704c60e621be54ddcafc8b4e580b7d0057a6fa013961b8bb82695ff52ea2e9d",
+      "renk_esleme_sayisi": 26
+    },
+    {
+      "file": "app/davet-bekliyor/page.tsx",
+      "once_sha256": "0e277511fea549ea4eacb322e2721f548c2fdd52a80950bad67f908d803a7a4e",
+      "sonra_sha256": "24b987306c61e20aea2559c1b5ab2e6dc2fd678dddcdb2ac048cf5ebd5809868",
+      "renk_esleme_sayisi": 3
+    },
+    {
+      "file": "app/eczanem/_components/EclubGecisKarti.tsx",
+      "once_sha256": "a176524553a5fa7f4414b8f420ecfdb34b4bd72b3404ee4204ef728122cb8fe3",
+      "sonra_sha256": "e6b05ede8f162d2a56cfe8f12abd2c3d8a5a6fd4fec22a97543ec9bdb3cd33a1",
+      "renk_esleme_sayisi": 35
+    },
+    {
+      "file": "app/eczanem/_components/EczanemKapsamBreadcrumb.tsx",
+      "once_sha256": "74a332b9dd4abf7ce02418ef1a53ada70be1e91e92e4b06bfc4b937e7315cabc",
+      "sonra_sha256": "4de2aeb6bec8e42eae0973f6d162f86e02adefe5eb1a305a5826777cef27077f",
+      "renk_esleme_sayisi": 5
+    },
+    {
+      "file": "app/eczanem/_components/EczanemMusteriNavbar.tsx",
+      "once_sha256": "5e39697d30632d33b2ee118f62a1e2c6187418a34f7bbb04d7b397204663864c",
+      "sonra_sha256": "9f1daaf7ec84cb495f9d4e5a55dd9983a88a9226d61f8b43867e1e1c7b3ea380",
+      "renk_esleme_sayisi": 51
+    },
+    {
+      "file": "app/eczanem/_components/EczanemMusteriSidebar.tsx",
+      "once_sha256": "c6eabe9396a6cc91b2a1fa171d906a35ab565e98c542d4f6b8cf28bee0de2a99",
+      "sonra_sha256": "bfde7eab73f917bb41d384aa833f6ac5b80582222975393606f32106f48fd61a",
+      "renk_esleme_sayisi": 52
+    },
+    {
+      "file": "app/eczanem/_components/EczanemPuanlarim.tsx",
+      "once_sha256": "5bcddc1236c263f4d1371d740b676360fc035369844e2735e026b89978364625",
+      "sonra_sha256": "33e2083cd98bc1f1954347578c8879ccc2658302e4b0480c403e7dc2ecc6f843",
+      "renk_esleme_sayisi": 84
+    },
+    {
+      "file": "app/eczanem/_components/EczanemVideoRafi.tsx",
+      "once_sha256": "17c8811093783e6ab393ddf987c2169d9749e7d63a8237d99fa773d5aa0c2598",
+      "sonra_sha256": "1eb40a98854e076089576c7ff12f3ad910aef09de1abae6869c51ddad8ab9423",
+      "renk_esleme_sayisi": 9
+    },
+    {
+      "file": "app/eczanem/hapbilgi-nedir/page.tsx",
+      "once_sha256": "b5f662d2da4931ab1de8c8514079d37b3547cedec9e42784622ae30ca108ab47",
+      "sonra_sha256": "f1402a140e4fb31e8c8bd1e7ffd7a22af75551ebc00d32a984a737aca8517e9c",
+      "renk_esleme_sayisi": 3
+    },
+    {
+      "file": "app/eczanem/kapali/page.tsx",
+      "once_sha256": "d9b5717628dfb83d6a3ddf95b0850cc05f4d7f4e88abd839ac9d8195ec7cdfa5",
+      "sonra_sha256": "79ee27acab3bd510a77b1d544dbf91fba86f5d53aee5a06026b1442bb8a8e7f4",
+      "renk_esleme_sayisi": 13
+    },
+    {
+      "file": "app/eczanem/nasil-calisir/page.tsx",
+      "once_sha256": "811fe96052fadbc96d8a266365ddb72e7a96b2a6d56822d9931ee91b96b34125",
+      "sonra_sha256": "93570af0ceaec232fa8b065f2826731dda2fd366ee08c6f114784aaa068ac84c",
+      "renk_esleme_sayisi": 10
+    },
+    {
+      "file": "app/eczanem/page.tsx",
+      "once_sha256": "c90402c64f95df82cd56a8fad6a4037db6219ad1feb273688e9376d25646fda0",
+      "sonra_sha256": "2313003b321449cfc15920bc5a17760883e335ca26a4837118bb6ea0161b16fc",
+      "renk_esleme_sayisi": 24
+    },
+    {
+      "file": "app/eczanem/puanlarim/page.tsx",
+      "once_sha256": "51f248c451b69d1ed4c0d2b856c59b1bfa52a06f498d0319a77219bb4e0530e0",
+      "sonra_sha256": "16bc056d5f27579883237095d6af62291b3357909e5c815cdd3db02f08fe4083",
+      "renk_esleme_sayisi": 6
+    },
+    {
+      "file": "app/login/_components/GirisAltBilgileri.tsx",
+      "once_sha256": "f5ede0d35568cf6a8f3fd467d40009ffbb4d0bbaf1670b2815ff492c54545fd2",
+      "sonra_sha256": "ebe66af5d5a985c09cabe8518a3908594b7f1e18a9b400860953e022030e356a",
+      "renk_esleme_sayisi": 10
+    },
+    {
+      "file": "app/login/page.tsx",
+      "once_sha256": "b7f9c079681d9ca1da29ec93ee60c26f16d922308dc5ae09f5dde276689d4e05",
+      "sonra_sha256": "9031b8b602a98d37b659a5c9c2d6e0c7933d7c0365126db16cb0f392e306934b",
+      "renk_esleme_sayisi": 22
+    },
+    {
+      "file": "app/providers/PushAbonelik.tsx",
+      "once_sha256": "32e78dbf24a0cf6ea779632662073b910791de6faccbe3af58aea7db685b23f1",
+      "sonra_sha256": "11d394523bb3ba524529469fba3e432a054c44323737b973cf16b2c80be7d33d",
+      "renk_esleme_sayisi": 6
+    },
+    {
+      "file": "app/sifre-yenile/page.tsx",
+      "once_sha256": "7c135a566a654f0e43084e28f63b4a45292c4b9dd1454d260001d6efd4e7d296",
+      "sonra_sha256": "393c60f3b2c6007e92ab503954c63f605f9a6e2961ecd8b9355bde928c491f3e",
+      "renk_esleme_sayisi": 6
+    },
+    {
+      "file": "components/DosyaGoruntuleListesi.tsx",
+      "once_sha256": "0bd173931dd9204a5ecc7692e80e7951dedd1647018477b41964fbef8ffc7db4",
+      "sonra_sha256": "0b6406b7f347c0a0e8dc89087befadd34320a6bbd09c14a73f0a965149fee302",
+      "renk_esleme_sayisi": 19
+    },
+    {
+      "file": "components/DurumAnahtari.tsx",
+      "once_sha256": "056a9ff6207f188b9e19c3708d1f8f8e210c330a6c310c9c45cf6bf584292db6",
+      "sonra_sha256": "c3f0da49249b1e3d3baeef898ed7035f7c2c2e28b2020ff2aa7dc2200559b335",
+      "renk_esleme_sayisi": 3
+    },
+    {
+      "file": "components/SenaryoMetniGoster.tsx",
+      "once_sha256": "685169bf342904e5c647e47ef767b2528c5b49bf37bae767c8fb93bbf3a7ed29",
+      "sonra_sha256": "bf218f110a7552af8d7a0e74486f6b35e3970893ca74791fda651174a00df5f4",
+      "renk_esleme_sayisi": 5
+    },
+    {
+      "file": "components/SoruIceAktar.tsx",
+      "once_sha256": "8d0da2df1d8de5a0f900c07674837cce2643e8e665439cde71890c1009caa95f",
+      "sonra_sha256": "94988b6b2c95cd005a92f03a45d4d09a552a94d0bbb4a0c0a0c33a068e0d8aac",
+      "renk_esleme_sayisi": 6
+    },
+    {
+      "file": "components/SoruSetiFormu.tsx",
+      "once_sha256": "a1aec2925a0b940f7e33c95d3f75bbc9d32bc5ca2e267f19634842b2497eaa4a",
+      "sonra_sha256": "db49c560def222fd6cb0ddc347b663c0cdf1f00aa525e2e222ba8f07fa5473a6",
+      "renk_esleme_sayisi": 18
+    },
+    {
+      "file": "components/ana-sayfa/BmAnaSayfa.tsx",
+      "once_sha256": "41517c5ed79cba6b6370e023768e6abc04cdda895b100ec5a05d4f69d99afd78",
+      "sonra_sha256": "c90f83cc40633a1c38bd10d5e6d24fd58331e26ea3cdcd8b28e605794b6e4fa8",
+      "renk_esleme_sayisi": 24
+    },
+    {
+      "file": "components/ana-sayfa/IuAnaSayfa.tsx",
+      "once_sha256": "6770aae0949ce5d567a9d35018521d10e6ebb0eec064cad7cb76ecb90c2b136b",
+      "sonra_sha256": "07317f96b889bdd3e2827c692dc0b9f6cc41016c2be7b491c0725ae4c0ed7faa",
+      "renk_esleme_sayisi": 39
+    },
+    {
+      "file": "components/ana-sayfa/SahaVideoRaflari.tsx",
+      "once_sha256": "5d2563ee8aad3e83a2f756794ef1edf6c9000e5738f83b974c58fc994ad46afa",
+      "sonra_sha256": "cd5f8c7f971e93cd4193c31063e935a848203ead5f22c9163722e5190ced5779",
+      "renk_esleme_sayisi": 15
+    },
+    {
+      "file": "components/ana-sayfa/TmAnaSayfa.tsx",
+      "once_sha256": "c45eb4c0c31568171d2c016cb97f2001fb3ff3e85dca0f410d39a8fd0240b54f",
+      "sonra_sha256": "fff738a89502189b4c40085bb61a517c600f631419c2892aabc6952305ff71ad",
+      "renk_esleme_sayisi": 20
+    },
+    {
+      "file": "components/ana-sayfa/UreticiAnaSayfa.tsx",
+      "once_sha256": "3a2dccf6cb76b4c646695af1b69396fd1e91270a31887d7542e0cbe43e3d8d97",
+      "sonra_sha256": "0e70f8e3c97bf51e66b7f6d6003bc614ab4c26741fd38628209eb41aa016551d",
+      "renk_esleme_sayisi": 47
+    },
+    {
+      "file": "components/ana-sayfa/UttAnaSayfa.tsx",
+      "once_sha256": "37f2e3c1e1707e9e05fbc5605cafe7d066445841abd04f1187a308bf3538deb8",
+      "sonra_sha256": "6ae55d6fb2bd5056990c9a7a138c9ee5eb8c61a29314abee0bcce8b8499ed0ef",
+      "renk_esleme_sayisi": 48
+    },
+    {
+      "file": "components/ana-sayfa/VideoBolumu.tsx",
+      "once_sha256": "a469b54593797b9b6df64683a09aa42b69f9b655de61d3f6656696d7f221cc88",
+      "sonra_sha256": "525e08268ab4aaef08b6d3a97c366b57139295a47d77b540cd61d2e0d6c05fb1",
+      "renk_esleme_sayisi": 16
+    },
+    {
+      "file": "components/ana-sayfa/YoneticiAnaSayfa.tsx",
+      "once_sha256": "80b58e39cad9d8bf24ddcee310a300371ea889914900f4bb2ac3984d37b0dad3",
+      "sonra_sha256": "7d6348c5d7a3fbc60d55c1f81bd6654c1a98099af8db6f4658acf62f13d02415",
+      "renk_esleme_sayisi": 31
+    },
+    {
+      "file": "components/auth/DavetSifreKarti.tsx",
+      "once_sha256": "49607fcaef80b7b841e09d898a2ea5c63954fec861f0b9b2156108bbb996fac1",
+      "sonra_sha256": "c796e791867fa8ba449995ec5726b67be448fbee3b64ca4a478aabba722959fa",
+      "renk_esleme_sayisi": 2
+    },
+    {
+      "file": "components/auth/SifreBelirlemeFormu.tsx",
+      "once_sha256": "9fe1c6ecea6fcab3cccca92a29342221e06ce0d6bda68200db672e24c4257b22",
+      "sonra_sha256": "fcc9645960a1d795f4be91fffa9f4fa0bc11c53029f262ad0b58433f9d29a85b",
+      "renk_esleme_sayisi": 6
+    },
+    {
+      "file": "components/cc-ligi/CcChallengeListesi.tsx",
+      "once_sha256": "c2a78afdc3465d8e198d02a36c50ac9b5be56f0175dd8ed462fb7b4fb82c62c9",
+      "sonra_sha256": "7f15fa5ec03a53c9c2259fbd2efaf184c90379d8ff3b68569d4ff84fa3ff66dc",
+      "renk_esleme_sayisi": 25
+    },
+    {
+      "file": "components/cc-ligi/CcLigiBanner.tsx",
+      "once_sha256": "75f064f780e190b1fefdc94828196aa67c9a41302ae9d359d8e4ba0d5dcdaf38",
+      "sonra_sha256": "44c35ffb2e1f6f62b319f2f8727b56bb0d08414e9909b1c87749a8120a187bd2",
+      "renk_esleme_sayisi": 1
+    },
+    {
+      "file": "components/cc-ligi/CcLigiTablosu.tsx",
+      "once_sha256": "ded13c151d0fd28d805ce8fbe351720fc0ea0f08ed97085c8eb0cbe11698bf2a",
+      "sonra_sha256": "8cc838eba2989855153c02243e0966a5345958a65af32b29eedaa82258858f94",
+      "renk_esleme_sayisi": 30
+    },
+    {
+      "file": "components/challenge-club/ChallengeGonderPaneli.tsx",
+      "once_sha256": "10ea5790aa16839f00ca8326fcd561968eb9c8f94f150948c58f910894774b56",
+      "sonra_sha256": "f9a4825369f8e62456e0dfcf308ae50703ec3c4cb46b335034fb6d2a96cf34b8",
+      "renk_esleme_sayisi": 13
+    },
+    {
+      "file": "components/eclub/DepoAramaliSecim.tsx",
+      "once_sha256": "151f863564411284d0aeeeab847d90fdefd786933fe607397fec1b7795e7d087",
+      "sonra_sha256": "b9df0cdfb967a98819018e9138880bd52456153a5282dbbf29172366b8b8313b",
+      "renk_esleme_sayisi": 4
+    },
+    {
+      "file": "components/eclub/DepoTercihFormu.tsx",
+      "once_sha256": "672fb16294293cd3365ce2d5debeca22af1a7d3f3b6133bc623479e3cee3757c",
+      "sonra_sha256": "02e3ad8021495623a5acadaf782eff2b7231ce0c1ba45f1a71b85c74ed7af5ae",
+      "renk_esleme_sayisi": 13
+    },
+    {
+      "file": "components/eclub/EclubCekTakipVitrinKarti.tsx",
+      "once_sha256": "dfd53196ca175b5ec3f98b9c424acb6c2cf3be96aa91b5f26c3103c05643a531",
+      "sonra_sha256": "2374440879cf56c5f747742653ca87f3c815f10382c6be002676627c20ca116c",
+      "renk_esleme_sayisi": 16
+    },
+    {
+      "file": "components/eclub/EclubCekTalepVitrinKarti.tsx",
+      "once_sha256": "6302e09da48dd1af73ce8f241a78693f26fca4da78516cd7b0dc9e74227bab19",
+      "sonra_sha256": "cdc610bee6f84b0a95ad318971480ff2829b8e5f47ff2df5f19c8d088b8d1366",
+      "renk_esleme_sayisi": 60
+    },
+    {
+      "file": "components/eclub/EclubFirmaCalismaAlani.tsx",
+      "once_sha256": "9a19e0f85a14f2daad80c74cdf1821a6761c6f65a113d822eac9a60af6a913c0",
+      "sonra_sha256": "bb010aebab7ed86b541e9d1088fcacfd3db555e9b1f4acc4ff75898a5b1eecc7",
+      "renk_esleme_sayisi": 11
+    },
+    {
+      "file": "components/eclub/EclubHaftalikPuanBirikimi.tsx",
+      "once_sha256": "5ce9a149dbabe4370da30960cb2d0a58bff40dcf6b9e666446951bc3a339c8b3",
+      "sonra_sha256": "972d7ee022c35fdad756c794ff5acf78baae5ed3fe155c264d31f1aac6ebe8be",
+      "renk_esleme_sayisi": 2
+    },
+    {
+      "file": "components/eclub/EclubHediyeCekiBilgiPaneli.tsx",
+      "once_sha256": "0838ea5e572248e11f6d104e416f534f7b6d6a36de1326a2af576b1942ee66c5",
+      "sonra_sha256": "eaea9470add74593a8416306423cdd9032b2e3d925aad7920269bb5b152d873c",
+      "renk_esleme_sayisi": 9
+    },
+    {
+      "file": "components/eclub/EclubKisiSayfa.tsx",
+      "once_sha256": "f9d1f98838f8fc461073e5d97d117fe5e3a9c9c3c1e41f8171248042fcc0f77a",
+      "sonra_sha256": "d73a1f161d77421d9e66a3ca7362085b907d97e4d090bee40216ed2559022d07",
+      "renk_esleme_sayisi": 19
+    },
+    {
+      "file": "components/eclub/UttGonderimIncelemesi.tsx",
+      "once_sha256": "7d295dda4bb9f9c16391513f376e2e5fff43bb62df99f81e9ffd7197599163b2",
+      "sonra_sha256": "63dbbb718403a125a00b92c05720aec14c27c848ae58a84af3fd2d8b9edaea61",
+      "renk_esleme_sayisi": 5
+    },
+    {
+      "file": "components/eclub/eclub-bilgi-paneli.module.css",
+      "once_sha256": "477d284db48c5ca6232741f82f3580214d158833d0a1eff1437b50ba5f62c746",
+      "sonra_sha256": "e5bff38a89b5864e02358e918b10ee4bc4cb8ed7d0b7069eef52f198c97d8f43",
+      "renk_esleme_sayisi": 13
+    },
+    {
+      "file": "components/eclub/eclub-kisi-banner.module.css",
+      "once_sha256": "c20ed73102ac042fa91e97eff730a9cc6a6d73d44d86e3ef25a77ebd06539e89",
+      "sonra_sha256": "8f59bb29a717450658b736a16ddae690215333c329e3423fdf03dfd1423ce1da",
+      "renk_esleme_sayisi": 8
+    },
+    {
+      "file": "components/eclub/eclub-performans.module.css",
+      "once_sha256": "ee9dfa7922ad138669011b719b8b98ae72142972d0e1f4e2dc22264ed2383c00",
+      "sonra_sha256": "ac556fc218494ebc3a6246dfc6eeca2483ee1fe68fda81659b585609af4b6204",
+      "renk_esleme_sayisi": 34
+    },
+    {
+      "file": "components/hapbi/HapbiChatModal.tsx",
+      "once_sha256": "77616616fa2d1b77f19a9ff20150abad631fc42bf668fd2fdd141e019eba46c4",
+      "sonra_sha256": "722a085db4a22a54a3975843bbc3207642a4e5b50194bc28bf798043fefec113",
+      "renk_esleme_sayisi": 36
+    },
+    {
+      "file": "components/hbligi/field/field.module.css",
+      "once_sha256": "31d0ddccba79dc1beab59e74febaeace5c6ec1250ff85f96897f331f3fe66978",
+      "sonra_sha256": "cfe88c1eba15d7b77eacd2de9085d326ae40376f42037c5d33ac2d1c4676f747",
+      "renk_esleme_sayisi": 80
+    },
+    {
+      "file": "components/hbligi/league/BmLeaguePage.tsx",
+      "once_sha256": "5d1bc37f883c471dc2a40e3ca4ef35eb053de587a14f5542975cba77956c020f",
+      "sonra_sha256": "3bbafd5bc31e71694001ca3fc84701d56e99b3e567bd9a7ef534c8e31883c4f9",
+      "renk_esleme_sayisi": 1
+    },
+    {
+      "file": "components/hbligi/league/CompetitorComparison.tsx",
+      "once_sha256": "46fa5d1a12c5c612276ac7ba95b8f08f0a6cd3e51e2ef6f7688d84df35cc8513",
+      "sonra_sha256": "267568fe406bcf67abab58312b3a7a5816a07bf4c335a37a704a755a9c6d2ee5",
+      "renk_esleme_sayisi": 64
+    },
+    {
+      "file": "components/hbligi/league/LeadershipInsight.tsx",
+      "once_sha256": "007d63ac9bde99fe7fca4c28020fe8ede49c033a0d24055d5417e04d18c8bb87",
+      "sonra_sha256": "e878d861ee3d1b07fd81676cf3d59d12b9ab27eac3860b682ad76b6d168e0108",
+      "renk_esleme_sayisi": 3
+    },
+    {
+      "file": "components/hbligi/league/LeadershipPath.tsx",
+      "once_sha256": "c5305fc34826c152105985b38e26d34504198f30baab82421b9d63f65e296974",
+      "sonra_sha256": "05cc973980e5b1f80bd2fcd5c0c4c1725a740f87735e751c34005c3c110028c9",
+      "renk_esleme_sayisi": 9
+    },
+    {
+      "file": "components/hbligi/league/LeadershipProfile.tsx",
+      "once_sha256": "c519200baacd54d1abc4b68c70d0c429a60ed9d4fbb8ac6ca18d3969f81666b8",
+      "sonra_sha256": "3d7d7b428ec787e91d15084d57332664e72b9b34f61650dae437c6c9548f37a3",
+      "renk_esleme_sayisi": 4
+    },
+    {
+      "file": "components/hbligi/league/LeagueHeader.tsx",
+      "once_sha256": "4acd8375894804fa017b6d74a4ae0e8a27527666b9d7adad194816c528c9a2f0",
+      "sonra_sha256": "2a953045cd03568bfbd84f2be3ed67df678288d397bb0834ddb5ef33ccf2805c",
+      "renk_esleme_sayisi": 1
+    },
+    {
+      "file": "components/hbligi/league/LeaguePodium.tsx",
+      "once_sha256": "56e42fe759406c51a51ede7b22a079131df6e50fd2db88271a22c34a29e4450b",
+      "sonra_sha256": "1169015fd8ba7e95ce8998e6a53cb401c6e0bf8031e4351fc70e9df00a120ad0",
+      "renk_esleme_sayisi": 11
+    },
+    {
+      "file": "components/hbligi/league/ScoreComposition.tsx",
+      "once_sha256": "2725245912a01c27e038d6cc871b01b6894107e07cacde59060997a3d72f66d0",
+      "sonra_sha256": "0c37ccc4646d1ccea16bb54ac5b080fa60994dd18585979d4c0941f61a62794f",
+      "renk_esleme_sayisi": 24
+    },
+    {
+      "file": "components/hbligi/league/TmLeaguePage.tsx",
+      "once_sha256": "b64fec8f1a179af0edb06c15af04823a0043a726be27db371fec292a5b345731",
+      "sonra_sha256": "cde0203fb2ebc07bf7e3c32e87164c57ecbc941dc9b5f2279f17573678fefc3a",
+      "renk_esleme_sayisi": 1
+    },
+    {
+      "file": "components/hbligi/league/league.module.css",
+      "once_sha256": "9f373351130518e0c20bd6d72c7d360a2bbc2bcba8df0e5f577c02e6213c9144",
+      "sonra_sha256": "fb2810a6618b4dbb9424bfdc641844c9c4c9fd259a0ad34a5395fb1c4752283a",
+      "renk_esleme_sayisi": 22
+    },
+    {
+      "file": "components/hbligi/league/util.ts",
+      "once_sha256": "99bb7154bcbcf47c107d76bf7f8d56db53e6634c417f5f7726571008b974360a",
+      "sonra_sha256": "4b523aec005e52be27b210e71eefe3da5bf2659e6e02338360c983ab4022bb63",
+      "renk_esleme_sayisi": 4
+    },
+    {
+      "file": "components/hbligi/producer/ProducerLeaguePage.tsx",
+      "once_sha256": "9fd314834fcd4d7e2b28064352f24ab93f3337097d572401154aaa4d1d3642f2",
+      "sonra_sha256": "e57910599304af345421c8a710cbbc3920fc5a10c8ed21c703819a7847d7ff6c",
+      "renk_esleme_sayisi": 8
+    },
+    {
+      "file": "components/liste/DahaFazlaGoster.tsx",
+      "once_sha256": "2f7567ec3b9e2287e1a664ef4b09082925e17bc07c4f0195c598059f940c6036",
+      "sonra_sha256": "b0f4d56b728b2c10eff8111de986cc8b748214bc4666240a09026f54bfa9f6df",
+      "renk_esleme_sayisi": 3
+    },
+    {
+      "file": "components/liste/ListeArama.tsx",
+      "once_sha256": "2ed62dd9e64fdd6c52f98094e94b4b0ad72496b3a9eedf7e51d5de866e84e532",
+      "sonra_sha256": "3ea27ad80905022815be759b37fb03586766c3bbba9d719ba26bbfe20ce5a5b0",
+      "renk_esleme_sayisi": 2
+    },
+    {
+      "file": "components/navigasyon/HayaletTanburSecici.tsx",
+      "once_sha256": "8d3ffeaaf45030f46a88bcdc3e38f34af4e024ff4825322598b599d609f55579",
+      "sonra_sha256": "2b5ae08ecb1df1c71e2207085666509fcd5294c42f61064f3e3972a159260857",
+      "renk_esleme_sayisi": 12
+    },
+    {
+      "file": "components/ogrenme-araci/DagitimIcerikOzeti.tsx",
+      "once_sha256": "8d0eeae2a78b213b58aa5cca25db3eca63193f0436cc3626d5a3a9dbd381bfa0",
+      "sonra_sha256": "6f3c954923603c9af2728863683f94a6e956573cd3f7fd111bb2fa1f49211ba4",
+      "renk_esleme_sayisi": 5
+    },
+    {
+      "file": "components/ogrenme-araci/YarimYuklemeBildirimi.tsx",
+      "once_sha256": "3bfb386bceb8da67b9ca736689a3d0aea3a3496f1d40dbd86413eb0cf25d76bb",
+      "sonra_sha256": "d00cd8ec61e0d6e9a36505b28e22006d5dc347bebc7e0cc38f0c51b2c80ca21e",
+      "renk_esleme_sayisi": 13
+    },
+    {
+      "file": "components/panel/BilgiSayfa.tsx",
+      "once_sha256": "77a58ffd1d1dbe42468353a73bce94396e151606d32b7ddbf9fd55e44b474ba4",
+      "sonra_sha256": "456219f6b29c5d0910d9cb91fec8f033e5c1d32ab1ff8480a2e6c15e046d358f",
+      "renk_esleme_sayisi": 2
+    },
+    {
+      "file": "components/panel/bilgi/bilgi.module.css",
+      "once_sha256": "fa31b713947d7a26ff7903b56cb970b5e42575547db36f076285930ed776c81e",
+      "sonra_sha256": "8317598e5bc76954abc7edae7cd437884522c533898bb4fec3125669385c8f24",
+      "renk_esleme_sayisi": 3
+    },
+    {
+      "file": "components/raporlar/BegeniFavoriListesi.tsx",
+      "once_sha256": "3c4c477d5515dae931a773f6bbae5e33d3e6cac7ea532253f5769e5a1fb5ae10",
+      "sonra_sha256": "df0bd6ffef7297a6005a7ecc2131ff22b149abf1267a450350c85a7b7d61e8ed",
+      "renk_esleme_sayisi": 9
+    },
+    {
+      "file": "components/raporlar/BmPerformansGorunumu.tsx",
+      "once_sha256": "e6a8f96889b0f69ec8f0b1c967cb44642a4d3bced835b285495ad91df21212bb",
+      "sonra_sha256": "9b95abd159af0ca7415e5798d01edbdc49fa929d981be864d5e2831832416627",
+      "renk_esleme_sayisi": 3
+    },
+    {
+      "file": "components/raporlar/DavranisRaporu.tsx",
+      "once_sha256": "1213bd9ebd969bb4552770b4e8f5d148c96f53d98da94fbc8583e87ae74847bc",
+      "sonra_sha256": "7acfb9778199cd6d98a575c775a5480298fcbe122203fa191e593676fc08cc3a",
+      "renk_esleme_sayisi": 28
+    },
+    {
+      "file": "components/raporlar/OgrenmeAraciPerformansi.tsx",
+      "once_sha256": "3317ef930a813de079f97da9034fcd76e667e467c9e98df76d53792003e89661",
+      "sonra_sha256": "3df4f9364c9e82d629d17cf4e3731124e64686709885ab13721f91404af4ece3",
+      "renk_esleme_sayisi": 66
+    },
+    {
+      "file": "components/raporlar/UrunKirilimPaneli.tsx",
+      "once_sha256": "3b0ca9a1a8b4b9ac418bc11c73b67bc29158e8af7b8b45afbeb6b4b1a594ca67",
+      "sonra_sha256": "703035ff9036410f30c43173cf40bf70077407706bd32316839b49cbc0f5dca1",
+      "renk_esleme_sayisi": 17
+    },
+    {
+      "file": "components/soru/IzlemeSoruPaneli.tsx",
+      "once_sha256": "cfd0ad0e577f28a9a13c31644f6c3b03a3d85615f25417939a59be80b7a19bad",
+      "sonra_sha256": "1d096987e54fd8f966e45764c83416e8aacf8399e9f21535001badc2fcea234d",
+      "renk_esleme_sayisi": 10
+    },
+    {
+      "file": "components/store/AdresModal.tsx",
+      "once_sha256": "ab0ca1db38e5b0c5704939f3880d7c0942511958fa0db53140a79949742cb57a",
+      "sonra_sha256": "45a0a73980cd6a657f0848ee2e6b5e68d3325b240f846542308bf38eb21c6581",
+      "renk_esleme_sayisi": 20
+    },
+    {
+      "file": "components/talep/TalepKlasorleri.tsx",
+      "once_sha256": "5d43d611e445dcdae2e5dc24531b9c47c24c7c0d3e80f3636eb557a90877c250",
+      "sonra_sha256": "66c6172477b71e709211be0778c54ddd063d315390568f04db76dc2c8891a6a8",
+      "renk_esleme_sayisi": 10
+    },
+    {
+      "file": "components/uretim/UretimGorevListesi.tsx",
+      "once_sha256": "b4c17eef2bf08f684cb6aeace059160c471d881c71a65d4b335ec65bb2931627",
+      "sonra_sha256": "604747a1dc18ad62017bc5ddc88c32cd86e15b7d6aca5054edcc16714f187512",
+      "renk_esleme_sayisi": 27
+    },
+    {
+      "file": "components/video/UttVideoKarti.tsx",
+      "once_sha256": "b98c051e00b97e97b5ce8643bf9e99ca522097a1871d70091a91b22f70bba507",
+      "sonra_sha256": "eb0ec855526067541f6f05539df183c21264910fd40c26a64cf7ed447fd20ae4",
+      "renk_esleme_sayisi": 4
+    },
+    {
+      "file": "components/yayin/BmEgitimYayinlari.tsx",
+      "once_sha256": "b739ab24b695db1dbb5e0cb62dbc99093866022f786f4d2334e7b8b5d819f406",
+      "sonra_sha256": "66d3f3e8ecdc2bf4fd7221c38fbd1009b404506e84fa6a60ee6be8367092296b",
+      "renk_esleme_sayisi": 14
+    },
+    {
+      "file": "components/yayin/BmOneriGonderimPaneli.tsx",
+      "once_sha256": "f16fd37718b28084aa02affc9598a63099ce83ac7dff5933dc496f8da381d85f",
+      "sonra_sha256": "ee76542ae9807d0afa53ef35413e31457f838603c39f5eea2168c514609947a1",
+      "renk_esleme_sayisi": 61
+    },
+    {
+      "file": "components/yayin/MobilYayinAkisi.tsx",
+      "once_sha256": "f5904232bd71214d112370cd476575e0ac4e45f4d5bdc89c1a2e597751bcdcde",
+      "sonra_sha256": "db4c8d1921be3753b9647c5887cdfa4db12758610b1b255124e523a66aa1c5c1",
+      "renk_esleme_sayisi": 7
+    },
+    {
+      "file": "components/yayin/katalog/UreticiYayinKatalogu.tsx",
+      "once_sha256": "eba3fa2593acfab4bb3305cc2f37eb1670d73b0be77086563b683babf5005c71",
+      "sonra_sha256": "330a741e946abecea7f7e7d72b62767fcfecba48cd75317cfd1ecfeeb56dd246",
+      "renk_esleme_sayisi": 28
+    },
+    {
+      "file": "lib/tclub/store/sabitler.ts",
+      "once_sha256": "e9e3d22c8b96c729378ee87599b4477f1fab88faea068597c6e4133407a56382",
+      "sonra_sha256": "cfeb8209189d202106fe32967bf12880c72fd6c0050d600af5a865050519ddee",
+      "renk_esleme_sayisi": 12
+    },
+    {
+      "file": "lib/utils/raporUtils.ts",
+      "once_sha256": "76921c9097b31450690f14f0c304dde4ceecc3698387e5770188f3c6ff21e51c",
+      "sonra_sha256": "63b8b5491296663628c44ee2599faee57d3fab4b5405be5353010e14722dc831",
+      "renk_esleme_sayisi": 6
+    },
+    {
+      "file": "lib/video/departman.ts",
+      "once_sha256": "06db09a11db44c60c35f87fccc9f77c592a184a9021900b1283e40413a9882e0",
+      "sonra_sha256": "1efb52fab33419459780538d9bab61d3607f4cfc90cae5b362bd7b3a35555d99",
+      "renk_esleme_sayisi": 4
+    }
+  ]
+}

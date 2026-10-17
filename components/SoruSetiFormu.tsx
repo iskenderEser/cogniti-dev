@@ -48,7 +48,7 @@ export function SoruSetiFormu({ taslaklar, onDegis, buyukluk, secenekSayisi }: S
     <div>
       {/* Sayaç + karta atlama şeridi */}
       <div className="flex items-center justify-between gap-2 mb-2 flex-wrap">
-        <span className="text-xs font-semibold" style={{ color: tamamSayisi === buyukluk && taslaklar.length === buyukluk ? "#16a34a" : "#737373" }}>
+        <span className="text-xs font-semibold" style={{ color: tamamSayisi === buyukluk && taslaklar.length === buyukluk ? "var(--tema-yerel-uretim-islevsel-metin-01)" : "var(--tema-yerel-uretim-yardimci-metin-04)" }}>
           {tamamSayisi}/{buyukluk} soru tamam
         </span>
         <div className="flex flex-wrap gap-1">
@@ -60,9 +60,9 @@ export function SoruSetiFormu({ taslaklar, onDegis, buyukluk, secenekSayisi }: S
               className="rounded cursor-pointer border"
               style={{
                 width: 22, height: 22, fontSize: 10, fontFamily: "'Nunito', sans-serif",
-                background: kartTamam(t) ? "#e6f1fb" : "#fff",
-                color: kartTamam(t) ? "#56aeff" : "#9ca3af",
-                borderColor: kartTamam(t) ? "#bfdbfe" : "#e5e7eb",
+                background: kartTamam(t) ? "var(--tema-yerel-uretim-secim-zemin-01)" : "var(--tema-yerel-uretim-kart-03)",
+                color: kartTamam(t) ? "var(--tema-yerel-uretim-eylem-metin-01)" : "var(--tema-yerel-uretim-yardimci-metin-03)",
+                borderColor: kartTamam(t) ? "var(--tema-yerel-uretim-cizgi-06)" : "var(--tema-yerel-uretim-cizgi-05)",
               }}>
               {i + 1}
             </button>
@@ -74,10 +74,10 @@ export function SoruSetiFormu({ taslaklar, onDegis, buyukluk, secenekSayisi }: S
       <div className="flex flex-col gap-2.5">
         {taslaklar.map((t, i) => (
           <div key={i} ref={el => { kartRefs.current[i] = el; }}
-            className="border border-gray-200 rounded-lg p-3 bg-white">
+            className="border border-[var(--tema-yerel-uretim-cizgi-01)] rounded-lg p-3 bg-[var(--tema-yerel-uretim-kart-01)]">
             <div className="flex items-start justify-between gap-2 mb-1.5">
-              <span className="text-xs font-semibold text-gray-500">Soru {i + 1}</span>
-              <svg onClick={() => sil(i)} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" className="cursor-pointer flex-shrink-0 mt-0.5">
+              <span className="text-xs font-semibold text-[var(--tema-yerel-uretim-yardimci-metin-01)]">Soru {i + 1}</span>
+              <svg onClick={() => sil(i)} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--tema-yerel-uretim-yardimci-metin-03)" strokeWidth="2" className="cursor-pointer flex-shrink-0 mt-0.5">
                 <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
               </svg>
             </div>
@@ -86,28 +86,28 @@ export function SoruSetiFormu({ taslaklar, onDegis, buyukluk, secenekSayisi }: S
               onChange={e => guncelle(i, { soru_metni: e.target.value })}
               placeholder="Soru metni"
               rows={2}
-              className="w-full border border-gray-200 rounded-lg px-2.5 py-2 text-xs text-gray-900 bg-white resize-y mb-1.5 box-border"
+              className="w-full border border-[var(--tema-yerel-uretim-cizgi-01)] rounded-lg px-2.5 py-2 text-xs text-[var(--tema-yerel-uretim-ana-metin-01)] bg-[var(--tema-yerel-uretim-kart-01)] resize-y mb-1.5 box-border"
               style={{ fontFamily: "'Nunito', sans-serif" }}
             />
             {t.secenekler.map((deger, idx) => (
               <div key={idx} className="flex items-center gap-2 mb-1.5">
-                <span className="text-xs font-semibold text-gray-400 w-3 flex-shrink-0">{harfBul(idx)}</span>
+                <span className="text-xs font-semibold text-[var(--tema-yerel-uretim-yardimci-metin-02)] w-3 flex-shrink-0">{harfBul(idx)}</span>
                 <input
                   value={deger}
                   onChange={e => secenekGuncelle(i, idx, e.target.value)}
                   placeholder={`${harfBul(idx)} seçeneği`}
-                  className="flex-1 border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs text-gray-900 bg-white"
+                  className="flex-1 border border-[var(--tema-yerel-uretim-cizgi-01)] rounded-lg px-2.5 py-1.5 text-xs text-[var(--tema-yerel-uretim-ana-metin-01)] bg-[var(--tema-yerel-uretim-kart-01)]"
                   style={{ fontFamily: "'Nunito', sans-serif" }}
                 />
                 <label className="flex items-center gap-1 cursor-pointer flex-shrink-0 text-xs"
-                  style={{ color: t.dogru === idx ? "#16a34a" : "#9ca3af" }}>
+                  style={{ color: t.dogru === idx ? "var(--tema-yerel-uretim-islevsel-metin-01)" : "var(--tema-yerel-uretim-islevsel-metin-24)" }}>
                   <input
                     type="radio"
                     name={`soru-${i}-dogru`}
                     checked={t.dogru === idx}
                     onChange={() => guncelle(i, { dogru: idx })}
                     className="cursor-pointer"
-                    style={{ accentColor: "#16a34a" }}
+                    style={{ accentColor: "var(--tema-yerel-uretim-islevsel-metin-01)" }}
                   />
                   Doğru
                 </label>
@@ -116,7 +116,7 @@ export function SoruSetiFormu({ taslaklar, onDegis, buyukluk, secenekSayisi }: S
             {t.dogru !== null && (
               <div className="flex justify-end">
                 <span onClick={() => guncelle(i, { dogru: null })}
-                  className="text-xs text-gray-400 cursor-pointer underline">
+                  className="text-xs text-[var(--tema-yerel-uretim-yardimci-metin-02)] cursor-pointer underline">
                   işareti temizle
                 </span>
               </div>
@@ -128,7 +128,7 @@ export function SoruSetiFormu({ taslaklar, onDegis, buyukluk, secenekSayisi }: S
       {/* Soru ekle — tavan: talep büyüklüğü */}
       {taslaklar.length < buyukluk && (
         <button type="button" onClick={ekle}
-          className="mt-2.5 w-full border border-dashed border-gray-300 rounded-lg py-2 text-xs font-semibold text-gray-500 bg-transparent cursor-pointer"
+          className="mt-2.5 w-full border border-dashed border-[var(--tema-yerel-uretim-cizgi-21)] rounded-lg py-2 text-xs font-semibold text-[var(--tema-yerel-uretim-yardimci-metin-01)] bg-transparent cursor-pointer"
           style={{ fontFamily: "'Nunito', sans-serif" }}>
           + Soru Ekle ({taslaklar.length}/{buyukluk})
         </button>

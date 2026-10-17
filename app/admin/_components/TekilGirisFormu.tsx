@@ -107,13 +107,13 @@ export default function TekilGirisFormu(p: TekilGirisFormuProps) {
         </div>
       )}
 
-      <div style={{ display: "flex", gap: "16px", padding: "12px 0", borderTop: "0.5px solid #e5e7eb", marginTop: "12px" }}>
-        <label style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", color: "#111", fontFamily: "'Nunito', sans-serif", cursor: "pointer" }}>
+      <div style={{ display: "flex", gap: "16px", padding: "12px 0", borderTop: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)", marginTop: "12px" }}>
+        <label style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", color: "var(--tema-yerel-yonetim-ana-metin-01)", fontFamily: "'Nunito', sans-serif", cursor: "pointer" }}>
           <input type="checkbox" checked={p.tekilYetkiKullanici}
             onChange={(e) => p.setTekilYetkiKullanici(e.target.checked)} />
           Kullanıcı yönetim yetkisi
         </label>
-        <label style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", color: "#111", fontFamily: "'Nunito', sans-serif", cursor: "pointer" }}>
+        <label style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", color: "var(--tema-yerel-yonetim-ana-metin-01)", fontFamily: "'Nunito', sans-serif", cursor: "pointer" }}>
           <input type="checkbox" checked={p.tekilYetkiAktifPasif}
             onChange={(e) => p.setTekilYetkiAktifPasif(e.target.checked)} />
           Aktif/Pasif yetkisi
@@ -121,7 +121,7 @@ export default function TekilGirisFormu(p: TekilGirisFormuProps) {
       </div>
 
       <button type="submit" disabled={p.tekilLoading}
-        style={{ ...btnBase, background: p.tekilLoading ? "#d1d5db" : RENK_BORDO, color: "white", border: "none", marginTop: "12px" }}>
+        style={{ ...btnBase, background: p.tekilLoading ? "var(--tema-yerel-yonetim-sayfa-zemini-01)" : RENK_BORDO, color: "var(--tema-yerel-yonetim-ters-metin-01)", border: "none", marginTop: "12px" }}>
         {p.tekilLoading ? "Kaydediliyor..." : "Kaydet"}
       </button>
     </form>

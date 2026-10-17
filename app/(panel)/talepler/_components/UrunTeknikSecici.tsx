@@ -113,10 +113,10 @@ export function UrunTeknikSecici({
     <div className="flex flex-col md:flex-row gap-3">
       {urunGosterilsin && (
         <div className="flex-1">
-          <label className="text-xs text-gray-500 block mb-1">
+          <label className="text-xs text-[var(--tema-yerel-uretim-yardimci-metin-01)] block mb-1">
             Ürün Adı
             {turKurali.urun === "tercihli" && (
-              <span className="text-gray-400 font-normal ml-1">(tercihli)</span>
+              <span className="text-[var(--tema-yerel-uretim-yardimci-metin-02)] font-normal ml-1">(tercihli)</span>
             )}
           </label>
           <SadeFormSecimi value={yeniUrunGoster ? "yeni" : seciliUrunId} onChange={(e) => handleUrunSelectChange(e.target.value)} aria-label="Ürün" className="w-full">
@@ -141,16 +141,16 @@ export function UrunTeknikSecici({
                   value={yeniUrunAdi}
                   onChange={(e) => setYeniUrunAdi(e.target.value)}
                   placeholder="Yeni ürün adı..."
-                  className="flex-1 border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs outline-none"
-                  style={{ borderColor: "#56aeff", fontFamily: "'Nunito', sans-serif" }}
+                  className="flex-1 border border-[var(--tema-yerel-uretim-cizgi-01)] rounded-lg px-2.5 py-1.5 text-xs outline-none"
+                  style={{ borderColor: "var(--tema-yerel-uretim-cizgi-04)", fontFamily: "'Nunito', sans-serif" }}
                 />
                 <button
                   type="button"
                   onClick={handleUrunEkleClick}
                   disabled={!yeniUrunAdi.trim() || urunEkleniyor || takimZorunluAmaSecilmedi}
-                  className="text-white border-none rounded-lg px-3 py-1.5 text-xs font-semibold cursor-pointer whitespace-nowrap"
+                  className="text-[var(--tema-yerel-uretim-ters-metin-01)] border-none rounded-lg px-3 py-1.5 text-xs font-semibold cursor-pointer whitespace-nowrap"
                   style={{
-                    background: "#237ac8",
+                    background: "var(--tema-yerel-uretim-eylem-zemin-01)",
                     opacity:
                       !yeniUrunAdi.trim() || urunEkleniyor || takimZorunluAmaSecilmedi ? 0.6 : 1,
                     fontFamily: "'Nunito', sans-serif",
@@ -165,7 +165,7 @@ export function UrunTeknikSecici({
                     setYeniUrunAdi("");
                     setSeciliEkleTakimId("");
                   }}
-                  className="bg-transparent border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs text-gray-500 cursor-pointer"
+                  className="bg-transparent border border-[var(--tema-yerel-uretim-cizgi-01)] rounded-lg px-2.5 py-1.5 text-xs text-[var(--tema-yerel-uretim-yardimci-metin-01)] cursor-pointer"
                   style={{ fontFamily: "'Nunito', sans-serif" }}
                 >
                   İptal
@@ -178,10 +178,10 @@ export function UrunTeknikSecici({
 
       {teknikGosterilsin && (
         <div className="flex-1">
-          <label className="text-xs text-gray-500 block mb-1">
+          <label className="text-xs text-[var(--tema-yerel-uretim-yardimci-metin-01)] block mb-1">
             Teknik Adı
             {turKurali.teknik === "tercihli" && (
-              <span className="text-gray-400 font-normal ml-1">(tercihli)</span>
+              <span className="text-[var(--tema-yerel-uretim-yardimci-metin-02)] font-normal ml-1">(tercihli)</span>
             )}
           </label>
           <SadeFormSecimi value={yeniTeknikGoster ? "yeni" : seciliTeknikId} onChange={(e) => handleTeknikSelectChange(e.target.value)} aria-label="Teknik" className="w-full">
@@ -197,16 +197,16 @@ export function UrunTeknikSecici({
                 value={yeniTeknikAdi}
                 onChange={(e) => setYeniTeknikAdi(e.target.value)}
                 placeholder="Yeni teknik adı..."
-                className="flex-1 border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs outline-none"
-                style={{ borderColor: "#56aeff", fontFamily: "'Nunito', sans-serif" }}
+                className="flex-1 border border-[var(--tema-yerel-uretim-cizgi-01)] rounded-lg px-2.5 py-1.5 text-xs outline-none"
+                style={{ borderColor: "var(--tema-yerel-uretim-cizgi-04)", fontFamily: "'Nunito', sans-serif" }}
               />
               <button
                 type="button"
                 onClick={handleTeknikEkleClick}
                 disabled={!yeniTeknikAdi.trim() || teknikEkleniyor}
-                className="text-white border-none rounded-lg px-3 py-1.5 text-xs font-semibold cursor-pointer whitespace-nowrap"
+                className="text-[var(--tema-yerel-uretim-ters-metin-01)] border-none rounded-lg px-3 py-1.5 text-xs font-semibold cursor-pointer whitespace-nowrap"
                 style={{
-                  background: "#237ac8",
+                  background: "var(--tema-yerel-uretim-eylem-zemin-01)",
                   opacity: !yeniTeknikAdi.trim() || teknikEkleniyor ? 0.6 : 1,
                   fontFamily: "'Nunito', sans-serif",
                 }}
@@ -219,7 +219,7 @@ export function UrunTeknikSecici({
                   setYeniTeknikGoster(false);
                   setYeniTeknikAdi("");
                 }}
-                className="bg-transparent border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs text-gray-500 cursor-pointer"
+                className="bg-transparent border border-[var(--tema-yerel-uretim-cizgi-01)] rounded-lg px-2.5 py-1.5 text-xs text-[var(--tema-yerel-uretim-yardimci-metin-01)] cursor-pointer"
                 style={{ fontFamily: "'Nunito', sans-serif" }}
               >
                 İptal

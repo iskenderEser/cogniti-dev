@@ -21,8 +21,8 @@ import { YenileButonu } from "@/components/ui/yenile-butonu";
 import SayfaRehberi from "@/components/rehber/SayfaRehberi";
 import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 
-const GRI_METIN = "#737373";
-const GRI_ZEMIN = "#f9fafb";
+const GRI_METIN = "var(--tema-yerel-magaza-yardimci-metin-22)";
+const GRI_ZEMIN = "var(--tema-yerel-magaza-sayfa-zemini-11)";
 
 export default function SiparislerPage() {
   const router = useRouter();
@@ -87,15 +87,15 @@ export default function SiparislerPage() {
       <div className="mx-auto max-w-7xl px-3 py-4 md:px-6 md:py-6">
         <SayfaYenileBasligi className="mb-5 flex flex-wrap items-end justify-between gap-3"
           baslik={<div className="inline-flex items-center">
-            <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-[#203653]">
+            <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-[var(--tema-yerel-magaza-ana-metin-01)]">
               Ekip Sipariş Takibi
             </h1>
             <SayfaRehberi anahtar="store-siparisler" className="ml-1.5 -translate-y-1" />
           </div>}
-          ustBilgi={<><div className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#71859d]">
+          ustBilgi={<><div className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-[var(--tema-yerel-magaza-yardimci-metin-02)]">
             HBStore
           </div></>}
-          aciklama={<><p className="mt-1 text-xs font-medium text-[#8190a3]">
+          aciklama={<><p className="mt-1 text-xs font-medium text-[var(--tema-yerel-magaza-yardimci-metin-18)]">
             {rolKucu === "bm"
               ? "Bölgenizdeki UTT ve KD_UTT siparişlerinin güncel durumu."
               : rolKucu === "tm"

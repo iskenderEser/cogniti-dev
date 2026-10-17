@@ -180,7 +180,7 @@ export default function YarimYuklemeBildirimi() {
   };
 
   const dosyaSecici = (rol: "ana" | "kapak" | "transkript", etiket: string, accept: string) => (
-    <label className="flex flex-col gap-1 rounded-lg border border-dashed border-gray-300 bg-gray-50 p-3 text-xs font-semibold text-gray-600">
+    <label className="flex flex-col gap-1 rounded-lg border border-dashed border-[var(--tema-yerel-ortak-sayfa-cizgi-11)] bg-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-06)] p-3 text-xs font-semibold text-[var(--tema-yerel-ortak-sayfa-ana-metin-08)]">
       {etiket}
       <input type="file" accept={accept} disabled={islem} className="block w-full text-xs font-normal" onChange={(e) => setDosyalar((d) => ({ ...d, [rol]: e.target.files?.[0] }))} />
     </label>
@@ -196,12 +196,12 @@ export default function YarimYuklemeBildirimi() {
   const dosyaGerekli = aktif.arac_turu !== "podcast" || podcastDosyaGerekli;
   return (
     <>
-      <div className="fixed inset-0 z-[9500] flex items-center justify-center bg-black/40 p-4" role="dialog" aria-modal="true" aria-labelledby="yarim-yukleme-baslik">
-        <section className="w-full max-w-lg rounded-2xl border border-gray-200 bg-white p-5 shadow-2xl">
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#bc2d0d]">Yarım kalan yükleme</p>
-          <h2 id="yarim-yukleme-baslik" className="mt-1 text-lg font-bold text-gray-900">{aktif.baslik}</h2>
-          <p className="mt-2 text-sm leading-5 text-gray-600">{`${aktif.dosya_adi} yüklemesi tamamlanmadan kesildi. Aynı kayıtla devam edebilir veya dosya ve geçici kayıtları güvenli biçimde iptal edebilirsiniz.`}</p>
-          {yuklemeler.length > 1 && <p className="mt-1 text-xs text-gray-400">Bekleyen {yuklemeler.length} işlem var; işlemler sırayla gösterilecektir.</p>}
+      <div className="fixed inset-0 z-[9500] flex items-center justify-center bg-[var(--tema-yerel-ortak-sayfa-ortu-01)]/40 p-4" role="dialog" aria-modal="true" aria-labelledby="yarim-yukleme-baslik">
+        <section className="w-full max-w-lg rounded-2xl border border-[var(--tema-yerel-ortak-sayfa-cizgi-06)] bg-[var(--tema-yerel-ortak-sayfa-kart-01)] p-5 shadow-2xl">
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--tema-yerel-ortak-sayfa-vurgu-metin-01)]">Yarım kalan yükleme</p>
+          <h2 id="yarim-yukleme-baslik" className="mt-1 text-lg font-bold text-[var(--tema-yerel-ortak-sayfa-ana-metin-07)]">{aktif.baslik}</h2>
+          <p className="mt-2 text-sm leading-5 text-[var(--tema-yerel-ortak-sayfa-ana-metin-08)]">{`${aktif.dosya_adi} yüklemesi tamamlanmadan kesildi. Aynı kayıtla devam edebilir veya dosya ve geçici kayıtları güvenli biçimde iptal edebilirsiniz.`}</p>
+          {yuklemeler.length > 1 && <p className="mt-1 text-xs text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-12)]">Bekleyen {yuklemeler.length} işlem var; işlemler sırayla gösterilecektir.</p>}
 
           {dosyaGerekli && <div className="mt-4 flex flex-col gap-2">
             {aktif.arac_turu === "podcast" && <>
@@ -216,14 +216,14 @@ export default function YarimYuklemeBildirimi() {
             </>}
           </div>}
 
-          {yuzde !== null && <div className="mt-4"><div className="mb-1 text-xs font-semibold text-[#287fce]">Yükleniyor: %{yuzde}</div><div className="h-2 overflow-hidden rounded-full bg-blue-100"><div className="h-full bg-[#56aeff]" style={{ width: `${yuzde}%` }} /></div></div>}
+          {yuzde !== null && <div className="mt-4"><div className="mb-1 text-xs font-semibold text-[var(--tema-yerel-ortak-sayfa-eylem-metin-07)]">Yükleniyor: %{yuzde}</div><div className="h-2 overflow-hidden rounded-full bg-[var(--tema-yerel-ortak-sayfa-secim-zemin-05)]"><div className="h-full bg-[var(--tema-yerel-ortak-sayfa-eylem-zemin-09)]" style={{ width: `${yuzde}%` }} /></div></div>}
 
           <div className="mt-5 flex justify-end gap-2">
-            <button type="button" disabled={islem} onClick={() => void iptalEt()} className="rounded-lg border border-red-200 bg-white px-4 py-2.5 text-xs font-bold text-[#bc2d0d] disabled:opacity-50">İptal Et</button>
+            <button type="button" disabled={islem} onClick={() => void iptalEt()} className="rounded-lg border border-[var(--tema-yerel-ortak-sayfa-islevsel-cizgi-04)] bg-[var(--tema-yerel-ortak-sayfa-kart-01)] px-4 py-2.5 text-xs font-bold text-[var(--tema-yerel-ortak-sayfa-vurgu-metin-01)] disabled:opacity-50">İptal Et</button>
             {((aktif.arac_turu === "podcast" && podcastKapakGerekli) || flipPdfKapakGerekli) && (
-              <button type="button" disabled={islem} onClick={() => void gorselsizDevamEt()} className="rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-xs font-bold text-gray-700 hover:bg-gray-50 disabled:opacity-50">Görselsiz Devam Et</button>
+              <button type="button" disabled={islem} onClick={() => void gorselsizDevamEt()} className="rounded-lg border border-[var(--tema-yerel-ortak-sayfa-cizgi-11)] bg-[var(--tema-yerel-ortak-sayfa-kart-01)] px-3 py-2.5 text-xs font-bold text-[var(--tema-yerel-ortak-sayfa-ana-metin-11)] hover:bg-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-06)] disabled:opacity-50">Görselsiz Devam Et</button>
             )}
-            <button type="button" disabled={islem} onClick={() => void devamEt()} className="rounded-lg border-0 bg-[#56aeff] px-4 py-2.5 text-xs font-bold text-white disabled:opacity-50">{islem ? "İşleniyor…" : "Devam Et"}</button>
+            <button type="button" disabled={islem} onClick={() => void devamEt()} className="rounded-lg border-0 bg-[var(--tema-yerel-ortak-sayfa-eylem-zemin-09)] px-4 py-2.5 text-xs font-bold text-[var(--tema-yerel-ortak-sayfa-ters-metin-01)] disabled:opacity-50">{islem ? "İşleniyor…" : "Devam Et"}</button>
           </div>
         </section>
       </div>

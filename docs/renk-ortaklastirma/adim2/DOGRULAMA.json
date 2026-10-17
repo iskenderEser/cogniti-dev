@@ -1,0 +1,44 @@
+{
+  "cssBildirimi": 221,
+  "renkDisiFark": 0,
+  "maviDegerFarki": 0,
+  "degisenBildirim": 15,
+  "disKullanimDosyasi": 57,
+  "degismeyenDisKullanim": 56,
+  "degisenDisKaynak": [
+    "components/ui/select.tsx"
+  ],
+  "radixDegisikligi": "Yalnız iki focus renk sınıfı",
+  "derlenenFocusKurali": 2,
+  "cssDerlemeUyarisi": 0,
+  "tarih": "2026-10-17",
+  "durum": "TAMAMLANDI",
+  "tamamlanmaDayanagi": "Renk bağlantıları, 40/40 hedef kontrol, CSS derlemesi ve 221 bildirimin korunumu doğrulandı; ek tarayıcı kontrolleri ayrı kayıtlıdır.",
+  "sadeKontrolRenkleriEkranBoyutundanBagimsiz": true,
+  "testler": {
+    "tema": 6,
+    "sadeMavi": 17,
+    "sadeYesil": 17,
+    "toplamBasarili": 40,
+    "basarisiz": 0
+  },
+  "typecheck": "BASARILI",
+  "eslint": {
+    "sonuc": "BASARILI",
+    "hata": 0,
+    "uyari": 0
+  },
+  "tarayici": {
+    "masaustuMavi1440": "GORUNTULENDI",
+    "masaustuYesil1440": "GORUNTULENDI",
+    "mobilMavi390": "GORUNTULENDI",
+    "mobilYesil390": "DOGRULANAMADI",
+    "gercekMenuEtkilesimi": "DOGRULANAMADI",
+    "hesaplanmisDOMOlcumu": "DOGRULANAMADI"
+  },
+  "varsayilanTema": "mavi",
+  "geciciLayoutDegisikligiGeriAlindi": true,
+  "geciciViewportGeriAlindi": true,
+  "veritabaniIslemi": false,
+  "canliDagitim": false
+}

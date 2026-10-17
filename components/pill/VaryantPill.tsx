@@ -37,12 +37,12 @@ interface Props {
 type VaryantTipi = "arac" | "soru" | "iu";
 
 const VARYANT: Record<VaryantTipi, { etiket: string; renk: PillRenk }> = {
-  arac: { etiket: "", renk: { bg: "#dbeafe", metin: "#1d4ed8", kenar: "#93c5fd" } },
-  soru: { etiket: "Hazır Soru", renk: { bg: "#fbe4de", metin: "#bc2d0d", kenar: "#e9b3a6" } },
+  arac: { etiket: "", renk: { bg: "var(--tema-pill-varyant-arac-zemin)", metin: "var(--tema-pill-varyant-arac-metin)", kenar: "var(--tema-pill-varyant-arac-cizgi)" } },
+  soru: { etiket: "Hazır Soru", renk: { bg: "var(--tema-pill-varyant-soru-zemin)", metin: "var(--tema-pill-varyant-soru-metin)", kenar: "var(--tema-pill-varyant-soru-cizgi)" } },
   // Normal üretim: içeriği İÇERİK ÜRETİCİSİ hazırlar. Eskiden bu durumda hücre
   // boş kalıyordu ("-" gibi görünüyordu) — oysa bu bir eksik veri değil, üç
   // üretim yönteminden biri. Boş bırakmak "yöntem yok" demekti, yanlıştı.
-  iu: { etiket: "İçerik Üreticisi", renk: { bg: "#f5f3ff", metin: "#6d28d9", kenar: "#ddd6fe" } },
+  iu: { etiket: "İçerik Üreticisi", renk: { bg: "var(--tema-pill-varyant-iu-zemin)", metin: "var(--tema-pill-varyant-iu-metin)", kenar: "var(--tema-pill-varyant-iu-cizgi)" } },
 };
 
 export function VaryantPill({ hazirVideo, hazirSoruSeti, ogrenmeAraciTuru, kendiSatirinda = true }: Props) {

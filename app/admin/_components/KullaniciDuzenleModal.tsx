@@ -73,7 +73,7 @@ export default function KullaniciDuzenleModal({ kullanici, takimlar, loading, on
     <div
       onClick={onKapat}
       style={{
-        position: "fixed", inset: 0, background: "rgba(0,0,0,0.35)",
+        position: "fixed", inset: 0, background: "var(--tema-yerel-yonetim-ortu-02)",
         display: "flex", alignItems: "center", justifyContent: "center",
         padding: "16px", zIndex: 50,
       }}
@@ -81,15 +81,15 @@ export default function KullaniciDuzenleModal({ kullanici, takimlar, loading, on
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
-          background: "white", borderRadius: "10px", padding: "20px",
+          background: "var(--tema-yerel-yonetim-kart-01)", borderRadius: "10px", padding: "20px",
           width: "100%", maxWidth: "560px", maxHeight: "90vh", overflow: "auto",
           fontFamily: "'Nunito', sans-serif",
         }}
       >
-        <h3 style={{ fontSize: "14px", fontWeight: 700, color: "#111", marginBottom: "4px" }}>
+        <h3 style={{ fontSize: "14px", fontWeight: 700, color: "var(--tema-yerel-yonetim-ana-metin-01)", marginBottom: "4px" }}>
           Kullanıcıyı Düzenle
         </h3>
-        <p style={{ fontSize: "11px", color: "#737373", marginBottom: "14px" }}>
+        <p style={{ fontSize: "11px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)", marginBottom: "14px" }}>
           Değişiklik eski bilgilerin üstüne yazılır. Kullanıcının ürettiği puan ve
           içerikler etkilenmez.
         </p>
@@ -151,20 +151,20 @@ export default function KullaniciDuzenleModal({ kullanici, takimlar, loading, on
             </div>
           )}
 
-          <div style={{ display: "flex", gap: "16px", padding: "12px 0", borderTop: "0.5px solid #e5e7eb", marginTop: "12px" }}>
-            <label style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", color: "#111", cursor: "pointer" }}>
+          <div style={{ display: "flex", gap: "16px", padding: "12px 0", borderTop: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)", marginTop: "12px" }}>
+            <label style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", color: "var(--tema-yerel-yonetim-ana-metin-01)", cursor: "pointer" }}>
               <input type="checkbox" checked={yetkiKullanici} onChange={(e) => setYetkiKullanici(e.target.checked)} />
               Kullanıcı yönetim yetkisi
             </label>
-            <label style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", color: "#111", cursor: "pointer" }}>
+            <label style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", color: "var(--tema-yerel-yonetim-ana-metin-01)", cursor: "pointer" }}>
               <input type="checkbox" checked={yetkiAktifPasif} onChange={(e) => setYetkiAktifPasif(e.target.checked)} />
               Aktif/Pasif yetkisi
             </label>
           </div>
 
           {onayAsamasi ? (
-            <div style={{ background: "#fffbeb", border: "0.5px solid #fcd34d", borderRadius: "6px", padding: "10px", marginTop: "12px" }}>
-              <p style={{ fontSize: "12px", color: "#92400e", margin: "0 0 10px" }}>
+            <div style={{ background: "var(--tema-yerel-yonetim-islevsel-zemin-02)", border: "0.5px solid var(--tema-yerel-yonetim-islevsel-cizgi-01)", borderRadius: "6px", padding: "10px", marginTop: "12px" }}>
+              <p style={{ fontSize: "12px", color: "var(--tema-yerel-yonetim-islevsel-metin-01)", margin: "0 0 10px" }}>
                 <strong>{ad} {soyad}</strong> kullanıcısının bilgileri güncellenecek ve eski
                 bilgilerin üstüne yazılacak. Onaylıyor musunuz?
                 {eposta.trim().toLowerCase() !== (kullanici.eposta ?? "").toLowerCase() &&
@@ -172,11 +172,11 @@ export default function KullaniciDuzenleModal({ kullanici, takimlar, loading, on
               </p>
               <div style={{ display: "flex", gap: "8px" }}>
                 <button type="button" onClick={gonder} disabled={loading}
-                  style={{ ...btnBase, background: loading ? "#d1d5db" : RENK_BORDO, color: "white", border: "none" }}>
+                  style={{ ...btnBase, background: loading ? "var(--tema-yerel-yonetim-sayfa-zemini-01)" : RENK_BORDO, color: "var(--tema-yerel-yonetim-ters-metin-01)", border: "none" }}>
                   {loading ? "Kaydediliyor..." : "Evet, Kaydet"}
                 </button>
                 <button type="button" onClick={() => setOnayAsamasi(false)} disabled={loading}
-                  style={{ ...btnBase, background: "white", color: "#737373", border: "0.5px solid #e5e7eb" }}>
+                  style={{ ...btnBase, background: "var(--tema-yerel-yonetim-kart-01)", color: "var(--tema-yerel-yonetim-yardimci-metin-01)", border: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)" }}>
                   Vazgeç
                 </button>
               </div>
@@ -184,11 +184,11 @@ export default function KullaniciDuzenleModal({ kullanici, takimlar, loading, on
           ) : (
             <div style={{ display: "flex", gap: "8px", marginTop: "12px" }}>
               <button type="submit" disabled={loading}
-                style={{ ...btnBase, background: RENK_BORDO, color: "white", border: "none" }}>
+                style={{ ...btnBase, background: RENK_BORDO, color: "var(--tema-yerel-yonetim-ters-metin-01)", border: "none" }}>
                 Kaydet
               </button>
               <button type="button" onClick={onKapat}
-                style={{ ...btnBase, background: "white", color: "#737373", border: "0.5px solid #e5e7eb" }}>
+                style={{ ...btnBase, background: "var(--tema-yerel-yonetim-kart-01)", color: "var(--tema-yerel-yonetim-yardimci-metin-01)", border: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)" }}>
                 Kapat
               </button>
             </div>

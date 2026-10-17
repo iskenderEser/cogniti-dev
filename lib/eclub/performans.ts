@@ -1,10 +1,11 @@
+import { hesaplananRenk } from "@/lib/tema/cizimRenkleri";
 import { trZamanParcalari, trZamanUtc } from "@/lib/zaman/turkiye";
 
 export const ECLUB_PERFORMANS_TURLERI = [
-  { tur: "video", ad: "Video", renk: "#237ac8", zemin: "#edf5ff" },
-  { tur: "podcast", ad: "Podcast", renk: "#8c65c9", zemin: "#f3effa" },
-  { tur: "gorsel", ad: "Görsel", renk: "#d99438", zemin: "#fff6e8" },
-  { tur: "flip_pdf", ad: "Literatür", renk: "#23947a", zemin: "#edf8f4" },
+  { tur: "video", ad: "Video", renk: hesaplananRenk("--tema-cizim-arac-video-renk"), zemin: hesaplananRenk("--tema-cizim-arac-video-zemin") },
+  { tur: "podcast", ad: "Podcast", renk: hesaplananRenk("--tema-cizim-arac-podcast-renk"), zemin: hesaplananRenk("--tema-cizim-arac-podcast-zemin") },
+  { tur: "gorsel", ad: "Görsel", renk: hesaplananRenk("--tema-cizim-arac-gorsel-renk"), zemin: hesaplananRenk("--tema-cizim-arac-gorsel-zemin") },
+  { tur: "flip_pdf", ad: "Literatür", renk: hesaplananRenk("--tema-cizim-arac-literatur-renk"), zemin: hesaplananRenk("--tema-cizim-arac-literatur-zemin") },
 ] as const;
 export type PerformansTuru = typeof ECLUB_PERFORMANS_TURLERI[number]["tur"];
 export interface PerformansHaftasi { hafta: number; baslangic: string; bitisHaric: string }

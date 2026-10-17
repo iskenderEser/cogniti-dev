@@ -34,8 +34,8 @@ export function EkDosyaYukleme({ bekleyenler, hazirVideo, disabled = false, onSe
 
   return (
     <div>
-      <label className="text-xs text-gray-500 block mb-1.5">
-        Ek Dosyalar <span className="text-gray-400 font-normal">(isteğe bağlı)</span>
+      <label className="text-xs text-[var(--tema-yerel-uretim-yardimci-metin-01)] block mb-1.5">
+        Ek Dosyalar <span className="text-[var(--tema-yerel-uretim-yardimci-metin-02)] font-normal">(isteğe bağlı)</span>
       </label>
       <div className="mb-2 flex flex-col items-start gap-1.5">
         <SadeIslemButonu
@@ -57,7 +57,7 @@ export function EkDosyaYukleme({ bekleyenler, hazirVideo, disabled = false, onSe
             disabled={disabled}
             className="hidden"
         />
-        <span className="text-[10px] font-semibold uppercase leading-snug text-gray-400">
+        <span className="text-[10px] font-semibold uppercase leading-snug text-[var(--tema-yerel-uretim-yardimci-metin-02)]">
           {hazirVideo
             ? "PDF · DOCX · PPTX · XLSX · TXT · PNG · JPG · JPEG"
             : "PDF · DOCX · PPTX · XLSX · TXT · PNG · JPG · JPEG · MP4 · MOV · AVI · MKV · WEBM"}
@@ -70,7 +70,7 @@ export function EkDosyaYukleme({ bekleyenler, hazirVideo, disabled = false, onSe
             return (
               <div
                 key={i}
-                className="flex items-center gap-1 bg-gray-50 border border-gray-200 rounded-full py-1 pl-2 pr-2.5"
+                className="flex items-center gap-1 bg-[var(--tema-yerel-uretim-sayfa-zemini-01)] border border-[var(--tema-yerel-uretim-cizgi-01)] rounded-full py-1 pl-2 pr-2.5"
               >
                 <div
                   className="w-4 h-4 rounded flex items-center justify-center flex-shrink-0"
@@ -78,14 +78,14 @@ export function EkDosyaYukleme({ bekleyenler, hazirVideo, disabled = false, onSe
                 >
                   <span style={{ fontSize: 7, fontWeight: 700, color: renk }}>{etiket}</span>
                 </div>
-                <span className="text-xs text-gray-700 max-w-28 truncate">{preview.dosya_adi}</span>
+                <span className="text-xs text-[var(--tema-yerel-uretim-ana-metin-03)] max-w-28 truncate">{preview.dosya_adi}</span>
                 <svg
                   onClick={() => onSil(i)}
                   width="12"
                   height="12"
                   viewBox="0 0 24 24"
                   fill="none"
-                  stroke="#9ca3af"
+                  stroke="var(--tema-yerel-uretim-yardimci-metin-03)"
                   strokeWidth="2"
                   className="cursor-pointer flex-shrink-0"
                 >

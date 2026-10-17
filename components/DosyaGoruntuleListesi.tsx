@@ -21,14 +21,14 @@ const OFFICE_FORMATLAR = ["docx", "doc", "pptx", "ppt", "xlsx", "xls"];
 
 const dosyaTipiRenk = (dosya_adi: string): { etiket: string; bg: string; renk: string } => {
   const ext = dosya_adi.split(".").pop()?.toLowerCase() ?? "";
-  if (ext === "pdf") return { etiket: "PDF", bg: "#fef2f2", renk: "#bc2d0d" };
-  if (["docx", "doc"].includes(ext)) return { etiket: "DOC", bg: "#eff6ff", renk: "#1d4ed8" };
-  if (["pptx", "ppt"].includes(ext)) return { etiket: "PPT", bg: "#fff7ed", renk: "#c2410c" };
-  if (["xlsx", "xls"].includes(ext)) return { etiket: "XLS", bg: "#f0fdf4", renk: "#15803d" };
-  if (ext === "txt") return { etiket: "TXT", bg: "#f9fafb", renk: "#374151" };
-  if (["png", "jpg", "jpeg"].includes(ext)) return { etiket: "IMG", bg: "#fdf4ff", renk: "#7e22ce" };
-  if (["mp4", "mov", "webm", "avi", "mkv"].includes(ext)) return { etiket: "VID", bg: "#f0fdf4", renk: "#16a34a" };
-  return { etiket: ext.toUpperCase(), bg: "#f9fafb", renk: "#737373" };
+  if (ext === "pdf") return { etiket: "PDF", bg: "var(--tema-yerel-ortak-sayfa-islevsel-zemin-11)", renk: "var(--tema-yerel-ortak-sayfa-vurgu-metin-01)" };
+  if (["docx", "doc"].includes(ext)) return { etiket: "DOC", bg: "var(--tema-yerel-ortak-sayfa-secim-zemin-03)", renk: "var(--tema-yerel-ortak-sayfa-eylem-metin-02)" };
+  if (["pptx", "ppt"].includes(ext)) return { etiket: "PPT", bg: "var(--tema-yerel-ortak-sayfa-islevsel-zemin-12)", renk: "var(--tema-yerel-ortak-sayfa-islevsel-metin-12)" };
+  if (["xlsx", "xls"].includes(ext)) return { etiket: "XLS", bg: "var(--tema-yerel-ortak-sayfa-islevsel-zemin-09)", renk: "var(--tema-yerel-ortak-sayfa-islevsel-metin-13)" };
+  if (ext === "txt") return { etiket: "TXT", bg: "var(--tema-yerel-ortak-sayfa-sayfa-zemini-08)", renk: "var(--tema-yerel-ortak-sayfa-ana-metin-10)" };
+  if (["png", "jpg", "jpeg"].includes(ext)) return { etiket: "IMG", bg: "var(--tema-yerel-ortak-sayfa-islevsel-zemin-13)", renk: "var(--tema-yerel-ortak-sayfa-islevsel-metin-14)" };
+  if (["mp4", "mov", "webm", "avi", "mkv"].includes(ext)) return { etiket: "VID", bg: "var(--tema-yerel-ortak-sayfa-islevsel-zemin-09)", renk: "var(--tema-yerel-ortak-sayfa-islevsel-metin-10)" };
+  return { etiket: ext.toUpperCase(), bg: "var(--tema-yerel-ortak-sayfa-sayfa-zemini-08)", renk: "var(--tema-yerel-ortak-sayfa-yardimci-metin-14)" };
 };
 
 interface Props {
@@ -72,14 +72,14 @@ export function DosyaGoruntuleListesi({ dosyalar, onHata, sagAksiyon }: Props) {
         const { etiket, bg, renk } = dosyaTipiRenk(dosya.dosya_adi);
         const isGoruntuleniyor = goruntuleniyorUrl === dosya.url;
         return (
-          <div key={i} className="flex items-center gap-1 bg-gray-50 border border-gray-200 rounded-full py-1 pl-2 pr-2.5">
+          <div key={i} className="flex items-center gap-1 bg-[var(--tema-yerel-ortak-sayfa-sayfa-zemini-06)] border border-[var(--tema-yerel-ortak-sayfa-cizgi-06)] rounded-full py-1 pl-2 pr-2.5">
             <div className="w-4 h-4 rounded flex items-center justify-center flex-shrink-0" style={{ background: bg }}>
               <span style={{ fontSize: 7, fontWeight: 700, color: renk }}>{etiket}</span>
             </div>
-            <span className="text-xs text-gray-700 max-w-28 truncate">{dosya.dosya_adi}</span>
+            <span className="text-xs text-[var(--tema-yerel-ortak-sayfa-ana-metin-11)] max-w-28 truncate">{dosya.dosya_adi}</span>
             <span onClick={() => !isGoruntuleniyor && handleGoruntule(dosya)}
               className="text-xs font-semibold cursor-pointer ml-0.5 whitespace-nowrap"
-              style={{ color: "#56aeff", opacity: isGoruntuleniyor ? 0.5 : 1 }}>
+              style={{ color: "var(--tema-yerel-ortak-sayfa-eylem-metin-03)", opacity: isGoruntuleniyor ? 0.5 : 1 }}>
               {isGoruntuleniyor ? "..." : "Görüntüle"}
             </span>
             {sagAksiyon?.(dosya)}

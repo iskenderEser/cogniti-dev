@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { eclubHoykRengi } from "@/lib/eclub/hoykSureCercevesi";
+import { eclubHoykRengi, eclubHoykRenkPaleti } from "@/lib/eclub/hoykSureCercevesi";
+import { cizimRenkCozucu, cizimTemasiniIzle } from "@/lib/tema/cizimRenkleri";
 
 const TOPLAM_GUN = 15;
 const CIZGI_KALINLIGI = 3.5;
@@ -49,7 +50,7 @@ function cerceveNoktasi(uzaklik: number, genislik: number, yukseklik: number): [
   return [kenar + yaricap + yaricap * Math.cos(aci), kenar + yaricap + yaricap * Math.sin(aci)];
 }
 
-function ciz(canvas: HTMLCanvasElement, gun: number, kirmizilasma: number): void {
+function ciz(canvas: HTMLCanvasElement, gun: number, kirmizilasma: number, palet: ReturnType<typeof eclubHoykRenkPaleti>): void {
   const baglam = canvas.getContext("2d");
   const genislik = canvas.clientWidth;
   const yukseklik = canvas.clientHeight;
@@ -68,7 +69,7 @@ function ciz(canvas: HTMLCanvasElement, gun: number, kirmizilasma: number): void
     const bitis = Math.min(baslangic + 1, gorunen);
     const ilk = cerceveNoktasi(baslangic, genislik, yukseklik);
     const son = cerceveNoktasi(bitis, genislik, yukseklik);
-    baglam.strokeStyle = eclubHoykRengi((baslangic + bitis) / (2 * toplam), kirmizilasma);
+    baglam.strokeStyle = eclubHoykRengi((baslangic + bitis) / (2 * toplam), kirmizilasma, palet);
     baglam.beginPath();
     baglam.moveTo(...ilk);
     baglam.lineTo(...son);
@@ -80,10 +81,20 @@ export function EclubHoykSureCercevesi({ gecenGun }: { gecenGun: number }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gorunumRef = useRef({ gun: gecenGun, kirmizilasma: gecenGun >= TOPLAM_GUN ? 1 : 0 });
   const baslatildiRef = useRef(false);
+  const paletRef = useRef(eclubHoykRenkPaleti());
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+    const paletiOku = () => {
+      const coz = cizimRenkCozucu(canvas);
+      paletRef.current = eclubHoykRenkPaleti((ad) => coz(`var(${ad})`));
+    };
+    paletiOku();
+    const temaTakibiniBirak = cizimTemasiniIzle(canvas, () => {
+      paletiOku();
+      ciz(canvas, gorunumRef.current.gun, gorunumRef.current.kirmizilasma, paletRef.current);
+    });
     const boyutlandir = () => {
       const genislik = canvas.clientWidth;
       const yukseklik = canvas.clientHeight;
@@ -92,12 +103,12 @@ export function EclubHoykSureCercevesi({ gecenGun }: { gecenGun: number }) {
       canvas.width = Math.round(genislik * oran);
       canvas.height = Math.round(yukseklik * oran);
       canvas.getContext("2d")?.setTransform(oran, 0, 0, oran, 0, 0);
-      ciz(canvas, gorunumRef.current.gun, gorunumRef.current.kirmizilasma);
+      ciz(canvas, gorunumRef.current.gun, gorunumRef.current.kirmizilasma, paletRef.current);
     };
     const gozlemci = new ResizeObserver(boyutlandir);
     gozlemci.observe(canvas);
     boyutlandir();
-    return () => gozlemci.disconnect();
+    return () => { gozlemci.disconnect(); temaTakibiniBirak(); };
   }, []);
 
   useEffect(() => {
@@ -105,7 +116,7 @@ export function EclubHoykSureCercevesi({ gecenGun }: { gecenGun: number }) {
     if (!canvas) return;
     if (!baslatildiRef.current) {
       baslatildiRef.current = true;
-      ciz(canvas, gorunumRef.current.gun, gorunumRef.current.kirmizilasma);
+      ciz(canvas, gorunumRef.current.gun, gorunumRef.current.kirmizilasma, paletRef.current);
       return;
     }
 
@@ -119,7 +130,7 @@ export function EclubHoykSureCercevesi({ gecenGun }: { gecenGun: number }) {
         gun: ilk.gun + (gecenGun - ilk.gun) * yumusak,
         kirmizilasma: gecenGun === TOPLAM_GUN ? ilk.kirmizilasma : ilk.kirmizilasma * (1 - oran),
       };
-      ciz(canvas, gorunumRef.current.gun, gorunumRef.current.kirmizilasma);
+      ciz(canvas, gorunumRef.current.gun, gorunumRef.current.kirmizilasma, paletRef.current);
       if (oran < 1) {
         kare = requestAnimationFrame(ilerlet);
         return;
@@ -130,7 +141,7 @@ export function EclubHoykSureCercevesi({ gecenGun }: { gecenGun: number }) {
       const kirmizilastir = (an: number) => {
         const renkOrani = sinirla((an - renkBaslangici) / 320, 0, 1);
         gorunumRef.current = { gun: TOPLAM_GUN, kirmizilasma: ilk.kirmizilasma + (1 - ilk.kirmizilasma) * renkOrani };
-        ciz(canvas, TOPLAM_GUN, gorunumRef.current.kirmizilasma);
+        ciz(canvas, TOPLAM_GUN, gorunumRef.current.kirmizilasma, paletRef.current);
         if (renkOrani < 1) kare = requestAnimationFrame(kirmizilastir);
       };
       kare = requestAnimationFrame(kirmizilastir);

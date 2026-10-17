@@ -4,16 +4,16 @@ import { Dialog } from "radix-ui";
 import { YASAL_METINLER } from "./yasalMetinler";
 
 const BAGLANTI_SINIFI =
-  "rounded-sm text-center underline-offset-4 hover:text-gray-500 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gray-400";
+  "rounded-sm text-center underline-offset-4 hover:text-[var(--tema-yerel-giris-yardimci-metin-01)] hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--tema-yerel-giris-odak-01)]";
 
 export default function GirisAltBilgileri() {
   return (
     // Masaüstünde eski telif satırının yüksekliği korunur; giriş formu yer değiştirmez.
     <div className="relative mt-20 md:mt-10 md:h-6">
-      <div className="bg-white pb-8 md:absolute md:inset-x-0 md:top-10">
+      <div className="bg-[var(--tema-yerel-giris-kart-01)] pb-8 md:absolute md:inset-x-0 md:top-10">
         <section
           aria-label="Sözleşmeler ve şirket bilgileri"
-          className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,0.6fr)] items-start gap-x-6 text-center text-xs leading-relaxed text-gray-400"
+          className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,0.6fr)] items-start gap-x-6 text-center text-xs leading-relaxed text-[var(--tema-yerel-giris-yardimci-metin-02)]"
         >
           <ul aria-label="Sözleşmeler" className="m-0 flex list-none flex-col gap-2 p-0">
             {YASAL_METINLER.map((metin) => (
@@ -25,31 +25,31 @@ export default function GirisAltBilgileri() {
                     </button>
                   </Dialog.Trigger>
                   <Dialog.Portal>
-                    <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30" />
+                    <Dialog.Overlay className="fixed inset-0 z-50 bg-[var(--tema-yerel-giris-ortu-01)]/30" />
                     <Dialog.Content
                       aria-describedby={undefined}
-                      className="fixed left-1/2 top-1/2 z-50 flex max-h-[85dvh] w-[calc(100%-2rem)] max-w-xl -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-2xl bg-white text-gray-600 shadow-xl"
+                      className="fixed left-1/2 top-1/2 z-50 flex max-h-[85dvh] w-[calc(100%-2rem)] max-w-xl -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-2xl bg-[var(--tema-yerel-giris-kart-01)] text-[var(--tema-yerel-giris-ana-metin-01)] shadow-xl"
                       style={{ fontFamily: "'Nunito', sans-serif" }}
                     >
-                      <div className="flex items-center justify-between gap-4 border-b border-gray-100 px-6 py-4">
+                      <div className="flex items-center justify-between gap-4 border-b border-[var(--tema-yerel-giris-cizgi-01)] px-6 py-4">
                         <Dialog.Title className="m-0 text-[13px] font-semibold leading-[18px]">
                           {metin.baslik}
                         </Dialog.Title>
                         <Dialog.Close
                           aria-label="Kapat"
-                          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xl text-gray-400 hover:bg-gray-100 hover:text-gray-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-400"
+                          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xl text-[var(--tema-yerel-giris-yardimci-metin-02)] hover:bg-[var(--tema-yerel-giris-sayfa-zemini-01)] hover:text-[var(--tema-yerel-giris-ana-metin-01)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--tema-yerel-giris-odak-01)]"
                         >
                           <span aria-hidden="true">×</span>
                         </Dialog.Close>
                       </div>
-                      <article className="min-h-48 overflow-y-auto px-6 py-5 text-left text-[10px] leading-[16px] text-gray-600">
+                      <article className="min-h-48 overflow-y-auto px-6 py-5 text-left text-[10px] leading-[16px] text-[var(--tema-yerel-giris-ana-metin-01)]">
                         {metin.bolumler.map((bolum, bolumSirasi) => (
                           <section
                             key={bolum.baslik ?? `${metin.baslik}-${bolumSirasi}`}
                             className={bolumSirasi === 0 ? "" : "mt-6"}
                           >
                             {bolum.baslik && (
-                              <h3 className="mb-2 text-[12px] font-bold leading-[17px] text-gray-800">
+                              <h3 className="mb-2 text-[12px] font-bold leading-[17px] text-[var(--tema-yerel-giris-ana-metin-02)]">
                                 {bolum.baslik}
                               </h3>
                             )}
@@ -88,7 +88,7 @@ export default function GirisAltBilgileri() {
           </address>
         </section>
 
-        <div className="mt-6 text-center text-xs text-gray-400">
+        <div className="mt-6 text-center text-xs text-[var(--tema-yerel-giris-yardimci-metin-02)]">
           © 2026 HapBilgi · Tüm hakları saklıdır.
         </div>
       </div>

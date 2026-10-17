@@ -235,9 +235,9 @@ export default function EclubLigiPage() {
     <div className={styles.page} style={{ fontFamily: "'Nunito', sans-serif" }}>
       <div className={styles.container}>
         <SayfaYenileBasligi className={styles.header} baslik={<div className="inline-flex items-center">
-          <h1 className="m-0 text-2xl font-extrabold tracking-[-0.03em] text-[#10213d]">E-Club Ligi</h1>
+          <h1 className="m-0 text-2xl font-extrabold tracking-[-0.03em] text-[var(--tema-yerel-eclub-ana-metin-12)]">E-Club Ligi</h1>
           <SayfaRehberi anahtar="eclub-ligi" className="ml-1.5 -translate-y-1" />
-        </div>} aciklama={<><p className="mt-1 text-xs font-semibold text-[#78889d]">
+        </div>} aciklama={<><p className="mt-1 text-xs font-semibold text-[var(--tema-yerel-eclub-yardimci-metin-19)]">
           Eczacıların ve teknisyenlerin öğrenme motivasyonunu gözlemleyebilirsiniz.
         </p>
 
@@ -312,9 +312,9 @@ export default function EclubLigiPage() {
         )}
 
         {hata && !data ? (
-          <div role="alert" className="rounded-2xl border border-red-100 bg-white p-6 text-center">
-            <p className="text-sm text-[#a43737]">{hata}</p>
-            <button type="button" onClick={() => void veriCek()} className="mt-3 rounded-xl bg-[#2f9ae9] px-4 py-2 text-xs font-extrabold text-white">Yeniden dene</button>
+          <div role="alert" className="rounded-2xl border border-[var(--tema-yerel-eclub-islevsel-cizgi-07)] bg-[var(--tema-yerel-eclub-islevsel-zemin-10)] p-6 text-center">
+            <p className="text-sm text-[var(--tema-yerel-eclub-islevsel-metin-26)]">{hata}</p>
+            <button type="button" onClick={() => void veriCek()} className="mt-3 rounded-xl bg-[var(--tema-yerel-eclub-eylem-zemin-06)] px-4 py-2 text-xs font-extrabold text-[var(--tema-yerel-eclub-ters-metin-01)]">Yeniden dene</button>
           </div>
         ) : data ? (
         <>
@@ -346,7 +346,7 @@ export default function EclubLigiPage() {
               <h2 className={styles.panelTitle}>E-Club Takımlar Ligi</h2>
               <p className={styles.panelDescription}>Çekli ve çeksiz performans puanlarının toplamına göre dönemlik takım sıralaması.</p>
             </div>
-            <Trophy className="h-5 w-5 text-[#237ac8]" />
+            <Trophy className="h-5 w-5 text-[var(--tema-yerel-eclub-eylem-metin-01)]" />
           </div>
 
           {takimLigi.length > 0 ? (
@@ -373,35 +373,35 @@ export default function EclubLigiPage() {
                     return (
                       <tr
                         key={takim.utt_id}
-                        className={benimTakimim ? "bg-[#eaf4fd] font-black ring-1 ring-inset ring-[#93c5fd]" : undefined}
+                        className={benimTakimim ? "bg-[var(--tema-yerel-eclub-secim-zemin-05)] font-black ring-1 ring-inset ring-[var(--tema-yerel-eclub-odak-04)]" : undefined}
                       >
                         <td style={{ textAlign: "center" }}>
-                          <span className={`${styles.rankBadge} ${benimTakimim ? "bg-[#2563eb] text-white" : ""}`}>
+                          <span className={`${styles.rankBadge} ${benimTakimim ? "bg-[var(--tema-yerel-eclub-eylem-zemin-07)] text-[var(--tema-yerel-eclub-ters-metin-01)]" : ""}`}>
                             {takim.sira || "—"}
                           </span>
                         </td>
                         <td>
                           <div className="flex flex-col">
-                            <strong className="text-xs text-[#1e3a8a]">
+                            <strong className="text-xs text-[var(--tema-yerel-eclub-ana-metin-04)]">
                               {takim.takim_adi}
                             </strong>
                             {benimTakimim && (
-                              <span className="mt-0.5 inline-flex w-fit items-center gap-1 rounded bg-[#dbeafe] px-1.5 py-0.2 text-[9px] font-extrabold text-[#1d4ed8]">
+                              <span className="mt-0.5 inline-flex w-fit items-center gap-1 rounded bg-[var(--tema-yerel-eclub-secim-zemin-02)] px-1.5 py-0.2 text-[9px] font-extrabold text-[var(--tema-yerel-eclub-eylem-metin-02)]">
                                 <CheckCircle2 size={10} /> Benim Takımım
                               </span>
                             )}
                           </div>
                         </td>
-                        <td className="text-xs text-[#334155]">{takim.utt_adi}</td>
-                        <td className="text-xs text-[#64748b]">{takim.bolge_adi}</td>
-                        <td className="text-xs tabular-nums text-[#475569]" style={{ textAlign: "center" }}>{takim.uye_sayisi}</td>
-                        <td className="text-xs tabular-nums text-[#475569]" style={{ textAlign: "center" }}>{takim.aktif_uye}</td>
-                        <td className="text-xs tabular-nums text-[#334155]" style={{ textAlign: "center" }}>{takim.tamamlanan_izleme}</td>
-                        <td className="text-xs font-bold tabular-nums text-[#16a34a]" style={{ textAlign: "center" }}>{takim.dogru_cevap}</td>
-                        <td className="text-xs font-bold tabular-nums text-[#0f766e]" style={{ textAlign: "center" }}>
+                        <td className="text-xs text-[var(--tema-yerel-eclub-ana-metin-15)]">{takim.utt_adi}</td>
+                        <td className="text-xs text-[var(--tema-yerel-eclub-yardimci-metin-26)]">{takim.bolge_adi}</td>
+                        <td className="text-xs tabular-nums text-[var(--tema-yerel-eclub-ana-metin-16)]" style={{ textAlign: "center" }}>{takim.uye_sayisi}</td>
+                        <td className="text-xs tabular-nums text-[var(--tema-yerel-eclub-ana-metin-16)]" style={{ textAlign: "center" }}>{takim.aktif_uye}</td>
+                        <td className="text-xs tabular-nums text-[var(--tema-yerel-eclub-ana-metin-15)]" style={{ textAlign: "center" }}>{takim.tamamlanan_izleme}</td>
+                        <td className="text-xs font-bold tabular-nums text-[var(--tema-yerel-eclub-islevsel-metin-05)]" style={{ textAlign: "center" }}>{takim.dogru_cevap}</td>
+                        <td className="text-xs font-bold tabular-nums text-[var(--tema-yerel-eclub-islevsel-metin-27)]" style={{ textAlign: "center" }}>
                           {takim.cekli_puan.toLocaleString("tr-TR")} p
                         </td>
-                        <td className="text-xs font-bold tabular-nums text-[#7c5ce7]" style={{ textAlign: "center" }}>
+                        <td className="text-xs font-bold tabular-nums text-[var(--tema-yerel-eclub-islevsel-metin-28)]" style={{ textAlign: "center" }}>
                           {takim.ceksiz_puan.toLocaleString("tr-TR")} p
                         </td>
                         <td className={styles.score} style={{ textAlign: "center" }}>

@@ -34,7 +34,7 @@ interface SiparisFiltreleriProps {
 const labelStyle: React.CSSProperties = {
   fontSize: "10px",
   fontWeight: 600,
-  color: "#71859d",
+  color: "var(--tema-yerel-magaza-yardimci-metin-02)",
   display: "block",
   marginBottom: "4px",
   fontFamily: "'Nunito', sans-serif",
@@ -99,16 +99,16 @@ export default function SiparisFiltreleri(p: SiparisFiltreleriProps) {
   // ─── Render ────────────────────────────────────────────────────────────────
 
   return (
-    <section className="mb-4 rounded-2xl border border-[#dfe7f1] bg-white p-4 shadow-[0_6px_18px_rgba(31,55,90,0.035)]">
+    <section className="mb-4 rounded-2xl border border-[var(--tema-yerel-magaza-cizgi-01)] bg-[var(--tema-yerel-magaza-kart-01)] p-4 shadow-[0_6px_18px_var(--tema-yerel-magaza-golge-01)]">
       <div className="mb-3 flex items-center justify-between gap-3">
         <div>
-          <h2 className="text-sm font-extrabold text-[#203653]">Filtreler</h2>
-          <p className="mt-0.5 text-[11px] font-medium text-[#8190a3]">Listeyi ekip, durum veya sipariş tarihine göre daraltın.</p>
+          <h2 className="text-sm font-extrabold text-[var(--tema-yerel-magaza-ana-metin-01)]">Filtreler</h2>
+          <p className="mt-0.5 text-[11px] font-medium text-[var(--tema-yerel-magaza-yardimci-metin-18)]">Listeyi ekip, durum veya sipariş tarihine göre daraltın.</p>
         </div>
         {aktifFiltreVar && (
           <button
             onClick={p.filtreleriSifirla}
-            className="rounded-lg border border-[#dfe7f1] bg-white px-3 py-1.5 text-[11px] font-bold text-[#61748b] transition-colors hover:bg-[#f6f9fc]"
+            className="rounded-lg border border-[var(--tema-yerel-magaza-cizgi-01)] bg-[var(--tema-yerel-magaza-kart-01)] px-3 py-1.5 text-[11px] font-bold text-[var(--tema-yerel-magaza-yardimci-metin-19)] transition-colors hover:bg-[var(--tema-yerel-magaza-sayfa-zemini-05)]"
           >
             Filtreleri Temizle
           </button>

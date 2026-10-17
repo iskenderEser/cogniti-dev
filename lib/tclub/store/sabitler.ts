@@ -27,8 +27,8 @@ export const DURUM_ETIKETLERI: Record<SiparisDurum, string> = {
  * UI tutarlılığı için tek yerde tanımlı.
  */
 export const DURUM_RENKLERI: Record<SiparisDurum, { metin: string; arka: string; kenar: string }> = {
-  beklemede: { metin: "#854d0e", arka: "#fefce8", kenar: "#fde68a" },
-  kargoda: { metin: "#1d4ed8", arka: "#e6f1fb", kenar: "#bfdbfe" },
-  teslim_edildi: { metin: "#16a34a", arka: "#f0fdf4", kenar: "#bbf7d0" },
-  iptal: { metin: "#bc2d0d", arka: "#fef2f2", kenar: "#fecaca" },
+  beklemede: { metin: "var(--tema-yerel-magaza-islevsel-metin-14)", arka: "var(--tema-yerel-magaza-islevsel-zemin-20)", kenar: "var(--tema-yerel-magaza-islevsel-cizgi-01)" },
+  kargoda: { metin: "var(--tema-yerel-magaza-islevsel-metin-15)", arka: "var(--tema-yerel-magaza-islevsel-zemin-21)", kenar: "var(--tema-yerel-magaza-islevsel-cizgi-07)" },
+  teslim_edildi: { metin: "var(--tema-yerel-magaza-islevsel-metin-16)", arka: "var(--tema-yerel-magaza-islevsel-zemin-22)", kenar: "var(--tema-yerel-magaza-islevsel-cizgi-08)" },
+  iptal: { metin: "var(--tema-yerel-magaza-islevsel-metin-17)", arka: "var(--tema-yerel-magaza-islevsel-zemin-23)", kenar: "var(--tema-yerel-magaza-islevsel-cizgi-09)" },
 };

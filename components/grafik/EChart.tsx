@@ -25,6 +25,7 @@ import {
 import { LabelLayout, UniversalTransition } from "echarts/features";
 import { CanvasRenderer, SVGRenderer } from "echarts/renderers";
 import type { EChartsCoreOption } from "echarts/core";
+import { cizimRenkCozucu, cizimTemasiniIzle, grafikRenkleriniCoz } from "@/lib/tema/cizimRenkleri";
 
 echarts.use([
   BarChart,
@@ -65,6 +66,7 @@ export default function EChart({ option, height = 320, className, style, onClick
   const grafikRef = useRef<echarts.ECharts | null>(null);
   // Handler'ı ref'te tut ki her değişimde grafik yeniden kurulmasın.
   const tiklamaRef = useRef(onClick);
+  const secenekRef = useRef(option);
 
   useEffect(() => {
     tiklamaRef.current = onClick;
@@ -89,8 +91,12 @@ export default function EChart({ option, height = 320, className, style, onClick
 
     const gozlemci = new ResizeObserver(() => grafik.resize());
     gozlemci.observe(kutuRef.current);
+    const temaTakibiniBirak = cizimTemasiniIzle(kutuRef.current, () => {
+      grafik.setOption(grafikRenkleriniCoz(secenekRef.current, cizimRenkCozucu(kutuRef.current)), { replaceMerge: ["xAxis", "yAxis"] });
+    });
     return () => {
       gozlemci.disconnect();
+      temaTakibiniBirak();
       zrender.off("mousemove", imleciGuncelle);
       zrender.off("globalout", imleciSifirla);
       grafik.dispose();
@@ -101,15 +107,16 @@ export default function EChart({ option, height = 320, className, style, onClick
   // Option değişince güncelle. replaceMerge: eksen bileşenleri (pie↔bar geçişinde
   // pie'da eksen yok → kaldırılır); series universalTransition ile morph olur.
   useEffect(() => {
-    grafikRef.current?.setOption(option, { replaceMerge: ["xAxis", "yAxis"] });
-  }, [option]);
+    secenekRef.current = option;
+    grafikRef.current?.setOption(grafikRenkleriniCoz(option, cizimRenkCozucu(kutuRef.current)), { replaceMerge: ["xAxis", "yAxis"] });
+  }, [option, renderer]);
 
   // PNG indir — ekrandaki grafik değişmez; yalnız indirilen dosyanın sağ-alt
   // köşesine HapBilgi logosu (baykuş + "hapbilgi") filigran olarak basılır.
   const indir = async () => {
     const grafik = grafikRef.current;
     if (!grafik) return;
-    const kaynak = grafik.getDataURL({ type: "png", pixelRatio: 2, backgroundColor: "#fff" });
+    const kaynak = grafik.getDataURL({ type: "png", pixelRatio: 2, backgroundColor: cizimRenkCozucu(kutuRef.current)("var(--tema-cizim-png-zemin)") });
 
     const yukle = (src: string) =>
       new Promise<HTMLImageElement>((coz, red) => {
@@ -159,7 +166,7 @@ export default function EChart({ option, height = 320, className, style, onClick
           style={{
             position: "absolute", top: 4, right: 4, display: "flex", alignItems: "center", gap: 4,
             padding: "3px 9px", fontSize: 12, borderRadius: 999, cursor: "pointer",
-            border: "0.5px solid #e5e7eb", background: "rgba(255,255,255,0.9)", color: "#6b7280",
+            border: "0.5px solid var(--tema-cizim-png-cizgi)", background: "var(--tema-cizim-png-dugme)", color: "var(--tema-cizim-png-metin)",
           }}
         >
           <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor">

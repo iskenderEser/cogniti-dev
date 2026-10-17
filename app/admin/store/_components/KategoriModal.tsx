@@ -35,8 +35,8 @@ const BOS_FORM: FormState = {
   aktif_mi: true,
 };
 
-const KOYU_METIN = "#374151";
-const GRI_METIN = "#737373";
+const KOYU_METIN = "var(--tema-yerel-yonetim-ana-metin-03)";
+const GRI_METIN = "var(--tema-yerel-yonetim-yardimci-metin-01)";
 
 export default function KategoriModal({
   acik,
@@ -106,7 +106,7 @@ export default function KategoriModal({
   if (!acik) return null;
 
   const inputStili: React.CSSProperties = {
-    border: "0.5px solid #e5e7eb",
+    border: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)",
     fontFamily: "'Nunito', sans-serif",
     color: KOYU_METIN,
   };
@@ -114,20 +114,20 @@ export default function KategoriModal({
   return (
     <div
       className="fixed inset-0 flex items-center justify-center z-50 p-4"
-      style={{ background: "rgba(0,0,0,0.5)" }}
+      style={{ background: "var(--tema-yerel-yonetim-ortu-04)" }}
     >
       <div
-        className="bg-white rounded-xl border border-gray-200 shadow-lg w-full max-w-sm flex flex-col"
+        className="bg-[var(--tema-yerel-yonetim-kart-04)] rounded-xl border border-[var(--tema-yerel-yonetim-cizgi-08)] shadow-lg w-full max-w-sm flex flex-col"
       >
         {/* Başlık */}
-        <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
-          <div className="text-base font-semibold text-gray-900">
+        <div className="px-5 py-4 border-b border-[var(--tema-yerel-yonetim-cizgi-09)] flex items-center justify-between">
+          <div className="text-base font-semibold text-[var(--tema-yerel-yonetim-ana-metin-05)]">
             {mevcutKategori ? "Kategoriyi Düzenle" : "Yeni Kategori"}
           </div>
           <button
             onClick={onKapat}
             disabled={kaydediliyor}
-            className="text-gray-500 text-lg cursor-pointer border-none bg-transparent p-1"
+            className="text-[var(--tema-yerel-yonetim-yardimci-metin-06)] text-lg cursor-pointer border-none bg-transparent p-1"
             style={{ opacity: kaydediliyor ? 0.4 : 1 }}
           >
             ✕
@@ -137,7 +137,7 @@ export default function KategoriModal({
         {/* Form */}
         <div className="px-5 py-4 flex flex-col gap-3">
           <div>
-            <label className="text-xs font-semibold text-gray-700 block mb-1.5">
+            <label className="text-xs font-semibold text-[var(--tema-yerel-yonetim-ana-metin-08)] block mb-1.5">
               Kategori Adı
             </label>
             <input
@@ -145,7 +145,7 @@ export default function KategoriModal({
               value={form.ad}
               onChange={(e) => handleChange("ad", e.target.value)}
               disabled={kaydediliyor}
-              className="w-full px-3 py-2 text-sm rounded-lg bg-white"
+              className="w-full px-3 py-2 text-sm rounded-lg bg-[var(--tema-yerel-yonetim-kart-04)]"
               style={inputStili}
               placeholder="Örn. Kitap, Elektronik, Aksesuar"
               autoFocus
@@ -153,7 +153,7 @@ export default function KategoriModal({
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-gray-700 block mb-1.5">
+            <label className="text-xs font-semibold text-[var(--tema-yerel-yonetim-ana-metin-08)] block mb-1.5">
               Görüntülenme Sırası
             </label>
             <input
@@ -162,7 +162,7 @@ export default function KategoriModal({
               value={form.sira}
               onChange={(e) => handleChange("sira", e.target.value === "" ? "" : Number(e.target.value))}
               disabled={kaydediliyor}
-              className="w-full px-3 py-2 text-sm rounded-lg bg-white"
+              className="w-full px-3 py-2 text-sm rounded-lg bg-[var(--tema-yerel-yonetim-kart-04)]"
               style={inputStili}
             />
             <div className="text-xs mt-1" style={{ color: GRI_METIN }}>
@@ -184,13 +184,13 @@ export default function KategoriModal({
         </div>
 
         {/* Aksiyon */}
-        <div className="px-5 py-4 border-t border-gray-100 flex gap-2.5 justify-end">
+        <div className="px-5 py-4 border-t border-[var(--tema-yerel-yonetim-cizgi-09)] flex gap-2.5 justify-end">
           <button
             onClick={onKapat}
             disabled={kaydediliyor}
-            className="px-4 py-2 rounded-lg border bg-transparent text-gray-500 text-xs cursor-pointer"
+            className="px-4 py-2 rounded-lg border bg-transparent text-[var(--tema-yerel-yonetim-yardimci-metin-06)] text-xs cursor-pointer"
             style={{
-              border: "0.5px solid #e5e7eb",
+              border: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)",
               fontFamily: "'Nunito', sans-serif",
               opacity: kaydediliyor ? 0.4 : 1,
             }}
@@ -200,7 +200,7 @@ export default function KategoriModal({
           <button
             onClick={handleKaydet}
             disabled={kaydediliyor}
-            className="px-5 py-2 rounded-lg border-none text-white text-xs font-semibold cursor-pointer"
+            className="px-5 py-2 rounded-lg border-none text-[var(--tema-yerel-yonetim-ters-metin-02)] text-xs font-semibold cursor-pointer"
             style={{
               background: RENK_BORDO,
               opacity: kaydediliyor ? 0.5 : 1,
