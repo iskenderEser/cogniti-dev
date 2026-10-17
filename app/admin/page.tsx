@@ -36,6 +36,7 @@ import SistemAyarlari from "./_components/SistemAyarlari";
 import HbStorePaneli from "./_components/global/HbStorePaneli";
 import EclubStorePaneli from "./_components/global/EclubStorePaneli";
 import EclubYonetimPaneli from "./eclub/_components/EclubYonetimPaneli";
+import EczanemUyeYonetimi from "./eczanem/_components/EczanemUyeYonetimi";
 import EclubBannerYonetimi from "./eclub/_components/EclubBannerYonetimi";
 import UretimAtamaPaneli from "./_components/global/UretimAtamaPaneli";
 
@@ -115,7 +116,7 @@ export default function AdminPanel() {
     : [];
 
   return (
-    <div style={{ minHeight: "100vh", background: "#fff", fontFamily: "'Nunito', sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: "var(--tema-yerel-yonetim-kart-03)", fontFamily: "'Nunito', sans-serif" }}>
       <AdminUstBar
         kullaniciAd={`${admin.kullanici.ad} ${admin.kullanici.soyad}`}
         globalBolum={globalBolum}
@@ -170,10 +171,10 @@ export default function AdminPanel() {
           ) : globalBolum === "uretim" ? (
             <UretimAtamaPaneli hata={admin.hata} basari={admin.basari} />
           ) : !f ? (
-            <p style={{ fontSize: "13px", color: "#737373" }}>Soldan bir firma seçin.</p>
+            <p style={{ fontSize: "13px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)" }}>Soldan bir firma seçin.</p>
           ) : (
             <>
-              <h2 style={{ fontSize: "16px", fontWeight: 700, color: "#111", marginBottom: "16px" }}>
+              <h2 style={{ fontSize: "16px", fontWeight: 700, color: "var(--tema-yerel-yonetim-ana-metin-01)", marginBottom: "16px" }}>
                 {f.firma_adi}
               </h2>
 
@@ -247,12 +248,16 @@ export default function AdminPanel() {
               )}
 
               {seciliSekme === "eczanem" && (
+                <div className="flex min-w-0 flex-col gap-5">
                 <ModulDurumKarti
                   baslik="Eczanem"
                   acik={f.eczanem_aktif}
                   onToggle={() => admin.handleEczanemToggle(f)}
-                  aciklama="Eczanenin danışanlarının bilgilenme modülü — davetler, gönderimler, üyeler, siparişler ve tarifeler. Kapalıyken bu firmanın eczacı/teknisyenleri Eczanem sekmesini görmez."
+                  m4NotuGoster={false}
+                  aciklama="Eczanenin üyelerinin bilgilenme modülü — davetler, gönderimler, üyeler, siparişler ve tarifeler. Kapalıyken bu firmanın eczacı/teknisyenleri Eczanem sekmesini görmez."
                 />
+                <EczanemUyeYonetimi key={f.firma_id} firmaId={f.firma_id} firmaAdi={f.firma_adi} />
+                </div>
               )}
             </>
           )}
