@@ -72,7 +72,7 @@ BEGIN
       FROM kullanicilar k
       JOIN bolgeler b ON b.bolge_id = k.bolge_id
       WHERE b.takim_id = v_takim_id
-        AND k.rol = ANY(COALESCE(y.hedef_roller, ARRAY['utt']))
+        AND (CASE WHEN k.rol = 'kd_utt' THEN 'utt' ELSE k.rol END) = ANY(COALESCE(y.hedef_roller, ARRAY['utt']))
         AND k.aktif_mi = true;
     END IF;
 

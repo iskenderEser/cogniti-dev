@@ -24,7 +24,7 @@ AS $fonksiyon$
     JOIN public.eclub_eczane_firma ef
       ON ef.id = ue.eczane_firma_id AND ef.aktif_mi = true
     WHERE k.kullanici_id = p_utt_id
-      AND LOWER(k.rol) = 'utt'
+      AND LOWER(k.rol) IN ('utt', 'kd_utt')
       AND k.aktif_mi = true
       AND f.aktif = true
       AND f.eczanem_aktif = true
@@ -68,7 +68,7 @@ BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM public.kullanicilar k
     JOIN public.firmalar f ON f.firma_id = k.firma_id
-    WHERE k.kullanici_id = p_utt_id AND LOWER(k.rol) = 'utt'
+    WHERE k.kullanici_id = p_utt_id AND LOWER(k.rol) IN ('utt', 'kd_utt')
       AND k.aktif_mi = true AND f.aktif = true AND f.eczanem_aktif = true
   ) THEN
     RAISE EXCEPTION 'Mutabakat erişimi yalnız yetkili UTT içindir.' USING ERRCODE = '42501';

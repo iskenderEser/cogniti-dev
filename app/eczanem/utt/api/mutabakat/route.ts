@@ -10,6 +10,7 @@ import {
   type UttMutabakatFiltresi, type UttMutabakatKarari,
 } from "@/lib/eczanem/uttMutabakat";
 import { rolCozucu } from "@/lib/utils/rolCozucu";
+import { TUKETICI_ROLLER } from "@/lib/utils/roller";
 import { rolHatasi, sunucuHatasi, validasyonHatasi, yetkiHatasi } from "@/lib/utils/hataIsle";
 
 async function yetkiliUtt() {
@@ -18,7 +19,7 @@ async function yetkiliUtt() {
   const { data: { user }, error } = await supabase.auth.getUser();
   if (error || !user) return { hata: yetkiHatasi() };
   const rol = await rolCozucu(adminSupabase, user.id);
-  if (rol !== "utt") return { hata: rolHatasi("Mutabakat sayfasına yalnız UTT erişebilir.") };
+  if (!TUKETICI_ROLLER.includes(rol)) return { hata: rolHatasi("Mutabakat sayfasına yalnız UTT erişebilir.") };
   const erisim = await uttEczanemErisimi(adminSupabase, user.id);
   if (!erisim.ok || !erisim.acik) {
     return { hata: rolHatasi(erisim.hata ?? ECZANEM_KAPALI_MESAJI) };

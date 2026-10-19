@@ -179,9 +179,9 @@ test("görünüm test ürünleri kısa ad ve 99 önekli İndirim ID kullanır", 
   assert.match(testAdlariSql, /SET urun_adi = h\.yeni_ad,\s*gorunen_indirim_id = h\.yeni_indirim_id/);
 });
 
-test("yeni yüzey yalnız UTT rolünde, kimlik ve müşteri bilgisi taşımadan açılır", () => {
-  assert.match(nav, /path: "\/eczanem\/utt\/mutabakat"[\s\S]*?c\.rolKucu === "utt"/);
-  assert.match(route, /rol !== "utt"/);
+test("yeni yüzey ortak UTT rol kümesinde, kimlik ve müşteri bilgisi taşımadan açılır", () => {
+  assert.match(nav, /path: "\/eczanem\/utt\/mutabakat"[^\n]*TUKETICI_ROLLER\.includes\(c\.rolKucu\)/);
+  assert.match(route, /!TUKETICI_ROLLER\.includes\(rol\)/);
   assert.match(route, /uttEczanemErisimi/);
   assert.match(route, /Mutabakat işlem alanları geçersiz/);
   assert.match(route, /Cache-Control": "no-store"/);
@@ -232,7 +232,7 @@ test("onay snapshot'ı ve karar RPC'si UTT kapsamı, dönem ve tek işlem kimli�
   assert.match(kayitSql, /v_harcama_puani <> NEW\.kullanilan_puan/);
   assert.match(kayitSql, /g\.yayin_id IS DISTINCT FROM i\.yayin_id/);
   assert.match(kayitSql, /REVOKE ALL ON TABLE/);
-  assert.match(rpcSql, /LOWER\(k\.rol\) = 'utt'/);
+  assert.match(rpcSql, /LOWER\(k\.rol\) IN \('utt', 'kd_utt'\)/);
   assert.match(rpcSql, /ef\.aktif_mi = true/);
   assert.match(rpcSql, /FOR UPDATE/);
   assert.match(rpcSql, /v_simdi_tr < v_ay_basi_tr \+ INTERVAL '7 days'/);

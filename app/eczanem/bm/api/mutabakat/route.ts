@@ -17,6 +17,7 @@ import {
 } from "@/lib/eczanem/uttMutabakat";
 import { eclubYonetimKapsaminiGetir, type EclubKapsamUtt } from "@/lib/eclub/yonetimKapsami";
 import { rolCozucu } from "@/lib/utils/rolCozucu";
+import { TUKETICI_ROLLER } from "@/lib/utils/roller";
 import { rolHatasi, sunucuHatasi, validasyonHatasi, yetkiHatasi } from "@/lib/utils/hataIsle";
 
 async function yetkiliBm() {
@@ -41,7 +42,7 @@ async function yetkiliBm() {
   if (kullaniciHatasi || !kullanici) throw new Error("BM organizasyon kapsamı alınamadı.");
 
   const kapsam = await eclubYonetimKapsaminiGetir(db, kullanici);
-  return { db, kullaniciId: user.id, uttler: kapsam.uttler.filter((utt) => utt.rol === "utt") };
+  return { db, kullaniciId: user.id, uttler: kapsam.uttler.filter((utt) => TUKETICI_ROLLER.includes(utt.rol)) };
 }
 
 function hedefUtt(uttler: EclubKapsamUtt[], uttId: string): EclubKapsamUtt | null {
