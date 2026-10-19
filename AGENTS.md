@@ -34,6 +34,15 @@ Hediye Takibi görünüm testi için oluşturulan test verileri henüz silinmemi
 
 Eczanem>İndirim Onayı sekmesindeki (F) veriler silinecek
 
+## Hatırlatma: Cogniti marka dönüşümünde 5, 7 ve 9. adımlar
+
+Kullanıcı kararı: **5. e-posta kimliği**, **7. `cogniti.net` domain bağlantısı** ve **9. gerçek ortam son kontrolü** tek bir `cogniti.net` geçişi kapsamında birlikte ele alınacak. **6. dış platformlar adımı (6.1–6.7) tamamlandı.**
+
+- **7 — Domain:** `cogniti.net` için DNS, Vercel/hosting bağlantısı ve HTTPS tamamlanacak. Yeni domaine bağlı Supabase Auth site/redirect adresleri, Bunny origin/domain izinleri ve uygulama/cron/ortam değişkeni değerleri bu geçişte gözden geçirilecek.
+- **5 — E-posta kimliği:** Resend gönderici adı/adresi ve domain doğrulaması; `RESEND_API_KEY`, `ECLUB_DAVET_EMAIL_FROM`, `ECLUB_CEK_EMAIL_FROM`, `HAPBILGI_SITE_URL` değerleri ile hosting ayarları kontrol edilecek. Supabase Auth şifre sıfırlama e-postasının göndericisi, SMTP/şablon ayarları ve dönüş adresleri doğrulanacak. Teknik değişken adları korunacak; gizli değerler belgeye veya sohbete yazılmayacak.
+- **9 — Son kontrol:** Yeni domainde giriş, gerçek davet → e-posta → şifre oluşturma → giriş ve şifre sıfırlama; logo/banner, medya, e-posta ve bildirim kimliği doğrulanıp marka geçişi kaydedilecek. Kontrollü gerçek kayıt testlerinden önce test e-postası gönderme.
+- E-posta metin taslakları `docs/COGNITI_EPOSTA_SABLON_STOGU.md` ve BLUEBOOK içinde tutuluyor. Kullanıcı kapsamı **tüm sistem bildirimleri** olarak onayladı. Taslak hazırlamak, yeni otomatik gönderim veya alıcı kuralı ekleme yetkisi değildir; metin onayı ve gönderim entegrasyonu ayrı izlenecek. Çek metinlerinde sağlayıcı adı yerine **Hediye çeki** kullanılacak; şablon stoğu değişirse iki kayıt birlikte güncellenecek.
+
 ## Üçüncü zorunlu kural: Video Mimarisi ve Öğrenme Araçları Ayrımı
 
 **Videoları ASLA diğer öğrenme araçları (PDF, Görsel, Podcast) ile aynı ortak yükleme/doğrulama paketine veya ara durum tablolarına sokma.**
