@@ -49,7 +49,7 @@ export default function CcChallengeListesi({ yil, ay, hata }: Props) {
       setYukleniyor(true);
       try {
         const res = await fetch(
-          `/cc-ligi/api?tip=challenge-listesi&yil=${yil}&ay=${ay}`
+          `/c-club-ligi/api?tip=challenge-listesi&yil=${yil}&ay=${ay}`
         );
         const d = await res.json();
         if (!res.ok) {

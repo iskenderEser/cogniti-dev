@@ -12,7 +12,7 @@ const kart = oku("app/(panel)/eclub/hediye-takip/_components/CekTakipKarti.tsx")
 const islemRotasi = oku("app/(panel)/eclub/hediye-takip/api/cek-takip/[talepId]/route.ts");
 const islemSql = oku("scripts/sql/eclub_store_yeni_donem_satis_sartli_cek.sql");
 const teslimatSql = oku("scripts/sql/eclub_cek_teslimat_outbox.sql");
-const takimSayfasi = oku("app/(panel)/eclub/eczanelerim/page.tsx");
+const takimSayfasi = oku("app/(panel)/eclub/eczaneler-takimim/page.tsx");
 const navigasyon = oku("components/panel/panelNav.config.ts");
 const proxy = oku("proxy.ts");
 

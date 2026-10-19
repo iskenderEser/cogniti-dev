@@ -8,7 +8,7 @@
 // GET ?tip=urun&urun_id=X         → Tek ürün detayı (ürün detay sayfası için)
 //
 // Yetki: STORE_ALABILEN_ROLLER (utt, kd_utt, bm)
-// Vitrin sadece alıcılar içindir; diğer roller /store/siparisler sayfasına yönlenir.
+// Vitrin sadece alıcılar içindir; diğer roller /store/ekip-magaza-siparisleri sayfasına yönlenir.
 // Firma modül erişimi proxy.ts bekçisine ek olarak burada da doğrulanır; ürün
 // listesi, kategori listesi ve detay firma bazlı ürün istisnasına uyar.
 

@@ -3,7 +3,7 @@
 const KARSILAMA_ANAHTARI = "hb_mobil_karsilama_tamamlandi";
 
 type NormalGirisYolu = "/ana-sayfa" | "/admin";
-type GirisYolu = NormalGirisYolu | "/hapbilgi-nedir";
+type GirisYolu = NormalGirisYolu | "/nedir";
 
 interface KarsilamaAuth {
   getUser(): Promise<{
@@ -24,7 +24,7 @@ async function ilkMobilGirisYolu(auth: KarsilamaAuth, kullaniciId: string): Prom
       data: { [KARSILAMA_ANAHTARI]: true },
     });
     // Tercih servisi aksadığında giriş engellenmez; sonraki girişte yeniden denenir.
-    return kayitHatasi ? "/ana-sayfa" : "/hapbilgi-nedir";
+    return kayitHatasi ? "/ana-sayfa" : "/nedir";
   } catch {
     return "/ana-sayfa";
   }

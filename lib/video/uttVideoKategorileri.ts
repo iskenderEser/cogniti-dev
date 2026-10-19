@@ -2,6 +2,7 @@ import type { IcerikTuru } from "@/lib/video/icerikTuru";
 
 export interface UttVideoKategorisi {
   slug: string;
+  urlSlug: string;
   icerikTuru: IcerikTuru;
   etiket: string;
   sayfaAciklamasi: string;
@@ -13,6 +14,7 @@ const ORTAK_SAYFA_ACIKLAMASI = "Sizin için atanmış tüm yayınları görebili
 export const UTT_VIDEO_KATEGORILERI = [
   {
     slug: "urun",
+    urlSlug: "urun-egitimleri",
     icerikTuru: "urun",
     etiket: "Ürün Eğitimleri",
     sayfaAciklamasi: ORTAK_SAYFA_ACIKLAMASI,
@@ -20,6 +22,7 @@ export const UTT_VIDEO_KATEGORILERI = [
   },
   {
     slug: "medikal",
+    urlSlug: "medikal-egitimler",
     icerikTuru: "medikal",
     etiket: "Medikal Eğitimler",
     sayfaAciklamasi: ORTAK_SAYFA_ACIKLAMASI,
@@ -27,6 +30,7 @@ export const UTT_VIDEO_KATEGORILERI = [
   },
   {
     slug: "urun-medikal",
+    urlSlug: "urun-medikal-egitimleri",
     icerikTuru: "urun_medikal",
     etiket: "Ürün-Medikal Eğitimleri",
     sayfaAciklamasi: ORTAK_SAYFA_ACIKLAMASI,
@@ -34,6 +38,7 @@ export const UTT_VIDEO_KATEGORILERI = [
   },
   {
     slug: "satis",
+    urlSlug: "satis-egitimleri",
     icerikTuru: "egitim",
     etiket: "Satış Eğitimleri",
     sayfaAciklamasi: ORTAK_SAYFA_ACIKLAMASI,
@@ -41,6 +46,7 @@ export const UTT_VIDEO_KATEGORILERI = [
   },
   {
     slug: "yonetim",
+    urlSlug: "yonetim-egitimleri",
     icerikTuru: "yonetim",
     etiket: "Yönetim Eğitimleri",
     sayfaAciklamasi: ORTAK_SAYFA_ACIKLAMASI,
@@ -48,6 +54,7 @@ export const UTT_VIDEO_KATEGORILERI = [
   },
   {
     slug: "ik",
+    urlSlug: "ik-egitimleri",
     icerikTuru: "ik",
     etiket: "İK Eğitimleri",
     sayfaAciklamasi: ORTAK_SAYFA_ACIKLAMASI,
@@ -56,5 +63,5 @@ export const UTT_VIDEO_KATEGORILERI = [
 ] as const satisfies ReadonlyArray<UttVideoKategorisi>;
 
 export function uttVideoKategorisiBul(slug: string) {
-  return UTT_VIDEO_KATEGORILERI.find((kategori) => kategori.slug === slug);
+  return UTT_VIDEO_KATEGORILERI.find((kategori) => kategori.urlSlug === slug);
 }

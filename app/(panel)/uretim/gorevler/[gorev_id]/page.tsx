@@ -29,7 +29,7 @@ import { PodcastTranskriptEditoru } from "@/app/(panel)/talepler/_components/Pod
 
 const ASAMA: Record<ToastAsama, { etiket: Asama; liste: string }> = {
   senaryo: { etiket: "Senaryo", liste: "/senaryolar" },
-  video: { etiket: "Video", liste: "/videolar" },
+  video: { etiket: "Video", liste: "/ogrenme-araclari" },
   soru_seti: { etiket: "Soru Seti", liste: "/soru-setleri" },
 };
 
@@ -241,7 +241,7 @@ export default function UretimGorevDetayPage() {
     if (!gorev?.arac_id) return hata("Göreve bağlı video kaydı bulunamadı.", "video görevi");
     setIslem(true); setVideoYuzdesi(0);
     try {
-      const izinRes = await fetch("/videolar/api/bunny-yukleme-baslat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ arac_id: gorev.arac_id, dosya_adi: dosya.name, mime_type: dosya.type || "video/mp4", dosya_boyutu: dosya.size }) });
+      const izinRes = await fetch("/ogrenme-araclari/api/bunny-yukleme-baslat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ arac_id: gorev.arac_id, dosya_adi: dosya.name, mime_type: dosya.type || "video/mp4", dosya_boyutu: dosya.size }) });
       const izin = await izinRes.json();
       if (!izinRes.ok) return hata(izin.hata ?? "Video yüklemesi başlatılamadı.", izin.adim, izin.detay);
       await bunnyTusYukle(dosya, izin, setVideoYuzdesi);
@@ -262,7 +262,7 @@ export default function UretimGorevDetayPage() {
     } else if (teslimSonucu === "isleniyor") {
       // Encode arka planda devam eder; kullanıcı beklemeden iş listesine dönebilir.
       setYuklenenVideo(null);
-      router.push("/videolar");
+      router.push("/ogrenme-araclari");
     }
   };
 

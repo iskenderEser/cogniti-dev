@@ -222,7 +222,7 @@ export function asamaCoz(talep: ZincirTalebi, z: ZincirSatiri): ZincirDurumu {
       asama: "Video",
       durum_kodu: kod,
       tarih: oncekiTarih,
-      yol: talep.hazir_video ? `/talepler/${talep.talep_id}` : "/videolar",
+      yol: talep.hazir_video ? `/talepler/${talep.talep_id}` : "/ogrenme-araclari",
       iu_id: null,
     };
   }
@@ -243,7 +243,7 @@ export function asamaCoz(talep: ZincirTalebi, z: ZincirSatiri): ZincirDurumu {
       asama: "Video",
       durum_kodu: kayitDurumKodu(z.arac_durum, !!z.arac_iu_id),
       tarih: z.arac_durum_tarih ?? oncekiTarih,
-      yol: "/videolar",
+      yol: "/ogrenme-araclari",
       iu_id: z.arac_iu_id,
     };
   }

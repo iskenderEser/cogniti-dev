@@ -6,7 +6,7 @@ const sql = readFileSync(
   "scripts/sql/eclub_store_rapor_lig_eczane_snapshot.sql",
   "utf8"
 );
-const ligApi = readFileSync("app/(panel)/eclub/ligi/api/route.ts", "utf8");
+const ligApi = readFileSync("app/(panel)/e-club-ligi/api/route.ts", "utf8");
 
 
 function fonksiyonBloku(ad: string): string {

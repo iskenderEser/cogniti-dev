@@ -14,7 +14,7 @@ test("mutlu: üretim yazıları yalnız kanonik görev API'lerinde yaşar", () =
 test("red: eski paralel yazma uçları yeniden açılamaz", () => {
   for (const yol of [
     "app/(panel)/senaryolar/api/durum/route.ts",
-    "app/(panel)/videolar/api/durum/route.ts",
+    "app/(panel)/ogrenme-araclari/api/durum/route.ts",
     "app/(panel)/soru-setleri/api/durum/route.ts",
     "app/(panel)/talepler/api/hazir-video/route.ts",
     "lib/uretim/surec.ts",

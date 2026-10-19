@@ -107,7 +107,7 @@ test("bütün tanımlı rollerde üst/sol/mobil menü yüzeyleri iki temanın or
         for (const element of [sidebar, drawer]) assert.equal(window.getComputedStyle(element).backgroundColor, renk(window, "--tema-yan-zemin"), `${rolKucu}/${tema}/menu`);
         const bilgiPilleri = Array.from(navbar.querySelectorAll("button"));
         const aktifPill = bilgiPilleri.find(button => button.textContent === "Ana Sayfa")!;
-        const pasifPill = bilgiPilleri.find(button => button.textContent === "HapBilgi Nedir")!;
+        const pasifPill = bilgiPilleri.find(button => button.textContent === "Nedir")!;
         assert.equal(window.getComputedStyle(aktifPill).color, renk(window, "--tema-vurgu"));
         assert.equal(window.getComputedStyle(aktifPill).backgroundColor, renk(window, "--tema-ust-menu-pill-secili-zemin"));
         assert.equal(window.getComputedStyle(pasifPill).color, renk(window, "--tema-gezinme-metin"));

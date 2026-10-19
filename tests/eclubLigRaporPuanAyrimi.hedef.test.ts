@@ -45,7 +45,7 @@ test("çekli/çeksiz ayrımı eksikse geçmiş veri varsayımı yapılmaz", () =
 });
 
 test("lig üç puan değerini açıkça adlandırır", () => {
-  const lig = oku("app/(panel)/eclub/ligi/page.tsx");
+  const lig = oku("app/(panel)/e-club-ligi/page.tsx");
 
   for (const etiket of ["Çekli Puan", "Çeksiz Puan", "Lig Puanı"]) {
     assert.match(lig, new RegExp(etiket));

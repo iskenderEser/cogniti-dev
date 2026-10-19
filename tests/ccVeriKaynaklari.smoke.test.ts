@@ -7,11 +7,11 @@ import { readFileSync } from "node:fs";
 const ozetSql = readFileSync("scripts/sql/cc_ligi_ozet.sql", "utf8");
 const backfillSql = readFileSync("scripts/sql/cc_ligi_backfill.sql", "utf8");
 const okumaSql = readFileSync("scripts/sql/cc_ligi_okuma.sql", "utf8");
-const ligApi = readFileSync("app/(panel)/cc-ligi/api/route.ts", "utf8");
-const ligSayfasi = readFileSync("app/(panel)/cc-ligi/page.tsx", "utf8");
+const ligApi = readFileSync("app/(panel)/c-club-ligi/api/route.ts", "utf8");
+const ligSayfasi = readFileSync("app/(panel)/c-club-ligi/page.tsx", "utf8");
 const takimAkordeonu = readFileSync("components/cc-ligi/CcTakimLigAkordeonu.tsx", "utf8");
 const ligIskeleti = readFileSync("components/cc-ligi/CcLigiSkeleton.tsx", "utf8");
-const ligLoading = readFileSync("app/(panel)/cc-ligi/loading.tsx", "utf8");
+const ligLoading = readFileSync("app/(panel)/c-club-ligi/loading.tsx", "utf8");
 
 test("mutlu: CC özet ve backfill yalnız C-Club puan/kayıp tablolarını kullanır", () => {
   assert.match(ozetSql, /CREATE TRIGGER trg_cc_ozet_kazanim[\s\S]*ON public\.cc_kazanilan_puanlar/);

@@ -5,7 +5,7 @@ import { eclubBmGruplari } from "@/lib/eclub/bmGruplari";
 import { PANEL_NAV, type NavContext } from "@/components/panel/panelNav.config";
 
 const oku = (yol: string) => readFileSync(yol, "utf8");
-const takim = oku("app/(panel)/eclub/eczanelerim/_components/BmEclubTakimim.tsx");
+const takim = oku("app/(panel)/eclub/eczaneler-takimim/_components/BmEclubTakimim.tsx");
 const yayin = oku("app/(panel)/eclub/yayinlar/_components/BmEclubYayinlari.tsx");
 
 test("BM gruplaması farklı BM'leri ayırır, atamasız UTT'leri kaybetmez", () => {
@@ -31,7 +31,7 @@ test("TM sekmeleri modül kapalıyken açılmaz", () => {
 });
 
 test("TM mevcut ortak bileşenleri kullanır; BM ve UTT davranışı korunur", () => {
-  assert.match(oku("app/(panel)/eclub/eczanelerim/page.tsx"), /<BmEclubTakimim rol="tm" \/>/);
+  assert.match(oku("app/(panel)/eclub/eczaneler-takimim/page.tsx"), /<BmEclubTakimim rol="tm" \/>/);
   assert.match(oku("app/(panel)/eclub/yayinlar/page.tsx"), /<BmEclubYayinlari rol="tm" \/>/);
   assert.match(takim, /<Button[^\n]+hediye-takip/);
   assert.match(takim, /acikBmler\.has\(bm\.id\)/);
@@ -44,7 +44,7 @@ test("TM mevcut ortak bileşenleri kullanır; BM ve UTT davranışı korunur", (
 });
 
 test("API'ler TM'yi oturum kapsamıyla sınırlar; yayın statları seçili UTT'ye daralmaz", () => {
-  for (const yol of ["app/(panel)/eclub/eczanelerim/api/route.ts", "app/(panel)/eclub/yayinlar/api/bm/route.ts"]) {
+  for (const yol of ["app/(panel)/eclub/eczaneler-takimim/api/route.ts", "app/(panel)/eclub/yayinlar/api/bm/route.ts"]) {
     const api = oku(yol);
     assert.match(api, /!kullanici\.aktif_mi/);
     assert.match(api, /!YONLENDIRICI_ROLLER\.includes/);

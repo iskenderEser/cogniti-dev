@@ -4,9 +4,9 @@ import test from "node:test";
 import { PANEL_NAV, type NavContext } from "@/components/panel/panelNav.config";
 
 const oku = (yol: string) => readFileSync(yol, "utf8");
-const sayfa = oku("app/(panel)/eclub/eczanelerim/page.tsx");
-const gorunum = oku("app/(panel)/eclub/eczanelerim/_components/BmEclubTakimim.tsx");
-const api = oku("app/(panel)/eclub/eczanelerim/api/route.ts");
+const sayfa = oku("app/(panel)/eclub/eczaneler-takimim/page.tsx");
+const gorunum = oku("app/(panel)/eclub/eczaneler-takimim/_components/BmEclubTakimim.tsx");
+const api = oku("app/(panel)/eclub/eczaneler-takimim/api/route.ts");
 const uttEczaneApi = oku("app/(panel)/eclub/listem/api/eczaneler/route.ts");
 const uttKisiApi = oku("app/(panel)/eclub/listem/api/kisiler/route.ts");
 
@@ -22,7 +22,7 @@ const baglam: NavContext = {
 test("BM sidebar'da E-Club Takımım sekmesini görür", () => {
   const eclub = PANEL_NAV.find((grup) => grup.baslik === "E-Club");
   assert.ok(eclub);
-  assert.ok(eclub.oglar.some((oge) => oge.path === "/eclub/eczanelerim" && oge.gate(baglam)));
+  assert.ok(eclub.oglar.some((oge) => oge.path === "/eclub/eczaneler-takimim" && oge.gate(baglam)));
 });
 
 test("aynı sayfa BM'yi salt okunur akordiyona, UTT'yi mevcut yönetim görünümüne ayırır", () => {

@@ -116,7 +116,7 @@ export async function proxy(request: NextRequest) {
   // -------------------------------------------------------------------------
 
   // --- Challenge Club firma bekçisi ----------------------------------------
-  // /challenge-club/* ve /cc-ligi/* (sayfa + API) yalnızca firması CC açık
+  // /challenge-club/* ve /c-club-ligi/* (sayfa + API) yalnızca firması CC açık
   // (firmalar.cc_aktif = true) olan kullanıcıya açıktır. Admin bu işi
   // FirmaSidebar toggle'ı ile firma bazında kapatır; kapalı firmada o firmanın
   // hiçbir kullanıcısı (BM, TM, üretici, yönetici...) CC'yi göremez/erişemez.
@@ -126,7 +126,7 @@ export async function proxy(request: NextRequest) {
   // (diğer isteklerde firma sorgusu yapılmaz — dar kapsam).
   if (
     pathname.startsWith("/challenge-club") ||
-    pathname.startsWith("/cc-ligi")
+    pathname.startsWith("/c-club-ligi")
   ) {
     const ccApiYolu = pathname.includes("/api/") || pathname.endsWith("/api");
 
@@ -172,7 +172,7 @@ export async function proxy(request: NextRequest) {
 
   // --- Yayın kataloğu bekçisi ----------------------------------------------
   // Eğitim yayınları sayfası ile ortak katalog API'sine yalnız katalog rolleri erişir.
-  if (pathname.startsWith("/yayindaki-videolar") || pathname.startsWith("/yayin-katalogu/api")) {
+  if (pathname.startsWith("/egitim-yayinlari") || pathname.startsWith("/yayin-katalogu/api")) {
     const yvApiYolu = pathname.startsWith("/yayin-katalogu/api");
 
     if (!user) {
@@ -186,7 +186,7 @@ export async function proxy(request: NextRequest) {
     );
     const yvRol = await rolCozucu(yvSupabase, user.id);
 
-    if (!YAYINDAKI_VIDEO_GORENLER.includes(yvRol)) {
+    if (!YAYINDAKI_VIDEO_GORENLER.includes(yvRol) && (yvApiYolu || !TUKETICI_ROLLER.includes(yvRol))) {
       if (yvApiYolu) return NextResponse.json({ error: "Bu sayfaya erişim yetkiniz yok." }, { status: 403 });
       return NextResponse.redirect(new URL("/ana-sayfa", request.url));
     }
@@ -344,7 +344,7 @@ export async function proxy(request: NextRequest) {
   // NOT: /admin/eclub bu bekçinin KAPSAMINDA DEĞİLDİR (o /admin/api bekçisiyle
   // ve sayfa auth guard'ıyla korunur, firma bağımsızdır). Burada yalnızca
   // /eclub yolları kontrol edilir. Sorgu YALNIZCA /eclub yollarında çalışır.
-  if (pathname.startsWith("/eclub")) {
+  if (pathname.startsWith("/eclub") || pathname.startsWith("/e-club-ligi")) {
     const eclubApiYolu = pathname.includes("/api/") || pathname.endsWith("/api");
 
     if (!user) {
@@ -415,6 +415,23 @@ export async function proxy(request: NextRequest) {
   // /eczanem/bm ve /eczanem/tm (iç uygulama), sonra genel /eczanem
   // (müşteri). Girişsiz istisnalar: müşteri giriş sayfası/API'leri ve davet
   // kabulü — bunlar oturum ÖNCESİ akışlardır, koruma OTP mekanizmasındadır.
+  // Ortak bilgi adresinde Eczanem üyesinin mevcut modül kapısı korunur.
+  // Firma ve E-Club kullanıcıları kendi panel kabuğunda aynı adresi kullanır.
+  if (pathname === "/nedir") {
+    if (!user) return NextResponse.redirect(new URL("/login", request.url));
+    const bilgiSupabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+    const bilgiRolu = await rolCozucu(bilgiSupabase, user.id);
+    if (bilgiRolu === MUSTERI_ROLU) {
+      const erisim = await eczanemRolErisimi(bilgiSupabase, user.id, bilgiRolu);
+      if (!erisim.ok || !erisim.acik) {
+        return NextResponse.redirect(new URL("/eczanem/kapali", request.url));
+      }
+    }
+  }
+
   if (pathname.startsWith("/eczanem")) {
     const girissizYol =
       pathname.startsWith("/eczanem/giris") ||

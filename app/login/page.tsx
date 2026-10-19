@@ -86,7 +86,7 @@ export default function LoginPage() {
     // E-Club kişisi (eczacı/teknisyen) → kendi paneline; Eczanem müşterisi →
     // /eczanem paneline (müşteri de bu sayfadan e-posta/telefon + şifre ile girer);
     // admin → /admin; diğerleri → firma-aktif kontrolünden geçip /ana-sayfa.
-    // Ana Sayfa kullanıcılarının ilk mobil girişi /hapbilgi-nedir ile karşılanır.
+    // Ana Sayfa kullanıcılarının ilk mobil girişi /nedir ile karşılanır.
     // Kimlik kaynağı useAuth'tur (B-06/D3 — user_metadata okuması kaldırıldı:
     // metadata girişte iliştirilir ve bayatlayabilir, rolCozucu dersi).
     const yonlendir = async () => {

@@ -1,0 +1,127 @@
+// app/store/siparisler/api/route.ts
+//
+// HBStore genel sipariş listesi endpoint'i.
+// Auth + STORE_GENEL_GOREN_ROLLER yetki kontrolü, sonra get_kapsamli_siparisler
+// RPC'sini çağırır. RPC rol bazlı kapsam + filtreleri kendi içinde uygular.
+//
+// Query parametreleri (hepsi opsiyonel):
+//   firma_id, takim_id, bolge_id, kullanici_id_filtre,
+//   durum, tarih_baslangic, tarih_bitis, offset, limit
+//
+// Dönüş: { siparisler: [...], toplam: integer }
+//
+// Firma erişim kontrolü (hbstore_aktif) proxy.ts HBStore bekçisinde merkezi
+// olarak yapılır — /store yolu kapalı firmada zaten 403 döner.
+
+import { NextRequest, NextResponse } from "next/server";
+import { createClient, createAdminClient } from "@/lib/supabase/server";
+import {
+  hataYaniti,
+  sunucuHatasi,
+  yetkiHatasi,
+  rolHatasi,
+  validasyonHatasi,
+} from "@/lib/utils/hataIsle";
+import { ADMIN_ROLLER, STORE_GENEL_GOREN_ROLLER } from "@/lib/utils/roller";
+import { rolCozucu } from "@/lib/utils/rolCozucu";
+
+const VARSAYILAN_LIMIT = 30;
+const MAKS_LIMIT = 100;
+
+export async function GET(request: NextRequest) {
+  try {
+    const supabase = await createClient();
+
+    // Auth
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) return yetkiHatasi();
+
+    // Rol
+    const adminSupabase = createAdminClient();
+    const rol = await rolCozucu(adminSupabase, user.id);
+    if (!STORE_GENEL_GOREN_ROLLER.includes(rol)) {
+      return rolHatasi("Bu sayfaya erişim yetkiniz yok.");
+    }
+
+
+    // Query parametrelerini al
+    const { searchParams } = new URL(request.url);
+
+    const firma_id = searchParams.get("firma_id");
+
+    // Admin dışındaki roller yalnız bağlı oldukları firmayı filtreleyebilir.
+    // Bu kapı takım/bölge/kullanıcı kimlikleri okunmadan ve kapsam RPC'si
+    // çalıştırılmadan önce yabancı firma isteğini kesin olarak reddeder.
+    if (firma_id && !ADMIN_ROLLER.includes(rol)) {
+      const { data: firmaKullanici, error: firmaKullaniciError } = await adminSupabase
+        .from("kullanicilar")
+        .select("firma_id")
+        .eq("kullanici_id", user.id)
+        .maybeSingle();
+
+      if (firmaKullaniciError || !firmaKullanici?.firma_id) {
+        return hataYaniti(
+          "Kullanıcı firma bilgisi alınamadı.",
+          "kullanicilar SELECT — sipariş firma kapısı",
+          firmaKullaniciError
+        );
+      }
+      if (firmaKullanici.firma_id !== firma_id) {
+        return rolHatasi("Başka bir firmanın siparişlerine erişim yetkiniz yok.");
+      }
+    }
+
+    const takim_id = searchParams.get("takim_id");
+    const bolge_id = searchParams.get("bolge_id");
+    const kullanici_id_filtre = searchParams.get("kullanici_id");
+    const durum = searchParams.get("durum");
+    const tarih_baslangic = searchParams.get("tarih_baslangic");
+    const tarih_bitis = searchParams.get("tarih_bitis");
+
+    // Sayfalama
+    const offsetRaw = searchParams.get("offset");
+    const limitRaw = searchParams.get("limit");
+
+    const offset = offsetRaw ? Math.max(0, parseInt(offsetRaw, 10)) : 0;
+    let limit = limitRaw ? parseInt(limitRaw, 10) : VARSAYILAN_LIMIT;
+    if (!Number.isInteger(limit) || limit <= 0) {
+      return validasyonHatasi("limit pozitif tam sayı olmalı.", ["limit"]);
+    }
+    if (limit > MAKS_LIMIT) limit = MAKS_LIMIT;
+
+    // Durum doğrulama
+    const GECERLI_DURUMLAR = ["beklemede", "kargoda", "teslim_edildi", "iptal"];
+    if (durum && !GECERLI_DURUMLAR.includes(durum)) {
+      return validasyonHatasi(
+        `Geçersiz durum. Geçerli: ${GECERLI_DURUMLAR.join(", ")}`,
+        ["durum"]
+      );
+    }
+
+    // RPC çağrısı
+    const { data, error } = await adminSupabase.rpc("get_kapsamli_siparisler", {
+      p_kullanici_id: user.id,
+      p_firma_id: firma_id,
+      p_takim_id: takim_id,
+      p_bolge_id: bolge_id,
+      p_kullanici_id_filtre: kullanici_id_filtre,
+      p_durum: durum,
+      p_tarih_baslangic: tarih_baslangic,
+      p_tarih_bitis: tarih_bitis,
+      p_offset: offset,
+      p_limit: limit,
+    });
+
+    if (error) {
+      return hataYaniti(
+        "Siparişler çekilemedi.",
+        "get_kapsamli_siparisler RPC",
+        error
+      );
+    }
+
+    return NextResponse.json(data, { status: 200 });
+  } catch (err) {
+    return sunucuHatasi(err, "GET /store/ekip-magaza-siparisleri/api");
+  }
+}

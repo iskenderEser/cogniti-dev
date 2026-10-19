@@ -8,7 +8,7 @@ const ortak = oku("components/ui/yenile-butonu.tsx");
 const sayfalar = [
   oku("app/(panel)/eczanem/yayinlar/page.tsx"),
   oku("app/(panel)/eclub/yayinlar/page.tsx"),
-  oku("app/(panel)/eclub/eczanelerim/page.tsx"),
+  oku("app/(panel)/eclub/eczaneler-takimim/page.tsx"),
   oku("app/(panel)/eczanem/eczane/uye-yayinlari/page.tsx"),
   oku("app/(panel)/eczanem/eczane/uyeler/page.tsx"),
 ];

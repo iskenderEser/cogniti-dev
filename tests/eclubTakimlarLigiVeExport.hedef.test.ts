@@ -9,8 +9,8 @@ import {
 
 const oku = (yol: string) => readFileSync(yol, "utf8");
 
-const pageContent = oku("app/(panel)/eclub/ligi/page.tsx");
-const cssContent = oku("app/(panel)/eclub/ligi/eclub-league.module.css");
+const pageContent = oku("app/(panel)/e-club-ligi/page.tsx");
+const cssContent = oku("app/(panel)/e-club-ligi/eclub-league.module.css");
 
 const satir = (degisiklik: Partial<EclubRaporHamSatir>): EclubRaporHamSatir => ({
   eczane_id: "eczane-1",

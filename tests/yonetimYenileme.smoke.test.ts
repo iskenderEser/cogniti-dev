@@ -14,14 +14,14 @@ const kaynaklar = [
   oku("app/(panel)/oneriler/_components/TmOneriTakibi.tsx"),
   oku("app/(panel)/oneriler/_components/UyeOnerilerGorunumu.tsx"),
   oku("app/(panel)/store/siparislerim/page.tsx"),
-  oku("app/(panel)/store/siparisler/page.tsx"),
+  oku("app/(panel)/store/ekip-magaza-siparisleri/page.tsx"),
 ];
 
 test("mutlu: üretim, yönetim ve sipariş takip yüzeyleri ortak YenileButonu kullanır", () => {
   for (const kaynak of kaynaklar) assert.match(kaynak, /<YenileButonu/);
   assert.match(oku("app/(panel)/talepler/_hooks/useTalepMerkezi.ts"), /yenileniyor/);
   assert.match(oku("app/(panel)/yayin-yonetimi/_hooks/useYayinYonetimi.ts"), /yenileniyor/);
-  assert.match(oku("app/(panel)/store/siparisler/_hooks/useSiparisListe.ts"), /sessiz/);
+  assert.match(oku("app/(panel)/store/ekip-magaza-siparisleri/_hooks/useSiparisListe.ts"), /sessiz/);
 });
 
 test("red: ikinci paket de tarayıcı yenilemesi kullanmaz ve açık formda kullanıcı yenilemeyi kapatır", () => {

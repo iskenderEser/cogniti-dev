@@ -51,7 +51,7 @@ test("mutlu: müşteri ana sayfası belirlenen altı dijital kanal rafını ve a
   assert.doesNotMatch(oynatici, /if \(!res\.ok\)[\s\S]{0,320}izlemeBitirildiRef\.current = false/);
   assert.match(ilerlemeRoute, /\.eq\("musteri_id", kimlik\.musteriId!\)/);
   assert.match(navbar, /etiket: "Ana Sayfa", href: "\/eczanem"/);
-  assert.match(navbar, /etiket: "HapBilgi Nedir", href: "\/eczanem\/hapbilgi-nedir"/);
+  assert.match(navbar, /etiket: "Nedir", href: "\/nedir"/);
   assert.match(navbar, /etiket: "Nasıl Çalışır", href: "\/eczanem\/nasil-calisir"/);
   assert.match(puanSayfasi, /<EczanemPuanlarim/);
   assert.doesNotMatch(sayfa, /<EczanemPuanlarim/);

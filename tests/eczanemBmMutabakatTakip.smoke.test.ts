@@ -20,14 +20,14 @@ test("BM Eczanem sidebarında yalnız Mutabakat Takip öğesini görür", () => 
   assert.ok(eczanem);
   const gorunur = eczanem.oglar.filter((oge) => oge.gate(temelBaglam));
   assert.deepEqual(gorunur.map((oge) => oge.etiket), ["Mutabakat Takip"]);
-  assert.equal(gorunur[0].path, "/eczanem/bm/mutabakat");
+  assert.equal(gorunur[0].path, "/eczanem/bm/mutabakat-takip");
 });
 
 test("BM mutabakat takip rotası rol ve Eczanem firma kapısıyla korunur", () => {
   const proxy = oku("proxy.ts");
   const erisim = oku("lib/eczanem/erisim.ts");
-  const sayfa = oku("app/(panel)/eczanem/bm/mutabakat/page.tsx");
-  const istemci = oku("app/(panel)/eczanem/bm/mutabakat/_components/BmMutabakatTakipClient.tsx");
+  const sayfa = oku("app/(panel)/eczanem/bm/mutabakat-takip/page.tsx");
+  const istemci = oku("app/(panel)/eczanem/bm/mutabakat-takip/_components/BmMutabakatTakipClient.tsx");
   const ortakTablo = oku("app/(panel)/eczanem/_components/MutabakatIslemTablosu.tsx");
   const api = oku("app/eczanem/bm/api/mutabakat/route.ts");
 
@@ -50,7 +50,7 @@ test("BM mutabakat takip rotası rol ve Eczanem firma kapısıyla korunur", () =
 });
 
 test("UTT ve eczane akordiyonları birbirinden bağımsız açık kalır", () => {
-  const istemci = oku("app/(panel)/eczanem/bm/mutabakat/_components/BmMutabakatTakipClient.tsx");
+  const istemci = oku("app/(panel)/eczanem/bm/mutabakat-takip/_components/BmMutabakatTakipClient.tsx");
   const ortakTablo = oku("app/(panel)/eczanem/_components/MutabakatIslemTablosu.tsx");
 
   assert.match(istemci, /const \[acikUttler, setAcikUttler\] = useState<Set<string>>/);
@@ -65,7 +65,7 @@ test("UTT ve eczane akordiyonları birbirinden bağımsız açık kalır", () =>
 
 test("UTT, BM ve TM tek merkezi işlem tablosu ile aynı sütun standardını kullanır", () => {
   const utt = oku("app/(panel)/eczanem/utt/mutabakat/page.tsx");
-  const bmTm = oku("app/(panel)/eczanem/bm/mutabakat/_components/BmMutabakatTakipClient.tsx");
+  const bmTm = oku("app/(panel)/eczanem/bm/mutabakat-takip/_components/BmMutabakatTakipClient.tsx");
   const ortakTablo = oku("app/(panel)/eczanem/_components/MutabakatIslemTablosu.tsx");
   const stiller = oku("app/(panel)/eczanem/_components/MutabakatIslemTablosu.module.css");
 
@@ -94,12 +94,12 @@ test("TM mutabakat takibi BM, UTT ve eczane akordiyon hiyerarşisini son onaya t
   assert.ok(nav);
   const tmBaglami = { ...temelBaglam, rolKucu: "tm" };
   const gorunur = nav.oglar.filter((oge) => oge.gate(tmBaglami));
-  assert.deepEqual(gorunur.map((oge) => oge.path), ["/eczanem/tm/mutabakat"]);
+  assert.deepEqual(gorunur.map((oge) => oge.path), ["/eczanem/tm/mutabakat-takip"]);
 
   const proxy = oku("proxy.ts");
-  const sayfa = oku("app/(panel)/eczanem/tm/mutabakat/page.tsx");
+  const sayfa = oku("app/(panel)/eczanem/tm/mutabakat-takip/page.tsx");
   const api = oku("app/eczanem/tm/api/mutabakat/route.ts");
-  const istemci = oku("app/(panel)/eczanem/bm/mutabakat/_components/BmMutabakatTakipClient.tsx");
+  const istemci = oku("app/(panel)/eczanem/bm/mutabakat-takip/_components/BmMutabakatTakipClient.tsx");
   const ortakTablo = oku("app/(panel)/eczanem/_components/MutabakatIslemTablosu.tsx");
   const kapsam = oku("lib/eclub/yonetimKapsami.ts");
   assert.match(proxy, /const tmDali = pathname\.startsWith\("\/eczanem\/tm"\)/);
@@ -122,7 +122,7 @@ test("UTT, BM ve TM mutabakat görünümü akordiyon ve düz tablo arasında bek
   const uttApi = oku("app/eczanem/utt/api/mutabakat/route.ts");
   const bmApi = oku("app/eczanem/bm/api/mutabakat/route.ts");
   const tmApi = oku("app/eczanem/tm/api/mutabakat/route.ts");
-  const istemci = oku("app/(panel)/eczanem/bm/mutabakat/_components/BmMutabakatTakipClient.tsx");
+  const istemci = oku("app/(panel)/eczanem/bm/mutabakat-takip/_components/BmMutabakatTakipClient.tsx");
   const ortakTablo = oku("app/(panel)/eczanem/_components/MutabakatIslemTablosu.tsx");
   const veriKaynagi = oku("lib/eczanem/uttMutabakat.ts");
 
@@ -154,7 +154,7 @@ test("UTT, BM ve TM mutabakat görünümü akordiyon ve düz tablo arasında bek
 test("İndirim Onay Tablosu üç rolde ortak XLSX dışa aktarma butonunu kullanır", () => {
   const paket = oku("package.json");
   const utt = oku("app/(panel)/eczanem/utt/mutabakat/page.tsx");
-  const bmTm = oku("app/(panel)/eczanem/bm/mutabakat/_components/BmMutabakatTakipClient.tsx");
+  const bmTm = oku("app/(panel)/eczanem/bm/mutabakat-takip/_components/BmMutabakatTakipClient.tsx");
   const excel = oku("app/(panel)/eczanem/_components/MutabakatExcelButonu.tsx");
   const veri = oku("lib/eczanem/uttMutabakat.ts");
 

@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 
 const oku = (yol: string) => readFileSync(yol, "utf8");
-const takim = oku("app/(panel)/eclub/eczanelerim/_components/BmEclubTakimim.tsx");
+const takim = oku("app/(panel)/eclub/eczaneler-takimim/_components/BmEclubTakimim.tsx");
 const istemci = oku("app/(panel)/eclub/hediye-takip/_components/HediyeTakipIstemcisi.tsx");
 const bm = oku("app/(panel)/eclub/hediye-takip/_components/BmHediyeTakipIstemcisi.tsx");
 const cekApi = oku("app/(panel)/eclub/hediye-takip/api/bm/cek-takip/route.ts");

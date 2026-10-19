@@ -80,6 +80,7 @@ Platform **Video** (`video`), **Podcast** (`podcast`), **Dijital Broşür** (`go
 * **Hedef Roller (`talepler.hedef_roller`):** Kişi rolü değil, içeriğin hedef kitlesidir: `utt`, `bm`, `eczaci`, `eczane_teknisyeni`, `eczanem`. Eczacı, ikinci eczacı ve yardımcı eczacı unvanları `eczaci`; eczane teknisyeni `eczane_teknisyeni` hedef kitlesine eşlenir. Yalnız `eczaci` ve `eczane_teknisyeni` hedefleri birlikte seçilebilir. Eczanem hedefli talebi yalnız `PM_AILESI_ROLLER` ile aynı kaynağı kullanan `ECZANEM_TALEP_ACAN_ROLLER` açabilir.
 
 ### 4. Erişim ve Güvenlik Mimarisi (`proxy.ts` Middleware)
+* **Güncel URL kararı (18.10.2026):** Rol bazlı onaylanan adresler ve uygulama doğrulaması `docs/ONAYLI_URL_DEGISIKLIKLERI_2026_10_18.md` dosyasındadır. Aşağıdaki tarihsel dosya envanterinde geçen eski yollar yerine bu güncel URL kaydı esas alınır. C-Club ve E-Club ligleri `/c-club-ligi` ve `/e-club-ligi`; ortak eğitim sayfaları `/egitim-yayinlari/[kategori]` adresindedir. Raporların rol hiyerarşisi, `/admin` ve Eczanem sayfa içi seçim yapısı korunur. Ortak bilgi menüsü tüm mevcut kullanıcı kabuklarında `Nedir`, adresi `/nedir` olarak onaylandı; rolün mevcut içerik ve kabuğu korunarak uygulanır.
 * **Merkezi Güvenlik Kapısı:** Statik varlıklar hariç tüm istekler kök `proxy.ts` (Next.js Node.js runtime) katmanından geçer.
 * **Merkezi Erişim Kapıları:**
   1. **Admin API:** `/admin/api/*` rotaları `ADMIN_ROLLER` ile korunur.

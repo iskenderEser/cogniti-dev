@@ -100,7 +100,7 @@ interface PanelNavbarProps {
 // Bilgi pill'leri — sabit sıra, rolden bağımsız.
 const BILGI_PILLERI: { key: string; etiket: string; path: string }[] = [
   { key: "ana-sayfa", etiket: "Ana Sayfa", path: "/ana-sayfa" },
-  { key: "hapbilgi-nedir", etiket: "HapBilgi Nedir", path: "/hapbilgi-nedir" },
+  { key: "hapbilgi-nedir", etiket: "Nedir", path: "/nedir" },
   { key: "nasil-calisir", etiket: "Nasıl Çalışır", path: "/nasil-calisir" },
 ];
 

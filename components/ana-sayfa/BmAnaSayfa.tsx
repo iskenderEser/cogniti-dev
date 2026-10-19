@@ -200,7 +200,7 @@ export default function BmAnaSayfa({ user, adSoyad }: Props) {
       <div className="mb-5 flex items-center justify-end gap-2">
         <button
           type="button"
-          onClick={() => router.push("/yayindaki-videolar")}
+          onClick={() => router.push("/egitim-yayinlari/urun-egitimleri")}
           className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-[var(--tema-yerel-ana-sayfa-eylem-zemin-02)] px-4 py-2.5 text-xs font-extrabold text-[var(--tema-yerel-ana-sayfa-ters-metin-02)] shadow-sm transition-colors hover:bg-[var(--tema-yerel-ana-sayfa-eylem-zemin-03)]"
         >
           <Plus size={15} strokeWidth={2.5} aria-hidden="true" /> Yayın Öneriniz

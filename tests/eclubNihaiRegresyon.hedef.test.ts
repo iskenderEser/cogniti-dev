@@ -7,7 +7,7 @@ import { eclubRaporunuTopla, eclubTakimlarLiginiOlustur, type EclubRaporHamSatir
 const oku = (yol: string) => readFileSync(yol, "utf8");
 
 const rolloutSql = oku("scripts/sql/eclub_cekli_ceksiz_puan_tam_rollout.sql");
-const ligSayfasiKod = oku("app/(panel)/eclub/ligi/page.tsx");
+const ligSayfasiKod = oku("app/(panel)/e-club-ligi/page.tsx");
 const yayinApiKod = oku("app/(panel)/yayin-yonetimi/api/yayinlar/route.ts");
 
 // ===========================================================================

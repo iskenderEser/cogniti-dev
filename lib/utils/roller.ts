@@ -47,7 +47,7 @@ export const TUM_ROLLER = [
 // ───────────────────────────────────────────────────────────────────────────
 
 // URETIM_HATTI_GORENLER: Üretim hattı sayfalarını (/talepler, /senaryolar,
-// /videolar, /soru-setleri) görebilen roller.
+// /ogrenme-araclari, /soru-setleri) görebilen roller.
 // Üretici roller (13 rol) ve İçerik Üreticisi dahildir.
 // PM tarafı talep oluşturur, senaryo/video/soru seti incelemesi yapar;
 // İU tarafı senaryo/video/soru seti üretir.
@@ -84,7 +84,7 @@ export function yayinDetayModaliGorebilir(rol: string): boolean {
 // Challenge Club / CC Ligi rol kategorileri
 // ───────────────────────────────────────────────────────────────────────────
 
-// CCLIGI_GORENLERLER: CC Ligi sayfasını (/cc-ligi) görebilen roller.
+// CCLIGI_GORENLERLER: CC Ligi sayfasını (/c-club-ligi) görebilen roller.
 // BM ana tüketici, TM/üretici/yönetici/admin ise gözlemci olarak lig'i görür.
 // UTT, KD_UTT ve İU bu sayfaya erişemez.
 export const CCLIGI_GORENLERLER = [
@@ -118,7 +118,7 @@ export const STORE_GORENLERLER = [
   ...ADMIN_ROLLER,           // tüm firmalar
 ];
 
-// STORE_GENEL_GOREN_ROLLER: HBStore /store/siparisler sayfasını (başkalarının
+// STORE_GENEL_GOREN_ROLLER: HBStore /store/ekip-magaza-siparisleri sayfasını (başkalarının
 // siparişlerini görüntüleme) görebilen roller.
 // UTT/KD_UTT bu sayfayı görmez — sadece kendi siparişlerini /store/siparislerim'de görür.
 // BM kendi bölgesindeki UTT'lerin siparişlerini görür.

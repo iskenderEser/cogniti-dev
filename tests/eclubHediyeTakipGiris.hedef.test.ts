@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-const takimSayfasi = readFileSync("app/(panel)/eclub/eczanelerim/page.tsx", "utf8");
+const takimSayfasi = readFileSync("app/(panel)/eclub/eczaneler-takimim/page.tsx", "utf8");
 const proxy = readFileSync("proxy.ts", "utf8");
 const navigasyon = readFileSync("components/panel/panelNav.config.ts", "utf8");
 

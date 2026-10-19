@@ -35,7 +35,7 @@ type MobilDrawerProps = NavContext & {
 // PanelNavbar ile birebir aynı bilgi pill'i listesi.
 const BILGI_PILLERI: { etiket: string; path: string }[] = [
   { etiket: "Ana Sayfa", path: "/ana-sayfa" },
-  { etiket: "HapBilgi Nedir", path: "/hapbilgi-nedir" },
+  { etiket: "Nedir", path: "/nedir" },
   { etiket: "Nasıl Çalışır", path: "/nasil-calisir" },
 ];
 

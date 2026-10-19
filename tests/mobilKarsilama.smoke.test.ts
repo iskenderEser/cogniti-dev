@@ -25,7 +25,7 @@ function hesapOlustur(id: string, metadata: Record<string, unknown> = {}) {
 
 test("ilk mobil giriş tanıtımı, sonraki giriş başka tarayıcıda da Ana Sayfa'yı açar", async () => {
   const hesap = hesapOlustur("kullanici-a", { ad: "Örnek" });
-  assert.equal(await mobilKarsilamaYonlendiricisiOlustur()(hesap.auth, "kullanici-a", true, "/ana-sayfa"), "/hapbilgi-nedir");
+  assert.equal(await mobilKarsilamaYonlendiricisiOlustur()(hesap.auth, "kullanici-a", true, "/ana-sayfa"), "/nedir");
   assert.equal(await mobilKarsilamaYonlendiricisiOlustur()(hesap.auth, "kullanici-a", true, "/ana-sayfa"), "/ana-sayfa");
   assert.equal(hesap.kullanici.user_metadata.ad, "Örnek");
   assert.deepEqual(hesap.sayaclar(), { okumaSayisi: 2, yazmaSayisi: 1 });
@@ -37,7 +37,7 @@ test("masaüstü ve admin yönleri korunur; ilk mobil karşılama hakkı tüketi
   assert.equal(await yonlendir(hesap.auth, "kullanici-a", false, "/ana-sayfa"), "/ana-sayfa");
   assert.equal(await yonlendir(hesap.auth, "kullanici-a", true, "/admin"), "/admin");
   assert.deepEqual(hesap.sayaclar(), { okumaSayisi: 0, yazmaSayisi: 0 });
-  assert.equal(await yonlendir(hesap.auth, "kullanici-a", true, "/ana-sayfa"), "/hapbilgi-nedir");
+  assert.equal(await yonlendir(hesap.auth, "kullanici-a", true, "/ana-sayfa"), "/nedir");
 });
 
 test("yinelenen giriş etkileri aynı kararı paylaşır; farklı hesaplar birbirini etkilemez", async () => {
@@ -48,7 +48,7 @@ test("yinelenen giriş etkileri aynı kararı paylaşır; farklı hesaplar birbi
     yonlendir(a.auth, "kullanici-a", true, "/ana-sayfa"),
     yonlendir(a.auth, "kullanici-a", true, "/ana-sayfa"),
     yonlendir(b.auth, "kullanici-b", true, "/ana-sayfa"),
-  ]), ["/hapbilgi-nedir", "/hapbilgi-nedir", "/hapbilgi-nedir"]);
+  ]), ["/nedir", "/nedir", "/nedir"]);
   assert.deepEqual(a.sayaclar(), { okumaSayisi: 1, yazmaSayisi: 1 });
   assert.deepEqual(b.sayaclar(), { okumaSayisi: 1, yazmaSayisi: 1 });
 });
@@ -73,5 +73,5 @@ test("kayıt veya bağlantı hatası girişi engellemez; sonraki giriş yeniden 
     const auth = { ...hesap.auth, updateUser };
     assert.equal(await mobilKarsilamaYonlendiricisiOlustur()(auth, "kullanici-a", true, "/ana-sayfa"), "/ana-sayfa");
   }
-  assert.equal(await mobilKarsilamaYonlendiricisiOlustur()(hesap.auth, "kullanici-a", true, "/ana-sayfa"), "/hapbilgi-nedir");
+  assert.equal(await mobilKarsilamaYonlendiricisiOlustur()(hesap.auth, "kullanici-a", true, "/ana-sayfa"), "/nedir");
 });

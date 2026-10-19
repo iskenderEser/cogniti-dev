@@ -19,7 +19,7 @@ const BORDO = "var(--tema-yerel-eczanem-vurgu-metin-01)";
 const BILGI_PILLERI: { key: string; etiket: string; href: string }[] = [
   { key: "ana-sayfa", etiket: "Ana Sayfa", href: "/eczanem" },
   { key: "puanlarim", etiket: "Puanlarım", href: "/eczanem/puanlarim" },
-  { key: "hapbilgi-nedir", etiket: "HapBilgi Nedir", href: "/eczanem/hapbilgi-nedir" },
+  { key: "hapbilgi-nedir", etiket: "Nedir", href: "/nedir" },
   { key: "nasil-calisir", etiket: "Nasıl Çalışır", href: "/eczanem/nasil-calisir" },
 ];
 

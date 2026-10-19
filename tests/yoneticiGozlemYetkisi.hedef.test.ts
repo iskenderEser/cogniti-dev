@@ -37,7 +37,7 @@ const talep = oku("app/(panel)/talepler/api/route.ts");
 const yayinYonetimiSayfasi = oku("app/(panel)/yayin-yonetimi/page.tsx");
 const yayinAc = oku("app/(panel)/yayin-yonetimi/api/yayinlar/route.ts");
 const hazirVideoYukle = oku("app/(panel)/talepler/api/bunny-yukleme-baslat/route.ts");
-const iuVideoYukle = oku("app/(panel)/videolar/api/bunny-yukleme-baslat/route.ts");
+const iuVideoYukle = oku("app/(panel)/ogrenme-araclari/api/bunny-yukleme-baslat/route.ts");
 const aracYuklemeBaslat = oku("app/api/ogrenme-araclari/yukleme-baslat/route.ts");
 const aracYuklemeTamamla = oku("app/api/ogrenme-araclari/yukleme-tamamla/route.ts");
 const destekYuklemeBaslat = oku("app/api/ogrenme-araclari/[arac_id]/destek-yukleme-baslat/route.ts");
@@ -47,11 +47,11 @@ const favori = oku("app/izle/api/favori/route.ts");
 const gorselTamamla = oku("app/api/ogrenme-araclari/gorsel-tamamla/route.ts");
 const podcastIlerleme = oku("app/api/ogrenme-araclari/podcast-ilerleme/route.ts");
 const pdfIlerleme = oku("app/api/ogrenme-araclari/flip-pdf-ilerleme/route.ts");
-const eclubLigiSayfasi = oku("app/(panel)/eclub/ligi/page.tsx");
-const eclubTakimAdi = oku("app/(panel)/eclub/ligi/api/takim-adi/route.ts");
-const ekipSiparisSayfasi = oku("app/(panel)/store/siparisler/page.tsx");
-const ekipSiparisTablosu = oku("app/(panel)/store/siparisler/_components/SiparisTablosu.tsx");
-const ekipSiparisApi = oku("app/(panel)/store/siparisler/api/route.ts");
+const eclubLigiSayfasi = oku("app/(panel)/e-club-ligi/page.tsx");
+const eclubTakimAdi = oku("app/(panel)/e-club-ligi/api/takim-adi/route.ts");
+const ekipSiparisSayfasi = oku("app/(panel)/store/ekip-magaza-siparisleri/page.tsx");
+const ekipSiparisTablosu = oku("app/(panel)/store/ekip-magaza-siparisleri/_components/SiparisTablosu.tsx");
+const ekipSiparisApi = oku("app/(panel)/store/ekip-magaza-siparisleri/api/route.ts");
 const atomikUretimSql = oku("scripts/sql/uretim_atomik_rpc.sql");
 const yoneticiRaporSql = oku("scripts/sql/get_yonetici_rapor_v2.sql");
 const yayinAktiflikApi = oku("app/(panel)/yayin-katalogu/api/[yayin_id]/route.ts");
@@ -221,8 +221,8 @@ test("yönetici yabancı firma sipariş filtresinde alt kapsamlar ve RPC çalı�
 
 test("sipariş kimliğiyle doğrudan ayrıntı okuma yüzeyi açılmaz", () => {
   for (const yol of [
-    "../app/(panel)/store/siparisler/[siparis_id]/page.tsx",
-    "../app/(panel)/store/siparisler/api/[siparis_id]/route.ts",
+    "../app/(panel)/store/ekip-magaza-siparisleri/[siparis_id]/page.tsx",
+    "../app/(panel)/store/ekip-magaza-siparisleri/api/[siparis_id]/route.ts",
   ]) {
     assert.equal(existsSync(new URL(yol, import.meta.url)), false);
   }
@@ -286,13 +286,13 @@ for (const yoneticiRolu of YONETICI_ROLLER) {
     for (const yasakli of [
       "/talepler", "/yayin-yonetimi", "/sizin-yayinlariniz", "/tum-yayinlar",
       "/challenge-club", "/store", "/store/siparislerim", "/store/adreslerim",
-      "/eclub/eczanelerim", "/eclub/yayinlar", "/eczanem/yayinlar",
+      "/eclub/eczaneler-takimim", "/eclub/yayinlar", "/eczanem/yayinlar",
     ]) {
       assert.ok(!yollar.includes(yasakli), `${yoneticiRolu} yasaklı yolu görüyor: ${yasakli}`);
     }
     for (const saltOkuma of [
-      "/yayindaki-videolar", "/raporlar/yonetici", "/store/siparisler",
-      "/cc-ligi", "/eclub/ligi",
+      "/egitim-yayinlari/urun-egitimleri", "/raporlar/yonetici", "/store/ekip-magaza-siparisleri",
+      "/c-club-ligi", "/e-club-ligi",
     ]) {
       assert.ok(yollar.includes(saltOkuma), `${yoneticiRolu} salt okuma yolunu göremiyor: ${saltOkuma}`);
     }
