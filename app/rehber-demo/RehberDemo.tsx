@@ -7,7 +7,7 @@ import YuruyenRehber, { type RehberAdimi } from "@/components/rehber/YuruyenRehb
 import styles from "./demo.module.css";
 
 const ADIMLAR: readonly RehberAdimi[] = [
-  { hedefId: "demo-yayinlar", baslik: "Keşfetmeye buradan başla.", aciklama: "Yayınlarını tek bir yerde bulursun. Şimdi sana bir yayın kartını göstereyim." },
+  { hedefId: "demo-yayinlar", baslik: "Keşfetmeye buradan başla.", aciklama: "Merhaba, ben Kity. HapBilgi’ye hoş geldin! Yayınlarını tek bir yerde bulabilirsin. Şimdi sana bir yayın kartını göstereyim.", sesDosyasi: "/rehber/ses/kity-merhaba-mia.mp3" },
   { hedefId: "demo-yayin-karti", baslik: "Sıradaki yayının burada.", aciklama: "Yayın kartında içeriği görebilir, İzlemeye başla düğmesiyle yayını açabilirsin." },
   { hedefId: "demo-puanlar", baslik: "Puanlarını takip et.", aciklama: "Puanlarım alanından kazanımlarını ve hareketlerini inceleyebilirsin. İstersen bu düğmeye tıkla." },
   { hedefId: "demo-profil", baslik: "Her şey seninle başlar.", aciklama: "Hesap bilgilerine buradan ulaşırsın. Küçük turumuz bitti; yeniden yürümemi istersen Turu tekrar oynat'a bas." },
@@ -17,7 +17,7 @@ export default function RehberDemo() {
   const [acik, setAcik] = useState(false);
   const [tamamlandi, setTamamlandi] = useState(false);
   const [bildirim, setBildirim] = useState("");
-  const baslat = () => { setBildirim(""); setAcik(true); };
+  const baslat = () => { window.speechSynthesis?.getVoices(); setBildirim(""); setAcik(true); };
 
   return <main className={styles.sayfa}>
     <header className={styles.ustAlan}>
@@ -32,7 +32,7 @@ export default function RehberDemo() {
         <p className={styles.girisAciklama}>Yanınıza gelir, neyin nerede olduğunu gösterir.<br className={styles.masaustuSatir} /> HapBilgi&apos;de ilk adımlarınız için küçük bir yol arkadaşı.</p>
         <div className={styles.baslatSatiri}>
           <button type="button" className={styles.baslat} onClick={baslat} disabled={acik}><Play size={16} fill="currentColor" />{acik ? "Kity size eşlik ediyor" : tamamlandi ? "Turu tekrar oynat" : "Kity’yi yürüt"}{!acik && <ArrowRight size={17} />}</button>
-          <span>4 durak · yaklaşık 40 saniye</span>
+          <span>4 durak · sesli anlatım</span>
         </div>
         <div className={styles.ozellikler}><span><Check size={13} /> Yürür</span><span><Check size={13} /> İşaret eder</span><span><Check size={13} /> Yol gösterir</span></div>
       </div>
@@ -79,6 +79,6 @@ export default function RehberDemo() {
 
     <footer className={styles.altAlan}><span>HapBilgi × Kity</span><span>Birlikte keşfetmek daha kolay.</span><button type="button" onClick={baslat} disabled={acik}><RotateCcw size={13} /> Turu tekrar oynat</button></footer>
     {bildirim && <div className={styles.bildirim} role="status"><Check size={16} /><span>{bildirim}</span><button type="button" aria-label="Mesajı kapat" onClick={() => setBildirim("")}>×</button></div>}
-    <YuruyenRehber adimlar={ADIMLAR} acik={acik} onKapat={() => setAcik(false)} onTamamla={() => setTamamlandi(true)} />
+    <YuruyenRehber adimlar={ADIMLAR} acik={acik} sesli onKapat={() => setAcik(false)} onTamamla={() => setTamamlandi(true)} />
   </main>;
 }

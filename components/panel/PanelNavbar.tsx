@@ -151,6 +151,7 @@ export default function PanelNavbar({
 
   return (
     <nav
+      id="kity-navbar"
       className="sticky top-0 z-50 border-b border-[var(--tema-cizgi)] px-2.5 py-2.5 sm:px-6 sm:py-3.5 min-h-[64px] sm:min-h-[76px] flex flex-col justify-center"
       style={{ background: "var(--tema-ust-menu-zemin)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)", borderBottomColor: "var(--tema-cizgi)" }}
     >
@@ -158,6 +159,7 @@ export default function PanelNavbar({
         {/* Sol Kolon: Logo & Co-Branding (Ayraç sidebarın 240px sağ kenarı ile tam hizalıdır: 24px padding + 216px = 240px) */}
         <div className="flex items-center flex-shrink-0">
           <div
+            id="kity-karsilama"
             onClick={() => router.push(anaSayfaYolu)}
             className="flex items-center md:w-[175px] lg:w-[195px] xl:w-[216px] flex-shrink-0 cursor-pointer group select-none"
           >

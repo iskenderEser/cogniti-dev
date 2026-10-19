@@ -1,22 +1,32 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
-import { ArrowLeft, ArrowRight, Pause, Play, X } from "lucide-react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { ArrowLeft, ArrowRight, Pause, Play, Volume2, VolumeX, X } from "lucide-react";
 import { rehberKonumu, yuruyusSuresi, type Dikdortgen, type Nokta } from "./konum";
 import styles from "./rehber.module.css";
 import KityVeda from "./KityVeda";
+import { kityHedefiniBul } from "@/lib/rehber/kityHedef";
 
 export type RehberAdimi = {
   hedefId: string;
+  hedefSecici?: string;
   baslik: string;
   aciklama: string;
+  sesDosyasi?: string;
 };
 
 type Props = {
   adimlar: readonly RehberAdimi[];
+  karsilama?: RehberAdimi;
   acik: boolean;
   onKapat: () => void;
   onTamamla?: () => void;
+  sesli?: boolean;
+  tarayiciSesiKullan?: boolean;
+  hedefiHazirla?: (adim: RehberAdimi, signal: AbortSignal) => Promise<void>;
+  altIcerik?: ReactNode;
+  vedaMetni?: string;
+  vedaSesDosyasi?: string;
 };
 
 type Yerlesim = ReturnType<typeof rehberKonumu>;
@@ -28,10 +38,14 @@ export default function YuruyenRehber(props: Props) {
   return props.acik ? <AktifRehber {...props} /> : null;
 }
 
-function AktifRehber({ adimlar, acik, onKapat, onTamamla }: Props) {
+function AktifRehber({ adimlar, karsilama, acik, onKapat, onTamamla, sesli = false, tarayiciSesiKullan = true, hedefiHazirla, altIcerik, vedaMetni, vedaSesDosyasi }: Props) {
+  const [kabulEdildi, setKabulEdildi] = useState(false);
+  const karsilamada = Boolean(karsilama && !kabulEdildi);
   const [adim, setAdim] = useState(0);
   const [asama, setAsama] = useState<"yuruyor" | "anlatiyor">("yuruyor");
   const [duraklatildi, setDuraklatildi] = useState(false);
+  const [sesAcik, setSesAcik] = useState(sesli);
+  const [sesHatasi, setSesHatasi] = useState("");
   const [gorunum, setGorunum] = useState<Gorunum>(ILK_GORUNUM);
   const [yerlesim, setYerlesim] = useState<Yerlesim | null>(null);
   const [hedef, setHedef] = useState<Dikdortgen | null>(null);
@@ -47,9 +61,11 @@ function AktifRehber({ adimlar, acik, onKapat, onTamamla }: Props) {
   const azHareketRef = useRef(false);
   const kapatRef = useRef(onKapat);
   const bitirRef = useRef(onTamamla);
+  const hazirlaRef = useRef(hedefiHazirla);
   const kapatDugmesiRef = useRef<HTMLButtonElement>(null);
   const balonRef = useRef<HTMLElement>(null);
-  const adimBilgisi = adimlar[adim];
+  const adimBilgisi = karsilamada ? karsilama : adimlar[adim];
+  const tarayiciSesi = tarayiciSesiKullan && !adimlar.some(a => a.sesDosyasi);
 
   const vedayaGec = useCallback(() => {
     if (vedaRef.current) return;
@@ -64,6 +80,7 @@ function AktifRehber({ adimlar, acik, onKapat, onTamamla }: Props) {
   }, []);
 
   useEffect(() => { kapatRef.current = onKapat; bitirRef.current = onTamamla; }, [onKapat, onTamamla]);
+  useEffect(() => { hazirlaRef.current = hedefiHazirla; }, [hedefiHazirla]);
 
   useEffect(() => {
     const medya = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -102,99 +119,151 @@ function AktifRehber({ adimlar, acik, onKapat, onTamamla }: Props) {
   useEffect(() => {
     if (!acik || !adimBilgisi || !gorselHazir || veda) return;
     let temizle: (() => void) | undefined;
+    const iptal = new AbortController();
     const baslatmaKaresi = requestAnimationFrame(() => {
-      const eleman = document.getElementById(adimBilgisi.hedefId);
-      if (!eleman) {
-        setHedefYok(true);
-        setHedef(null);
-        setAsama("anlatiyor");
-        return;
-      }
-      setHedefYok(false);
       setAsama("yuruyor");
-      let hareketKaresi = 0;
-      let olcumKaresi = 0;
-      let durduruldu = false;
-
-      const olc = () => {
-        const r = eleman.getBoundingClientRect();
-        const dikdortgen = { left: r.left, top: r.top, width: r.width, height: r.height };
-        const yeni = rehberKonumu(dikdortgen, { width: window.innerWidth, height: window.innerHeight }, balonRef.current?.getBoundingClientRect().height || 270);
-        hedefKonumRef.current = yeni;
-        setHedef(dikdortgen);
-        setYerlesim(yeni);
-        if (!hareketRef.current) {
-          konumRef.current = yeni.avatar;
-          setGorunum({ konum: yeni.avatar, kare: 7, sagaBakiyor: yeni.sagaBakiyor });
+      setHedef(null);
+      setSesHatasi("");
+      const baslat = (hazirlamaHatasi = false) => {
+        if (iptal.signal.aborted) return;
+        const eleman = kityHedefiniBul(adimBilgisi);
+        if (!eleman || hazirlamaHatasi) {
+          setHedefYok(true);
+          setHedef(null);
+          setAsama("anlatiyor");
+          return;
         }
-        return yeni;
-      };
-      const olcumIste = () => {
-        cancelAnimationFrame(olcumKaresi);
-        olcumKaresi = requestAnimationFrame(olc);
-      };
+        setHedefYok(false);
+        setAsama("yuruyor");
+        let hareketKaresi = 0;
+        let olcumKaresi = 0;
+        let durduruldu = false;
 
-      hareketRef.current = true;
-      const ilkRect = eleman.getBoundingClientRect();
-      if (ilkRect.top < 90 || ilkRect.bottom > window.innerHeight - 40) {
-        eleman.scrollIntoView({ block: "center", behavior: azHareketRef.current ? "instant" : "smooth" });
-      }
-      const hedefYer = olc();
-      const baslangic = { ...konumRef.current };
-      const sure = azHareketRef.current ? 0 : yuruyusSuresi(baslangic, hedefYer.avatar);
-      let gecen = 0;
-      let oncekiZaman: number | null = null;
+        const olc = () => {
+          const r = (kityHedefiniBul(adimBilgisi) ?? eleman).getBoundingClientRect();
+          const dikdortgen = { left: r.left, top: r.top, width: r.width, height: r.height };
+          const yeni = rehberKonumu(dikdortgen, { width: window.innerWidth, height: window.innerHeight }, balonRef.current?.getBoundingClientRect().height || 270);
+          hedefKonumRef.current = yeni;
+          setHedef(dikdortgen);
+          setYerlesim(yeni);
+          if (!hareketRef.current) {
+            konumRef.current = yeni.avatar;
+            setGorunum({ konum: yeni.avatar, kare: 7, sagaBakiyor: yeni.sagaBakiyor });
+          }
+          return yeni;
+        };
+        const olcumIste = () => {
+          cancelAnimationFrame(olcumKaresi);
+          olcumKaresi = requestAnimationFrame(olc);
+        };
 
-      const ilerle = (zaman: number) => {
-        if (durduruldu) return;
-        if (oncekiZaman !== null) gecen += Math.min(zaman - oncekiZaman, 100);
-        oncekiZaman = zaman;
-        const oran = sure === 0 || azHareketRef.current ? 1 : Math.min(1, gecen / sure);
-        const son = hedefKonumRef.current ?? hedefYer;
-        const yeniKonum = { x: baslangic.x + (son.avatar.x - baslangic.x) * oran, y: baslangic.y + (son.avatar.y - baslangic.y) * oran };
-        konumRef.current = yeniKonum;
-        setGorunum({
-          konum: yeniKonum,
-          kare: oran < 1 ? Math.floor(gecen / 105) % 6 : 7,
-          sagaBakiyor: oran < 1 ? son.avatar.x >= baslangic.x : son.sagaBakiyor,
-        });
-        if (oran < 1) hareketKaresi = requestAnimationFrame(ilerle);
-        else { hareketRef.current = false; setAsama("anlatiyor"); }
+        hareketRef.current = true;
+        const ilkRect = eleman.getBoundingClientRect();
+        if (ilkRect.top < 90 || ilkRect.bottom > window.innerHeight - 40) {
+          eleman.scrollIntoView({ block: "center", behavior: azHareketRef.current ? "instant" : "smooth" });
+        }
+        const hedefYer = olc();
+        const baslangic = { ...konumRef.current };
+        const sure = karsilamada || azHareketRef.current ? 0 : yuruyusSuresi(baslangic, hedefYer.avatar);
+        let gecen = 0;
+        let oncekiZaman: number | null = null;
+
+        const ilerle = (zaman: number) => {
+          if (durduruldu) return;
+          if (oncekiZaman !== null) gecen += Math.min(zaman - oncekiZaman, 100);
+          oncekiZaman = zaman;
+          const oran = sure === 0 || azHareketRef.current ? 1 : Math.min(1, gecen / sure);
+          const son = hedefKonumRef.current ?? hedefYer;
+          const yeniKonum = { x: baslangic.x + (son.avatar.x - baslangic.x) * oran, y: baslangic.y + (son.avatar.y - baslangic.y) * oran };
+          konumRef.current = yeniKonum;
+          setGorunum({
+            konum: yeniKonum,
+            kare: oran < 1 ? Math.floor(gecen / 105) % 6 : 7,
+            sagaBakiyor: oran < 1 ? son.avatar.x >= baslangic.x : son.sagaBakiyor,
+          });
+          if (oran < 1) hareketKaresi = requestAnimationFrame(ilerle);
+          else { hareketRef.current = false; setAsama("anlatiyor"); }
+        };
+        hareketKaresi = requestAnimationFrame(ilerle);
+        window.addEventListener("resize", olcumIste);
+        window.addEventListener("scroll", olcumIste, true);
+        const gozlemci = new ResizeObserver(olcumIste);
+        gozlemci.observe(eleman);
+        if (balonRef.current) gozlemci.observe(balonRef.current);
+        const menuGozlemcisi = adimBilgisi.hedefSecici ? new MutationObserver(olcumIste) : null;
+        menuGozlemcisi?.observe(document.body, { childList: true, subtree: true });
+        temizle = () => {
+          durduruldu = true;
+          hareketRef.current = false;
+          cancelAnimationFrame(hareketKaresi);
+          cancelAnimationFrame(olcumKaresi);
+          window.removeEventListener("resize", olcumIste);
+          window.removeEventListener("scroll", olcumIste, true);
+          gozlemci.disconnect();
+          menuGozlemcisi?.disconnect();
+        };
       };
-      hareketKaresi = requestAnimationFrame(ilerle);
-      window.addEventListener("resize", olcumIste);
-      window.addEventListener("scroll", olcumIste, true);
-      const gozlemci = new ResizeObserver(olcumIste);
-      gozlemci.observe(eleman);
-      if (balonRef.current) gozlemci.observe(balonRef.current);
-      temizle = () => {
-        durduruldu = true;
-        hareketRef.current = false;
-        cancelAnimationFrame(hareketKaresi);
-        cancelAnimationFrame(olcumKaresi);
-        window.removeEventListener("resize", olcumIste);
-        window.removeEventListener("scroll", olcumIste, true);
-        gozlemci.disconnect();
-      };
+      if (hazirlaRef.current) {
+        void hazirlaRef.current(adimBilgisi, iptal.signal).then(() => baslat(), () => baslat(true));
+      } else baslat();
     });
-    return () => { cancelAnimationFrame(baslatmaKaresi); temizle?.(); };
-  }, [acik, adimBilgisi, gorselHazir, veda]);
+    return () => { iptal.abort(); cancelAnimationFrame(baslatmaKaresi); temizle?.(); };
+  }, [acik, adimBilgisi, gorselHazir, veda, karsilamada]);
 
   useEffect(() => {
-    if (!acik || veda || asama !== "anlatiyor" || duraklatildi || hedefYok || !gorselHazir || azHareketRef.current) return;
-    const zamanlayici = window.setTimeout(() => {
-      if (adim < adimlar.length - 1) setAdim(adim + 1);
-      else vedayaGec();
-    }, 6500);
-    return () => window.clearTimeout(zamanlayici);
-  }, [acik, adim, adimlar.length, asama, duraklatildi, hedefYok, gorselHazir, veda, vedayaGec]);
+    if (!acik || veda || karsilamada || asama !== "anlatiyor" || duraklatildi || hedefYok || !gorselHazir || !adimBilgisi) return;
+    let zamanlayici: number | undefined;
+    let iptal = false;
+    let konusma: SpeechSynthesisUtterance | undefined;
+    let kayit: HTMLAudioElement | undefined;
+    let sesHatasiBildirildi = false;
+    const otomatikDevam = (gecikme: number) => {
+      if (iptal || azHareketRef.current) return;
+      zamanlayici = window.setTimeout(() => {
+        if (adim < adimlar.length - 1) { setAsama("yuruyor"); setAdim(adim + 1); }
+        else vedayaGec();
+      }, gecikme);
+    };
+    const hataBildir = () => {
+      if (iptal || sesHatasiBildirildi) return;
+      sesHatasiBildirildi = true;
+      setSesHatasi("Ses başlatılamadı. Sesi kapatıp açarak yeniden deneyebilirsin.");
+      otomatikDevam(6500);
+    };
+    const ses = window.speechSynthesis;
+    if (sesAcik && adimBilgisi.sesDosyasi) {
+      kayit = new Audio(adimBilgisi.sesDosyasi);
+      kayit.onplaying = () => { if (!iptal) setSesHatasi(""); };
+      kayit.onended = () => otomatikDevam(800);
+      kayit.onerror = hataBildir;
+      void kayit.play().catch(hataBildir);
+    } else if (sesAcik && tarayiciSesi && ses && "SpeechSynthesisUtterance" in window) {
+      konusma = new SpeechSynthesisUtterance(`${adim === 0 ? "Merhaba, ben Kity. " : ""}${adimBilgisi.baslik} ${adimBilgisi.aciklama}`);
+      konusma.lang = "tr-TR";
+      const turkceSes = ses.getVoices().find(s => /^tr(?:-|_)/i.test(s.lang));
+      if (turkceSes) konusma.voice = turkceSes;
+      konusma.onstart = () => { if (!iptal) setSesHatasi(""); };
+      konusma.onend = () => otomatikDevam(800);
+      konusma.onerror = hataBildir;
+      try { ses.cancel(); ses.resume(); ses.speak(konusma); }
+      catch { hataBildir(); }
+    } else {
+      otomatikDevam(6500);
+    }
+    return () => {
+      iptal = true;
+      window.clearTimeout(zamanlayici);
+      if (kayit) { kayit.onplaying = null; kayit.onended = null; kayit.onerror = null; kayit.pause(); }
+      if (konusma) { konusma.onstart = null; konusma.onend = null; konusma.onerror = null; ses.cancel(); }
+    };
+  }, [acik, adim, adimBilgisi, adimlar.length, asama, duraklatildi, hedefYok, gorselHazir, veda, vedayaGec, sesAcik, tarayiciSesi, karsilamada]);
 
   if (!acik || !adimBilgisi) return null;
-  if (veda) return <KityVeda baslangic={gorunum.konum} baslangicYukseklik={yerlesim?.avatarYukseklik ?? 240} onBitti={vedayiBitir} />;
+  if (veda) return <KityVeda baslangic={gorunum.konum} baslangicYukseklik={yerlesim?.avatarYukseklik ?? 240} onBitti={vedayiBitir} metin={vedaMetni} sesDosyasi={sesAcik ? vedaSesDosyasi : undefined} />;
   const saga = gorunum.sagaBakiyor;
   const balonStili: CSSProperties = yerlesim
     ? { left: yerlesim.balon.x, top: yerlesim.balon.y, width: yerlesim.balon.width }
-    : { right: 20, bottom: 20, width: "min(310px, calc(100vw - 32px))" };
+    : { right: 20, bottom: 20, width: "min(260px, calc(100vw - 32px))" };
   const el = yerlesim ? {
     x: gorunum.konum.x + yerlesim.avatarGenislik * (saga ? 0.88 : 0.12),
     y: gorunum.konum.y + yerlesim.avatarYukseklik * 0.2,
@@ -202,8 +271,8 @@ function AktifRehber({ adimlar, acik, onKapat, onTamamla }: Props) {
 
   return (
     <div className={styles.katman} data-rehber-asama={asama}>
-      {hedef && <div className={styles.vurgu} aria-hidden="true" style={{ left: hedef.left - 7, top: hedef.top - 7, width: hedef.width + 14, height: hedef.height + 14 }} />}
-      {asama === "anlatiyor" && !hedefYok && el && yerlesim && (
+      {hedef && !karsilamada && <div className={styles.vurgu} aria-hidden="true" style={{ left: hedef.left - 7, top: hedef.top - 7, width: hedef.width + 14, height: hedef.height + 14 }} />}
+      {!karsilamada && asama === "anlatiyor" && !hedefYok && el && yerlesim && (
         <svg className={styles.isaret} aria-hidden="true">
           <defs><marker id="cogniti-ok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#a16a35" /></marker></defs>
           <path d={`M ${el.x} ${el.y} Q ${(el.x + yerlesim.hedefNoktasi.x) / 2} ${el.y - 28}, ${yerlesim.hedefNoktasi.x} ${yerlesim.hedefNoktasi.y}`} fill="none" stroke="#a16a35" strokeWidth="2" strokeDasharray="4 5" markerEnd="url(#cogniti-ok)" />
@@ -216,19 +285,30 @@ function AktifRehber({ adimlar, acik, onKapat, onTamamla }: Props) {
       <aside ref={balonRef} className={styles.balon} style={balonStili} aria-label="Kity sayfa rehberi">
         <div className={styles.balonUst}>
           <span className={styles.imza}><span /> KITY</span>
-          <button ref={kapatDugmesiRef} type="button" onClick={onKapat} className={styles.kapat} aria-label="Turu kapat"><X size={17} /></button>
+          <div className={styles.balonDugmeleri}>
+            {sesli && <button type="button" className={styles.kapat} aria-label={sesAcik ? "Sesi kapat" : "Sesi aç"} aria-pressed={sesAcik} onClick={() => { setSesHatasi(""); setSesAcik(!sesAcik); }}>{sesAcik ? <Volume2 size={17} /> : <VolumeX size={17} />}</button>}
+            <button ref={kapatDugmesiRef} type="button" onClick={onKapat} className={styles.kapat} aria-label="Turu kapat"><X size={17} /></button>
+          </div>
         </div>
         <div aria-live="polite" aria-atomic="true">
-          <p className={styles.adimEtiketi}>{String(adim + 1).padStart(2, "0")} / {String(adimlar.length).padStart(2, "0")} <span>{asama === "yuruyor" ? "Yanına geliyorum…" : "Birlikte keşfedelim"}</span></p>
+          {!karsilamada && <p className={styles.adimEtiketi}>{String(adim + 1).padStart(2, "0")} / {String(adimlar.length).padStart(2, "0")} <span>{asama === "yuruyor" ? "Yanına geliyorum…" : "Birlikte keşfedelim"}</span></p>}
           <h2>{adimBilgisi.baslik}</h2>
           <p className={styles.aciklama}>{gorselHatasi ? "Karakter yüklenemedi. Sayfayı yenileyerek tekrar deneyebilirsin." : !gorselHazir ? "Karakter hazırlanıyor…" : hedefYok ? "Bu adımın alanı şu anda görünmüyor. Sonraki adıma geçebilirsin." : adimBilgisi.aciklama}</p>
+          {sesli && tarayiciSesi && (!("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) && <p role="status">Bu tarayıcı seslendirmeyi desteklemiyor.</p>}
+          {sesAcik && sesHatasi && <p role="status">{sesHatasi}</p>}
         </div>
+        {karsilamada ? <div className={styles.kontroller}>
+          <button type="button" className={styles.ileri} disabled={!gorselHazir || hedefYok} onClick={() => { setAsama("yuruyor"); setKabulEdildi(true); }}>Evet</button>
+          <button type="button" className={styles.otomatik} onClick={vedayaGec}>Hayır</button>
+        </div> : <>
         <div className={styles.adimCubuklari} aria-hidden="true">{adimlar.map((a, i) => <span key={a.hedefId} data-aktif={i === adim} data-tamam={i < adim} />)}</div>
         <div className={styles.kontroller}>
           <button type="button" onClick={() => setDuraklatildi(!duraklatildi)} className={styles.otomatik} aria-label={duraklatildi ? "Otomatik tura devam et" : "Otomatik turu duraklat"}>{duraklatildi ? <Play size={14} /> : <Pause size={14} />} {duraklatildi ? "Devam et" : "Duraklat"}</button>
-          <button type="button" onClick={() => setAdim(Math.max(0, adim - 1))} disabled={adim === 0} className={styles.geri} aria-label="Önceki adım"><ArrowLeft size={16} /></button>
-          <button type="button" onClick={() => { if (adim === adimlar.length - 1) vedayaGec(); else setAdim(adim + 1); }} className={styles.ileri}>{adim === adimlar.length - 1 ? "Bitir" : "İleri"}<ArrowRight size={15} /></button>
+          <button type="button" onClick={() => { setAsama("yuruyor"); setAdim(Math.max(0, adim - 1)); }} disabled={adim === 0} className={styles.geri} aria-label="Önceki adım"><ArrowLeft size={16} /></button>
+          <button type="button" onClick={() => { if (adim === adimlar.length - 1) vedayaGec(); else { setAsama("yuruyor"); setAdim(adim + 1); } }} className={styles.ileri}>{adim === adimlar.length - 1 ? "Bitir" : "İleri"}<ArrowRight size={15} /></button>
         </div>
+        </>}
+        {altIcerik}
       </aside>
     </div>
   );

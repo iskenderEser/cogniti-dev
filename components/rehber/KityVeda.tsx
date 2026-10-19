@@ -9,6 +9,8 @@ type Props = {
   baslangic: Nokta;
   baslangicYukseklik: number;
   onBitti: () => void;
+  metin?: string;
+  sesDosyasi?: string;
 };
 type Asama = "veda-yuruyor" | "veda-el" | "veda-kayboluyor";
 const EL_KARELERI = [0, 1, 2, 3, 2, 3, 2, 3];
@@ -16,7 +18,7 @@ const EL_SURESI = 1400;
 const KAYBOLMA_SURESI = 750;
 
 /** Bitir: mevcut konumdan merkeze yürüyüş → el kaldırma → saydamlaşma. */
-export default function KityVeda({ baslangic, baslangicYukseklik, onBitti }: Props) {
+export default function KityVeda({ baslangic, baslangicYukseklik, onBitti, metin = "Görüşmek üzere!", sesDosyasi }: Props) {
   const [gorunum, setGorunum] = useState({
     konum: baslangic, yukseklik: baslangicYukseklik, kare: 0,
     asama: "veda-yuruyor" as Asama, opaklik: 1, sagaBakiyor: true, elGorseli: false,
@@ -24,7 +26,20 @@ export default function KityVeda({ baslangic, baslangicYukseklik, onBitti }: Pro
   const gorselRef = useRef<"bekliyor" | "hazir" | "hata">("bekliyor");
   const bittiRef = useRef(onBitti);
   const atlaRef = useRef<HTMLButtonElement>(null);
+  const sesBittiRef = useRef(!sesDosyasi);
   useEffect(() => { bittiRef.current = onBitti; }, [onBitti]);
+
+  useEffect(() => {
+    if (!sesDosyasi) return;
+    const ses = new Audio(sesDosyasi);
+    sesBittiRef.current = false;
+    const bitti = () => { sesBittiRef.current = true; };
+    ses.onended = bitti;
+    ses.onerror = bitti;
+    const zamanlayici = window.setTimeout(bitti, 45000);
+    void ses.play().catch(bitti);
+    return () => { window.clearTimeout(zamanlayici); ses.onended = null; ses.onerror = null; ses.pause(); };
+  }, [sesDosyasi]);
 
   useEffect(() => {
     const img = new Image();
@@ -43,6 +58,7 @@ export default function KityVeda({ baslangic, baslangicYukseklik, onBitti }: Pro
     let oncekiZaman: number | null = null;
     let gecen = 0;
     let elBaslangici: number | null = null;
+    let kaybolmaBaslangici: number | null = null;
     let kare = 0;
     let durduruldu = false;
 
@@ -67,10 +83,11 @@ export default function KityVeda({ baslangic, baslangicYukseklik, onBitti }: Pro
         if (gorselRef.current !== "bekliyor" || gecen >= yurumeSuresi + 5000) elBaslangici ??= gecen;
         const elGecen = elBaslangici === null ? 0 : gecen - elBaslangici;
         elGorseli = gorselRef.current === "hazir";
-        asama = elBaslangici !== null && elGecen >= elSuresi ? "veda-kayboluyor" : "veda-el";
+        if (elBaslangici !== null && elGecen >= elSuresi && sesBittiRef.current) kaybolmaBaslangici ??= gecen;
+        asama = kaybolmaBaslangici !== null ? "veda-kayboluyor" : "veda-el";
         kareNo = elGorseli ? azHareket ? 3 : EL_KARELERI[Math.min(EL_KARELERI.length - 1, Math.floor(elGecen / (EL_SURESI / EL_KARELERI.length)))] : 6;
         if (asama === "veda-kayboluyor") {
-          opaklik = kaybolmaSuresi === 0 ? 0 : Math.max(0, 1 - (elGecen - elSuresi) / kaybolmaSuresi);
+          opaklik = kaybolmaSuresi === 0 ? 0 : Math.max(0, 1 - (gecen - kaybolmaBaslangici!) / kaybolmaSuresi);
           if (opaklik === 0) { bittiRef.current(); return; }
         }
       }
@@ -93,7 +110,7 @@ export default function KityVeda({ baslangic, baslangicYukseklik, onBitti }: Pro
       <div className={styles.golge} />
     </div>
     <p className={styles.vedaMesaji} role="status" style={{ opacity: gorunum.asama === "veda-yuruyor" ? 0 : gorunum.opaklik, left: gorunum.konum.x + genislik / 2, top: gorunum.konum.y + gorunum.yukseklik + 15 }}>
-      Görüşmek üzere! <span>Kity</span>
+      {metin} <span>Kity</span>
     </p>
   </div>;
 }

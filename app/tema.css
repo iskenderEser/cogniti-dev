@@ -4662,6 +4662,13 @@
   --tema-uretim-ozet-planlanan-vurgu: #047857;
 }
 
+/* Geniş masaüstünde Cogniti logosu büyür; dar ve dokunmatik ekran ölçüleri korunur. */
+@media (min-width: 1440px) and (hover: hover) and (pointer: fine) {
+  #kity-navbar #kity-karsilama > img {
+    height: 66px;
+  }
+}
+
 /* bi ipucu balonu: arayüz temaya uyar, turuncu kimlik korunur. */
 :root,
 [data-tema="mavi"] {

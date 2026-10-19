@@ -242,6 +242,7 @@ export default function MobilDrawer(props: MobilDrawerProps) {
               <div key={grup.baslik} className="flex flex-col gap-1">
                 <button
                   type="button"
+                  data-kity-menu={encodeURIComponent(grup.baslik)}
                   onClick={() => grupToggle(grup.baslik)}
                   className="flex w-full cursor-pointer items-center justify-between border-none bg-transparent"
                   style={{ minHeight: "44px", fontSize: "12px", fontWeight: 800, color: grup.baslik === "HBStore" ? "var(--tema-hbstore-vurgu)" : "var(--tema-baslik)", textTransform: "uppercase", letterSpacing: "0.06em", padding: "2px 12px 4px", fontFamily: "'Nunito', sans-serif" }}

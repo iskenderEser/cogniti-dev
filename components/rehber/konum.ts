@@ -6,23 +6,35 @@ const sinirla = (deger: number, alt: number, ust: number) => Math.max(alt, Math.
 /** Sabit katmandaki avatar ve balon, hedefi kapatmadan ekran içinde kalır. */
 export function rehberKonumu(hedef: Dikdortgen, ekran: { width: number; height: number }, balonYukseklik = 270) {
   const bosluk = 16;
-  const avatarYukseklik = Math.min(240, ekran.height * 0.34);
-  const avatarGenislik = avatarYukseklik / 2;
+  let avatarYukseklik = Math.min(240, ekran.height * 0.34);
+  let avatarGenislik = avatarYukseklik / 2;
   const sag = hedef.left + hedef.width;
   const solUygun = hedef.left - avatarGenislik - 28 >= bosluk;
   const sagUygun = sag + avatarGenislik + 28 <= ekran.width - bosluk;
   const solda = solUygun || !sagUygun;
   const x = sinirla(solda ? hedef.left - avatarGenislik - 28 : sag + 28, bosluk, ekran.width - avatarGenislik - bosluk);
-  const y = sinirla(hedef.top + hedef.height / 2 - avatarYukseklik * 0.42, 90, ekran.height - avatarYukseklik - 24);
-  const balonGenislik = Math.min(310, ekran.width - 32);
+  let y = sinirla(hedef.top + hedef.height / 2 - avatarYukseklik * 0.42, 90, ekran.height - avatarYukseklik - 24);
+  const balonGenislik = Math.min(260, ekran.width - 32);
+  const aralik = 12;
 
-  // Dar ekranda anlatım altta; karakter hedefin yanında görünür kalır.
-  const balonX = ekran.width < 700
-    ? (ekran.width - balonGenislik) / 2
-    : sinirla(solda ? x - balonGenislik - 12 : x + avatarGenislik + 12, bosluk, ekran.width - balonGenislik - bosluk);
-  const balonY = ekran.width < 700
-    ? Math.max(bosluk, ekran.height - balonYukseklik - 16)
-    : sinirla(y - balonYukseklik + 60, 90, ekran.height - balonYukseklik - 16);
+  // Balonu ekran kenarına sıkıştırmak avatarın üstüne bindiriyordu.
+  // Önce avatarın gerçekten boş olan yanını, sığmazsa ayrı bir dikey alanı kullan.
+  const soldaBalonYeri = x - aralik - balonGenislik >= bosluk;
+  const sagdaBalonYeri = x + avatarGenislik + aralik + balonGenislik <= ekran.width - bosluk;
+  let balonX: number;
+  let balonY: number;
+  if (soldaBalonYeri || sagdaBalonYeri) {
+    balonX = soldaBalonYeri && (solda || !sagdaBalonYeri)
+      ? x - aralik - balonGenislik
+      : x + avatarGenislik + aralik;
+    balonY = sinirla(y, bosluk, ekran.height - balonYukseklik - bosluk);
+  } else {
+    balonX = sinirla(x, bosluk, ekran.width - balonGenislik - bosluk);
+    balonY = Math.max(bosluk, ekran.height - balonYukseklik - bosluk);
+    avatarYukseklik = Math.min(avatarYukseklik, Math.max(0, balonY - aralik - bosluk));
+    avatarGenislik = avatarYukseklik / 2;
+    y = sinirla(y, bosluk, balonY - aralik - avatarYukseklik);
+  }
 
   return {
     avatar: { x, y },

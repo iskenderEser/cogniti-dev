@@ -211,6 +211,7 @@ export default function SolListe(props: SolListeProps) {
           return (
             <div key={grup.baslik} className="flex flex-col gap-1">
               <button
+                data-kity-menu={encodeURIComponent(grup.baslik)}
                 onClick={() => grupToggle(grup.baslik)}
                 aria-expanded={acik}
                 className="w-full flex items-center justify-between bg-transparent border-none cursor-pointer"

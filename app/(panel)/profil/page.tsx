@@ -418,7 +418,7 @@ export default function ProfilPage() {
   return (
     <div className="min-h-screen bg-[var(--tema-yerel-hesap-sayfa-zemini-01)]" style={{ fontFamily: "'Nunito', sans-serif" }}>
       <div className={`${isEclubKisi ? "max-w-xl" : "max-w-5xl"} mx-auto px-3 py-3 pb-20 md:px-6 md:py-6 md:pb-6`}>
-        <div className="bg-[var(--tema-yerel-hesap-kart-01)] rounded-xl border border-[var(--tema-yerel-hesap-cizgi-01)] overflow-hidden flex flex-col md:flex-row md:min-h-[600px]">
+        <div id={profil ? "kity-profil" : undefined} className="bg-[var(--tema-yerel-hesap-kart-01)] rounded-xl border border-[var(--tema-yerel-hesap-cizgi-01)] overflow-hidden flex flex-col md:flex-row md:min-h-[600px]">
           {SolPanel()}
           {!isEclubKisi && <div className="hidden md:block w-px bg-[var(--tema-yerel-hesap-sayfa-zemini-03)] flex-shrink-0" />}
           {!isEclubKisi && SagPanel()}
