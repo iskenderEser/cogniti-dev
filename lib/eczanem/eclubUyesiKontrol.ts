@@ -5,9 +5,9 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 export const ECLUB_UYESI_MUSTERI_OLAMAZ_MESAJI =
-  "HapBilgi'de E-Club üyesi olduğunuz için müşteri olarak kayıt olmazsınız";
+  "Cogniti'de E-Club üyesi olduğunuz için müşteri olarak kayıt olmazsınız";
 export const ECZANEM_MUSTERISI_ECLUB_UYESI_OLAMAZ_MESAJI =
-  "Bu kişi HapBilgi'de Eczanem müşterisi olduğu için E-Club üyesi olarak kaydedilemez.";
+  "Bu kişi Cogniti'de Eczanem müşterisi olduğu için E-Club üyesi olarak kaydedilemez.";
 
 /** Eczanem'in 10 haneli kanonik telefonunu sistemdeki tarihsel yazımlara açar. */
 export function eclubTelefonVaryantlari(telefon: string): string[] {

@@ -1,19 +1,21 @@
 export const ECLUB_BANNER_BUCKET = "store-urun-gorselleri";
 export const ECLUB_BANNER_TABLO = "eclub_firma_bannerlari";
 export const ECLUB_BANNER_MAX_BOYUT = 5 * 1024 * 1024;
+// Marka adı değişse de platformun mevcut firma ve banner kayıtları aynı kalır.
+export const PLATFORM_FIRMA_ID = "15853eba-a94c-4528-9a07-0ee0b8677a02";
 
 export interface EclubBanner { sira: number; url: string }
 
-export function hapbilgiBannerFirmasi(firmaAdi: string): boolean {
-  return firmaAdi.trim().toLowerCase() === "hapbilgi";
+export function platformBannerFirmasi(firmaId: string): boolean {
+  return firmaId.toLowerCase() === PLATFORM_FIRMA_ID;
 }
 
-export function bannerAdedi(firmaAdi: string): number {
-  return hapbilgiBannerFirmasi(firmaAdi) ? 5 : 3;
+export function bannerAdedi(firmaId: string): number {
+  return platformBannerFirmasi(firmaId) ? 5 : 3;
 }
 
-export function bannerSirasiGecerli(sira: number, firmaAdi = ""): boolean {
-  return Number.isInteger(sira) && sira >= 1 && sira <= bannerAdedi(firmaAdi);
+export function bannerSirasiGecerli(sira: number, firmaId = ""): boolean {
+  return Number.isInteger(sira) && sira >= 1 && sira <= bannerAdedi(firmaId);
 }
 
 /** Uzantı dosya adına değil, dosyanın gerçek biçimine göre seçilir. */

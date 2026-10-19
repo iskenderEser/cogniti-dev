@@ -12,6 +12,7 @@
 
 import { useState } from "react";
 import { HataMesajiContainer } from "@/components/HataMesaji";
+import { platformBannerFirmasi } from "@/lib/eclub/banner";
 import { useAdminPanel } from "./_hooks/useAdminPanel";
 import { useTekilForm } from "./_hooks/useTekilForm";
 import { useTopluForm } from "./_hooks/useTopluForm";
@@ -238,7 +239,7 @@ export default function AdminPanel() {
                     m4NotuGoster={false}
                   />
                   <EclubBannerYonetimi key={f.firma_id} firmaId={f.firma_id} firmaAdi={f.firma_adi} />
-                  {f.firma_adi.trim().toLowerCase() !== "hapbilgi" && <>
+                  {!platformBannerFirmasi(f.firma_id) && <>
                     <EclubBannerYonetimi key={`${f.firma_id}-uyeler`} firmaId={f.firma_id} firmaAdi={f.firma_adi} alan="uyeler" />
                     <EclubBannerYonetimi key={`${f.firma_id}-uye-yayinlari`} firmaId={f.firma_id} firmaAdi={f.firma_adi} alan="uye-yayinlari" />
                     <EclubBannerYonetimi key={`${f.firma_id}-indirim-onayi`} firmaId={f.firma_id} firmaAdi={f.firma_adi} alan="indirim-onayi" />

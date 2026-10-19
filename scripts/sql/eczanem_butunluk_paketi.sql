@@ -65,7 +65,7 @@ BEGIN
       SELECT 1 FROM public.eczanem_musteriler m
       WHERE public.hapbilgi_telefon_normalize(m.telefon) = v_telefon
     ) THEN
-      RAISE EXCEPTION 'Bu kişi HapBilgi''de Eczanem müşterisi olduğu için E-Club üyesi olarak kaydedilemez.'
+      RAISE EXCEPTION 'Bu kişi Cogniti''de Eczanem müşterisi olduğu için E-Club üyesi olarak kaydedilemez.'
         USING ERRCODE = 'P0001';
     END IF;
   ELSIF TG_TABLE_NAME = 'eczanem_musteriler' THEN
@@ -73,7 +73,7 @@ BEGIN
       SELECT 1 FROM public.eclub_kisiler k
       WHERE public.hapbilgi_telefon_normalize(k.telefon) = v_telefon
     ) THEN
-      RAISE EXCEPTION 'HapBilgi''de E-Club üyesi olduğunuz için müşteri olarak kayıt olmazsınız'
+      RAISE EXCEPTION 'Cogniti''de E-Club üyesi olduğunuz için müşteri olarak kayıt olmazsınız'
         USING ERRCODE = 'P0001';
     END IF;
   END IF;

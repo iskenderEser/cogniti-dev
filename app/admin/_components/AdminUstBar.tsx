@@ -41,7 +41,7 @@ export default function AdminUstBar(p: AdminUstBarProps) {
         }}
       >
         <span style={{ fontSize: "17px", fontWeight: 800, color: "white", letterSpacing: "0.2px" }}>
-          HapBilgi Yönetim
+          Cogniti Yönetim
         </span>
       </button>
 

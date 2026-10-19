@@ -1,4 +1,4 @@
--- Hapbilgi için beş, diğer firmalar için üç banner. Tamamını tek parça çalıştırın.
+-- Cogniti platform firması için beş, diğer firmalar için üç banner. Tamamını tek parça çalıştırın.
 -- İlk kurulum ve mevcut tablonun güncellenmesi için aynı SQL kullanılır.
 -- Mevcut banner, firma, puan ve çek kayıtları korunur.
 BEGIN;
@@ -15,11 +15,9 @@ ALTER TABLE public.eclub_firma_bannerlari ADD CONSTRAINT eclub_firma_bannerlari_
 
 CREATE OR REPLACE FUNCTION public.eclub_banner_sira_kontrolu()
 RETURNS trigger LANGUAGE plpgsql SET search_path = public AS $fonksiyon$
-DECLARE v_firma_adi text;
 BEGIN
-  SELECT firma_adi INTO v_firma_adi FROM public.firmalar WHERE firma_id = NEW.firma_id;
-  IF NEW.sira > 3 AND lower(btrim(coalesce(v_firma_adi, ''))) <> 'hapbilgi' THEN
-    RAISE EXCEPTION 'Yalnız Hapbilgi firması beş banner kullanabilir.' USING ERRCODE = '23514';
+  IF NEW.sira > 3 AND NEW.firma_id <> '15853eba-a94c-4528-9a07-0ee0b8677a02'::uuid THEN
+    RAISE EXCEPTION 'Yalnız Cogniti firması beş banner kullanabilir.' USING ERRCODE = '23514';
   END IF;
   RETURN NEW;
 END;

@@ -13,14 +13,16 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "HapBilgi",
-  description: "v-learning",
+  metadataBase: new URL("https://cogniti.net"),
+  applicationName: "Cogniti",
+  title: "Cogniti",
+  description: "Cogniti · bilgi taşır",
   // PWA/push zemini (P1): manifest yüklenebilirlik + iOS "Ana Ekrana Ekle"
   // (iOS Safari push'u yalnız PWA kurulumunda destekler — plan A.5).
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
-    title: "HapBilgi",
+    title: "Cogniti",
     statusBarStyle: "default",
   },
 };

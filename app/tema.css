@@ -173,7 +173,7 @@
   --tema-uyari: #b45309;
   --tema-bilgi: #2563eb;
   --tema-ters-metin: #ffffff;
-  --tema-secici-vurgu: var(--tema-eylem);
+  --tema-secici-vurgu: var(--tema-kontrol-eylem);
 
   /* Örtü/derinlik ve HBStore kimliği her iki temada aynı kalır. */
   --tema-mobil-menu-ortu: rgba(0,0,0,0.45);

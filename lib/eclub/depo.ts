@@ -62,7 +62,7 @@ export function depoTalepMailto(info: string, konum?: DepoKonumu): string {
   const govde = konum
     ? `Düzeltme talebi\nDepo: ${konum.depo_adi}\nŞube: ${konum.sube_adi ?? "Belirtilmemiş"}\nİl / İlçe: ${konum.il} / ${konum.ilce}\nAdres: ${konum.adres}\nKayıt: ${konum.depo_sube_id}\n\nTalebim:\n`
     : "Depo/Şube ekleme talebi\nDepo adı:\nŞube adı (varsa):\nİl / İlçe:\nAdres:\n\nTalebim:\n";
-  return `mailto:${encodeURIComponent(info)}?subject=${encodeURIComponent("HapBilgi Depo Düzeltme/Ekleme Talebi")}&body=${encodeURIComponent(govde)}`;
+  return `mailto:${encodeURIComponent(info)}?subject=${encodeURIComponent("Cogniti Depo Düzeltme/Ekleme Talebi")}&body=${encodeURIComponent(govde)}`;
 }
 
 const aramaMetni = (v: string) => v.toLocaleLowerCase("tr-TR").replaceAll("ı", "i")

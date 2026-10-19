@@ -75,7 +75,7 @@ export default function IuAnaSayfa({ user, adSoyad }: Props) {
         <div>
           <h1 className="text-lg md:text-xl font-extrabold text-[var(--tema-yerel-ana-sayfa-ana-metin-01)] m-0">Merhaba {ad}, 👋</h1>
           <p className="text-sm text-[var(--tema-yerel-ana-sayfa-yardimci-metin-03)] mt-1">
-            <strong style={{ color: "var(--tema-yerel-ana-sayfa-eylem-metin-03)", fontWeight: 700 }}>HapBilgi · </strong>{ROL_ADLARI["iu"]}
+            <strong style={{ color: "var(--tema-yerel-ana-sayfa-eylem-metin-03)", fontWeight: 700 }}>Cogniti · </strong>{ROL_ADLARI["iu"]}
           </p>
         </div>
         <TarihPill />

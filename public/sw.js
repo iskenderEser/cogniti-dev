@@ -1,6 +1,6 @@
 // public/sw.js
 //
-// HapBilgi Service Worker (P1 — hapbilgi_push_teknik_is_plani.md C.1/C.3).
+// Cogniti Service Worker (P1 — hapbilgi_push_teknik_is_plani.md C.1/C.3).
 // Tek görevi web push'tur: fetch/önbellek katmanı BİLEREK yok — uygulama
 // davranışına karışmaz, yalnız site kapalıyken bildirim gösterir.
 // Yük sözleşmesi lib/push/tipler.ts PushYuku'dur (K-P6 — PII taşımaz).
@@ -24,7 +24,7 @@ self.addEventListener("push", (event) => {
     return; // sözleşme dışı yük — sessiz geç
   }
 
-  const baslik = yuk.baslik || "HapBilgi";
+  const baslik = yuk.baslik || "Cogniti";
   event.waitUntil(
     self.registration.showNotification(baslik, {
       body: yuk.govde || "",
@@ -35,7 +35,7 @@ self.addEventListener("push", (event) => {
   );
 });
 
-// Tıklama: açık bir HapBilgi sekmesi varsa ona odaklan ve hedefe götür,
+// Tıklama: açık bir Cogniti sekmesi varsa ona odaklan ve hedefe götür,
 // yoksa yeni pencere aç. Login değilse proxy zaten giriş ekranına yönlendirir.
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();

@@ -50,6 +50,9 @@ function bilesen(dosya: string, pathname = "/ana-sayfa") {
     "@/lib/video/katalogOnbellek": { prefetchYayinKatalog: noop },
     "@/app/(panel)/raporlar/yayin-raporlari/_hooks/uretimRaporuOnbellek": { prefetchUretimRaporu: noop },
   };
+  if (dosya !== "components/marka/CognitiLogo.tsx") {
+    modules["@/components/marka/CognitiLogo"] = { default: bilesen("components/marka/CognitiLogo.tsx") };
+  }
   const source = readFileSync(dosya, "utf8");
   const compiled = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX } }).outputText;
   const exports: { default?: React.ComponentType<Record<string, unknown>> } = {};

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import RenkKarsilastirma from "./RenkKarsilastirma";
 
 export const metadata: Metadata = {
-  title: "HOYK renk karşılaştırması | HapBilgi",
+  title: "HOYK renk karşılaştırması | Cogniti",
   robots: { index: false, follow: false },
 };
 

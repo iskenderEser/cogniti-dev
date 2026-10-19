@@ -1,7 +1,7 @@
 // app/admin/_components/LogoKimlikYonetimi.tsx
 //
 // FİRMA sekme grubundaki "Logo ve Kimlik" sekmesi:
-// Bu firmanın çalışanlarına özel iç panelinde HapBilgi logosunun yanında
+// Bu firmanın çalışanlarına özel iç panelinde Cogniti logosunun yanında
 // yer alan firma logosunu ve "resmi öğrenme platformu" ortaklığını yönetir.
 //
 // 3 Aksiyon Butonu:
@@ -11,6 +11,7 @@
 
 "use client";
 
+import CognitiLogo from "@/components/marka/CognitiLogo";
 import { useState, useEffect, useRef } from "react";
 import type { Firma } from "../_types";
 import { RENK_BORDO, RENK_CIZGI, btnBase } from "../_constants";
@@ -141,7 +142,7 @@ export default function LogoKimlikYonetimi({ firma, onGuncelle }: LogoKimlikYone
             {firma.firma_adi} · Logo ve Kimlik Yönetimi
           </h2>
           <p style={{ fontSize: "12.5px", color: "var(--tema-yerel-yonetim-yardimci-metin-02)", marginTop: "3px", margin: 0 }}>
-            İç müşteri panelinde (UTT, üretici vb.) HapBilgi logosu yanında görünecek kurumsal logo ve resmi öğrenme ortaklığı.
+            İç müşteri panelinde (UTT, üretici vb.) Cogniti logosu yanında görünecek kurumsal logo ve resmi öğrenme ortaklığı.
           </p>
         </div>
 
@@ -221,11 +222,9 @@ export default function LogoKimlikYonetimi({ firma, onGuncelle }: LogoKimlikYone
             minHeight: "68px",
           }}
         >
-          {/* HapBilgi Logo */}
-          <img
-            src="/hapbilgi-yatay-TM-1-logo-optimized.png"
-            alt="HapBilgi"
-            style={{ height: "42px", width: "auto", display: "block" }}
+          {/* Cogniti Logo */}
+          <CognitiLogo
+            style={{ height: "42px", width: "74.725px", display: "block", objectFit: "contain" }}
           />
 
           <div style={{ height: "28px", width: "1.5px", background: "var(--tema-yerel-yonetim-secim-zemin-01)", margin: "0 16px" }} />

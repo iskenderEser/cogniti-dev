@@ -1,7 +1,7 @@
 {
-  "name": "HapBilgi",
-  "short_name": "HapBilgi",
-  "description": "v-learning",
+  "name": "Cogniti",
+  "short_name": "Cogniti",
+  "description": "Cogniti · bilgi taşır",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

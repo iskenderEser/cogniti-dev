@@ -26,36 +26,36 @@ export function icerikUret(olayTuru: PushOlayTuru, aliciRol: string, baglam: Pus
   switch (olayTuru) {
     case "uretim_durum_gecisi":
       if (aliciRol === IU_ROLU) {
-        return icKullaniciYuku("HapBilgi — Üretim Hattı", "Bir içerik sizden işlem bekliyor.");
+        return icKullaniciYuku("Cogniti — Üretim Hattı", "Bir içerik sizden işlem bekliyor.");
       }
       if (URETICI_ROLLER.includes(aliciRol)) {
-        return icKullaniciYuku("HapBilgi — Üretim Hattı", "Bir içeriğinizin durumu güncellendi.");
+        return icKullaniciYuku("Cogniti — Üretim Hattı", "Bir içeriğinizin durumu güncellendi.");
       }
       // Diğer iç roller (ör. bilgilendirme amaçlı alıcılar) için jenerik metin.
-      return icKullaniciYuku("HapBilgi", "Sizi ilgilendiren bir gelişme var.");
+      return icKullaniciYuku("Cogniti", "Sizi ilgilendiren bir gelişme var.");
 
     case "video_onerisi":
       if (TUKETICI_ROLLER.includes(aliciRol)) {
-        return { baslik: "HapBilgi", govde: "Size yeni bir öğrenme içeriği önerildi.", url: baglam.yayinId ? `/ana-sayfa?yayin_id=${encodeURIComponent(baglam.yayinId)}${baglam.bagId ? `&oneri_id=${encodeURIComponent(baglam.bagId)}` : ""}` : "/ana-sayfa" };
+        return { baslik: "Cogniti", govde: "Size yeni bir öğrenme içeriği önerildi.", url: baglam.yayinId ? `/ana-sayfa?yayin_id=${encodeURIComponent(baglam.yayinId)}${baglam.bagId ? `&oneri_id=${encodeURIComponent(baglam.bagId)}` : ""}` : "/ana-sayfa" };
       }
       return null;
 
     case "video_yayini":
       if (TUKETICI_ROLLER.includes(aliciRol)) {
-        return { baslik: "HapBilgi", govde: "Yeni bir öğrenme içeriği yayında.", url: baglam.yayinId ? `/ana-sayfa?yayin_id=${encodeURIComponent(baglam.yayinId)}` : "/ana-sayfa" };
+        return { baslik: "Cogniti", govde: "Yeni bir öğrenme içeriği yayında.", url: baglam.yayinId ? `/ana-sayfa?yayin_id=${encodeURIComponent(baglam.yayinId)}` : "/ana-sayfa" };
       }
       return null;
 
     case "eclub_oneri":
       if (ECLUB_TUKETICI_ROLLERI.includes(aliciRol)) {
-        return { baslik: "HapBilgi E-Club", govde: "Eczanenize yeni bir öğrenme içeriği önerildi.", url: `${baglam.firmaId ? eclubFirmaYolu(baglam.firmaId, "yayinlar") : "/eclub/ana-sayfa"}${baglam.bagId ? `?oneri_id=${encodeURIComponent(baglam.bagId)}` : ""}` };
+        return { baslik: "Cogniti E-Club", govde: "Eczanenize yeni bir öğrenme içeriği önerildi.", url: `${baglam.firmaId ? eclubFirmaYolu(baglam.firmaId, "yayinlar") : "/eclub/ana-sayfa"}${baglam.bagId ? `?oneri_id=${encodeURIComponent(baglam.bagId)}` : ""}` };
       }
       return null;
 
     case "eclub_cek_teslim":
       if (ECLUB_TUKETICI_ROLLERI.includes(aliciRol)) {
         return {
-          baslik: "HapBilgi E-Club",
+          baslik: "Cogniti E-Club",
           govde: "Eczanenizin Migros hediye çeki hazır.",
           url: `${baglam.firmaId ? eclubFirmaYolu(baglam.firmaId, "cek-talepleri") : "/eclub/cek-taleplerim"}${baglam.bagId ? `?talep_id=${encodeURIComponent(baglam.bagId)}` : ""}`,
         };
@@ -84,8 +84,8 @@ export function icerikUret(olayTuru: PushOlayTuru, aliciRol: string, baglam: Pus
 
     case "store_siparis":
       if (ECLUB_TUKETICI_ROLLERI.includes(aliciRol)) {
-        return { baslik: "HapBilgi Store", govde: "Siparişinizde gelişme var.", url: "/eclub/store" };
+        return { baslik: "Cogniti Store", govde: "Siparişinizde gelişme var.", url: "/eclub/store" };
       }
-      return icKullaniciYuku("HapBilgi Store", "Siparişinizde gelişme var.");
+      return icKullaniciYuku("Cogniti Store", "Siparişinizde gelişme var.");
   }
 }

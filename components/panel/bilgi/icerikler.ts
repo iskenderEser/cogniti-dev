@@ -1,7 +1,7 @@
 // Bilgi sayfalarının metinleri, görsel ve etkileşim kodundan ayrı tutulur.
 export const BILGI_SAYFALARI = {
   hakkinda: {
-    etiket: "HapBilgi Nedir?",
+    etiket: "Cogniti Nedir?",
     baslik: "Uçtan uca",
     vurgu: "öğrenme zinciri",
     aciklama:

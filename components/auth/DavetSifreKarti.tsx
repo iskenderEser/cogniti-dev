@@ -1,5 +1,6 @@
 "use client";
 
+import CognitiLogo from "@/components/marka/CognitiLogo";
 import { useEffect } from "react";
 import { SifreBelirlemeFormu } from "@/components/auth/SifreBelirlemeFormu";
 import { createClient } from "@/lib/supabase/client";
@@ -12,7 +13,7 @@ export function DavetSifreKarti({ token }: { token: string | null }) {
   }, []);
   return <main className="flex min-h-screen items-center justify-center bg-[var(--tema-yerel-giris-kart-01)] px-6 py-10" style={{ fontFamily: "'Nunito', sans-serif" }}>
     <div className="w-full max-w-sm">
-      <img src="/hapbilgi-dikey-TM-1-logo.png" alt="HapBilgi" className="mx-auto mb-8 h-36 object-contain" />
+      <CognitiLogo className="mx-auto mb-8 h-36 object-contain" style={{ width: 144 }} />
       {!token ? <p role="alert" className="text-sm text-[var(--tema-yerel-giris-ana-metin-01)]">Davet bağlantısı bulunamadı. Temsilcinizden yeni davet isteyin.</p> : <SifreBelirlemeFormu baslik="Şifre oluştur" buton="Kaydet" onKaydet={async (sifre, tekrar) => {
         const r = await fetch("/sifre-olustur/api", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ token, sifre, tekrar }) });
         const d = await r.json();

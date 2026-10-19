@@ -3,7 +3,7 @@ import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { eclubKisiErisimi } from "@/lib/eclub/kisiErisim";
 import { eclubFirmaKapsami, eclubFirmaRotasiKapsami } from "@/lib/eclub/firmaGezinme";
 import { firmaBannerlariniOku } from "@/lib/eclub/bannerSunucu";
-import { bannerKurulumuEksik } from "@/lib/eclub/banner";
+import { bannerKurulumuEksik, PLATFORM_FIRMA_ID } from "@/lib/eclub/banner";
 import { ECLUB_TUKETICI_ROLLERI } from "@/lib/utils/roller";
 import { uuidGecerliMi } from "@/lib/uretim/rpc";
 import { yetkiHatasi, rolHatasi, validasyonHatasi, hataYaniti, sunucuHatasi } from "@/lib/utils/hataIsle";
@@ -29,10 +29,10 @@ export async function GET(request: Request) {
     } else {
       // Ana sayfa görselleri bütün aktif E-Club üyelerine gösterilir.
       if (!erisim.eclub_aktif) return rolHatasi();
-      const { data: hapbilgi, error: firmaHatasi } = await admin.from("firmalar")
-        .select("firma_id").ilike("firma_adi", "hapbilgi").eq("aktif", true).eq("eclub_aktif", true).maybeSingle();
+      const { data: platformFirmasi, error: firmaHatasi } = await admin.from("firmalar")
+        .select("firma_id").eq("firma_id", PLATFORM_FIRMA_ID).eq("aktif", true).eq("eclub_aktif", true).maybeSingle();
       if (firmaHatasi) return hataYaniti("Ana sayfa banner firması okunamadı.", "Banner firma SELECT", firmaHatasi);
-      hedefFirmaId = hapbilgi?.firma_id ?? null;
+      hedefFirmaId = platformFirmasi?.firma_id ?? null;
     }
     if (!hedefFirmaId) return NextResponse.json({ bannerlar: [] }, { headers: { "Cache-Control": "no-store" } });
     const sonuc = await firmaBannerlariniOku(admin, hedefFirmaId);

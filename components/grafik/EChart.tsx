@@ -112,7 +112,7 @@ export default function EChart({ option, height = 320, className, style, onClick
   }, [option, renderer]);
 
   // PNG indir — ekrandaki grafik değişmez; yalnız indirilen dosyanın sağ-alt
-  // köşesine HapBilgi logosu (baykuş + "hapbilgi") filigran olarak basılır.
+  // köşesine mevcut temanın Cogniti logosu filigran olarak basılır.
   const indir = async () => {
     const grafik = grafikRef.current;
     if (!grafik) return;
@@ -134,7 +134,8 @@ export default function EChart({ option, height = 320, className, style, onClick
     };
 
     try {
-      const [taban, logo] = await Promise.all([yukle(kaynak), yukle("/logo-download.png")]);
+      const yesil = kutuRef.current?.closest("[data-tema]")?.getAttribute("data-tema") === "yesil";
+      const [taban, logo] = await Promise.all([yukle(kaynak), yukle(`/marka/cogniti-${yesil ? "green" : "blue"}.svg`)]);
       const canvas = document.createElement("canvas");
       canvas.width = taban.naturalWidth;
       canvas.height = taban.naturalHeight;

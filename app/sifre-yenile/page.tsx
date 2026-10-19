@@ -8,6 +8,7 @@
 
 "use client";
 
+import CognitiLogo from "@/components/marka/CognitiLogo";
 import { SifreBelirlemeFormu } from "@/components/auth/SifreBelirlemeFormu";
 import { createClient } from "@/lib/supabase/client";
 import { guvenliCikisYap } from "@/lib/auth/guvenliCikis";
@@ -62,7 +63,7 @@ export default function SifreYenilePage() {
       style={{ fontFamily: "'Nunito', sans-serif" }}
     >
       <div className="w-full max-w-sm">
-        <img src="/hapbilgi-dikey-TM-1-logo.png" alt="hapbilgi" className="object-contain mx-auto mb-8" style={{ height: 144 }} />
+        <CognitiLogo className="object-contain mx-auto mb-8" style={{ width: 144, height: 144 }} />
 
         {oturumHazir === null && (
           <p className="text-sm text-[var(--tema-yerel-giris-yardimci-metin-01)] text-center">Bağlantı doğrulanıyor...</p>

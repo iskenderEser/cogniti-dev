@@ -1,15 +1,17 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { bannerAdedi, bannerDosyaUzantisi, bannerSirasiGecerli, ECLUB_BANNER_MAX_BOYUT } from "@/lib/eclub/banner";
+import { bannerAdedi, bannerDosyaUzantisi, bannerSirasiGecerli, ECLUB_BANNER_MAX_BOYUT, PLATFORM_FIRMA_ID } from "@/lib/eclub/banner";
 
-test("Hapbilgi beş, diğer firmalar üç banner kullanır", () => {
-  assert.equal(bannerAdedi("Hapbilgi"), 5);
-  assert.equal(bannerAdedi("HapBilgi"), 5);
-  assert.equal(bannerAdedi("Hepifarma"), 3);
-  assert.equal(bannerSirasiGecerli(4, "Hapbilgi"), true);
-  assert.equal(bannerSirasiGecerli(5, "Hapbilgi"), true);
-  assert.equal(bannerSirasiGecerli(6, "Hapbilgi"), false);
-  assert.equal(bannerSirasiGecerli(4, "Hepifarma"), false);
+test("Platform firması adı değişse de kimliğiyle beş, diğer firmalar üç banner kullanır", () => {
+  const digerFirmaId = "11111111-1111-4111-8111-111111111111";
+  assert.equal(bannerAdedi(PLATFORM_FIRMA_ID), 5);
+  assert.equal(bannerAdedi(PLATFORM_FIRMA_ID.toUpperCase()), 5);
+  assert.equal(bannerAdedi(digerFirmaId), 3);
+  assert.equal(bannerSirasiGecerli(4, PLATFORM_FIRMA_ID), true);
+  assert.equal(bannerSirasiGecerli(5, PLATFORM_FIRMA_ID), true);
+  assert.equal(bannerSirasiGecerli(6, PLATFORM_FIRMA_ID), false);
+  assert.equal(bannerSirasiGecerli(4, digerFirmaId), false);
+  for (const ad of ["Hapbilgi", "Cogniti"]) assert.equal(bannerAdedi(ad), 3);
 });
 
 test("Banner sırası yalnız üç yükleme alanını kabul eder", () => {

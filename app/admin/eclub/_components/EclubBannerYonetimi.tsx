@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { logoGorseliniOptimizeEt } from "@/lib/firma/logoOptimizasyonIstemci";
-import { bannerAdedi, hapbilgiBannerFirmasi, ECZANEM_BANNER_ALANLARI, type BannerAlani, type EclubBanner } from "@/lib/eclub/banner";
+import { bannerAdedi, platformBannerFirmasi, ECZANEM_BANNER_ALANLARI, type BannerAlani, type EclubBanner } from "@/lib/eclub/banner";
 import { btnBase, RENK_BORDO } from "../../_constants";
 import styles from "./eclub-banner-yonetimi.module.css";
 
@@ -20,8 +20,8 @@ export default function EclubBannerYonetimi({ firmaId, firmaAdi, alan = "firma" 
   const [taslaklar, setTaslaklar] = useState<Record<number, BannerTaslagi>>({});
   const [acikAlanlar, setAcikAlanlar] = useState<number[]>([]);
   const taslakRef = useRef<Record<number, BannerTaslagi>>({});
-  const azamiAdet = alan === "firma" ? bannerAdedi(firmaAdi) : 3;
-  const baslik = alan === "firma" ? (hapbilgiBannerFirmasi(firmaAdi) ? "E-Club Ana Sayfa Bannerları" : `${firmaAdi} · E-Club · Firma ve Yayınlar Bannerı`) : `${firmaAdi} · Eczanem · ${ECZANEM_BANNER_ALANLARI[alan]}`;
+  const azamiAdet = alan === "firma" ? bannerAdedi(firmaId) : 3;
+  const baslik = alan === "firma" ? (platformBannerFirmasi(firmaId) ? "E-Club Ana Sayfa Bannerları" : `${firmaAdi} · E-Club · Firma ve Yayınlar Bannerı`) : `${firmaAdi} · Eczanem · ${ECZANEM_BANNER_ALANLARI[alan]}`;
   const gorunenSiralar = [...new Set([...bannerlar.map((b) => b.sira), ...acikAlanlar])].sort((a, b) => a - b);
   const bosAlanVar = gorunenSiralar.length < azamiAdet;
 
@@ -119,7 +119,7 @@ export default function EclubBannerYonetimi({ firmaId, firmaAdi, alan = "firma" 
 
   return <section className={styles.panel} aria-label={baslik}>
     <h2>{baslik}</h2>
-    <p>{alan !== "firma" ? "Görseli seçip önizlemeyi kontrol edin. Bu sayfanın bannerını kaydetmek için Yayınla butonunu kullanın." : <>Görseli seçip önizlemeyi kontrol edin. Yalnız Yayınla butonuna bastığınızda {firmaAdi} firma sayfasında{hapbilgiBannerFirmasi(firmaAdi) ? " ve E-Club ana sayfasında" : ""} görünür.</>}</p>
+    <p>{alan !== "firma" ? "Görseli seçip önizlemeyi kontrol edin. Bu sayfanın bannerını kaydetmek için Yayınla butonunu kullanın." : <>Görseli seçip önizlemeyi kontrol edin. Yalnız Yayınla butonuna bastığınızda {firmaAdi} firma sayfasında{platformBannerFirmasi(firmaId) ? " ve E-Club ana sayfasında" : ""} görünür.</>}</p>
     <div className={styles.kartlar}>
       {gorunenSiralar.map((sira) => {
         const baslik = BASLIKLAR[sira - 1];

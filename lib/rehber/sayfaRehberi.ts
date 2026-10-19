@@ -1,6 +1,6 @@
 // lib/rehber/sayfaRehberi.ts
 //
-// HapBilgi Sayfa ve Tablo Rehberi (Walkthrough / Info-Flyout) Merkezi Veri Sözlüğü.
+// Cogniti Sayfa ve Tablo Rehberi (Walkthrough / Info-Flyout) Merkezi Veri Sözlüğü.
 // Operasyonel tabloların, formların ve kritik modüllerin sütun ve rozet anlamlarını
 // tek bir kanonik kaynaktan (Single Source of Truth) yönetir.
 
@@ -84,19 +84,19 @@ export const VARYANT_ALT_MODAL: AltModalBilgisi = {
     {
       kod: "V1",
       baslik: "V1",
-      aciklama: "İçerik akışı, seçilen öğrenme aracı ve soru seti HapBilgi içerik üreticisi aracılığıyla üretilir.",
+      aciklama: "İçerik akışı, seçilen öğrenme aracı ve soru seti Cogniti içerik üreticisi aracılığıyla üretilir.",
       rozet: "İçerik Üreticiyle",
     },
     {
       kod: "V2",
       baslik: "V2",
-      aciklama: "Seçtiğiniz öğrenme aracı sizin tarafınızdan hazır yüklenir. Soru seti HapBilgi içerik üreticisi aracılığıyla üretilir. Tabloda seçilen araca özgü hazır rozetiyle görünür.",
+      aciklama: "Seçtiğiniz öğrenme aracı sizin tarafınızdan hazır yüklenir. Soru seti Cogniti içerik üreticisi aracılığıyla üretilir. Tabloda seçilen araca özgü hazır rozetiyle görünür.",
       rozet: "Hazır Öğrenme Aracı",
     },
     {
       kod: "V3",
       baslik: "V3",
-      aciklama: "İçerik akışı ve seçilen öğrenme aracı HapBilgi içerik üreticisi aracılığıyla üretilir. Soru seti sizin tarafınızdan hazır yüklenir. Tabloda hazır soru seti rozetiyle görünür.",
+      aciklama: "İçerik akışı ve seçilen öğrenme aracı Cogniti içerik üreticisi aracılığıyla üretilir. Soru seti sizin tarafınızdan hazır yüklenir. Tabloda hazır soru seti rozetiyle görünür.",
       rozet: "Hazır Soru Seti",
     },
     {
@@ -264,7 +264,7 @@ export const SAYFA_REHBERLERI: Record<string, SayfaRehberBilgisi> = {
       },
       {
         baslik: "Sipariş Verme",
-        aciklama: "HapBilgi içinde dönem boyunca topladığınız puanlarınızı kullanarak sipariş verebilirsiniz. Kullanmadığınız puanlarınız bir sonraki döneme devir olmayacaktır.",
+        aciklama: "Cogniti içinde dönem boyunca topladığınız puanlarınızı kullanarak sipariş verebilirsiniz. Kullanmadığınız puanlarınız bir sonraki döneme devir olmayacaktır.",
         ikon: "🪙",
       },
       {
@@ -497,7 +497,7 @@ export const SAYFA_REHBERLERI: Record<string, SayfaRehberBilgisi> = {
     maddeler: [
       {
         baslik: "ID (Talep Numarası)",
-        aciklama: "FirmaAdı_No formatında her talebe özel üretilen tekil kimliktir (Örn: HapBilgi_10001).",
+        aciklama: "FirmaAdı_No formatında her talebe özel üretilen tekil kimliktir (Örn: Cogniti_10001).",
         ikon: "🆔",
       },
       {

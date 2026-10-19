@@ -43,7 +43,7 @@ export async function POST(request: Request) {
     const { data: firma, error: firmaHatasi } = await admin.from("firmalar").select("firma_id, firma_adi").eq("firma_id", firmaId).maybeSingle();
     if (firmaHatasi) return hataYaniti("Firma okunamadı.", "Banner firma SELECT", firmaHatasi);
     if (!firma) return validasyonHatasi("Firma bulunamadı.", ["firma_id"]);
-    if (!bannerSirasiGecerli(sira, alan === "firma" ? firma.firma_adi : "")) return validasyonHatasi("Bu firma için en fazla üç banner yayınlanabilir.", ["sira"]);
+    if (!bannerSirasiGecerli(sira, alan === "firma" ? firma.firma_id : "")) return validasyonHatasi("Bu firma için en fazla üç banner yayınlanabilir.", ["sira"]);
     let eskiSorgusu = admin.from(tablo).select("dosya_yolu").eq("firma_id", firmaId).eq("sira", sira);
     if (alan !== "firma") eskiSorgusu = eskiSorgusu.eq("alan", alan);
     const { data: eski, error: okumaHatasi } = await eskiSorgusu.maybeSingle();

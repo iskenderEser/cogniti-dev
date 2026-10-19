@@ -7,6 +7,7 @@
 
 "use client";
 
+import CognitiLogo from "@/components/marka/CognitiLogo";
 import { createClient } from "@/lib/supabase/client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -208,12 +209,12 @@ export default function LoginPage() {
               metin alanının orta çizgisi giriş alanının ekseniyle çakışır (İskender, ekran görseliyle) */}
           <div className="max-w-md w-full md:-translate-y-[75px]">
           {/* Şeffaf kenarlar mevcut 150 × 150 logo alanına sığdırılır; yerleşim korunur. */}
-          <img src="/hapbilgi-dikey-TM-1-logo.png" alt="hapbilgi" className="object-cover mx-auto mb-8 scale-110" style={{ width: 150, height: 150 }} />
+          <CognitiLogo className="object-contain mx-auto mb-8 scale-110" style={{ width: 150, height: 150 }} />
 
           {/* Positioning-why cümlesi (İskender, 18.07.2026): "Öğrenmenin V Hali" kalktı,
               slogan başlık oldu. "Kazanmak" tanımı: docs/fiziksel_tespitler_ve_cozumler.md F-04 Ek 3. */}
           <h1 className="text-2xl md:text-3xl lg:text-3xl font-extrabold leading-tight mb-8 md:mb-10" style={{ color: GRI_METIN }}>
-            Öğrenirken Kazandırır
+            bilgi taşır
           </h1>
 
           <div className="flex flex-col gap-4 md:gap-5">

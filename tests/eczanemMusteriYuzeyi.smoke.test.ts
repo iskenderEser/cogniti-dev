@@ -23,8 +23,8 @@ test("mutlu: müşteri ana sayfası belirlenen altı dijital kanal rafını ve a
     "Yeni Öğrenme İçeriklerim",
     "Yarım Bıraktıklarım",
     "En Son Tamamladıklarım",
-    "HapBilgi’de En Çok Beğenilenler",
-    "HapBilgi’de En Çok Favorilenenler",
+    "Cogniti’de En Çok Beğenilenler",
+    "Cogniti’de En Çok Favorilenenler",
     "En Çok Tamamlananlar",
   ];
   for (const baslik of basliklar) assert.match(sayfa, new RegExp(`baslik=\"${baslik}\"`));

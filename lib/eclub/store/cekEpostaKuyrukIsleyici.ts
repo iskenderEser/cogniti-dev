@@ -39,7 +39,7 @@ export async function eclubCekEpostaKuyrugunuTuket(maxIsSayisi = 10) {
           from,
           to: [is.alici_eposta],
           subject: "Migros hediye çekiniz hazır",
-          html: `<p>Merhaba ${htmlKacir(is.alici_adi || "")},</p><p><strong>${htmlKacir(is.cek_tutari_tl)} TL</strong> değerindeki Migros hediye çekiniz hazırdır.</p><p>Çek kodunuz: <strong>${htmlKacir(is.cek_kodu)}</strong></p><p>Kodu HapBilgi içindeki Çeklerim alanından da görebilirsiniz.</p>`,
+          html: `<p>Merhaba ${htmlKacir(is.alici_adi || "")},</p><p><strong>${htmlKacir(is.cek_tutari_tl)} TL</strong> değerindeki Migros hediye çekiniz hazırdır.</p><p>Çek kodunuz: <strong>${htmlKacir(is.cek_kodu)}</strong></p><p>Kodu Cogniti içindeki Çeklerim alanından da görebilirsiniz.</p>`,
         }),
       });
       if (!yanit.ok) throw new Error(`RESEND_${yanit.status}`);

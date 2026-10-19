@@ -89,7 +89,7 @@ export default function GirisAltBilgileri() {
         </section>
 
         <div className="mt-6 text-center text-xs text-[var(--tema-yerel-giris-yardimci-metin-02)]">
-          © 2026 HapBilgi · Tüm hakları saklıdır.
+          © 2026 Cogniti · Tüm hakları saklıdır.
         </div>
       </div>
     </div>

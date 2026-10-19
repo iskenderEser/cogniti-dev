@@ -128,7 +128,7 @@ export function PushAbonelik() {
     <div className="fixed bottom-4 right-4 z-50 w-80 rounded-xl border border-[var(--tema-yerel-ortak-sayfa-cizgi-07)] bg-[var(--tema-yerel-ortak-sayfa-kart-01)] p-4 shadow-lg">
       <p className="text-sm font-semibold text-[var(--tema-yerel-ortak-sayfa-ana-metin-09)]">Bildirimleri açalım mı?</p>
       <p className="mt-1 text-sm text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-13)]">
-        Sizi ilgilendiren gelişmeleri (onaylar, öneriler, yeni videolar) HapBilgi
+        Sizi ilgilendiren gelişmeleri (onaylar, öneriler, yeni videolar) Cogniti
         kapalıyken de tarayıcı bildirimi olarak alırsınız.
       </p>
       <div className="mt-3 flex justify-end gap-2">

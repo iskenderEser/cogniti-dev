@@ -6,9 +6,9 @@
 
 "use client";
 
+import CognitiLogo from "@/components/marka/CognitiLogo";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import { useTema } from "@/app/providers/TemaProvider";
 import TemaSecici from "@/components/tema/TemaSecici";
 
@@ -161,14 +161,10 @@ export default function PanelNavbar({
             onClick={() => router.push(anaSayfaYolu)}
             className="flex items-center md:w-[175px] lg:w-[195px] xl:w-[216px] flex-shrink-0 cursor-pointer group select-none"
           >
-            <Image
-              src="/hapbilgi-yatay-TM-1-logo-optimized.png"
-              alt="hapbilgi"
+            <CognitiLogo
               width={427}
               height={240}
-              preload
-              unoptimized
-              className="h-10 sm:h-11 md:h-12 lg:h-[48px] xl:h-[54px] w-auto aspect-[901/340] object-cover transition-transform duration-200 group-hover:scale-105 drop-shadow-sm"
+              className="h-10 sm:h-11 md:h-12 lg:h-[48px] xl:h-[54px] w-auto aspect-[901/340] object-contain transition-transform duration-200 group-hover:scale-105"
             />
           </div>
 
