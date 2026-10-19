@@ -43,9 +43,7 @@ test("HBStore navbar girişi yalnız kişisel sipariş verebilen rollere açıl�
   }
 });
 
-test("HBStore adı Bi, rehber ve BM menüsünde tutarlı kalır", () => {
-  const biSayfalari = oku("lib/bi/sayfalar.ts");
-  const biKatalogu = oku("lib/bi/cevapKatalogu.ts");
+test("HBStore adı rehber ve BM menüsünde tutarlı kalır", () => {
   const rehber = oku("lib/rehber/sayfaRehberi.ts");
   const storeSayfasi = oku("app/(panel)/store/page.tsx");
   const siparislerimSayfasi = oku("app/(panel)/store/siparislerim/page.tsx");
@@ -72,8 +70,6 @@ test("HBStore adı Bi, rehber ve BM menüsünde tutarlı kalır", () => {
     .filter((oge) => !oge.gate || oge.gate(bmBaglami))
     .map((oge) => oge.etiket);
 
-  assert.match(biSayfalari, /"store": \{ etiket: "HBStore", url: "\/store" \}/);
-  assert.match(biKatalogu, /id: "hbstore",\s*baslik: "HBStore"/);
   assert.match(hbStoreRehberi, /baslik: "HBStore"/);
   assert.match(hbStoreRehberi, /baslik: "HBStore Günleri"/);
   assert.match(hbStoreRehberi, /HBStore açıkken/);

@@ -57,9 +57,8 @@ Kullanıcının rolüne ve kullandığı özelliklere göre aşağıdaki veriler
 - **Eczanem verileri:** bağlı olunan eczane, gönderilen içerikler, ürün ve firma bağlantısı, 180 günlük puan kayıtları, barkodla oluşturulan indirim talebi, indirim tutarı, onay/ret ve işlem kodu.
 - **Bildirim verileri:** bildirim tercihi, Web Push abonelik adresi ve anahtarları, tarayıcı kullanıcı aracısı, bildirim gönderim ve görülme durumu.
 - **Talep ve iletişim verileri:** destek başvuruları, talep, şikâyet, işlem ve yazışma kayıtları.
-- **Yapay zekâ kullanım verileri:** Hapbi'ye yazılan soru, görüntülenen sayfa, rol ve yetki kapsamı ile yanıtın oluşturulması için gerekli sınırlı platform sonuçları. Hapbi sohbeti kalıcı bir sohbet veri tabanında tutulmaz; imzalı sohbet bağlamı en fazla 30 dakika geçerlidir.
 
-HapBilgi sağlık verisi, teşhis, reçete, hasta dosyası veya diğer özel nitelikli kişisel verileri toplamak amacıyla tasarlanmamıştır. Kullanıcılar Hapbi, destek, içerik ve diğer serbest metin alanlarına kendilerine veya üçüncü kişilere ait sağlık verisi ya da diğer özel nitelikli kişisel veri girmemelidir.
+HapBilgi sağlık verisi, teşhis, reçete, hasta dosyası veya diğer özel nitelikli kişisel verileri toplamak amacıyla tasarlanmamıştır. Kullanıcılar destek, içerik ve diğer serbest metin alanlarına kendilerine veya üçüncü kişilere ait sağlık verisi ya da diğer özel nitelikli kişisel veri girmemelidir.
 
 ## 4. Kişisel verilerin işlenme amaçları
 
@@ -108,7 +107,6 @@ Kişisel veriler, amaçla sınırlı ve ölçülü olarak aşağıdaki alıcı g
 - Kullanıcının rol ve yetkisi kapsamında diğer platform kullanıcılarına,
 - Ödülün tedariki ve teslimi için tedarikçi, kargo ve lojistik hizmet sağlayıcılarına,
 - Hesap, veri tabanı, barındırma, içerik dağıtımı, Web Push, e-posta, güvenlik, yedekleme ve teknik destek hizmet sağlayıcılarına,
-- Hapbi yanıtının oluşturulması için gerekli sınırlı veriler bakımından yapay zekâ hizmet sağlayıcısına,
 - Kanunen yetkili kamu kurumları, idari merciler ve adli makamlara.
 
 Teslimat adresi ve telefon bilgisi yalnız ödülün gönderilmesi için gerekli taraflarla paylaşılır. Eczanem indirim talebi, kullanıcının bağlı olduğu ve işlemi gerçekleştirmesini istediği eczaneye iletilir.

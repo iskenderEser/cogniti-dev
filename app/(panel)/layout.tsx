@@ -24,9 +24,6 @@ import { PANEL_NAV, eclubKisiNavOlustur, type NavContext } from "@/components/pa
 import { HBSTORE_BAKIYE_DEGISTI } from "@/lib/tclub/store/olay";
 import { BILDIRIM_ROZETLERI_DEGISTI, bildirimRozetleriniYenile } from "@/lib/bildirimler/rozet";
 import { ONERI_ZAMANI_DEGISTI } from "@/lib/tclub/oneri/gorunurluk";
-import { HapbiProvider } from "@/components/hapbi/HapbiProvider";
-import HapbiMaskot from "@/components/hapbi/HapbiMaskot";
-import HapbiChatModal from "@/components/hapbi/HapbiChatModal";
 import YarimYuklemeBildirimi from "@/components/ogrenme-araci/YarimYuklemeBildirimi";
 import YayinSonucBildirimi from "@/components/panel/YayinSonucBildirimi";
 import { STORE_ALABILEN_ROLLER, URETICI_ROLLER } from "@/lib/utils/roller";
@@ -44,6 +41,7 @@ import {
 export default function PanelLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const { kullanici, yukleniyor, cikisYap } = useAuth();
+  const kullaniciId = kullanici?.id ?? null;
 
   // Mahremiyet güvenliği: Kimliği doğrulanmamış hiçbir durumda önbellek okunmaz;
   // güvenli varsayılanlarla başlatılır. Kullanıcı doğrulandığında sessionStorage'dan okunur.
@@ -121,8 +119,8 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
       const guncelFirmalar = data.eclub_firmalar ?? [];
       setEclubFirmalar(guncelFirmalar);
 
-      if (kullanici?.id) {
-        setPanelCache(kullanici.id, {
+      if (kullaniciId) {
+        setPanelCache(kullaniciId, {
           flags: guncelFlags,
           ozet: guncelOzet,
           eclubStorePuani: guncelStorePuan,
@@ -130,7 +128,7 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
         });
       }
     } catch {}
-  }, [kullanici?.id]);
+  }, [kullaniciId]);
 
   // Firma bayrakları + Navbar özeti. Sipariş/iptal sonrası aynı oturumda bakiye
   // yeniden okunur; sekmeye geri dönüldüğünde de eski değer ekranda kalmaz.
@@ -254,46 +252,41 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
   const anaSayfaYolu = isEclubKisi ? "/eclub/ana-sayfa" : "/ana-sayfa";
 
   return (
-    <HapbiProvider>
-      <div style={{ height: "100vh", background: "var(--tema-zemin)", fontFamily: "'Nunito', sans-serif", display: "flex", flexDirection: "column", overflow: "hidden" }}>
-        <PanelNavbar
-          adSoyad={kullanici.adSoyad}
-          email={kullanici.email}
-          ozet={isEclubKisi ? null : etkinOzet}
-          siparisPuaniGoster={!isEclubKisi && etkinFlags.storeAcik}
-          hbStoreGoster={!isEclubKisi && etkinFlags.storeAcik && STORE_ALABILEN_ROLLER.includes(rolKucu)}
-          anaSayfaYolu={anaSayfaYolu}
-          eclubStorePuani={isEclubKisi && etkinFlags.eclubStoreAcik ? etkinEclubStorePuani : null}
-          firmaLogoUrl={!isEclubKisi ? etkinFlags.firmaLogoUrl : null}
-          ogrenmePlatformuAktif={!isEclubKisi && Boolean(etkinFlags.ogrenmePlatformuAktif)}
-          firmaAdi={firmaAdi}
-          onCikis={cikisYap}
-          onHamburger={() => setDrawerAcik(true)}
-        />
+    <div style={{ height: "100vh", background: "var(--tema-zemin)", fontFamily: "'Nunito', sans-serif", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+      <PanelNavbar
+        adSoyad={kullanici.adSoyad}
+        email={kullanici.email}
+        ozet={isEclubKisi ? null : etkinOzet}
+        siparisPuaniGoster={!isEclubKisi && etkinFlags.storeAcik}
+        hbStoreGoster={!isEclubKisi && etkinFlags.storeAcik && STORE_ALABILEN_ROLLER.includes(rolKucu)}
+        anaSayfaYolu={anaSayfaYolu}
+        eclubStorePuani={isEclubKisi && etkinFlags.eclubStoreAcik ? etkinEclubStorePuani : null}
+        firmaLogoUrl={!isEclubKisi ? etkinFlags.firmaLogoUrl : null}
+        ogrenmePlatformuAktif={!isEclubKisi && Boolean(etkinFlags.ogrenmePlatformuAktif)}
+        firmaAdi={firmaAdi}
+        onCikis={cikisYap}
+        onHamburger={() => setDrawerAcik(true)}
+      />
 
-        <MobilDrawer
-          {...ctx}
-          gruplar={gruplar}
-          badge={badge}
-          acik={drawerAcik}
-          onKapat={() => setDrawerAcik(false)}
-          onCikis={cikisYap}
-          anaSayfaYolu={anaSayfaYolu}
-        />
+      <MobilDrawer
+        {...ctx}
+        gruplar={gruplar}
+        badge={badge}
+        acik={drawerAcik}
+        onKapat={() => setDrawerAcik(false)}
+        onCikis={cikisYap}
+        anaSayfaYolu={anaSayfaYolu}
+      />
 
-        <div className="flex flex-1" style={{ minHeight: 0 }}>
-          <SolListe {...ctx} gruplar={gruplar} badge={badge} />
-          <main className="flex-1 overflow-y-auto" style={{ minWidth: 0 }}>
-            {children}
-          </main>
-        </div>
-
-        {/* bi düğmesi ve sohbet alanı */}
-        <HapbiMaskot />
-        <HapbiChatModal />
-        <YarimYuklemeBildirimi />
-        <YayinSonucBildirimi />
+      <div className="flex flex-1" style={{ minHeight: 0 }}>
+        <SolListe {...ctx} gruplar={gruplar} badge={badge} />
+        <main className="flex-1 overflow-y-auto" style={{ minWidth: 0 }}>
+          {children}
+        </main>
       </div>
-    </HapbiProvider>
+
+      <YarimYuklemeBildirimi />
+      <YayinSonucBildirimi />
+    </div>
   );
 }

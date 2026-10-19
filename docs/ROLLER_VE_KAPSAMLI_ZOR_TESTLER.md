@@ -1,5 +1,7 @@
 # Roller ve Kapsamlı Zor Testler
 
+> 19 Ekim 2026: bi/Hapbi sistemden tamamen kaldırıldı. Bu belgedeki eski sohbet test sonuçları tarihsel kayıttır; sohbet senaryoları güncel doğrulama kapsamına girmez. Rapor, ürün ve diğer yetki testleri kendi kapsamlarında geçerlidir.
+
 ## Amaç
 
 Bu çalışma, HapBilgi'deki her rolün görev tanımı içinde bulunan bütün ana fonksiyonları olağan kullanımın ötesinde zorlayarak yetki açığı, yarış koşulu, mükerrer kayıt, yarım işlem, veri sızıntısı, puan veya bakiye tutarsızlığı ve sessiz hata ihtimallerini ortaya çıkarmayı amaçlar. Testler yalnızca bir işlemin çalıştığını göstermeyecek; eşzamanlı kullanım, tekrar deneme, işlem ortasında veri veya yetki değişimi ve dış servis kesintisi gibi gerçek sistem risklerini de sınayacaktır.

@@ -4669,28 +4669,6 @@
   }
 }
 
-/* bi ipucu balonu: arayüz temaya uyar, turuncu kimlik korunur. */
-:root,
-[data-tema="mavi"] {
-  --tema-bi-ipucu-zemin: var(--color-gray-900);
-  --tema-bi-ipucu-ters-metin: var(--color-white);
-  --tema-bi-ipucu-ayirici: var(--color-gray-600);
-  --tema-bi-ipucu-metin: var(--color-gray-200);
-}
-[data-tema="yesil"] {
-  --tema-bi-ipucu-zemin: var(--tema-metin);
-  --tema-bi-ipucu-ters-metin: var(--tema-eylem-metin);
-  --tema-bi-ipucu-ayirici: var(--tema-ikincil-metin);
-  --tema-bi-ipucu-metin: var(--tema-eylem-metin);
-}
-:root,
-[data-tema="mavi"],
-[data-tema="yesil"] {
-  --tema-bi-ipucu-golge: var(--color-black);
-  --tema-bi-ipucu-cizgi: var(--color-white);
-  --tema-bi-ipucu-kimlik: var(--color-orange-400);
-}
-
 /* Tanbur yazısının beyaz okunurluk aurası iki temada da korunur. */
 :root,
 [data-tema="mavi"],

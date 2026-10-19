@@ -51,7 +51,7 @@ Bu bölümde listelenen üç kullanımın tamamı teslim edildi. Başka bir uygu
 - [x] Sekiz mavi CSS sınıfı karşılaştırması ve altı tema/içerik/tıklama kontrolü başarılı. Renk dışı kaynak farkı 0. Ana düğme, turuncu çizim/ışımalar, durum rozeti, sürükleme ve animasyon kaynağı byte düzeyinde aynı bırakıldı.
 - [x] TypeScript ve hedef lint başarılı. Gerçek tarayıcı kontrolü yapılmadı; React testinde değişmeyen styled-jsx öznitelikleri için taklit ortam uyarıları oluştu.
 
-[bi ipucu doğrulaması](renk-ortaklastirma/adim10/BI_IPUCU_DOGRULAMA.json)
+19 Ekim 2026: bi özelliği kaldırıldı; bu tarihsel renk çalışmasına ait bileşen ve özel doğrulama çıktısı artık mevcut değildir.
 
 ## Sonraki onaylı teslim — Mobil Tanbur yazı gölgeleri
 
