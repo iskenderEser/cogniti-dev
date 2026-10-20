@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { act, createElement } from "react";
 import { GlobalWindow } from "happy-dom";
+import { PLATFORM_FIRMA_ID } from "@/lib/eclub/banner";
 
 const win = new GlobalWindow();
 for (const key of Object.getOwnPropertyNames(win)) {
@@ -92,7 +93,7 @@ test("Seçim yalnız yerel önizleme oluşturur; yayınlama, vazgeçme ve hata m
     assert.equal(buton("Yayınlandı").disabled, true);
     await sec();
     const sonTaslak = kart().querySelector("img")!.getAttribute("src")!;
-    await act(async () => { root.render(createElement(BannerYonetimi, { key: "hapbilgi", firmaId: "firma-h", firmaAdi: "Hapbilgi" })); });
+    await act(async () => { root.render(createElement(BannerYonetimi, { key: "hapbilgi", firmaId: PLATFORM_FIRMA_ID, firmaAdi: "Cogniti" })); });
     assert.equal(container.querySelectorAll("article").length, 1);
     for (let i = 0; i < 4; i++) await act(async () => { ekle().click(); });
     assert.equal(container.querySelectorAll("article").length, 5);

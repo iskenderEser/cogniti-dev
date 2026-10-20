@@ -14,8 +14,8 @@ export function bannerAdedi(firmaId: string): number {
   return platformBannerFirmasi(firmaId) ? 5 : 3;
 }
 
-export function bannerSirasiGecerli(sira: number, firmaId = ""): boolean {
-  return Number.isInteger(sira) && sira >= 1 && sira <= bannerAdedi(firmaId);
+export function bannerSirasiGecerli(sira: number, firmaId = "", alan: BannerAlani = "firma"): boolean {
+  return Number.isInteger(sira) && sira >= 1 && sira <= bannerAlaniAdedi(firmaId, alan);
 }
 
 /** Uzantı dosya adına değil, dosyanın gerçek biçimine göre seçilir. */
@@ -34,6 +34,7 @@ export function bannerKurulumuEksik(hata: { code?: string } | null): boolean {
 
 export const ECZANEM_BANNER_TABLO = "eczanem_sayfa_bannerlari";
 export const ECZANEM_BANNER_ALANLARI = {
+  "uye-ana-sayfa": "Üye Ana Sayfa Bannerları",
   uyeler: "Üyeler Sayfası Bannerı",
   "uye-yayinlari": "Üye Yayınları Sayfası Bannerı",
   "indirim-onayi": "İndirim Onayı Sayfası Bannerı",
@@ -42,4 +43,8 @@ export type BannerAlani = "firma" | keyof typeof ECZANEM_BANNER_ALANLARI;
 
 export function bannerAlaniGecerli(alan: string): alan is BannerAlani {
   return alan === "firma" || Object.hasOwn(ECZANEM_BANNER_ALANLARI, alan);
+}
+
+export function bannerAlaniAdedi(firmaId: string, alan: BannerAlani): number {
+  return alan === "firma" || alan === "uye-ana-sayfa" ? bannerAdedi(firmaId) : 3;
 }

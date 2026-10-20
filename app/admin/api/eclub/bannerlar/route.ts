@@ -3,10 +3,10 @@ import { adminGirisKontrol } from "@/lib/utils/adminGirisKontrol";
 import { createAdminClient } from "@/lib/supabase/server";
 import { uuidGecerliMi } from "@/lib/uretim/rpc";
 import { sunucuHatasi, validasyonHatasi, hataYaniti } from "@/lib/utils/hataIsle";
-import { bannerDosyaUzantisi, bannerKurulumuEksik, bannerSirasiGecerli, ECLUB_BANNER_BUCKET, ECLUB_BANNER_TABLO, ECZANEM_BANNER_TABLO, bannerAlaniGecerli, type BannerAlani } from "@/lib/eclub/banner";
+import { bannerDosyaUzantisi, bannerKurulumuEksik, bannerSirasiGecerli, bannerAlaniAdedi, ECLUB_BANNER_BUCKET, ECLUB_BANNER_TABLO, ECZANEM_BANNER_TABLO, bannerAlaniGecerli, type BannerAlani } from "@/lib/eclub/banner";
 import { firmaBannerlariniOku } from "@/lib/eclub/bannerSunucu";
 
-const kurulumYaniti = (alan: BannerAlani = "firma") => NextResponse.json({ hata: `Banner yüklemeyi etkinleştirmek için ${alan === "firma" ? "eclub_firma_bannerlari.sql" : "eczanem_sayfa_bannerlari.sql"} kurulumunu çalıştırın.`, kurulumGerekli: true }, { status: 503 });
+const kurulumYaniti = (alan: BannerAlani = "firma") => NextResponse.json({ hata: `Banner yüklemeyi etkinleştirmek için ${alan === "firma" ? "eclub_firma_bannerlari.sql" : alan === "uye-ana-sayfa" ? "eczanem_uye_bannerlari.sql" : "eczanem_sayfa_bannerlari.sql"} kurulumunu çalıştırın.`, kurulumGerekli: true }, { status: 503 });
 
 export async function GET(request: Request) {
   try {
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
     const { data: firma, error: firmaHatasi } = await admin.from("firmalar").select("firma_id, firma_adi").eq("firma_id", firmaId).maybeSingle();
     if (firmaHatasi) return hataYaniti("Firma okunamadı.", "Banner firma SELECT", firmaHatasi);
     if (!firma) return validasyonHatasi("Firma bulunamadı.", ["firma_id"]);
-    if (!bannerSirasiGecerli(sira, alan === "firma" ? firma.firma_id : "")) return validasyonHatasi("Bu firma için en fazla üç banner yayınlanabilir.", ["sira"]);
+    if (!bannerSirasiGecerli(sira, firma.firma_id, alan)) return validasyonHatasi(`Bu alan için en fazla ${bannerAlaniAdedi(firma.firma_id, alan)} banner yayınlanabilir.`, ["sira"]);
     let eskiSorgusu = admin.from(tablo).select("dosya_yolu").eq("firma_id", firmaId).eq("sira", sira);
     if (alan !== "firma") eskiSorgusu = eskiSorgusu.eq("alan", alan);
     const { data: eski, error: okumaHatasi } = await eskiSorgusu.maybeSingle();
@@ -56,7 +56,7 @@ export async function POST(request: Request) {
     const { error: kayitHatasi } = await admin.from(tablo).upsert({ firma_id: firmaId, ...(alan === "firma" ? {} : { alan }), sira, dosya_yolu: yol, updated_at: new Date().toISOString() }, { onConflict: alan === "firma" ? "firma_id,sira" : "firma_id,alan,sira" });
     if (kayitHatasi) {
       await depo.remove([yol]);
-      if (kayitHatasi.code === "23514" && sira > 3) return kurulumYaniti(alan);
+      if (kayitHatasi.code === "23514" && (alan === "uye-ana-sayfa" || sira > 3)) return kurulumYaniti(alan);
       return hataYaniti("Banner kaydedilemedi.", "Banner UPSERT", kayitHatasi);
     }
     if (eski?.dosya_yolu) await depo.remove([eski.dosya_yolu]);

@@ -38,6 +38,7 @@ import HbStorePaneli from "./_components/global/HbStorePaneli";
 import EclubStorePaneli from "./_components/global/EclubStorePaneli";
 import EclubYonetimPaneli from "./eclub/_components/EclubYonetimPaneli";
 import EczanemUyeYonetimi from "./eczanem/_components/EczanemUyeYonetimi";
+import EczanemBannerYonetimi from "./eczanem/_components/EczanemBannerYonetimi";
 import EclubBannerYonetimi from "./eclub/_components/EclubBannerYonetimi";
 import UretimAtamaPaneli from "./_components/global/UretimAtamaPaneli";
 
@@ -257,6 +258,7 @@ export default function AdminPanel() {
                   m4NotuGoster={false}
                   aciklama="Eczanenin üyelerinin bilgilenme modülü — davetler, gönderimler, üyeler, siparişler ve tarifeler. Kapalıyken bu firmanın eczacı/teknisyenleri Eczanem sekmesini görmez."
                 />
+                <EczanemBannerYonetimi key={`${f.firma_id}-uye-bannerlari`} firmaId={f.firma_id} firmaAdi={f.firma_adi} />
                 <EczanemUyeYonetimi key={f.firma_id} firmaId={f.firma_id} firmaAdi={f.firma_adi} />
                 </div>
               )}

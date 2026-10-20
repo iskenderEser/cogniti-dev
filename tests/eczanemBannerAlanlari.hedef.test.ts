@@ -4,7 +4,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { bannerAlaniGecerli, ECZANEM_BANNER_ALANLARI, type BannerAlani } from "@/lib/eclub/banner";
 import { firmaBannerlariniOku } from "@/lib/eclub/bannerSunucu";
 
-test("Yalnız mevcut firma alanı ve üç Eczanem sayfası kabul edilir", () => {
+test("Yalnız mevcut firma alanı ve tanımlı Eczanem banner alanları kabul edilir", () => {
   for (const alan of ["firma", ...Object.keys(ECZANEM_BANNER_ALANLARI)]) assert.equal(bannerAlaniGecerli(alan), true);
   for (const alan of ["", "__proto__", "constructor", "baska-sayfa"]) assert.equal(bannerAlaniGecerli(alan), false);
 });
