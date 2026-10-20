@@ -445,15 +445,15 @@ export async function proxy(request: NextRequest) {
       const uttDali = pathname.startsWith("/eczanem/utt") || pathname.startsWith("/eczanem/yayinlar");
       const bmDali = pathname.startsWith("/eczanem/bm");
       const tmDali = pathname.startsWith("/eczanem/tm");
-      // Eczacı, UTT, BM ve TM dalları iç uygulama oturumuyla (/login) girilir; müşteri
-      // dalının kendi giriş ekranı vardır (/eczanem/giris).
+      // Üye ve iç kullanıcılar ortak giriş sayfasını (/login) kullanır.
+      // Dal ayrımı oturumdan sonraki modül kapısında korunur.
       const icUygulamaDali = eczaneDali || uttDali || bmDali || tmDali;
 
       if (!user) {
         if (apiYolu) {
           return NextResponse.json({ error: "Oturum açmanız gerekiyor." }, { status: 401 });
         }
-        return NextResponse.redirect(new URL(icUygulamaDali ? "/login" : "/eczanem/giris", request.url));
+        return NextResponse.redirect(new URL("/login", request.url));
       }
 
       const eczanemSupabase = createClient(

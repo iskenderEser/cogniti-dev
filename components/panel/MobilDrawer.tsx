@@ -18,8 +18,8 @@
 "use client";
 
 import { useRouter, usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import { PANEL_NAV, mobilPanelNavOlustur, type NavContext, type NavGrup, type NavOge } from "./panelNav.config";
+import { Fragment, useEffect, useState } from "react";
+import { PANEL_NAV, mobilPanelNavOlustur, navOgeAktifMi, navOgeVeyaAltiAktifMi, navSecimIzi, type NavContext, type NavGrup, type NavOge } from "./panelNav.config";
 import { URETICI_ROLLER } from "@/lib/utils/roller";
 
 type MobilDrawerProps = NavContext & {
@@ -28,6 +28,9 @@ type MobilDrawerProps = NavContext & {
   onCikis: () => void;
   badge: Record<string, number>;
   anaSayfaYolu?: string;
+  onAnaSayfa?: () => void;
+  anaSayfaSecili?: boolean;
+  bilgiPilleri?: { etiket: string; path: string }[];
   // Çizilecek ağaç — layout verir (eclub_kisi'de ECLUB_KISI_NAV). Varsayılan PANEL_NAV.
   gruplar?: NavGrup[];
 };
@@ -47,23 +50,8 @@ export default function MobilDrawer(props: MobilDrawerProps) {
   const cozPath = (oge: NavOge) => typeof oge.path === "function" ? oge.path(props) : (oge.path ?? "");
   const rozetSayisi = (oge: NavOge) => oge.badgeKey ? (props.badge[oge.badgeKey] ?? 0) : 0;
 
-  const grupAktifMi = (grup: NavGrup) => {
-    return grup.oglar.some((oge) => {
-      if (!oge.gate(props)) return false;
-      const p = cozPath(oge);
-      if ((p && (oge.tamEslesme ? pathname === p : pathname === p || pathname.startsWith(`${p}/`))) || oge.aktifYollar?.some((yol) => pathname === yol || pathname.startsWith(`${yol}/`))) {
-        return true;
-      }
-      if (oge.altOglar) {
-        return oge.altOglar.some((alt) => {
-          if (!alt.gate(props)) return false;
-          const ap = cozPath(alt);
-          return ap && (alt.tamEslesme ? pathname === ap : pathname.startsWith(ap));
-        });
-      }
-      return false;
-    });
-  };
+  const secimIzi = navSecimIzi(gruplar, props);
+  const grupAktifMi = (grup: NavGrup) => grup.oglar.some(oge => navOgeVeyaAltiAktifMi(oge, props, pathname));
 
   const [kapaliGruplar, setKapaliGruplar] = useState<Set<string>>(() => {
     const gorunurGruplar = gruplar.filter((g) => g.oglar.some((o) => o.gate(props)));
@@ -75,7 +63,7 @@ export default function MobilDrawer(props: MobilDrawerProps) {
     });
     return kapali;
   });
-  const [altOgeDurumlari, setAltOgeDurumlari] = useState<Map<string, boolean>>(new Map());
+  const [altOgeDurumlari, setAltOgeDurumlari] = useState<Map<string, { acik: boolean; secimIzi: string }>>(new Map());
 
   const grupToggle = (baslik: string) =>
     setKapaliGruplar((onceki) => {
@@ -105,7 +93,7 @@ export default function MobilDrawer(props: MobilDrawerProps) {
       return degisti ? yeni : onceki;
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname, props.storeAcik, props.ccAcik, props.eclubAcik, props.eclubStoreAcik, props.eczanemAcik]);
+  }, [pathname, props.storeAcik, props.ccAcik, props.eclubAcik, props.eclubStoreAcik, props.eczanemAcik, secimIzi]);
 
   useEffect(() => {
     if (!props.acik || !URETICI_ROLLER.includes(props.rolKucu)) return;
@@ -118,11 +106,14 @@ export default function MobilDrawer(props: MobilDrawerProps) {
   const git = (path: string) => { router.push(path); props.onKapat(); };
   const cikis = () => { props.onKapat(); props.onCikis(); };
 
-  const Satir = ({ etiket, path, sayi, girintili = false, tamEslesme = false, aktifYollar }: { etiket: string; path: string; sayi?: number; girintili?: boolean; tamEslesme?: boolean; aktifYollar?: string[] }) => {
-    const aktif = (tamEslesme ? pathname === path : pathname === path || pathname.startsWith(`${path}/`)) || aktifYollar?.some((yol) => pathname === yol || pathname.startsWith(`${yol}/`)) === true;
+  const Satir = ({ etiket, path, sayi, girintili = false, tamEslesme = false, aktifYollar, secili, onSecim, anahtar }: { etiket: string; path: string; sayi?: number; girintili?: boolean; tamEslesme?: boolean; aktifYollar?: string[]; secili?: boolean; onSecim?: () => void; anahtar?: string }) => {
+    const aktif = secili ?? (Boolean(path && (tamEslesme ? pathname === path : pathname === path || pathname.startsWith(`${path}/`))) || aktifYollar?.some((yol) => pathname === yol || pathname.startsWith(`${yol}/`)) === true);
     return (
       <button
-        onClick={() => git(path)}
+        type="button"
+        onClick={() => { if (onSecim) { onSecim(); props.onKapat(); } else if (path) git(path); }}
+        aria-pressed={onSecim ? aktif : undefined}
+        data-nav-secim={anahtar}
         className="w-full flex items-center justify-between rounded-lg cursor-pointer border-none text-left"
         style={{
           padding: girintili ? "10px 12px 10px 20px" : "10px 12px",
@@ -149,24 +140,41 @@ export default function MobilDrawer(props: MobilDrawerProps) {
 
   const OgeBlogu = ({ oge, girintili = false }: { oge: NavOge; girintili?: boolean }) => {
     const altOglar = (oge.altOglar ?? []).filter((altOge) => altOge.gate(props));
-    if (altOglar.length === 0) {
-      return <Satir etiket={oge.etiket} path={cozPath(oge)} sayi={rozetSayisi(oge)} girintili={girintili} tamEslesme={oge.tamEslesme} aktifYollar={oge.aktifYollar} />;
-    }
-    const altAktif = altOglar.some((alt) => {
-      const p = cozPath(alt);
-      return alt.tamEslesme ? pathname === p : pathname.startsWith(p);
+    if (altOglar.length === 0) return Satir({ etiket: oge.etiket, path: cozPath(oge), sayi: rozetSayisi(oge), girintili, tamEslesme: oge.tamEslesme, aktifYollar: oge.aktifYollar, secili: oge.secili, onSecim: oge.onSecim, anahtar: oge.anahtar });
+    const anahtar = oge.anahtar ?? oge.etiket;
+    const altAktif = (Boolean(oge.onSecim) && navOgeAktifMi(oge, props, pathname))
+      || altOglar.some(alt => navOgeVeyaAltiAktifMi(alt, props, pathname));
+    const kayit = altOgeDurumlari.get(anahtar);
+    const altAcik = oge.onSecim && altAktif && kayit?.secimIzi !== secimIzi ? true : kayit?.acik ?? altAktif;
+    const dalDegistir = () => setAltOgeDurumlari(onceki => {
+      const yeni = new Map(onceki);
+      yeni.set(anahtar, { acik: !altAcik, secimIzi });
+      return yeni;
     });
-    const altAcik = altOgeDurumlari.get(oge.etiket) ?? altAktif;
     const sayi = rozetSayisi(oge);
+    if (oge.onSecim) {
+      return <div className="flex flex-col gap-0.5">
+        <div className="flex items-center gap-1">
+          { Satir({ etiket: oge.etiket, path: cozPath(oge), sayi, girintili, secili: oge.secili, onSecim: oge.onSecim, anahtar: oge.anahtar }) }
+          <button type="button" onClick={dalDegistir} aria-expanded={altAcik}
+            aria-label={`${oge.etiket} alt menüsünü ${altAcik ? "kapat" : "aç"}`}
+            data-nav-dal={anahtar}
+            className="shrink-0 rounded-lg border-none bg-transparent p-2 text-[var(--tema-gezinme-metin)]"
+            style={{ minWidth: "32px", minHeight: "44px" }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} style={{ transform: altAcik ? "rotate(180deg)" : "none" }} aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6" /></svg>
+          </button>
+        </div>
+        {altAcik && <div className="flex flex-col gap-0.5 pl-3">
+          {altOglar.map(altOge => <Fragment key={altOge.anahtar ?? altOge.etiket}>{OgeBlogu({ oge: altOge, girintili: true })}</Fragment>)}
+        </div>}
+      </div>;
+    }
+
     return (
       <div className="flex flex-col gap-0.5">
         <button
           type="button"
-          onClick={() => setAltOgeDurumlari((onceki) => {
-            const yeni = new Map(onceki);
-            yeni.set(oge.etiket, !altAcik);
-            return yeni;
-          })}
+          onClick={dalDegistir}
           aria-expanded={altAcik}
           className="flex w-full cursor-pointer items-center justify-between border-none bg-transparent text-left"
           style={{ padding: girintili ? "10px 12px 4px 20px" : "10px 12px 4px", minHeight: "44px", fontSize: "14px", fontWeight: 700, color: "var(--tema-gezinme-metin)", fontFamily: "'Nunito', sans-serif" }}
@@ -183,9 +191,7 @@ export default function MobilDrawer(props: MobilDrawerProps) {
         </button>
         {altAcik && (
           <div className="flex flex-col gap-0.5 pl-3">
-            {altOglar.map((altOge) => (
-              <Satir key={altOge.etiket} etiket={altOge.etiket} path={cozPath(altOge)} sayi={rozetSayisi(altOge)} girintili tamEslesme={altOge.tamEslesme} />
-            ))}
+            {altOglar.map(altOge => <Fragment key={altOge.anahtar ?? altOge.etiket}>{OgeBlogu({ oge: altOge, girintili: true })}</Fragment>)}
           </div>
         )}
       </div>
@@ -216,8 +222,8 @@ export default function MobilDrawer(props: MobilDrawerProps) {
 
         {/* Bilgi pilleri */}
         <div className="flex flex-col gap-1">
-          {BILGI_PILLERI.map((p) => (
-            <Satir key={p.path} etiket={p.etiket} path={p.etiket === "Ana Sayfa" ? (props.anaSayfaYolu ?? p.path) : p.path} tamEslesme />
+          {(props.bilgiPilleri ?? BILGI_PILLERI).map((p) => (
+            <Fragment key={p.path}>{Satir({ etiket: p.etiket, secili: p.etiket === "Ana Sayfa" ? props.anaSayfaSecili : undefined, onSecim: p.etiket === "Ana Sayfa" ? props.onAnaSayfa : undefined, path: p.etiket === "Ana Sayfa" ? (props.anaSayfaYolu ?? p.path) : p.path, tamEslesme: true })}</Fragment>
           ))}
         </div>
 
@@ -232,7 +238,7 @@ export default function MobilDrawer(props: MobilDrawerProps) {
             if (grup.baslikGoster === false) {
               return (
                 <div key={grup.baslik} className="flex flex-col gap-1">
-                  {gorunur.map((oge) => <OgeBlogu key={oge.etiket} oge={oge} />)}
+                  {gorunur.map(oge => <Fragment key={oge.anahtar ?? oge.etiket}>{OgeBlogu({ oge })}</Fragment>)}
                 </div>
               );
             }
@@ -243,6 +249,7 @@ export default function MobilDrawer(props: MobilDrawerProps) {
                 <button
                   type="button"
                   data-kity-menu={encodeURIComponent(grup.baslik)}
+                  aria-expanded={acik}
                   onClick={() => grupToggle(grup.baslik)}
                   className="flex w-full cursor-pointer items-center justify-between border-none bg-transparent"
                   style={{ minHeight: "44px", fontSize: "12px", fontWeight: 800, color: grup.baslik === "HBStore" ? "var(--tema-hbstore-vurgu)" : "var(--tema-baslik)", textTransform: "uppercase", letterSpacing: "0.06em", padding: "2px 12px 4px", fontFamily: "'Nunito', sans-serif" }}
@@ -253,7 +260,7 @@ export default function MobilDrawer(props: MobilDrawerProps) {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6" />
                   </svg>
                 </button>
-                {acik && gorunur.map((oge) => <OgeBlogu key={oge.etiket} oge={oge} girintili />)}
+                {acik && gorunur.map(oge => <Fragment key={oge.anahtar ?? oge.etiket}>{OgeBlogu({ oge, girintili: true })}</Fragment>)}
               </div>
             );
           })}

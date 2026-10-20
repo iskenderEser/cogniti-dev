@@ -8,7 +8,7 @@
 
 import CognitiLogo from "@/components/marka/CognitiLogo";
 import { useRouter, usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useTema } from "@/app/providers/TemaProvider";
 import TemaSecici from "@/components/tema/TemaSecici";
 
@@ -77,7 +77,7 @@ function OzetPill({ etiket, deger }: { etiket: string; deger: string }) {
   );
 }
 
-interface PanelNavbarProps {
+export interface PanelNavbarProps {
   adSoyad?: string;
   email?: string;
   // Kişisel özet — yalnız UTT/KD_UTT (BM sonraya). Verilmezse özet pill'leri çizilmez.
@@ -88,11 +88,16 @@ interface PanelNavbarProps {
   hbStoreGoster?: boolean;
   // Dış müşteri ana sayfası /eclub/ana-sayfa'dir; iç kullanıcıda varsayılan korunur.
   anaSayfaYolu?: string;
+  onAnaSayfa?: () => void;
+  anaSayfaSecili?: boolean;
   eclubStorePuani?: number | null;
   firmaLogoUrl?: string | null;
   ogrenmePlatformuAktif?: boolean;
   firmaAdi?: string | null;
   temaSeciciGoster?: boolean;
+  bilgiPilleri?: { key: string; etiket: string; path: string }[];
+  profilMenusu?: ReactNode;
+  profilAltBilgi?: string;
   onCikis: () => void;
   onHamburger?: () => void; // mobilde sol drawer'ı açar
 }
@@ -104,6 +109,66 @@ const BILGI_PILLERI: { key: string; etiket: string; path: string }[] = [
   { key: "nasil-calisir", etiket: "Nasıl Çalışır", path: "/nasil-calisir" },
 ];
 
+function PanelTemaSecici() {
+  const { tema, temaDegistir } = useTema();
+  return <TemaSecici tema={tema} onTemaDegistir={temaDegistir} />;
+}
+
+function ProfilDugmesi({ harfler, menu, mobil = false }: { harfler?: string; menu?: ReactNode; mobil?: boolean }) {
+  const router = useRouter();
+  const [acik, setAcik] = useState(false);
+  const alanRef = useRef<HTMLDivElement>(null);
+  const dugmeRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!acik || !menu) return;
+    const ogeler = () => Array.from(menuRef.current?.querySelectorAll<HTMLElement>('[role="menuitem"]:not(:disabled)') ?? []);
+    (ogeler()[0] ?? menuRef.current)?.focus();
+    const disariTiklandi = (event: MouseEvent | TouchEvent) => {
+      if (!alanRef.current?.contains(event.target as Node)) setAcik(false);
+    };
+    const tusaBasildi = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setAcik(false);
+        dugmeRef.current?.focus();
+      } else if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
+        const liste = ogeler();
+        if (!liste.length) return;
+        event.preventDefault();
+        const mevcut = liste.indexOf(document.activeElement as HTMLElement);
+        const indeks = event.key === "Home" ? 0 : event.key === "End" ? liste.length - 1
+          : (mevcut + (event.key === "ArrowDown" ? 1 : -1) + liste.length) % liste.length;
+        liste[indeks].focus();
+      } else if (event.key === "Tab") setAcik(false);
+    };
+    document.addEventListener("mousedown", disariTiklandi);
+    document.addEventListener("touchstart", disariTiklandi);
+    document.addEventListener("keydown", tusaBasildi);
+    return () => {
+      document.removeEventListener("mousedown", disariTiklandi);
+      document.removeEventListener("touchstart", disariTiklandi);
+      document.removeEventListener("keydown", tusaBasildi);
+    };
+  }, [acik, menu]);
+
+  return <div ref={alanRef} className="relative shrink-0">
+    <button ref={dugmeRef} type="button" aria-label="Profil ve hesap menüsü"
+      aria-haspopup={menu ? "menu" : undefined} aria-expanded={menu ? acik : undefined}
+      onClick={() => { if (menu) setAcik(!acik); else router.push("/profil"); }}
+      className={`${mobil ? "w-7 h-7" : "w-8 h-8"} rounded-full flex items-center justify-center text-xs font-bold cursor-pointer shrink-0 p-0`}
+      style={{ background: "var(--tema-gezinme-avatar-zemin)", color: "var(--tema-gezinme-metin)", border: mobil ? "none" : "1px solid var(--tema-gezinme-avatar-cizgi)" }}>
+      {harfler}
+    </button>
+    {menu && acik && <div ref={menuRef} role="menu" aria-label="Hesap işlemleri" tabIndex={-1}
+      className="absolute right-0 top-full z-[60] mt-2 w-72 max-w-[calc(100vw-24px)] rounded-2xl border border-[var(--tema-cizgi)] bg-[var(--tema-yuzey)] p-3 text-[var(--tema-metin)] shadow-lg"
+      onClick={event => { if ((event.target as HTMLElement).closest('[role="menuitem"]')) setAcik(false); }}>
+      {menu}
+    </div>}
+  </div>;
+}
+
 export default function PanelNavbar({
   adSoyad,
   email,
@@ -111,17 +176,21 @@ export default function PanelNavbar({
   siparisPuaniGoster,
   hbStoreGoster,
   anaSayfaYolu = "/ana-sayfa",
+  onAnaSayfa,
+  anaSayfaSecili,
   eclubStorePuani,
   firmaLogoUrl,
   ogrenmePlatformuAktif,
   firmaAdi,
   temaSeciciGoster = true,
+  bilgiPilleri = BILGI_PILLERI,
+  profilMenusu,
+  profilAltBilgi,
   onCikis,
   onHamburger,
 }: PanelNavbarProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const { tema, temaDegistir } = useTema();
   const [hover, setHover] = useState<string | null>(null);
 
   // Ana Sayfa navbarın sürekli görünen ana hedefidir. Butonla yapılan router.push
@@ -130,7 +199,7 @@ export default function PanelNavbar({
     router.prefetch(anaSayfaYolu);
   }, [anaSayfaYolu, router]);
 
-  const isAktif = (path: string) => pathname === path;
+  const isAktif = (path: string) => path === anaSayfaYolu && anaSayfaSecili !== undefined ? anaSayfaSecili : pathname === path;
 
   const pillClass = (aktif: boolean) =>
     `relative inline-flex items-center justify-center px-2.5 md:px-3 lg:px-3.5 py-1 rounded-full border-none cursor-pointer text-xs md:text-[13px] font-medium transition-all duration-200 whitespace-nowrap ${aktif ? "font-semibold" : ""}`;
@@ -160,7 +229,7 @@ export default function PanelNavbar({
         <div className="flex items-center flex-shrink-0">
           <div
             id="kity-karsilama"
-            onClick={() => router.push(anaSayfaYolu)}
+            onClick={() => { if (onAnaSayfa) onAnaSayfa(); else router.push(anaSayfaYolu); }}
             className="flex items-center md:w-[175px] lg:w-[195px] xl:w-[216px] flex-shrink-0 cursor-pointer group select-none"
           >
             <CognitiLogo
@@ -203,10 +272,11 @@ export default function PanelNavbar({
         <div className="hidden md:flex items-center gap-2.5 lg:gap-3.5 flex-shrink-0">
           {/* Bilgi Pill'leri */}
           <div className="flex items-center gap-1.5 sm:gap-2">
-            {BILGI_PILLERI.map((p) => (
+            {bilgiPilleri.map((p) => (
               <button
                 key={p.key}
-                onClick={() => router.push(p.key === "ana-sayfa" ? anaSayfaYolu : p.path)}
+                aria-pressed={isAktif(p.key === "ana-sayfa" ? anaSayfaYolu : p.path)}
+                onClick={() => { if (p.key === "ana-sayfa" && onAnaSayfa) onAnaSayfa(); else router.push(p.key === "ana-sayfa" ? anaSayfaYolu : p.path); }}
                 onMouseEnter={() => setHover(p.key)}
                 onMouseLeave={() => setHover(null)}
                 className={pillClass(isAktif(p.key === "ana-sayfa" ? anaSayfaYolu : p.path))}
@@ -245,15 +315,10 @@ export default function PanelNavbar({
           <div className="flex flex-col items-end gap-0.5 flex-shrink-0 ml-5 lg:ml-6">
             <div className="flex items-center gap-2">
               {adSoyad && <span className="text-sm font-bold whitespace-nowrap" style={{ color: "var(--tema-gezinme-metin)" }}>{adSoyad}</span>}
-              <div
-                onClick={() => router.push("/profil")}
-                className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold cursor-pointer shrink-0"
-                style={{ background: "var(--tema-gezinme-avatar-zemin)", color: "var(--tema-gezinme-metin)", border: "1px solid var(--tema-gezinme-avatar-cizgi)" }}
-              >
-                {bashHarfler}
-              </div>
+              <ProfilDugmesi harfler={bashHarfler} menu={profilMenusu} />
             </div>
             <div className="flex items-center gap-2">
+              {profilAltBilgi && <span className="text-[11px] font-semibold text-[var(--tema-ikincil-metin)]">{profilAltBilgi}</span>}
               <button
                 onClick={onCikis}
                 className="flex items-center gap-1 text-xs font-semibold cursor-pointer bg-transparent border-none"
@@ -270,13 +335,7 @@ export default function PanelNavbar({
 
         {/* Mobil: avatar + hamburger (sol drawer'ı açar). flex-shrink-0 ile asla kesilmez */}
         <div className="flex md:hidden items-center gap-1.5 flex-shrink-0">
-          <div
-            onClick={() => router.push("/profil")}
-            className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold cursor-pointer"
-            style={{ background: "var(--tema-gezinme-avatar-zemin)", color: "var(--tema-gezinme-metin)" }}
-          >
-            {bashHarfler}
-          </div>
+          <ProfilDugmesi harfler={bashHarfler} menu={profilMenusu} mobil />
           <button
             onClick={onHamburger}
             aria-label="Menü"
@@ -288,7 +347,7 @@ export default function PanelNavbar({
           </button>
         </div>
       </div>
-      {temaSeciciGoster && <TemaSecici tema={tema} onTemaDegistir={temaDegistir} />}
+      {temaSeciciGoster && <PanelTemaSecici />}
     </nav>
   );
 }

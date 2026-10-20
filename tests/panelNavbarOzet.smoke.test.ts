@@ -23,7 +23,7 @@ test("UTT navbar özeti yalnızca takım sırası ve sipariş puanını taşır"
   assert.match(navbar, /router\.push\("\/store"\)/);
   assert.match(navbar, />\s*HBStore\s*<\/button>/);
   assert.match(navbar, /\{hbStoreGoster && \(/);
-  assert.match(layout, /hbStoreGoster=\{!isEclubKisi && etkinFlags\.storeAcik && STORE_ALABILEN_ROLLER\.includes\(rolKucu\)\}/);
+  assert.match(layout, /hbStoreGoster: !isEclubKisi && etkinFlags\.storeAcik && STORE_ALABILEN_ROLLER\.includes\(rolKucu\)/);
   assert.match(storeSayfasi, /<h1[^>]*>\s*HBStore\s*<\/h1>/);
   assert.doesNotMatch(navbar, /Haftalık:/);
   assert.doesNotMatch(navbar, /haftalikPuan/);

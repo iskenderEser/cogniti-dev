@@ -17,8 +17,8 @@
 "use client";
 
 import { useRouter, usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import { PANEL_NAV, type NavContext, type NavGrup, type NavOge } from "./panelNav.config";
+import { Fragment, useEffect, useState } from "react";
+import { PANEL_NAV, navOgeAktifMi, navOgeVeyaAltiAktifMi, navSecimIzi, type NavContext, type NavGrup, type NavOge } from "./panelNav.config";
 import { prefetchTalepMerkezi } from "@/app/(panel)/talepler/_hooks/talepOnbellek";
 import { prefetchYayinOzet } from "@/app/(panel)/yayin-yonetimi/_hooks/ozetOnbellek";
 import { prefetchYayinKatalog } from "@/lib/video/katalogOnbellek";
@@ -40,23 +40,8 @@ export default function SolListe(props: SolListeProps) {
   const cozPath = (oge: NavOge) => typeof oge.path === "function" ? oge.path(props) : (oge.path ?? "");
   const rozetSayisi = (oge: NavOge) => oge.badgeKey ? (props.badge[oge.badgeKey] ?? 0) : 0;
 
-  const grupAktifMi = (grup: NavGrup) => {
-    return grup.oglar.some((oge) => {
-      if (!oge.gate(props)) return false;
-      const p = cozPath(oge);
-      if ((p && (oge.tamEslesme ? pathname === p : pathname === p || pathname.startsWith(`${p}/`))) || oge.aktifYollar?.some((yol) => pathname === yol || pathname.startsWith(`${yol}/`))) {
-        return true;
-      }
-      if (oge.altOglar) {
-        return oge.altOglar.some((alt) => {
-          if (!alt.gate(props)) return false;
-          const ap = cozPath(alt);
-          return ap && (alt.tamEslesme ? pathname === ap : pathname.startsWith(ap));
-        });
-      }
-      return false;
-    });
-  };
+  const secimIzi = navSecimIzi(gruplar, props);
+  const grupAktifMi = (grup: NavGrup) => grup.oglar.some(oge => navOgeVeyaAltiAktifMi(oge, props, pathname));
 
   const [hover, setHover] = useState<string | null>(null);
   const [kapaliGruplar, setKapaliGruplar] = useState<Set<string>>(() => {
@@ -69,7 +54,7 @@ export default function SolListe(props: SolListeProps) {
     });
     return kapali;
   });
-  const [altOgeDurumlari, setAltOgeDurumlari] = useState<Map<string, boolean>>(new Map());
+  const [altOgeDurumlari, setAltOgeDurumlari] = useState<Map<string, { acik: boolean; secimIzi: string }>>(new Map());
 
   // Sayfa veya görünür gruplar değiştiğinde aktif sayfanın grubu kapalıysa aç; yeni gruplar kapalı başlasın
   useEffect(() => {
@@ -93,7 +78,7 @@ export default function SolListe(props: SolListeProps) {
       return degisti ? yeni : onceki;
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname, props.storeAcik, props.ccAcik, props.eclubAcik, props.eczanemAcik]);
+  }, [pathname, props.storeAcik, props.ccAcik, props.eclubAcik, props.eczanemAcik, secimIzi]);
 
   const grupToggle = (baslik: string) =>
     setKapaliGruplar((onceki) => {
@@ -104,12 +89,14 @@ export default function SolListe(props: SolListeProps) {
 
   const Satir = ({ oge, seviye = 0 }: { oge: NavOge; seviye?: number }) => {
     const path = cozPath(oge);
-    const aktif = (oge.tamEslesme ? pathname === path : pathname === path || pathname.startsWith(`${path}/`)) || oge.aktifYollar?.some((yol) => pathname === yol || pathname.startsWith(`${yol}/`)) === true;
-    const isHover = hover === oge.etiket;
+    const aktif = navOgeAktifMi(oge, props, pathname);
+    const anahtar = oge.anahtar ?? oge.etiket;
+    const isHover = hover === anahtar;
     const sayi = rozetSayisi(oge);
 
     const onHover = () => {
-      setHover(oge.etiket);
+      setHover(anahtar);
+      if (oge.onSecim || !path) return;
       router.prefetch(path);
       if (path === "/yayin-takip" && kullanici?.id) void prefetchTalepMerkezi(kullanici.id);
       else if (path === "/yayin-yonetimi" && kullanici?.id) void prefetchYayinOzet(kullanici.id);
@@ -119,7 +106,10 @@ export default function SolListe(props: SolListeProps) {
 
     return (
       <button
-        onClick={() => router.push(path)}
+        type="button"
+        onClick={() => { if (oge.onSecim) oge.onSecim(); else if (path) router.push(path); }}
+        aria-pressed={oge.onSecim ? aktif : undefined}
+        data-nav-secim={oge.anahtar}
         onMouseEnter={onHover}
         onMouseLeave={() => setHover(null)}
         className="relative w-full flex items-center justify-between rounded-lg cursor-pointer border-none text-left transition-all duration-200"
@@ -148,22 +138,41 @@ export default function SolListe(props: SolListeProps) {
 
   const OgeBlogu = ({ oge, seviye = 0 }: { oge: NavOge; seviye?: number }) => {
     const altOglar = (oge.altOglar ?? []).filter((altOge) => altOge.gate(props));
-    if (altOglar.length === 0) return <Satir oge={oge} seviye={seviye} />;
-    const altAktif = altOglar.some((alt) => {
-      const p = cozPath(alt);
-      return alt.tamEslesme ? pathname === p : pathname.startsWith(p);
+    if (altOglar.length === 0) return Satir({ oge, seviye });
+    const anahtar = oge.anahtar ?? oge.etiket;
+    const altAktif = (Boolean(oge.onSecim) && navOgeAktifMi(oge, props, pathname))
+      || altOglar.some(alt => navOgeVeyaAltiAktifMi(alt, props, pathname));
+    const kayit = altOgeDurumlari.get(anahtar);
+    const altAcik = oge.onSecim && altAktif && kayit?.secimIzi !== secimIzi ? true : kayit?.acik ?? altAktif;
+    const dalDegistir = () => setAltOgeDurumlari(onceki => {
+      const yeni = new Map(onceki);
+      yeni.set(anahtar, { acik: !altAcik, secimIzi });
+      return yeni;
     });
-    const altAcik = altOgeDurumlari.get(oge.etiket) ?? altAktif;
     const sayi = rozetSayisi(oge);
+    if (oge.onSecim) {
+      return <div className="flex flex-col gap-0.5">
+        <div className="flex items-center gap-1">
+          { Satir({ oge, seviye }) }
+          <button type="button" onClick={dalDegistir} aria-expanded={altAcik}
+            aria-label={`${oge.etiket} alt menüsünü ${altAcik ? "kapat" : "aç"}`}
+            data-nav-dal={anahtar}
+            className="shrink-0 rounded-lg border-none bg-transparent p-2 text-[var(--tema-gezinme-metin)]"
+            style={{ minWidth: "32px", minHeight: "32px" }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} style={{ transform: altAcik ? "rotate(180deg)" : "none" }} aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6" /></svg>
+          </button>
+        </div>
+        {altAcik && <div className="flex flex-col gap-0.5">
+          {altOglar.map(altOge => <Fragment key={altOge.anahtar ?? altOge.etiket}>{OgeBlogu({ oge: altOge, seviye: seviye + 1 })}</Fragment>)}
+        </div>}
+      </div>;
+    }
+
     return (
       <div className="flex flex-col gap-0.5">
         <button
           type="button"
-          onClick={() => setAltOgeDurumlari((onceki) => {
-            const yeni = new Map(onceki);
-            yeni.set(oge.etiket, !altAcik);
-            return yeni;
-          })}
+          onClick={dalDegistir}
           aria-expanded={altAcik}
           className="flex w-full cursor-pointer items-center justify-between border-none bg-transparent text-left"
           style={{ padding: `7px 10px 3px ${10 + seviye * 8}px`, fontSize: "14px", fontWeight: 700, color: "var(--tema-gezinme-metin)", fontFamily: "'Nunito', sans-serif" }}
@@ -180,7 +189,7 @@ export default function SolListe(props: SolListeProps) {
         </button>
         {altAcik && (
           <div className="flex flex-col gap-0.5">
-            {altOglar.map((altOge) => <Satir key={altOge.etiket} oge={altOge} seviye={seviye + 1} />)}
+            {altOglar.map(altOge => <Fragment key={altOge.anahtar ?? altOge.etiket}>{OgeBlogu({ oge: altOge, seviye: seviye + 1 })}</Fragment>)}
           </div>
         )}
       </div>
@@ -202,7 +211,7 @@ export default function SolListe(props: SolListeProps) {
           if (grup.baslikGoster === false) {
             return (
               <div key={grup.baslik} className="flex flex-col gap-1">
-                {gorunur.map((oge) => <OgeBlogu key={oge.etiket} oge={oge} />)}
+                {gorunur.map(oge => <Fragment key={oge.anahtar ?? oge.etiket}>{OgeBlogu({ oge })}</Fragment>)}
               </div>
             );
           }
@@ -223,7 +232,7 @@ export default function SolListe(props: SolListeProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6" />
                 </svg>
               </button>
-              {acik && gorunur.map((oge) => <OgeBlogu key={oge.etiket} oge={oge} seviye={1} />)}
+              {acik && gorunur.map(oge => <Fragment key={oge.anahtar ?? oge.etiket}>{OgeBlogu({ oge, seviye: 1 })}</Fragment>)}
             </div>
           );
         })}

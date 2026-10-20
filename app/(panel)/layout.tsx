@@ -17,9 +17,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/providers/AuthProvider";
-import PanelNavbar from "@/components/panel/PanelNavbar";
-import SolListe from "@/components/panel/SolListe";
-import MobilDrawer from "@/components/panel/MobilDrawer";
+import PanelKabugu from "@/components/panel/PanelKabugu";
 import { PANEL_NAV, eclubKisiNavOlustur, type NavContext } from "@/components/panel/panelNav.config";
 import { HBSTORE_BAKIYE_DEGISTI } from "@/lib/tclub/store/olay";
 import { BILDIRIM_ROZETLERI_DEGISTI, bildirimRozetleriniYenile } from "@/lib/bildirimler/rozet";
@@ -47,7 +45,6 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
   // güvenli varsayılanlarla başlatılır. Kullanıcı doğrulandığında sessionStorage'dan okunur.
   const [flags, setFlags] = useState<PanelFlags>(VARSAYILAN_FLAGS);
   const [badge, setBadge] = useState<Record<string, number>>({});
-  const [drawerAcik, setDrawerAcik] = useState(false);
   const [ozet, setOzet] = useState<{ takimSirasi: number | null; siparisPuani: number } | null>(null);
   const [eclubStorePuani, setEclubStorePuani] = useState<number | null>(null);
   const [eclubFirmalar, setEclubFirmalar] = useState<Array<{ firma_id: string; firma_adi: string; eclub_store_aktif: boolean }>>([]);
@@ -252,41 +249,26 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
   const anaSayfaYolu = isEclubKisi ? "/eclub/ana-sayfa" : "/ana-sayfa";
 
   return (
-    <div style={{ height: "100vh", background: "var(--tema-zemin)", fontFamily: "'Nunito', sans-serif", display: "flex", flexDirection: "column", overflow: "hidden" }}>
-      <PanelNavbar
-        adSoyad={kullanici.adSoyad}
-        email={kullanici.email}
-        ozet={isEclubKisi ? null : etkinOzet}
-        siparisPuaniGoster={!isEclubKisi && etkinFlags.storeAcik}
-        hbStoreGoster={!isEclubKisi && etkinFlags.storeAcik && STORE_ALABILEN_ROLLER.includes(rolKucu)}
-        anaSayfaYolu={anaSayfaYolu}
-        eclubStorePuani={isEclubKisi && etkinFlags.eclubStoreAcik ? etkinEclubStorePuani : null}
-        firmaLogoUrl={!isEclubKisi ? etkinFlags.firmaLogoUrl : null}
-        ogrenmePlatformuAktif={!isEclubKisi && Boolean(etkinFlags.ogrenmePlatformuAktif)}
-        firmaAdi={firmaAdi}
-        onCikis={cikisYap}
-        onHamburger={() => setDrawerAcik(true)}
-      />
-
-      <MobilDrawer
-        {...ctx}
-        gruplar={gruplar}
-        badge={badge}
-        acik={drawerAcik}
-        onKapat={() => setDrawerAcik(false)}
-        onCikis={cikisYap}
-        anaSayfaYolu={anaSayfaYolu}
-      />
-
-      <div className="flex flex-1" style={{ minHeight: 0 }}>
-        <SolListe {...ctx} gruplar={gruplar} badge={badge} />
-        <main className="flex-1 overflow-y-auto" style={{ minWidth: 0 }}>
-          {children}
-        </main>
-      </div>
-
-      <YarimYuklemeBildirimi />
-      <YayinSonucBildirimi />
-    </div>
+    <PanelKabugu
+      navbar={{
+        adSoyad: kullanici.adSoyad,
+        email: kullanici.email,
+        ozet: isEclubKisi ? null : etkinOzet,
+        siparisPuaniGoster: !isEclubKisi && etkinFlags.storeAcik,
+        hbStoreGoster: !isEclubKisi && etkinFlags.storeAcik && STORE_ALABILEN_ROLLER.includes(rolKucu),
+        anaSayfaYolu,
+        eclubStorePuani: isEclubKisi && etkinFlags.eclubStoreAcik ? etkinEclubStorePuani : null,
+        firmaLogoUrl: !isEclubKisi ? etkinFlags.firmaLogoUrl : null,
+        ogrenmePlatformuAktif: !isEclubKisi && Boolean(etkinFlags.ogrenmePlatformuAktif),
+        firmaAdi,
+        onCikis: cikisYap,
+      }}
+      baglam={ctx}
+      gruplar={gruplar}
+      badge={badge}
+      bildirimler={<><YarimYuklemeBildirimi /><YayinSonucBildirimi /></>}
+    >
+      {children}
+    </PanelKabugu>
   );
 }

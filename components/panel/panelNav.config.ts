@@ -40,6 +40,11 @@ export interface NavContext {
 
 export interface NavOge {
   etiket: string;
+  // Aynı etiketli kapsamlar için kimlik; seçim ve açılma durumu bu anahtarla ayrılır.
+  anahtar?: string;
+  // Sayfa içi kapsam seçimi; verilmediğinde mevcut path davranışı kullanılır.
+  onSecim?: () => void;
+  secili?: boolean;
   // Sabit yol; Raporlar rol-bazlı yönlendiği için çözücü fonksiyon da olabilir
   // (mevcut Navbar.raporaGit birebir).
   path?: string | ((ctx: NavContext) => string);
@@ -56,6 +61,32 @@ export interface NavGrup {
   // false yalnız ayrı kimlik kabuklarında kullanılır. İç sistem PANEL_NAV
   // gruplarında başlık, görünür öğe sayısından bağımsız olarak daima çizilir.
   baslikGoster?: boolean;
+}
+
+/** Açık kapsam seçimi varsa adres yerine o seçimi kullanır. */
+export function navOgeAktifMi(oge: NavOge, ctx: NavContext, pathname: string): boolean {
+  if (!oge.gate(ctx)) return false;
+  if (oge.secili !== undefined) return oge.secili;
+  const path = typeof oge.path === "function" ? oge.path(ctx) : oge.path;
+  return Boolean(path && (oge.tamEslesme ? pathname === path : pathname === path || pathname.startsWith(`${path}/`)))
+    || oge.aktifYollar?.some(yol => pathname === yol || pathname.startsWith(`${yol}/`)) === true;
+}
+
+export function navOgeVeyaAltiAktifMi(oge: NavOge, ctx: NavContext, pathname: string): boolean {
+  return oge.gate(ctx) && (navOgeAktifMi(oge, ctx, pathname)
+    || (oge.altOglar ?? []).some(alt => navOgeVeyaAltiAktifMi(alt, ctx, pathname)));
+}
+
+/** Kapsam değişince eski bir kapatma seçili içeriğin üst dallarını gizlemez. */
+export function navSecimIzi(gruplar: NavGrup[], ctx: NavContext): string {
+  const anahtarlar: string[] = [];
+  const oku = (oge: NavOge) => {
+    if (!oge.gate(ctx)) return;
+    if (oge.secili) anahtarlar.push(oge.anahtar ?? oge.etiket);
+    oge.altOglar?.forEach(oku);
+  };
+  gruplar.forEach(grup => grup.oglar.forEach(oku));
+  return JSON.stringify(anahtarlar.sort());
 }
 
 export const PANEL_NAV: NavGrup[] = [
