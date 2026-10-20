@@ -6,7 +6,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
 const sayfa = readFileSync("app/eczanem/page.tsx", "utf8");
-const navbar = readFileSync("app/eczanem/_components/EczanemMusteriNavbar.tsx", "utf8");
+const uyeBaglantisi = readFileSync("app/eczanem/_components/EczanemPanelBaglantisi.tsx", "utf8");
 const raf = readFileSync("app/eczanem/_components/EczanemVideoRafi.tsx", "utf8");
 const oynatici = readFileSync("app/eczanem/_components/EczanemVideoOynatici.tsx", "utf8");
 const videolarRoute = readFileSync("app/eczanem/api/videolar/route.ts", "utf8");
@@ -18,21 +18,21 @@ const puanlar = readFileSync("app/eczanem/_components/EczanemPuanlarim.tsx", "ut
 const puanlarRoute = readFileSync("app/eczanem/api/puanlar/route.ts", "utf8");
 const siparisRoute = readFileSync("app/eczanem/api/siparis/route.ts", "utf8");
 
-test("mutlu: müşteri ana sayfası belirlenen altı dijital kanal rafını ve ayrı Puanlarım sayfasını sunar", () => {
+test("mutlu: müşteri ana sayfası belirlenen beş yayın rafını ve ayrı Puanlarım sayfasını sunar", () => {
   const basliklar = [
-    "Yeni Öğrenme İçeriklerim",
-    "Yarım Bıraktıklarım",
-    "En Son Tamamladıklarım",
-    "Cogniti’de En Çok Beğenilenler",
-    "Cogniti’de En Çok Favorilenenler",
-    "En Çok Tamamlananlar",
+    "Yeni Yayınlar",
+    "Yarım Kalanlar",
+    "Tamamlananlar",
+    "En Çok Beğenilenler",
+    "En Çok Favorilenenler",
   ];
-  for (const baslik of basliklar) assert.match(sayfa, new RegExp(`baslik=\"${baslik}\"`));
+  assert.deepEqual([...sayfa.matchAll(/<EczanemVideoRafi baslik="([^"]+)"/g)].map(eslesme => eslesme[1]), basliklar);
 
   assert.match(sayfa, /video\.izleme_basladi && !video\.izlendi/);
   assert.match(sayfa, /puanaGore\("begeni_sayisi"\)/);
   assert.match(sayfa, /puanaGore\("favori_sayisi"\)/);
-  assert.match(sayfa, /puanaGore\("izlenme_sayisi"\)/);
+  assert.doesNotMatch(sayfa, /en_cok_izlenenler|En Çok Tamamlananlar|izlenme_sayisi/);
+  assert.doesNotMatch(videolarRoute, /izlenme_sayisi/);
   assert.match(raf, /içeriğini sayfaya yerleştir/);
   assert.match(raf, /onBegeni/);
   assert.match(raf, /onFavori/);
@@ -50,9 +50,9 @@ test("mutlu: müşteri ana sayfası belirlenen altı dijital kanal rafını ve a
   assert.match(oynatici, /İçeriği tamamladığınızda puanınız otomatik eklenir/);
   assert.doesNotMatch(oynatici, /if \(!res\.ok\)[\s\S]{0,320}izlemeBitirildiRef\.current = false/);
   assert.match(ilerlemeRoute, /\.eq\("musteri_id", kimlik\.musteriId!\)/);
-  assert.match(navbar, /etiket: "Ana Sayfa", href: "\/eczanem"/);
-  assert.match(navbar, /etiket: "Nedir", href: "\/nedir"/);
-  assert.match(navbar, /etiket: "Nasıl Çalışır", href: "\/eczanem\/nasil-calisir"/);
+  assert.match(uyeBaglantisi, /etiket: "Ana Sayfa", path: "\/eczanem"/);
+  assert.match(uyeBaglantisi, /etiket: "Nedir", path: "\/nedir"/);
+  assert.match(uyeBaglantisi, /etiket: "Nasıl Çalışır", path: "\/eczanem\/nasil-calisir"/);
   assert.match(puanSayfasi, /<EczanemPuanlarim/);
   assert.doesNotMatch(sayfa, /<EczanemPuanlarim/);
 
@@ -93,5 +93,5 @@ test("red: kart açılışı izleme yazamaz; kapsam dışı talep ve belirsiz du
   assert.match(puanlarRoute, /\.gte\("created_at", altSinir\)/);
   assert.match(puanlar, /Onaylanmadı/);
   assert.match(puanlar, /İptal Edildi/);
-  assert.doesNotMatch([sayfa, navbar, raf, puanSayfasi, puanlar].join("\n"), /Düştü|Reddedildi|Reddedilen\/Düşen/);
+  assert.doesNotMatch([sayfa, uyeBaglantisi, raf, puanSayfasi, puanlar].join("\n"), /Düştü|Reddedildi|Reddedilen\/Düşen/);
 });

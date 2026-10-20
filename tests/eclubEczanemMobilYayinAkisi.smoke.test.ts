@@ -251,7 +251,7 @@ test("Eczanem: EczanemVideoRafi mobilde 2 kartla başlar, 7 karta açılır, gon
   await act(async () => {
     root.render(
       createElement(EczanemVideoRafi, {
-        baslik: "Yeni Öğrenme İçeriklerim",
+        baslik: "Yeni Yayınlar",
         videolar,
         bosMesaj: "Yeni öğrenme içeriğiniz bulunmuyor.",
         sifirlamaAnahtari: "tum-tumu",
@@ -327,7 +327,7 @@ test("Eczanem: EczanemVideoRafi mobilde 2 kartla başlar, 7 karta açılır, gon
   await act(async () => {
     root.render(
       createElement(EczanemVideoRafi, {
-        baslik: "Yeni Öğrenme İçeriklerim",
+        baslik: "Yeni Yayınlar",
         videolar,
         bosMesaj: "Yeni öğrenme içeriğiniz bulunmuyor.",
         sifirlamaAnahtari: "eczane-1-tumu",
@@ -352,17 +352,15 @@ test("Eczanem: EczanemVideoRafi mobilde 2 kartla başlar, 7 karta açılır, gon
 
   const baslikKapsayici = container.querySelector(`#${labelledBy}`);
   assert.ok(baslikKapsayici, "aria-labelledby hedefi DOM'da bulunmalı");
-  assert.equal(baslikKapsayici.textContent?.trim(), "Yeni Öğrenme İçeriklerim", "Görünür başlık doğru metni içermeli");
+  assert.equal(baslikKapsayici.textContent?.trim(), "Yeni Yayınlar", "Görünür başlık doğru metni içermeli");
 
   const h2El = baslikKapsayici.querySelector("h2");
   assert.ok(h2El, "Hedef kapsayıcı içinde semantik h2 bulunmalı");
-  assert.equal(h2El.textContent?.trim(), "Yeni Öğrenme İçeriklerim", "h2 doğru metni içermeli");
+  assert.equal(h2El.textContent?.trim(), "Yeni Yayınlar", "h2 doğru metni içermeli");
   assert.match(h2El.className, /text-base/, "text-base sınıfı korunmalı");
-  assert.match(h2El.className, /font-black/, "font-black sınıfı korunmalı");
-  assert.match(h2El.className, /tracking-\[-0\.015em\]/, "tracking-[-0.015em] sınıfı korunmalı");
-  assert.match(h2El.className, /text-\[#1e344a\]/, "text-[#1e344a] sınıfı korunmalı");
+  assert.match(h2El.className, /font-extrabold/, "Başlık E-Club yazı kalınlığını kullanmalı");
+  assert.match(h2El.className, /text-\[var\(--tema-yerel-eclub-ana-metin-18\)\]/, "Başlık E-Club tema rengini kullanmalı");
   assert.match(h2El.className, /md:text-lg/, "md:text-lg sınıfı korunmalı");
-  assert.match(h2El.className, /truncate/, "truncate sınıfı korunmalı");
 
   const idliElemanlar = Array.from(container.querySelectorAll("[id]"));
   const idListesi = idliElemanlar.map((el) => el.getAttribute("id")!);

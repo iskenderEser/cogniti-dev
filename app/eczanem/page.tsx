@@ -1,13 +1,10 @@
 // Eczanem müşteri ana sayfası: dijital kanal rafları, sayfa içi oynatıcı ve
-// hesap güvenliği. Puan/indirim işlemleri navbar'daki ayrı Puanlarım sayfasıdır.
+// hesap güvenliği. Puan/indirim işlemleri sol menüdeki ayrı Puanlarım sayfasıdır.
 "use client";
-import { TarihPill } from "@/components/ui/tarih-pill";
-import { YenileButonu } from "@/components/ui/yenile-butonu";
-import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Layers, Sparkles } from "lucide-react";
+import { Layers } from "lucide-react";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
@@ -16,11 +13,14 @@ import { Input } from "@/components/ui/input";
 import { MUSTERI_ROLU } from "@/lib/utils/roller";
 import { adSoyadBicimle } from "@/lib/utils/adSoyadBicimle";
 import EclubGecisKarti from "./_components/EclubGecisKarti";
-import EczanemKapsamBreadcrumb from "./_components/EczanemKapsamBreadcrumb";
-import EczanemMusteriNavbar from "./_components/EczanemMusteriNavbar";
-import EczanemMusteriSidebar from "./_components/EczanemMusteriSidebar";
+import EczanemAnaSayfaSkeleton, { EczanemRaflarSkeleton } from "./_components/EczanemAnaSayfaSkeleton";
+import EczanemAnaSayfaUstBolum from "./_components/EczanemAnaSayfaUstBolum";
+import EczanemPanelBaglantisi from "./_components/EczanemPanelBaglantisi";
+import { eczanemGezinmeAgaciniOku, eczanemGezinmeAgaciniYaz } from "./_components/eczanemGezinme";
+import { eczanemUyeMenusuOlustur } from "./_components/eczanemUyeMenusu";
 import EczanemVideoOynatici from "./_components/EczanemVideoOynatici";
 import EczanemVideoRafi from "./_components/EczanemVideoRafi";
+import EczanemUrunFiltresi from "./_components/EczanemUrunFiltresi";
 import type {
   EczanemMusteriVideo,
   EczanemSidebarAgaci,
@@ -33,7 +33,7 @@ import { YAYIN_TURLERI } from "@/lib/ogrenmeAraci/turSunumu";
 
 const bosRaflar: EczanemVideoRaflari = {
   yeni_videolarim: [], yarim_biraktiklarim: [], en_son_izlediklerim: [],
-  en_cok_begenilenler: [], en_cok_favorilenenler: [], en_cok_izlenenler: [],
+  en_cok_begenilenler: [], en_cok_favorilenenler: [],
 };
 
 const tariheGoreAzalan = (alan: "gelis_tarihi" | "izleme_baslangic" | "izleme_bitis") => (a: EczanemMusteriVideo, b: EczanemMusteriVideo) => (
@@ -47,13 +47,12 @@ function EczanemPanelIcerik() {
   const { mesajlar, hata, basari } = useHataMesaji();
   const musteri = !!kullanici && kullanici.kimlik_turu === MUSTERI_ROLU;
   const [videolar, setVideolar] = useState<EczanemMusteriVideo[]>([]);
-  const [agac, setAgac] = useState<EczanemSidebarAgaci>([]);
+  const [agac, setAgac] = useState<EczanemSidebarAgaci>(() => eczanemGezinmeAgaciniOku(kullanici?.id) ?? []);
   const [secim, setSecim] = useState<EczanemSidebarSecim>({ tip: "tum" });
   const [aktifYayinTuru, setAktifYayinTuru] = useState<YayinTuruFiltreDegeri>("tumu");
-  const [mobilDrawerAcik, setMobilDrawerAcik] = useState(false);
-  const mobilTetikleyiciRef = useRef<HTMLButtonElement | null>(null);
   const [videoYukleniyor, setVideoYukleniyor] = useState(true);
   const [videoYenileniyor, setVideoYenileniyor] = useState(false);
+  const [ustBolumYenileme, setUstBolumYenileme] = useState(0);
   const [videoHazir, setVideoHazir] = useState(false);
   const [videoHatasi, setVideoHatasi] = useState<string | null>(null);
   const [etkilesimIsliyor, setEtkilesimIsliyor] = useState<string | null>(null);
@@ -63,6 +62,18 @@ function EczanemPanelIcerik() {
   const [silmeHatasi, setSilmeHatasi] = useState<string | null>(null);
   const [siliniyor, setSiliniyor] = useState(false);
   const videoIstegiRef = useRef<AbortController | null>(null);
+  const [tumIceriklerSecili, setTumIceriklerSecili] = useState(false);
+  const anaSayfayiAc = useCallback(() => {
+    setTumIceriklerSecili(false);
+    setSecim({ tip: "tum" });
+    setAktifYayinTuru("tumu");
+    setSeciliVideo(null);
+    router.push("/eczanem", { scroll: false });
+  }, [router]);
+  const menuGruplari = useMemo(() => eczanemUyeMenusuOlustur({ agac, secim, tumIceriklerSecili, onSecim: yeniSecim => {
+    if (yeniSecim.tip === "tum") { anaSayfayiAc(); setTumIceriklerSecili(true); }
+    else { setTumIceriklerSecili(false); setSecim(yeniSecim); }
+  } }), [agac, secim, tumIceriklerSecili, anaSayfayiAc]);
 
   const videolariCek = useCallback(async (elle = false) => {
     videoIstegiRef.current?.abort();
@@ -72,20 +83,21 @@ function EczanemPanelIcerik() {
     try {
       const res = await fetch("/eczanem/api/videolar", { cache: "no-store", signal: controller.signal });
       const data: EczanemVideolarYaniti = await res.json();
+      if (controller.signal.aborted || videoIstegiRef.current !== controller) return;
       if (!res.ok) {
         const errData = data as unknown as { hata?: string; adim?: string };
         const mesaj = errData.hata ?? "Öğrenme içerikleri yüklenemedi.";
-        setVideoHatasi(mesaj); setAgac([]); hata(mesaj, errData.adim ?? "öğrenme içerikleri"); return;
+        setVideoHatasi(mesaj); hata(mesaj, errData.adim ?? "öğrenme içerikleri"); return;
       }
+      if (kullanici?.id) eczanemGezinmeAgaciniYaz(kullanici.id, data.agac ?? []);
       setVideolar(data.videolar ?? []); setAgac(data.agac ?? []); setVideoHazir(true); setVideoHatasi(null);
     } catch (error) {
-      if (!(error instanceof DOMException && error.name === "AbortError")) {
-        setAgac([]); setVideoHatasi("Öğrenme içerikleri yüklenemedi."); hata("Öğrenme içerikleri yüklenemedi.", "öğrenme içerikleri");
+      if (!controller.signal.aborted && videoIstegiRef.current === controller && !(error instanceof DOMException && error.name === "AbortError")) { setVideoHatasi("Öğrenme içerikleri yüklenemedi."); hata("Öğrenme içerikleri yüklenemedi.", "öğrenme içerikleri");
       }
     } finally {
       if (videoIstegiRef.current === controller) { setVideoYukleniyor(false); setVideoYenileniyor(false); }
     }
-  }, [hata]);
+  }, [hata, kullanici?.id]);
 
   useEffect(() => {
     if (yukleniyor) return;
@@ -94,6 +106,20 @@ function EczanemPanelIcerik() {
     void videolariCek();
     return () => videoIstegiRef.current?.abort();
   }, [kullanici, musteri, router, videolariCek, yukleniyor]);
+
+  const rotaEczaneId = searchParams.get("eczane_id");
+  const rotaFirmaId = searchParams.get("firma_id");
+  const uygulananRota = useRef<string | null>(null);
+  useEffect(() => {
+    if (!rotaEczaneId) { uygulananRota.current = null; return; }
+    if (!videoHazir) return;
+    const anahtar = JSON.stringify([rotaEczaneId, rotaFirmaId]);
+    if (uygulananRota.current === anahtar) return;
+    const eczane = agac.find(item => item.eczane_id === rotaEczaneId);
+    if (!eczane || (rotaFirmaId && !eczane.firmalar.some(firma => firma.firma_id === rotaFirmaId))) return;
+    uygulananRota.current = anahtar;
+    setSecim(rotaFirmaId ? { tip: "firma", eczane_id: rotaEczaneId, firma_id: rotaFirmaId } : { tip: "eczane", eczane_id: rotaEczaneId });
+  }, [agac, rotaEczaneId, rotaFirmaId, videoHazir]);
 
   const kapsamVideolari = useMemo<EczanemMusteriVideo[]>(() => {
     switch (secim.tip) {
@@ -130,7 +156,7 @@ function EczanemPanelIcerik() {
 
   const raflar = useMemo<EczanemVideoRaflari>(() => {
     if (!videoHazir) return bosRaflar;
-    const puanaGore = (alan: "begeni_sayisi" | "favori_sayisi" | "izlenme_sayisi") => [...filtrelenmisVideolar]
+    const puanaGore = (alan: "begeni_sayisi" | "favori_sayisi") => [...filtrelenmisVideolar]
       .filter((video) => video[alan] > 0)
       .sort((a, b) => b[alan] - a[alan] || tariheGoreAzalan("gelis_tarihi")(a, b));
     return {
@@ -139,7 +165,6 @@ function EczanemPanelIcerik() {
       en_son_izlediklerim: filtrelenmisVideolar.filter((video) => video.izlendi).sort(tariheGoreAzalan("izleme_bitis")),
       en_cok_begenilenler: puanaGore("begeni_sayisi"),
       en_cok_favorilenenler: puanaGore("favori_sayisi"),
-      en_cok_izlenenler: puanaGore("izlenme_sayisi"),
     };
   }, [filtrelenmisVideolar, videoHazir]);
 
@@ -184,7 +209,7 @@ function EczanemPanelIcerik() {
     finally { setSiliniyor(false); }
   };
 
-  if (yukleniyor || !kullanici || !musteri) return <div className="flex min-h-screen items-center justify-center bg-[var(--tema-yerel-eczanem-sayfa-zemini-23)]"><span className="size-7 animate-spin rounded-full border-2 border-[var(--tema-yerel-eczanem-cizgi-39)] border-t-[var(--tema-yerel-eczanem-cizgi-02)]" aria-label="Oturum yükleniyor" /></div>;
+  if (yukleniyor || !kullanici || !musteri) return <EczanemAnaSayfaSkeleton />;
 
   const secimAnahtari =
     secim.tip === "tum"
@@ -208,105 +233,77 @@ function EczanemPanelIcerik() {
   };
 
   const musteriAd = kullanici.ad ? adSoyadBicimle(kullanici.ad) : "";
+  const seciliEczane = secim.tip === "tum" ? undefined : agac.find(eczane => eczane.eczane_id === secim.eczane_id);
+  const seciliFirma = secim.tip === "tum" || secim.tip === "eczane" ? undefined : seciliEczane?.firmalar.find(firma => firma.firma_id === secim.firma_id);
 
   return (
-    <div className="min-h-screen bg-[var(--tema-yerel-eczanem-sayfa-zemini-23)] pb-12" style={{ fontFamily: "'Nunito', sans-serif" }}>
+    <EczanemPanelBaglantisi gruplar={menuGruplari} gezinmeAgaci={agac} onAnaSayfa={anaSayfayiAc} anaSayfaSecili={secim.tip === "tum" && !tumIceriklerSecili} onHesapSil={() => setSilmeModalAcik(true)}>
       <HataMesajiContainer mesajlar={mesajlar} />
-      <EczanemMusteriNavbar
-        ad={kullanici.adSoyad || kullanici.ad || "Müşteri"}
-        telefon={kullanici.telefon}
-        onCikis={cikisYap}
-        onHesapSil={() => setSilmeModalAcik(true)}
-      />
-      <main className="mx-auto flex w-full max-w-[1440px] items-start gap-6 px-4 py-5 md:px-6 md:py-7">
-        <EczanemMusteriSidebar
-          agac={agac}
-          secim={secim}
-          onSecim={setSecim}
-          mobilAcik={mobilDrawerAcik}
-          onMobilKapat={() => setMobilDrawerAcik(false)}
-          tetikleyiciRef={mobilTetikleyiciRef}
+      <div className="min-h-full bg-[var(--tema-yerel-eclub-sayfa-zemini-03)] pb-20 md:pb-8">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-3 py-4 md:gap-5 md:px-6 md:py-6">
+        <EczanemAnaSayfaUstBolum
+          key={kullanici.id}
+          kullaniciId={kullanici.id}
+          ad={musteriAd}
+          firmaAdi={seciliFirma?.firma_adi}
+          firmaId={seciliFirma?.firma_id}
+          eczaneId={seciliEczane?.eczane_id}
+          eczaneAdi={seciliEczane?.eczane_adi}
+          yeniIcerikler={videolar.filter(video => !video.izleme_basladi).length}
+          tamamlananlar={videolar.filter(video => video.izlendi).length}
+          iceriklerHazir={videoHazir}
+          yenileniyor={videoYukleniyor || videoYenileniyor}
+          yenilemeAnahtari={ustBolumYenileme}
+          onYenile={() => { setUstBolumYenileme(deger => deger + 1); return videolariCek(true); }}
         />
-        <div className="flex-1 min-w-0 flex flex-col gap-6">
-          {/* Mobilde İçerikler butonu */}
-          <div className="flex items-center md:hidden">
-            <button
-              ref={mobilTetikleyiciRef}
-              id="eczanem-mobil-icerikler-btn"
-              type="button"
-              aria-controls="eczanem-mobil-drawer"
-              aria-expanded={mobilDrawerAcik}
-              onClick={() => setMobilDrawerAcik(true)}
-              className="inline-flex items-center gap-2 rounded-xl border border-[var(--tema-yerel-eczanem-cizgi-33)] bg-[var(--tema-yerel-eczanem-kart-01)] px-3.5 py-2 text-xs font-black text-[var(--tema-yerel-eczanem-ana-metin-23)] shadow-sm transition hover:bg-[var(--tema-yerel-eczanem-sayfa-zemini-24)] active:bg-[var(--tema-yerel-eczanem-sayfa-zemini-25)]"
-            >
-              <Layers className="size-4 text-[var(--tema-yerel-eczanem-vurgu-metin-01)]" />
-              <span>İçerikler</span>
-            </button>
+        <EclubGecisKarti hata={hata} basari={basari} />
+        {videoHatasi && <div role="alert" className="rounded-2xl border border-[var(--tema-yerel-eczanem-islevsel-cizgi-17)] bg-[var(--tema-yerel-eczanem-islevsel-zemin-10)] px-4 py-3 text-xs font-bold text-[var(--tema-yerel-eczanem-islevsel-metin-08)]">{videoHatasi}{videoHazir ? " · Son başarılı içerik akışı gösteriliyor." : ""}<button type="button" disabled={videoYenileniyor} onClick={() => { void videolariCek(true); }} className="ml-3 underline underline-offset-2 disabled:opacity-50">{videoYenileniyor ? "Yenileniyor…" : "Tekrar dene"}</button></div>}
+        {videoYukleniyor && !videoHazir ? (
+          <EczanemRaflarSkeleton />
+        ) : !videoHazir ? null : seciliVideo ? (
+          <EczanemVideoOynatici video={seciliVideo} onKapat={() => { setSeciliVideo(null); router.push("/eczanem", { scroll: false }); void videolariCek(); }} onTamamlandi={() => { setUstBolumYenileme(deger => deger + 1); return videolariCek(); }} hata={hata} basari={basari} />
+        ) : (
+          <div className="flex flex-col gap-6">
+            {seciliFirma && seciliEczane && <EczanemUrunFiltresi key={JSON.stringify([seciliEczane.eczane_id, seciliFirma.firma_id])} eczaneId={seciliEczane.eczane_id} firma={seciliFirma} secim={secim} onSecim={setSecim} />}
+            <YayinTuruFiltresi secili={aktifYayinTuru} onSec={setAktifYayinTuru} sayilar={turSayilari} />
+            {filtrelenmisVideolar.length === 0 && secim.tip !== "tum" ? (
+              <div className="flex flex-col items-center justify-center gap-3.5 rounded-2xl border border-dashed border-[var(--tema-yerel-eczanem-cizgi-40)] bg-[var(--tema-yerel-eczanem-kart-01)] p-8 text-center shadow-sm">
+                <div className="flex size-11 items-center justify-center rounded-2xl bg-[var(--tema-yerel-eczanem-islevsel-zemin-32)] text-[var(--tema-yerel-eczanem-vurgu-metin-01)]">
+                  <Layers className="size-5" />
+                </div>
+                <p className="text-sm font-bold text-[var(--tema-yerel-eczanem-ana-metin-24)]">
+                  Bu kapsamda öğrenme içeriği bulunmuyor.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setSecim({ tip: "tum" })}
+                  className="inline-flex items-center gap-2 rounded-xl bg-[var(--tema-yerel-eczanem-vurgu-zemin-01)] px-4 py-2 text-xs font-black text-[var(--tema-yerel-eczanem-ters-metin-01)] shadow-sm transition hover:bg-[var(--tema-yerel-eczanem-islevsel-zemin-37)] active:bg-[var(--tema-yerel-eczanem-islevsel-zemin-38)]"
+                >
+                  <Layers className="size-3.5" />
+                  <span>Tüm İçerikler</span>
+                </button>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-6">
+                <EczanemVideoRafi baslik="Yeni Yayınlar" videolar={raflar.yeni_videolarim} bosMesaj="Yeni öğrenme içeriğiniz bulunmuyor." {...rafOrtak} />
+                <EczanemVideoRafi baslik="Yarım Kalanlar" videolar={raflar.yarim_biraktiklarim} bosMesaj="Yarım bıraktığınız öğrenme içeriği bulunmuyor." {...rafOrtak} />
+                <EczanemVideoRafi baslik="Tamamlananlar" videolar={raflar.en_son_izlediklerim} bosMesaj="Henüz tamamladığınız bir öğrenme içeriği bulunmuyor." {...rafOrtak} />
+                <EczanemVideoRafi baslik="En Çok Beğenilenler" videolar={raflar.en_cok_begenilenler} bosMesaj="Henüz müşteriler tarafından beğenilmiş bir öğrenme yayını bulunmuyor." {...rafOrtak} />
+                <EczanemVideoRafi baslik="En Çok Favorilenenler" videolar={raflar.en_cok_favorilenenler} bosMesaj="Henüz müşteriler tarafından favorilenmiş bir öğrenme yayını bulunmuyor." {...rafOrtak} />
+              </div>
+            )}
           </div>
-
-          <section className="relative overflow-hidden rounded-3xl bg-[linear-gradient(125deg,var(--tema-yerel-eczanem-eylem-zemin-11)_0%,var(--tema-yerel-eczanem-eylem-zemin-01)_56%,var(--tema-yerel-eczanem-eylem-zemin-12)_100%)] px-5 py-6 text-[var(--tema-yerel-eczanem-ters-metin-01)] shadow-[0_12px_32px_var(--tema-yerel-eczanem-golge-06)] md:px-8 md:py-8">
-            <div className="absolute -right-16 -top-24 size-64 rounded-full border-[32px] border-[var(--tema-yerel-eczanem-cizgi-35)]/5" /><div className="absolute -bottom-24 right-28 size-52 rounded-full bg-[var(--tema-yerel-eczanem-kart-01)]/5" />
-            <SayfaYenileBasligi className="relative"
-              altAksiyon={<TarihPill />}
-              ustBilgi={<p className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-[0.18em] text-[var(--tema-yerel-eczanem-yardimci-metin-41)]"><Sparkles className="size-3.5" /> Cogniti Eczanem</p>}
-              baslik={<h1 className="text-2xl font-black tracking-[-0.025em] md:text-3xl">{musteriAd ? `Merhaba ${musteriAd}` : "Merhaba"}</h1>}
-              aciklama={<p className="mt-2 max-w-xl text-xs font-semibold leading-5 text-[var(--tema-yerel-eczanem-ters-metin-01)]/78 md:text-sm md:leading-6">Eczanenizden gelen öğrenme içeriklerini inceleyin; size özel içerik akışınızı tek sayfada yönetin.</p>}
-              aksiyon={<YenileButonu yenileniyor={videoYukleniyor || videoYenileniyor} onYenile={() => videolariCek(true)} />}
-            />
-          </section>
-          <EclubGecisKarti hata={hata} basari={basari} />
-          {videoHatasi && <div className="rounded-2xl border border-[var(--tema-yerel-eczanem-islevsel-cizgi-17)] bg-[var(--tema-yerel-eczanem-islevsel-zemin-10)] px-4 py-3 text-xs font-bold text-[var(--tema-yerel-eczanem-islevsel-metin-08)]">{videoHatasi}{videoHazir ? " · Son başarılı içerik akışı gösteriliyor." : ""}</div>}
-          {videoYukleniyor && !videoHazir ? (
-            <div className="flex min-h-72 items-center justify-center gap-2 text-xs font-extrabold text-[var(--tema-yerel-eczanem-yardimci-metin-35)]"><span className="size-4 animate-spin rounded-full border-2 border-[var(--tema-yerel-eczanem-cizgi-08)] border-t-[var(--tema-yerel-eczanem-cizgi-09)]" /> Öğrenme içerikleri hazırlanıyor…</div>
-          ) : seciliVideo ? (
-            <EczanemVideoOynatici video={seciliVideo} onKapat={() => { setSeciliVideo(null); router.push("/eczanem", { scroll: false }); void videolariCek(); }} onTamamlandi={() => videolariCek()} hata={hata} basari={basari} />
-          ) : (
-            <div className="flex flex-col gap-6">
-              <EczanemKapsamBreadcrumb
-                agac={agac}
-                secim={secim}
-                onSecim={setSecim}
-              />
-              <YayinTuruFiltresi secili={aktifYayinTuru} onSec={setAktifYayinTuru} sayilar={turSayilari} />
-              {filtrelenmisVideolar.length === 0 && secim.tip !== "tum" ? (
-                <div className="flex flex-col items-center justify-center gap-3.5 rounded-2xl border border-dashed border-[var(--tema-yerel-eczanem-cizgi-40)] bg-[var(--tema-yerel-eczanem-kart-01)] p-8 text-center shadow-sm">
-                  <div className="flex size-11 items-center justify-center rounded-2xl bg-[var(--tema-yerel-eczanem-islevsel-zemin-32)] text-[var(--tema-yerel-eczanem-vurgu-metin-01)]">
-                    <Layers className="size-5" />
-                  </div>
-                  <p className="text-sm font-bold text-[var(--tema-yerel-eczanem-ana-metin-24)]">
-                    Bu kapsamda öğrenme içeriği bulunmuyor.
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => setSecim({ tip: "tum" })}
-                    className="inline-flex items-center gap-2 rounded-xl bg-[var(--tema-yerel-eczanem-vurgu-zemin-01)] px-4 py-2 text-xs font-black text-[var(--tema-yerel-eczanem-ters-metin-01)] shadow-sm transition hover:bg-[var(--tema-yerel-eczanem-islevsel-zemin-37)] active:bg-[var(--tema-yerel-eczanem-islevsel-zemin-38)]"
-                  >
-                    <Layers className="size-3.5" />
-                    <span>Tüm İçerikler</span>
-                  </button>
-                </div>
-              ) : (
-                <div className="flex flex-col gap-7">
-                  <EczanemVideoRafi baslik="Yeni Öğrenme İçeriklerim" videolar={raflar.yeni_videolarim} bosMesaj="Yeni öğrenme içeriğiniz bulunmuyor." {...rafOrtak} />
-                  <EczanemVideoRafi baslik="Yarım Bıraktıklarım" videolar={raflar.yarim_biraktiklarim} bosMesaj="Yarım bıraktığınız öğrenme içeriği bulunmuyor." {...rafOrtak} />
-                  <EczanemVideoRafi baslik="En Son Tamamladıklarım" videolar={raflar.en_son_izlediklerim} bosMesaj="Henüz tamamladığınız bir öğrenme içeriği bulunmuyor." {...rafOrtak} />
-                  <EczanemVideoRafi baslik="Cogniti’de En Çok Beğenilenler" videolar={raflar.en_cok_begenilenler} bosMesaj="Henüz müşteriler tarafından beğenilmiş bir öğrenme yayını bulunmuyor." {...rafOrtak} />
-                  <EczanemVideoRafi baslik="Cogniti’de En Çok Favorilenenler" videolar={raflar.en_cok_favorilenenler} bosMesaj="Henüz müşteriler tarafından favorilenmiş bir öğrenme yayını bulunmuyor." {...rafOrtak} />
-                  <EczanemVideoRafi baslik="En Çok Tamamlananlar" videolar={raflar.en_cok_izlenenler} bosMesaj="Henüz müşteriler tarafından tamamlanmış bir öğrenme içeriği bulunmuyor." {...rafOrtak} />
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      </main>
+        )}
+      </div>
+      </div>
       <AlertDialog open={silmeModalAcik} onOpenChange={(acik) => { if (!acik) silmeModaliniKapat(); }}><AlertDialogContent><form onSubmit={hesabimiSil}><AlertDialogHeader><AlertDialogTitle className="text-[var(--tema-yerel-eczanem-islevsel-metin-39)]">Hesabınızı silmek istediğinize emin misiniz?</AlertDialogTitle><AlertDialogDescription className="leading-6">Bu işlem geri alınamaz. Hesabınız, puanlarınız, siparişleriniz ve Cogniti’deki tüm kayıtlarınız kalıcı olarak silinir.</AlertDialogDescription></AlertDialogHeader><label className="mt-5 block text-xs font-extrabold text-[var(--tema-yerel-eczanem-yardimci-metin-42)]" htmlFor="hesap-silme-sifre">Mevcut şifreniz</label><Input id="hesap-silme-sifre" type="password" value={silmeSifresi} onChange={(event) => setSilmeSifresi(event.target.value)} autoComplete="current-password" required disabled={siliniyor} className="mt-2 h-10 focus-visible:border-[var(--tema-yerel-eczanem-islevsel-cizgi-22)] focus-visible:ring-[var(--tema-yerel-eczanem-islevsel-odak-02)]/20" placeholder="Şifrenizi girin" />{silmeHatasi && <div className="mt-3 rounded-xl border border-[var(--tema-yerel-eczanem-islevsel-cizgi-23)] bg-[var(--tema-yerel-eczanem-islevsel-zemin-39)] px-3 py-2 text-xs font-bold text-[var(--tema-yerel-eczanem-islevsel-metin-40)]">{silmeHatasi}</div>}<AlertDialogFooter className="mt-6"><AlertDialogCancel type="button" onClick={silmeModaliniKapat} disabled={siliniyor}>Vazgeç</AlertDialogCancel><Button type="submit" disabled={siliniyor || !silmeSifresi} className="bg-[var(--tema-yerel-eczanem-islevsel-zemin-16)] font-extrabold hover:bg-[var(--tema-yerel-eczanem-islevsel-zemin-17)]">{siliniyor ? "Siliniyor…" : "Evet, hesabımı sil"}</Button></AlertDialogFooter></form></AlertDialogContent></AlertDialog>
-    </div>
+    </EczanemPanelBaglantisi>
   );
 }
 
 export default function EczanemPanelPage() {
   return (
-    <Suspense fallback={<div className="flex min-h-screen items-center justify-center bg-[var(--tema-yerel-eczanem-sayfa-zemini-23)]"><span className="size-7 animate-spin rounded-full border-2 border-[var(--tema-yerel-eczanem-cizgi-39)] border-t-[var(--tema-yerel-eczanem-cizgi-02)]" aria-label="Sayfa yükleniyor" /></div>}>
+    <Suspense fallback={<EczanemAnaSayfaSkeleton />}>
       <EczanemPanelIcerik />
     </Suspense>
   );

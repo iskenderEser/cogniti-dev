@@ -44,7 +44,6 @@ interface EtkilesimSatiri {
   yayin_id: string;
   begeni_sayisi: number | string | null;
   favori_sayisi: number | string | null;
-  izlenme_sayisi: number | string | null;
   begeni_mi: boolean | null;
   favori_mi: boolean | null;
 }
@@ -256,7 +255,6 @@ export async function GET() {
         son_konum_saniye: izleme?.son_konum_saniye ?? 0,
         begeni_sayisi: Number(etkilesim?.begeni_sayisi ?? 0),
         favori_sayisi: Number(etkilesim?.favori_sayisi ?? 0),
-        izlenme_sayisi: Number(etkilesim?.izlenme_sayisi ?? 0),
         begeni_mi: Boolean(etkilesim?.begeni_mi),
         favori_mi: Boolean(etkilesim?.favori_mi),
       };

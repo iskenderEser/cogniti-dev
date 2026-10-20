@@ -23,7 +23,9 @@ const { default: GirisAltBilgileri } = await import("@/app/login/_components/Gir
 const { default: ModulDurumKarti } = await import("@/app/admin/_components/ModulDurumKarti");
 const { YayinKumandaPaneli } = await import("@/app/(panel)/yayin-yonetimi/_components/YayinKumandaPaneli");
 const { default: TakipStatKartlari } = await import("@/app/(panel)/eclub/hediye-takip/_components/TakipStatKartlari");
-const { default: EczanemMusteriNavbar } = await import("@/app/eczanem/_components/EczanemMusteriNavbar");
+const { TemaProvider } = await import("@/app/providers/TemaProvider");
+const { default: PanelNavbar } = await import("@/components/panel/PanelNavbar");
+const { default: EczanemProfilMenusu } = await import("@/app/eczanem/_components/EczanemProfilMenusu");
 const h = React.createElement;
 after(async () => { await dom.happyDOM.close(); });
 
@@ -175,29 +177,35 @@ test("çek ve sipariş takip özetlerinde sayılar, boş durum ve dört işlevse
   }
 });
 
-test("Eczanem müşteri profil ve mobil menüsü açıkken tema değişir; Escape ve sahte çıkış/silme callbacks korunur", async () => {
+test("Eczanem üye profili ortak navbar içinde iki temada açılır; masaüstü/mobil Escape, silme ve çıkış korunur", async () => {
   let exits = 0, deletes = 0;
-  const view = await mount(h(EczanemMusteriNavbar, { ad: "Örnek Üye", telefon: "00000001234", onCikis: () => { exits++; }, onHesapSil: () => { deletes++; } }));
+  const profilMenusu = h(EczanemProfilMenusu, { ad: "Örnek Üye", telefon: "00000001234", onHesapSil: () => { deletes++; } });
+  const view = await mount(h(TemaProvider, null, h(PanelNavbar, { adSoyad: "Örnek Üye", profilMenusu, onCikis: () => { exits++; } })));
   try {
-    const profile = view.container.querySelector('[aria-label="Profil ve hesap menüsü"]')!;
-    await click(profile);
-    const menu = view.container.querySelector('[role="menu"]')!;
-    assert.ok(menu);
-    for (const theme of ["mavi", "yesil"]) {
-      switchTheme(theme);
-      color(menu, "background-color", "#fff");
-      const destructive = menu.querySelector("button")!;
-      color(destructive, "color", "#bc2d0d"); color(destructive.querySelector("svg")!, "color", "#bc2d0d");
-      const badge = [...menu.querySelectorAll("span")].find(s => s.textContent?.includes("Eczanem Üyesi"))!;
-      color(badge, "background-color", theme === "mavi" ? "#fef2f2" : "#edf2e7");
+    const avatars = view.container.querySelectorAll<HTMLButtonElement>('[aria-label="Profil ve hesap menüsü"]');
+    assert.equal(avatars.length, 2);
+    for (const avatar of avatars) {
+      await click(avatar);
+      const menu = view.container.querySelector('[role="menu"]')!;
+      assert.ok(menu);
+      assert.match(menu.textContent!, /••• ••• 1234/);
+      assert.doesNotMatch(menu.textContent!, /00000001234/);
+      for (const theme of ["mavi", "yesil"]) {
+        switchTheme(theme);
+        color(menu, "background-color", theme === "mavi" ? "#ffffff" : "#fcfdf8");
+        color(menu.querySelector('[role="menuitem"]')!, "color", "#e24b4a");
+        const badge = [...menu.querySelectorAll("span")].find(s => s.textContent === "Eczanem Üyesi")!;
+        color(badge, "color", theme === "mavi" ? "#185fa5" : "#4f7254");
+        assert.equal(view.container.querySelector('[role="menu"]'), menu);
+      }
+      await act(async () => document.dispatchEvent(new dom.KeyboardEvent("keydown", { key: "Escape", bubbles: true })));
+      assert.equal(view.container.querySelector('[role="menu"]'), null);
+      assert.equal(document.activeElement, avatar);
     }
-    await click(menu.querySelector("button")!); assert.equal(deletes, 1); assert.equal(view.container.querySelector('[role="menu"]'), null);
-    await click(view.container.querySelector('[aria-label="Gezinme menüsünü aç"]')!);
-    const drawer = view.container.querySelector("#eczanem-mobil-drawer")!;
-    assert.ok(drawer);
-    for (const theme of ["mavi", "yesil", "mavi"]) { switchTheme(theme); assert.equal(view.container.querySelector("#eczanem-mobil-drawer"), drawer); assert.match(drawer.textContent!, /Örnek Üye/); }
-    await act(async () => document.dispatchEvent(new dom.KeyboardEvent("keydown", { key: "Escape", bubbles: true })));
-    assert.equal(view.container.querySelector("#eczanem-mobil-drawer"), null);
+    await click(avatars[0]);
+    await click(view.container.querySelector('[role="menuitem"]')!);
+    assert.equal(deletes, 1);
+    assert.equal(view.container.querySelector('[role="menu"]'), null);
     await click([...view.container.querySelectorAll("button")].find(b => b.textContent?.trim() === "Çıkış")!);
     assert.equal(exits, 1);
   } finally { await view.close(); }

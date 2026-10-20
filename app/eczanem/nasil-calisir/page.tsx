@@ -3,10 +3,9 @@
 import { useId, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, Coins, Play, RotateCcw, Store } from "lucide-react";
-import { useAuth } from "@/app/providers/AuthProvider";
-import { MUSTERI_ROLU } from "@/lib/utils/roller";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import EczanemMusteriNavbar from "../_components/EczanemMusteriNavbar";
+import EczanemPanelBaglantisi from "../_components/EczanemPanelBaglantisi";
+import { eczanemUyeMenusuOlustur } from "../_components/eczanemUyeMenusu";
 import styles from "@/components/panel/bilgi/bilgi.module.css";
 
 const ADIMLAR = [
@@ -41,22 +40,8 @@ const ADIMLAR = [
 ];
 
 export default function EczanemNasilCalisirPage() {
-  const { kullanici, yukleniyor, cikisYap } = useAuth();
-  const musteri = !!kullanici && kullanici.kimlik_turu === MUSTERI_ROLU;
-
   const [secili, setSecili] = useState(0);
   const sahneId = useId();
-
-  if (yukleniyor || !kullanici || !musteri) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-[var(--tema-yerel-eczanem-kart-01)]">
-        <span
-          className="size-7 animate-spin rounded-full border-2 border-[var(--tema-yerel-eczanem-cizgi-38)] border-t-[var(--tema-yerel-eczanem-vurgu-cizgi-01)]"
-          aria-label="Oturum yükleniyor"
-        />
-      </div>
-    );
-  }
 
   const adim = ADIMLAR[secili];
   const sonAdim = secili === ADIMLAR.length - 1;
@@ -64,13 +49,7 @@ export default function EczanemNasilCalisirPage() {
   const ilerlemeAciklamasi = sonAdim ? "Döngüyü yeniden başlat" : `${sonrakiAdim.baslik} adımını göster`;
 
   return (
-    <div className="min-h-screen bg-[var(--tema-yerel-eczanem-kart-01)]" style={{ fontFamily: "'Nunito', sans-serif" }}>
-      <EczanemMusteriNavbar
-        ad={kullanici.adSoyad || kullanici.ad || "Müşteri"}
-        telefon={kullanici.telefon}
-        onCikis={cikisYap}
-      />
-
+    <EczanemPanelBaglantisi gruplar={eczanemUyeMenusuOlustur()}>
       <div className={styles.zemin}>
         <section className={styles.sayfa} aria-label="Nasıl Çalışır?">
           <header>
@@ -272,6 +251,6 @@ export default function EczanemNasilCalisirPage() {
           </div>
         </section>
       </div>
-    </div>
+    </EczanemPanelBaglantisi>
   );
 }

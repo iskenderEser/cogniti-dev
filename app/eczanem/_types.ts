@@ -66,7 +66,6 @@ export interface EczanemMusteriVideo {
   son_konum_saniye: number;
   begeni_sayisi: number;
   favori_sayisi: number;
-  izlenme_sayisi: number;
   begeni_mi: boolean;
   favori_mi: boolean;
 }
@@ -77,7 +76,6 @@ export interface EczanemVideoRaflari {
   en_son_izlediklerim: EczanemMusteriVideo[];
   en_cok_begenilenler: EczanemMusteriVideo[];
   en_cok_favorilenenler: EczanemMusteriVideo[];
-  en_cok_izlenenler: EczanemMusteriVideo[];
 }
 
 export interface EczanemVideolarYaniti {
