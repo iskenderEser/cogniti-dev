@@ -10,8 +10,10 @@
 - Sol sidebar iki temada da ilgili sayfa zeminiyle aynı renkte. Navbar ve dil beyaz.
 - T-Club, E-Club ve C-Club lig bannerlarının zeminleri iki temada da mevcut mavi görünümdeki renklerini koruyor.
 - Kahverengi başlık denemesi geri alındı; önceki başlık renkleri kullanılıyor.
-- Hesap tercihi mevcut Supabase Auth metadata kaydında saklanıyor. Girişte hesabın kayıtlı tercihi öncelikli; kaydı yoksa tarayıcının son tercihi, o da yoksa mavi uygulanıyor.
-- Login ekranı tarayıcıda son kullanılan görünümü koruyor. Başka hesabın mevcut tercihi bununla değiştirilmez.
+- Hesap tercihi mevcut Supabase Auth metadata kaydında saklanıyor. **20 Ekim 2026 kullanıcı kararıyla** girişte hesabın kendi tercihi, kaydı yoksa varsayılan mavi uygulanır. Tarayıcının son rengi hesaba aktarılmaz; kullanıcı renk seçmeden hesap tercihi kaydedilmez.
+- Önceki akıştan kalan tercihler geçersizdir; bütün hesaplarda mavi başlangıç uygulanır. Yalnız yeni açık seçimle kaydedilen `hb_tema_surumu = 2` tercihi sonraki girişlerde kullanılır.
+- **20 Ekim 2026 güncellemesi:** Login tarayıcıda son açık seçilen renkle açılır; seçim yoksa varsayılan mavidir. Kullanıcının yeşil seçimi kendi tarayıcısında korunur. Girişten sonra hesabın geçerli tercihi, yoksa mavi uygulanır; tarayıcı rengi başka hesaba aktarılmaz veya kaydedilmez.
+- Eski ortak tarayıcı kaydı başlangıç rengi sayılmaz. Varsayılan açılış mavi; yalnız yeni açık seçimin ayrı `hb_tarayici_tema_secimi` kaydı sonraki açılış rengini belirler.
 - İş metrikleri ve hesaplamalar değiştirilmedi.
 
 ## Kontrol ve kabul

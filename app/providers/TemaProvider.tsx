@@ -1,15 +1,15 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
-import { MISAFIR_TEMA_ANAHTARI, VARSAYILAN_TEMA, temaGecerliMi, type Tema } from "@/lib/tema/temalar";
+import { createContext, useCallback, useContext, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { TARAYICI_TEMA_ANAHTARI, VARSAYILAN_TEMA, temaGecerliMi, type Tema } from "@/lib/tema/temalar";
 import { useAuth } from "@/app/providers/AuthProvider";
 
 type TemaBaglami = { tema: Tema; temaDegistir: (tema: Tema) => void };
 const TemaContext = createContext<TemaBaglami | null>(null);
 
-function misafirTemasiniOku(): Tema {
+function tarayiciTemasiniOku(): Tema {
   try {
-    const tema = window.localStorage.getItem(MISAFIR_TEMA_ANAHTARI);
+    const tema = window.localStorage.getItem(TARAYICI_TEMA_ANAHTARI);
     return temaGecerliMi(tema) ? tema : VARSAYILAN_TEMA;
   } catch {
     return VARSAYILAN_TEMA;
@@ -27,13 +27,6 @@ export function TemaProvider({ children }: { children: ReactNode }) {
   const uygula = useCallback((yeniTema: Tema) => {
     document.documentElement.setAttribute("data-tema", yeniTema);
     setTema(yeniTema);
-    try {
-      // Login ekranı bu tarayıcıda en son kullanılan görünümü korur.
-      window.localStorage.setItem(MISAFIR_TEMA_ANAHTARI, yeniTema);
-      return true;
-    } catch {
-      return false;
-    }
   }, []);
 
   const kaydet = useCallback((id: string, yeniTema: Tema, surum: number) => {
@@ -55,15 +48,19 @@ export function TemaProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
-  useEffect(() => {
-    const misafirTemasi = misafirTemasiniOku();
-    uygula(misafirTemasi);
-    if (yukleniyor) return;
+  useLayoutEffect(() => {
+    // Kimlik doğrulanırken veya hesap değişirken önceki hesabın rengi gösterilmez.
+    // Tarayıcı tercihi yalnız oturumsuz açılışta kullanılır; hesaba taşınmaz.
+    if (yukleniyor) {
+      uygula(kullaniciId ? VARSAYILAN_TEMA : tarayiciTemasiniOku());
+      return;
+    }
     kimlikRef.current = kullaniciId;
     let aktif = true;
     const surum = degisimRef.current;
 
     if (kullaniciId) {
+      uygula(VARSAYILAN_TEMA);
       void (async () => {
         try {
           const response = await fetch("/tema/api", { cache: "no-store" });
@@ -72,29 +69,35 @@ export function TemaProvider({ children }: { children: ReactNode }) {
           if (!response.ok || sonuc.kullanici_id !== kullaniciId || (sonuc.tema !== null && !temaGecerliMi(sonuc.tema))) {
             throw new Error("Tema okunamadı.");
           }
-          uygula(sonuc.tema ?? misafirTemasi);
-          if (sonuc.tema === null) kaydet(kullaniciId, misafirTemasi, surum);
+          // Tercihi olmayan hesaba tarayıcıdaki başka kullanıcının seçimi taşınmaz.
+          // Kalıcı kayıt yalnız kullanıcının temaDegistir eyleminden yapılır.
+          uygula(sonuc.tema ?? VARSAYILAN_TEMA);
         } catch {
           if (aktif && degisimRef.current === surum) window.alert("Tema tercihiniz yüklenemedi. Lütfen tekrar seçin.");
         }
       })();
+    } else {
+      uygula(tarayiciTemasiniOku());
     }
 
     return () => {
       aktif = false;
       kimlikRef.current = undefined;
     };
-  }, [kullaniciId, yukleniyor, uygula, kaydet]);
+  }, [kullaniciId, yukleniyor, uygula]);
 
   const temaDegistir = useCallback((yeniTema: Tema) => {
-    const tarayiciyaKaydedildi = uygula(yeniTema);
-    const surum = ++degisimRef.current;
-    if (kullaniciId) {
-      kaydet(kullaniciId, yeniTema, surum);
-    } else if (!tarayiciyaKaydedildi) {
-      window.alert("Tema tercihiniz bu tarayıcıda kaydedilemedi.");
+    if (!kullaniciId || yukleniyor) return;
+    uygula(yeniTema);
+    try {
+      // Yalnız açık seçim login görünümünü günceller; hesap okuması güncellemez.
+      window.localStorage.setItem(TARAYICI_TEMA_ANAHTARI, yeniTema);
+    } catch {
+      // Tarayıcı depolaması kapalı olsa da hesap tercihi sunucuda kaydedilir.
     }
-  }, [kullaniciId, uygula, kaydet]);
+    const surum = ++degisimRef.current;
+    kaydet(kullaniciId, yeniTema, surum);
+  }, [kullaniciId, yukleniyor, uygula, kaydet]);
 
   return <TemaContext.Provider value={{ tema, temaDegistir }}>{children}</TemaContext.Provider>;
 }

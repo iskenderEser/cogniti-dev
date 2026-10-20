@@ -3,6 +3,14 @@
 **Tarih:** 17 Ekim 2026  
 **Durum:** 2. adım tamamlandı; ilk giriş davranışı kullanıcı tarafından onaylandı. Kalıcı kayıt da [5. adımda uygulandı](CIFT_TEMA_ADIM5.md).
 
+**20 Ekim 2026 — Güncel kullanıcı kararı:** Tema her hesap için bağımsızdır. Tercihi olmayan hesap varsayılan maviyle açılır; giriş ekranının tarayıcı tercihi hesaba aktarılmaz veya otomatik kaydedilmez. Bu karar önceki ilk giriş kuralının yerini alır.
+
+**Eski tercihlerin geçersizleştirilmesi:** Eski `hb_tema` kayıtları otomatik aktarım ile gerçek kullanıcı seçimini ayırmadığı için geçerli tercih sayılmaz. Bütün hesaplar varsayılan maviyle başlar. Yalnız düzeltmeden sonra kullanıcının açık renk seçimiyle yazılan `hb_tema_surumu = 2` kaydı kabul edilir. Eski yeşil kayıt, aynı veya farklı tarayıcıdan girişte yeniden uygulanmaz. Bu işlem toplu hesap/veri silme veya kullanıcı kimliği değişikliği gerektirmez.
+
+**Giriş ekranı davranışı — 20 Ekim 2026:** Kullanıcı yeşil seçtiğinde kendi tarayıcısında `/login` yeşil açılır; açık mavi seçiminde mavi açılır. Tarayıcıda seçim yoksa varsayılan mavi uygulanır. Bu kayıt başka hesabın tercihi olarak uygulanmaz veya hesaba otomatik yazılmaz. Önceki “her zaman mavi” değişikliği kullanıcının talimatını yanlış yorumlayan uygulamaydı ve kaldırıldı.
+
+**Varsayılan açılış düzeltmesi:** Eski ortak `hb_misafir_tema` kaydı açılışta kullanılmaz. Açılış mavidir; yalnız bu düzeltmeden sonra yapılan açık seçim `hb_tarayici_tema_secimi` kaydına yazılır ve sonraki açılışta kullanılır. Böylece eski yeşil kayıt varsayılan maviyi ezmez, yeni açık yeşil seçim ise kullanıcının kendi tarayıcısında korunur.
+
 Çift tema planının 1. adımı ve mobil/tablet görünüm kontrolü olan 1,5. adımı kullanıcı tarafından tamamlandı. Bu belge yalnız 2. adımın davranış kurallarını kaydeder.
 
 ## Tercih kuralları
@@ -11,11 +19,12 @@
 |---|---|---|
 | Varsayılan görünüm | Mevcut `mavi` kimliği: kırık beyaz–mavi. İkinci seçenek `yesil`: sütlü kahve–yeşil. | Onaylanan iki görünümü ve mevcut varsayılanı korumak. |
 | Hesabın kayıtlı tercihi var | Girişten sonra hesap tercihi uygulanır; giriş öncesindeki tarayıcı tercihinden önceliklidir. | Kullanıcının kendi seçimini her cihazda kullanmak. |
-| Giriş öncesi kullanım | Login ekranı, kullanıcının B seçeneği onayıyla, bu tarayıcıda son kullanılan temayı korur. Böyle bir seçim yoksa mevcut varsayılan uygulanır. Giriş yapıldığında hesabın kayıtlı tercihi önceliklidir. | Giriş ekranında da kullanıcının son görünümünü korumak. |
+| Giriş öncesi kullanım | Login ekranı tarayıcıda son açık seçilen renkle açılır; seçim yoksa varsayılan mavi kullanılır. | Kullanıcının kendi tarayıcısındaki açılış seçimini korumak. |
 | Başka cihazdan değişiklik | Kullanıcı tercihini her cihazdan değiştirebilir. Son başarıyla kaydedilen tercih sonraki girişte veya sayfa yeniden açıldığında uygulanır. | Cihaz değişiminde hesabın güncel tercihini korumak. |
-| Aynı cihazda farklı hesaplar | Hesap kaydı doğrulanmış kimliğe bağlıdır. Login ekranı tarayıcının son görünümünü gösterir; başka hesabın kayıtlı tercihi bununla değiştirilmez. Henüz tercihi olmayan hesap için aşağıdaki ilk giriş kuralı geçerlidir. | Hesapların kayıtlarını ayrı tutmak. |
+| Aynı cihazda farklı hesaplar | Girişten sonra yalnız hesabın kendi geçerli tercihi, yoksa varsayılan mavi uygulanır. Tarayıcı açılış rengi hesaba aktarılmaz. Hesap okuması tarayıcı seçimini değiştirmez; yalnız açık seçim değiştirir. | Hesapların kayıtlarını ayrı tutmak. |
 | Kayıt başarısız | Tercih kalıcı olarak kaydedilmiş kabul edilmez; kullanıcıya bildirilir. | Kaydedilmeyen seçimin saklanmış gibi sunulmaması. |
-| Hesabın henüz kayıtlı tercihi yok | Kullanıcının onayladığı kural: Giriş öncesinde tarayıcıda seçtiği tema korunur; seçim yoksa varsayılan kırık beyaz–mavi uygulanır. | İlk girişte kullanıcının mevcut seçimini korumak. |
+| Hesabın henüz kayıtlı tercihi yok | Varsayılan kırık beyaz–mavi uygulanır. Tarayıcının son rengi hesaba aktarılmaz; kullanıcı renk seçmedikçe hesap tercihi yazılmaz. | Önceki kullanıcının seçiminin başka hesaba taşınmasını önlemek. |
+| Hesap tercihi yükleniyor veya okunamıyor | Varsayılan mavi gösterilir; önceki hesabın rengi kullanılmaz. Geçici görünüm login için saklanan tarayıcı kaydını değiştirmez. | Hesap geçişi ve okuma hatasında da renkleri bağımsız tutmak. |
 
 ## Koddan doğrulanan mevcut durum
 

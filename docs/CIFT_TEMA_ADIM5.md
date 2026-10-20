@@ -7,8 +7,9 @@
 
 - Hesaba ait tercih, mevcut Supabase Auth `user_metadata` alanındaki `hb_tema` anahtarında saklanıyor. Mevcut mobil karşılama tercihi de aynı metadata mekanizmasını kullanıyordu. Yeni tablo veya kolon gerekmedi.
 - `/tema/api` güncel hesabın tercihini okuyor. Yazma isteğinde oturum kimliğiyle istek sahibi karşılaştırılıyor; başka hesap kimliği reddediliyor. Sunucu yalnız `hb_tema` anahtarını güncelliyor; rol ve yetki bu tercihten belirlenmiyor.
-- Hesapta kayıt varsa tarayıcı tercihinden öncelikli. Kayıt yoksa onaylanan kurala göre giriş öncesi seçim, o da yoksa `mavi` uygulanıp hesaba kaydediliyor.
-- Login ekranı kullanıcının sonradan onayladığı B davranışını izliyor: `hb_misafir_tema` tarayıcı kaydı son kullanılan görünümü tutuyor. İçerideki seçim de bu görünümü güncelliyor; çıkışta login aynı temada kalıyor. Girişte hesabın kayıtlı tercihi öncelikli; farklı hesapların mevcut kayıtları değiştirilmez.
+- **20 Ekim 2026 güncellemesi:** Hesapta kayıt varsa kendi tercihi uygulanır. Kayıt yoksa `mavi` gösterilir; tarayıcı tercihi hesaba aktarılmaz ve otomatik kayıt yapılmaz. Kalıcı kayıt yalnız kullanıcının renk seçimiyle oluşur. Hesap yüklenirken/geçişinde varsayılan görünüm login için tutulan tarayıcı kaydını değiştirmez.
+- **Aynı gün tamamlanan eski kayıt düzeltmesi:** Önceki `hb_tema` değerleri geçersizdir. API yalnız yeni açık seçimle birlikte kaydedilen `hb_tema_surumu = 2` tercihlerini kabul eder. Eski yeşil kayıt bulunan üye ve eczacı dahil bütün hesaplar, yeniden seçim yapılana kadar varsayılan maviyi kullanır.
+- **20 Ekim 2026 giriş ekranı düzeltmesi:** Eski ortak `hb_misafir_tema` açılışta kullanılmaz; başlangıç mavidir. Kullanıcının bundan sonraki açık seçimi `hb_tarayici_tema_secimi` ile kendi tarayıcısında korunur. Hesap okuması veya varsayılan görünüm tarayıcı seçimini değiştirmez. Başka hesaba girişte yalnız o hesabın geçerli tercihi, yoksa varsayılan mavi uygulanır; tarayıcı rengi hesaba aktarılmaz veya otomatik yazılmaz.
 - Hızlı seçimler sıraya alınarak son seçimin en son kaydedilmesi sağlandı. Hesap değişiminde eski yükleme sonuçları uygulanmıyor ve bekleyen eski hesap işleri gönderilmiyor.
 - Kayıt/yükleme hatası kullanıcıya bildiriliyor. Başarısız kayıt kaydedilmiş kabul edilmiyor.
 
