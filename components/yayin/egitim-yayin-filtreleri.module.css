@@ -1,0 +1,42 @@
+.alan {
+  container: egitim-filtreleri / inline-size;
+  min-width: 0;
+  margin-bottom: 20px;
+}
+.urunler { min-width: 0; margin-bottom: 12px; }
+.urunler > div {
+  flex-wrap: nowrap;
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+.urunler button { white-space: nowrap; }
+.kontroller {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  width: fit-content;
+  max-width: 100%;
+  gap: 12px;
+  align-items: start;
+}
+.tur, .arama { min-width: 0; max-width: 100%; }
+.tur > div { vertical-align: top; }
+.arama { width: 100%; }
+.arama > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+}
+.arama > div > button { width: 100%; min-width: 0; }
+.arama input { width: 100%; }
+
+@container egitim-filtreleri (min-width: 480px) {
+  .arama > div { grid-template-columns: 160px minmax(0, 1fr); }
+}
+@container egitim-filtreleri (min-width: 1040px) {
+  .kontroller {
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr) 408px;
+    align-items: center;
+  }
+}

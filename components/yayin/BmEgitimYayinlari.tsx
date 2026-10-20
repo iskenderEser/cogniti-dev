@@ -3,13 +3,14 @@
 import { useAuth } from "@/app/providers/AuthProvider";
 import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
 import VideoOynatici from "@/components/izle/VideoOynatici";
-import { ListeArama, useListe, type AramaAlani } from "@/components/liste";
+import { useListe, type AramaAlani } from "@/components/liste";
+import EgitimYayinFiltreleri, { useEgitimUrunFiltresi } from "./EgitimYayinFiltreleri";
 import type { YayinTuruFiltreDegeri } from "@/components/ogrenme-araci/YayinTuruFiltresi";
 import SayfaRehberi from "@/components/rehber/SayfaRehberi";
 import { YenileButonu } from "@/components/ui/yenile-butonu";
 import BmOneriGonderimPaneli, { type BmOneriAlici, type BmOneriLimitler } from "@/components/yayin/BmOneriGonderimPaneli";
 import { useBmOneriSecimi } from "@/components/yayin/BmOneriSecimi";
-import { UttYayinKartIskeletleri, UttYayinListeAkisi, UttYayinTuruToggle } from "@/components/yayin/UttYayinListeOrtaklari";
+import { UttYayinKartIskeletleri, UttYayinListeAkisi } from "@/components/yayin/UttYayinListeOrtaklari";
 import { YayinKarti } from "@/components/yayin/YayinKarti";
 import { oneriTarihKurali } from "@/lib/tclub/oneri/tarihKurali";
 import { talepIdGoster } from "@/lib/utils/talepId";
@@ -43,6 +44,7 @@ export default function BmEgitimYayinlari({ kategoriBilgisi }: { kategoriBilgisi
   const [yenileTetik, setYenileTetik] = useState(0);
   const [aktifTur, setAktifTur] = useState<YayinTuruFiltreDegeri>("tumu");
   const [aktifYayin, setAktifYayin] = useState<YayindakiVideo | null>(null);
+  const [urunSecimi, setUrunSecimi] = useState<string | null>(null);
   const [alicilar, setAlicilar] = useState<BmOneriAlici[]>([]);
   const [limitler, setLimitler] = useState<BmOneriLimitler | null>(null);
   const [alicilarYukleniyor, setAlicilarYukleniyor] = useState(true);
@@ -56,6 +58,7 @@ export default function BmEgitimYayinlari({ kategoriBilgisi }: { kategoriBilgisi
   useEffect(() => {
     setAktifYayin(null);
     setAktifTur("tumu");
+    setUrunSecimi(null);
   }, [kategoriBilgisi.slug]);
 
   useEffect(() => { hataRef.current = hata; }, [hata]);
@@ -101,9 +104,10 @@ export default function BmEgitimYayinlari({ kategoriBilgisi }: { kategoriBilgisi
   const kategoriYayinlari = useMemo(() => yayinlar.filter((yayin) =>
     yayin.icerik_turu === kategoriBilgisi.icerikTuru && (!bmMi || yayin.hedef_roller.includes("utt"))
   ), [yayinlar, kategoriBilgisi.icerikTuru, bmMi]);
+  const { urunler, seciliUrun, urunYayinlari } = useEgitimUrunFiltresi(kategoriYayinlari, kategoriBilgisi.icerikTuru === "urun", urunSecimi);
   const turFiltreli = useMemo(() => aktifTur === "tumu"
-    ? kategoriYayinlari
-    : kategoriYayinlari.filter((yayin) => yayin.arac_turu === aktifTur), [kategoriYayinlari, aktifTur]);
+    ? urunYayinlari
+    : urunYayinlari.filter((yayin) => yayin.arac_turu === aktifTur), [urunYayinlari, aktifTur]);
   const liste = useListe({ veri: turFiltreli, adim: Infinity, aramaAlanlari: ARAMA_ALANLARI });
   const seciliYayinlar = yayinlar.filter((yayin) => seciliYayinIdleri.includes(yayin.yayin_id));
   const seciliAlici = alicilar.find((alici) => alici.kullanici_id === aliciId);
@@ -197,12 +201,10 @@ export default function BmEgitimYayinlari({ kategoriBilgisi }: { kategoriBilgisi
         <button type="button" onClick={() => setSonuc(null)} aria-label="Bilgi notunu kapat" className="shrink-0 rounded p-1 hover:bg-[var(--tema-yerel-ortak-sayfa-ortu-01)]/5"><X className="size-4" /></button>
       </div>}
 
-      <div className="mb-5 flex min-w-0 flex-wrap items-center justify-between gap-3">
-        <UttYayinTuruToggle yayinlar={kategoriYayinlari} deger={aktifTur} onDegistir={setAktifTur} className="min-w-0" />
-        <div className="ml-auto flex min-w-0 max-w-full items-center justify-end">
-          <ListeArama arama={liste.arama} ipucu="Bu kategoride ara..." genislik="w-48 sm:w-60" yukseklik="secim" />
-        </div>
-      </div>
+      <EgitimYayinFiltreleri
+        urunler={urunler} seciliUrun={seciliUrun} onUrunSec={setUrunSecimi}
+        yayinlar={urunYayinlari} aktifTur={aktifTur} onTurDegistir={setAktifTur} arama={liste.arama}
+      />
 
       {loading ? (
         <UttYayinKartIskeletleri izgaraClassName="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5" />
@@ -227,7 +229,7 @@ export default function BmEgitimYayinlari({ kategoriBilgisi }: { kategoriBilgisi
               <button type="button" onClick={() => setAktifYayin(yayin)} className="text-[10px] font-extrabold text-[var(--tema-hoyk-bm-onizleme)] hover:text-[var(--tema-hoyk-bm-secim-kontrolu)]">Önizle ↗</button>
             </div> : undefined}
           />}
-          sifirlamaAnahtari={`${kategoriBilgisi.slug}-${aktifTur}-${liste.arama.alanAnahtari}-${liste.arama.aranan}`}
+          sifirlamaAnahtari={`${kategoriBilgisi.slug}-${seciliUrun ?? "tumu"}-${aktifTur}-${liste.arama.alanAnahtari}-${liste.arama.aranan}`}
           bosMesaj={bosMesaj}
           masaustuIzgaraClassName="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
         />

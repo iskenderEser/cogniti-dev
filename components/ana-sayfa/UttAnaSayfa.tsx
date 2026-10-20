@@ -21,7 +21,8 @@ import {
 import SayfaRehberi from "@/components/rehber/SayfaRehberi";
 import type { YayinTuruFiltreDegeri } from "@/components/ogrenme-araci/YayinTuruFiltresi";
 import { useHbstoreTakvim } from "@/hooks/useHbstoreTakvim";
-import { useListe, ListeArama, type AramaAlani } from "@/components/liste";
+import { useListe, type AramaAlani } from "@/components/liste";
+import EgitimYayinFiltreleri, { useEgitimUrunFiltresi } from "@/components/yayin/EgitimYayinFiltreleri";
 import HayaletTanburSecici, { type TanburBolum } from "@/components/navigasyon/HayaletTanburSecici";
 import {
   UttYayinKartIskeletleri,
@@ -95,11 +96,13 @@ function KategoriYayinlariGoster({
   mesajlar: HataMesajiProps[];
 }) {
   const [aktifTur, setAktifTur] = useState<YayinTuruFiltreDegeri>("tumu");
+  const [urunSecimi, setUrunSecimi] = useState<string | null>(null);
+  const { urunler, seciliUrun, urunYayinlari } = useEgitimUrunFiltresi(kategoriVideolari, kategoriBilgisi.icerikTuru === "urun", urunSecimi);
 
   const turFiltreli = useMemo(() => {
-    if (aktifTur === "tumu") return kategoriVideolari;
-    return kategoriVideolari.filter((v) => v.arac_turu === aktifTur);
-  }, [kategoriVideolari, aktifTur]);
+    if (aktifTur === "tumu") return urunYayinlari;
+    return urunYayinlari.filter((v) => v.arac_turu === aktifTur);
+  }, [urunYayinlari, aktifTur]);
 
   const ARAMA_ALANLARI: AramaAlani<Video>[] = useMemo(
     () => [
@@ -136,22 +139,10 @@ function KategoriYayinlariGoster({
         </p>
       </header>
 
-      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <UttYayinTuruToggle
-          yayinlar={kategoriVideolari}
-          deger={aktifTur}
-          onDegistir={setAktifTur}
-          className="min-w-0"
-        />
-        <div className="flex shrink-0 items-center justify-end">
-          <ListeArama
-            arama={liste.arama}
-            ipucu="Bu kategoride ara..."
-            yukseklik="secim"
-            genislik="w-48 sm:w-60"
-          />
-        </div>
-      </div>
+      <EgitimYayinFiltreleri
+        urunler={urunler} seciliUrun={seciliUrun} onUrunSec={setUrunSecimi}
+        yayinlar={urunYayinlari} aktifTur={aktifTur} onTurDegistir={setAktifTur} arama={liste.arama}
+      />
 
       <UttYayinListeAkisi<Video>
         kayitlar={liste.gorunen}
@@ -164,7 +155,7 @@ function KategoriYayinlariGoster({
             onFavori={onFavori}
           />
         )}
-        sifirlamaAnahtari={`${kategoriBilgisi.slug}-${aktifTur}-${liste.arama.alanAnahtari}-${liste.arama.aranan}`}
+        sifirlamaAnahtari={`${kategoriBilgisi.slug}-${seciliUrun ?? "tumu"}-${aktifTur}-${liste.arama.alanAnahtari}-${liste.arama.aranan}`}
         bosMesaj={bosDurumMetni}
         masaustuIzgaraClassName="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
       />
@@ -367,6 +358,7 @@ export default function UttAnaSayfa({ user, rol, adSoyad, kategoriBilgisi, temel
 
     return (
       <KategoriYayinlariGoster
+        key={kategoriBilgisi.slug}
         kategoriBilgisi={kategoriBilgisi}
         kategoriVideolari={kategoriVideolari}
         onVideoClick={handleVideoClick}

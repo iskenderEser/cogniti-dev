@@ -106,8 +106,8 @@ test("Faz 3 mimari: YayindakiVideoBolumu MobilYayinAkisi kullanır ve masaüstü
   assert.match(yayindakiVideoBolumuKodu, /<MobilYayinAkisi<YayindakiVideo>/);
 });
 
-test("BM eğitim listesi kategori, tür ve arama değişimlerinde mobil listeyi sıfırlar", () => {
-  assert.match(bmEgitimKodu, /sifirlamaAnahtari=\{`\$\{kategoriBilgisi\.slug\}-\$\{aktifTur\}-\$\{liste\.arama\.alanAnahtari\}-\$\{liste\.arama\.aranan\}`\}/);
+test("BM eğitim listesi kategori, ürün, tür ve arama değişimlerinde mobil listeyi sıfırlar", () => {
+  assert.match(bmEgitimKodu, /sifirlamaAnahtari=\{`\$\{kategoriBilgisi\.slug\}-\$\{seciliUrun \?\? "tumu"\}-\$\{aktifTur\}-\$\{liste\.arama\.alanAnahtari\}-\$\{liste\.arama\.aranan\}`\}/);
 });
 
 // --------------------------------------------------------------------------
