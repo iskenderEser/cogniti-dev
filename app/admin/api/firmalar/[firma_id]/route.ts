@@ -131,6 +131,13 @@ export async function PATCH(
       );
     }
 
+    // Eczanem yalnız aynı firmanın E-Club'ı açıkken açılabilir.
+    if (guncelleme.eczanem_aktif === true && guncelleme.eclub_aktif === false) {
+      return validasyonHatasi("Eczanem’i açmak için önce E-Club’ı açın.", ["eclub_aktif", "eczanem_aktif"]);
+    }
+    // Üst modül kapanınca alt modül de kapanır; yeniden açılış otomatik değildir.
+    if (guncelleme.eclub_aktif === false) guncelleme.eczanem_aktif = false;
+
     // K-A6 — aktivasyon kilidi: firmada eksik bilgili kullanıcı varken firma
     // AKTİFLEŞTİRİLEMEZ; kim ve neden eksik, sebepli mesajla döner.
     if (guncelleme.aktif === true) {
@@ -146,13 +153,23 @@ export async function PATCH(
       }
     }
 
-    const { data: guncellenen, error } = await adminSupabase
+    let firmaGuncellemesi = adminSupabase
       .from("firmalar")
       .update(guncelleme)
-      .eq("firma_id", firma_id)
+      .eq("firma_id", firma_id);
+    // Kontrolü UPDATE'in içinde tut: eş zamanlı E-Club kapatması atlanamaz.
+    const eclubAcikOlmali = guncelleme.eczanem_aktif === true && guncelleme.eclub_aktif !== true;
+    if (eclubAcikOlmali) firmaGuncellemesi = firmaGuncellemesi.eq("eclub_aktif", true);
+    const { data: guncellenen, error } = await firmaGuncellemesi
       .select(FIRMA_KOLONLARI)
-      .single();
+      .maybeSingle();
 
+    if (!error && !guncellenen && eclubAcikOlmali) {
+      return validasyonHatasi("Eczanem’i açmak için önce E-Club’ı açın.", ["eclub_aktif"]);
+    }
+    if (error?.code === "23514" && error.message.includes("firmalar_eczanem_eclub_bagimliligi")) {
+      return validasyonHatasi("Eczanem’i açmak için önce E-Club’ı açın.", ["eclub_aktif"]);
+    }
     if (error) return hataYaniti("Firma durumu güncellenemedi.", "firmalar tablosu UPDATE — durum", error);
 
     const guncellenenKontrol = veriKontrol(guncellenen, "firmalar tablosu UPDATE — dönen veri", "Durum güncellendi ancak veri döndürülemedi.");
@@ -161,7 +178,9 @@ export async function PATCH(
     // Uygun mesajı belirle (tek alan güncellendiyse ona özel mesaj)
     let mesaj = "Firma durumu güncellendi.";
     const tekAlan = Object.keys(guncelleme).length === 1;
-    if (tekAlan && "aktif" in guncelleme) {
+    if (guncelleme.eclub_aktif === false && Object.keys(guncelleme).length === 2) {
+      mesaj = "E-Club ve Eczanem kapatıldı.";
+    } else if (tekAlan && "aktif" in guncelleme) {
       mesaj = guncelleme.aktif ? "Firma aktifleştirildi." : "Firma pasifleştirildi.";
     } else if (tekAlan && "hbstore_aktif" in guncelleme) {
       mesaj = guncelleme.hbstore_aktif ? "Mağaza açıldı." : "Mağaza kapatıldı.";

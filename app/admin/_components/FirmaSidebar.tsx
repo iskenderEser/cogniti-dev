@@ -36,16 +36,19 @@ function Switch({
   renk,
   onClick,
   baslik,
+  disabled = false,
 }: {
   acik: boolean;
   renk: string;
   onClick: () => void;
   baslik: string;
+  disabled?: boolean;
 }) {
   return (
     <button
       onClick={onClick}
       title={baslik}
+      disabled={disabled}
       style={{
         flexShrink: 0,
         width: "34px",
@@ -54,7 +57,8 @@ function Switch({
         border: "none",
         background: acik ? renk : "var(--tema-yerel-yonetim-sayfa-zemini-01)",
         position: "relative",
-        cursor: "pointer",
+        cursor: disabled ? "not-allowed" : "pointer",
+        opacity: disabled ? 0.5 : 1,
         padding: 0,
         transition: "background 0.15s",
       }}
@@ -287,7 +291,8 @@ export default function FirmaSidebar({
                       acik={f.eczanem_aktif}
                       renk="var(--tema-yerel-yonetim-islevsel-metin-05)"
                       onClick={() => handleEczanemToggle(f)}
-                      baslik={f.eczanem_aktif ? "Eczanem açık — kapatmak için tıkla" : "Eczanem kapalı — açmak için tıkla"}
+                      disabled={!f.eclub_aktif && !f.eczanem_aktif}
+                      baslik={f.eczanem_aktif ? "Eczanem açık — kapatmak için tıkla" : !f.eclub_aktif ? "Eczanem’i açmak için önce E-Club’ı açın" : "Eczanem kapalı — açmak için tıkla"}
                     />
                     Eczanem
                   </span>

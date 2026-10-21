@@ -5,8 +5,7 @@
 // İçerik yönetimi (görünürlük + müdahale katmanları) M4'te bu kartın altına
 // gelecek; kart o güne kadar sekmenin "boş ama dürüst" durumunu anlatır.
 //
-// acik === null → modülün firma bayrağı yok (T-Club ana modüldür, hep açık;
-// Eczanem bayrağı admin PATCH kapsamına M4'te eklenecek).
+// acik === null → modülün firma bayrağı yok (T-Club ana modüldür, hep açık).
 
 "use client";
 
@@ -17,6 +16,7 @@ interface ModulDurumKartiProps {
   aciklama: string;
   acik: boolean | null;
   toggleLoading?: boolean;
+  toggleDisabled?: boolean;
   onToggle?: () => void;
   // İçeriği henüz M4'te gelecek sekmelerde true (varsayılan); içerik
   // taşınmış sekmelerde (E-Club) false — not gösterilmez.
@@ -58,7 +58,7 @@ export default function ModulDurumKarti(p: ModulDurumKartiProps) {
         {p.acik !== null && p.onToggle && (
           <button
             onClick={p.onToggle}
-            disabled={p.toggleLoading}
+            disabled={p.toggleLoading || p.toggleDisabled}
             style={{
               padding: "6px 14px",
               background: p.acik ? "transparent" : RENK_BORDO,
@@ -67,7 +67,8 @@ export default function ModulDurumKarti(p: ModulDurumKartiProps) {
               fontSize: "12px",
               fontWeight: 700,
               color: p.acik ? "var(--tema-yerel-yonetim-yardimci-metin-01)" : "var(--tema-yerel-yonetim-ters-metin-01)",
-              cursor: p.toggleLoading ? "not-allowed" : "pointer",
+              cursor: p.toggleLoading || p.toggleDisabled ? "not-allowed" : "pointer",
+              opacity: p.toggleDisabled ? 0.5 : 1,
               fontFamily: "'Nunito', sans-serif",
             }}
           >

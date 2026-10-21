@@ -101,7 +101,7 @@ export async function GET() {
       cc_aktif = firma?.cc_aktif ?? false;
       eclub_aktif = firma?.eclub_aktif ?? false;
       eclub_store_aktif = firma?.eclub_store_aktif ?? false;
-      eczanem_aktif = firma?.eczanem_aktif ?? false;
+      eczanem_aktif = eclub_aktif && firma?.eczanem_aktif === true;
       logo_url = firma?.logo_url ?? null;
       ogrenme_platformu_aktif = firma?.ogrenme_platformu_aktif ?? false;
     }

@@ -187,10 +187,10 @@ export const PANEL_NAV: NavGrup[] = [
   {
     baslik: "Eczanem",
     oglar: [
-      { etiket: "Eczanem Yayınları", path: "/eczanem/yayinlar",   tamEslesme: true, gate: (c) => c.eczanemAcik && TUKETICI_ROLLER.includes(c.rolKucu) },
-      { etiket: "Mutabakat", path: "/eczanem/utt/mutabakat", tamEslesme: true, gate: (c) => c.eczanemAcik && TUKETICI_ROLLER.includes(c.rolKucu) },
-      { etiket: "Mutabakat Takip", path: "/eczanem/bm/mutabakat-takip", tamEslesme: true, gate: (c) => c.eczanemAcik && c.rolKucu === "bm" },
-      { etiket: "Mutabakat Takip", path: "/eczanem/tm/mutabakat-takip", tamEslesme: true, gate: (c) => c.eczanemAcik && c.rolKucu === "tm" },
+      { etiket: "Eczanem Yayınları", path: "/eczanem/yayinlar",   tamEslesme: true, gate: (c) => c.eclubAcik && c.eczanemAcik && TUKETICI_ROLLER.includes(c.rolKucu) },
+      { etiket: "Mutabakat", path: "/eczanem/utt/mutabakat", tamEslesme: true, gate: (c) => c.eclubAcik && c.eczanemAcik && TUKETICI_ROLLER.includes(c.rolKucu) },
+      { etiket: "Mutabakat Takip", path: "/eczanem/bm/mutabakat-takip", tamEslesme: true, gate: (c) => c.eclubAcik && c.eczanemAcik && c.rolKucu === "bm" },
+      { etiket: "Mutabakat Takip", path: "/eczanem/tm/mutabakat-takip", tamEslesme: true, gate: (c) => c.eclubAcik && c.eczanemAcik && c.rolKucu === "tm" },
     ],
   },
 ];
@@ -248,9 +248,9 @@ export function eclubKisiNavOlustur(firmalar: EclubGezinmeFirmasi[]): NavGrup[] 
   {
     baslik: "Eczanem",
     oglar: [
-      { etiket: "Üyeler",          path: "/eczanem/eczane/uyeler", gate: (c) => c.eczanemAcik },
-      { etiket: "Üye Yayınları",    path: "/eczanem/eczane/uye-yayinlari", badgeKey: "eczanem_video_gonderilecek", gate: (c) => c.eczanemAcik },
-      { etiket: "İndirim Onayı",    path: "/eczanem/eczane/indirim-onayi", badgeKey: "eczanem_siparis_bekleyen", gate: (c) => c.eczanemAcik },
+      { etiket: "Üyeler",          path: "/eczanem/eczane/uyeler", gate: (c) => c.eclubAcik && c.eczanemAcik },
+      { etiket: "Üye Yayınları",    path: "/eczanem/eczane/uye-yayinlari", badgeKey: "eczanem_video_gonderilecek", gate: (c) => c.eclubAcik && c.eczanemAcik },
+      { etiket: "İndirim Onayı",    path: "/eczanem/eczane/indirim-onayi", badgeKey: "eczanem_siparis_bekleyen", gate: (c) => c.eclubAcik && c.eczanemAcik },
     ],
   },
   ];

@@ -33,7 +33,7 @@ export async function GET(request: Request) {
     let firmaSorgusu = admin.from("firmalar")
       .select("firma_id").eq("firma_id", hedefFirma).eq("aktif", true);
     // Platform tanıtımı firma modülüne bağlı değildir; seçili firma kendi modül kapısından geçer.
-    if (firmaId) firmaSorgusu = firmaSorgusu.eq("eczanem_aktif", true);
+    if (firmaId) firmaSorgusu = firmaSorgusu.eq("eclub_aktif", true).eq("eczanem_aktif", true);
     const { data: firma, error: firmaHatasi } = await firmaSorgusu.maybeSingle();
     if (firmaHatasi) return hataYaniti("Ana sayfa görselleri okunamadı.", "Eczanem banner firması SELECT", firmaHatasi);
     if (!firma) return NextResponse.json({ bannerlar: [] }, { headers: { "Cache-Control": "no-store" } });

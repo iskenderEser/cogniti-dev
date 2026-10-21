@@ -33,7 +33,7 @@ export function eclubKisiModulDurumu(firmalar: EclubFirmaModulSatiri[]) {
   return {
     eclub_aktif: eclubFirmalari.length > 0,
     eclub_store_aktif: eclubFirmalari.some((firma) => firma.eclub_store_aktif === true),
-    eczanem_aktif: aktifFirmalar.some((firma) => firma.eczanem_aktif === true),
+    eczanem_aktif: eclubFirmalari.some((firma) => firma.eczanem_aktif === true),
   };
 }
 

@@ -1,4 +1,5 @@
-// Eczanem firma kapısının tek kaynağı. Firma toggle'ı yalnız arayüz görünürlüğü
+// Eczanem firma kapısının tek kaynağı. Aynı firmada E-Club da açık olmalıdır.
+// Firma toggle'ı yalnız arayüz görünürlüğü
 // değildir: iç kullanıcı kendi firmasından, eczacı aktif eczane→firma bağından,
 // müşteri ise aktif üyelik→eczane→firma zincirinden doğrulanır.
 
@@ -39,6 +40,7 @@ async function acikFirmaIdleri(
     .select("firma_id")
     .in("firma_id", tekil)
     .eq("aktif", true)
+    .eq("eclub_aktif", true)
     .eq("eczanem_aktif", true);
 
   if (error) return { ok: false, firmaIdler: [], hata: "Eczanem firma erişimi doğrulanamadı." };

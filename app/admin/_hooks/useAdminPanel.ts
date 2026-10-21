@@ -176,12 +176,13 @@ export function useAdminPanel() {
       hata(data.hata ?? "E-Club durumu güncellenemedi.", data.adim, data.detay);
       return;
     }
-    basari(yeniDurum ? "E-Club açıldı." : "E-Club kapatıldı.");
+    basari(data.mesaj ?? (yeniDurum ? "E-Club açıldı." : "E-Club ve Eczanem kapatıldı."));
+    const guncellenenFirma: Firma = data.firma;
     setFirmalar(prev =>
-      prev.map(x => (x.firma_id === f.firma_id ? { ...x, eclub_aktif: yeniDurum } : x))
+      prev.map(x => (x.firma_id === f.firma_id ? { ...x, ...guncellenenFirma } : x))
     );
     setSeciliFirma(prev =>
-      prev && prev.firma_id === f.firma_id ? { ...prev, eclub_aktif: yeniDurum } : prev
+      prev && prev.firma_id === f.firma_id ? { ...prev, ...guncellenenFirma } : prev
     );
     } catch (err) {
       // B-32: ağ hatasında sessiz çökme yok — kullanıcı bilgilendirilir.
@@ -221,6 +222,10 @@ export function useAdminPanel() {
   const handleEczanemToggle = async (f: Firma) => {
     try {
     const yeniDurum = !f.eczanem_aktif;
+    if (yeniDurum && !f.eclub_aktif) {
+      hata("Eczanem’i açmak için önce E-Club’ı açın.");
+      return;
+    }
     const res = await fetch(`/admin/api/firmalar/${f.firma_id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -232,11 +237,12 @@ export function useAdminPanel() {
       return;
     }
     basari(yeniDurum ? "Eczanem açıldı." : "Eczanem kapatıldı.");
+    const guncellenenFirma: Firma = data.firma;
     setFirmalar(prev =>
-      prev.map(x => (x.firma_id === f.firma_id ? { ...x, eczanem_aktif: yeniDurum } : x))
+      prev.map(x => (x.firma_id === f.firma_id ? { ...x, ...guncellenenFirma } : x))
     );
     setSeciliFirma(prev =>
-      prev && prev.firma_id === f.firma_id ? { ...prev, eczanem_aktif: yeniDurum } : prev
+      prev && prev.firma_id === f.firma_id ? { ...prev, ...guncellenenFirma } : prev
     );
     } catch (err) {
       // B-32: ağ hatasında sessiz çökme yok — kullanıcı bilgilendirilir.

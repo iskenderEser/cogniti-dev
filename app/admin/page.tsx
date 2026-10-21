@@ -255,8 +255,9 @@ export default function AdminPanel() {
                   baslik="Eczanem"
                   acik={f.eczanem_aktif}
                   onToggle={() => admin.handleEczanemToggle(f)}
+                  toggleDisabled={!f.eclub_aktif && !f.eczanem_aktif}
                   m4NotuGoster={false}
-                  aciklama="Eczanenin üyelerinin bilgilenme modülü — davetler, gönderimler, üyeler, siparişler ve tarifeler. Kapalıyken bu firmanın eczacı/teknisyenleri Eczanem sekmesini görmez."
+                  aciklama="Eczanenin üyelerinin bilgilenme modülü — davetler, gönderimler, üyeler, siparişler ve tarifeler. Yalnız E-Club açıkken açılabilir. E-Club kapatılınca Eczanem de kapanır; E-Club yeniden açıldığında Eczanem ayrıca açılmalıdır."
                 />
                 <EczanemBannerYonetimi key={`${f.firma_id}-uye-bannerlari`} firmaId={f.firma_id} firmaAdi={f.firma_adi} />
                 <EczanemUyeYonetimi key={f.firma_id} firmaId={f.firma_id} firmaAdi={f.firma_adi} />
