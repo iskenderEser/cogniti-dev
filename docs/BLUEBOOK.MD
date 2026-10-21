@@ -91,7 +91,7 @@ Platform **Video** (`video`), **Podcast** (`podcast`), **Dijital Broşür** (`go
   6. **HBStore:** `/store/*` rotaları rol kapsamı ve `hbstore_aktif` firma bayrağıyla korunur.
   7. **E-Club Store:** `/eclub/store/*` ve `/eclub/siparisler/*`, iç kullanıcıda firma; E-Club kullanıcısında aktif eczane–firma ilişkileri ve `eclub_store_aktif` üzerinden korunur.
   8. **E-Club:** `/eclub/*`, kimlik türüne göre firma veya aktif eczane–firma ilişkileri ve `eclub_aktif` üzerinden korunur.
-  9. **Eczanem:** `/eczanem/*`, UTT/KD_UTT, E-Club kullanıcısı ve Eczanem uygulaması üyesi dallarını rol ile ilişki zincirine göre ayırır; ilgili firmaların `eczanem_aktif` bayrağını doğrular.
+  9. **Eczanem:** `/eczanem/*`, UTT/KD_UTT, E-Club kullanıcısı ve Eczanem uygulaması üyesi dallarını rol ile ilişki zincirine göre ayırır; aynı aktif firmanın hem `eclub_aktif` hem `eczanem_aktif` bayrağını doğrular.
 * **Firma Modül Bayrakları:** `cc_aktif`, `hbstore_aktif`, `eclub_aktif`, `eclub_store_aktif` ve `eczanem_aktif` yalnız arayüz görünürlüğünü değil, ilgili sayfa ve API erişimini de sınırlar.
 * **Katmanlı Savunma:** Proxy kapısından sonra hassas route handler'ları kimlik, rol, firma, takım, bölge, eczane ve kayıt sahipliği kontrollerini kendi işlem kapsamlarında tekrarlar. `rolCozucu`, `eclubKisiErisimi` ve `eczanemRolErisimi` ortak erişim kaynaklarıdır; atomik RPC'ler ile veritabanı kısıtları yazma bütünlüğünün son katmanını oluşturur.
 
@@ -213,6 +213,12 @@ Bu kayıt canlı veritabanı doğrulaması değildir. `scripts/denetim/sema.json
 
 # 4. BÖLÜM: ECZANEM (Üye Öğrenme, Puan ve Eczane İşlem Katmanı)
 *Eczanem Uygulaması Üyeleri İçin Öğrenme İçeriği ve Eczane Bağlantılı Platform İşlemleri*
+
+**21 Ekim 2026 — E-Club bağımlılığı:** Eczanem yalnız aynı firmada E-Club açıkken açılabilir. E-Club kapatıldığında Eczanem de aynı admin güncellemesinde kapatılır; E-Club yeniden açıldığında Eczanem ayrıca açılmalıdır. Eczanem'in kapatılması E-Club'ı kapatmaz. Farklı firmaların açık bayrakları birleştirilmez; başka bir bağlı firmada ikisi de açıksa o firmanın kapsamı korunur. Admin anahtarları, profil/menü, üye bannerı ve ortak sunucu erişimi bu kurala bağlandı. Önceden tutarsız kaydedilmiş bayraklar da sunucuda erişim vermez.
+
+**Veritabanı kurulumu bekliyor:** `scripts/sql/eczanem_eclub_modul_bagimliligi.sql`, mevcut E-Club kapalı/Eczanem açık firma bayraklarını kapatır; doğrudan yazımlar için CHECK kısıtı ve E-Club kapanışında Eczanem'i kapatan trigger kurar. Üyelik, puan ve işlem kayıtlarını silmez. SQL canlı veritabanında çalıştırılmadı; başarı sonucu görülmeden veritabanı koruması kurulmuş sayılmaz. Uygulama ve sahte bağımlılıklı testlerin geçmesi PostgreSQL'de SQL kurulumu veya gerçek tarayıcı doğrulaması değildir.
+
+**Yerel doğrulama:** İlgili yedi test dosyasında 31/31 test başarılı. Dört bayrak kombinasyonu, ilgili roller, çok firmalı izolasyon, menüler, admin API'si, koşullu güncellemenin kapanış yarışı, admin anahtarlarının React durum güncellemesi ve üye bannerı kapsamı sınandı. Değişen dosyaların ESLint kontrolü başarılı. PostgreSQL çalıştırıcısı bulunmadığından kurulum SQL'i yerel PostgreSQL'de de çalıştırılmadı; bu SQL için yürütme başarısı iddiası yoktur. Ağ bağlantısı ve gerçek modül değişikliği yapılmadı.
 
 ### 1. Aşama: Rol ve Görev Tanımları
 * **Ortak Üye Sayfa Kabuğu — 20 Ekim 2026:** `/eczanem`, `/eczanem/puanlarim`, üye `/nedir` ve `/eczanem/nasil-calisir`, `EczanemPanelBaglantisi` üzerinden iç kullanıcılarla aynı `components/panel/PanelKabugu.tsx` bileşenine bağlıdır. Navbar `PanelNavbar`, masaüstü sol menü `SolListe`, mobil menü `MobilDrawer` ile çizilir; ayrı üye navbar/sidebar bileşenleri kaldırılmıştır. Masaüstü sol menü 240 px genişliğindedir; menü ve ana içerik ayrı kayar. Üye ortak renk anahtarıyla kendi temasını değiştirebilir. Ana sayfada Merhaba, seçili eczane veya öne çıkarılan firma başlığı; Yenile, tarih, banner rafı ve E-Club ile ortak üç özet kartı bulunur. İlk yüklemede sayfa/raf/banner iskeletleri gösterilir; yenilemede aynı kapsamın mevcut içeriği korunur.

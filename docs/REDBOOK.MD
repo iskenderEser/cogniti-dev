@@ -8,6 +8,8 @@
 
 ### Kasada Bekleyen Geliştirmeler
 
+- **Eczanem–E-Club bağımlılığının veritabanı kurulumu.** Uygulama erişimi ve admin aç/kapat işlemleri aynı firmada iki modülün açık olmasını zorunlu kılacak şekilde düzeltildi. `scripts/sql/eczanem_eclub_modul_bagimliligi.sql` hazırlanmıştır; canlıda çalıştırılmadı. SQL, tutarsız mevcut bayrakları kapatır, CHECK ve kapanış trigger'ını kurar. Kullanıcı başarı sonucunda `sql_sonucu=TAMAMLANDI`, `tutarsiz_firma_sayisi=0`, `kisit_mevcut=true`, `tetikleyici_mevcut=true` değerlerini doğrulamadan bu iş kapanmış sayılmaz. *21 Ekim 2026.*
+
 - **HBStore: dönemlik kullanım.** Mağaza kullanımını takvim çeyreklerine göre düzenle. Önceden belirtilen kurgu: her dönemin son haftasında açık; dönemin son günü 23:59'da kapanır ve sonraki dönemin son haftasında yeniden açılır.
 - **E-Club Store: aylık kullanım.** Mağaza kullanımını aylık olarak düzenle. Ay içindeki açılış/kapanış günleri henüz belirlenmedi.
 
