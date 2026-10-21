@@ -8,13 +8,13 @@ import { PLATFORM_FIRMA_ID } from "@/lib/eclub/banner";
 const firmaId = "11111111-1111-4111-8111-111111111111";
 const eczaneId = "22222222-2222-4222-8222-222222222222";
 function ortam() {
-  const durum = { user: { id: "uye" } as { id: string } | null, kimlik: true, firma: true, bag: true, eczaneIdler: [eczaneId], firmaIdler: [firmaId], hata: null as { code: string } | null };
+  const durum = { user: { id: "uye" } as { id: string } | null, kimlik: true, firma: true, eclub: true, bag: true, eczaneIdler: [eczaneId], firmaIdler: [firmaId], hata: null as { code: string } | null };
   const sorgular: Array<[string, unknown]> = [], okumalar: Array<[string, string]> = [];
   const json = (veri: unknown, options?: ResponseInit) => Response.json(veri, options);
   const admin = { from: (tablo: string) => {
     sorgular.push(["from", tablo]);
     const filtreler: Record<string, unknown> = {};
-    const chain = { select: (alan: string) => { sorgular.push(["select", alan]); return chain; }, eq: (alan: string, deger: unknown) => { sorgular.push([alan, deger]); filtreler[alan] = deger; return chain; }, maybeSingle: async () => ({ data: (tablo === "firmalar" ? durum.firma : durum.bag) ? { firma_id: filtreler.firma_id } : null, error: null }) };
+    const chain = { select: (alan: string) => { sorgular.push(["select", alan]); return chain; }, eq: (alan: string, deger: unknown) => { sorgular.push([alan, deger]); filtreler[alan] = deger; return chain; }, maybeSingle: async () => ({ data: (tablo === "firmalar" ? durum.firma && (filtreler.eclub_aktif !== true || durum.eclub) : durum.bag) ? { firma_id: filtreler.firma_id } : null, error: null }) };
     return chain;
   } };
   const modules: Record<string, unknown> = {
@@ -45,6 +45,14 @@ test("firma bannerı yalnız seçili aktif eczane–firma kapsamında okunur", a
   assert.deepEqual(o.okumalar, [[firmaId, "uye-ana-sayfa"]]);
   assert.ok(o.sorgular.some(([alan, deger]) => alan === "eczanem_aktif" && deger === true));
   assert.deepEqual(o.sorgular.slice(0, 5), [["from", "eclub_eczane_firma"], ["select", "firma_id"], ["eczane_id", eczaneId], ["firma_id", firmaId], ["aktif_mi", true]]);
+});
+
+test("E-Club kapalı firmanın üye bannerı okunmaz; genel platform bannerı korunur", async () => {
+  const o = ortam(); o.durum.eclub = false;
+  assert.deepEqual(await (await o.GET(`?firma_id=${firmaId}&eczane_id=${eczaneId}`)).json(), { bannerlar: [] });
+  assert.equal(o.okumalar.length, 0);
+  assert.equal((await o.GET()).status, 200);
+  assert.deepEqual(o.okumalar, [[PLATFORM_FIRMA_ID, "uye-ana-sayfa"]]);
 });
 
 test("oturumsuz ve yetkisiz eczane/firma istekleri banner okuyamaz; başka eczanedeki firma bağı yetmez", async () => {
