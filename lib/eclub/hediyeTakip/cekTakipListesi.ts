@@ -15,7 +15,7 @@ import type { CekTalepDurumu, SatisSartiTipi } from "@/lib/eclub/store/eclubStor
 import { ECLUB_TUKETICI_ROLLERI, type EclubKisiRol } from "@/lib/utils/roller";
 import { trGunEkle } from "@/lib/zaman/kontrol";
 import { OGRENME_ARACI_TURLERI, type OgrenmeAraciTuru } from "@/lib/ogrenmeAraci/tipler";
-import { talepIdGoster } from "@/lib/utils/talepId";
+import { yayin_kodu } from "@/lib/utils/yayinKodu";
 
 interface HamTalep {
   talep_id: string;
@@ -188,9 +188,9 @@ export async function cekTakipTalepleriniGetir(
 
   const urunAdlari = new Map((urunSonucu.data ?? []).map((urun) => [urun.urun_id, urun.urun_adi]));
   const gorunenUrunIdleri = new Map((urunSonucu.data ?? []).map((urun) => [urun.urun_id, urun.gorunen_urun_id]));
-  const gorunenTalepIdleri = new Map((yayinSonucu.data ?? []).map((yayin) => [
+  const yayinKodlari = new Map((yayinSonucu.data ?? []).map((yayin) => [
     yayin.yayin_id,
-    talepIdGoster(yayin.firma_adi, yayin.talep_no),
+    yayin_kodu(yayin.firma_adi, yayin.talep_no),
   ]));
   const eczaneAdlari = new Map((eczaneSonucu.data ?? []).map((eczane) => [eczane.gln, eczane.eczane_adi]));
   const kullaniciAdlari = new Map((kullaniciSonucu.data ?? []).map((kullanici) => [
@@ -245,7 +245,7 @@ export async function cekTakipTalepleriniGetir(
       },
       ogrenme_araci: {
         tur: ogrenmeAraciTuru(kunye?.arac_turu),
-        gorunen_talep_id: gorunenTalepIdleri.get(talep.yayin_id) ?? null,
+        yayin_kodu: yayinKodlari.get(talep.yayin_id) ?? null,
       },
       odul_kosulu: {
         siparis_tipi: talep.siparis_tipi,

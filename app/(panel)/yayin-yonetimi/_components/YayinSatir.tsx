@@ -14,7 +14,7 @@ import type { Soru } from "@/app/(panel)/talepler/_types";
 import type { HesaplananTur } from "@/lib/tclub/tur/kayit";
 import { HedefRolPilleri } from "@/components/pill";
 import { yalnizEclubHedefliMi } from "@/lib/utils/roller";
-import { talepIdGoster } from "@/lib/utils/talepId";
+import { yayin_kodu } from "@/lib/utils/yayinKodu";
 import { ureticiDurumMesaji, yayinDurumKodu } from "@/lib/utils/durum/mesaj";
 import { yayinThumbnailIstemciCoz } from "@/lib/ogrenmeAraci/thumbnailIstemci";
 import { VideoThumb } from "./Yardimcilar";
@@ -93,13 +93,13 @@ export function YayinSatir({
     const resimGoster = Boolean(thumbnail && hataliThumbnail !== thumbnail);
 
     return (
-      <article className="self-start overflow-hidden rounded-xl border border-[var(--tema-yerel-uretim-cizgi-36)] bg-[var(--tema-yerel-uretim-kart-01)] shadow-sm transition-all hover:-translate-y-0.5 hover:border-[var(--tema-yerel-uretim-cizgi-47)] hover:shadow-[0_10px_24px_var(--tema-yerel-uretim-golge-08)]">
+      <article className="flex flex-col overflow-hidden rounded-xl sm:h-full border border-[var(--tema-yerel-uretim-cizgi-36)] bg-[var(--tema-yerel-uretim-kart-01)] shadow-sm transition-all hover:-translate-y-0.5 hover:border-[var(--tema-yerel-uretim-cizgi-47)] hover:shadow-[0_10px_24px_var(--tema-yerel-uretim-golge-08)]">
         <button
           type="button"
           onClick={handleOnizle}
           disabled={!tiklanabilir}
           aria-label={tiklanabilir ? `${y.urun_adi} ${etiket.toLowerCase()} önizle` : "Önizleme bulunmuyor"}
-          className="group relative block aspect-video w-full overflow-hidden bg-[var(--tema-yerel-uretim-secim-zemin-14)] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--tema-yerel-uretim-odak-01)] disabled:cursor-default"
+          className="group relative block aspect-video w-full shrink-0 overflow-hidden bg-[var(--tema-yerel-uretim-secim-zemin-14)] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--tema-yerel-uretim-odak-01)] disabled:cursor-default"
         >
           {resimGoster ? (
             <img
@@ -158,7 +158,7 @@ export function YayinSatir({
           </div>
 
           <div className="flex items-center justify-between gap-2 text-[10px] text-[var(--tema-yerel-uretim-yardimci-metin-36)]">
-            <span className="truncate font-mono text-[var(--tema-yerel-uretim-vurgu-metin-01)]">{talepIdGoster(y.firma_adi, y.talep_no)}</span>
+            <span className="truncate font-mono text-[var(--tema-yerel-uretim-vurgu-metin-01)]">{yayin_kodu(y.firma_adi, y.talep_no)}</span>
             <span className="shrink-0">{formatTarih(y.yayin_tarihi)}</span>
           </div>
 
@@ -205,7 +205,7 @@ export function YayinSatir({
           )}
         </div>
 
-        <div className="border-t border-[var(--tema-yerel-uretim-cizgi-13)] p-2.5">
+        <div className="mt-auto shrink-0 border-t border-[var(--tema-yerel-uretim-cizgi-13)] p-2.5">
           {planlandi && onPlanIslem ? (
             <div className="grid gap-2">
               <button type="button" onClick={() => onPlanIslem(y.yayin_id, "hemen_yayinla")} disabled={islemLoading === y.yayin_id}
@@ -299,7 +299,7 @@ export function YayinSatir({
               </span>
             )}
           </div>
-          <span className="mt-1 block text-[11px] font-semibold text-[var(--tema-yerel-uretim-yardimci-metin-10)]">{talepIdGoster(y.firma_adi, y.talep_no)}</span>
+          <span className="mt-1 block text-[11px] font-semibold text-[var(--tema-yerel-uretim-yardimci-metin-10)]">{yayin_kodu(y.firma_adi, y.talep_no)}</span>
           <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-[var(--tema-yerel-uretim-yardimci-metin-32)]">
             {y.turu_adi && <span className="font-bold">{y.turu_adi}</span>}
             {y.teknik_adi && y.teknik_adi !== "-" && <><span className="text-[var(--tema-yerel-uretim-yardimci-metin-39)]">•</span><span>{y.teknik_adi}</span></>}

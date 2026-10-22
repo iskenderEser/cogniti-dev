@@ -3,7 +3,7 @@
 // Toplu/Tekil Silme — Aşama 4 (docs/toplu_tekil_silme_is_plani.md).
 // Navbar "Toplu/Tekil Sil" butonunun modalı. İki mod:
 //   Toplu → Tüm Veriler (tüm firmalar)   → mod='tum'
-//   Tekil → görünen talep numarası ile   → mod='tekil'
+//   Tekil → yayın kodu ile   → mod='tekil'
 // (Firma silme burada DEĞİL — o firma kartında, Aşama 5.)
 // Akış: tip seç → görünen numara → Önizle (sayım) → son onay → Sil.
 // API gerçek talep UUID'sini sunucuda çözer.
@@ -43,20 +43,20 @@ const SATIRLAR: [keyof Onizleme, string][] = [
 
 export default function TopluTekilSilModal({ acik, onKapat, hata, basari }: Props) {
   const [tip, setTip] = useState<Tip | null>(null);
-  const [gorunenTalepId, setGorunenTalepId] = useState("");
+  const [yayin_kodu, setYayinKodu] = useState("");
   const [onizleme, setOnizleme] = useState<Onizleme | null>(null);
   const [onayMetni, setOnayMetni] = useState("");
   const [loading, setLoading] = useState(false);
 
   if (!acik) return null;
 
-  const sifirla = () => { setTip(null); setGorunenTalepId(""); setOnizleme(null); setOnayMetni(""); };
+  const sifirla = () => { setTip(null); setYayinKodu(""); setOnizleme(null); setOnayMetni(""); };
   const kapat = () => { sifirla(); onKapat(); };
 
   const govde = (islem: "sayim" | "sil") =>
     tip === "tum"
       ? { islem, mod: "tum" }
-      : { islem, mod: "tekil", gorunen_talep_id: gorunenTalepId.trim() };
+      : { islem, mod: "tekil", yayin_kodu: yayin_kodu.trim() };
 
   const cagir = async (islem: "sayim" | "sil") => {
     const res = await fetch("/admin/api/veri-sil", {
@@ -91,7 +91,7 @@ export default function TopluTekilSilModal({ acik, onKapat, hata, basari }: Prop
     } finally { setLoading(false); }
   };
 
-  const tekilGecerli = tip === "tekil" ? gorunenTalepId.trim().length > 0 : true;
+  const tekilGecerli = tip === "tekil" ? yayin_kodu.trim().length > 0 : true;
   const onayGecerli = tip === "tum" ? onayMetni.trim() === ONAY_KELIMESI : true;
   const silAktif = !!onizleme && tekilGecerli && onayGecerli && !loading;
 
@@ -136,16 +136,16 @@ export default function TopluTekilSilModal({ acik, onKapat, hata, basari }: Prop
           </button>
           <button onClick={() => { setTip("tekil"); setOnizleme(null); }}
             style={{ ...kutu(tip === "tekil" ? "#eff6ff" : "#fafafa"), borderColor: tip === "tekil" ? "var(--tema-yerel-yonetim-cizgi-07)" : "var(--tema-yerel-yonetim-cizgi-06)" }}>
-            <b>Tek Talep</b> — ekranda görünen talep numarasıyla
+            <b>Tek Talep</b> — yayın koduyla
           </button>
         </div>
 
-        {/* 2) Tekil: ekranda görünen talep numarası */}
+        {/* 2) Tekil: yayın kodu */}
         {tip === "tekil" && (
           <input
-            value={gorunenTalepId}
-            onChange={(e) => { setGorunenTalepId(e.target.value); setOnizleme(null); }}
-            placeholder="Görünen talep no (ör. hepifarma_30058)"
+            value={yayin_kodu}
+            onChange={(e) => { setYayinKodu(e.target.value); setOnizleme(null); }}
+            placeholder="Yayın Kodu (ör. hepifarma_30058)"
             style={{ width: "100%", boxSizing: "border-box", padding: "8px 10px", fontSize: "13px", border: "1px solid var(--tema-yerel-yonetim-cizgi-06)", borderRadius: "8px", marginBottom: "12px", fontFamily: "'Nunito', sans-serif" }}
           />
         )}

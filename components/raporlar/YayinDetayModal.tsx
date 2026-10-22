@@ -26,6 +26,7 @@ interface SoruDetay {
 
 interface YayinDetayVerisi {
   yayin_id: string;
+  yayin_kodu: string;
   talep_no: number | null;
   durum: string;
   yayin_tarihi: string;
@@ -124,7 +125,7 @@ export default function YayinDetayModal({ yayinId, onKapat }: Props) {
             <div className="min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-xs font-extrabold text-[var(--tema-yayin-detay-ust-etiket)] truncate">
-                  {detay?.talep_no ? `Talep #${detay.talep_no}` : `Yayın: ${yayinId.slice(0, 8)}`}
+                  {detay?.yayin_kodu ?? "-"}
                 </span>
                 {detay?.arac_turu && <YayinTuruPill tur={detay.arac_turu} />}
                 {detay?.durum && (
@@ -314,19 +315,7 @@ export default function YayinDetayModal({ yayinId, onKapat }: Props) {
           ) : null}
         </div>
 
-        {/* Alt Footer */}
-        <div className="flex items-center justify-between border-t border-[var(--tema-yayin-detay-cizgi)] bg-[var(--tema-yayin-detay-yuzey)] px-4 py-2.5 sm:px-6">
-          <span className="text-[11px] font-semibold text-[var(--tema-yayin-detay-aciklama)]">
-            Antigravity İçerik ve Soru Analiz Modülü
-          </span>
-          <button
-            type="button"
-            onClick={onKapat}
-            className="rounded-xl bg-[var(--tema-yayin-detay-eylem)] px-4 py-1.5 text-xs font-extrabold text-[var(--tema-yayin-detay-eylem-metni)] hover:bg-[var(--tema-yayin-detay-eylem-hover)] transition-colors shadow-sm"
-          >
-            Kapat
-          </button>
-        </div>
+
       </div>
     </div>
   );

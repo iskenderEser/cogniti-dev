@@ -13,7 +13,7 @@ import { useBmOneriSecimi } from "@/components/yayin/BmOneriSecimi";
 import { UttYayinKartIskeletleri, UttYayinListeAkisi } from "@/components/yayin/UttYayinListeOrtaklari";
 import { YayinKarti } from "@/components/yayin/YayinKarti";
 import { oneriTarihKurali } from "@/lib/tclub/oneri/tarihKurali";
-import { talepIdGoster } from "@/lib/utils/talepId";
+import { yayin_kodu } from "@/lib/utils/yayinKodu";
 import type { UttVideoKategorisi } from "@/lib/video/uttVideoKategorileri";
 import type { YayindakiVideo } from "@/lib/video/yayindakiVideolar";
 import { ArrowLeft, Check, X } from "lucide-react";
@@ -218,8 +218,8 @@ export default function BmEgitimYayinlari({ kategoriBilgisi }: { kategoriBilgisi
             etkilesimAktif={false}
             etkilesimGoster={false}
             durumGoster={false}
-            talepNoGoster={bmMi}
-            baslikSagAksiyon={!bmMi && yayin.talep_no != null ? <span className="shrink-0 font-mono text-xs text-[var(--tema-hoyk-talep-metni)] sm:text-[10px]">{talepIdGoster(yayin.firma_adi, yayin.talep_no)}</span> : undefined}
+            yayinKoduGoster={bmMi}
+            baslikSagAksiyon={!bmMi && yayin.talep_no != null ? <span className="shrink-0 font-mono text-xs text-[var(--tema-hoyk-talep-metni)] sm:text-[10px]">{yayin_kodu(yayin.firma_adi, yayin.talep_no)}</span> : undefined}
             className={seciliYayinIdleri.includes(yayin.yayin_id) ? "ring-2 ring-[var(--tema-hoyk-bm-secim-halka)]" : ""}
             altEkIcerik={bmMi ? <div onClick={(event) => event.stopPropagation()} className="mt-2.5 flex items-center justify-between gap-2 border-t border-[var(--tema-hoyk-bm-alt-cizgi)] pt-2">
               <label className="inline-flex cursor-pointer items-center gap-1.5 text-[10px] font-extrabold text-[var(--tema-hoyk-secim-pasif-metni)]">

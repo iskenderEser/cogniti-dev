@@ -42,7 +42,7 @@ test("YayinKarti: ürün adı mobilde 16px (text-base, leading-[22px]), masaüst
   assert.match(html, /line-clamp-2/);
 });
 
-test("YayinKarti: görünen ürün ID'si adın altında ince gri yazılır; talep ID'si yerinde kalır", () => {
+test("YayinKarti: görünen ürün ID'si adın altında ince gri yazılır; yayın kodu yerinde kalır", () => {
   const html = renderToStaticMarkup(createElement(YayinKarti, {
     yayin: ornekYayinUret({ urun_adi: "Normavas", gorunen_urun_id: "30-001", firma_adi: "Hepifarma", talep_no: 30079 }),
   }));

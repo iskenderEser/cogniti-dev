@@ -64,7 +64,7 @@ test("liste ve karar yalnız tanımlı RPC parametrelerini taşır", async () =>
   ]);
 });
 
-test("mutabakat listesi gerçek ürün ve talep ID'lerini çözer, UUID'leri yalnız bağ için kullanır", async () => {
+test("mutabakat listesi görünen ürün ID ve yayın kodlarını çözer, UUID'leri yalnız bağ için kullanır", async () => {
   const mutabakatId = "765b6890-183f-4518-b887-07003ff5cdc7";
   const urunId = "151b6890-183f-4518-b887-07003ff5cdc7";
   const yayinId = "251b6890-183f-4518-b887-07003ff5cdc7";
@@ -87,7 +87,7 @@ test("mutabakat listesi gerçek ürün ve talep ID'lerini çözer, UUID'leri yal
   } as unknown as SupabaseClient;
   const sonuc = await uttMutabakatlariListele(db, "utt-id", "2026-09", "tumu", 0);
   assert.equal(sonuc.kayitlar[0].gorunen_urun_id, "30-001");
-  assert.equal(sonuc.kayitlar[0].kaynaklar[0].gorunen_talep_id, "Hepifarma_30079");
+  assert.equal(sonuc.kayitlar[0].kaynaklar[0].yayin_kodu, "Hepifarma_30079");
 });
 
 test("ürünler ve açılan işlemler ayrı ayrı sayfalanır; kapsam her RPC'de korunur", async () => {
@@ -198,7 +198,7 @@ test("Mutabakat arayüzü Eczanem Yayınları panel desenini ve işlem alanları
     assert.ok(yayinlarSayfasi.includes(desen), `Yayınlar referansı eksik: ${desen}`);
     assert.ok(sayfa.includes(desen), `Mutabakat uyarlaması eksik: ${desen}`);
   }
-  for (const alan of ["gorunen_urun_id", "gorunen_talep_id", "gorunen_indirim_id", "Toplam İndirim Adedi", "Onaylanan İndirim Puanı", "Uygulanan Toplam İndirim", "Öğrenme Aracı", "Perakende Satış Fiyatı", "İndirim Limiti", "İndirim Tutarı", "Sonuç", "Eczane Adı", "Ürün Adı", "İndirim Onay Tarihi", "İndirim ID", "Toplam İşlem Adedi", "Toplam Onaylanan Puan", "Toplam İndirim Tutarı"]) {
+  for (const alan of ["gorunen_urun_id", "yayin_kodu", "gorunen_indirim_id", "Toplam İndirim Adedi", "Onaylanan İndirim Puanı", "Uygulanan Toplam İndirim", "Öğrenme Aracı", "Perakende Satış Fiyatı", "İndirim Limiti", "İndirim Tutarı", "Sonuç", "Eczane Adı", "Ürün Adı", "İndirim Onay Tarihi", "İndirim ID", "Toplam İşlem Adedi", "Toplam Onaylanan Puan", "Toplam İndirim Tutarı"]) {
     assert.ok(mutabakatArayuzu.includes(alan), `İşlem alanı eksik: ${alan}`);
   }
   for (const eskiMetin of ["PM tarifesi", "PM öğrenme puanı:", "Bu indirimde:", "UTT karar geçmişi", "Yayın ve karar ayrıntıları", "Önceki ayın indirimleri için karar dönemi açık"]) {
@@ -221,7 +221,7 @@ test("Mutabakat arayüzü Eczanem Yayınları panel desenini ve işlem alanları
   assert.match(sayfa, /<SadeAySecimi/);
   assert.match(ortakTablo, /aria-pressed=\{secili\}/);
   assert.doesNotMatch(sayfa, /type="month"/);
-  assert.doesNotMatch(mutabakatArayuzu, /Ürün ID: \{kayit\.urun_id\}|Mutabakat ID: \{kayit\.mutabakat_id\}|Yayın ID: \{kaynak\.yayin_id\}/);
+  assert.doesNotMatch(mutabakatArayuzu, /Ürün ID: \{kayit\.urun_id\}|Mutabakat ID: \{kayit\.mutabakat_id\}|Yayın Kodu: \{kaynak\.yayin_id\}/);
   assert.match(sayfa, /aria-expanded=\{acikEczaneId === eczane\.eczane_id\}/);
   assert.match(sayfa, /<MutabakatIslemTablosu/);
 });

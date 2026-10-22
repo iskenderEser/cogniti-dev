@@ -1,7 +1,7 @@
-// Admin tekil silme alanında kullanıcının gördüğü talep kimliğini çözer.
+// Admin tekil silme alanında yayın kodunun sayısal bölümünü çözer.
 // Örnek: "hepifarma_30058" -> 30058. Talep numarası global benzersizdir;
 // gerçek talep UUID'si yalnız sunucuda veritabanından bulunur.
-export function gorunenTalepNumarasiniCoz(deger: unknown): number | null {
+export function yayinKoduNumarasiniCoz(deger: unknown): number | null {
   if (typeof deger !== "string") return null;
 
   const sonParca = deger.trim().split("_").pop() ?? "";

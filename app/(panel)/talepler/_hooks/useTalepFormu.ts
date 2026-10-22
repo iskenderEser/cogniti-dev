@@ -8,7 +8,7 @@
 //
 // E-Club üretim düzenlemesi: hedef rol eczacı/eczane teknisyeni ise teknik seçimi
 // gizlenir ve teknik_id null gönderilir (teknik bu roller için anlamlı detay değil).
-// Eczanem düzenlemesi (U4): 'eczanem' hedefi yalnız ürün müdürü ailesine görünür
+// Eczanem düzenlemesi (U4): 'eczanem' hedefi ürün müdürü ailesine ve Medikal Müdür'e görünür
 // (İP-§4.1); teknik E-Club gibi gizlidir, ürün her hâlükârda zorunludur (dörtlü kilit).
 
 "use client";
@@ -171,7 +171,7 @@ export function useTalepFormu(onTalepOlusturuldu?: () => void | Promise<void>) {
   // Eczanem hedefinde de teknik gizlenir: son tüketiciye satış tekniği
   // anlatılmaz, içerik ürün odaklıdır (İP-§4.2 — zincir aynı, teknik yok).
   const eczanemHedef = hedefRol === "eczanem";
-  // Eczanem hedefi yalnızca ürün müdürü ailesine görünür (İP-§4.1).
+  // Eczanem hedefi ürün müdürü ailesine ve Medikal Müdür'e görünür.
   const eczanemSecilebilir = ECZANEM_TALEP_ACAN_ROLLER.includes(rol.toLowerCase());
   const teknikGosterilsin = turKurali.teknik !== "yok" && !eclubHedef && !eczanemHedef;
   // Ürün ve teknik ikisi de yoksa serbest ad alanı gösterilir (eczanem hariç: orada ürün zorunlu).

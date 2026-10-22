@@ -23,7 +23,7 @@ export interface SiparisTakipTalebi {
   eczane: { eczane_id: string; eczane_adi: string; gln: string | null };
   uye: { ad_soyad: string; rol: string };
   urun: { urun_id: string; urun_adi: string; yayin_id: string; gorunen_urun_id: string };
-  ogrenme_araci: { tur: OgrenmeAraciTuru; gorunen_talep_id: string | null };
+  ogrenme_araci: { tur: OgrenmeAraciTuru; yayin_kodu: string | null };
   siparis: {
     tipi: SatisSartiTipi;
     adet: number;

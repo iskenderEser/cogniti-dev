@@ -1,7 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { OgrenmeAraciTuru } from "@/lib/ogrenmeAraci/tipler";
 import { gorunenUrunIdHaritasi } from "@/lib/urunler/gorunenId";
-import { talepIdGoster } from "@/lib/utils/talepId";
+import { yayin_kodu } from "@/lib/utils/yayinKodu";
 
 export type UttMutabakatKarari = "onay" | "beklet" | "ret";
 export type UttMutabakatFiltresi = "tumu" | "bekliyor" | UttMutabakatKarari;
@@ -59,7 +59,7 @@ export function uttMutabakatSonucEtiketi(
 
 export interface UttMutabakatKaynagi {
   yayin_id: string;
-  gorunen_talep_id?: string | null;
+  yayin_kodu?: string | null;
   arac_id: string;
   arac_turu: OgrenmeAraciTuru;
   teknik_adi: string | null;
@@ -278,7 +278,7 @@ async function uttMutabakatKayitlariniZenginlestir(db: SupabaseClient, uttId: st
   );
   const urunIdleri = await gorunenUrunIdHaritasi(db, kayitlar.map((kayit) => kayit.urun_id));
   const yayinIdleri = [...new Set(kayitlar.flatMap((kayit) => kayit.kaynaklar.map((kaynak) => kaynak.yayin_id)))];
-  const talepIdleri = new Map<string, string>();
+  const yayinKodlari = new Map<string, string>();
   if (yayinIdleri.length > 0) {
     const { data: yayinlar, error: yayinHatasi } = await db.from("v_yayin_detay")
       .select("yayin_id, firma_adi, talep_no")
@@ -286,7 +286,7 @@ async function uttMutabakatKayitlariniZenginlestir(db: SupabaseClient, uttId: st
     if (yayinHatasi) throw new Error("Mutabakat yayın kimlikleri okunamadı.");
     for (const yayin of yayinlar ?? []) {
       if (yayin.talep_no != null && yayin.firma_adi) {
-        talepIdleri.set(yayin.yayin_id, talepIdGoster(yayin.firma_adi, yayin.talep_no));
+        yayinKodlari.set(yayin.yayin_id, yayin_kodu(yayin.firma_adi, yayin.talep_no));
       }
     }
   }
@@ -309,7 +309,7 @@ async function uttMutabakatKayitlariniZenginlestir(db: SupabaseClient, uttId: st
       gorunen_urun_id: urunIdleri.get(kayit.urun_id) ?? null,
       kaynaklar: kayit.kaynaklar.map((kaynak) => ({
         ...kaynak,
-        gorunen_talep_id: talepIdleri.get(kaynak.yayin_id) ?? null,
+        yayin_kodu: yayinKodlari.get(kaynak.yayin_id) ?? null,
       })),
     }));
 }

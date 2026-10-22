@@ -258,7 +258,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (hedefRoller.includes("eczanem") && !ECZANEM_TALEP_ACAN_ROLLER.includes(rol)) {
-      return rolHatasi("Eczanem hedefli talebi yalnızca Ürün Müdürü açabilir.");
+      return rolHatasi("Eczanem hedefli talebi yalnızca Ürün Müdürü ailesi ve Medikal Müdür açabilir.");
     }
 
     const icerikTuru = TALEP_TURU_KURALLARI[egitimTuru].icerikTuru;

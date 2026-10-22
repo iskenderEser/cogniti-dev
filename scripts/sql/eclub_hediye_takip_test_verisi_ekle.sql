@@ -498,7 +498,7 @@ SELECT
   em.eczane_adi,
   u.urun_adi,
   u.gorunen_urun_id,
-  concat_ws('_', f.firma_adi, k.talep_no::text) AS gorunen_talep_id,
+  concat_ws('_', f.firma_adi, k.talep_no::text) AS yayin_kodu,
   t.donem_kodu,
   t.durum,
   t.siparis_tipi,

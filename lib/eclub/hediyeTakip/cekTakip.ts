@@ -104,7 +104,7 @@ export interface CekTakipTalebi {
   };
   ogrenme_araci: {
     tur: OgrenmeAraciTuru;
-    gorunen_talep_id: string | null;
+    yayin_kodu: string | null;
   };
   odul_kosulu: {
     siparis_tipi: SatisSartiTipi;

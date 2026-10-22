@@ -49,7 +49,7 @@ export function mutabakatExcelTablosu(rol: MutabakatOnayRolu, kayitlar: ExcelMut
       kayit.gorunen_urun_id ? `${kayit.urun_adi}\n${kayit.gorunen_urun_id}` : kayit.urun_adi,
       kayit.kaynaklar.map((kaynak) => {
         const arac = YAYIN_TURU_SUNUMU[kaynak.arac_turu]?.etiket ?? "Öğrenme içeriği";
-        return kaynak.gorunen_talep_id ? `${arac} (Talep ID: ${kaynak.gorunen_talep_id})` : arac;
+        return kaynak.yayin_kodu ? `${arac} (Yayın Kodu: ${kaynak.yayin_kodu})` : arac;
       }).join("\n"),
       kayit.satis_fiyati ?? "",
       `${kayit.tarife_puan.toLocaleString("tr-TR")} puan = ${kayit.tarife_tl.toLocaleString("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TL`,

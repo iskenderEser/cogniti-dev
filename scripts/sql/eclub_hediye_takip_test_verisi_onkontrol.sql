@@ -186,7 +186,7 @@ SELECT
   yayin_id,
   urun_adi,
   gorunen_urun_id,
-  concat_ws('_', firma_adi, talep_no::text) AS gorunen_talep_id
+  concat_ws('_', firma_adi, talep_no::text) AS yayin_kodu
 FROM uygun_urunler
 ORDER BY gorunen_urun_id, yayin_id
 LIMIT 3;

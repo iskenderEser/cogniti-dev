@@ -124,10 +124,10 @@ export async function POST(request: NextRequest) {
       return rolHatasi("İK rolleri Eczacı veya Eczane Teknisyeni hedefli talep oluşturamaz.");
     }
 
-    // Eczanem hedefli talebi yalnızca ürün müdürü ailesi açabilir (İP-§4.1) —
+    // Eczanem hedefli talebi ürün müdürü ailesi ve Medikal Müdür açabilir —
     // form seçeneği zaten gizlidir, bu sunucu tarafı doğrulamasıdır.
     if (hedefRoller.includes("eczanem") && !ECZANEM_TALEP_ACAN_ROLLER.includes(rol)) {
-      return rolHatasi("Eczanem hedefli talebi yalnızca Ürün Müdürü açabilir.");
+      return rolHatasi("Eczanem hedefli talebi yalnızca Ürün Müdürü ailesi ve Medikal Müdür açabilir.");
     }
 
     // Yetenek-bilinçli talep türü validasyonu — rol bu türde talep açabiliyor mu?

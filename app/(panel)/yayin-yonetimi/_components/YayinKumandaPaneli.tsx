@@ -1,19 +1,40 @@
 "use client";
 import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 
-import { SadeKontrolButonu, SadeKontrolGrubu } from "@/components/kontrol/SadeKontroller";
+import { SadeKontrolButonu, SadeKontrolGrubu, SadeKapsulFiltre } from "@/components/kontrol/SadeKontroller";
 
-import { HEDEF_ROL_TASARIM } from "@/app/(panel)/talepler/_types";
-import { ECLUB_ORTAK_YAYIN_GRUBU, type YayinHedefGrubu } from "@/lib/utils/roller";
+import type { YayinHedefGrubu } from "@/lib/utils/roller";
 import type { ReactNode } from "react";
 import type { AltSekme, BekleyenHedefSayilari } from "../_types";
-import { ANA_SEKMELER, ANA_SEKME_ETIKETLERI } from "../_types";
+import { ANA_SEKME_ETIKETLERI } from "../_types";
 
 import SayfaRehberi from "@/components/rehber/SayfaRehberi";
 
-interface Props {
-  aktifHedef: YayinHedefGrubu;
+const KAPSUL_SECENEKLERI: { deger: AltSekme; etiket: string }[] = [
+  { deger: "bekleyen", etiket: "Yayına Hazır" },
+  { deger: "yayinda", etiket: "Yayında" },
+  { deger: "durdurulan", etiket: "Durdurulan" },
+];
+
+export function YayinDurumuToggle({ aktifDurum, onDurumDegistir }: {
   aktifDurum: AltSekme;
+  onDurumDegistir: (durum: AltSekme) => void;
+}) {
+
+  return (
+    <SadeKapsulFiltre
+      secenekler={KAPSUL_SECENEKLERI}
+      deger={aktifDurum}
+      onDegistir={onDurumDegistir}
+      etiket="Yayın durumu seçimi"
+      className="shrink-0"
+    />
+  );
+}
+
+interface Props {
+  anaSekmeler: YayinHedefGrubu[];
+  aktifHedef: YayinHedefGrubu;
   bekleyen: number;
   bekleyenHedefSayilari: BekleyenHedefSayilari;
   canli: number;
@@ -21,13 +42,12 @@ interface Props {
   durdurulan: number;
   yukleniyor?: boolean;
   onHedefDegistir: (hedef: YayinHedefGrubu) => void;
-  onDurumDegistir: (durum: AltSekme) => void;
   aksiyon?: ReactNode;
 }
 
 export function YayinKumandaPaneli({
+  anaSekmeler,
   aktifHedef,
-  aktifDurum,
   bekleyen,
   bekleyenHedefSayilari,
   canli,
@@ -35,44 +55,35 @@ export function YayinKumandaPaneli({
   durdurulan,
   yukleniyor = false,
   onHedefDegistir,
-  onDurumDegistir,
   aksiyon,
 }: Props) {
-  const hedefTasarimi = aktifHedef === ECLUB_ORTAK_YAYIN_GRUBU
-    ? { renk: "var(--tema-yerel-uretim-eylem-metin-16)", bg: "var(--tema-yerel-uretim-secim-zemin-15)" }
-    : HEDEF_ROL_TASARIM[aktifHedef];
   const durumlar: {
     anahtar: AltSekme;
     etiket: string;
     deger: number;
     aciklama: string;
-    altBilgi?: string;
     renk: string;
-    zemin: string;
   }[] = [
     {
       anahtar: "bekleyen",
-      etiket: "Yayına Hazır",
+      etiket: "Yayınlanmayı Bekleyen",
       deger: bekleyen,
-      aciklama: "Puanlama ve yayın kararı bekliyor",
+      aciklama: "Detay bekleyen yayınlar",
       renk: "var(--tema-yerel-uretim-islevsel-metin-36)",
-      zemin: "var(--tema-yerel-uretim-islevsel-zemin-15)",
     },
     {
       anahtar: "yayinda",
       etiket: "Yayında",
       deger: canli + planli,
-      aciklama: "Hedef kitlenin erişebildiği içerikler",
+      aciklama: "Toplam açılan yayınlar",
       renk: "var(--tema-yerel-uretim-islevsel-metin-37)",
-      zemin: "var(--tema-yerel-uretim-islevsel-zemin-17)",
     },
     {
       anahtar: "durdurulan",
       etiket: "Durdurulan",
       deger: durdurulan,
-      aciklama: "Yeniden başlatılabilir yayınlar",
+      aciklama: "Yeniden başlatılabilen yayınlar",
       renk: "var(--tema-yerel-uretim-islevsel-metin-38)",
-      zemin: "var(--tema-yerel-uretim-islevsel-zemin-18)",
     },
   ];
 
@@ -88,78 +99,51 @@ export function YayinKumandaPaneli({
         aksiyon={aksiyon}
       />
 
-      <div className="rounded-2xl border border-[var(--tema-yerel-uretim-cizgi-08)] bg-[var(--tema-yerel-uretim-kart-01)] p-3 shadow-[0_8px_24px_var(--tema-yerel-uretim-golge-01)] md:p-4">
-        <div className="mb-3 flex items-center justify-between gap-3">
-          <div>
-            <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-[var(--tema-yerel-uretim-yardimci-metin-24)]">Yayın kitlesi</p>
-          </div>
-          <span
-            className="hidden rounded-full px-2.5 py-1 text-[10px] font-extrabold sm:inline"
-            style={{ color: hedefTasarimi.renk, backgroundColor: hedefTasarimi.bg }}
+      <div aria-label="Yayın durumu" aria-busy={yukleniyor} className="grid grid-cols-1 gap-2.5 sm:grid-cols-3">
+        {durumlar.map((durum) => (
+          <article
+            key={durum.anahtar}
+            className="min-w-0 rounded-xl border border-[var(--tema-yerel-uretim-cizgi-12)] bg-[var(--tema-yerel-uretim-kart-01)] p-3 text-left shadow-[0_6px_18px_var(--tema-yerel-uretim-golge-07)] md:p-5"
+            style={{ borderLeft: `3px solid ${durum.renk}` }}
           >
-            {ANA_SEKME_ETIKETLERI[aktifHedef]}
-          </span>
-        </div>
-        <SadeKontrolGrubu tur="sekme">
-          {ANA_SEKMELER.map((hedef) => {
-
-            const aktif = hedef === aktifHedef;
-            const bekleyenSayi = bekleyenHedefSayilari[hedef];
-            return (
-              <SadeKontrolButonu type="button" key={hedef} aria-pressed={aktif} onClick={() => onHedefDegistir(hedef)}>
-                <span className="flex items-center justify-between gap-2">
-                  <span>{ANA_SEKME_ETIKETLERI[hedef]}</span>
-                  {bekleyenSayi > 0 && (
-                    <span
-                      aria-label={`${bekleyenSayi} yayına hazır içerik`}
-                      className="inline-flex h-[18px] min-w-[18px] shrink-0 items-center justify-center rounded-full bg-[var(--tema-yerel-uretim-vurgu-zemin-01)] px-[5px] text-[10px] font-bold leading-none text-[var(--tema-yerel-uretim-ters-metin-01)]"
-                    >
-                      {bekleyenSayi}
-                    </span>
-                  )}
-                </span>
-              </SadeKontrolButonu>
-            );
-          })}
-        </SadeKontrolGrubu>
+            <p className="mb-2 text-xs font-bold uppercase tracking-wide text-[var(--tema-yerel-uretim-yardimci-metin-20)]">{durum.etiket}</p>
+            <div className="text-2xl font-extrabold leading-none text-[var(--tema-yerel-uretim-ana-metin-18)] md:text-3xl">
+              {yukleniyor ? (
+                <>
+                  <span aria-hidden="true" className="inline-block h-8 w-12 animate-pulse rounded bg-current/10" />
+                  <span className="sr-only">Yükleniyor...</span>
+                </>
+              ) : (
+                durum.deger.toLocaleString("tr-TR")
+              )}
+            </div>
+            <p className="mt-1.5 text-xs text-[var(--tema-yerel-uretim-yardimci-metin-20)]">{durum.aciklama}</p>
+          </article>
+        ))}
       </div>
 
-      <div aria-label="Yayın durumu" className="grid grid-cols-1 gap-2.5 sm:grid-cols-3">
-        {durumlar.map((durum) => {
-          const aktif = durum.anahtar === aktifDurum;
+      <SadeKontrolGrubu tur="sekme" aria-label="Yayın kitlesi">
+        {anaSekmeler.map((hedef) => {
+
+          const aktif = hedef === aktifHedef;
+          const bekleyenSayi = bekleyenHedefSayilari[hedef];
           return (
-            <button
-              type="button"
-              key={durum.anahtar}
-              aria-pressed={aktif}
-              onClick={() => onDurumDegistir(durum.anahtar)}
-              className="group rounded-2xl border bg-[var(--tema-yerel-uretim-kart-01)] px-3.5 py-3.5 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--tema-yerel-uretim-odak-01)]"
-              style={{
-                borderColor: aktif ? durum.renk : "var(--tema-yerel-uretim-cizgi-12)",
-                boxShadow: aktif ? `0 8px 22px color-mix(in srgb, ${durum.renk} 9.411764705882353%, transparent)` : "0 6px 18px var(--tema-yerel-uretim-golge-07)",
-              }}
-            >
-              <span className="flex items-center gap-3">
-                <span
-                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-lg font-extrabold"
-                  style={{ color: durum.renk, backgroundColor: durum.zemin }}
-                >
-                  {yukleniyor ? (
-                    <span className="inline-block h-5 w-5 animate-pulse rounded bg-current/20" />
-                  ) : (
-                    durum.deger
-                  )}
-                </span>
-                <span className="min-w-0">
-                  <span className="block text-sm font-extrabold text-[var(--tema-yerel-uretim-ana-metin-18)]">{durum.etiket}</span>
-                  <span className="mt-0.5 block text-[11px] leading-4 text-[var(--tema-yerel-uretim-yardimci-metin-20)]">{durum.aciklama}</span>
-                  {durum.altBilgi && <span className="mt-1 block text-[10px] font-extrabold" style={{ color: durum.renk }}>{durum.altBilgi}</span>}
-                </span>
+            <SadeKontrolButonu type="button" key={hedef} aria-pressed={aktif} onClick={() => onHedefDegistir(hedef)}>
+              <span className="flex items-center justify-between gap-2">
+                <span>{ANA_SEKME_ETIKETLERI[hedef]}</span>
+                {bekleyenSayi > 0 && (
+                  <span
+                    aria-label={`${bekleyenSayi} yayına hazır içerik`}
+                    className="inline-flex h-[18px] min-w-[18px] shrink-0 items-center justify-center rounded-full bg-[var(--tema-yerel-uretim-vurgu-zemin-01)] px-[5px] text-[10px] font-bold leading-none text-[var(--tema-yerel-uretim-ters-metin-01)]"
+                  >
+                    {bekleyenSayi}
+                  </span>
+                )}
               </span>
-            </button>
+            </SadeKontrolButonu>
           );
         })}
-      </div>
+      </SadeKontrolGrubu>
     </section>
   );
 }

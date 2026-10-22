@@ -14,7 +14,7 @@ import type { Soru } from "@/app/(panel)/talepler/_types";
 import { DurumPill, HedefRolPilleri, NOTR_RENK, Pill, TeknikPill } from "@/components/pill";
 import { ECLUB_KAZANIM_SECENEKLERI, type BaremSatiri, type EclubKazanimModeli } from "@/lib/eclub/store/eclubStoreTipler";
 import { yalnizEclubHedefliMi } from "@/lib/utils/roller";
-import { talepIdGoster } from "@/lib/utils/talepId";
+import { yayin_kodu } from "@/lib/utils/yayinKodu";
 import { AlertCircle, CheckCircle2 } from "lucide-react";
 import type { Bekleyen, OnizlemeHedefi } from "../_types";
 import { EXTRA_PUAN_SECENEKLERI, VIDEO_PUAN_SECENEKLERI, VIDEO_PUAN_SECENEKLERI_ECZANEM } from "../_types";
@@ -156,7 +156,7 @@ export function BekleyenSatir({
             <span className="break-words" title={`Ürün: ${b.urun_adi}`}>{b.urun_adi}</span>
           </Pill>
           <Pill renk={NOTR_RENK} className="max-w-full" sarabilir>
-            <span className="break-all font-mono" title="Talep kimliği">{talepIdGoster(b.firma_adi, b.talep_no)}</span>
+            <span className="break-all font-mono" title="Yayın kodu">{yayin_kodu(b.firma_adi, b.talep_no)}</span>
           </Pill>
           {b.turu_adi && <Pill renk={NOTR_RENK}>{b.turu_adi}</Pill>}
           <TeknikPill teknikAdi={b.teknik_adi} />

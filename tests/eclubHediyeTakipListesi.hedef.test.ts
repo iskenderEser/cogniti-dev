@@ -31,7 +31,7 @@ test("mobil kart masaüstündeki güvenli çek ve teslimat bilgilerini kayıpsı
     assert.match(kart, new RegExp(alan));
   }
   assert.match(kart, /talep\.urun\.gorunen_urun_id/);
-  assert.match(kart, /talep\.ogrenme_araci\.gorunen_talep_id/);
+  assert.match(kart, /talep\.ogrenme_araci\.yayin_kodu/);
   assert.doesNotMatch(kart, /talep\.urun\.urun_id/);
   assert.doesNotMatch(kart, /talep\.ogrenme_araci\.talep_id/);
   assert.match(kart, /tarihFormatla\(talep\.teslimat\.basarili_eposta\?\.tamamlanma_tarihi/);

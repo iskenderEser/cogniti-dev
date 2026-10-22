@@ -5,7 +5,7 @@ import type { CekTalebi } from "@/lib/eclub/store/cekTakipOnbellek";
 import { CEK_TALEP_DURUM_META } from "@/lib/eclub/store/eclubStoreTipler";
 import { YAYIN_TURU_SUNUMU } from "@/lib/ogrenmeAraci/turSunumu";
 import type { OgrenmeAraciTuru } from "@/lib/ogrenmeAraci/tipler";
-import { talepIdGoster } from "@/lib/utils/talepId";
+import { yayin_kodu } from "@/lib/utils/yayinKodu";
 
 type Props = {
   talep: CekTalebi;
@@ -31,8 +31,8 @@ export default function EclubCekTakipVitrinKarti({ talep, iptalEdiliyor, dogrula
         <div className="grid min-w-0 grid-cols-[max-content_minmax(0,1fr)] items-center gap-3 @[660px]:col-span-2 @[900px]:col-span-1">
           <div className="grid min-w-0 gap-2">
             <div className="min-w-0">
-              <span className={baslikClass}>Yayın ID</span>
-              <h2 className={kimlikDegeriClass}>{talepIdGoster(talep.firma_adi, talep.talep_no)}{talep.gorunum_testi_mi && <> <span className="text-[var(--tema-yerel-eclub-islevsel-metin-40)]">(F)</span></>}</h2>
+              <span className={baslikClass}>Yayın Kodu</span>
+              <h2 className={kimlikDegeriClass}>{yayin_kodu(talep.firma_adi, talep.talep_no)}{talep.gorunum_testi_mi && <> <span className="text-[var(--tema-yerel-eclub-islevsel-metin-40)]">(F)</span></>}</h2>
             </div>
             <div className="min-w-0">
               <span className={baslikClass}>Yayın türü</span>

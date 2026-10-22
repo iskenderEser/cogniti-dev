@@ -283,14 +283,23 @@ export function hedefRolVarMi(hedefRoller: readonly string[] | null | undefined,
 }
 
 // PM_AILESI_ROLLER: Ürün Müdürü ailesi (pm/jr_pm/kd_pm). "Yalnızca PM" gerektiren
-// kararların tek kaynağı — talep dosyası yükleme/silme, Eczanem talebi açma vb.
+// kararların tek kaynağı — talep dosyası yükleme/silme vb.
 export const PM_AILESI_ROLLER = ["pm", "jr_pm", "kd_pm"];
 
-// Eczanem hedefli talebi AÇABİLEN roller (İP-§4.1: "yalnızca PM") — ürün
-// müdürü ailesi. Diğer 10 üretici rol Eczanem hedefini göremez/seçemez:
-// Karşılık tanımı PM'in ürün maliyet kararıdır, ürün sahipliği PM'dedir.
-// Kavram birebir "PM ailesi"dir — tek kaynak PM_AILESI_ROLLER.
-export const ECZANEM_TALEP_ACAN_ROLLER = PM_AILESI_ROLLER;
+// Eczanem hedefli talep açabilen roller: ürün müdürü ailesi ve Medikal Müdür.
+// Talep formu, API ve Yayın Yönetimi kategori görünürlüğünün ortak kaynağı.
+export const ECZANEM_TALEP_ACAN_ROLLER = [...PM_AILESI_ROLLER, "med_md"];
+
+/** Üreticinin talep oluşturabildiği yayın kategorileri; içerik sayısından bağımsızdır. */
+export function ureticiYayinHedefGruplari(ureticiRol: string): YayinHedefGrubu[] {
+  const rol = ureticiRol.trim().toLowerCase();
+  if (!URETICI_ROLLER.includes(rol)) return [];
+  return YAYIN_HEDEF_GRUP_SIRASI.filter((hedef) => {
+    if (hedef === "eczanem") return ECZANEM_TALEP_ACAN_ROLLER.includes(rol);
+    const hedefler = hedef === ECLUB_ORTAK_YAYIN_GRUBU ? ECLUB_HEDEF_ROLLER : [hedef];
+    return hedefler.every((hedefRol) => hedefRolIkUreticisineAcikMi(rol, hedefRol));
+  });
+}
 
 // ROL_ADLARI: Rol kısaltmalarının Türkçe karşılıkları.
 // Yalnızca görüntüleme katmanında kullanılır — veritabanında hiçbir şey değişmez.

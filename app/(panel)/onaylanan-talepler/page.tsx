@@ -1,13 +1,14 @@
 // app/onaylanan-talepler/page.tsx
 //
 // F-12 (docs/test_pm_iu_21072026.md) + ikinci tur talebi (21.07): IU'nun
-// "Onaylanan Talepler" sekmesi — tablo görünümü (Talep No | Talep Adı |
+// "Onaylanan Talepler" sekmesi — tablo görünümü (Yayın Kodu | Talep Adı |
 // Talep Tarihi | Talep Onay Tarihi); satıra tıklanınca talebin onaylı
 // senaryosu, videosu (oynatılabilir) ve soru seti salt-okuma açılır.
-// Talep No görünümü: `${firma_adi}_${talep_no}` (İskender kararı, 21.07).
+// Yayın Kodu görünümü: `${firma_adi}_${talep_no}` (İskender kararı, 21.07).
 
 "use client";
 
+import { panelBaslangici } from "@/lib/panel/baslangic";
 import { Fragment, useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
@@ -15,7 +16,7 @@ import { HedefRolPilleri } from "@/components/pill";
 import type { TalepBilgisi } from "@/lib/utils/talepZinciri";
 import type { HedefRoller } from "@/app/(panel)/talepler/_types";
 import { useAuth } from "@/app/providers/AuthProvider";
-import { talepIdGoster } from "@/lib/utils/talepId";
+import { yayin_kodu } from "@/lib/utils/yayinKodu";
 import VideoOnizleme from "@/components/video/VideoOnizleme";
 import TalepKlasorleri from "@/components/talep/TalepKlasorleri";
 import { useListe, ListeArama } from "@/components/liste";
@@ -47,7 +48,7 @@ interface SoruSetiOnayiSatiri {
 // TalepKlasorleri'nin beklediği sözleşmeyi karşılar — ekran ayrıca hesaplamaz.
 interface OnayliTalep {
   talep_id: string;
-  talep_no_goster: string;
+  yayin_kodu: string;
   firma_adi: string;
   departman: DepartmanKey;
   urun_adi: string;
@@ -77,7 +78,7 @@ export default function OnaylananTaleplerPage() {
     veri: kayitlar,
     adim: Infinity,
     aramaAlanlari: [
-      { anahtar: "no", etiket: "Talep No", deger: (k: OnayliTalep) => k.talep_no_goster },
+      { anahtar: "yayin_kodu", etiket: "Yayın Kodu", deger: (k: OnayliTalep) => k.yayin_kodu },
       { anahtar: "ad", etiket: "Ürün / Eğitim", deger: (k: OnayliTalep) => k.urun_adi },
     ],
   });
@@ -89,7 +90,7 @@ export default function OnaylananTaleplerPage() {
       return;
     }
     if (kullanici.rol.toLowerCase() !== "iu") {
-      router.push("/ana-sayfa");
+      router.push(panelBaslangici(kullanici.rol).yol);
       return;
     }
   }, [kullanici, authYukleniyor, router]);
@@ -144,7 +145,7 @@ export default function OnaylananTaleplerPage() {
       const video = videoMap.get(o.senaryo_durum_id) ?? null;
       liste.push({
         talep_id: talep.talep_id,
-        talep_no_goster: talepIdGoster(talep.firma_adi, talep.talep_no),
+        yayin_kodu: yayin_kodu(talep.firma_adi, talep.talep_no),
         firma_adi: talep.firma_adi,
         departman: talep.departman,
         urun_adi: talep.urun_adi,
@@ -269,7 +270,7 @@ export default function OnaylananTaleplerPage() {
                   <div onClick={() => setAcikTalep(acikTalep === k.talep_id ? null : k.talep_id)}
                     className="px-4 py-3 cursor-pointer flex items-center justify-between gap-2">
                     <div className="flex flex-col min-w-0">
-                      <span className="text-xs text-[var(--tema-yerel-uretim-yardimci-metin-02)]">{k.talep_no_goster}</span>
+                      <span className="text-xs text-[var(--tema-yerel-uretim-yardimci-metin-02)]">{k.yayin_kodu}</span>
                       <span className="text-sm font-semibold text-[var(--tema-yerel-uretim-ana-metin-01)] truncate">{k.urun_adi}</span>
                       {k.yayin_oncesi_silindi && <span className="mt-1 w-fit rounded-full border border-[var(--tema-yerel-uretim-cizgi-01)] bg-[var(--tema-yerel-uretim-sayfa-zemini-01)] px-2 py-0.5 text-[10px] font-bold text-[var(--tema-yerel-uretim-ana-metin-02)]">Yayın öncesi silindi</span>}
                       <span className="text-xs text-[var(--tema-yerel-uretim-yardimci-metin-01)]">{formatTarih(k.talep_tarihi)} → {formatTarih(k.onay_tarihi)}</span>
@@ -292,7 +293,7 @@ export default function OnaylananTaleplerPage() {
               <table className="w-full border-collapse text-sm">
                 <thead>
                   <tr className="border-b border-[var(--tema-yerel-uretim-cizgi-03)] bg-[var(--tema-yerel-uretim-sayfa-zemini-01)]">
-                    <th className="text-left px-5 py-2.5 text-[var(--tema-yerel-uretim-yardimci-metin-02)] font-medium text-xs uppercase">Talep No</th>
+                    <th className="text-left px-5 py-2.5 text-[var(--tema-yerel-uretim-yardimci-metin-02)] font-medium text-xs uppercase">Yayın Kodu</th>
                     <th className="text-left px-3 py-2.5 text-[var(--tema-yerel-uretim-yardimci-metin-02)] font-medium text-xs uppercase">Talep Adı (Ürün Adı)</th>
                     <th className="text-left px-3 py-2.5 text-[var(--tema-yerel-uretim-yardimci-metin-02)] font-medium text-xs uppercase">Talep Tarihi</th>
                     <th className="text-left px-3 py-2.5 text-[var(--tema-yerel-uretim-yardimci-metin-02)] font-medium text-xs uppercase">Talep Onay Tarihi</th>
@@ -304,7 +305,7 @@ export default function OnaylananTaleplerPage() {
                     <Fragment key={k.talep_id}>
                       <tr onClick={() => setAcikTalep(acikTalep === k.talep_id ? null : k.talep_id)}
                         className="border-b border-[var(--tema-yerel-uretim-cizgi-02)] cursor-pointer hover:bg-[var(--tema-yerel-uretim-sayfa-zemini-01)] transition-colors duration-100">
-                        <td className="px-5 py-3 text-[var(--tema-yerel-uretim-ana-metin-03)] font-semibold">{k.talep_no_goster}</td>
+                        <td className="px-5 py-3 text-[var(--tema-yerel-uretim-ana-metin-03)] font-semibold">{k.yayin_kodu}</td>
                         <td className="px-3 py-3 text-[var(--tema-yerel-uretim-ana-metin-01)]">
                           <div>{k.urun_adi}</div>
                           {k.yayin_oncesi_silindi && <span className="mt-1 inline-flex rounded-full border border-[var(--tema-yerel-uretim-cizgi-01)] bg-[var(--tema-yerel-uretim-sayfa-zemini-01)] px-2 py-0.5 text-[10px] font-bold text-[var(--tema-yerel-uretim-ana-metin-02)]">Yayın öncesi silindi</span>}

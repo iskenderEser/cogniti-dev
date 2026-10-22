@@ -10,7 +10,7 @@
 
 import { AnaSayfaVideo } from "@/lib/video/anaSayfaVideolari";
 import { yayinThumbnailIstemciCoz } from "@/lib/ogrenmeAraci/thumbnailIstemci";
-import { talepIdGoster } from "@/lib/utils/talepId";
+import { yayin_kodu } from "@/lib/utils/yayinKodu";
 import { AracVarsayilanKapak } from "@/components/ogrenme-araci/AracVarsayilanKapak";
 
 import MobilYayinAkisi from "@/components/yayin/MobilYayinAkisi";
@@ -63,7 +63,7 @@ export default function VideoBolumu({ videolar, onVideoSec, baslik = "Videolar" 
                 <div className="text-xs text-[var(--tema-yerel-ana-sayfa-yardimci-metin-03)] whitespace-nowrap flex-shrink-0">{v.teknik_adi}</div>
               </div>
               {v.talep_no != null && (
-                <div className="text-[10px] text-[var(--tema-yerel-ana-sayfa-yardimci-metin-01)] font-mono">{talepIdGoster(v.firma_adi, v.talep_no)}</div>
+                <div className="text-[10px] text-[var(--tema-yerel-ana-sayfa-yardimci-metin-01)] font-mono">{yayin_kodu(v.firma_adi, v.talep_no)}</div>
               )}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1">
@@ -103,7 +103,7 @@ export default function VideoBolumu({ videolar, onVideoSec, baslik = "Videolar" 
           izlenmeGoster={false}
           durumGoster={false}
           donguGoster={false}
-          talepNoGoster={true}
+          yayinKoduGoster={true}
           puanGoster={true}
           tarihGoster={true}
           hoverOverlay={

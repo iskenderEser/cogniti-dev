@@ -10,7 +10,7 @@
 //    - Admin Rolü (1 rol: admin)
 //    Toplam 23 rol.
 // 2. Tüketici Saha Rolleri (UTT, KD_UTT) sahada içerik tüketip soru cevaplayarak puan topladığı
-//    için doğru cevap anahtarı içeren bu modalı ASLA açamaz. Rapor ekranında yayın ID düz metin kalır.
+//    için doğru cevap anahtarı içeren bu modalı ASLA açamaz. Rapor ekranında yayın kodu düz metin kalır.
 // 3. İçerik Üreticisi (İU) ve dış tüketici rolleri (Eczacı, Teknisyen, Müşteri) bu modalı açamaz.
 // 4. API düzeyinde firma_id çoklu kiracı (multi-tenant) ve firma aktiflik denetimi zorunludur.
 

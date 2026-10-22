@@ -1,7 +1,7 @@
 "use client";
 
 import { YayinKarti } from "@/components/yayin/YayinKarti";
-import { talepIdGoster } from "@/lib/utils/talepId";
+import { yayin_kodu } from "@/lib/utils/yayinKodu";
 import type { EczaneDagitimDanisani, EczaneDagitimOzeti, EczaneDagitimYayini } from "../_types";
 
 interface Props {
@@ -41,8 +41,8 @@ export function EczaneDanisanYayinKarti({
         izlenmeGoster={false}
         puanGoster
         extraPuanGoster={false}
-        talepNoGoster={false}
-        baslikSagAksiyon={yayin.talep_no != null ? <span className="shrink-0 font-mono text-xs text-[var(--tema-hoyk-talep-metni)] sm:text-[10px]">{talepIdGoster(yayin.firma_adi, yayin.talep_no)}</span> : undefined}
+        yayinKoduGoster={false}
+        baslikSagAksiyon={yayin.talep_no != null ? <span className="shrink-0 font-mono text-xs text-[var(--tema-hoyk-talep-metni)] sm:text-[10px]">{yayin_kodu(yayin.firma_adi, yayin.talep_no)}</span> : undefined}
         donguGoster={false}
         tarihSatiriSagAksiyon={(secilebilir || gonderilecekGoster) ? (
           <label onClick={(event) => event.stopPropagation()} className={`inline-flex shrink-0 items-center gap-1 text-xs font-normal sm:text-[10px] ${secili ? "text-[var(--tema-hoyk-secim-metni)]" : "text-[var(--tema-hoyk-secim-pasif-metni)]"} ${secilebilir ? "cursor-pointer" : "cursor-not-allowed opacity-50"}`}>

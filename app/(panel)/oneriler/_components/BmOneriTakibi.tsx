@@ -13,7 +13,7 @@ import VideoOnizleme from "@/components/video/VideoOnizleme";
 import { UttYayinTuruToggle } from "@/components/yayin/UttYayinListeOrtaklari";
 import { YayinKarti } from "@/components/yayin/YayinKarti";
 import type { Periyot } from "@/lib/utils/raporUtils";
-import { talepIdGoster } from "@/lib/utils/talepId";
+import { yayin_kodu } from "@/lib/utils/yayinKodu";
 import { Plus, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
@@ -248,10 +248,10 @@ export default function BmOneriTakibi({
                       etkilesimAktif={false}
                       etkilesimGoster={false}
                       durumGoster={false}
-                      talepNoGoster={false}
+                      yayinKoduGoster={false}
                       baslikSagAksiyon={oneri.talep_no != null ? (
                         <span className="shrink-0 font-mono text-xs text-[var(--tema-hoyk-talep-metni)] sm:text-[10px]">
-                          {talepIdGoster(oneri.firma_adi, oneri.talep_no)}
+                          {yayin_kodu(oneri.firma_adi, oneri.talep_no)}
                         </span>
                       ) : undefined}
                     />

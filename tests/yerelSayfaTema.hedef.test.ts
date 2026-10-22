@@ -152,9 +152,17 @@ test("yayın yönetiminde hedef ve durum seçimleri, canlı+planlı sayısı ve 
     }
     for (const b of statusButtons) await click(b);
     assert.deepEqual(states, ["bekleyen", "yayinda", "durdurulan"]);
-    const targetButtons = [...view.container.querySelectorAll('button[aria-pressed]')].filter(b => !statusButtons.includes(b as HTMLButtonElement));
+    const targetButtons = [...view.container.querySelector('[aria-label="Yayın kitlesi"]')!.querySelectorAll("button")];
     for (const b of targetButtons) await click(b);
     assert.deepEqual(targets, ANA_SEKMELER);
+    const capsule = view.container.querySelector('[aria-label="Yayın durumu seçimi"]')!;
+    const capsuleButtons = [...capsule.querySelectorAll("button")];
+    assert.deepEqual(capsuleButtons.map(b => b.textContent), ["Tüm", "Yayına Hazır", "Yayında", "Durdurulan"]);
+    assert.equal(capsule.parentElement, view.container.querySelector('[aria-label="Yayın kitlesi"]')!.parentElement);
+    assert.equal(capsuleButtons[1].getAttribute("aria-pressed"), "true");
+    for (const b of capsuleButtons) await click(b);
+    assert.equal(capsuleButtons[3].getAttribute("aria-pressed"), "true");
+    assert.deepEqual(states, ["bekleyen", "yayinda", "durdurulan"], "Yeni kapsül liste durumunu değiştirmemeli");
     await view.render(h(YayinKumandaPaneli, { ...props, yukleniyor: true }));
     assert.equal(view.container.querySelectorAll('[aria-label="Yayın durumu"] .animate-pulse').length, 3);
   } finally { await view.close(); }

@@ -2,8 +2,8 @@
 //
 // Toplu/Tekil Silme — Aşama 3 (docs/toplu_tekil_silme_is_plani.md).
 // Admin'e özel silme aracının API ucu. Tek POST, iki işlem:
-//   { islem: 'sayim', mod, firma_id?, gorunen_talep_id? } → önizleme
-//   { islem: 'sil',   mod, firma_id?, gorunen_talep_id? } → silme
+//   { islem: 'sayim', mod, firma_id?, yayin_kodu? } → önizleme
+//   { islem: 'sil',   mod, firma_id?, yayin_kodu? } → silme
 // mod ∈ 'tum' | 'firma' | 'tekil'. Tekil modda kullanıcı ekrandaki
 // "FirmaAdı_talep_no" değerini gönderir; gerçek UUID sunucuda çözülür.
 //
@@ -14,7 +14,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/server";
 import { adminGirisKontrol } from "@/lib/utils/adminGirisKontrol";
 import { hataYaniti, sunucuHatasi, validasyonHatasi } from "@/lib/utils/hataIsle";
-import { gorunenTalepNumarasiniCoz } from "@/lib/admin/talepSilKimligi";
+import { yayinKoduNumarasiniCoz } from "@/lib/admin/yayinKodu";
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -28,8 +28,8 @@ export async function POST(request: NextRequest) {
     const body = await request.json().catch(() => null);
     if (!body || typeof body !== "object") return validasyonHatasi("Geçersiz istek gövdesi.", ["body"]);
 
-    const { islem, mod, firma_id, gorunen_talep_id } = body as {
-      islem?: string; mod?: string; firma_id?: string; gorunen_talep_id?: string;
+    const { islem, mod, firma_id, yayin_kodu } = body as {
+      islem?: string; mod?: string; firma_id?: string; yayin_kodu?: string;
     };
 
     if (islem !== "sayim" && islem !== "sil")
@@ -38,11 +38,11 @@ export async function POST(request: NextRequest) {
       return validasyonHatasi("mod 'tum', 'firma' veya 'tekil' olmalıdır.", ["mod"]);
     if (mod === "firma" && (!firma_id || !UUID_RE.test(firma_id)))
       return validasyonHatasi("Firma modunda geçerli firma_id zorunludur.", ["firma_id"]);
-    const talepNo = mod === "tekil" ? gorunenTalepNumarasiniCoz(gorunen_talep_id) : null;
+    const talepNo = mod === "tekil" ? yayinKoduNumarasiniCoz(yayin_kodu) : null;
     if (mod === "tekil" && talepNo == null)
-      return validasyonHatasi("Geçerli görünen talep numarası zorunludur. Örnek: hepifarma_30058.", ["gorunen_talep_id"]);
+      return validasyonHatasi("Geçerli yayın kodu zorunludur. Örnek: hepifarma_30058.", ["yayin_kodu"]);
 
-    // 3) Görünen numarayı gerçek UUID'ye yalnız sunucuda çöz.
+    // 3) Yayın kodunu gerçek UUID'ye yalnız sunucuda çöz.
     const adminSupabase = createAdminClient();
     let talepId: string | null = null;
     if (mod === "tekil") {
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
       if (talepHatasi)
         return hataYaniti("Talep sorgulanamadı.", "talepler SELECT — talep_no", talepHatasi);
       if (!talep)
-        return validasyonHatasi("Bu numarayla eşleşen talep bulunamadı.", ["gorunen_talep_id"]);
+        return validasyonHatasi("Bu numarayla eşleşen talep bulunamadı.", ["yayin_kodu"]);
 
       talepId = talep.talep_id;
     }
@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
     const durum = (data as { durum?: string } | null)?.durum;
     const beklenen = islem === "sayim" ? "onizleme" : "silindi";
     if (durum !== beklenen)
-      return validasyonHatasi(`İşlem tamamlanamadı: ${durum ?? "bilinmeyen"}`, ["mod", "firma_id", "gorunen_talep_id"]);
+      return validasyonHatasi(`İşlem tamamlanamadı: ${durum ?? "bilinmeyen"}`, ["mod", "firma_id", "yayin_kodu"]);
 
     return NextResponse.json(data, { status: 200 });
   } catch (err) {

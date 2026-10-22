@@ -22,7 +22,7 @@ import { AsamaPill, DurumPill } from "@/components/pill";
 import SayfaRehberi from "@/components/rehber/SayfaRehberi";
 import { TALEP_TURU_KURALLARI } from "@/lib/uretici/yetenekler";
 import { ureticiDurumMesaji } from "@/lib/utils/durum/mesaj";
-import { talepIdGoster } from "@/lib/utils/talepId";
+import { yayin_kodu } from "@/lib/utils/yayinKodu";
 import { useState } from "react";
 import { ASAMA_SUZGEC_SECENEKLERI, type AsamaSuzgeci, type TalepSatiri } from "../_ureticiRolTypes";
 
@@ -110,7 +110,7 @@ export function IsListesi({ talepler, seciliTalepId, rol, onSec }: Props) {
                   <span className="flex items-start justify-between gap-3">
                     <span className="min-w-0">
                       <span className="block truncate text-sm font-extrabold text-[var(--tema-yerel-uretim-ana-metin-06)]">{baslikVer(t)}</span>
-                      <span className="mt-0.5 block text-[11px] font-semibold text-[var(--tema-yerel-uretim-yardimci-metin-10)]">{talepIdGoster(t.firma_adi, t.talep_no)}</span>
+                      <span className="mt-0.5 block text-[11px] font-semibold text-[var(--tema-yerel-uretim-yardimci-metin-10)]">{yayin_kodu(t.firma_adi, t.talep_no)}</span>
                     </span>
                     <span aria-hidden="true" className="shrink-0 text-lg text-[var(--tema-yerel-uretim-yardimci-metin-11)]">›</span>
                   </span>
@@ -165,7 +165,7 @@ export function IsListesi({ talepler, seciliTalepId, rol, onSec }: Props) {
                       <td className="min-w-[190px] px-4 py-3">
                         <span className="block text-sm text-[var(--tema-yerel-uretim-ana-metin-06)]" style={{ fontWeight: aksiyonBende ? 800 : 700 }}>{baslikVer(t)}</span>
                         <span className="mt-0.5 block text-[11px] font-semibold text-[var(--tema-yerel-uretim-yardimci-metin-10)]">
-                          {talepIdGoster(t.firma_adi, t.talep_no)}
+                          {yayin_kodu(t.firma_adi, t.talep_no)}
                           {t.teknik_adi !== "-" ? ` · ${t.teknik_adi}` : ""}
                         </span>
                       </td>

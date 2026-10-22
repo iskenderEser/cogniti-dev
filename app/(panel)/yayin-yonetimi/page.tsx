@@ -9,22 +9,37 @@
 
 "use client";
 
-import { useEffect, useState, useCallback, Suspense, type ReactNode } from "react";
+import { useEffect, useState, useCallback, useMemo, Suspense, type ReactNode } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
 import { useAuth } from "@/app/providers/AuthProvider";
-import { URETICI_ROLLER, YAYIN_HEDEF_GRUP_SIRASI, yayinHedefGrubuBelirle, type YayinHedefGrubu } from "@/lib/utils/roller";
+import { URETICI_ROLLER, ureticiYayinHedefGruplari, yayinHedefGrubuBelirle, type YayinHedefGrubu } from "@/lib/utils/roller";
 import type { Bekleyen, AltSekme, OnizlemeHedefi } from "./_types";
 import { useYayinYonetimi } from "./_hooks/useYayinYonetimi";
 import { BekleyenSatir } from "./_components/BekleyenSatir";
 import { YayinSatir } from "./_components/YayinSatir";
 import { useListe, ListeArama, DahaFazlaGoster } from "@/components/liste";
 import { OgrenmeAraciOnizlemeModal, YayinOnayModal, YayinSilmeModal } from "./_components/Modallar";
-import { YayinKumandaPaneli } from "./_components/YayinKumandaPaneli";
+import { YayinKumandaPaneli, YayinDurumuToggle } from "./_components/YayinKumandaPaneli";
 import { YenileButonu } from "@/components/ui/yenile-butonu";
 import MobilYayinAkisi from "@/components/yayin/MobilYayinAkisi";
+import { UttYayinTuruToggle } from "@/components/yayin/UttYayinListeOrtaklari";
+import { SadeZamanToggle } from "@/components/kontrol/SadeKontroller";
+import type { YayinTuruFiltreDegeri } from "@/components/ogrenme-araci/YayinTuruFiltresi";
+import type { Periyot } from "@/lib/utils/raporUtils";
+import { aktifPeriyot, ligPeriyoduAraligi } from "@/lib/zaman/kontrol";
+import { yayin_kodu } from "@/lib/utils/yayinKodu";
 
-function ListeBasligi({ baslik, aciklama, sayi, arama }: { baslik: string; aciklama?: string; sayi: number; arama: ReactNode }) {
+const ARAMA_HEDEF_KITLE_ADLARI: Record<YayinHedefGrubu, string> = {
+  utt: "Temsilciler",
+  bm: "Bölge Müdürleri",
+  eczaci: "Eczacılar",
+  eczane_teknisyeni: "Eczane Teknisyenleri",
+  eczaci_ve_eczane_teknisyeni: "Eczacılar ve Eczane Teknisyenleri",
+  eczanem: "Eczanem Üyeleri",
+};
+
+function ListeBasligi({ baslik, aciklama, sayi, arama }: { baslik: string; aciklama?: string; sayi: number; arama?: ReactNode }) {
   return (
     <div className="mb-3 flex flex-col gap-3 rounded-2xl border border-[var(--tema-yerel-uretim-cizgi-36)] bg-[var(--tema-yerel-uretim-kart-01)] px-4 py-3.5 shadow-[0_6px_18px_var(--tema-yerel-uretim-golge-07)] sm:flex-row sm:items-center sm:justify-between">
       <div>
@@ -59,20 +74,25 @@ function YayinYonetimiIcerik() {
   const baslangicDurum: AltSekme =
     durumParam === "yayinda" || durumParam === "durdurulan" || durumParam === "bekleyen"
       ? durumParam
-      : "bekleyen";
+      : "yayinda";
+
+  const { kullanici, yukleniyor: kimlikYukleniyor } = useAuth();
+  const rol = (kullanici?.rol ?? "").trim().toLowerCase();
+  const anaSekmeler = useMemo(() => ureticiYayinHedefGruplari(rol), [rol]);
 
   const baslangicHedef: YayinHedefGrubu | null =
-    hedefParam && (YAYIN_HEDEF_GRUP_SIRASI as readonly string[]).includes(hedefParam)
+    hedefParam && (anaSekmeler as readonly string[]).includes(hedefParam)
       ? (hedefParam as YayinHedefGrubu)
       : null;
 
-  const { kullanici, yukleniyor: kimlikYukleniyor } = useAuth();
   const ureticiMi = !!kullanici && URETICI_ROLLER.includes((kullanici.rol ?? "").toLowerCase());
   const kullaniciId = ureticiMi ? kullanici.id : undefined;
   const { mesajlar, hata, basari } = useHataMesaji();
 
   const [aktifAnaSekme, setAktifAnaSekme] = useState<YayinHedefGrubu>(baslangicHedef ?? "utt");
   const [aktifSekme, setAktifSekme] = useState<AltSekme>(baslangicDurum);
+  const [aktifYayinTuru, setAktifYayinTuru] = useState<YayinTuruFiltreDegeri>("tumu");
+  const [aktifZaman, setAktifZaman] = useState<Periyot>("bu_ay");
 
   // Saf UI state (modallar + akordiyon + video/araç önizleme) — sayfada kalır.
   const [acikAkordiyon, setAcikAkordiyon] = useState<string | null>(null);
@@ -95,21 +115,23 @@ function YayinYonetimiIcerik() {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setAktifSekme(durumParam);
     }
-    if (hedefParam && (YAYIN_HEDEF_GRUP_SIRASI as readonly string[]).includes(hedefParam)) {
+    if (hedefParam && (anaSekmeler as readonly string[]).includes(hedefParam)) {
       setAktifAnaSekme(hedefParam as YayinHedefGrubu);
+    } else {
+      setAktifAnaSekme((mevcut) => anaSekmeler.includes(mevcut) ? mevcut : "utt");
     }
-  }, [durumParam, hedefParam]);
+  }, [durumParam, hedefParam, anaSekmeler]);
 
   const onOzetYuklendi = useCallback((sayilar: Record<string, number>) => {
     if (!baslangicHedef && baslangicDurum === "bekleyen") {
-      const ilkBekleyenHedef = YAYIN_HEDEF_GRUP_SIRASI.find(
+      const ilkBekleyenHedef = anaSekmeler.find(
         (hedef) => Number(sayilar?.[hedef] ?? 0) > 0,
       );
       if (ilkBekleyenHedef) {
         setAktifAnaSekme(ilkBekleyenHedef);
       }
     }
-  }, [baslangicHedef, baslangicDurum]);
+  }, [baslangicHedef, baslangicDurum, anaSekmeler]);
 
   const yy = useYayinYonetimi({
     kullaniciId,
@@ -147,16 +169,34 @@ function YayinYonetimiIcerik() {
   const planliSayisi = yayinlarFiltreli.filter(y => y.durum === "planlandi").length;
   const durdurulular = yayinlarFiltreli.filter(y => y.durum === "Durduruldu");
 
+  const zamanAraligi = ligPeriyoduAraligi({
+    ...aktifPeriyot(),
+    periyot: aktifZaman === "bu_ay" ? "ay" : aktifZaman === "bu_donem" ? "donem" : aktifZaman === "bu_yil" ? "yil" : "hafta",
+  });
+  const baslangic = Date.parse(zamanAraligi.baslangic);
+  const bitis = Date.parse(zamanAraligi.bitis);
+  const zamanUygun = (tarih: string) => {
+    const an = Date.parse(tarih);
+    return an >= baslangic && an <= bitis;
+  };
+  const turUygun = (kayit: { arac_turu?: string | null }) =>
+    aktifYayinTuru === "tumu" || (kayit.arac_turu ?? "video") === aktifYayinTuru;
+  const zamanBekleyenler = yy.bekleyenler.filter((b) => zamanUygun(b.onay_tarihi));
+  const zamanYayindakiler = yayindakiler.filter((y) => zamanUygun(y.yayin_tarihi));
+  const zamanDurdurulanlar = durdurulular.filter((y) => zamanUygun(y.yayin_tarihi));
+  const turFiltresiYayinlari: { arac_turu?: string | null }[] =
+    aktifSekme === "bekleyen" ? zamanBekleyenler : aktifSekme === "yayinda" ? zamanYayindakiler : zamanDurdurulanlar;
+
   // Arama + kademeli listeleme merkezden (components/liste). Üç sekme üç ayrı
   // liste olduğu için üç kanca var; React kancaları koşulsuz çağrılmalı, bu yüzden
   // aktif sekmeye göre tek kanca kurulamaz — üçü de kurulur, biri kullanılır.
   const ARAMA_ALANLARI = [
-    { anahtar: "no", etiket: "Talep No", deger: (r: { talep_no: number }) => r.talep_no },
     { anahtar: "ad", etiket: "Ürün / Eğitim", deger: (r: { urun_adi: string }) => r.urun_adi },
+    { anahtar: "yayin_kodu", etiket: "Yayın Kodu", deger: (r: { firma_adi: string; talep_no: number }) => yayin_kodu(r.firma_adi, r.talep_no) },
   ];
-  const bekleyenListe = useListe({ veri: yy.bekleyenler, aramaAlanlari: ARAMA_ALANLARI });
-  const yayindaListe = useListe({ veri: yayindakiler, aramaAlanlari: ARAMA_ALANLARI });
-  const durdurulanListe = useListe({ veri: durdurulular, aramaAlanlari: ARAMA_ALANLARI });
+  const bekleyenListe = useListe({ veri: zamanBekleyenler.filter(turUygun), aramaAlanlari: ARAMA_ALANLARI });
+  const yayindaListe = useListe({ veri: zamanYayindakiler.filter(turUygun), aramaAlanlari: ARAMA_ALANLARI });
+  const durdurulanListe = useListe({ veri: zamanDurdurulanlar.filter(turUygun), aramaAlanlari: ARAMA_ALANLARI });
 
   // Auth guard layout'ta; burada yalnız kimlik kontrolü sırasında tam ekran spinner.
   if (kimlikYukleniyor || !ureticiMi) {
@@ -171,14 +211,15 @@ function YayinYonetimiIcerik() {
   }
 
   const aktifHedefOzet = yy.hedefOzetleri?.[aktifAnaSekme];
+  const aramaSonucMesaji = `${ARAMA_HEDEF_KITLE_ADLARI[aktifAnaSekme]} için yapmış olduğunuz aramada kayıt bulunmadı.`;
 
   return (
     <>
       <div className="min-h-full bg-[var(--tema-yerel-uretim-sayfa-zemini-11)]">
       <div className="mx-auto flex max-w-[1480px] flex-col gap-5 px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
         <YayinKumandaPaneli
+          anaSekmeler={anaSekmeler}
           aktifHedef={aktifAnaSekme}
-          aktifDurum={aktifSekme}
           bekleyen={aktifHedefOzet ? aktifHedefOzet.bekleyen : yy.bekleyenler.length}
           bekleyenHedefSayilari={yy.bekleyenHedefSayilari}
           canli={aktifHedefOzet ? aktifHedefOzet.canli : canliSayisi}
@@ -186,9 +227,35 @@ function YayinYonetimiIcerik() {
           durdurulan={aktifHedefOzet ? aktifHedefOzet.durdurulan : durdurulular.length}
           yukleniyor={!aktifHedefOzet && yy.loading}
           onHedefDegistir={setAktifAnaSekme}
-          onDurumDegistir={setAktifSekme}
           aksiyon={<YenileButonu yenileniyor={yy.yenileniyor} onYenile={() => { void yy.ozetCek(); void yy.veriCek(); }} disabled={!!acikAkordiyon || !!yy.islemLoading} />}
         />
+
+        <div className="flex min-w-0 flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="w-full min-w-0 sm:w-auto sm:flex-1">
+            <UttYayinTuruToggle
+              yayinlar={turFiltresiYayinlari}
+              deger={aktifYayinTuru}
+              onDegistir={setAktifYayinTuru}
+              className="max-w-full"
+            />
+          </div>
+          <SadeZamanToggle
+            deger={aktifZaman}
+            onDegistir={setAktifZaman}
+            etiket="Yayın zamanı"
+            className="max-w-full sm:ml-auto sm:shrink-0"
+          />
+        </div>
+
+        <div className="flex min-w-0 flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <YayinDurumuToggle aktifDurum={aktifSekme} onDurumDegistir={setAktifSekme} />
+          <ListeArama
+            arama={aktifSekme === "bekleyen" ? bekleyenListe.arama : aktifSekme === "yayinda" ? yayindaListe.arama : durdurulanListe.arama}
+            yukseklik="secim"
+            genislik="w-full"
+            className="w-full sm:ml-auto sm:w-[344px] sm:shrink"
+          />
+        </div>
 
         {yy.loading ? (
           <div className="flex flex-col items-center justify-center rounded-2xl border border-[var(--tema-yerel-uretim-cizgi-36)] bg-[var(--tema-yerel-uretim-kart-01)] py-16 text-center shadow-[0_6px_18px_var(--tema-yerel-uretim-golge-09)]">
@@ -201,11 +268,11 @@ function YayinYonetimiIcerik() {
         ) : (
           <>
         {aktifSekme === "bekleyen" && (
-          <ListeBasligi baslik="Yayına Hazır İçerikler" sayi={bekleyenListe.toplam} arama={<ListeArama arama={bekleyenListe.arama} yukseklik="secim" />} />
+          <ListeBasligi baslik="Yayına Hazır İçerikler" sayi={bekleyenListe.toplam} />
         )}
         {aktifSekme === "bekleyen" && (
           bekleyenListe.toplam === 0
-            ? <BosListe mesaj={yy.bekleyenler.length === 0 ? "Yayına hazırlanmayı bekleyen içerik yok." : "Aramanıza uyan kayıt bulunamadı."} />
+            ? <BosListe mesaj={!bekleyenListe.arama.aranan.trim() && yy.bekleyenler.length === 0 ? "Yayına hazırlanmayı bekleyen içerik yok." : aramaSonucMesaji} />
             : bekleyenListe.gorunen.map(b => (
               <BekleyenSatir key={b.soru_seti_durum_id} b={b}
                 islemLoading={yy.islemLoading}
@@ -244,11 +311,8 @@ function YayinYonetimiIcerik() {
         )}
 
         {aktifSekme === "yayinda" && (
-          <ListeBasligi baslik="Aktif Yayınlar" aciklama="Canlı ve planlanmış içeriklerin yaşam döngüsünü yönetin." sayi={yayindaListe.toplam} arama={<ListeArama arama={yayindaListe.arama} yukseklik="secim" />} />
-        )}
-        {aktifSekme === "yayinda" && (
           yayindaListe.toplam === 0
-            ? <BosListe mesaj={yayindakiler.length === 0 ? "Bu hedef kitle için aktif yayın yok." : "Aramanıza uyan kayıt bulunamadı."} />
+            ? <BosListe mesaj={!yayindaListe.arama.aranan.trim() && yayindakiler.length === 0 ? "Bu hedef kitle için aktif yayın yok." : aramaSonucMesaji} />
             : (
               <MobilYayinAkisi
                 kayitlar={yayindaListe.filtrelenmis}
@@ -275,10 +339,10 @@ function YayinYonetimiIcerik() {
                   </div>
                 )}
                 sayacGoster={false}
-                sifirlamaAnahtari={`${aktifAnaSekme}-${aktifSekme}-${yayindaListe.arama.alanAnahtari}-${yayindaListe.arama.aranan}`}
+                sifirlamaAnahtari={`${aktifAnaSekme}-${aktifSekme}-${aktifYayinTuru}-${aktifZaman}-${yayindaListe.arama.alanAnahtari}-${yayindaListe.arama.aranan}`}
                 masaustuIcerik={
                   <>
-                    <div className="grid grid-cols-1 items-start gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+                    <div className="grid auto-rows-fr grid-cols-1 items-stretch gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
                       {yayindaListe.gorunen.map((y) => (
                         <YayinSatir
                           key={y.yayin_id}
@@ -312,11 +376,11 @@ function YayinYonetimiIcerik() {
         )}
 
         {aktifSekme === "durdurulan" && (
-          <ListeBasligi baslik="Durdurulan Yayınlar" aciklama="Yayından kaldırılan içerikleri inceleyin veya yeniden başlatın." sayi={durdurulanListe.toplam} arama={<ListeArama arama={durdurulanListe.arama} yukseklik="secim" />} />
+          <ListeBasligi baslik="Durdurulan Yayınlar" aciklama="Yayından kaldırılan içerikleri inceleyin veya yeniden başlatın." sayi={durdurulanListe.toplam} />
         )}
         {aktifSekme === "durdurulan" && (
           durdurulanListe.toplam === 0
-            ? <BosListe mesaj={durdurulular.length === 0 ? "Bu hedef kitle için durdurulan yayın yok." : "Aramanıza uyan kayıt bulunamadı."} />
+            ? <BosListe mesaj={!durdurulanListe.arama.aranan.trim() && durdurulular.length === 0 ? "Bu hedef kitle için durdurulan yayın yok." : aramaSonucMesaji} />
             : durdurulanListe.gorunen.map(y => (
               <YayinSatir key={y.yayin_id} y={y}
                 islemLoading={yy.islemLoading}

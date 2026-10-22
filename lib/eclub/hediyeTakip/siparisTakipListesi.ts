@@ -5,7 +5,7 @@ import { trGunEkle } from "@/lib/zaman/kontrol";
 import { cekTakipTalepKapsami, type CekTakipKapsami } from "./cekTakipErisim";
 import { siparisTakipDurumu, siparisTakipStatlariniHesapla, type SiparisTakipApiYaniti, type SiparisTakipFiltreleri, type SiparisTakipTalebi } from "./siparisTakip";
 import { OGRENME_ARACI_TURLERI, type OgrenmeAraciTuru } from "@/lib/ogrenmeAraci/tipler";
-import { talepIdGoster } from "@/lib/utils/talepId";
+import { yayin_kodu } from "@/lib/utils/yayinKodu";
 
 interface HamSiparis {
   talep_id: string;
@@ -122,9 +122,9 @@ export async function siparisTakipVerisiniGetir(
   }
   const urunAdlari = new Map((urunSonucu.data ?? []).map((urun) => [urun.urun_id, urun.urun_adi]));
   const gorunenUrunIdleri = new Map((urunSonucu.data ?? []).map((urun) => [urun.urun_id, urun.gorunen_urun_id]));
-  const gorunenTalepIdleri = new Map((yayinSonucu.data ?? []).map((yayin) => [
+  const yayinKodlari = new Map((yayinSonucu.data ?? []).map((yayin) => [
     yayin.yayin_id,
-    talepIdGoster(yayin.firma_adi, yayin.talep_no),
+    yayin_kodu(yayin.firma_adi, yayin.talep_no),
   ]));
   const eczaneAdlari = new Map((eczaneSonucu.data ?? []).map((eczane) => [eczane.gln, eczane.eczane_adi]));
   const depoAdlari = new Map(depoKatalogu.map((depo) => [depo.depo_sube_id, konumEtiketi(depo)]));
@@ -168,7 +168,7 @@ export async function siparisTakipVerisiniGetir(
       },
       ogrenme_araci: {
         tur: ogrenmeAraciTuru(tekil(kayit.v_yayin_kunye)?.arac_turu),
-        gorunen_talep_id: gorunenTalepIdleri.get(kayit.yayin_id) ?? null,
+        yayin_kodu: yayinKodlari.get(kayit.yayin_id) ?? null,
       },
       siparis: {
         tipi: kayit.siparis_tipi,

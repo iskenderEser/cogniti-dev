@@ -13,7 +13,7 @@
 
 import { useRouter } from "next/navigation";
 import { TALEP_TURU_KURALLARI } from "@/lib/uretici/yetenekler";
-import { talepIdGoster } from "@/lib/utils/talepId";
+import { yayin_kodu } from "@/lib/utils/yayinKodu";
 import { adimlariCoz } from "@/lib/utils/uretimSeridi";
 import { ureticiDurumMesaji } from "@/lib/utils/durum/mesaj";
 import { useBunnyIslemeDurumu } from "@/hooks/useBunnyIslemeDurumu";
@@ -152,7 +152,7 @@ export function TalepDetayi({
         <div className="min-w-0">
           <span className="block text-lg font-extrabold tracking-[-0.015em] text-[var(--tema-yerel-uretim-ana-metin-14)]">{baslik}</span>
           <span className="mt-1 block text-xs font-semibold text-[var(--tema-yerel-uretim-yardimci-metin-14)]">
-            {talepIdGoster(talep.firma_adi, talep.talep_no)} · {formatTarih(talep.created_at)}
+            {yayin_kodu(talep.firma_adi, talep.talep_no)} · {formatTarih(talep.created_at)}
           </span>
           <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
             <TeknikPill teknikAdi={talep.teknik_adi} />

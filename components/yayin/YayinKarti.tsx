@@ -4,7 +4,7 @@ import React, { type MouseEvent, type ReactNode } from "react";
 import { Heart, Star, RotateCcw } from "lucide-react";
 import { yayinThumbnailIstemciCoz } from "@/lib/ogrenmeAraci/thumbnailIstemci";
 import { type IcerikTuru } from "@/lib/video/icerikTuru";
-import { talepIdGoster } from "@/lib/utils/talepId";
+import { yayin_kodu } from "@/lib/utils/yayinKodu";
 import type { OgrenmeAraciTuru } from "@/lib/ogrenmeAraci/tipler";
 import { AracVarsayilanKapak } from "@/components/ogrenme-araci/AracVarsayilanKapak";
 import { YayinTuruPill } from "@/components/ogrenme-araci/YayinTuruPill";
@@ -65,7 +65,7 @@ export interface YayinKartiProps {
   izlenmeGoster?: boolean;
   puanGoster?: boolean;
   extraPuanGoster?: boolean;
-  talepNoGoster?: boolean;
+  yayinKoduGoster?: boolean;
   donguGoster?: boolean;
 
   className?: string;
@@ -143,7 +143,7 @@ export function YayinKarti({
   izlenmeGoster = true,
   puanGoster = true,
   extraPuanGoster = true,
-  talepNoGoster = true,
+  yayinKoduGoster = true,
   donguGoster = true,
 
   className = "",
@@ -353,17 +353,17 @@ export function YayinKarti({
           )}
         </div>
 
-        {/* 2. Satır: Yayın Tarihi & Talep Kimliği */}
-        {(tarihGoster || talepNoGoster || tarihSatiriSagAksiyon) && (
+        {/* 2. Satır: Yayın Tarihi & Yayın Kodu */}
+        {(tarihGoster || yayinKoduGoster || tarihSatiriSagAksiyon) && (
           <div className="mt-1.5 flex items-center justify-between gap-1 text-xs text-[var(--tema-hoyk-ikincil-metin)] sm:text-[10px]">
             {tarihGoster ? (
               <span className="truncate">{formatTarihUzun(yayin.yayin_tarihi)}</span>
             ) : (
               <span />
             )}
-            {tarihSatiriSagAksiyon ?? (talepNoGoster && yayin.talep_no != null ? (
+            {tarihSatiriSagAksiyon ?? (yayinKoduGoster && yayin.talep_no != null ? (
               <span className="shrink-0 font-mono text-xs text-[var(--tema-hoyk-talep-metni)] sm:text-[10px]">
-                {talepIdGoster(yayin.firma_adi, yayin.talep_no)}
+                {yayin_kodu(yayin.firma_adi, yayin.talep_no)}
               </span>
             ) : (
               <span />

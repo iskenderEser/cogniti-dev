@@ -38,7 +38,7 @@ test("takip tablosu çek, içerik ve teslimat bilgilerini ayrı sütunlarda gös
   assert.match(listeOkuyucu, /eclub_cek_teslimat_outbox/);
   assert.match(listeOkuyucu, /alici_eposta, tamamlanma_at/);
   assert.match(listeOkuyucu, /urun_id, urun_adi, gorunen_urun_id/);
-  assert.match(listeOkuyucu, /talepIdGoster\(yayin\.firma_adi, yayin\.talep_no\)/);
+  assert.match(listeOkuyucu, /yayin_kodu\(yayin\.firma_adi, yayin\.talep_no\)/);
   assert.doesNotMatch(kart, /talep\.urun\.urun_id|talep\.ogrenme_araci\.talep_id/);
 });
 

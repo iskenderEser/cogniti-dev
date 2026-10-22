@@ -102,7 +102,7 @@ export function YeniTalepFormV2({ formu }: Props) {
   const videoIslemModalAcik = formu.videoYuklemeYuzdesi !== null || formu.videoIslemeBekleniyor;
   const icerikTuruSecimiGerekli = yetenek.acabilecegiTalepTurleri.length > 1;
 
-  // Eczanem hedefi yalnız ürün müdürü ailesine sunulur (İP-§4.1).
+  // Eczanem hedefi ürün müdürü ailesine ve Medikal Müdür'e sunulur.
   const hedefRoller = TUM_HEDEF_ROLLER.filter(
     (r) => (r !== "eczanem" || formu.eczanemSecilebilir) && hedefRolIkUreticisineAcikMi(formu.rol, r),
   );

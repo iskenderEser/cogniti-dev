@@ -5,8 +5,7 @@
 // Renk NÖTR (İskender kararı 27.07, docs/pill_envanteri.md §E-5): aşama sıralı bir
 // konum bilgisidir, uyarı değil. Önceden renkliydi ve durum pill'iyle çakışıyordu —
 // #eff6ff hem "Video aşaması" hem "inceleme bekleniyor" demekti (bulgu P-4).
-// Ayrıca aşama renk haritası iki dosyada kopyalanmıştı (P-5: UreticiAnaSayfa +
-// IuAnaSayfa); nötre alınınca harita tümden ortadan kalktı.
+// Nötr renk ortak kaynaktan okunur; ekranlara özel aşama renk haritaları yoktur.
 
 "use client";
 

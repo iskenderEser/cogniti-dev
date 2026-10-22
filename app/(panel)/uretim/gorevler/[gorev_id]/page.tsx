@@ -12,7 +12,7 @@ import { bunnyTusYukle } from "@/lib/video/bunnyTusIstemci";
 import { type SoruTaslagi, sorulardanTaslaklar, taslaklariBoyutla, taslaklariDogrula, taslaklardanSorular } from "@/lib/soru/taslak";
 import { IU_ROLU, URETICI_ROLLER } from "@/lib/utils/roller";
 import { durumMesaji, gorevDurumKodu, type Asama } from "@/lib/utils/durum/mesaj";
-import { talepIdGoster } from "@/lib/utils/talepId";
+import { yayin_kodu } from "@/lib/utils/yayinKodu";
 import { uretimToast, toastVaryant, type ToastAsama, type ToastOlay } from "@/lib/uretim/toastMesaj";
 import { URETIM_REVIZYON_TAVANI } from "@/lib/uretim/gorevSozlesmesi";
 import type { UretimGorevIcerigi, UretimGorevi } from "@/lib/uretim/gorevTipleri";
@@ -481,7 +481,7 @@ export default function UretimGorevDetayPage() {
         <button type="button" onClick={() => router.push(asama.liste)} className="w-fit border-0 bg-transparent p-0 text-sm text-[var(--tema-yerel-uretim-yardimci-metin-01)]">‹ {gorunenAsamaEtiketi} listesi</button>
         <section className="overflow-hidden rounded-xl border border-[var(--tema-yerel-uretim-cizgi-01)] bg-[var(--tema-yerel-uretim-kart-01)]">
           <div className="flex flex-wrap items-start justify-between gap-3 border-b border-[var(--tema-yerel-uretim-cizgi-03)] px-4 py-4 md:px-5">
-            <div><p className="text-[10px] font-bold uppercase tracking-wider text-[var(--tema-yerel-uretim-yardimci-metin-02)]">{gorunenAsamaEtiketi} görevi</p><h1 className="mt-1 text-lg font-bold text-[var(--tema-yerel-uretim-ana-metin-01)]">{gorev.talep?.urun_adi ?? "-"}</h1><p className="mt-1 text-xs text-[var(--tema-yerel-uretim-yardimci-metin-01)]">{talepIdGoster(gorev.talep?.firma_adi ?? "", gorev.talep?.talep_no ?? 0)}</p></div>
+            <div><p className="text-[10px] font-bold uppercase tracking-wider text-[var(--tema-yerel-uretim-yardimci-metin-02)]">{gorunenAsamaEtiketi} görevi</p><h1 className="mt-1 text-lg font-bold text-[var(--tema-yerel-uretim-ana-metin-01)]">{gorev.talep?.urun_adi ?? "-"}</h1><p className="mt-1 text-xs text-[var(--tema-yerel-uretim-yardimci-metin-01)]">{yayin_kodu(gorev.talep?.firma_adi ?? "", gorev.talep?.talep_no ?? 0)}</p></div>
             {durum && <span className="rounded-full px-3 py-1 text-xs font-semibold" style={{ background: durum.renk.bg, color: durum.renk.text, border: `1px solid ${durum.renk.border}` }}>{durum.metin}</span>}
           </div>
           <div className="flex flex-wrap gap-2 border-b border-[var(--tema-yerel-uretim-cizgi-03)] px-4 py-3 md:px-5"><TeknikPill teknikAdi={gorev.talep?.teknik_adi ?? "-"} /><HedefRolPilleri hedefRoller={gorev.talep?.hedef_roller ?? []} /><VaryantPill hazirVideo={gorev.talep?.hazir_video ?? false} hazirSoruSeti={gorev.talep?.hazir_soru_seti ?? false} ogrenmeAraciTuru={gorev.talep?.ogrenme_araci_turu} kendiSatirinda={false} />{gorev.atanan_iu && <span className="rounded-full border border-[var(--tema-yerel-uretim-cizgi-01)] px-2.5 py-1 text-[10px] text-[var(--tema-yerel-uretim-yardimci-metin-01)]">İçerik Üreticisi: {gorev.atanan_iu.ad_soyad}</span>}</div>

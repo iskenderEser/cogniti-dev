@@ -1,7 +1,7 @@
 "use client";
 
 import { YayinKarti } from "@/components/yayin/YayinKarti";
-import { talepIdGoster } from "@/lib/utils/talepId";
+import { yayin_kodu } from "@/lib/utils/yayinKodu";
 import type { OneriGecmisKaydi, OneriYayin } from "../../oneriler/_types";
 import { EclubGonderimDetayKarti } from "./EclubGonderimDetayKarti";
 
@@ -47,8 +47,8 @@ export function EclubYayinGonderimKarti({ yayin, yeni, secili, secilebilir, gond
       izlenmeGoster={false}
       puanGoster
       extraPuanGoster={false}
-      talepNoGoster={false}
-      tarihSatiriSagAksiyon={yayin.talep_no != null ? <span className="shrink-0 font-mono text-xs text-[var(--tema-hoyk-talep-metni)] sm:text-[10px]">{talepIdGoster(yayin.firma_adi, yayin.talep_no)}</span> : undefined}
+      yayinKoduGoster={false}
+      tarihSatiriSagAksiyon={yayin.talep_no != null ? <span className="shrink-0 font-mono text-xs text-[var(--tema-hoyk-talep-metni)] sm:text-[10px]">{yayin_kodu(yayin.firma_adi, yayin.talep_no)}</span> : undefined}
       donguGoster={false}
       thumbnailAltBant={!incelemeTamamlandi ? <span className="block w-full rounded-md bg-[var(--tema-hoyk-inceleme-uyari-zemin)] px-1.5 py-0.5 text-center text-[9px] font-medium leading-3 text-[var(--tema-hoyk-inceleme-uyari-metin)]">Göndermek için yayını tamamlayın</span> : undefined}
       puanSatiriSagAksiyon={<span className="inline-flex shrink-0 rounded-md border border-[var(--tema-hoyk-gonderim-cizgi)] bg-[var(--tema-hoyk-gonderim-zemin)] px-1.5 py-0.5 text-[10px] font-normal leading-tight text-[var(--tema-hoyk-gonderim-metin)] sm:text-[9px]">{gonderilecekGoster ? hedefKisiSayisi - gonderilenSayisi : gonderilenSayisi}/{hedefKisiSayisi} {gonderilecekGoster ? "Gönderilecek" : "Gönderilen"}</span>}

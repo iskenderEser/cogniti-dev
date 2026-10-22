@@ -101,7 +101,7 @@ test("sipariş tablosu çek takibiyle ortak bilgi başlıklarını ayrı sütunl
     assert.match(arayuz, new RegExp(`baslik: '${baslik}'`));
   }
   assert.match(arayuz, /talep\.urun\.gorunen_urun_id/);
-  assert.match(arayuz, /talep\.ogrenme_araci\.gorunen_talep_id/);
+  assert.match(arayuz, /talep\.ogrenme_araci\.yayin_kodu/);
   assert.match(arayuz, /siparisTercihi\(talep\)/);
   assert.match(arayuz, /"Zorunlu" : "Tercihli"/);
   assert.match(arayuz, /function SiparisDurumu/);
@@ -112,7 +112,7 @@ test("sipariş tablosu çek takibiyle ortak bilgi başlıklarını ayrı sütunl
   assert.match(liste, /v_yayin_kunye \( urun_id, arac_turu \)/);
   assert.match(liste, /v_yayin_detay/);
   assert.match(liste, /gorunen_urun_id/);
-  assert.match(liste, /talepIdGoster/);
+  assert.match(liste, /yayin_kodu/);
   assert.doesNotMatch(arayuz, /hour:|minute:/);
 });
 

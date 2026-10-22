@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { hataYaniti, sunucuHatasi, yetkiHatasi, rolHatasi, validasyonHatasi } from "@/lib/utils/hataIsle";
 import { rolCozucu } from "@/lib/utils/rolCozucu";
+import { yayin_kodu } from "@/lib/utils/yayinKodu";
 import { ADMIN_ROLLER, yayinDetayModaliGorebilir } from "@/lib/utils/roller";
 import { yayinThumbnailCevabi, type YayinKapakGirdisi } from "@/lib/ogrenmeAraci/yayinThumbnail";
 
@@ -42,6 +43,7 @@ export async function GET(
       .select(`
         yayin_id,
         firma_id,
+        firma_adi,
         talep_no,
         durum,
         yayin_tarihi,
@@ -89,7 +91,7 @@ export async function GET(
 
     const kapakli = yayinThumbnailCevabi(yayin as unknown as YayinKapakGirdisi & Record<string, unknown>);
 
-    return NextResponse.json({ yayin: kapakli }, { status: 200 });
+    return NextResponse.json({ yayin: { ...kapakli, yayin_kodu: yayin_kodu(yayin.firma_adi, yayin.talep_no) } }, { status: 200 });
   } catch (err) {
     return sunucuHatasi(err, "GET /api/raporlar/yayin-detay/[yayin_id]");
   }

@@ -16,7 +16,7 @@
 
 import { useState } from "react";
 import { TALEP_TURU_KURALLARI } from "@/lib/uretici/yetenekler";
-import { talepIdGoster } from "@/lib/utils/talepId";
+import { yayin_kodu } from "@/lib/utils/yayinKodu";
 import { AsamaPill } from "@/components/pill";
 import type { TalepSatiri } from "../_ureticiRolTypes";
 
@@ -79,7 +79,7 @@ export function IptalAkordiyonu({ talepler, formatTarih }: Props) {
               {talepler.map((t) => (
                 <tr key={t.talep_id} className="border-b border-[var(--tema-yerel-uretim-cizgi-02)]">
                   <td className="px-4 py-3 text-[var(--tema-yerel-uretim-yardimci-metin-01)] text-xs whitespace-nowrap">
-                    {talepIdGoster(t.firma_adi, t.talep_no)}
+                    {yayin_kodu(t.firma_adi, t.talep_no)}
                   </td>
                   <td className="px-3 py-3 text-[var(--tema-yerel-uretim-yardimci-metin-01)]">{baslikVer(t)}</td>
                   <td className="px-3 py-3"><AsamaPill asama={t.asama} ogrenmeAraciTuru={t.ogrenme_araci_turu} /></td>
