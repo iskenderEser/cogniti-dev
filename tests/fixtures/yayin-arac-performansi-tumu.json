@@ -1,0 +1,1884 @@
+[
+  {
+    "anahtar": "uretici:bu_hafta",
+    "kapsam": {
+      "tur": "uretici",
+      "firmaId": "f1",
+      "raporKimligi": "u1",
+      "ureticiId": "u1"
+    },
+    "aralik": {
+      "baslangic": "2026-10-18T21:00:00.000Z",
+      "bitis": "2026-10-22T12:00:00.000Z"
+    },
+    "araclar": [
+      {
+        "arac_turu": "video",
+        "yayin_sayisi": 1,
+        "kayitli_arac_puani": 30,
+        "baslatma": 5,
+        "tamamlama": 2,
+        "dogru_cevap": 0,
+        "yanlis_cevap": 0,
+        "kazanilan_puan": 80,
+        "kaybedilen_puan": 5,
+        "oneri_gonderildi": 0,
+        "oneri_tamamlandi": 0,
+        "challenge_gonderildi": 0,
+        "challenge_tamamlandi": 0,
+        "eclub_dagitim": 0,
+        "eclub_dagitim_tamamlandi": 0,
+        "eczanem_dagitim": 0,
+        "eczanem_dagitim_tamamlandi": 0,
+        "net_kazanilan_puan": 75,
+        "dogru_cevap_yuzdesi": null,
+        "roller": {
+          "utt": {
+            "baslatma": 3,
+            "tamamlama": 1,
+            "kazanilan_puan": 50,
+            "kaybedilen_puan": 5,
+            "net_puan": 45
+          },
+          "kd_utt": {
+            "baslatma": 2,
+            "tamamlama": 1,
+            "kazanilan_puan": 30,
+            "kaybedilen_puan": 0,
+            "net_puan": 30
+          }
+        },
+        "yayinlar": [
+          {
+            "yayin_id": "eski-video",
+            "yayin_kodu": "SentetikFirma_10001",
+            "talep_id": "talep-eski-video",
+            "talep_no": 10001,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 50,
+            "kaybedilen_puan": 5,
+            "baslatma": 3,
+            "tamamlama": 1
+          },
+          {
+            "yayin_id": "haftalik-video",
+            "yayin_kodu": "SentetikFirma_10002",
+            "talep_id": "talep-haftalik-video",
+            "talep_no": 10002,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 30,
+            "kaybedilen_puan": 0,
+            "baslatma": 2,
+            "tamamlama": 1
+          }
+        ]
+      },
+      {
+        "arac_turu": "podcast",
+        "yayin_sayisi": 0,
+        "kayitli_arac_puani": 0,
+        "baslatma": 2,
+        "tamamlama": 1,
+        "dogru_cevap": 0,
+        "yanlis_cevap": 0,
+        "kazanilan_puan": 40,
+        "kaybedilen_puan": 10,
+        "oneri_gonderildi": 0,
+        "oneri_tamamlandi": 0,
+        "challenge_gonderildi": 1,
+        "challenge_tamamlandi": 0,
+        "eclub_dagitim": 0,
+        "eclub_dagitim_tamamlandi": 0,
+        "eczanem_dagitim": 0,
+        "eczanem_dagitim_tamamlandi": 0,
+        "net_kazanilan_puan": 30,
+        "dogru_cevap_yuzdesi": null,
+        "roller": {
+          "bm": {
+            "baslatma": 2,
+            "tamamlama": 1,
+            "kazanilan_puan": 40,
+            "kaybedilen_puan": 10,
+            "net_puan": 30
+          }
+        },
+        "yayinlar": [
+          {
+            "yayin_id": "aylik-podcast",
+            "yayin_kodu": "SentetikFirma_10003",
+            "talep_id": "talep-aylik-podcast",
+            "talep_no": 10003,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 40,
+            "kaybedilen_puan": 10,
+            "baslatma": 2,
+            "tamamlama": 1
+          }
+        ]
+      },
+      {
+        "arac_turu": "gorsel",
+        "yayin_sayisi": 0,
+        "kayitli_arac_puani": 0,
+        "baslatma": 2,
+        "tamamlama": 4,
+        "dogru_cevap": 0,
+        "yanlis_cevap": 0,
+        "kazanilan_puan": 11,
+        "kaybedilen_puan": 20,
+        "oneri_gonderildi": 0,
+        "oneri_tamamlandi": 0,
+        "challenge_gonderildi": 0,
+        "challenge_tamamlandi": 0,
+        "eclub_dagitim": 1,
+        "eclub_dagitim_tamamlandi": 0,
+        "eczanem_dagitim": 0,
+        "eczanem_dagitim_tamamlandi": 0,
+        "net_kazanilan_puan": -9,
+        "dogru_cevap_yuzdesi": null,
+        "roller": {
+          "eczaci": {
+            "baslatma": 2,
+            "tamamlama": 1,
+            "kazanilan_puan": 5,
+            "kaybedilen_puan": 20,
+            "net_puan": -15
+          },
+          "ikinci_eczaci": {
+            "baslatma": 0,
+            "tamamlama": 1,
+            "kazanilan_puan": 2,
+            "kaybedilen_puan": 0,
+            "net_puan": 2
+          },
+          "yardimci_eczaci": {
+            "baslatma": 0,
+            "tamamlama": 1,
+            "kazanilan_puan": 2,
+            "kaybedilen_puan": 0,
+            "net_puan": 2
+          },
+          "eczane_teknisyeni": {
+            "baslatma": 0,
+            "tamamlama": 1,
+            "kazanilan_puan": 2,
+            "kaybedilen_puan": 0,
+            "net_puan": 2
+          }
+        },
+        "yayinlar": [
+          {
+            "yayin_id": "yillik-brosur",
+            "yayin_kodu": "SentetikFirma_10004",
+            "talep_id": "talep-yillik-brosur",
+            "talep_no": 10004,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 11,
+            "kaybedilen_puan": 20,
+            "baslatma": 2,
+            "tamamlama": 4
+          }
+        ]
+      },
+      {
+        "arac_turu": "flip_pdf",
+        "yayin_sayisi": 0,
+        "kayitli_arac_puani": 0,
+        "baslatma": 2,
+        "tamamlama": 1,
+        "dogru_cevap": 0,
+        "yanlis_cevap": 0,
+        "kazanilan_puan": 25,
+        "kaybedilen_puan": 0,
+        "oneri_gonderildi": 0,
+        "oneri_tamamlandi": 0,
+        "challenge_gonderildi": 0,
+        "challenge_tamamlandi": 0,
+        "eclub_dagitim": 0,
+        "eclub_dagitim_tamamlandi": 0,
+        "eczanem_dagitim": 0,
+        "eczanem_dagitim_tamamlandi": 0,
+        "net_kazanilan_puan": 25,
+        "dogru_cevap_yuzdesi": null,
+        "roller": {
+          "musteri": {
+            "baslatma": 2,
+            "tamamlama": 1,
+            "kazanilan_puan": 25,
+            "kaybedilen_puan": 0,
+            "net_puan": 25
+          }
+        },
+        "yayinlar": [
+          {
+            "yayin_id": "eski-literatur",
+            "yayin_kodu": "SentetikFirma_10005",
+            "talep_id": "talep-eski-literatur",
+            "talep_no": 10005,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 25,
+            "kaybedilen_puan": 0,
+            "baslatma": 2,
+            "tamamlama": 1
+          }
+        ]
+      }
+    ],
+    "kart_metni": "Öğrenme Aracı PerformansıVideo1 Yeni Yayın · Bu HaftaBu Hafta Kümülatif Tüketim2%40 Tamamlama5 BaşlatmaYeni yayın puanı: 30 pBu Hafta Oluşan Puan%58 Pay75 p Net+80−5ROL TÜKETİM SAYILARIUTT1KD-UTT1Podcast0 Yeni Yayın · Bu HaftaBu Hafta Kümülatif Tüketim1%50 Tamamlama2 BaşlatmaYeni yayın puanı: 0 pBu Hafta Oluşan Puan%23 Pay30 p Net+40−10ROL TÜKETİM SAYILARIBM1Dijital Broşür0 Yeni Yayın · Bu HaftaBu Hafta Kümülatif Tüketim4%100 Tamamlama2 BaşlatmaYeni yayın puanı: 0 pBu Hafta Oluşan Puan-9 p Net+11−20ROL TÜKETİM SAYILARIEczacı12. Eczacı1Yrd. Eczacı1+1Literatür0 Yeni Yayın · Bu HaftaBu Hafta Kümülatif Tüketim1%50 Tamamlama2 BaşlatmaYeni yayın puanı: 0 pBu Hafta Oluşan Puan%19 Pay25 p Net+25−0ROL TÜKETİM SAYILARIDanışan1Video, Bu Hafta Etkileşim Detayları2Rol Motivasyon TablosuRolTüketimNet PuanSaha Temsilcisi (UTT)1 (%50)+45 pKıdemli UTT1 (%50)+30 pBu Hafta Etkileşim Alan Yayınlar (2)Yayın KoduTamamlama - PuanSentetikFirma_100011 tamamlama · 45 pSentetikFirma_100021 tamamlama · 30 pPodcast, Bu Hafta Etkileşim Detayları1Rol Motivasyon TablosuRolTüketimNet PuanBölge Müdürü (BM)1 (%100)+30 pBu Hafta Etkileşim Alan Yayınlar (1)Yayın KoduTamamlama - PuanSentetikFirma_100031 tamamlama · 30 pDijital Broşür, Bu Hafta Etkileşim Detayları1Rol Motivasyon TablosuRolTüketimNet PuanEczacı1 (%25)-15 pİkinci Eczacı1 (%25)+2 pYardımcı Eczacı1 (%25)+2 pEczane Teknisyeni1 (%25)+2 pBu Hafta Etkileşim Alan Yayınlar (1)Yayın KoduTamamlama - PuanSentetikFirma_100044 tamamlama · -9 pLiteratür, Bu Hafta Etkileşim Detayları1Rol Motivasyon TablosuRolTüketimNet PuanDanışan / Eczanem1 (%100)+25 pBu Hafta Etkileşim Alan Yayınlar (1)Yayın KoduTamamlama - PuanSentetikFirma_100051 tamamlama · 25 pKümülatif Tüketim seçili dönemde öğrenme araçları için tamamlanan izleme, dinleme veya okuma hareketlerinin toplam sayısını ifade eder."
+  },
+  {
+    "anahtar": "uretici:bu_ay",
+    "kapsam": {
+      "tur": "uretici",
+      "firmaId": "f1",
+      "raporKimligi": "u1",
+      "ureticiId": "u1"
+    },
+    "aralik": {
+      "baslangic": "2026-09-30T21:00:00.000Z",
+      "bitis": "2026-10-22T12:00:00.000Z"
+    },
+    "araclar": [
+      {
+        "arac_turu": "video",
+        "yayin_sayisi": 1,
+        "kayitli_arac_puani": 30,
+        "baslatma": 5,
+        "tamamlama": 5,
+        "dogru_cevap": 0,
+        "yanlis_cevap": 0,
+        "kazanilan_puan": 140,
+        "kaybedilen_puan": 5,
+        "oneri_gonderildi": 0,
+        "oneri_tamamlandi": 0,
+        "challenge_gonderildi": 0,
+        "challenge_tamamlandi": 0,
+        "eclub_dagitim": 0,
+        "eclub_dagitim_tamamlandi": 0,
+        "eczanem_dagitim": 0,
+        "eczanem_dagitim_tamamlandi": 0,
+        "net_kazanilan_puan": 135,
+        "dogru_cevap_yuzdesi": null,
+        "roller": {
+          "utt": {
+            "baslatma": 3,
+            "tamamlama": 4,
+            "kazanilan_puan": 110,
+            "kaybedilen_puan": 5,
+            "net_puan": 105
+          },
+          "kd_utt": {
+            "baslatma": 2,
+            "tamamlama": 1,
+            "kazanilan_puan": 30,
+            "kaybedilen_puan": 0,
+            "net_puan": 30
+          }
+        },
+        "yayinlar": [
+          {
+            "yayin_id": "eski-video",
+            "yayin_kodu": "SentetikFirma_10001",
+            "talep_id": "talep-eski-video",
+            "talep_no": 10001,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 110,
+            "kaybedilen_puan": 5,
+            "baslatma": 3,
+            "tamamlama": 4
+          },
+          {
+            "yayin_id": "haftalik-video",
+            "yayin_kodu": "SentetikFirma_10002",
+            "talep_id": "talep-haftalik-video",
+            "talep_no": 10002,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 30,
+            "kaybedilen_puan": 0,
+            "baslatma": 2,
+            "tamamlama": 1
+          }
+        ]
+      },
+      {
+        "arac_turu": "podcast",
+        "yayin_sayisi": 1,
+        "kayitli_arac_puani": 40,
+        "baslatma": 2,
+        "tamamlama": 1,
+        "dogru_cevap": 0,
+        "yanlis_cevap": 0,
+        "kazanilan_puan": 40,
+        "kaybedilen_puan": 10,
+        "oneri_gonderildi": 0,
+        "oneri_tamamlandi": 0,
+        "challenge_gonderildi": 1,
+        "challenge_tamamlandi": 0,
+        "eclub_dagitim": 0,
+        "eclub_dagitim_tamamlandi": 0,
+        "eczanem_dagitim": 0,
+        "eczanem_dagitim_tamamlandi": 0,
+        "net_kazanilan_puan": 30,
+        "dogru_cevap_yuzdesi": null,
+        "roller": {
+          "bm": {
+            "baslatma": 2,
+            "tamamlama": 1,
+            "kazanilan_puan": 40,
+            "kaybedilen_puan": 10,
+            "net_puan": 30
+          }
+        },
+        "yayinlar": [
+          {
+            "yayin_id": "aylik-podcast",
+            "yayin_kodu": "SentetikFirma_10003",
+            "talep_id": "talep-aylik-podcast",
+            "talep_no": 10003,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 40,
+            "kaybedilen_puan": 10,
+            "baslatma": 2,
+            "tamamlama": 1
+          }
+        ]
+      },
+      {
+        "arac_turu": "gorsel",
+        "yayin_sayisi": 0,
+        "kayitli_arac_puani": 0,
+        "baslatma": 2,
+        "tamamlama": 4,
+        "dogru_cevap": 0,
+        "yanlis_cevap": 0,
+        "kazanilan_puan": 11,
+        "kaybedilen_puan": 20,
+        "oneri_gonderildi": 0,
+        "oneri_tamamlandi": 0,
+        "challenge_gonderildi": 0,
+        "challenge_tamamlandi": 0,
+        "eclub_dagitim": 1,
+        "eclub_dagitim_tamamlandi": 0,
+        "eczanem_dagitim": 0,
+        "eczanem_dagitim_tamamlandi": 0,
+        "net_kazanilan_puan": -9,
+        "dogru_cevap_yuzdesi": null,
+        "roller": {
+          "eczaci": {
+            "baslatma": 2,
+            "tamamlama": 1,
+            "kazanilan_puan": 5,
+            "kaybedilen_puan": 20,
+            "net_puan": -15
+          },
+          "ikinci_eczaci": {
+            "baslatma": 0,
+            "tamamlama": 1,
+            "kazanilan_puan": 2,
+            "kaybedilen_puan": 0,
+            "net_puan": 2
+          },
+          "yardimci_eczaci": {
+            "baslatma": 0,
+            "tamamlama": 1,
+            "kazanilan_puan": 2,
+            "kaybedilen_puan": 0,
+            "net_puan": 2
+          },
+          "eczane_teknisyeni": {
+            "baslatma": 0,
+            "tamamlama": 1,
+            "kazanilan_puan": 2,
+            "kaybedilen_puan": 0,
+            "net_puan": 2
+          }
+        },
+        "yayinlar": [
+          {
+            "yayin_id": "yillik-brosur",
+            "yayin_kodu": "SentetikFirma_10004",
+            "talep_id": "talep-yillik-brosur",
+            "talep_no": 10004,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 11,
+            "kaybedilen_puan": 20,
+            "baslatma": 2,
+            "tamamlama": 4
+          }
+        ]
+      },
+      {
+        "arac_turu": "flip_pdf",
+        "yayin_sayisi": 0,
+        "kayitli_arac_puani": 0,
+        "baslatma": 2,
+        "tamamlama": 1,
+        "dogru_cevap": 0,
+        "yanlis_cevap": 0,
+        "kazanilan_puan": 25,
+        "kaybedilen_puan": 0,
+        "oneri_gonderildi": 0,
+        "oneri_tamamlandi": 0,
+        "challenge_gonderildi": 0,
+        "challenge_tamamlandi": 0,
+        "eclub_dagitim": 0,
+        "eclub_dagitim_tamamlandi": 0,
+        "eczanem_dagitim": 0,
+        "eczanem_dagitim_tamamlandi": 0,
+        "net_kazanilan_puan": 25,
+        "dogru_cevap_yuzdesi": null,
+        "roller": {
+          "musteri": {
+            "baslatma": 2,
+            "tamamlama": 1,
+            "kazanilan_puan": 25,
+            "kaybedilen_puan": 0,
+            "net_puan": 25
+          }
+        },
+        "yayinlar": [
+          {
+            "yayin_id": "eski-literatur",
+            "yayin_kodu": "SentetikFirma_10005",
+            "talep_id": "talep-eski-literatur",
+            "talep_no": 10005,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 25,
+            "kaybedilen_puan": 0,
+            "baslatma": 2,
+            "tamamlama": 1
+          }
+        ]
+      }
+    ],
+    "kart_metni": "Öğrenme Aracı PerformansıVideo1 Yeni Yayın · Bu AyBu Ay Kümülatif Tüketim5%100 Tamamlama5 BaşlatmaYeni yayın puanı: 30 pBu Ay Oluşan Puan%71 Pay135 p Net+140−5ROL TÜKETİM SAYILARIUTT4KD-UTT1Podcast1 Yeni Yayın · Bu AyBu Ay Kümülatif Tüketim1%50 Tamamlama2 BaşlatmaYeni yayın puanı: 40 pBu Ay Oluşan Puan%16 Pay30 p Net+40−10ROL TÜKETİM SAYILARIBM1Dijital Broşür0 Yeni Yayın · Bu AyBu Ay Kümülatif Tüketim4%100 Tamamlama2 BaşlatmaYeni yayın puanı: 0 pBu Ay Oluşan Puan-9 p Net+11−20ROL TÜKETİM SAYILARIEczacı12. Eczacı1Yrd. Eczacı1+1Literatür0 Yeni Yayın · Bu AyBu Ay Kümülatif Tüketim1%50 Tamamlama2 BaşlatmaYeni yayın puanı: 0 pBu Ay Oluşan Puan%13 Pay25 p Net+25−0ROL TÜKETİM SAYILARIDanışan1Video, Bu Ay Etkileşim Detayları2Rol Motivasyon TablosuRolTüketimNet PuanSaha Temsilcisi (UTT)4 (%80)+105 pKıdemli UTT1 (%20)+30 pBu Ay Etkileşim Alan Yayınlar (2)Yayın KoduTamamlama - PuanSentetikFirma_100014 tamamlama · 105 pSentetikFirma_100021 tamamlama · 30 pPodcast, Bu Ay Etkileşim Detayları1Rol Motivasyon TablosuRolTüketimNet PuanBölge Müdürü (BM)1 (%100)+30 pBu Ay Etkileşim Alan Yayınlar (1)Yayın KoduTamamlama - PuanSentetikFirma_100031 tamamlama · 30 pDijital Broşür, Bu Ay Etkileşim Detayları1Rol Motivasyon TablosuRolTüketimNet PuanEczacı1 (%25)-15 pİkinci Eczacı1 (%25)+2 pYardımcı Eczacı1 (%25)+2 pEczane Teknisyeni1 (%25)+2 pBu Ay Etkileşim Alan Yayınlar (1)Yayın KoduTamamlama - PuanSentetikFirma_100044 tamamlama · -9 pLiteratür, Bu Ay Etkileşim Detayları1Rol Motivasyon TablosuRolTüketimNet PuanDanışan / Eczanem1 (%100)+25 pBu Ay Etkileşim Alan Yayınlar (1)Yayın KoduTamamlama - PuanSentetikFirma_100051 tamamlama · 25 pKümülatif Tüketim seçili dönemde öğrenme araçları için tamamlanan izleme, dinleme veya okuma hareketlerinin toplam sayısını ifade eder."
+  },
+  {
+    "anahtar": "uretici:bu_donem",
+    "kapsam": {
+      "tur": "uretici",
+      "firmaId": "f1",
+      "raporKimligi": "u1",
+      "ureticiId": "u1"
+    },
+    "aralik": {
+      "baslangic": "2026-09-30T21:00:00.000Z",
+      "bitis": "2026-10-22T12:00:00.000Z"
+    },
+    "araclar": [
+      {
+        "arac_turu": "video",
+        "yayin_sayisi": 1,
+        "kayitli_arac_puani": 30,
+        "baslatma": 5,
+        "tamamlama": 5,
+        "dogru_cevap": 0,
+        "yanlis_cevap": 0,
+        "kazanilan_puan": 140,
+        "kaybedilen_puan": 5,
+        "oneri_gonderildi": 0,
+        "oneri_tamamlandi": 0,
+        "challenge_gonderildi": 0,
+        "challenge_tamamlandi": 0,
+        "eclub_dagitim": 0,
+        "eclub_dagitim_tamamlandi": 0,
+        "eczanem_dagitim": 0,
+        "eczanem_dagitim_tamamlandi": 0,
+        "net_kazanilan_puan": 135,
+        "dogru_cevap_yuzdesi": null,
+        "roller": {
+          "utt": {
+            "baslatma": 3,
+            "tamamlama": 4,
+            "kazanilan_puan": 110,
+            "kaybedilen_puan": 5,
+            "net_puan": 105
+          },
+          "kd_utt": {
+            "baslatma": 2,
+            "tamamlama": 1,
+            "kazanilan_puan": 30,
+            "kaybedilen_puan": 0,
+            "net_puan": 30
+          }
+        },
+        "yayinlar": [
+          {
+            "yayin_id": "eski-video",
+            "yayin_kodu": "SentetikFirma_10001",
+            "talep_id": "talep-eski-video",
+            "talep_no": 10001,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 110,
+            "kaybedilen_puan": 5,
+            "baslatma": 3,
+            "tamamlama": 4
+          },
+          {
+            "yayin_id": "haftalik-video",
+            "yayin_kodu": "SentetikFirma_10002",
+            "talep_id": "talep-haftalik-video",
+            "talep_no": 10002,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 30,
+            "kaybedilen_puan": 0,
+            "baslatma": 2,
+            "tamamlama": 1
+          }
+        ]
+      },
+      {
+        "arac_turu": "podcast",
+        "yayin_sayisi": 1,
+        "kayitli_arac_puani": 40,
+        "baslatma": 2,
+        "tamamlama": 1,
+        "dogru_cevap": 0,
+        "yanlis_cevap": 0,
+        "kazanilan_puan": 40,
+        "kaybedilen_puan": 10,
+        "oneri_gonderildi": 0,
+        "oneri_tamamlandi": 0,
+        "challenge_gonderildi": 1,
+        "challenge_tamamlandi": 0,
+        "eclub_dagitim": 0,
+        "eclub_dagitim_tamamlandi": 0,
+        "eczanem_dagitim": 0,
+        "eczanem_dagitim_tamamlandi": 0,
+        "net_kazanilan_puan": 30,
+        "dogru_cevap_yuzdesi": null,
+        "roller": {
+          "bm": {
+            "baslatma": 2,
+            "tamamlama": 1,
+            "kazanilan_puan": 40,
+            "kaybedilen_puan": 10,
+            "net_puan": 30
+          }
+        },
+        "yayinlar": [
+          {
+            "yayin_id": "aylik-podcast",
+            "yayin_kodu": "SentetikFirma_10003",
+            "talep_id": "talep-aylik-podcast",
+            "talep_no": 10003,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 40,
+            "kaybedilen_puan": 10,
+            "baslatma": 2,
+            "tamamlama": 1
+          }
+        ]
+      },
+      {
+        "arac_turu": "gorsel",
+        "yayin_sayisi": 0,
+        "kayitli_arac_puani": 0,
+        "baslatma": 2,
+        "tamamlama": 4,
+        "dogru_cevap": 0,
+        "yanlis_cevap": 0,
+        "kazanilan_puan": 11,
+        "kaybedilen_puan": 20,
+        "oneri_gonderildi": 0,
+        "oneri_tamamlandi": 0,
+        "challenge_gonderildi": 0,
+        "challenge_tamamlandi": 0,
+        "eclub_dagitim": 1,
+        "eclub_dagitim_tamamlandi": 0,
+        "eczanem_dagitim": 0,
+        "eczanem_dagitim_tamamlandi": 0,
+        "net_kazanilan_puan": -9,
+        "dogru_cevap_yuzdesi": null,
+        "roller": {
+          "eczaci": {
+            "baslatma": 2,
+            "tamamlama": 1,
+            "kazanilan_puan": 5,
+            "kaybedilen_puan": 20,
+            "net_puan": -15
+          },
+          "ikinci_eczaci": {
+            "baslatma": 0,
+            "tamamlama": 1,
+            "kazanilan_puan": 2,
+            "kaybedilen_puan": 0,
+            "net_puan": 2
+          },
+          "yardimci_eczaci": {
+            "baslatma": 0,
+            "tamamlama": 1,
+            "kazanilan_puan": 2,
+            "kaybedilen_puan": 0,
+            "net_puan": 2
+          },
+          "eczane_teknisyeni": {
+            "baslatma": 0,
+            "tamamlama": 1,
+            "kazanilan_puan": 2,
+            "kaybedilen_puan": 0,
+            "net_puan": 2
+          }
+        },
+        "yayinlar": [
+          {
+            "yayin_id": "yillik-brosur",
+            "yayin_kodu": "SentetikFirma_10004",
+            "talep_id": "talep-yillik-brosur",
+            "talep_no": 10004,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 11,
+            "kaybedilen_puan": 20,
+            "baslatma": 2,
+            "tamamlama": 4
+          }
+        ]
+      },
+      {
+        "arac_turu": "flip_pdf",
+        "yayin_sayisi": 0,
+        "kayitli_arac_puani": 0,
+        "baslatma": 2,
+        "tamamlama": 1,
+        "dogru_cevap": 0,
+        "yanlis_cevap": 0,
+        "kazanilan_puan": 25,
+        "kaybedilen_puan": 0,
+        "oneri_gonderildi": 0,
+        "oneri_tamamlandi": 0,
+        "challenge_gonderildi": 0,
+        "challenge_tamamlandi": 0,
+        "eclub_dagitim": 0,
+        "eclub_dagitim_tamamlandi": 0,
+        "eczanem_dagitim": 0,
+        "eczanem_dagitim_tamamlandi": 0,
+        "net_kazanilan_puan": 25,
+        "dogru_cevap_yuzdesi": null,
+        "roller": {
+          "musteri": {
+            "baslatma": 2,
+            "tamamlama": 1,
+            "kazanilan_puan": 25,
+            "kaybedilen_puan": 0,
+            "net_puan": 25
+          }
+        },
+        "yayinlar": [
+          {
+            "yayin_id": "eski-literatur",
+            "yayin_kodu": "SentetikFirma_10005",
+            "talep_id": "talep-eski-literatur",
+            "talep_no": 10005,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 25,
+            "kaybedilen_puan": 0,
+            "baslatma": 2,
+            "tamamlama": 1
+          }
+        ]
+      }
+    ],
+    "kart_metni": "Öğrenme Aracı PerformansıVideo1 Yeni Yayın · Bu DönemBu Dönem Kümülatif Tüketim5%100 Tamamlama5 BaşlatmaYeni yayın puanı: 30 pBu Dönem Oluşan Puan%71 Pay135 p Net+140−5ROL TÜKETİM SAYILARIUTT4KD-UTT1Podcast1 Yeni Yayın · Bu DönemBu Dönem Kümülatif Tüketim1%50 Tamamlama2 BaşlatmaYeni yayın puanı: 40 pBu Dönem Oluşan Puan%16 Pay30 p Net+40−10ROL TÜKETİM SAYILARIBM1Dijital Broşür0 Yeni Yayın · Bu DönemBu Dönem Kümülatif Tüketim4%100 Tamamlama2 BaşlatmaYeni yayın puanı: 0 pBu Dönem Oluşan Puan-9 p Net+11−20ROL TÜKETİM SAYILARIEczacı12. Eczacı1Yrd. Eczacı1+1Literatür0 Yeni Yayın · Bu DönemBu Dönem Kümülatif Tüketim1%50 Tamamlama2 BaşlatmaYeni yayın puanı: 0 pBu Dönem Oluşan Puan%13 Pay25 p Net+25−0ROL TÜKETİM SAYILARIDanışan1Video, Bu Dönem Etkileşim Detayları2Rol Motivasyon TablosuRolTüketimNet PuanSaha Temsilcisi (UTT)4 (%80)+105 pKıdemli UTT1 (%20)+30 pBu Dönem Etkileşim Alan Yayınlar (2)Yayın KoduTamamlama - PuanSentetikFirma_100014 tamamlama · 105 pSentetikFirma_100021 tamamlama · 30 pPodcast, Bu Dönem Etkileşim Detayları1Rol Motivasyon TablosuRolTüketimNet PuanBölge Müdürü (BM)1 (%100)+30 pBu Dönem Etkileşim Alan Yayınlar (1)Yayın KoduTamamlama - PuanSentetikFirma_100031 tamamlama · 30 pDijital Broşür, Bu Dönem Etkileşim Detayları1Rol Motivasyon TablosuRolTüketimNet PuanEczacı1 (%25)-15 pİkinci Eczacı1 (%25)+2 pYardımcı Eczacı1 (%25)+2 pEczane Teknisyeni1 (%25)+2 pBu Dönem Etkileşim Alan Yayınlar (1)Yayın KoduTamamlama - PuanSentetikFirma_100044 tamamlama · -9 pLiteratür, Bu Dönem Etkileşim Detayları1Rol Motivasyon TablosuRolTüketimNet PuanDanışan / Eczanem1 (%100)+25 pBu Dönem Etkileşim Alan Yayınlar (1)Yayın KoduTamamlama - PuanSentetikFirma_100051 tamamlama · 25 pKümülatif Tüketim seçili dönemde öğrenme araçları için tamamlanan izleme, dinleme veya okuma hareketlerinin toplam sayısını ifade eder."
+  },
+  {
+    "anahtar": "uretici:bu_yil",
+    "kapsam": {
+      "tur": "uretici",
+      "firmaId": "f1",
+      "raporKimligi": "u1",
+      "ureticiId": "u1"
+    },
+    "aralik": {
+      "baslangic": "2025-12-31T21:00:00.000Z",
+      "bitis": "2026-10-22T12:00:00.000Z"
+    },
+    "araclar": [
+      {
+        "arac_turu": "video",
+        "yayin_sayisi": 2,
+        "kayitli_arac_puani": 50,
+        "baslatma": 5,
+        "tamamlama": 9,
+        "dogru_cevap": 0,
+        "yanlis_cevap": 0,
+        "kazanilan_puan": 220,
+        "kaybedilen_puan": 5,
+        "oneri_gonderildi": 0,
+        "oneri_tamamlandi": 0,
+        "challenge_gonderildi": 0,
+        "challenge_tamamlandi": 0,
+        "eclub_dagitim": 0,
+        "eclub_dagitim_tamamlandi": 0,
+        "eczanem_dagitim": 0,
+        "eczanem_dagitim_tamamlandi": 0,
+        "net_kazanilan_puan": 215,
+        "dogru_cevap_yuzdesi": null,
+        "roller": {
+          "utt": {
+            "baslatma": 3,
+            "tamamlama": 8,
+            "kazanilan_puan": 190,
+            "kaybedilen_puan": 5,
+            "net_puan": 185
+          },
+          "kd_utt": {
+            "baslatma": 2,
+            "tamamlama": 1,
+            "kazanilan_puan": 30,
+            "kaybedilen_puan": 0,
+            "net_puan": 30
+          }
+        },
+        "yayinlar": [
+          {
+            "yayin_id": "eski-video",
+            "yayin_kodu": "SentetikFirma_10001",
+            "talep_id": "talep-eski-video",
+            "talep_no": 10001,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 190,
+            "kaybedilen_puan": 5,
+            "baslatma": 3,
+            "tamamlama": 8
+          },
+          {
+            "yayin_id": "haftalik-video",
+            "yayin_kodu": "SentetikFirma_10002",
+            "talep_id": "talep-haftalik-video",
+            "talep_no": 10002,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 30,
+            "kaybedilen_puan": 0,
+            "baslatma": 2,
+            "tamamlama": 1
+          }
+        ]
+      },
+      {
+        "arac_turu": "podcast",
+        "yayin_sayisi": 1,
+        "kayitli_arac_puani": 40,
+        "baslatma": 2,
+        "tamamlama": 1,
+        "dogru_cevap": 0,
+        "yanlis_cevap": 0,
+        "kazanilan_puan": 40,
+        "kaybedilen_puan": 10,
+        "oneri_gonderildi": 0,
+        "oneri_tamamlandi": 0,
+        "challenge_gonderildi": 1,
+        "challenge_tamamlandi": 0,
+        "eclub_dagitim": 0,
+        "eclub_dagitim_tamamlandi": 0,
+        "eczanem_dagitim": 0,
+        "eczanem_dagitim_tamamlandi": 0,
+        "net_kazanilan_puan": 30,
+        "dogru_cevap_yuzdesi": null,
+        "roller": {
+          "bm": {
+            "baslatma": 2,
+            "tamamlama": 1,
+            "kazanilan_puan": 40,
+            "kaybedilen_puan": 10,
+            "net_puan": 30
+          }
+        },
+        "yayinlar": [
+          {
+            "yayin_id": "aylik-podcast",
+            "yayin_kodu": "SentetikFirma_10003",
+            "talep_id": "talep-aylik-podcast",
+            "talep_no": 10003,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 40,
+            "kaybedilen_puan": 10,
+            "baslatma": 2,
+            "tamamlama": 1
+          }
+        ]
+      },
+      {
+        "arac_turu": "gorsel",
+        "yayin_sayisi": 1,
+        "kayitli_arac_puani": 10,
+        "baslatma": 2,
+        "tamamlama": 4,
+        "dogru_cevap": 0,
+        "yanlis_cevap": 0,
+        "kazanilan_puan": 11,
+        "kaybedilen_puan": 20,
+        "oneri_gonderildi": 0,
+        "oneri_tamamlandi": 0,
+        "challenge_gonderildi": 0,
+        "challenge_tamamlandi": 0,
+        "eclub_dagitim": 1,
+        "eclub_dagitim_tamamlandi": 0,
+        "eczanem_dagitim": 0,
+        "eczanem_dagitim_tamamlandi": 0,
+        "net_kazanilan_puan": -9,
+        "dogru_cevap_yuzdesi": null,
+        "roller": {
+          "eczaci": {
+            "baslatma": 2,
+            "tamamlama": 1,
+            "kazanilan_puan": 5,
+            "kaybedilen_puan": 20,
+            "net_puan": -15
+          },
+          "ikinci_eczaci": {
+            "baslatma": 0,
+            "tamamlama": 1,
+            "kazanilan_puan": 2,
+            "kaybedilen_puan": 0,
+            "net_puan": 2
+          },
+          "yardimci_eczaci": {
+            "baslatma": 0,
+            "tamamlama": 1,
+            "kazanilan_puan": 2,
+            "kaybedilen_puan": 0,
+            "net_puan": 2
+          },
+          "eczane_teknisyeni": {
+            "baslatma": 0,
+            "tamamlama": 1,
+            "kazanilan_puan": 2,
+            "kaybedilen_puan": 0,
+            "net_puan": 2
+          }
+        },
+        "yayinlar": [
+          {
+            "yayin_id": "yillik-brosur",
+            "yayin_kodu": "SentetikFirma_10004",
+            "talep_id": "talep-yillik-brosur",
+            "talep_no": 10004,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 11,
+            "kaybedilen_puan": 20,
+            "baslatma": 2,
+            "tamamlama": 4
+          }
+        ]
+      },
+      {
+        "arac_turu": "flip_pdf",
+        "yayin_sayisi": 1,
+        "kayitli_arac_puani": 5,
+        "baslatma": 3,
+        "tamamlama": 2,
+        "dogru_cevap": 0,
+        "yanlis_cevap": 0,
+        "kazanilan_puan": 25,
+        "kaybedilen_puan": 0,
+        "oneri_gonderildi": 0,
+        "oneri_tamamlandi": 0,
+        "challenge_gonderildi": 0,
+        "challenge_tamamlandi": 0,
+        "eclub_dagitim": 0,
+        "eclub_dagitim_tamamlandi": 0,
+        "eczanem_dagitim": 0,
+        "eczanem_dagitim_tamamlandi": 0,
+        "net_kazanilan_puan": 25,
+        "dogru_cevap_yuzdesi": null,
+        "roller": {
+          "musteri": {
+            "baslatma": 3,
+            "tamamlama": 2,
+            "kazanilan_puan": 25,
+            "kaybedilen_puan": 0,
+            "net_puan": 25
+          }
+        },
+        "yayinlar": [
+          {
+            "yayin_id": "eski-literatur",
+            "yayin_kodu": "SentetikFirma_10005",
+            "talep_id": "talep-eski-literatur",
+            "talep_no": 10005,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 25,
+            "kaybedilen_puan": 0,
+            "baslatma": 2,
+            "tamamlama": 1
+          },
+          {
+            "yayin_id": "tam-yil-baslangici",
+            "yayin_kodu": "SentetikFirma_10008",
+            "talep_id": "talep-tam-yil-baslangici",
+            "talep_no": 10008,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 0,
+            "kaybedilen_puan": 0,
+            "baslatma": 1,
+            "tamamlama": 1
+          }
+        ]
+      }
+    ],
+    "kart_metni": "Öğrenme Aracı PerformansıVideo2 Yeni Yayın · Bu YılBu Yıl Kümülatif Tüketim9%100 Tamamlama5 BaşlatmaYeni yayın puanı: 50 pBu Yıl Oluşan Puan%80 Pay215 p Net+220−5ROL TÜKETİM SAYILARIUTT8KD-UTT1Podcast1 Yeni Yayın · Bu YılBu Yıl Kümülatif Tüketim1%50 Tamamlama2 BaşlatmaYeni yayın puanı: 40 pBu Yıl Oluşan Puan%11 Pay30 p Net+40−10ROL TÜKETİM SAYILARIBM1Dijital Broşür1 Yeni Yayın · Bu YılBu Yıl Kümülatif Tüketim4%100 Tamamlama2 BaşlatmaYeni yayın puanı: 10 pBu Yıl Oluşan Puan-9 p Net+11−20ROL TÜKETİM SAYILARIEczacı12. Eczacı1Yrd. Eczacı1+1Literatür1 Yeni Yayın · Bu YılBu Yıl Kümülatif Tüketim2%67 Tamamlama3 BaşlatmaYeni yayın puanı: 5 pBu Yıl Oluşan Puan%9 Pay25 p Net+25−0ROL TÜKETİM SAYILARIDanışan2Video, Bu Yıl Etkileşim Detayları2Rol Motivasyon TablosuRolTüketimNet PuanSaha Temsilcisi (UTT)8 (%89)+185 pKıdemli UTT1 (%11)+30 pBu Yıl Etkileşim Alan Yayınlar (2)Yayın KoduTamamlama - PuanSentetikFirma_100018 tamamlama · 185 pSentetikFirma_100021 tamamlama · 30 pPodcast, Bu Yıl Etkileşim Detayları1Rol Motivasyon TablosuRolTüketimNet PuanBölge Müdürü (BM)1 (%100)+30 pBu Yıl Etkileşim Alan Yayınlar (1)Yayın KoduTamamlama - PuanSentetikFirma_100031 tamamlama · 30 pDijital Broşür, Bu Yıl Etkileşim Detayları1Rol Motivasyon TablosuRolTüketimNet PuanEczacı1 (%25)-15 pİkinci Eczacı1 (%25)+2 pYardımcı Eczacı1 (%25)+2 pEczane Teknisyeni1 (%25)+2 pBu Yıl Etkileşim Alan Yayınlar (1)Yayın KoduTamamlama - PuanSentetikFirma_100044 tamamlama · -9 pLiteratür, Bu Yıl Etkileşim Detayları2Rol Motivasyon TablosuRolTüketimNet PuanDanışan / Eczanem2 (%100)+25 pBu Yıl Etkileşim Alan Yayınlar (2)Yayın KoduTamamlama - PuanSentetikFirma_100051 tamamlama · 25 pSentetikFirma_100081 tamamlama · 0 pKümülatif Tüketim seçili dönemde öğrenme araçları için tamamlanan izleme, dinleme veya okuma hareketlerinin toplam sayısını ifade eder."
+  },
+  {
+    "anahtar": "firma:bu_hafta",
+    "kapsam": {
+      "tur": "firma",
+      "firmaId": "f1",
+      "raporKimligi": "gm1",
+      "ureticiId": null
+    },
+    "aralik": {
+      "baslangic": "2026-10-18T21:00:00.000Z",
+      "bitis": "2026-10-22T12:00:00.000Z"
+    },
+    "araclar": [
+      {
+        "arac_turu": "video",
+        "yayin_sayisi": 1,
+        "kayitli_arac_puani": 30,
+        "baslatma": 5,
+        "tamamlama": 2,
+        "dogru_cevap": 0,
+        "yanlis_cevap": 0,
+        "kazanilan_puan": 80,
+        "kaybedilen_puan": 5,
+        "oneri_gonderildi": 0,
+        "oneri_tamamlandi": 0,
+        "challenge_gonderildi": 0,
+        "challenge_tamamlandi": 0,
+        "eclub_dagitim": 0,
+        "eclub_dagitim_tamamlandi": 0,
+        "eczanem_dagitim": 0,
+        "eczanem_dagitim_tamamlandi": 0,
+        "net_kazanilan_puan": 75,
+        "dogru_cevap_yuzdesi": null,
+        "roller": {
+          "utt": {
+            "baslatma": 3,
+            "tamamlama": 1,
+            "kazanilan_puan": 50,
+            "kaybedilen_puan": 5,
+            "net_puan": 45
+          },
+          "kd_utt": {
+            "baslatma": 2,
+            "tamamlama": 1,
+            "kazanilan_puan": 30,
+            "kaybedilen_puan": 0,
+            "net_puan": 30
+          }
+        },
+        "yayinlar": [
+          {
+            "yayin_id": "eski-video",
+            "yayin_kodu": "SentetikFirma_10001",
+            "talep_id": "talep-eski-video",
+            "talep_no": 10001,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 50,
+            "kaybedilen_puan": 5,
+            "baslatma": 3,
+            "tamamlama": 1
+          },
+          {
+            "yayin_id": "haftalik-video",
+            "yayin_kodu": "SentetikFirma_10002",
+            "talep_id": "talep-haftalik-video",
+            "talep_no": 10002,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 30,
+            "kaybedilen_puan": 0,
+            "baslatma": 2,
+            "tamamlama": 1
+          }
+        ]
+      },
+      {
+        "arac_turu": "podcast",
+        "yayin_sayisi": 0,
+        "kayitli_arac_puani": 0,
+        "baslatma": 2,
+        "tamamlama": 1,
+        "dogru_cevap": 0,
+        "yanlis_cevap": 0,
+        "kazanilan_puan": 40,
+        "kaybedilen_puan": 10,
+        "oneri_gonderildi": 0,
+        "oneri_tamamlandi": 0,
+        "challenge_gonderildi": 1,
+        "challenge_tamamlandi": 0,
+        "eclub_dagitim": 0,
+        "eclub_dagitim_tamamlandi": 0,
+        "eczanem_dagitim": 0,
+        "eczanem_dagitim_tamamlandi": 0,
+        "net_kazanilan_puan": 30,
+        "dogru_cevap_yuzdesi": null,
+        "roller": {
+          "bm": {
+            "baslatma": 2,
+            "tamamlama": 1,
+            "kazanilan_puan": 40,
+            "kaybedilen_puan": 10,
+            "net_puan": 30
+          }
+        },
+        "yayinlar": [
+          {
+            "yayin_id": "aylik-podcast",
+            "yayin_kodu": "SentetikFirma_10003",
+            "talep_id": "talep-aylik-podcast",
+            "talep_no": 10003,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 40,
+            "kaybedilen_puan": 10,
+            "baslatma": 2,
+            "tamamlama": 1
+          }
+        ]
+      },
+      {
+        "arac_turu": "gorsel",
+        "yayin_sayisi": 1,
+        "kayitli_arac_puani": 15,
+        "baslatma": 4,
+        "tamamlama": 5,
+        "dogru_cevap": 0,
+        "yanlis_cevap": 0,
+        "kazanilan_puan": 26,
+        "kaybedilen_puan": 20,
+        "oneri_gonderildi": 0,
+        "oneri_tamamlandi": 0,
+        "challenge_gonderildi": 0,
+        "challenge_tamamlandi": 0,
+        "eclub_dagitim": 1,
+        "eclub_dagitim_tamamlandi": 0,
+        "eczanem_dagitim": 0,
+        "eczanem_dagitim_tamamlandi": 0,
+        "net_kazanilan_puan": 6,
+        "dogru_cevap_yuzdesi": null,
+        "roller": {
+          "eczaci": {
+            "baslatma": 2,
+            "tamamlama": 1,
+            "kazanilan_puan": 5,
+            "kaybedilen_puan": 20,
+            "net_puan": -15
+          },
+          "eczane_teknisyeni": {
+            "baslatma": 2,
+            "tamamlama": 2,
+            "kazanilan_puan": 17,
+            "kaybedilen_puan": 0,
+            "net_puan": 17
+          },
+          "ikinci_eczaci": {
+            "baslatma": 0,
+            "tamamlama": 1,
+            "kazanilan_puan": 2,
+            "kaybedilen_puan": 0,
+            "net_puan": 2
+          },
+          "yardimci_eczaci": {
+            "baslatma": 0,
+            "tamamlama": 1,
+            "kazanilan_puan": 2,
+            "kaybedilen_puan": 0,
+            "net_puan": 2
+          }
+        },
+        "yayinlar": [
+          {
+            "yayin_id": "yillik-brosur",
+            "yayin_kodu": "SentetikFirma_10004",
+            "talep_id": "talep-yillik-brosur",
+            "talep_no": 10004,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 11,
+            "kaybedilen_puan": 20,
+            "baslatma": 2,
+            "tamamlama": 4
+          },
+          {
+            "yayin_id": "diger-uretici-brosur",
+            "yayin_kodu": "SentetikFirma_10006",
+            "talep_id": "talep-diger-uretici-brosur",
+            "talep_no": 10006,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 15,
+            "kaybedilen_puan": 0,
+            "baslatma": 2,
+            "tamamlama": 1
+          }
+        ]
+      },
+      {
+        "arac_turu": "flip_pdf",
+        "yayin_sayisi": 0,
+        "kayitli_arac_puani": 0,
+        "baslatma": 2,
+        "tamamlama": 1,
+        "dogru_cevap": 0,
+        "yanlis_cevap": 0,
+        "kazanilan_puan": 25,
+        "kaybedilen_puan": 0,
+        "oneri_gonderildi": 0,
+        "oneri_tamamlandi": 0,
+        "challenge_gonderildi": 0,
+        "challenge_tamamlandi": 0,
+        "eclub_dagitim": 0,
+        "eclub_dagitim_tamamlandi": 0,
+        "eczanem_dagitim": 0,
+        "eczanem_dagitim_tamamlandi": 0,
+        "net_kazanilan_puan": 25,
+        "dogru_cevap_yuzdesi": null,
+        "roller": {
+          "musteri": {
+            "baslatma": 2,
+            "tamamlama": 1,
+            "kazanilan_puan": 25,
+            "kaybedilen_puan": 0,
+            "net_puan": 25
+          }
+        },
+        "yayinlar": [
+          {
+            "yayin_id": "eski-literatur",
+            "yayin_kodu": "SentetikFirma_10005",
+            "talep_id": "talep-eski-literatur",
+            "talep_no": 10005,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 25,
+            "kaybedilen_puan": 0,
+            "baslatma": 2,
+            "tamamlama": 1
+          }
+        ]
+      }
+    ],
+    "kart_metni": "Öğrenme Aracı PerformansıVideo1 Yeni Yayın · Bu HaftaBu Hafta Kümülatif Tüketim2%40 Tamamlama5 BaşlatmaYeni yayın puanı: 30 pBu Hafta Oluşan Puan%55 Pay75 p Net+80−5ROL TÜKETİM SAYILARIUTT1KD-UTT1Podcast0 Yeni Yayın · Bu HaftaBu Hafta Kümülatif Tüketim1%50 Tamamlama2 BaşlatmaYeni yayın puanı: 0 pBu Hafta Oluşan Puan%22 Pay30 p Net+40−10ROL TÜKETİM SAYILARIBM1Dijital Broşür1 Yeni Yayın · Bu HaftaBu Hafta Kümülatif Tüketim5%100 Tamamlama4 BaşlatmaYeni yayın puanı: 15 pBu Hafta Oluşan Puan%4 Pay6 p Net+26−20ROL TÜKETİM SAYILARIEczacı1Teknisyen22. Eczacı1+1Literatür0 Yeni Yayın · Bu HaftaBu Hafta Kümülatif Tüketim1%50 Tamamlama2 BaşlatmaYeni yayın puanı: 0 pBu Hafta Oluşan Puan%18 Pay25 p Net+25−0ROL TÜKETİM SAYILARIDanışan1Video, Bu Hafta Etkileşim Detayları2Rol Motivasyon TablosuRolTüketimNet PuanSaha Temsilcisi (UTT)1 (%50)+45 pKıdemli UTT1 (%50)+30 pBu Hafta Etkileşim Alan Yayınlar (2)Yayın KoduTamamlama - PuanSentetikFirma_100011 tamamlama · 45 pSentetikFirma_100021 tamamlama · 30 pPodcast, Bu Hafta Etkileşim Detayları1Rol Motivasyon TablosuRolTüketimNet PuanBölge Müdürü (BM)1 (%100)+30 pBu Hafta Etkileşim Alan Yayınlar (1)Yayın KoduTamamlama - PuanSentetikFirma_100031 tamamlama · 30 pDijital Broşür, Bu Hafta Etkileşim Detayları2Rol Motivasyon TablosuRolTüketimNet PuanEczacı1 (%20)-15 pEczane Teknisyeni2 (%40)+17 pİkinci Eczacı1 (%20)+2 pYardımcı Eczacı1 (%20)+2 pBu Hafta Etkileşim Alan Yayınlar (2)Yayın KoduTamamlama - PuanSentetikFirma_100044 tamamlama · -9 pSentetikFirma_100061 tamamlama · 15 pLiteratür, Bu Hafta Etkileşim Detayları1Rol Motivasyon TablosuRolTüketimNet PuanDanışan / Eczanem1 (%100)+25 pBu Hafta Etkileşim Alan Yayınlar (1)Yayın KoduTamamlama - PuanSentetikFirma_100051 tamamlama · 25 pKümülatif Tüketim seçili dönemde öğrenme araçları için tamamlanan izleme, dinleme veya okuma hareketlerinin toplam sayısını ifade eder."
+  },
+  {
+    "anahtar": "firma:bu_ay",
+    "kapsam": {
+      "tur": "firma",
+      "firmaId": "f1",
+      "raporKimligi": "gm1",
+      "ureticiId": null
+    },
+    "aralik": {
+      "baslangic": "2026-09-30T21:00:00.000Z",
+      "bitis": "2026-10-22T12:00:00.000Z"
+    },
+    "araclar": [
+      {
+        "arac_turu": "video",
+        "yayin_sayisi": 1,
+        "kayitli_arac_puani": 30,
+        "baslatma": 5,
+        "tamamlama": 5,
+        "dogru_cevap": 0,
+        "yanlis_cevap": 0,
+        "kazanilan_puan": 140,
+        "kaybedilen_puan": 5,
+        "oneri_gonderildi": 0,
+        "oneri_tamamlandi": 0,
+        "challenge_gonderildi": 0,
+        "challenge_tamamlandi": 0,
+        "eclub_dagitim": 0,
+        "eclub_dagitim_tamamlandi": 0,
+        "eczanem_dagitim": 0,
+        "eczanem_dagitim_tamamlandi": 0,
+        "net_kazanilan_puan": 135,
+        "dogru_cevap_yuzdesi": null,
+        "roller": {
+          "utt": {
+            "baslatma": 3,
+            "tamamlama": 4,
+            "kazanilan_puan": 110,
+            "kaybedilen_puan": 5,
+            "net_puan": 105
+          },
+          "kd_utt": {
+            "baslatma": 2,
+            "tamamlama": 1,
+            "kazanilan_puan": 30,
+            "kaybedilen_puan": 0,
+            "net_puan": 30
+          }
+        },
+        "yayinlar": [
+          {
+            "yayin_id": "eski-video",
+            "yayin_kodu": "SentetikFirma_10001",
+            "talep_id": "talep-eski-video",
+            "talep_no": 10001,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 110,
+            "kaybedilen_puan": 5,
+            "baslatma": 3,
+            "tamamlama": 4
+          },
+          {
+            "yayin_id": "haftalik-video",
+            "yayin_kodu": "SentetikFirma_10002",
+            "talep_id": "talep-haftalik-video",
+            "talep_no": 10002,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 30,
+            "kaybedilen_puan": 0,
+            "baslatma": 2,
+            "tamamlama": 1
+          }
+        ]
+      },
+      {
+        "arac_turu": "podcast",
+        "yayin_sayisi": 1,
+        "kayitli_arac_puani": 40,
+        "baslatma": 2,
+        "tamamlama": 1,
+        "dogru_cevap": 0,
+        "yanlis_cevap": 0,
+        "kazanilan_puan": 40,
+        "kaybedilen_puan": 10,
+        "oneri_gonderildi": 0,
+        "oneri_tamamlandi": 0,
+        "challenge_gonderildi": 1,
+        "challenge_tamamlandi": 0,
+        "eclub_dagitim": 0,
+        "eclub_dagitim_tamamlandi": 0,
+        "eczanem_dagitim": 0,
+        "eczanem_dagitim_tamamlandi": 0,
+        "net_kazanilan_puan": 30,
+        "dogru_cevap_yuzdesi": null,
+        "roller": {
+          "bm": {
+            "baslatma": 2,
+            "tamamlama": 1,
+            "kazanilan_puan": 40,
+            "kaybedilen_puan": 10,
+            "net_puan": 30
+          }
+        },
+        "yayinlar": [
+          {
+            "yayin_id": "aylik-podcast",
+            "yayin_kodu": "SentetikFirma_10003",
+            "talep_id": "talep-aylik-podcast",
+            "talep_no": 10003,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 40,
+            "kaybedilen_puan": 10,
+            "baslatma": 2,
+            "tamamlama": 1
+          }
+        ]
+      },
+      {
+        "arac_turu": "gorsel",
+        "yayin_sayisi": 1,
+        "kayitli_arac_puani": 15,
+        "baslatma": 4,
+        "tamamlama": 5,
+        "dogru_cevap": 0,
+        "yanlis_cevap": 0,
+        "kazanilan_puan": 26,
+        "kaybedilen_puan": 20,
+        "oneri_gonderildi": 0,
+        "oneri_tamamlandi": 0,
+        "challenge_gonderildi": 0,
+        "challenge_tamamlandi": 0,
+        "eclub_dagitim": 1,
+        "eclub_dagitim_tamamlandi": 0,
+        "eczanem_dagitim": 0,
+        "eczanem_dagitim_tamamlandi": 0,
+        "net_kazanilan_puan": 6,
+        "dogru_cevap_yuzdesi": null,
+        "roller": {
+          "eczaci": {
+            "baslatma": 2,
+            "tamamlama": 1,
+            "kazanilan_puan": 5,
+            "kaybedilen_puan": 20,
+            "net_puan": -15
+          },
+          "eczane_teknisyeni": {
+            "baslatma": 2,
+            "tamamlama": 2,
+            "kazanilan_puan": 17,
+            "kaybedilen_puan": 0,
+            "net_puan": 17
+          },
+          "ikinci_eczaci": {
+            "baslatma": 0,
+            "tamamlama": 1,
+            "kazanilan_puan": 2,
+            "kaybedilen_puan": 0,
+            "net_puan": 2
+          },
+          "yardimci_eczaci": {
+            "baslatma": 0,
+            "tamamlama": 1,
+            "kazanilan_puan": 2,
+            "kaybedilen_puan": 0,
+            "net_puan": 2
+          }
+        },
+        "yayinlar": [
+          {
+            "yayin_id": "yillik-brosur",
+            "yayin_kodu": "SentetikFirma_10004",
+            "talep_id": "talep-yillik-brosur",
+            "talep_no": 10004,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 11,
+            "kaybedilen_puan": 20,
+            "baslatma": 2,
+            "tamamlama": 4
+          },
+          {
+            "yayin_id": "diger-uretici-brosur",
+            "yayin_kodu": "SentetikFirma_10006",
+            "talep_id": "talep-diger-uretici-brosur",
+            "talep_no": 10006,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 15,
+            "kaybedilen_puan": 0,
+            "baslatma": 2,
+            "tamamlama": 1
+          }
+        ]
+      },
+      {
+        "arac_turu": "flip_pdf",
+        "yayin_sayisi": 0,
+        "kayitli_arac_puani": 0,
+        "baslatma": 2,
+        "tamamlama": 1,
+        "dogru_cevap": 0,
+        "yanlis_cevap": 0,
+        "kazanilan_puan": 25,
+        "kaybedilen_puan": 0,
+        "oneri_gonderildi": 0,
+        "oneri_tamamlandi": 0,
+        "challenge_gonderildi": 0,
+        "challenge_tamamlandi": 0,
+        "eclub_dagitim": 0,
+        "eclub_dagitim_tamamlandi": 0,
+        "eczanem_dagitim": 0,
+        "eczanem_dagitim_tamamlandi": 0,
+        "net_kazanilan_puan": 25,
+        "dogru_cevap_yuzdesi": null,
+        "roller": {
+          "musteri": {
+            "baslatma": 2,
+            "tamamlama": 1,
+            "kazanilan_puan": 25,
+            "kaybedilen_puan": 0,
+            "net_puan": 25
+          }
+        },
+        "yayinlar": [
+          {
+            "yayin_id": "eski-literatur",
+            "yayin_kodu": "SentetikFirma_10005",
+            "talep_id": "talep-eski-literatur",
+            "talep_no": 10005,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 25,
+            "kaybedilen_puan": 0,
+            "baslatma": 2,
+            "tamamlama": 1
+          }
+        ]
+      }
+    ],
+    "kart_metni": "Öğrenme Aracı PerformansıVideo1 Yeni Yayın · Bu AyBu Ay Kümülatif Tüketim5%100 Tamamlama5 BaşlatmaYeni yayın puanı: 30 pBu Ay Oluşan Puan%69 Pay135 p Net+140−5ROL TÜKETİM SAYILARIUTT4KD-UTT1Podcast1 Yeni Yayın · Bu AyBu Ay Kümülatif Tüketim1%50 Tamamlama2 BaşlatmaYeni yayın puanı: 40 pBu Ay Oluşan Puan%15 Pay30 p Net+40−10ROL TÜKETİM SAYILARIBM1Dijital Broşür1 Yeni Yayın · Bu AyBu Ay Kümülatif Tüketim5%100 Tamamlama4 BaşlatmaYeni yayın puanı: 15 pBu Ay Oluşan Puan%3 Pay6 p Net+26−20ROL TÜKETİM SAYILARIEczacı1Teknisyen22. Eczacı1+1Literatür0 Yeni Yayın · Bu AyBu Ay Kümülatif Tüketim1%50 Tamamlama2 BaşlatmaYeni yayın puanı: 0 pBu Ay Oluşan Puan%13 Pay25 p Net+25−0ROL TÜKETİM SAYILARIDanışan1Video, Bu Ay Etkileşim Detayları2Rol Motivasyon TablosuRolTüketimNet PuanSaha Temsilcisi (UTT)4 (%80)+105 pKıdemli UTT1 (%20)+30 pBu Ay Etkileşim Alan Yayınlar (2)Yayın KoduTamamlama - PuanSentetikFirma_100014 tamamlama · 105 pSentetikFirma_100021 tamamlama · 30 pPodcast, Bu Ay Etkileşim Detayları1Rol Motivasyon TablosuRolTüketimNet PuanBölge Müdürü (BM)1 (%100)+30 pBu Ay Etkileşim Alan Yayınlar (1)Yayın KoduTamamlama - PuanSentetikFirma_100031 tamamlama · 30 pDijital Broşür, Bu Ay Etkileşim Detayları2Rol Motivasyon TablosuRolTüketimNet PuanEczacı1 (%20)-15 pEczane Teknisyeni2 (%40)+17 pİkinci Eczacı1 (%20)+2 pYardımcı Eczacı1 (%20)+2 pBu Ay Etkileşim Alan Yayınlar (2)Yayın KoduTamamlama - PuanSentetikFirma_100044 tamamlama · -9 pSentetikFirma_100061 tamamlama · 15 pLiteratür, Bu Ay Etkileşim Detayları1Rol Motivasyon TablosuRolTüketimNet PuanDanışan / Eczanem1 (%100)+25 pBu Ay Etkileşim Alan Yayınlar (1)Yayın KoduTamamlama - PuanSentetikFirma_100051 tamamlama · 25 pKümülatif Tüketim seçili dönemde öğrenme araçları için tamamlanan izleme, dinleme veya okuma hareketlerinin toplam sayısını ifade eder."
+  },
+  {
+    "anahtar": "firma:bu_donem",
+    "kapsam": {
+      "tur": "firma",
+      "firmaId": "f1",
+      "raporKimligi": "gm1",
+      "ureticiId": null
+    },
+    "aralik": {
+      "baslangic": "2026-09-30T21:00:00.000Z",
+      "bitis": "2026-10-22T12:00:00.000Z"
+    },
+    "araclar": [
+      {
+        "arac_turu": "video",
+        "yayin_sayisi": 1,
+        "kayitli_arac_puani": 30,
+        "baslatma": 5,
+        "tamamlama": 5,
+        "dogru_cevap": 0,
+        "yanlis_cevap": 0,
+        "kazanilan_puan": 140,
+        "kaybedilen_puan": 5,
+        "oneri_gonderildi": 0,
+        "oneri_tamamlandi": 0,
+        "challenge_gonderildi": 0,
+        "challenge_tamamlandi": 0,
+        "eclub_dagitim": 0,
+        "eclub_dagitim_tamamlandi": 0,
+        "eczanem_dagitim": 0,
+        "eczanem_dagitim_tamamlandi": 0,
+        "net_kazanilan_puan": 135,
+        "dogru_cevap_yuzdesi": null,
+        "roller": {
+          "utt": {
+            "baslatma": 3,
+            "tamamlama": 4,
+            "kazanilan_puan": 110,
+            "kaybedilen_puan": 5,
+            "net_puan": 105
+          },
+          "kd_utt": {
+            "baslatma": 2,
+            "tamamlama": 1,
+            "kazanilan_puan": 30,
+            "kaybedilen_puan": 0,
+            "net_puan": 30
+          }
+        },
+        "yayinlar": [
+          {
+            "yayin_id": "eski-video",
+            "yayin_kodu": "SentetikFirma_10001",
+            "talep_id": "talep-eski-video",
+            "talep_no": 10001,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 110,
+            "kaybedilen_puan": 5,
+            "baslatma": 3,
+            "tamamlama": 4
+          },
+          {
+            "yayin_id": "haftalik-video",
+            "yayin_kodu": "SentetikFirma_10002",
+            "talep_id": "talep-haftalik-video",
+            "talep_no": 10002,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 30,
+            "kaybedilen_puan": 0,
+            "baslatma": 2,
+            "tamamlama": 1
+          }
+        ]
+      },
+      {
+        "arac_turu": "podcast",
+        "yayin_sayisi": 1,
+        "kayitli_arac_puani": 40,
+        "baslatma": 2,
+        "tamamlama": 1,
+        "dogru_cevap": 0,
+        "yanlis_cevap": 0,
+        "kazanilan_puan": 40,
+        "kaybedilen_puan": 10,
+        "oneri_gonderildi": 0,
+        "oneri_tamamlandi": 0,
+        "challenge_gonderildi": 1,
+        "challenge_tamamlandi": 0,
+        "eclub_dagitim": 0,
+        "eclub_dagitim_tamamlandi": 0,
+        "eczanem_dagitim": 0,
+        "eczanem_dagitim_tamamlandi": 0,
+        "net_kazanilan_puan": 30,
+        "dogru_cevap_yuzdesi": null,
+        "roller": {
+          "bm": {
+            "baslatma": 2,
+            "tamamlama": 1,
+            "kazanilan_puan": 40,
+            "kaybedilen_puan": 10,
+            "net_puan": 30
+          }
+        },
+        "yayinlar": [
+          {
+            "yayin_id": "aylik-podcast",
+            "yayin_kodu": "SentetikFirma_10003",
+            "talep_id": "talep-aylik-podcast",
+            "talep_no": 10003,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 40,
+            "kaybedilen_puan": 10,
+            "baslatma": 2,
+            "tamamlama": 1
+          }
+        ]
+      },
+      {
+        "arac_turu": "gorsel",
+        "yayin_sayisi": 1,
+        "kayitli_arac_puani": 15,
+        "baslatma": 4,
+        "tamamlama": 5,
+        "dogru_cevap": 0,
+        "yanlis_cevap": 0,
+        "kazanilan_puan": 26,
+        "kaybedilen_puan": 20,
+        "oneri_gonderildi": 0,
+        "oneri_tamamlandi": 0,
+        "challenge_gonderildi": 0,
+        "challenge_tamamlandi": 0,
+        "eclub_dagitim": 1,
+        "eclub_dagitim_tamamlandi": 0,
+        "eczanem_dagitim": 0,
+        "eczanem_dagitim_tamamlandi": 0,
+        "net_kazanilan_puan": 6,
+        "dogru_cevap_yuzdesi": null,
+        "roller": {
+          "eczaci": {
+            "baslatma": 2,
+            "tamamlama": 1,
+            "kazanilan_puan": 5,
+            "kaybedilen_puan": 20,
+            "net_puan": -15
+          },
+          "eczane_teknisyeni": {
+            "baslatma": 2,
+            "tamamlama": 2,
+            "kazanilan_puan": 17,
+            "kaybedilen_puan": 0,
+            "net_puan": 17
+          },
+          "ikinci_eczaci": {
+            "baslatma": 0,
+            "tamamlama": 1,
+            "kazanilan_puan": 2,
+            "kaybedilen_puan": 0,
+            "net_puan": 2
+          },
+          "yardimci_eczaci": {
+            "baslatma": 0,
+            "tamamlama": 1,
+            "kazanilan_puan": 2,
+            "kaybedilen_puan": 0,
+            "net_puan": 2
+          }
+        },
+        "yayinlar": [
+          {
+            "yayin_id": "yillik-brosur",
+            "yayin_kodu": "SentetikFirma_10004",
+            "talep_id": "talep-yillik-brosur",
+            "talep_no": 10004,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 11,
+            "kaybedilen_puan": 20,
+            "baslatma": 2,
+            "tamamlama": 4
+          },
+          {
+            "yayin_id": "diger-uretici-brosur",
+            "yayin_kodu": "SentetikFirma_10006",
+            "talep_id": "talep-diger-uretici-brosur",
+            "talep_no": 10006,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 15,
+            "kaybedilen_puan": 0,
+            "baslatma": 2,
+            "tamamlama": 1
+          }
+        ]
+      },
+      {
+        "arac_turu": "flip_pdf",
+        "yayin_sayisi": 0,
+        "kayitli_arac_puani": 0,
+        "baslatma": 2,
+        "tamamlama": 1,
+        "dogru_cevap": 0,
+        "yanlis_cevap": 0,
+        "kazanilan_puan": 25,
+        "kaybedilen_puan": 0,
+        "oneri_gonderildi": 0,
+        "oneri_tamamlandi": 0,
+        "challenge_gonderildi": 0,
+        "challenge_tamamlandi": 0,
+        "eclub_dagitim": 0,
+        "eclub_dagitim_tamamlandi": 0,
+        "eczanem_dagitim": 0,
+        "eczanem_dagitim_tamamlandi": 0,
+        "net_kazanilan_puan": 25,
+        "dogru_cevap_yuzdesi": null,
+        "roller": {
+          "musteri": {
+            "baslatma": 2,
+            "tamamlama": 1,
+            "kazanilan_puan": 25,
+            "kaybedilen_puan": 0,
+            "net_puan": 25
+          }
+        },
+        "yayinlar": [
+          {
+            "yayin_id": "eski-literatur",
+            "yayin_kodu": "SentetikFirma_10005",
+            "talep_id": "talep-eski-literatur",
+            "talep_no": 10005,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 25,
+            "kaybedilen_puan": 0,
+            "baslatma": 2,
+            "tamamlama": 1
+          }
+        ]
+      }
+    ],
+    "kart_metni": "Öğrenme Aracı PerformansıVideo1 Yeni Yayın · Bu DönemBu Dönem Kümülatif Tüketim5%100 Tamamlama5 BaşlatmaYeni yayın puanı: 30 pBu Dönem Oluşan Puan%69 Pay135 p Net+140−5ROL TÜKETİM SAYILARIUTT4KD-UTT1Podcast1 Yeni Yayın · Bu DönemBu Dönem Kümülatif Tüketim1%50 Tamamlama2 BaşlatmaYeni yayın puanı: 40 pBu Dönem Oluşan Puan%15 Pay30 p Net+40−10ROL TÜKETİM SAYILARIBM1Dijital Broşür1 Yeni Yayın · Bu DönemBu Dönem Kümülatif Tüketim5%100 Tamamlama4 BaşlatmaYeni yayın puanı: 15 pBu Dönem Oluşan Puan%3 Pay6 p Net+26−20ROL TÜKETİM SAYILARIEczacı1Teknisyen22. Eczacı1+1Literatür0 Yeni Yayın · Bu DönemBu Dönem Kümülatif Tüketim1%50 Tamamlama2 BaşlatmaYeni yayın puanı: 0 pBu Dönem Oluşan Puan%13 Pay25 p Net+25−0ROL TÜKETİM SAYILARIDanışan1Video, Bu Dönem Etkileşim Detayları2Rol Motivasyon TablosuRolTüketimNet PuanSaha Temsilcisi (UTT)4 (%80)+105 pKıdemli UTT1 (%20)+30 pBu Dönem Etkileşim Alan Yayınlar (2)Yayın KoduTamamlama - PuanSentetikFirma_100014 tamamlama · 105 pSentetikFirma_100021 tamamlama · 30 pPodcast, Bu Dönem Etkileşim Detayları1Rol Motivasyon TablosuRolTüketimNet PuanBölge Müdürü (BM)1 (%100)+30 pBu Dönem Etkileşim Alan Yayınlar (1)Yayın KoduTamamlama - PuanSentetikFirma_100031 tamamlama · 30 pDijital Broşür, Bu Dönem Etkileşim Detayları2Rol Motivasyon TablosuRolTüketimNet PuanEczacı1 (%20)-15 pEczane Teknisyeni2 (%40)+17 pİkinci Eczacı1 (%20)+2 pYardımcı Eczacı1 (%20)+2 pBu Dönem Etkileşim Alan Yayınlar (2)Yayın KoduTamamlama - PuanSentetikFirma_100044 tamamlama · -9 pSentetikFirma_100061 tamamlama · 15 pLiteratür, Bu Dönem Etkileşim Detayları1Rol Motivasyon TablosuRolTüketimNet PuanDanışan / Eczanem1 (%100)+25 pBu Dönem Etkileşim Alan Yayınlar (1)Yayın KoduTamamlama - PuanSentetikFirma_100051 tamamlama · 25 pKümülatif Tüketim seçili dönemde öğrenme araçları için tamamlanan izleme, dinleme veya okuma hareketlerinin toplam sayısını ifade eder."
+  },
+  {
+    "anahtar": "firma:bu_yil",
+    "kapsam": {
+      "tur": "firma",
+      "firmaId": "f1",
+      "raporKimligi": "gm1",
+      "ureticiId": null
+    },
+    "aralik": {
+      "baslangic": "2025-12-31T21:00:00.000Z",
+      "bitis": "2026-10-22T12:00:00.000Z"
+    },
+    "araclar": [
+      {
+        "arac_turu": "video",
+        "yayin_sayisi": 2,
+        "kayitli_arac_puani": 50,
+        "baslatma": 5,
+        "tamamlama": 9,
+        "dogru_cevap": 0,
+        "yanlis_cevap": 0,
+        "kazanilan_puan": 220,
+        "kaybedilen_puan": 5,
+        "oneri_gonderildi": 0,
+        "oneri_tamamlandi": 0,
+        "challenge_gonderildi": 0,
+        "challenge_tamamlandi": 0,
+        "eclub_dagitim": 0,
+        "eclub_dagitim_tamamlandi": 0,
+        "eczanem_dagitim": 0,
+        "eczanem_dagitim_tamamlandi": 0,
+        "net_kazanilan_puan": 215,
+        "dogru_cevap_yuzdesi": null,
+        "roller": {
+          "utt": {
+            "baslatma": 3,
+            "tamamlama": 8,
+            "kazanilan_puan": 190,
+            "kaybedilen_puan": 5,
+            "net_puan": 185
+          },
+          "kd_utt": {
+            "baslatma": 2,
+            "tamamlama": 1,
+            "kazanilan_puan": 30,
+            "kaybedilen_puan": 0,
+            "net_puan": 30
+          }
+        },
+        "yayinlar": [
+          {
+            "yayin_id": "eski-video",
+            "yayin_kodu": "SentetikFirma_10001",
+            "talep_id": "talep-eski-video",
+            "talep_no": 10001,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 190,
+            "kaybedilen_puan": 5,
+            "baslatma": 3,
+            "tamamlama": 8
+          },
+          {
+            "yayin_id": "haftalik-video",
+            "yayin_kodu": "SentetikFirma_10002",
+            "talep_id": "talep-haftalik-video",
+            "talep_no": 10002,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 30,
+            "kaybedilen_puan": 0,
+            "baslatma": 2,
+            "tamamlama": 1
+          }
+        ]
+      },
+      {
+        "arac_turu": "podcast",
+        "yayin_sayisi": 1,
+        "kayitli_arac_puani": 40,
+        "baslatma": 2,
+        "tamamlama": 1,
+        "dogru_cevap": 0,
+        "yanlis_cevap": 0,
+        "kazanilan_puan": 40,
+        "kaybedilen_puan": 10,
+        "oneri_gonderildi": 0,
+        "oneri_tamamlandi": 0,
+        "challenge_gonderildi": 1,
+        "challenge_tamamlandi": 0,
+        "eclub_dagitim": 0,
+        "eclub_dagitim_tamamlandi": 0,
+        "eczanem_dagitim": 0,
+        "eczanem_dagitim_tamamlandi": 0,
+        "net_kazanilan_puan": 30,
+        "dogru_cevap_yuzdesi": null,
+        "roller": {
+          "bm": {
+            "baslatma": 2,
+            "tamamlama": 1,
+            "kazanilan_puan": 40,
+            "kaybedilen_puan": 10,
+            "net_puan": 30
+          }
+        },
+        "yayinlar": [
+          {
+            "yayin_id": "aylik-podcast",
+            "yayin_kodu": "SentetikFirma_10003",
+            "talep_id": "talep-aylik-podcast",
+            "talep_no": 10003,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 40,
+            "kaybedilen_puan": 10,
+            "baslatma": 2,
+            "tamamlama": 1
+          }
+        ]
+      },
+      {
+        "arac_turu": "gorsel",
+        "yayin_sayisi": 2,
+        "kayitli_arac_puani": 25,
+        "baslatma": 4,
+        "tamamlama": 5,
+        "dogru_cevap": 0,
+        "yanlis_cevap": 0,
+        "kazanilan_puan": 26,
+        "kaybedilen_puan": 20,
+        "oneri_gonderildi": 0,
+        "oneri_tamamlandi": 0,
+        "challenge_gonderildi": 0,
+        "challenge_tamamlandi": 0,
+        "eclub_dagitim": 1,
+        "eclub_dagitim_tamamlandi": 0,
+        "eczanem_dagitim": 0,
+        "eczanem_dagitim_tamamlandi": 0,
+        "net_kazanilan_puan": 6,
+        "dogru_cevap_yuzdesi": null,
+        "roller": {
+          "eczaci": {
+            "baslatma": 2,
+            "tamamlama": 1,
+            "kazanilan_puan": 5,
+            "kaybedilen_puan": 20,
+            "net_puan": -15
+          },
+          "eczane_teknisyeni": {
+            "baslatma": 2,
+            "tamamlama": 2,
+            "kazanilan_puan": 17,
+            "kaybedilen_puan": 0,
+            "net_puan": 17
+          },
+          "ikinci_eczaci": {
+            "baslatma": 0,
+            "tamamlama": 1,
+            "kazanilan_puan": 2,
+            "kaybedilen_puan": 0,
+            "net_puan": 2
+          },
+          "yardimci_eczaci": {
+            "baslatma": 0,
+            "tamamlama": 1,
+            "kazanilan_puan": 2,
+            "kaybedilen_puan": 0,
+            "net_puan": 2
+          }
+        },
+        "yayinlar": [
+          {
+            "yayin_id": "yillik-brosur",
+            "yayin_kodu": "SentetikFirma_10004",
+            "talep_id": "talep-yillik-brosur",
+            "talep_no": 10004,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 11,
+            "kaybedilen_puan": 20,
+            "baslatma": 2,
+            "tamamlama": 4
+          },
+          {
+            "yayin_id": "diger-uretici-brosur",
+            "yayin_kodu": "SentetikFirma_10006",
+            "talep_id": "talep-diger-uretici-brosur",
+            "talep_no": 10006,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 15,
+            "kaybedilen_puan": 0,
+            "baslatma": 2,
+            "tamamlama": 1
+          }
+        ]
+      },
+      {
+        "arac_turu": "flip_pdf",
+        "yayin_sayisi": 1,
+        "kayitli_arac_puani": 5,
+        "baslatma": 3,
+        "tamamlama": 2,
+        "dogru_cevap": 0,
+        "yanlis_cevap": 0,
+        "kazanilan_puan": 25,
+        "kaybedilen_puan": 0,
+        "oneri_gonderildi": 0,
+        "oneri_tamamlandi": 0,
+        "challenge_gonderildi": 0,
+        "challenge_tamamlandi": 0,
+        "eclub_dagitim": 0,
+        "eclub_dagitim_tamamlandi": 0,
+        "eczanem_dagitim": 0,
+        "eczanem_dagitim_tamamlandi": 0,
+        "net_kazanilan_puan": 25,
+        "dogru_cevap_yuzdesi": null,
+        "roller": {
+          "musteri": {
+            "baslatma": 3,
+            "tamamlama": 2,
+            "kazanilan_puan": 25,
+            "kaybedilen_puan": 0,
+            "net_puan": 25
+          }
+        },
+        "yayinlar": [
+          {
+            "yayin_id": "eski-literatur",
+            "yayin_kodu": "SentetikFirma_10005",
+            "talep_id": "talep-eski-literatur",
+            "talep_no": 10005,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 25,
+            "kaybedilen_puan": 0,
+            "baslatma": 2,
+            "tamamlama": 1
+          },
+          {
+            "yayin_id": "tam-yil-baslangici",
+            "yayin_kodu": "SentetikFirma_10008",
+            "talep_id": "talep-tam-yil-baslangici",
+            "talep_no": 10008,
+            "kayitli_arac_puani": 0,
+            "kazanilan_puan": 0,
+            "kaybedilen_puan": 0,
+            "baslatma": 1,
+            "tamamlama": 1
+          }
+        ]
+      }
+    ],
+    "kart_metni": "Öğrenme Aracı PerformansıVideo2 Yeni Yayın · Bu YılBu Yıl Kümülatif Tüketim9%100 Tamamlama5 BaşlatmaYeni yayın puanı: 50 pBu Yıl Oluşan Puan%78 Pay215 p Net+220−5ROL TÜKETİM SAYILARIUTT8KD-UTT1Podcast1 Yeni Yayın · Bu YılBu Yıl Kümülatif Tüketim1%50 Tamamlama2 BaşlatmaYeni yayın puanı: 40 pBu Yıl Oluşan Puan%11 Pay30 p Net+40−10ROL TÜKETİM SAYILARIBM1Dijital Broşür2 Yeni Yayın · Bu YılBu Yıl Kümülatif Tüketim5%100 Tamamlama4 BaşlatmaYeni yayın puanı: 25 pBu Yıl Oluşan Puan%2 Pay6 p Net+26−20ROL TÜKETİM SAYILARIEczacı1Teknisyen22. Eczacı1+1Literatür1 Yeni Yayın · Bu YılBu Yıl Kümülatif Tüketim2%67 Tamamlama3 BaşlatmaYeni yayın puanı: 5 pBu Yıl Oluşan Puan%9 Pay25 p Net+25−0ROL TÜKETİM SAYILARIDanışan2Video, Bu Yıl Etkileşim Detayları2Rol Motivasyon TablosuRolTüketimNet PuanSaha Temsilcisi (UTT)8 (%89)+185 pKıdemli UTT1 (%11)+30 pBu Yıl Etkileşim Alan Yayınlar (2)Yayın KoduTamamlama - PuanSentetikFirma_100018 tamamlama · 185 pSentetikFirma_100021 tamamlama · 30 pPodcast, Bu Yıl Etkileşim Detayları1Rol Motivasyon TablosuRolTüketimNet PuanBölge Müdürü (BM)1 (%100)+30 pBu Yıl Etkileşim Alan Yayınlar (1)Yayın KoduTamamlama - PuanSentetikFirma_100031 tamamlama · 30 pDijital Broşür, Bu Yıl Etkileşim Detayları2Rol Motivasyon TablosuRolTüketimNet PuanEczacı1 (%20)-15 pEczane Teknisyeni2 (%40)+17 pİkinci Eczacı1 (%20)+2 pYardımcı Eczacı1 (%20)+2 pBu Yıl Etkileşim Alan Yayınlar (2)Yayın KoduTamamlama - PuanSentetikFirma_100044 tamamlama · -9 pSentetikFirma_100061 tamamlama · 15 pLiteratür, Bu Yıl Etkileşim Detayları2Rol Motivasyon TablosuRolTüketimNet PuanDanışan / Eczanem2 (%100)+25 pBu Yıl Etkileşim Alan Yayınlar (2)Yayın KoduTamamlama - PuanSentetikFirma_100051 tamamlama · 25 pSentetikFirma_100081 tamamlama · 0 pKümülatif Tüketim seçili dönemde öğrenme araçları için tamamlanan izleme, dinleme veya okuma hareketlerinin toplam sayısını ifade eder."
+  }
+]

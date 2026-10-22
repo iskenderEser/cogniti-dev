@@ -6,17 +6,13 @@
 
 'use client';
 
+import { panelBaslangici } from "@/lib/panel/baslangic";
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import {
   ArrowLeft,
   BookOpenCheck,
-  Calendar,
-  Heart,
   Layers,
-  Radio,
-  Repeat2,
-  Star,
   X,
 } from 'lucide-react';
 import { useAuth } from '@/app/providers/AuthProvider';
@@ -29,7 +25,18 @@ import UretimVaryantlariModal from '@/components/rehber/UretimVaryantlariModal';
 import OgrenmeAraciPerformansi from '@/components/raporlar/OgrenmeAraciPerformansi';
 import { ureticiYetenegi } from '@/lib/uretici/yetenekler';
 import styles from '../utt/utt-report.module.css';
+import raporStyles from './yayin-raporlari.module.css';
 import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
+import { SadeKontrolButonu, SadeKontrolGrubu } from "@/components/kontrol/SadeKontroller";
+
+const RAPOR_ROLLERI = [
+  { anahtar: 'tumu', etiket: 'Tümü' },
+  { anahtar: 'utt', etiket: 'Temsilci' },
+  { anahtar: 'bm', etiket: 'BM' },
+  { anahtar: 'eczaci', etiket: 'Eczacı' },
+  { anahtar: 'eczane_teknisyeni', etiket: 'Eczane Teknisyeni' },
+  { anahtar: 'eczanem', etiket: 'Eczanem Üyesi' },
+] as const;
 
 const DEFAULT_PERIYOT: Periyot = 'bu_ay';
 const PERIYOT_BASLIK: Record<Periyot, string> = {
@@ -66,12 +73,14 @@ const VARYANT_ROZETLERI: Record<string, { etiket: string; arkaPlan: string; renk
 export default function UretimRaporlariPage() {
   const { kullanici } = useAuth();
   const [periyot, setPeriyot] = useState<Periyot>(DEFAULT_PERIYOT);
+  const [seciliRaporRolu, setSeciliRaporRolu] = useState<typeof RAPOR_ROLLERI[number]['anahtar']>('tumu');
   const [seciliEgitimTuru, setSeciliEgitimTuru] = useState<string | null | undefined>(undefined);
   const [varyantModalAcik, setVaryantModalAcik] = useState(false);
 
   const { data, yenileniyor, error, yenile } = useUretimRaporu(
     periyot,
     kullanici?.id,
+    seciliRaporRolu,
   );
 
   const ureticiYeteneği = kullanici?.rol ? ureticiYetenegi(kullanici.rol) : null;
@@ -86,18 +95,6 @@ export default function UretimRaporlariPage() {
     );
   }, [data, seciliEgitimTuru]);
 
-  const etkilesim = useMemo(() => {
-    if (!data?.egitim_turu_etkisi) return { begeni: 0, favori: 0, extra: 0 };
-    return data.egitim_turu_etkisi.reduce(
-      (acc, x) => ({
-        begeni: acc.begeni + Number(x.begeni_sayisi ?? 0),
-        favori: acc.favori + Number(x.favori_sayisi ?? 0),
-        extra: acc.extra + Number(x.extra_izleme_sayisi ?? 0),
-      }),
-      { begeni: 0, favori: 0, extra: 0 },
-    );
-  }, [data]);
-
   const ureticiEgitimDetaylari = useMemo(() => {
     if (!data?.egitim_turu_etkisi || !ureticiYeteneği) return [];
     return ureticiYeteneği.acabilecegiTalepTurleri
@@ -108,8 +105,8 @@ export default function UretimRaporlariPage() {
   return (
     <div className={styles.page} style={{ fontFamily: "'Nunito', sans-serif" }}>
       <div className={styles.container}>
-        <Link href="/ana-sayfa" className="mb-3 inline-flex items-center gap-1.5 text-[11px] font-bold text-[var(--tema-yerel-rapor-yardimci-metin-10)] hover:text-[var(--tema-yerel-rapor-eylem-metin-06)]">
-          <ArrowLeft className="h-3.5 w-3.5" /> Ana Sayfa
+        <Link href={panelBaslangici(kullanici?.rol).yol} className="mb-3 inline-flex items-center gap-1.5 text-[11px] font-bold text-[var(--tema-yerel-rapor-yardimci-metin-10)] hover:text-[var(--tema-yerel-rapor-eylem-metin-06)]">
+          <ArrowLeft className="h-3.5 w-3.5" /> {panelBaslangici(kullanici?.rol).etiket}
         </Link>
 
         <SayfaYenileBasligi className="mb-4 flex flex-col gap-3 md:flex-row md:items-end md:justify-between md:gap-6"
@@ -122,11 +119,24 @@ export default function UretimRaporlariPage() {
             Yayınlarınızın üretim, saha etkisi ve öğrenme aracı performansını seçili dönemde görebilirsiniz.
           </p></>}
           aksiyon={<YenileButonu yenileniyor={yenileniyor} onYenile={yenile} className="min-w-[88px] justify-center" />}
-          ekKontroller={<><div className="flex w-full items-center gap-2 sm:w-auto">
-            <RaporPeriyotSecici deger={periyot} onDegistir={setPeriyot} />
-
-          </div></>}
         />
+
+        <div className="mb-4 flex min-w-0 flex-wrap items-center justify-between gap-3">
+          <SadeKontrolGrubu tur="sekme" aria-label="Rapor hedef kitlesi" className={`min-w-0 max-w-full ${raporStyles.rolFiltreleri}`}>
+            {RAPOR_ROLLERI.map((rol) => (
+              <SadeKontrolButonu
+                key={rol.anahtar}
+                aria-pressed={seciliRaporRolu === rol.anahtar}
+                onClick={() => setSeciliRaporRolu(rol.anahtar)}
+              >
+                {rol.etiket}
+              </SadeKontrolButonu>
+            ))}
+          </SadeKontrolGrubu>
+          <div className="min-w-0 max-w-full shrink-0">
+            <RaporPeriyotSecici deger={periyot} onDegistir={setPeriyot} />
+          </div>
+        </div>
 
         {error && !data ? (
           <div className="flex min-h-[300px] items-center justify-center rounded-2xl border border-[var(--tema-yerel-rapor-islevsel-cizgi-07)] bg-[var(--tema-yerel-rapor-islevsel-zemin-07)] p-6">
@@ -142,47 +152,7 @@ export default function UretimRaporlariPage() {
           </div>
         ) : (
           <>
-        {/* Yayın Hero Grid */}
-        <div className={styles.uretimHeroGrid}>
-          <section className={`${styles.panel} p-4 sm:p-5 flex flex-col justify-between`}>
-            <div>
-              <h2 className="text-base font-extrabold text-[var(--tema-yerel-rapor-ana-metin-06)]">Yayın Özeti</h2>
-              <p className="mt-0.5 text-xs text-[var(--tema-yerel-rapor-yardimci-metin-20)]">
-                Tüm ve farklı zamanlardaki canlı yayın sayılarınız
-              </p>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3 mt-3 sm:mt-4">
-              {/* 1. Stat Kart: ŞU ANDA YAYINDA */}
-              <div className="rounded-xl border border-[var(--tema-yerel-rapor-cizgi-29)] bg-[var(--tema-yerel-rapor-sayfa-zemini-01)] p-3.5">
-                <div className="flex items-center gap-1.5 text-[var(--tema-yerel-rapor-islevsel-metin-06)] mb-1">
-                  <Radio className="h-4 w-4" />
-                  <span className="text-[10px] font-extrabold uppercase tracking-wide text-[var(--tema-yerel-rapor-yardimci-metin-14)]">
-                    ŞU ANDA YAYINDA
-                  </span>
-                </div>
-                <div className="text-xl sm:text-2xl font-black tabular-nums text-[var(--tema-yerel-rapor-islevsel-metin-06)]">
-                  {data.uretim.su_an_yayinda}
-                </div>
-                <span className="block text-[10px] text-[var(--tema-yerel-rapor-yardimci-metin-25)] mt-0.5">Canlı yayın</span>
-              </div>
-
-              {/* 2. Stat Kart: [ZAMAN] YAYINA ALINAN */}
-              <div className="rounded-xl border border-[var(--tema-yerel-rapor-cizgi-29)] bg-[var(--tema-yerel-rapor-sayfa-zemini-01)] p-3.5">
-                <div className="flex items-center gap-1.5 text-[var(--tema-yerel-rapor-eylem-metin-06)] mb-1">
-                  <Calendar className="h-4 w-4" />
-                  <span className="text-[10px] font-extrabold uppercase tracking-wide text-[var(--tema-yerel-rapor-yardimci-metin-14)]">
-                    {PERIYOT_BASLIK[periyot]}
-                  </span>
-                </div>
-                <div className="text-xl sm:text-2xl font-black tabular-nums text-[var(--tema-yerel-rapor-eylem-metin-06)]">
-                  {data.uretim.donemde_yayina_alinan}
-                </div>
-                <span className="block text-[10px] text-[var(--tema-yerel-rapor-yardimci-metin-25)] mt-0.5">Açılan canlı yayın</span>
-              </div>
-            </div>
-          </section>
-
+        <div className="mb-4">
           {/* Varyant Dağılımı Kartı */}
           <section className={`${styles.panel} p-4 sm:p-5 flex flex-col justify-between`}>
             <div className="mb-3 flex items-center justify-between">
@@ -250,40 +220,6 @@ export default function UretimRaporlariPage() {
               );
             })()}
           </section>
-        </div>
-
-        {/* Etkileşim İstatistikleri Şeridi */}
-        <div className="mb-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div className="rounded-2xl border border-[var(--tema-yerel-rapor-cizgi-05)] bg-[var(--tema-yerel-rapor-kart-04)] p-4 flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--tema-yerel-rapor-islevsel-zemin-18)] text-[var(--tema-yerel-rapor-islevsel-metin-24)]">
-              <Heart className="h-5 w-5" />
-            </span>
-            <div>
-              <strong className="block text-lg font-black text-[var(--tema-yerel-rapor-ana-metin-07)]">{etkilesim.begeni}</strong>
-              <span className="block text-xs font-bold text-[var(--tema-yerel-rapor-yardimci-metin-08)]">Toplam Beğeni</span>
-              <span className="block text-[10px] text-[var(--tema-yerel-rapor-yardimci-metin-26)]">Tüm araçlar · seçili dönem</span>
-            </div>
-          </div>
-          <div className="rounded-2xl border border-[var(--tema-yerel-rapor-cizgi-05)] bg-[var(--tema-yerel-rapor-kart-04)] p-4 flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--tema-yerel-rapor-secim-zemin-09)] text-[var(--tema-yerel-rapor-eylem-metin-11)]">
-              <Star className="h-5 w-5" />
-            </span>
-            <div>
-              <strong className="block text-lg font-black text-[var(--tema-yerel-rapor-ana-metin-07)]">{etkilesim.favori}</strong>
-              <span className="block text-xs font-bold text-[var(--tema-yerel-rapor-yardimci-metin-08)]">Toplam Favori</span>
-              <span className="block text-[10px] text-[var(--tema-yerel-rapor-yardimci-metin-26)]">Tüm araçlar · seçili dönem</span>
-            </div>
-          </div>
-          <div className="rounded-2xl border border-[var(--tema-yerel-rapor-cizgi-05)] bg-[var(--tema-yerel-rapor-kart-04)] p-4 flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--tema-yerel-rapor-islevsel-zemin-19)] text-[var(--tema-yerel-rapor-islevsel-metin-25)]">
-              <Repeat2 className="h-5 w-5" />
-            </span>
-            <div>
-              <strong className="block text-lg font-black text-[var(--tema-yerel-rapor-ana-metin-07)]">{etkilesim.extra}</strong>
-              <span className="block text-xs font-bold text-[var(--tema-yerel-rapor-yardimci-metin-08)]">Toplam Extra İzleme</span>
-              <span className="block text-[10px] text-[var(--tema-yerel-rapor-yardimci-metin-26)]">Tüm araçlar · seçili dönem</span>
-            </div>
-          </div>
         </div>
 
         {/* Yayın Konusu ve Saha Etkisi (6 Sütun Tek Satır) */}
@@ -435,8 +371,13 @@ export default function UretimRaporlariPage() {
 
         {/* Öğrenme Aracı / Format Performansı Detay Tablosu (En Altta) */}
         <OgrenmeAraciPerformansi
+          key={JSON.stringify([kullanici?.id, periyot, seciliRaporRolu, data.arac_turu_tarih_araligi])}
           dagilim={data.arac_turu_dagilimi}
           periyotBasligi={PERIYOT_BASLIK[periyot]}
+          detayKapsami={data.arac_turu_tarih_araligi ? {
+            ...data.arac_turu_tarih_araligi, periyot,
+            raporRolu: seciliRaporRolu,
+          } : undefined}
         />
         </>
       )}

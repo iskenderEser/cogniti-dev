@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { yayinDetayModaliGorebilir } from "@/lib/utils/roller";
-import type { AracTuruRaporSatiri } from "@/lib/rapor/paylasilan/aracTuruDagilimi";
+import type { AracTuruRaporSatiri, AracRaporDetayKapsami, AracYayinSayfasi } from "@/lib/rapor/paylasilan/aracTuruDagilimi";
 import { Video, Headphones, Image as ImageIcon, BookOpen, Users, Sparkles, ExternalLink, Info } from "lucide-react";
 import YayinDetayModal from "./YayinDetayModal";
 
@@ -89,12 +89,15 @@ const sayi = (deger: number) => (deger ?? 0).toLocaleString("tr-TR");
 export default function OgrenmeAraciPerformansi({
   dagilim,
   periyotBasligi = "Seçili Dönem",
+  detayKapsami,
 }: {
   dagilim?: AracTuruRaporSatiri[];
   periyotBasligi?: string;
+  detayKapsami?: AracRaporDetayKapsami;
 }) {
   const { kullanici } = useAuth();
   const [seciliYayinId, setSeciliYayinId] = useState<string | null>(null);
+  const [acilanAraclar, setAcilanAraclar] = useState<string[]>([]);
 
   const modalYetkili = yayinDetayModaliGorebilir(kullanici?.rol ?? "");
 
@@ -248,6 +251,9 @@ export default function OgrenmeAraciPerformansi({
           return (
             <details
               key={satir.arac_turu}
+              onToggle={(event) => {
+                if (event.currentTarget.open) setAcilanAraclar((onceki) => onceki.includes(satir.arac_turu) ? onceki : [...onceki, satir.arac_turu]);
+              }}
               className="group rounded-xl border border-[var(--tema-yerel-rapor-cizgi-28)] bg-[var(--tema-yerel-rapor-kart-04)] p-3 transition-all hover:border-[var(--tema-yerel-rapor-cizgi-44)]"
             >
               <summary className="cursor-pointer list-none flex items-center justify-between text-[11px] font-extrabold text-[var(--tema-yerel-rapor-ana-metin-22)]">
@@ -256,7 +262,7 @@ export default function OgrenmeAraciPerformansi({
                   <span className="truncate">{ADLAR[satir.arac_turu]}, {periyotBasligi} Etkileşim Detayları</span>
                 </div>
                 <span className="rounded-md bg-[var(--tema-yerel-rapor-secim-zemin-15)] px-1.5 py-0.5 text-[10px] font-extrabold text-[var(--tema-yerel-rapor-eylem-metin-06)] shrink-0">
-                  {satir.yayinlar.length}
+                  {satir.etkilesim_yayin_sayisi ?? satir.yayinlar.length}
                 </span>
               </summary>
 
@@ -311,51 +317,21 @@ export default function OgrenmeAraciPerformansi({
                 {/* 2. Yayın Listesi */}
                 <div>
                   <div className="text-[10px] font-extrabold uppercase tracking-wide text-[var(--tema-yerel-rapor-yardimci-metin-14)] mb-1.5 flex items-center justify-between">
-                    <span>{periyotBasligi} Etkileşim Alan Yayınlar ({satir.yayinlar.length})</span>
+                    <span>{periyotBasligi} Etkileşim Alan Yayınlar ({satir.etkilesim_yayin_sayisi ?? satir.yayinlar.length})</span>
                   </div>
 
                   {/* Sabit 2 Sütunlu Alt Başlık Satırı */}
                   <div className="flex items-center justify-between px-2 py-1 mb-1 text-[9px] font-extrabold uppercase tracking-wider text-[var(--tema-yerel-rapor-yardimci-metin-08)] border-b border-[var(--tema-yerel-rapor-cizgi-27)] bg-[var(--tema-yerel-rapor-sayfa-zemini-03)] rounded-t">
-                    <span>Yayın ID</span>
+                    <span>Yayın Kodu</span>
                     <span>Tamamlama - Puan</span>
                   </div>
 
-                  {satir.yayinlar.length === 0 ? (
-                    <div className="text-[10px] text-[var(--tema-yerel-rapor-yardimci-metin-66)] italic px-2 py-1">Bu dönemde etkileşim alan yayın yok.</div>
-                  ) : (
-                    <div className="max-h-36 overflow-y-auto space-y-1 pr-1">
-                      {satir.yayinlar.map((y) => (
-                        <div
-                          key={y.yayin_id}
-                          className="flex items-center justify-between gap-1 rounded bg-[var(--tema-yerel-rapor-sayfa-zemini-03)] px-2 py-1 text-[10px] border border-[var(--tema-yerel-rapor-cizgi-27)] hover:bg-[var(--tema-yerel-rapor-secim-zemin-01)] transition-colors"
-                        >
-                          {modalYetkili ? (
-                            <button
-                              type="button"
-                              onClick={() => setSeciliYayinId(y.yayin_id)}
-                              className="font-extrabold text-[var(--tema-yerel-rapor-eylem-metin-06)] hover:underline truncate flex items-center gap-1 text-left cursor-pointer focus-visible:outline-none"
-                              title={`${y.talep_no ?? y.yayin_id} — Yayın detayını ve soruları aç`}
-                            >
-                              <span>{y.talep_no ?? y.yayin_id.slice(0, 8)}</span>
-                              <ExternalLink className="h-2.5 w-2.5 shrink-0 text-[var(--tema-yerel-rapor-yardimci-metin-14)]" />
-                            </button>
-                          ) : (
-                            <span
-                              className="font-bold text-[var(--tema-yerel-rapor-ana-metin-06)] truncate"
-                              title={String(y.talep_no ?? y.yayin_id)}
-                            >
-                              {y.talep_no ?? y.yayin_id.slice(0, 8)}
-                            </span>
-                          )}
-                          <span className="tabular-nums text-[var(--tema-yerel-rapor-yardimci-metin-27)] shrink-0 font-medium">
-                            {sayi(y.tamamlama)} tamamlama ·{" "}
-                            <strong className="text-[var(--tema-yerel-rapor-ana-metin-07)] font-bold">
-                              {sayi(y.kazanilan_puan - y.kaybedilen_puan)} p
-                            </strong>
-                          </span>
-                        </div>
-                      ))}
-                    </div>
+                  {(!detayKapsami || acilanAraclar.includes(satir.arac_turu)) && (
+                    <AracYayinListesi
+                      aracTuru={satir.arac_turu} ilkYayinlar={satir.yayinlar}
+                      toplam={satir.etkilesim_yayin_sayisi ?? satir.yayinlar.length}
+                      kapsam={detayKapsami} modalYetkili={modalYetkili} onSec={setSeciliYayinId}
+                    />
                   )}
                 </div>
               </div>
@@ -382,5 +358,87 @@ export default function OgrenmeAraciPerformansi({
         />
       )}
     </section>
+  );
+}
+
+function AracYayinListesi({ aracTuru, ilkYayinlar, toplam, kapsam, modalYetkili, onSec }: {
+  aracTuru: AracTuruRaporSatiri['arac_turu']; ilkYayinlar: AracTuruRaporSatiri['yayinlar'];
+  toplam: number; kapsam?: AracRaporDetayKapsami; modalYetkili: boolean; onSec: (id: string) => void;
+}) {
+  const [yayinlar, setYayinlar] = useState(ilkYayinlar);
+  const [sonrakiImlec, setSonrakiImlec] = useState<string | null>(null);
+  const [yukleniyor, setYukleniyor] = useState(Boolean(kapsam && toplam > 0));
+  const [hata, setHata] = useState<string | null>(null);
+  const istekRef = useRef<AbortController | null>(null);
+  const temelUrl = kapsam ? '/raporlar/api/uretim?' + new URLSearchParams({
+    arac_turu: aracTuru, periyot: kapsam.periyot, rapor_rolu: kapsam.raporRolu,
+    baslangic: kapsam.baslangic, bitis: kapsam.bitis,
+  }).toString() : null;
+
+  const sayfayiYukle = useCallback(async (imlec: string | null) => {
+    if (!temelUrl || istekRef.current) return;
+    const controller = new AbortController();
+    istekRef.current = controller;
+    setYukleniyor(true);
+    setHata(null);
+    try {
+      const res = await fetch(temelUrl + (imlec ? '&son_yayin_id=' + encodeURIComponent(imlec) : ''), {
+        signal: controller.signal, cache: 'no-store',
+      });
+      const json = await res.json();
+      if (controller.signal.aborted) return;
+      if (!res.ok || !json.success || !Array.isArray(json.data?.yayinlar)) {
+        throw new Error(json.hata || 'Yayınlar yüklenemedi.');
+      }
+      const sayfa = json.data as AracYayinSayfasi;
+      setYayinlar((onceki) => imlec ? [...onceki, ...sayfa.yayinlar] : sayfa.yayinlar);
+      setSonrakiImlec(sayfa.sonrakiImlec);
+    } catch (err) {
+      if (!controller.signal.aborted) setHata(err instanceof Error ? err.message : 'Yayınlar yüklenemedi.');
+    } finally {
+      if (!controller.signal.aborted) setYukleniyor(false);
+      if (istekRef.current === controller) istekRef.current = null;
+    }
+  }, [temelUrl]);
+
+  useEffect(() => {
+    if (toplam > 0) void sayfayiYukle(null);
+    return () => { istekRef.current?.abort(); istekRef.current = null; };
+  }, [sayfayiYukle, toplam]);
+
+  return (
+    <>
+      {yayinlar.length > 0 ? (
+        <div className="max-h-36 overflow-y-auto space-y-1 pr-1">
+          {yayinlar.map((y) => (
+            <div key={y.yayin_id} className="flex items-center justify-between gap-1 rounded bg-[var(--tema-yerel-rapor-sayfa-zemini-03)] px-2 py-1 text-[10px] border border-[var(--tema-yerel-rapor-cizgi-27)] hover:bg-[var(--tema-yerel-rapor-secim-zemin-01)] transition-colors">
+              {modalYetkili ? (
+                <button type="button" onClick={() => onSec(y.yayin_id)}
+                  className="font-extrabold text-[var(--tema-yerel-rapor-eylem-metin-06)] hover:underline truncate flex items-center gap-1 text-left cursor-pointer focus-visible:outline-none"
+                  title={`${y.yayin_kodu ?? '-'} — Yayın detayını ve soruları aç`}>
+                  <span>{y.yayin_kodu ?? '-'}</span>
+                  <ExternalLink className="h-2.5 w-2.5 shrink-0 text-[var(--tema-yerel-rapor-yardimci-metin-14)]" />
+                </button>
+              ) : (
+                <span className="font-bold text-[var(--tema-yerel-rapor-ana-metin-06)] truncate" title={y.yayin_kodu ?? '-'}>{y.yayin_kodu ?? '-'}</span>
+              )}
+              <span className="tabular-nums text-[var(--tema-yerel-rapor-yardimci-metin-27)] shrink-0 font-medium">
+                {sayi(y.tamamlama)} tamamlama ·{' '}
+                <strong className="text-[var(--tema-yerel-rapor-ana-metin-07)] font-bold">{sayi(y.kazanilan_puan - y.kaybedilen_puan)} p</strong>
+              </span>
+            </div>
+          ))}
+        </div>
+      ) : !yukleniyor && !hata ? (
+        <div className="text-[10px] text-[var(--tema-yerel-rapor-yardimci-metin-66)] italic px-2 py-1">Bu dönemde etkileşim alan yayın yok.</div>
+      ) : null}
+      {yukleniyor && <div role="status" className="py-2 text-[10px]">Yayınlar yükleniyor…</div>}
+      {hata && <div role="alert" className="py-2 text-[10px] text-[var(--tema-yerel-rapor-islevsel-metin-07)]">{hata}</div>}
+      {!yukleniyor && (hata || (sonrakiImlec && yayinlar.length < toplam)) && (
+        <button type="button" onClick={() => void sayfayiYukle(sonrakiImlec)} className="mt-2 text-[10px] font-bold text-[var(--tema-yerel-rapor-eylem-metin-06)] hover:underline">
+          {hata ? 'Tekrar dene' : 'Daha fazla yayın göster'}
+        </button>
+      )}
+    </>
   );
 }

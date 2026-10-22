@@ -1,5 +1,6 @@
 // app/(panel)/raporlar/uretim/_hooks/useUretimRaporu.ts
 import { useCallback, useEffect, useRef, useState } from 'react';
+import type { UretimRaporRolu } from '@/lib/rapor/uretim/raporRolu';
 import {
   getUretimRaporuOnbellek,
   setUretimRaporuOnbellek,
@@ -16,13 +17,16 @@ interface UseUretimRaporuSonuc {
 
 export function useUretimRaporu(
   periyot: string,
-  kullaniciId: string | undefined
+  kullaniciId: string | undefined,
+  raporRolu: UretimRaporRolu = 'tumu',
 ): UseUretimRaporuSonuc {
-  const baslangicVeri = getUretimRaporuOnbellek(periyot, kullaniciId);
-  const [data, setData] = useState<RaporData | null>(() => baslangicVeri);
-  const [loading, setLoading] = useState(() => !baslangicVeri);
-  const [yenileniyor, setYenileniyor] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const anahtar = JSON.stringify([kullaniciId, periyot, raporRolu]);
+  const onbellekVerisi = getUretimRaporuOnbellek(periyot, kullaniciId, raporRolu);
+  const [veri, setVeri] = useState<{ anahtar: string; data: RaporData | null }>(() => ({ anahtar, data: onbellekVerisi }));
+  const data = veri.anahtar === anahtar ? veri.data : onbellekVerisi;
+  const [yenilenenAnahtar, setYenilenenAnahtar] = useState<string | null>(null);
+  const [hata, setHata] = useState<{ anahtar: string; mesaj: string } | null>(null);
+  const error = hata?.anahtar === anahtar ? hata.mesaj : null;
   const [yenileTetik, setYenileTetik] = useState(0);
   const manuelTetiklendiRef = useRef(false);
 
@@ -30,15 +34,6 @@ export function useUretimRaporu(
     manuelTetiklendiRef.current = true;
     setYenileTetik((deger) => deger + 1);
   }, []);
-
-  // Periyot değiştiğinde önbellekteki veriyi anında ekrana bas
-  useEffect(() => {
-    const onbellek = getUretimRaporuOnbellek(periyot, kullaniciId);
-    if (onbellek) {
-      setData(onbellek);
-      setLoading(false);
-    }
-  }, [periyot, kullaniciId]);
 
   useEffect(() => {
     if (!kullaniciId) return;
@@ -48,34 +43,30 @@ export function useUretimRaporu(
     manuelTetiklendiRef.current = false;
 
     const fetchRapor = async () => {
-      const onbellek = getUretimRaporuOnbellek(periyot, kullaniciId);
-      if (isManuel) {
-        setYenileniyor(true);
-      } else if (!onbellek) {
-        setLoading(true);
-      }
-      setError(null);
+      const onbellek = getUretimRaporuOnbellek(periyot, kullaniciId, raporRolu);
+      if (isManuel) setYenilenenAnahtar(anahtar);
+      setHata(null);
 
       try {
-        const res = await fetch(`/raporlar/api/uretim?periyot=${periyot}`, {
+        const res = await fetch(`/raporlar/api/uretim?periyot=${periyot}&rapor_rolu=${raporRolu}`, {
           signal: controller.signal,
         });
         const json = await res.json();
-        if (json.success && json.data) {
+        if (controller.signal.aborted) return;
+        if (res.ok && json.success && json.data) {
           const rapor = json.data as RaporData;
-          setUretimRaporuOnbellek(periyot, kullaniciId, rapor);
-          setData(rapor);
-          setError(null);
+          setUretimRaporuOnbellek(periyot, kullaniciId, rapor, raporRolu);
+          setVeri({ anahtar, data: rapor });
+          setHata(null);
         } else if (!onbellek) {
-          setError(json.error || 'Veri alınamadı');
+          setHata({ anahtar, mesaj: json.hata || json.error || 'Veri alınamadı' });
         }
       } catch (err: unknown) {
-        if (err instanceof DOMException && err.name === 'AbortError') return;
-        if (!onbellek) setError('Bağlantı hatası');
+        if (controller.signal.aborted || (err instanceof DOMException && err.name === 'AbortError')) return;
+        if (!onbellek) setHata({ anahtar, mesaj: 'Bağlantı hatası' });
       } finally {
         if (!controller.signal.aborted) {
-          setLoading(false);
-          setYenileniyor(false);
+          setYenilenenAnahtar((mevcut) => mevcut === anahtar ? null : mevcut);
         }
       }
     };
@@ -85,12 +76,12 @@ export function useUretimRaporu(
     return () => {
       controller.abort();
     };
-  }, [periyot, kullaniciId, yenileTetik]);
+  }, [anahtar, periyot, kullaniciId, raporRolu, yenileTetik]);
 
   return {
     data,
-    loading,
-    yenileniyor,
+    loading: !data && !error,
+    yenileniyor: yenilenenAnahtar === anahtar,
     error,
     yenile,
   };

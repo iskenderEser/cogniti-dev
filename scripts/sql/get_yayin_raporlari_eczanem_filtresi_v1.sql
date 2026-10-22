@@ -1,0 +1,790 @@
+-- Yayın Raporları: yalnız Eczanem Üyesi filtresi.
+-- Eczanem hedefli yayınlar; üyenin kendi tüketim, cevap ve puan kayıtları.
+-- Gönderen eczacı hareketleri üye tüketimine eklenmez.
+-- Tümü, Temsilci, BM, Eczacı, Teknisyen ve üretici/firma kapsamları korunur.
+-- Önceki kart SQL'leri kurulu olmalıdır. Dosyanın tamamını SQL Editor'da çalıştırın.
+
+BEGIN;
+
+CREATE OR REPLACE FUNCTION public.get_yayin_raporlari_varyant_ozeti_v1(
+  p_yonetici_id uuid,
+  p_baslangic timestamptz,
+  p_bitis timestamptz,
+  p_rapor_rolu text DEFAULT 'tumu'
+)
+RETURNS TABLE (
+  donem_normal_uretim bigint,
+  donem_hazir_video bigint,
+  donem_hazir_soru_seti bigint,
+  donem_hazir_video_ve_soru_seti bigint
+)
+LANGUAGE sql
+STABLE
+SECURITY INVOKER
+AS $function$
+WITH rapor_scope AS (
+  SELECT
+    k.firma_id,
+    CASE WHEN k.rol IN (
+      'pm','jr_pm','kd_pm','med_md','egt_md','egt_yrd_md','egt_yon','egt_uz',
+      'ik_drk','ik_md','ik_yrd_md','ik_uz','ik_per'
+    ) THEN k.kullanici_id ELSE NULL::uuid END AS uretici_id
+  FROM public.kullanicilar k
+  WHERE k.kullanici_id = p_yonetici_id
+    AND k.aktif_mi = true
+    AND k.firma_id IS NOT NULL
+    AND k.rol IN (
+      'gm','gm_yrd','drk','paz_md','blm_md','grp_pm','sm',
+      'pm','jr_pm','kd_pm','med_md','egt_md','egt_yrd_md','egt_yon','egt_uz',
+      'ik_drk','ik_md','ik_yrd_md','ik_uz','ik_per'
+    )
+    AND p_rapor_rolu IN ('tumu','utt','bm','eczaci','eczane_teknisyeni','eczanem')
+),
+donem_yayinlari AS (
+  SELECT DISTINCT ON (yy.yayin_id)
+    yy.yayin_id, ky.talep_id, rs.uretici_id
+  FROM public.yayin_yonetimi yy
+  JOIN public.v_yayin_kunye ky ON ky.yayin_id = yy.yayin_id
+  JOIN rapor_scope rs
+    ON rs.firma_id = ky.firma_id
+   AND (rs.uretici_id IS NULL OR ky.uretici_id = rs.uretici_id)
+  WHERE p_rapor_rolu IN ('utt','bm','eczaci','eczane_teknisyeni','eczanem')
+    AND ky.talep_id IS NOT NULL
+    AND yy.yayin_tarihi >= p_baslangic
+    AND yy.yayin_tarihi <= p_bitis
+    AND COALESCE(yy.hedef_roller, ARRAY['utt']::text[]) && ARRAY[p_rapor_rolu]::text[]
+  -- Önceki kod yayin_id/talep_id artan sırasıyla Map'e yazıyordu.
+  -- Bir yayın için birden fazla künye varsa son NULL olmayan talep bağlantısı korunur.
+  ORDER BY yy.yayin_id, ky.talep_id DESC
+),
+varyantlar AS (
+  SELECT
+    CASE WHEN dy.uretici_id IS NOT NULL THEN COALESCE(t.hazir_video, false)
+      ELSE t.hazir_video END AS hazir_video,
+    CASE WHEN dy.uretici_id IS NOT NULL THEN COALESCE(t.hazir_soru_seti, false)
+      ELSE t.hazir_soru_seti END AS hazir_soru_seti
+  FROM donem_yayinlari dy
+  JOIN public.talepler t ON t.talep_id = dy.talep_id
+),
+utt_ozet AS (
+  SELECT
+    COUNT(*) FILTER (WHERE hazir_video = false AND hazir_soru_seti = false) AS donem_normal_uretim,
+    COUNT(*) FILTER (WHERE hazir_video = true AND hazir_soru_seti = false) AS donem_hazir_video,
+    COUNT(*) FILTER (WHERE hazir_video = false AND hazir_soru_seti = true) AS donem_hazir_soru_seti,
+    COUNT(*) FILTER (WHERE hazir_video = true AND hazir_soru_seti = true) AS donem_hazir_video_ve_soru_seti
+  FROM varyantlar
+)
+SELECT
+  o.donem_normal_uretim::bigint, o.donem_hazir_video::bigint,
+  o.donem_hazir_soru_seti::bigint, o.donem_hazir_video_ve_soru_seti::bigint
+FROM rapor_scope rs
+CROSS JOIN LATERAL public.get_uretici_yayin_ana_ozet_v1(
+  rs.uretici_id, p_baslangic, p_bitis
+) o
+WHERE p_rapor_rolu = 'tumu' AND rs.uretici_id IS NOT NULL
+
+UNION ALL
+
+SELECT
+  o.donem_normal_uretim::bigint, o.donem_hazir_video::bigint,
+  o.donem_hazir_soru_seti::bigint, o.donem_hazir_video_ve_soru_seti::bigint
+FROM rapor_scope rs
+CROSS JOIN LATERAL public.get_yonetici_rapor_ana_ozet_v2(
+  p_yonetici_id, p_baslangic, p_bitis
+) o
+WHERE p_rapor_rolu = 'tumu' AND rs.uretici_id IS NULL
+
+UNION ALL
+
+SELECT u.donem_normal_uretim, u.donem_hazir_video,
+  u.donem_hazir_soru_seti, u.donem_hazir_video_ve_soru_seti
+FROM utt_ozet u
+WHERE p_rapor_rolu IN ('utt','bm','eczaci','eczane_teknisyeni','eczanem');
+$function$;
+
+CREATE OR REPLACE FUNCTION public.get_yonetici_egitim_turu_etkisi_v3(
+  p_yonetici_id uuid,
+  p_baslangic timestamptz,
+  p_bitis timestamptz,
+  p_rapor_rolu text
+)
+RETURNS TABLE(
+  egitim_turu text,
+  donemde_yayina_alinan integer,
+  tamamlanan_izleme integer,
+  izleme_puani integer,
+  cevaplama_puani integer,
+  oneri_puani integer,
+  extra_puani integer,
+  ileri_sarma_kaybi integer,
+  yanlis_cevap_kaybi integer,
+  oneri_kaybi integer,
+  challenge_kaybi integer,
+  kazanilan_toplam integer,
+  kaybedilen_toplam integer,
+  net_puan integer,
+  begeni_sayisi integer,
+  favori_sayisi integer,
+  extra_izleme_sayisi integer,
+  urun_dagilimi jsonb,
+  eclub_puani integer
+)
+LANGUAGE sql
+STABLE
+SECURITY INVOKER
+AS $function$
+WITH
+turler AS (
+  SELECT *
+  FROM (VALUES
+    (1, 'urun_egitimi'::text),
+    (2, 'satis_teknikleri'::text),
+    (3, 'yonetim_egitimi'::text),
+    (4, 'medikal_egitim'::text),
+    (5, 'urun_medikal_egitim'::text),
+    (6, 'ik_egitimi'::text)
+  ) AS t(sira, egitim_turu)
+),
+rapor_scope AS (
+  SELECT
+    k.firma_id,
+    CASE
+      WHEN k.rol IN (
+        'pm','jr_pm','kd_pm','med_md','egt_md','egt_yrd_md','egt_yon','egt_uz',
+        'ik_drk','ik_md','ik_yrd_md','ik_uz','ik_per'
+      ) THEN k.kullanici_id
+      ELSE NULL::uuid
+    END AS uretici_id
+  FROM kullanicilar k
+  WHERE k.kullanici_id = p_yonetici_id
+    AND k.aktif_mi = true
+    AND k.rol IN (
+      'gm','gm_yrd','drk','paz_md','blm_md','grp_pm','sm',
+      'pm','jr_pm','kd_pm','med_md','egt_md','egt_yrd_md','egt_yon','egt_uz',
+      'ik_drk','ik_md','ik_yrd_md','ik_uz','ik_per'
+    )
+),
+scope_utt AS (
+  SELECT k.kullanici_id
+  FROM kullanicilar k
+  JOIN rapor_scope rs ON rs.firma_id = k.firma_id
+  WHERE k.aktif_mi = true
+    AND k.rol IN ('utt','kd_utt')
+    AND p_rapor_rolu IN ('tumu', 'utt')
+),
+scope_bm AS (
+  SELECT k.kullanici_id
+  FROM kullanicilar k
+  JOIN rapor_scope rs ON rs.firma_id = k.firma_id
+  WHERE k.aktif_mi = true
+    AND k.rol = 'bm'
+),
+scope_yayinlari AS (
+  SELECT DISTINCT
+    yy.yayin_id,
+    yy.yayin_tarihi AS yayina_alma_tarihi,
+    COALESCE(yy.hedef_roller, ARRAY['utt']::text[]) AS hedef_roller,
+    ky.egitim_turu::text,
+    ky.urun_id,
+    COALESCE(u.urun_adi, 'Ürün bağlantısı yok')::text AS urun_adi
+  FROM yayin_yonetimi yy
+  JOIN v_yayin_kunye ky ON ky.yayin_id = yy.yayin_id
+  JOIN rapor_scope rs
+    ON rs.firma_id = ky.firma_id
+   AND (rs.uretici_id IS NULL OR ky.uretici_id = rs.uretici_id)
+  LEFT JOIN urunler u ON u.urun_id = ky.urun_id
+  WHERE ky.egitim_turu IN (
+    'urun_egitimi', 'satis_teknikleri', 'yonetim_egitimi', 'medikal_egitim',
+    'urun_medikal_egitim', 'ik_egitimi'
+  )
+    AND (
+      p_rapor_rolu = 'tumu'
+      OR (
+        p_rapor_rolu = 'utt'
+        AND COALESCE(yy.hedef_roller, ARRAY['utt']::text[]) && ARRAY['utt']::text[]
+      )
+      OR (
+        p_rapor_rolu = 'bm'
+        AND COALESCE(yy.hedef_roller, ARRAY['utt']::text[]) && ARRAY['bm']::text[]
+      )
+      OR (
+        p_rapor_rolu = 'eczaci'
+        AND COALESCE(yy.hedef_roller, ARRAY['utt']::text[]) && ARRAY['eczaci']::text[]
+      )
+      OR (
+        p_rapor_rolu = 'eczane_teknisyeni'
+        AND COALESCE(yy.hedef_roller, ARRAY['utt']::text[]) && ARRAY['eczane_teknisyeni']::text[]
+      )
+      OR (
+        p_rapor_rolu = 'eczanem'
+        AND COALESCE(yy.hedef_roller, ARRAY['utt']::text[]) && ARRAY['eczanem']::text[]
+      )
+    )
+),
+uretim AS (
+  SELECT
+    sy.egitim_turu,
+    sy.urun_id,
+    sy.urun_adi,
+    COUNT(DISTINCT sy.yayin_id)::int AS adet
+  FROM scope_yayinlari sy
+  WHERE sy.yayina_alma_tarihi >= p_baslangic
+    AND sy.yayina_alma_tarihi <= p_bitis
+  GROUP BY sy.egitim_turu, sy.urun_id, sy.urun_adi
+),
+tamamlama_olaylari AS (
+  SELECT
+    sy.egitim_turu,
+    'tclub:' || ik.izleme_id::text AS olay_id,
+    (ik.izleme_turu = 'extra') AS extra_mi
+  FROM izleme_kayitlari ik
+  JOIN scope_utt su ON su.kullanici_id = ik.kullanici_id
+  JOIN scope_yayinlari sy ON sy.yayin_id = ik.yayin_id
+  WHERE sy.hedef_roller && ARRAY['utt']::text[]
+    AND p_rapor_rolu IN ('tumu', 'utt')
+    AND ik.tamamlandi_mi = true
+    AND ik.gercek_oynatma_mi = true
+    AND COALESCE(ik.izleme_bitis, ik.created_at, ik.izleme_baslangic) >= p_baslangic
+    AND COALESCE(ik.izleme_bitis, ik.created_at, ik.izleme_baslangic) <= p_bitis
+
+  UNION ALL
+
+  SELECT
+    sy.egitim_turu,
+    'cclub:' || ik.izleme_id::text,
+    (ik.izleme_turu = 'extra')
+  FROM cc_izleme_kayitlari ik
+  JOIN scope_bm sb ON sb.kullanici_id = ik.bm_id
+  JOIN scope_yayinlari sy ON sy.yayin_id = ik.yayin_id
+  WHERE sy.hedef_roller && ARRAY['bm']::text[]
+    AND p_rapor_rolu IN ('tumu', 'bm')
+    AND ik.tamamlandi_mi = true
+    AND COALESCE(ik.izleme_bitis, ik.created_at, ik.izleme_baslangic) >= p_baslangic
+    AND COALESCE(ik.izleme_bitis, ik.created_at, ik.izleme_baslangic) <= p_bitis
+
+  UNION ALL
+
+  SELECT
+    sy.egitim_turu,
+    'eclub:' || ik.izleme_id::text,
+    false
+  FROM eclub_izleme_kayitlari ik
+  JOIN eclub_kisiler ek ON ek.kisi_id = ik.kisi_id
+  JOIN scope_yayinlari sy ON sy.yayin_id = ik.yayin_id
+  WHERE ik.tamamlandi_mi = true
+    AND (
+      p_rapor_rolu = 'tumu'
+      OR (p_rapor_rolu = 'eczaci' AND LOWER(ek.rol) IN ('eczaci','ikinci_eczaci','yardimci_eczaci'))
+      OR (p_rapor_rolu = 'eczane_teknisyeni' AND LOWER(ek.rol) = 'eczane_teknisyeni')
+    )
+    AND (
+      (LOWER(ek.rol) IN ('eczaci','ikinci_eczaci','yardimci_eczaci')
+        AND sy.hedef_roller && ARRAY['eczaci']::text[])
+      OR
+      (LOWER(ek.rol) = 'eczane_teknisyeni'
+        AND sy.hedef_roller && ARRAY['eczane_teknisyeni']::text[])
+    )
+    AND COALESCE(ik.izleme_bitis, ik.created_at, ik.izleme_baslangic) >= p_baslangic
+    AND COALESCE(ik.izleme_bitis, ik.created_at, ik.izleme_baslangic) <= p_bitis
+
+  UNION ALL
+
+  SELECT
+    sy.egitim_turu,
+    'eczanem:' || ik.izleme_id::text,
+    false
+  FROM eczanem_izleme_kayitlari ik
+  JOIN scope_yayinlari sy ON sy.yayin_id = ik.yayin_id
+  WHERE sy.hedef_roller && ARRAY['eczanem']::text[]
+    AND p_rapor_rolu IN ('tumu', 'eczanem')
+    AND ik.tamamlandi_mi = true
+    AND ik.izleme_bitis >= p_baslangic
+    AND ik.izleme_bitis <= p_bitis
+),
+izleme AS (
+  SELECT
+    t.egitim_turu,
+    COUNT(DISTINCT t.olay_id)::int AS tamamlanan,
+    COUNT(DISTINCT t.olay_id) FILTER (WHERE t.extra_mi)::int AS extra
+  FROM tamamlama_olaylari t
+  GROUP BY t.egitim_turu
+),
+puan_hareketleri AS (
+  SELECT kp.yayin_id, kp.created_at,
+    kp.puan_turu::text AS tur, kp.puan::int AS kazanilan, 0::int AS kaybedilen
+  FROM kazanilan_puanlar kp
+  JOIN scope_utt su ON su.kullanici_id = kp.kullanici_id
+  JOIN scope_yayinlari sy ON sy.yayin_id = kp.yayin_id
+    AND sy.hedef_roller && ARRAY['utt']::text[]
+    AND p_rapor_rolu IN ('tumu', 'utt')
+  UNION ALL
+  SELECT x.yayin_id, x.created_at,
+    'ileri_sarma', 0, x.kaybedilen_puan::int
+  FROM ileri_sarma_kayitlari x
+  JOIN scope_utt su ON su.kullanici_id = x.kullanici_id
+  JOIN scope_yayinlari sy ON sy.yayin_id = x.yayin_id
+    AND sy.hedef_roller && ARRAY['utt']::text[]
+    AND p_rapor_rolu IN ('tumu', 'utt')
+  UNION ALL
+  SELECT x.yayin_id, x.created_at,
+    'yanlis_cevap', 0, x.kaybedilen_puan::int
+  FROM yanlis_cevap_kayitlari x
+  JOIN scope_utt su ON su.kullanici_id = x.kullanici_id
+  JOIN scope_yayinlari sy ON sy.yayin_id = x.yayin_id
+    AND sy.hedef_roller && ARRAY['utt']::text[]
+    AND p_rapor_rolu IN ('tumu', 'utt')
+  UNION ALL
+  SELECT x.yayin_id, x.created_at,
+    'oneri_kaybi', 0, x.kaybedilen_puan::int
+  FROM oneri_kayip_kayitlari x
+  JOIN scope_utt su ON su.kullanici_id = x.kullanici_id
+  JOIN scope_yayinlari sy ON sy.yayin_id = x.yayin_id
+    AND sy.hedef_roller && ARRAY['utt']::text[]
+    AND p_rapor_rolu IN ('tumu', 'utt')
+
+  UNION ALL
+
+  SELECT kp.yayin_id, kp.created_at,
+    CASE
+      WHEN kp.puan_turu IN ('cc_gonderme','cc_referral') THEN 'oneri'
+      ELSE kp.puan_turu::text
+    END,
+    kp.puan::int, 0::int
+  FROM cc_kazanilan_puanlar kp
+  JOIN scope_bm sb ON sb.kullanici_id = kp.bm_id
+  JOIN scope_yayinlari sy ON sy.yayin_id = kp.yayin_id
+    AND sy.hedef_roller && ARRAY['bm']::text[]
+    AND p_rapor_rolu IN ('tumu', 'bm')
+  UNION ALL
+  SELECT x.yayin_id, x.created_at,
+    'ileri_sarma', 0, x.kaybedilen_puan::int
+  FROM cc_ileri_sarma_kayitlari x
+  JOIN scope_bm sb ON sb.kullanici_id = x.bm_id
+  JOIN scope_yayinlari sy ON sy.yayin_id = x.yayin_id
+    AND sy.hedef_roller && ARRAY['bm']::text[]
+    AND p_rapor_rolu IN ('tumu', 'bm')
+  UNION ALL
+  SELECT x.yayin_id, x.created_at,
+    'yanlis_cevap', 0, x.kaybedilen_puan::int
+  FROM cc_yanlis_cevap_kayitlari x
+  JOIN scope_bm sb ON sb.kullanici_id = x.bm_id
+  JOIN scope_yayinlari sy ON sy.yayin_id = x.yayin_id
+    AND sy.hedef_roller && ARRAY['bm']::text[]
+    AND p_rapor_rolu IN ('tumu', 'bm')
+  UNION ALL
+  SELECT x.yayin_id, x.created_at,
+    'challenge_kaybi', 0, x.kaybedilen_puan::int
+  FROM challenge_kayip_kayitlari x
+  JOIN scope_bm sb ON sb.kullanici_id = x.kullanici_id
+  JOIN scope_yayinlari sy ON sy.yayin_id = x.yayin_id
+    AND sy.hedef_roller && ARRAY['bm']::text[]
+    AND p_rapor_rolu IN ('tumu', 'bm')
+
+  UNION ALL
+
+  SELECT kp.yayin_id, kp.created_at,
+    'eclub', kp.puan::int, 0::int
+  FROM eclub_kazanilan_puanlar kp
+  JOIN eclub_kisiler ek ON ek.kisi_id = kp.kisi_id
+  JOIN scope_yayinlari sy ON sy.yayin_id = kp.yayin_id
+    AND (
+      p_rapor_rolu = 'tumu'
+      OR (p_rapor_rolu = 'eczaci' AND LOWER(ek.rol) IN ('eczaci','ikinci_eczaci','yardimci_eczaci'))
+      OR (p_rapor_rolu = 'eczane_teknisyeni' AND LOWER(ek.rol) = 'eczane_teknisyeni')
+    )
+  WHERE (LOWER(ek.rol) IN ('eczaci','ikinci_eczaci','yardimci_eczaci')
+      AND sy.hedef_roller && ARRAY['eczaci']::text[])
+     OR (LOWER(ek.rol) = 'eczane_teknisyeni'
+      AND sy.hedef_roller && ARRAY['eczane_teknisyeni']::text[])
+  UNION ALL
+  SELECT x.yayin_id, x.created_at,
+    'ileri_sarma', 0, x.kaybedilen_puan::int
+  FROM eclub_ileri_sarma_kayitlari x
+  JOIN eclub_kisiler ek ON ek.kisi_id = x.kisi_id
+  JOIN scope_yayinlari sy ON sy.yayin_id = x.yayin_id
+    AND (
+      p_rapor_rolu = 'tumu'
+      OR (p_rapor_rolu = 'eczaci' AND LOWER(ek.rol) IN ('eczaci','ikinci_eczaci','yardimci_eczaci'))
+      OR (p_rapor_rolu = 'eczane_teknisyeni' AND LOWER(ek.rol) = 'eczane_teknisyeni')
+    )
+  WHERE (LOWER(ek.rol) IN ('eczaci','ikinci_eczaci','yardimci_eczaci')
+      AND sy.hedef_roller && ARRAY['eczaci']::text[])
+     OR (LOWER(ek.rol) = 'eczane_teknisyeni'
+      AND sy.hedef_roller && ARRAY['eczane_teknisyeni']::text[])
+  UNION ALL
+  SELECT x.yayin_id, x.created_at,
+    'yanlis_cevap', 0, x.kaybedilen_puan::int
+  FROM eclub_yanlis_cevap_kayitlari x
+  JOIN eclub_kisiler ek ON ek.kisi_id = x.kisi_id
+  JOIN scope_yayinlari sy ON sy.yayin_id = x.yayin_id
+    AND (
+      p_rapor_rolu = 'tumu'
+      OR (p_rapor_rolu = 'eczaci' AND LOWER(ek.rol) IN ('eczaci','ikinci_eczaci','yardimci_eczaci'))
+      OR (p_rapor_rolu = 'eczane_teknisyeni' AND LOWER(ek.rol) = 'eczane_teknisyeni')
+    )
+  WHERE (LOWER(ek.rol) IN ('eczaci','ikinci_eczaci','yardimci_eczaci')
+      AND sy.hedef_roller && ARRAY['eczaci']::text[])
+     OR (LOWER(ek.rol) = 'eczane_teknisyeni'
+      AND sy.hedef_roller && ARRAY['eczane_teknisyeni']::text[])
+
+
+  UNION ALL
+
+  SELECT sy.yayin_id, pk.created_at,
+    CASE WHEN pk.puan_turu = 'cevap' THEN 'cevaplama' ELSE 'izleme' END,
+    pk.puan::int, 0::int
+  FROM eczanem_puan_kayitlari pk
+  JOIN eczanem_izleme_kayitlari ik
+    ON ik.izleme_id = pk.izleme_id
+   AND ik.musteri_id = pk.musteri_id
+  JOIN scope_yayinlari sy ON sy.yayin_id = ik.yayin_id
+  JOIN rapor_scope rs ON rs.firma_id = pk.firma_id
+  WHERE sy.hedef_roller && ARRAY['eczanem']::text[]
+    AND p_rapor_rolu IN ('tumu', 'eczanem')
+    AND pk.urun_id = sy.urun_id
+    AND pk.puan_turu IN ('izleme', 'cevap')
+),
+puan AS (
+  SELECT
+    sy.egitim_turu,
+    sy.urun_id,
+    sy.urun_adi,
+    COALESCE(SUM(ph.kazanilan) FILTER (WHERE ph.tur = 'izleme'), 0)::int AS izleme,
+    COALESCE(SUM(ph.kazanilan) FILTER (WHERE ph.tur = 'cevaplama'), 0)::int AS cevaplama,
+    COALESCE(SUM(ph.kazanilan) FILTER (WHERE ph.tur = 'oneri'), 0)::int AS oneri,
+    COALESCE(SUM(ph.kazanilan) FILTER (WHERE ph.tur = 'extra'), 0)::int AS extra,
+    COALESCE(SUM(ph.kazanilan) FILTER (WHERE ph.tur = 'eclub'), 0)::int AS eclub,
+    COALESCE(SUM(ph.kaybedilen) FILTER (WHERE ph.tur = 'ileri_sarma'), 0)::int AS ileri,
+    COALESCE(SUM(ph.kaybedilen) FILTER (WHERE ph.tur = 'yanlis_cevap'), 0)::int AS yanlis,
+    COALESCE(SUM(ph.kaybedilen) FILTER (WHERE ph.tur = 'oneri_kaybi'), 0)::int AS oneri_kaybi,
+    COALESCE(SUM(ph.kaybedilen) FILTER (WHERE ph.tur = 'challenge_kaybi'), 0)::int AS challenge
+  FROM puan_hareketleri ph
+  JOIN scope_yayinlari sy ON sy.yayin_id = ph.yayin_id
+  WHERE ph.created_at >= p_baslangic AND ph.created_at <= p_bitis
+  GROUP BY sy.egitim_turu, sy.urun_id, sy.urun_adi
+),
+etkilesim AS (
+  SELECT x.egitim_turu,
+    SUM(x.begeni)::int AS begeni,
+    SUM(x.favori)::int AS favori
+  FROM (
+    SELECT sy.egitim_turu, 1::int AS begeni, 0::int AS favori
+    FROM video_begeniler vb
+    JOIN scope_utt su ON su.kullanici_id = vb.kullanici_id
+    JOIN scope_yayinlari sy ON sy.yayin_id = vb.yayin_id
+    WHERE vb.created_at >= p_baslangic AND vb.created_at <= p_bitis
+    UNION ALL
+    SELECT sy.egitim_turu, 0, 1
+    FROM video_favoriler vf
+    JOIN scope_utt su ON su.kullanici_id = vf.kullanici_id
+    JOIN scope_yayinlari sy ON sy.yayin_id = vf.yayin_id
+    WHERE vf.created_at >= p_baslangic AND vf.created_at <= p_bitis
+  ) x
+  GROUP BY x.egitim_turu
+),
+urun_gruplari AS (
+  SELECT egitim_turu, urun_id, urun_adi FROM uretim WHERE urun_id IS NOT NULL
+  UNION
+  SELECT egitim_turu, urun_id, urun_adi FROM puan WHERE urun_id IS NOT NULL
+),
+urun_ozet AS (
+  SELECT
+    ug.egitim_turu,
+    ug.urun_id,
+    ug.urun_adi,
+    COALESCE(u.adet, 0)::int AS yayina_alinan,
+    (COALESCE(p.izleme, 0) + COALESCE(p.cevaplama, 0) + COALESCE(p.oneri, 0)
+      + COALESCE(p.extra, 0) + COALESCE(p.eclub, 0))::int AS kazanilan,
+    COALESCE(p.eclub, 0)::int AS eclub_puani,
+    (COALESCE(p.ileri, 0) + COALESCE(p.yanlis, 0) + COALESCE(p.oneri_kaybi, 0) + COALESCE(p.challenge, 0))::int AS kaybedilen
+  FROM urun_gruplari ug
+  LEFT JOIN uretim u
+    ON u.egitim_turu = ug.egitim_turu
+   AND u.urun_id IS NOT DISTINCT FROM ug.urun_id
+   AND u.urun_adi = ug.urun_adi
+  LEFT JOIN puan p
+    ON p.egitim_turu = ug.egitim_turu
+   AND p.urun_id IS NOT DISTINCT FROM ug.urun_id
+   AND p.urun_adi = ug.urun_adi
+),
+urun_json AS (
+  SELECT
+    uo.egitim_turu,
+    jsonb_agg(
+      jsonb_build_object(
+        'urun_id', uo.urun_id,
+        'urun_adi', uo.urun_adi,
+        'yayina_alinan', uo.yayina_alinan,
+        'kazanilan_toplam', uo.kazanilan,
+        'kaybedilen_toplam', uo.kaybedilen,
+        'net_puan', uo.kazanilan - uo.kaybedilen,
+        'eclub_puani', uo.eclub_puani
+      )
+      ORDER BY (uo.kazanilan - uo.kaybedilen) DESC, uo.urun_adi
+    ) AS dagilim
+  FROM urun_ozet uo
+  GROUP BY uo.egitim_turu
+),
+tur_puan AS (
+  SELECT
+    p.egitim_turu,
+    SUM(p.izleme)::int AS izleme,
+    SUM(p.cevaplama)::int AS cevaplama,
+    SUM(p.oneri)::int AS oneri,
+    SUM(p.extra)::int AS extra,
+    SUM(p.eclub)::int AS eclub,
+    SUM(p.ileri)::int AS ileri,
+    SUM(p.yanlis)::int AS yanlis,
+    SUM(p.oneri_kaybi)::int AS oneri_kaybi,
+    SUM(p.challenge)::int AS challenge
+  FROM puan p
+  GROUP BY p.egitim_turu
+),
+tur_uretim AS (
+  SELECT u.egitim_turu, SUM(u.adet)::int AS adet
+  FROM uretim u
+  GROUP BY u.egitim_turu
+)
+SELECT
+  t.egitim_turu,
+  COALESCE(tu.adet, 0)::int,
+  COALESCE(i.tamamlanan, 0)::int,
+  COALESCE(tp.izleme, 0)::int,
+  COALESCE(tp.cevaplama, 0)::int,
+  COALESCE(tp.oneri, 0)::int,
+  COALESCE(tp.extra, 0)::int,
+  COALESCE(tp.ileri, 0)::int,
+  COALESCE(tp.yanlis, 0)::int,
+  COALESCE(tp.oneri_kaybi, 0)::int,
+  COALESCE(tp.challenge, 0)::int,
+  (COALESCE(tp.izleme, 0) + COALESCE(tp.cevaplama, 0) + COALESCE(tp.oneri, 0)
+    + COALESCE(tp.extra, 0) + COALESCE(tp.eclub, 0))::int,
+  (COALESCE(tp.ileri, 0) + COALESCE(tp.yanlis, 0) + COALESCE(tp.oneri_kaybi, 0) + COALESCE(tp.challenge, 0))::int,
+  (COALESCE(tp.izleme, 0) + COALESCE(tp.cevaplama, 0) + COALESCE(tp.oneri, 0)
+   + COALESCE(tp.extra, 0) + COALESCE(tp.eclub, 0)
+   - COALESCE(tp.ileri, 0) - COALESCE(tp.yanlis, 0) - COALESCE(tp.oneri_kaybi, 0) - COALESCE(tp.challenge, 0))::int,
+  COALESCE(e.begeni, 0)::int,
+  COALESCE(e.favori, 0)::int,
+  COALESCE(i.extra, 0)::int,
+  COALESCE(uj.dagilim, '[]'::jsonb),
+  COALESCE(tp.eclub, 0)::int
+FROM turler t
+LEFT JOIN tur_uretim tu ON tu.egitim_turu = t.egitim_turu
+LEFT JOIN izleme i ON i.egitim_turu = t.egitim_turu
+LEFT JOIN tur_puan tp ON tp.egitim_turu = t.egitim_turu
+LEFT JOIN etkilesim e ON e.egitim_turu = t.egitim_turu
+LEFT JOIN urun_json uj ON uj.egitim_turu = t.egitim_turu
+ORDER BY t.sira;
+$function$;
+
+CREATE OR REPLACE FUNCTION public.get_yayin_raporlari_arac_kaynagi_v1(
+  p_yonetici_id uuid,
+  p_baslangic timestamptz,
+  p_bitis timestamptz,
+  p_rapor_rolu text,
+  p_arac_turu text
+)
+RETURNS TABLE (
+  kaynak text,
+  yayin_id uuid,
+  arac_turu text,
+  talep_id uuid,
+  talep_no integer,
+  olay_turu text,
+  rol text,
+  adet bigint,
+  puan bigint,
+  arac_puani bigint
+)
+LANGUAGE sql
+STABLE
+SECURITY INVOKER
+AS $function$
+WITH rapor_scope AS (
+  SELECT
+    k.firma_id,
+    CASE WHEN k.rol IN (
+      'pm','jr_pm','kd_pm','med_md','egt_md','egt_yrd_md','egt_yon','egt_uz',
+      'ik_drk','ik_md','ik_yrd_md','ik_uz','ik_per'
+    ) THEN k.kullanici_id ELSE NULL::uuid END AS uretici_id
+  FROM public.kullanicilar k
+  WHERE k.kullanici_id = p_yonetici_id
+    AND k.aktif_mi = true
+    AND k.firma_id IS NOT NULL
+    AND k.rol IN (
+      'gm','gm_yrd','drk','paz_md','blm_md','grp_pm','sm',
+      'pm','jr_pm','kd_pm','med_md','egt_md','egt_yrd_md','egt_yon','egt_uz',
+      'ik_drk','ik_md','ik_yrd_md','ik_uz','ik_per'
+    )
+    AND p_rapor_rolu IN ('tumu','utt','bm','eczaci','eczane_teknisyeni','eczanem')
+)
+SELECT
+  'yayin'::text, y.yayin_id, y.arac_turu::text, y.talep_id, y.talep_no,
+  NULL::text, NULL::text, 0::bigint, 0::bigint,
+  COALESCE(y.arac_puani, 0)::bigint
+FROM public.v_rapor_arac_turu_ozet y
+JOIN rapor_scope rs ON (
+  (rs.uretici_id IS NOT NULL AND y.uretici_id = rs.uretici_id)
+  OR (rs.uretici_id IS NULL AND y.firma_id = rs.firma_id)
+)
+WHERE y.yayin_tarihi >= p_baslangic
+  AND y.yayin_tarihi < p_bitis
+  AND y.arac_turu IN ('video','podcast','gorsel','flip_pdf')
+  AND (p_arac_turu IS NULL OR y.arac_turu = p_arac_turu)
+  AND (
+    p_rapor_rolu = 'tumu'
+    OR (
+      p_rapor_rolu = 'utt'
+      AND y.firma_id = rs.firma_id
+      AND EXISTS (
+        SELECT 1 FROM public.yayin_yonetimi yy
+        WHERE yy.yayin_id = y.yayin_id
+          AND COALESCE(yy.hedef_roller, ARRAY['utt']::text[]) && ARRAY['utt']::text[]
+      )
+    )
+    OR (
+      p_rapor_rolu = 'bm'
+      AND y.firma_id = rs.firma_id
+      AND EXISTS (
+        SELECT 1 FROM public.yayin_yonetimi yy
+        WHERE yy.yayin_id = y.yayin_id
+          AND COALESCE(yy.hedef_roller, ARRAY['utt']::text[]) && ARRAY['bm']::text[]
+      )
+    )
+    OR (
+      p_rapor_rolu = 'eczaci'
+      AND y.firma_id = rs.firma_id
+      AND EXISTS (
+        SELECT 1 FROM public.yayin_yonetimi yy
+        WHERE yy.yayin_id = y.yayin_id
+          AND COALESCE(yy.hedef_roller, ARRAY['utt']::text[]) && ARRAY['eczaci']::text[]
+      )
+    )
+    OR (
+      p_rapor_rolu = 'eczane_teknisyeni'
+      AND y.firma_id = rs.firma_id
+      AND EXISTS (
+        SELECT 1 FROM public.yayin_yonetimi yy
+        WHERE yy.yayin_id = y.yayin_id
+          AND COALESCE(yy.hedef_roller, ARRAY['utt']::text[]) && ARRAY['eczane_teknisyeni']::text[]
+      )
+    )
+    OR (
+      p_rapor_rolu = 'eczanem'
+      AND y.firma_id = rs.firma_id
+      AND EXISTS (
+        SELECT 1 FROM public.yayin_yonetimi yy
+        WHERE yy.yayin_id = y.yayin_id
+          AND COALESCE(yy.hedef_roller, ARRAY['utt']::text[]) && ARRAY['eczanem']::text[]
+      )
+    )
+  )
+
+UNION ALL
+
+SELECT
+  'olay'::text, o.yayin_id, o.arac_turu::text, o.talep_id, o.talep_no,
+  o.olay_turu::text, COALESCE(NULLIF(o.rol, ''), 'bilinmiyor')::text,
+  COALESCE(o.adet, 0)::bigint, COALESCE(o.puan, 0)::bigint, 0::bigint
+FROM public.v_rapor_arac_turu_olaylari o
+JOIN rapor_scope rs ON (
+  (rs.uretici_id IS NOT NULL AND o.uretici_id = rs.uretici_id)
+  OR (rs.uretici_id IS NULL AND o.firma_id = rs.firma_id)
+)
+WHERE o.olay_tarihi >= p_baslangic
+  AND o.olay_tarihi < p_bitis
+  AND o.arac_turu IN ('video','podcast','gorsel','flip_pdf')
+  AND (p_arac_turu IS NULL OR o.arac_turu = p_arac_turu)
+  AND (
+    p_rapor_rolu = 'tumu'
+    OR (
+      p_rapor_rolu = 'utt'
+      AND o.firma_id = rs.firma_id
+      AND o.rol IN ('utt','kd_utt')
+      AND EXISTS (
+        SELECT 1 FROM public.kullanicilar k
+        WHERE k.kullanici_id = o.aktor_id
+          AND k.firma_id = rs.firma_id
+          AND k.aktif_mi = true
+          AND k.rol IN ('utt','kd_utt')
+      )
+      AND EXISTS (
+        SELECT 1 FROM public.yayin_yonetimi yy
+        WHERE yy.yayin_id = o.yayin_id
+          AND COALESCE(yy.hedef_roller, ARRAY['utt']::text[]) && ARRAY['utt']::text[]
+      )
+    )
+    OR (
+      p_rapor_rolu = 'bm'
+      AND o.firma_id = rs.firma_id
+      AND o.rol = 'bm'
+      AND EXISTS (
+        SELECT 1 FROM public.kullanicilar k
+        WHERE k.kullanici_id = o.aktor_id
+          AND k.firma_id = rs.firma_id
+          AND k.aktif_mi = true
+          AND k.rol = 'bm'
+      )
+      AND EXISTS (
+        SELECT 1 FROM public.yayin_yonetimi yy
+        WHERE yy.yayin_id = o.yayin_id
+          AND COALESCE(yy.hedef_roller, ARRAY['utt']::text[]) && ARRAY['bm']::text[]
+      )
+    )
+    OR (
+      p_rapor_rolu = 'eczaci'
+      AND o.firma_id = rs.firma_id
+      AND o.rol IN ('eczaci','ikinci_eczaci','yardimci_eczaci')
+      AND EXISTS (
+        SELECT 1 FROM public.eclub_kisiler ek
+        WHERE ek.kisi_id = o.aktor_id
+          AND LOWER(ek.rol) IN ('eczaci','ikinci_eczaci','yardimci_eczaci')
+      )
+      AND EXISTS (
+        SELECT 1 FROM public.yayin_yonetimi yy
+        WHERE yy.yayin_id = o.yayin_id
+          AND COALESCE(yy.hedef_roller, ARRAY['utt']::text[]) && ARRAY['eczaci']::text[]
+      )
+    )
+    OR (
+      p_rapor_rolu = 'eczane_teknisyeni'
+      AND o.firma_id = rs.firma_id
+      AND o.rol = 'eczane_teknisyeni'
+      AND EXISTS (
+        SELECT 1 FROM public.eclub_kisiler ek
+        WHERE ek.kisi_id = o.aktor_id
+          AND LOWER(ek.rol) = 'eczane_teknisyeni'
+      )
+      AND EXISTS (
+        SELECT 1 FROM public.yayin_yonetimi yy
+        WHERE yy.yayin_id = o.yayin_id
+          AND COALESCE(yy.hedef_roller, ARRAY['utt']::text[]) && ARRAY['eczane_teknisyeni']::text[]
+      )
+    )
+    OR (
+      p_rapor_rolu = 'eczanem'
+      AND o.firma_id = rs.firma_id
+      AND o.rol = 'musteri'
+      AND EXISTS (
+        SELECT 1 FROM public.eczanem_musteriler em
+        WHERE em.musteri_id = o.aktor_id
+      )
+      AND EXISTS (
+        SELECT 1 FROM public.yayin_yonetimi yy
+        WHERE yy.yayin_id = o.yayin_id
+          AND COALESCE(yy.hedef_roller, ARRAY['utt']::text[]) && ARRAY['eczanem']::text[]
+      )
+    )
+  );
+$function$;
+
+GRANT EXECUTE ON FUNCTION public.get_yayin_raporlari_varyant_ozeti_v1(uuid,timestamptz,timestamptz,text) TO service_role;
+GRANT EXECUTE ON FUNCTION public.get_yonetici_egitim_turu_etkisi_v3(uuid,timestamptz,timestamptz,text) TO service_role;
+GRANT EXECUTE ON FUNCTION public.get_yayin_raporlari_arac_kaynagi_v1(uuid,timestamptz,timestamptz,text,text) TO service_role;
+NOTIFY pgrst, 'reload schema';
+COMMIT;
+
+SELECT
+  position($eczanem$p_rapor_rolu IN ('utt','bm','eczaci','eczane_teknisyeni','eczanem')$eczanem$ IN pg_get_functiondef('public.get_yayin_raporlari_varyant_ozeti_v1(uuid,timestamptz,timestamptz,text)'::regprocedure)) > 0 AS eczanem_varyant_hazir,
+  position($eczanem$p_rapor_rolu IN ('tumu', 'eczanem')$eczanem$ IN pg_get_functiondef('public.get_yonetici_egitim_turu_etkisi_v3(uuid,timestamptz,timestamptz,text)'::regprocedure)) > 0 AS eczanem_konu_hazir,
+  position($eczanem$p_rapor_rolu = 'eczanem'$eczanem$ IN pg_get_functiondef('public.get_yayin_raporlari_arac_kaynagi_v1(uuid,timestamptz,timestamptz,text,text)'::regprocedure)) > 0 AS eczanem_arac_hazir;

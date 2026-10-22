@@ -4,30 +4,31 @@ import test from "node:test";
 
 const oku = (yol: string) => readFileSync(new URL(`../${yol}`, import.meta.url), "utf8");
 const sql = oku("scripts/sql/ogrenme_araclari_tamamlama_faz7_raporlama.sql");
+const raporSql = oku("scripts/sql/get_yayin_raporlari_arac_performansi_v1.sql");
 const ortak = oku("lib/rapor/paylasilan/aracTuruDagilimi.ts");
 const panel = oku("components/raporlar/OgrenmeAraciPerformansi.tsx");
 const uretimApi = oku("app/(panel)/raporlar/api/uretim/route.ts");
 const yayinRaporlari = oku("app/(panel)/raporlar/yayin-raporlari/page.tsx");
 const digerApiYollari = ["utt", "bm", "tm", "yonetici", "uretici"]
   .map((ad) => oku(`app/(panel)/raporlar/api/${ad}/route.ts`));
-const digerSayfaYollari = ["utt", "bm", "tm", "yonetici", "uretici", "eczanem"]
+const digerSayfaYollari = ["utt", "bm", "tm", "yonetici", "uretici"]
   .map((ad) => oku(`app/(panel)/raporlar/${ad}/page.tsx`));
 
 test("araç bazında dönemsel yayın sayısı dört araç için üretilir", () => {
   assert.match(ortak, /\["video", "podcast", "gorsel", "flip_pdf"\]/);
-  assert.match(ortak, /yayin_sayisi: yayinlar\.length/);
-  assert.match(ortak, /gte\("yayin_tarihi", girdi\.baslangic\)\.lt\("yayin_tarihi", girdi\.bitis\)/);
+  assert.match(raporSql, /COUNT\(\*\) FILTER \(WHERE k\.kaynak = 'yayin'\)/);
+  assert.match(raporSql, /y\.yayin_tarihi >= p_baslangic\s+AND y\.yayin_tarihi < p_bitis/);
 });
 
 test("davranış metrikleri yayın tarihi yerine olay tarihiyle dönemlenir", () => {
   assert.match(sql, /o\.olay_tarihi/);
-  assert.match(ortak, /gte\("olay_tarihi", girdi\.baslangic\)\.lt\("olay_tarihi", girdi\.bitis\)/);
+  assert.match(raporSql, /o\.olay_tarihi >= p_baslangic\s+AND o\.olay_tarihi < p_bitis/);
 });
 
 test("başlatma ve tamamlama UTT, BM, E-Club rolleri ve müşteri için ayrılır", () => {
   for (const tablo of ["izleme_kayitlari", "cc_izleme_kayitlari", "eclub_izleme_kayitlari", "eczanem_izleme_kayitlari"]) assert.match(sql, new RegExp(`FROM public\\.${tablo}`));
   assert.match(ortak, /Record<string, RolMetrigi>/);
-  assert.match(ortak, /tur === "baslatma" \|\| tur === "tamamlama"/);
+  assert.match(raporSql, /GROUP BY GROUPING SETS/);
 });
 
 test("doğru ve yanlış cevaplar dört tüketim kanalından okunur", () => {
@@ -43,13 +44,13 @@ test("Eczanem cevap ayrıntısı mevcut atomik RPC içinde kalıcılaştırılı
 });
 
 test("cevap bulunmadığında başarı yüzdesi sıfır yerine null olur", () => {
-  assert.match(ortak, /cevapToplami === 0 \? null/);
+  assert.match(raporSql, /= 0 THEN NULL::numeric/);
   assert.match(panel, /deger === null \? "—"/);
 });
 
 test("kayıtlı araç puanı gerçek kazanım ve kayıptan ayrı tutulur", () => {
   assert.match(ortak, /kayitli_arac_puani/);
-  assert.match(ortak, /net_kazanilan_puan: toplam\.kazanilan_puan - toplam\.kaybedilen_puan/);
+  assert.match(raporSql, /COALESCE\(g\.kazanilan_puan, 0\) - COALESCE\(g\.kaybedilen_puan, 0\)/);
   assert.match(panel, /satir\.kayitli_arac_puani/);
   assert.match(panel, /satir\.net_kazanilan_puan/);
 });
@@ -68,8 +69,8 @@ test("E-Club ve Eczanem dağıtımı gönderim ve tamamlanma olarak ayrılır", 
 
 test("aynı eğitim ailesindeki yayınlar yayin_id ile ayrı, talep_id ile izlenebilir kalır", () => {
   assert.match(sql, /ky\.talep_id,ky\.talep_no/);
-  assert.match(ortak, /new Map<string, OlayToplami>/);
-  assert.match(ortak, /yayinMetrigi\.get\(yayin_id\)/);
+  assert.match(raporSql, /GROUP BY k\.yayin_id/);
+  assert.match(raporSql, /MIN\(k\.talep_id::text\)::uuid AS talep_id/);
   assert.match(panel, /key=\{y\.yayin_id\}/);
 });
 

@@ -1,4 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { getTemsilciVaryantOzeti } from './getTemsilciVaryantOzeti';
+import type { UretimRaporRolu } from './raporRolu';
 import { URETICI_ROLLER, YONETICI_ROLLER, ADMIN_ROLLER } from '@/lib/utils/roller';
 import {
   TALEP_TURU_SIRA,
@@ -54,6 +56,7 @@ export async function getUretimData(
   kapsam: UretimRaporKapsami,
   baslangic: string,
   bitis: string,
+  raporRolu: UretimRaporRolu = 'tumu',
 ) {
   const ureticiMi = kapsam.tur === 'uretici';
   const raporKimligi = kapsam.raporKimligi;
@@ -66,14 +69,19 @@ export async function getUretimData(
         p_bitis: bitis,
       })
     : db.rpc('get_yonetici_rapor_ana_ozet_v2', egitimArgs);
-  const [ozetRes, egitimTuruRes] = await Promise.all([
+  const [ozetRes, egitimTuruRes, rolVaryantOzeti] = await Promise.all([
     ozetIstegi,
-    db.rpc('get_yonetici_egitim_turu_etkisi_v3', egitimArgs),
+    db.rpc(
+      'get_yonetici_egitim_turu_etkisi_v3',
+      raporRolu !== 'tumu' ? { ...egitimArgs, p_rapor_rolu: raporRolu } : egitimArgs,
+    ),
+    raporRolu !== 'tumu' ? getTemsilciVaryantOzeti(db, kapsam, baslangic, bitis, raporRolu) : null,
   ]);
   if (ozetRes.error || egitimTuruRes.error || !ozetRes.data?.length) {
     throw new Error('Üretim raporu okunamadı.');
   }
   const o = ozetRes.data?.[0] ?? {};
+  const varyantOzeti = rolVaryantOzeti ?? o;
   const egitimHaritasi = new Map<TalepTuru, Record<string, unknown>>();
   for (const ham of (egitimTuruRes.data ?? []) as Record<string, unknown>[]) {
     if (isTalepTuru(ham.egitim_turu)) egitimHaritasi.set(ham.egitim_turu, ham);
@@ -116,10 +124,10 @@ export async function getUretimData(
         adet: tur.donemde_yayina_alinan,
       })),
       varyantlar: [
-        { kod: 'normal', ad: 'Tam Üretim', adet: sayi(o.donem_normal_uretim) },
-        { kod: 'hazir_video', ad: 'Hazır Öğrenme Aracı', adet: sayi(o.donem_hazir_video) },
-        { kod: 'hazir_set', ad: 'Hazır Soru Seti', adet: sayi(o.donem_hazir_soru_seti) },
-        { kod: 'hazir_ikisi', ad: 'Hazır Öğrenme Aracı + Set', adet: sayi(o.donem_hazir_video_ve_soru_seti) },
+        { kod: 'normal', ad: 'Tam Üretim', adet: sayi(varyantOzeti.donem_normal_uretim) },
+        { kod: 'hazir_video', ad: 'Hazır Öğrenme Aracı', adet: sayi(varyantOzeti.donem_hazir_video) },
+        { kod: 'hazir_set', ad: 'Hazır Soru Seti', adet: sayi(varyantOzeti.donem_hazir_soru_seti) },
+        { kod: 'hazir_ikisi', ad: 'Hazır Öğrenme Aracı + Set', adet: sayi(varyantOzeti.donem_hazir_video_ve_soru_seti) },
       ],
     },
     egitim_turu_etkisi: egitimTurleri,

@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { OgrenmeAraciTuru } from "@/lib/ogrenmeAraci/tipler";
+import type { UretimRaporRolu } from "@/lib/rapor/uretim/raporRolu";
 
 const TURLER: OgrenmeAraciTuru[] = ["video", "podcast", "gorsel", "flip_pdf"];
 export type RolMetrigi = {
@@ -24,8 +25,9 @@ export interface AracTuruRaporSatiri extends OlayToplami {
   net_kazanilan_puan: number;
   dogru_cevap_yuzdesi: number | null;
   roller: Record<string, RolMetrigi>;
+  etkilesim_yayin_sayisi?: number;
   yayinlar: Array<{
-    yayin_id: string; talep_id: string | null; talep_no: string | null;
+    yayin_id: string; yayin_kodu: string; talep_id: string | null; talep_no: number | null;
     kayitli_arac_puani: number; kazanilan_puan: number; kaybedilen_puan: number;
     baslatma: number; tamamlama: number;
   }>;
@@ -39,79 +41,58 @@ const BOS: OlayToplami = {
   eczanem_dagitim_tamamlandi: 0,
 };
 
-export async function aracTuruDagilimi(
-  db: SupabaseClient,
-  girdi: { baslangic: string; bitis: string; firmaId?: string | null; takimId?: string | null; ureticiId?: string | null; aktorId?: string | null },
-): Promise<AracTuruRaporSatiri[]> {
-  let yayinSorgu = db.from("v_rapor_arac_turu_ozet")
-    .select("yayin_id,talep_id,talep_no,arac_turu,arac_puani")
-    .gte("yayin_tarihi", girdi.baslangic).lt("yayin_tarihi", girdi.bitis);
-  let olaySorgu = db.from("v_rapor_arac_turu_olaylari")
-    .select("yayin_id,talep_id,talep_no,arac_turu,olay_turu,rol,adet,puan")
-    .gte("olay_tarihi", girdi.baslangic).lt("olay_tarihi", girdi.bitis);
-  if (girdi.ureticiId) {
-    yayinSorgu = yayinSorgu.eq("uretici_id", girdi.ureticiId);
-    olaySorgu = olaySorgu.eq("uretici_id", girdi.ureticiId);
-  } else if (girdi.takimId) {
-    yayinSorgu = yayinSorgu.eq("takim_id", girdi.takimId);
-    olaySorgu = olaySorgu.eq("takim_id", girdi.takimId);
-  } else if (girdi.firmaId) {
-    yayinSorgu = yayinSorgu.eq("firma_id", girdi.firmaId);
-    olaySorgu = olaySorgu.eq("firma_id", girdi.firmaId);
+export type AracRaporAraligi = { baslangic: string; bitis: string };
+export type AracRaporDetayKapsami = AracRaporAraligi & { periyot: string; raporRolu: UretimRaporRolu };
+type AracRaporGirdisi = AracRaporAraligi & { raporKimligi: string; raporRolu: UretimRaporRolu };
+export type AracYayinSayfasi = { yayinlar: AracTuruRaporSatiri["yayinlar"]; sonrakiImlec: string | null };
+
+export const aracTuruMu = (deger: string): deger is OgrenmeAraciTuru => TURLER.includes(deger as OgrenmeAraciTuru);
+const sayi = (deger: unknown) => Number(deger ?? 0);
+const rpcArgumanlari = (girdi: AracRaporGirdisi) => ({
+  p_yonetici_id: girdi.raporKimligi, p_baslangic: girdi.baslangic,
+  p_bitis: girdi.bitis, p_rapor_rolu: girdi.raporRolu,
+});
+
+// Sayısal toplamlar SQL'den gelir; burada yalnız yanıtın veri tipleri uyarlanır.
+export async function aracTuruDagilimi(db: SupabaseClient, girdi: AracRaporGirdisi): Promise<AracTuruRaporSatiri[]> {
+  const { data, error } = await db.rpc('get_yayin_raporlari_arac_performansi_v1', rpcArgumanlari(girdi));
+  if (error || !Array.isArray(data) || data.length !== TURLER.length) {
+    throw new Error('Öğrenme aracı türü rapor kaynağı okunamadı.');
   }
-  if (girdi.aktorId) olaySorgu = olaySorgu.eq("aktor_id", girdi.aktorId);
-
-  const [yayinYaniti, olayYaniti] = await Promise.all([yayinSorgu, olaySorgu]);
-  if (yayinYaniti.error || olayYaniti.error) throw new Error("Öğrenme aracı türü rapor kaynağı okunamadı.");
-
-  const yayinlarVerisi = yayinYaniti.data ?? [];
-  const olaylarVerisi = olayYaniti.data ?? [];
-
+  const satirlar = new Map<string, Record<string, unknown>>(data.map((satir) => [satir.arac_turu, satir]));
   return TURLER.map((arac_turu) => {
-    const yayinlar = yayinlarVerisi.filter((x) => x.arac_turu === arac_turu);
-    const olaylar = olaylarVerisi.filter((x) => x.arac_turu === arac_turu);
-    const toplam: OlayToplami = { ...BOS };
-    const roller: Record<string, RolMetrigi> = {};
-    const yayinMetrigi = new Map<string, OlayToplami>();
-    const etkilesimYayinlari = new Map<string, { talep_id: string | null; talep_no: string | null }>();
-    for (const olay of olaylar) {
-      etkilesimYayinlari.set(olay.yayin_id, {
-        talep_id: olay.talep_id ?? null,
-        talep_no: olay.talep_no ?? null,
-      });
-      const tur = olay.olay_turu as keyof OlayToplami;
-      if (!(tur in toplam)) continue;
-      const deger = tur === "kazanilan_puan" || tur === "kaybedilen_puan" ? Number(olay.puan ?? 0) : Number(olay.adet ?? 0);
-      toplam[tur] += deger;
-      const yayin = yayinMetrigi.get(olay.yayin_id) ?? { ...BOS };
-      yayin[tur] += deger; yayinMetrigi.set(olay.yayin_id, yayin);
-      if (tur === "baslatma" || tur === "tamamlama") {
-        const rol = olay.rol || "bilinmiyor";
-        const metrik = roller[rol] ?? { baslatma: 0, tamamlama: 0, kazanilan_puan: 0, kaybedilen_puan: 0, net_puan: 0 };
-        metrik[tur] += deger; roller[rol] = metrik;
-      }
-      if (tur === "kazanilan_puan" || tur === "kaybedilen_puan") {
-        const rol = olay.rol || "bilinmiyor";
-        const metrik = roller[rol] ?? { baslatma: 0, tamamlama: 0, kazanilan_puan: 0, kaybedilen_puan: 0, net_puan: 0 };
-        metrik[tur] = (metrik[tur] ?? 0) + deger;
-        metrik.net_puan = (metrik.kazanilan_puan ?? 0) - (metrik.kaybedilen_puan ?? 0);
-        roller[rol] = metrik;
-      }
-    }
-    const cevapToplami = toplam.dogru_cevap + toplam.yanlis_cevap;
+    const ham = satirlar.get(arac_turu);
+    if (!ham) throw new Error('Öğrenme aracı türü rapor kaynağı eksik.');
+    const toplam = { ...BOS };
+    for (const alan of Object.keys(BOS) as Array<keyof OlayToplami>) toplam[alan] = sayi(ham[alan]);
+    const roller = Object.fromEntries(Object.entries((ham.roller ?? {}) as Record<string, RolMetrigi>).map(([rol, m]) => [rol, {
+      baslatma: sayi(m.baslatma), tamamlama: sayi(m.tamamlama),
+      kazanilan_puan: sayi(m.kazanilan_puan), kaybedilen_puan: sayi(m.kaybedilen_puan), net_puan: sayi(m.net_puan),
+    }]));
     return {
-      arac_turu, yayin_sayisi: yayinlar.length,
-      kayitli_arac_puani: yayinlar.reduce((t, y) => t + Number(y.arac_puani ?? 0), 0),
-      ...toplam,
-      net_kazanilan_puan: toplam.kazanilan_puan - toplam.kaybedilen_puan,
-      dogru_cevap_yuzdesi: cevapToplami === 0 ? null : Math.round((1000 * toplam.dogru_cevap) / cevapToplami) / 10,
-      roller,
-      yayinlar: [...etkilesimYayinlari.entries()].map(([yayin_id, yayin]) => {
-        const m = yayinMetrigi.get(yayin_id) ?? BOS;
-        return { yayin_id, talep_id: yayin.talep_id, talep_no: yayin.talep_no,
-          kayitli_arac_puani: 0, kazanilan_puan: m.kazanilan_puan,
-          kaybedilen_puan: m.kaybedilen_puan, baslatma: m.baslatma, tamamlama: m.tamamlama };
-      }),
+      arac_turu, ...toplam, roller,
+      yayin_sayisi: sayi(ham.yayin_sayisi), kayitli_arac_puani: sayi(ham.kayitli_arac_puani),
+      net_kazanilan_puan: sayi(ham.net_kazanilan_puan),
+      dogru_cevap_yuzdesi: ham.dogru_cevap_yuzdesi == null ? null : sayi(ham.dogru_cevap_yuzdesi),
+      etkilesim_yayin_sayisi: sayi(ham.etkilesim_yayin_sayisi), yayinlar: [],
     };
   });
+}
+
+export async function aracYayinlari(db: SupabaseClient, girdi: AracRaporGirdisi & {
+  aracTuru: OgrenmeAraciTuru; sonYayinId: string | null;
+}): Promise<AracYayinSayfasi> {
+  const sayfaBoyutu = 50;
+  const { data, error } = await db.rpc('get_yayin_raporlari_arac_yayinlari_v1', {
+    ...rpcArgumanlari(girdi), p_arac_turu: girdi.aracTuru,
+    p_sayfa_boyutu: sayfaBoyutu, p_son_yayin_id: girdi.sonYayinId,
+  });
+  if (error || !Array.isArray(data)) throw new Error('Öğrenme aracı yayınları okunamadı.');
+  const yayinlar: AracTuruRaporSatiri['yayinlar'] = data.map((y) => ({
+    yayin_id: y.yayin_id, yayin_kodu: y.yayin_kodu ?? '-', talep_id: y.talep_id ?? null,
+    talep_no: y.talep_no == null ? null : sayi(y.talep_no),
+    kayitli_arac_puani: sayi(y.kayitli_arac_puani), kazanilan_puan: sayi(y.kazanilan_puan),
+    kaybedilen_puan: sayi(y.kaybedilen_puan), baslatma: sayi(y.baslatma), tamamlama: sayi(y.tamamlama),
+  }));
+  return { yayinlar, sonrakiImlec: yayinlar.length === sayfaBoyutu ? yayinlar[yayinlar.length - 1].yayin_id : null };
 }

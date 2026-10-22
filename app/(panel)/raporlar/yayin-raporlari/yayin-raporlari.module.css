@@ -1,0 +1,23 @@
+@media (max-width: 639px) {
+  .rolFiltreleri[data-sade-grup] {
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+    gap: 10px;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+  }
+
+  .rolFiltreleri[data-sade-grup]::-webkit-scrollbar {
+    display: none;
+  }
+
+  .rolFiltreleri[data-sade-grup] > button {
+    flex: 0 0 auto;
+    min-width: 0;
+    justify-content: flex-start;
+    white-space: nowrap;
+    scroll-snap-align: start;
+  }
+}

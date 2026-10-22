@@ -4,7 +4,8 @@
 // Sayfaya girildiğinde rapor verilerinin (hacim, varyant, eğitim etkisi, ürün tablosu)
 // ilk kareden (0.00 sn) tam dolu çizilmesini sağlar; rakamların sonradan zıplamasını engeller.
 
-import type { AracTuruRaporSatiri } from "@/lib/rapor/paylasilan/aracTuruDagilimi";
+import type { AracTuruRaporSatiri, AracRaporAraligi } from "@/lib/rapor/paylasilan/aracTuruDagilimi";
+import type { UretimRaporRolu } from "@/lib/rapor/uretim/raporRolu";
 
 export interface DagilimSatiri {
   kod: string;
@@ -36,6 +37,7 @@ export interface EgitimTuruEtkisiSatiri {
 
 export interface RaporData {
   arac_turu_dagilimi: AracTuruRaporSatiri[];
+  arac_turu_tarih_araligi?: AracRaporAraligi;
   kullanici: {
     ad: string;
     soyad: string;
@@ -53,12 +55,14 @@ export interface RaporData {
 }
 
 const bellekHaritasi = new Map<string, RaporData>();
-const CACHE_PREFIX = "hb_uretim_raporu_";
-const onbellekAnahtari = (periyot: string, kullaniciId: string) => `${kullaniciId}_${periyot}`;
+// SQL özetleri ve sayfalı detaylar yeni yanıt biçimidir; eski iki rolün kayıtları okunmaz.
+const CACHE_PREFIX = "hb_uretim_raporu_v3_";
+const onbellekAnahtari = (periyot: string, kullaniciId: string, raporRolu: UretimRaporRolu) =>
+  `${kullaniciId}_${periyot}_${raporRolu}`;
 
-export function getUretimRaporuOnbellek(periyot: string, kullaniciId?: string): RaporData | null {
+export function getUretimRaporuOnbellek(periyot: string, kullaniciId?: string, raporRolu: UretimRaporRolu = 'tumu'): RaporData | null {
   if (!kullaniciId) return null;
-  const anahtar = onbellekAnahtari(periyot, kullaniciId);
+  const anahtar = onbellekAnahtari(periyot, kullaniciId, raporRolu);
   if (bellekHaritasi.has(anahtar)) {
     return bellekHaritasi.get(anahtar)!;
   }
@@ -77,8 +81,8 @@ export function getUretimRaporuOnbellek(periyot: string, kullaniciId?: string): 
   return null;
 }
 
-export function setUretimRaporuOnbellek(periyot: string, kullaniciId: string, veri: RaporData) {
-  const anahtar = onbellekAnahtari(periyot, kullaniciId);
+export function setUretimRaporuOnbellek(periyot: string, kullaniciId: string, veri: RaporData, raporRolu: UretimRaporRolu = 'tumu') {
+  const anahtar = onbellekAnahtari(periyot, kullaniciId, raporRolu);
   bellekHaritasi.set(anahtar, veri);
   if (typeof window !== "undefined") {
     try {
@@ -89,13 +93,13 @@ export function setUretimRaporuOnbellek(periyot: string, kullaniciId: string, ve
   }
 }
 
-export async function prefetchUretimRaporu(periyot: string, kullaniciId: string): Promise<RaporData | null> {
+export async function prefetchUretimRaporu(periyot: string, kullaniciId: string, raporRolu: UretimRaporRolu = 'tumu'): Promise<RaporData | null> {
   try {
-    const res = await fetch(`/raporlar/api/uretim?periyot=${periyot}`);
+    const res = await fetch(`/raporlar/api/uretim?periyot=${periyot}&rapor_rolu=${raporRolu}`);
     if (!res.ok) return null;
     const json = await res.json();
     if (json.success && json.data) {
-      setUretimRaporuOnbellek(periyot, kullaniciId, json.data as RaporData);
+      setUretimRaporuOnbellek(periyot, kullaniciId, json.data as RaporData, raporRolu);
       return json.data as RaporData;
     }
   } catch {
