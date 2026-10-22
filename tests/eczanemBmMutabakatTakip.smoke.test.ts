@@ -34,7 +34,7 @@ test("BM mutabakat takip rotası rol ve Eczanem firma kapısıyla korunur", () =
   assert.match(proxy, /const bmDali = pathname\.startsWith\("\/eczanem\/bm"\)/);
   assert.match(proxy, /else if \(bmDali\)[\s\S]*?rol !== "bm"/);
   assert.match(erisim, /TUKETICI_ROLLER\.includes\(rol\) \|\| rol === "bm" \|\| rol === "tm"/);
-  assert.match(sayfa, /if \(rol !== "bm"\) redirect\("\/ana-sayfa"\)/);
+  assert.match(sayfa, /if \(rol !== "bm"\) redirect\(panelBaslangici\(rol\)\.yol\)/);
   assert.match(istemci, />Mutabakat Takip</);
   assert.match(api, /if \(rol !== "bm"\)/);
   assert.match(api, /hedefUtt\(yetki\.uttler!, uttId\)/);
@@ -104,7 +104,7 @@ test("TM mutabakat takibi BM, UTT ve eczane akordiyon hiyerarşisini son onaya t
   const kapsam = oku("lib/eclub/yonetimKapsami.ts");
   assert.match(proxy, /const tmDali = pathname\.startsWith\("\/eczanem\/tm"\)/);
   assert.match(proxy, /else if \(tmDali\)[\s\S]*?rol !== "tm"/);
-  assert.match(sayfa, /if \(rol !== "tm"\) redirect\("\/ana-sayfa"\)/);
+  assert.match(sayfa, /if \(rol !== "tm"\) redirect\(panelBaslangici\(rol\)\.yol\)/);
   assert.match(sayfa, /rol="tm"/);
   assert.match(api, /tmMutabakatKarariVer/);
   assert.match(ortakTablo, /return kayit\.tm_karar/);

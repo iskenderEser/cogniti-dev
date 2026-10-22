@@ -132,7 +132,7 @@ export interface GlobalBolum {
 }
 
 export const GLOBAL_BOLUMLER: GlobalBolum[] = [
-  { id: "hbstore", etiket: "HBStore", firmaAdminGorur: false },
+  { id: "hbstore", etiket: "FirmaStore", firmaAdminGorur: false },
   { id: "eclubstore", etiket: "Çek Teslimatı", firmaAdminGorur: false },
   { id: "uretim", etiket: "İçerik Üretimi", firmaAdminGorur: false },
   { id: "sistem", etiket: "Sistem Ayarları", firmaAdminGorur: false },

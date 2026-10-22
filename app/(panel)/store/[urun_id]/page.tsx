@@ -5,6 +5,7 @@
 
 "use client";
 
+import { panelBaslangici } from "@/lib/panel/baslangic";
 import { SadeListeSecimi } from "@/components/kontrol/SadeKontroller";
 
 import { useAuth } from "@/app/providers/AuthProvider";
@@ -62,7 +63,7 @@ export default function UrunDetayPage() {
 
     const r = kullanici.rol.toLowerCase();
     if (!STORE_ALABILEN_ROLLER.includes(r)) {
-      router.push("/ana-sayfa");
+      router.push(panelBaslangici(kullanici.rol).yol);
       return;
     }
 
@@ -121,7 +122,7 @@ export default function UrunDetayPage() {
     if (!urun) return;
     if (!storeAcik) {
       hata(
-        `HBStore şu an siparişe kapalıdır. Siparişler yalnızca HBStore Günleri'nde (${takvim?.sonrakiDonemEtiketi ?? "HBStore Günleri"}) verilebilir.`,
+        `FirmaStore şu an siparişe kapalıdır. Siparişler yalnızca FirmaStore Günleri'nde (${takvim?.sonrakiDonemEtiketi ?? "FirmaStore Günleri"}) verilebilir.`,
         "takvim"
       );
       return;
@@ -204,7 +205,7 @@ export default function UrunDetayPage() {
           href="/store"
           className="inline-flex items-center gap-1.5 text-xs font-bold text-[var(--tema-yerel-magaza-yardimci-metin-02)] transition-colors hover:text-[var(--tema-yerel-magaza-eylem-metin-01)]"
         >
-          <ChevronLeft size={16} /> HBStore&apos;a Dön
+          <ChevronLeft size={16} /> FirmaStore&apos;a Dön
         </Link>
 
         {yukleniyor ? (
@@ -227,7 +228,7 @@ export default function UrunDetayPage() {
               href="/store"
               className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-[var(--tema-yerel-magaza-eylem-zemin-01)] px-4 py-2 text-xs font-extrabold text-[var(--tema-yerel-magaza-ters-metin-01)] hover:bg-[var(--tema-yerel-magaza-eylem-zemin-02)]"
             >
-              HBStore&apos;a Dön
+              FirmaStore&apos;a Dön
             </Link>
           </div>
         ) : !urun.aktif_mi ? (
@@ -397,15 +398,15 @@ export default function UrunDetayPage() {
                     </div>
                   </div>
 
-                  {/* HBStore Günleri Kapalı Bilgi Uyarısı */}
+                  {/* FirmaStore Günleri Kapalı Bilgi Uyarısı */}
                   {!storeAcik && (
                     <div className="rounded-xl border border-[var(--tema-yerel-magaza-islevsel-cizgi-02)] bg-[var(--tema-yerel-magaza-islevsel-zemin-04)] p-3.5 text-xs font-semibold text-[var(--tema-yerel-magaza-islevsel-metin-05)]">
                       <p className="flex items-center gap-1.5 font-extrabold text-[var(--tema-yerel-magaza-islevsel-metin-06)]">
-                        <span>⏳</span> HBStore Günleri Kapalı
+                        <span>⏳</span> FirmaStore Günleri Kapalı
                       </p>
                       <p className="mt-1 leading-relaxed text-[var(--tema-yerel-magaza-islevsel-metin-07)]">
-                        HBStore siparişleri yalnızca HBStore Günleri&apos;nde alınmaktadır. Sonraki sipariş dönemi:{" "}
-                        <strong className="font-extrabold text-[var(--tema-yerel-magaza-islevsel-metin-05)]">{takvim?.sonrakiDonemEtiketi ?? "HBStore Günleri"}</strong>
+                        FirmaStore siparişleri yalnızca FirmaStore Günleri&apos;nde alınmaktadır. Sonraki sipariş dönemi:{" "}
+                        <strong className="font-extrabold text-[var(--tema-yerel-magaza-islevsel-metin-05)]">{takvim?.sonrakiDonemEtiketi ?? "FirmaStore Günleri"}</strong>
                         {takvim ? ` (${takvim.kalanSureMetni} kaldı)` : ""}.
                       </p>
                     </div>
@@ -428,7 +429,7 @@ export default function UrunDetayPage() {
                   >
                     <ShoppingBag size={16} />
                     {!storeAcik
-                      ? `Siparişe Kapalı (Açılış: ${takvim?.sonrakiDonemEtiketi ?? "HBStore Günleri"})`
+                      ? `Siparişe Kapalı (Açılış: ${takvim?.sonrakiDonemEtiketi ?? "FirmaStore Günleri"})`
                       : toplamPuan > bakiye
                       ? "Yetersiz Bakiye"
                       : adresler.length === 0

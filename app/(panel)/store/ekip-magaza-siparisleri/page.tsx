@@ -1,10 +1,10 @@
 // app/store/siparisler/page.tsx
 //
-// HBStore genel sipariş listesi sayfası — orchestrator.
+// FirmaStore genel sipariş listesi sayfası — orchestrator.
 // Auth + STORE_GENEL_GOREN_ROLLER yetki kontrolü, hook'ları bağlar,
 // SiparisFiltreleri + SiparisTablosu bileşenlerini render eder.
 //
-// Firma erişim kontrolü (hbstore_aktif) proxy.ts HBStore bekçisinde merkezi olarak yapılır.
+// Firma erişim kontrolü (hbstore_aktif) proxy.ts FirmaStore bekçisinde merkezi olarak yapılır.
 
 "use client";
 
@@ -93,14 +93,14 @@ export default function SiparislerPage() {
             <SayfaRehberi anahtar="store-siparisler" className="ml-1.5 -translate-y-1" />
           </div>}
           ustBilgi={<><div className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-[var(--tema-yerel-magaza-yardimci-metin-02)]">
-            HBStore
+            FirmaStore
           </div></>}
           aciklama={<><p className="mt-1 text-xs font-medium text-[var(--tema-yerel-magaza-yardimci-metin-18)]">
             {rolKucu === "bm"
               ? "Bölgenizdeki UTT ve KD_UTT siparişlerinin güncel durumu."
               : rolKucu === "tm"
                 ? "Takımınızdaki bölge ve saha siparişlerinin güncel durumu."
-                : "Yetki kapsamınızdaki HBStore siparişlerinin güncel durumu."}
+                : "Yetki kapsamınızdaki FirmaStore siparişlerinin güncel durumu."}
           </p></>}
           aksiyon={<YenileButonu yenileniyor={liste.yenileniyor || hiyerarsiYenileniyor} onYenile={() => Promise.all([liste.yukle(true), hiyerarsiYukle(true)]).then(() => undefined)} disabled={liste.dahaYukleniyor} />}
 

@@ -150,8 +150,8 @@ export default function UreticiRaporPage() {
   return (
     <div className={styles.page} style={{ fontFamily: "'Nunito', sans-serif" }}>
       <div className={styles.container}>
-        <Link href="/ana-sayfa" className={styles.backLink}>
-          <ArrowLeft className="h-3.5 w-3.5" /> Ana Sayfa
+        <Link href="/yayin-yonetimi" className={styles.backLink}>
+          <ArrowLeft className="h-3.5 w-3.5" /> Yayın Yönetimi
         </Link>
 
         <SayfaYenileBasligi className={styles.header}

@@ -1,5 +1,6 @@
 "use client";
 
+import { panelBaslangici } from "@/lib/panel/baslangic";
 import { useEffect, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/providers/AuthProvider";
@@ -34,7 +35,7 @@ export default function EczanemPanelBaglantisi({ children, gruplar, gezinmeAgaci
   useEffect(() => {
     if (yukleniyor) return;
     if (!kullanici) { router.replace("/login"); return; }
-    if (!uye) router.replace("/ana-sayfa");
+    if (!uye) router.replace(panelBaslangici(kullanici.rol).yol);
   }, [kullanici, yukleniyor, uye, router]);
 
   if (yukleniyor) {
@@ -54,8 +55,6 @@ export default function EczanemPanelBaglantisi({ children, gruplar, gezinmeAgaci
         anaSayfaSecili,
         bilgiPilleri: [
           { key: "ana-sayfa", etiket: "Ana Sayfa", path: "/eczanem" },
-          { key: "hapbilgi-nedir", etiket: "Nedir", path: "/nedir" },
-          { key: "nasil-calisir", etiket: "Nasıl Çalışır", path: "/eczanem/nasil-calisir" },
         ],
         temaSeciciGoster: true,
         profilAltBilgi: kullanici.telefon ? `••• ••• ${kullanici.telefon.slice(-4)}` : undefined,

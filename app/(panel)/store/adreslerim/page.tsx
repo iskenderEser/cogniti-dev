@@ -5,6 +5,7 @@
 
 "use client";
 
+import { panelBaslangici } from "@/lib/panel/baslangic";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -50,7 +51,7 @@ export default function AdreslerimPage() {
 
     const r = kullanici.rol.toLowerCase();
     if (!STORE_ALABILEN_ROLLER.includes(r)) {
-      router.push("/ana-sayfa");
+      router.push(panelBaslangici(kullanici.rol).yol);
       return;
     }
 
@@ -177,7 +178,7 @@ export default function AdreslerimPage() {
               href="/store"
               className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--tema-yerel-magaza-cizgi-07)] bg-[var(--tema-yerel-magaza-kart-01)] px-3.5 py-2 text-xs font-extrabold text-[var(--tema-yerel-magaza-ana-metin-07)] shadow-sm transition-colors hover:bg-[var(--tema-yerel-magaza-sayfa-zemini-05)]"
             >
-              <ShoppingBag size={14} /> HBStore
+              <ShoppingBag size={14} /> FirmaStore
             </Link>
             <Link
               href="/store/siparislerim"
@@ -207,7 +208,7 @@ export default function AdreslerimPage() {
             </span>
             <h3 className="mt-3 text-sm font-extrabold text-[var(--tema-yerel-magaza-ana-metin-01)]">Kayıtlı adresiniz bulunmuyor</h3>
             <p className="mt-1 max-w-sm text-xs font-semibold text-[var(--tema-yerel-magaza-yardimci-metin-08)]">
-              HBStore&apos;dan sipariş verebilmek için teslimat adresi tanımlamanız gerekir.
+              FirmaStore&apos;dan sipariş verebilmek için teslimat adresi tanımlamanız gerekir.
             </p>
             <button
               type="button"

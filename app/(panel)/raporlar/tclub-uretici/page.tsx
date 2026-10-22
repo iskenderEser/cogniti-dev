@@ -208,8 +208,8 @@ export default function TclubUreticiRaporPage() {
   return (
     <div className={styles.page} style={{ fontFamily: "'Nunito', sans-serif" }}>
       <div className={styles.container}>
-        <Link href="/ana-sayfa" className="mb-3 inline-flex items-center gap-1.5 text-[11px] font-bold text-[var(--tema-yerel-rapor-yardimci-metin-10)] hover:text-[var(--tema-yerel-rapor-eylem-metin-06)]">
-          <ArrowLeft className="h-3.5 w-3.5" /> Ana Sayfa
+        <Link href="/yayin-yonetimi" className="mb-3 inline-flex items-center gap-1.5 text-[11px] font-bold text-[var(--tema-yerel-rapor-yardimci-metin-10)] hover:text-[var(--tema-yerel-rapor-eylem-metin-06)]">
+          <ArrowLeft className="h-3.5 w-3.5" /> Yayın Yönetimi
         </Link>
 
         <SayfaYenileBasligi className={styles.header}

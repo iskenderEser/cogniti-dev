@@ -14,6 +14,7 @@
 
 "use client";
 
+import { panelBaslangici } from "@/lib/panel/baslangic";
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/providers/AuthProvider";
@@ -73,7 +74,7 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
     }
   }, [kullanici?.id]);
 
-  // Üretici rolleri için ana sayfa ve panel içi gezinmede tüm kritik sayfaların önbelleğini ısıt
+  // Üretici rolleri için panel içi gezinmede kullanılan önbellekleri hazırla
   useEffect(() => {
     if (kullanici && URETICI_ROLLER.includes(rolKucu)) {
       void prefetchYayinOzet(kullanici.id);
@@ -246,7 +247,7 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
   };
   // eclub_kisi (KARAR-4) dar gezinme; diğer herkes tam ağaç.
   const gruplar = kullanici.kimlik_turu === "eclub_kisi" ? eclubKisiNavOlustur(etkinFirmalar) : PANEL_NAV;
-  const anaSayfaYolu = isEclubKisi ? "/eclub/ana-sayfa" : "/ana-sayfa";
+  const anaSayfaYolu = isEclubKisi ? "/eclub/ana-sayfa" : panelBaslangici(rolKucu).yol;
 
   return (
     <PanelKabugu
@@ -257,6 +258,7 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
         siparisPuaniGoster: !isEclubKisi && etkinFlags.storeAcik,
         hbStoreGoster: !isEclubKisi && etkinFlags.storeAcik && STORE_ALABILEN_ROLLER.includes(rolKucu),
         anaSayfaYolu,
+        bilgiPilleri: !isEclubKisi && URETICI_ROLLER.includes(rolKucu) ? [] : undefined,
         eclubStorePuani: isEclubKisi && etkinFlags.eclubStoreAcik ? etkinEclubStorePuani : null,
         firmaLogoUrl: !isEclubKisi ? etkinFlags.firmaLogoUrl : null,
         ogrenmePlatformuAktif: !isEclubKisi && Boolean(etkinFlags.ogrenmePlatformuAktif),

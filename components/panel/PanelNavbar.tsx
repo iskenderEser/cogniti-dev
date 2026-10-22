@@ -1,7 +1,7 @@
 // components/panel/PanelNavbar.tsx
 //
 // Panel üst barı. Sol: logo. Orta: bilgi pill'leri + (UTT/KD_UTT'de) dikey çizgi
-// ardından kişisel özet pill'leri (Takım Sırası · Sipariş Puanı) ve HBStore kısayolu.
+// ardından kişisel özet pill'leri (Takım Sırası · Sipariş Puanı) ve FirmaStore kısayolu.
 // Sağ: ad-soyad (bordo) + avatar; Çıkış adın altında. Fonksiyonel gezinme sol listede.
 
 "use client";
@@ -41,7 +41,7 @@ function OzetKapsul({
         </span>
       </div>
 
-      {/* Sipariş Puanı — yalnız HBStore aktifse */}
+      {/* Sipariş Puanı — yalnız FirmaStore aktifse */}
       {siparisPuaniGoster && (
         <>
           <span style={{ color: "var(--tema-ust-menu-ozet-ayirici)", margin: "0 8px", fontSize: 11, userSelect: "none" }}>|</span>
@@ -82,9 +82,9 @@ export interface PanelNavbarProps {
   email?: string;
   // Kişisel özet — yalnız UTT/KD_UTT (BM sonraya). Verilmezse özet pill'leri çizilmez.
   ozet?: { takimSirasi: number | null; siparisPuani: number } | null;
-  // Sipariş Puanı pill'i yalnız kullanıcının firmasında HBStore aktifse görünür.
+  // Sipariş Puanı pill'i yalnız kullanıcının firmasında FirmaStore aktifse görünür.
   siparisPuaniGoster?: boolean;
-  // HBStore giriş pill'i yalnız mağazadan kişisel sipariş verebilen rollerde görünür.
+  // FirmaStore giriş pill'i yalnız mağazadan kişisel sipariş verebilen rollerde görünür.
   hbStoreGoster?: boolean;
   // Dış müşteri ana sayfası /eclub/ana-sayfa'dir; iç kullanıcıda varsayılan korunur.
   anaSayfaYolu?: string;
@@ -102,11 +102,9 @@ export interface PanelNavbarProps {
   onHamburger?: () => void; // mobilde sol drawer'ı açar
 }
 
-// Bilgi pill'leri — sabit sıra, rolden bağımsız.
+// Varsayılan bilgi pill'leri; üretici kabuğu boş liste verir.
 const BILGI_PILLERI: { key: string; etiket: string; path: string }[] = [
   { key: "ana-sayfa", etiket: "Ana Sayfa", path: "/ana-sayfa" },
-  { key: "hapbilgi-nedir", etiket: "Nedir", path: "/nedir" },
-  { key: "nasil-calisir", etiket: "Nasıl Çalışır", path: "/nasil-calisir" },
 ];
 
 function PanelTemaSecici() {
@@ -193,8 +191,7 @@ export default function PanelNavbar({
   const pathname = usePathname();
   const [hover, setHover] = useState<string | null>(null);
 
-  // Ana Sayfa navbarın sürekli görünen ana hedefidir. Butonla yapılan router.push
-  // geçişi Link'in otomatik ön yüklemesini kullanmadığı için rotayı önceden hazırla.
+  // Logo hedefini önceden hazırla; üreticilerde bu hedef Yayın Yönetimi'dir.
   useEffect(() => {
     router.prefetch(anaSayfaYolu);
   }, [anaSayfaYolu, router]);
@@ -207,7 +204,7 @@ export default function PanelNavbar({
   const pillStyle = (key: string, aktif: boolean): React.CSSProperties => {
     const isHover = hover === key;
     return {
-      color: aktif ? BORDO : "var(--tema-gezinme-metin)",
+      color: aktif ? "var(--tema-ust-menu-pill-secili-metin)" : "var(--tema-gezinme-metin)",
       background: aktif ? "var(--tema-ust-menu-pill-secili-zemin)" : isHover ? "var(--tema-ust-menu-pill-hover)" : "var(--tema-ust-menu-pill-zemin)",
       boxShadow: aktif ? "inset 0 0 0 1px var(--tema-ust-menu-pill-secili-cizgi)" : "inset 0 0 0 0.5px var(--tema-ust-menu-pill-cizgi)",
       fontFamily: "'Nunito', sans-serif",
@@ -271,7 +268,7 @@ export default function PanelNavbar({
         {/* Sağ Kolon: Bilgi Pill'leri + Puan/Sıra Pill'leri + Kullanıcı Profili */}
         <div className="hidden md:flex items-center gap-2.5 lg:gap-3.5 flex-shrink-0">
           {/* Bilgi Pill'leri */}
-          <div className="flex items-center gap-1.5 sm:gap-2">
+          {bilgiPilleri.length > 0 && <div className="flex items-center gap-1.5 sm:gap-2">
             {bilgiPilleri.map((p) => (
               <button
                 key={p.key}
@@ -285,9 +282,9 @@ export default function PanelNavbar({
                 {p.etiket}
               </button>
             ))}
-          </div>
+          </div>}
 
-          <div className="h-5 w-[1px] bg-[var(--tema-ust-menu-ayirici)]" />
+          {bilgiPilleri.length > 0 && <div className="h-5 w-[1px] bg-[var(--tema-ust-menu-ayirici)]" />}
           {ozet && (
             <OzetKapsul ozet={ozet} siparisPuaniGoster={siparisPuaniGoster} />
           )}
@@ -305,9 +302,9 @@ export default function PanelNavbar({
                 boxShadow: "0 4px 12px var(--tema-hbstore-golge), inset 0 1px 0 var(--tema-hbstore-parilti)",
                 fontFamily: "'Nunito', sans-serif",
               }}
-              aria-label="HBStore'u aç"
+              aria-label="FirmaStore'u aç"
             >
-              HBStore
+              FirmaStore
             </button>
           )}
 

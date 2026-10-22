@@ -1,6 +1,6 @@
 // lib/tclub/store/takvim.ts
 //
-// HBStore dönemlik sipariş takvimi ("HBStore Günleri").
+// FirmaStore dönemlik sipariş takvimi ("FirmaStore Günleri").
 //
 // Sipariş Takvimi Kuralları (Europe/Istanbul):
 //   * Her çeyreğin son 7 takvim gününde sipariş alınır:
@@ -93,7 +93,7 @@ export function yilDonemPencereleri(yil: number): DonemPenceresi[] {
 }
 
 /**
- * Verilen anın HBStore sipariş penceresi içinde olup olmadığını kontrol eder.
+ * Verilen anın FirmaStore sipariş penceresi içinde olup olmadığını kontrol eder.
  *
  * Sınırlar (Europe/Istanbul):
  *  - 4. Ay (Nisan):  1–7 Nisan  (1 Nisan 00:00 – 8 Nisan 00:00 hariç)
@@ -128,7 +128,7 @@ export interface TakvimDurumu {
 }
 
 /**
- * Verilen anın HBStore takvim durumunu, aktif veya sonraki pencereyi ve
+ * Verilen anın FirmaStore takvim durumunu, aktif veya sonraki pencereyi ve
  * geri sayım metinlerini eksiksiz hesaplar.
  */
 export function hbstoreTakvimDurumu(tarih: Date = new Date()): TakvimDurumu {
@@ -163,15 +163,15 @@ export function hbstoreTakvimDurumu(tarih: Date = new Date()): TakvimDurumu {
     kalanMs = Math.max(0, aktifPencere.bitisHaric.getTime() - an);
     const kalanSure = formatKalanSure(kalanMs);
     const kisaKalan = formatKisaKalanSure(kalanMs);
-    durumMetni = `HBStore Günleri açık · ${kalanSure} kaldı`;
-    navMetni = `HBStore Açık · ${kisaKalan}`;
+    durumMetni = `FirmaStore Günleri açık · ${kalanSure} kaldı`;
+    navMetni = `FirmaStore Açık · ${kisaKalan}`;
     bakiyeDonemEtiketi = `${aktifPencere.donemAdi} (Q${aktifPencere.ceyrek}) kullanılabilir bakiyesi`;
   } else {
     kalanMs = Math.max(0, sonrakiPencere.baslangic.getTime() - an);
     const kalanSure = formatKalanSure(kalanMs);
     const kisaKalan = formatKisaKalanSure(kalanMs);
-    durumMetni = `HBStore Günlerine ${kalanSure} kaldı`;
-    navMetni = `HBStore Günlerine ${kisaKalan}`;
+    durumMetni = `FirmaStore Günlerine ${kalanSure} kaldı`;
+    navMetni = `FirmaStore Günlerine ${kisaKalan}`;
     bakiyeDonemEtiketi = `${sonrakiPencere.etiket} siparişi için biriken ${sonrakiPencere.donemAdi} (Q${sonrakiPencere.ceyrek}) puanı`;
   }
 

@@ -254,11 +254,11 @@ export const SAYFA_REHBERLERI: Record<string, SayfaRehberBilgisi> = {
   // ─── 14. HBSTORE ──────────────────────────────────────────────────────────
   "store-magaza": {
     anahtar: "store-magaza",
-    baslik: "HBStore",
-    ozet: "Her dönem sonu; takip eden ilk ayın sadece ilk 7 günü açılan HBStore'da, kazandığınız puanlarla tercih ettiğiniz ürünlerin siparişlerini hiçbir ödeme yapmadan verebilir ve dilediğiniz adrese kargolanmasını isteyebilirsiniz.",
+    baslik: "FirmaStore",
+    ozet: "Her dönem sonu; takip eden ilk ayın sadece ilk 7 günü açılan FirmaStore'da, kazandığınız puanlarla tercih ettiğiniz ürünlerin siparişlerini hiçbir ödeme yapmadan verebilir ve dilediğiniz adrese kargolanmasını isteyebilirsiniz.",
     maddeler: [
       {
-        baslik: "HBStore Günleri",
+        baslik: "FirmaStore Günleri",
         aciklama: "Her dönemin sonunu takip eden ayın ilk günü saat 00:01'de başlar, 7. günü saat 23:59'da kapanır.",
         ikon: "📅",
       },
@@ -273,7 +273,7 @@ export const SAYFA_REHBERLERI: Record<string, SayfaRehberBilgisi> = {
         ikon: "📍",
       },
     ],
-    ipucu: "HBStore açıkken puanlarınızla sipariş verebilirsiniz. HBStore kapalıyken ürünleri inceleyebilirsiniz; yeni sipariş vermek için bir sonraki HBStore Günleri'nin açılmasını beklemeniz gerekir.",
+    ipucu: "FirmaStore açıkken puanlarınızla sipariş verebilirsiniz. FirmaStore kapalıyken ürünleri inceleyebilirsiniz; yeni sipariş vermek için bir sonraki FirmaStore Günleri'nin açılmasını beklemeniz gerekir.",
   },
 
   // ─── 15. E-CLUB TAKIMIM (ECZANELERİM) ─────────────────────────────────────
@@ -367,7 +367,7 @@ export const SAYFA_REHBERLERI: Record<string, SayfaRehberBilgisi> = {
   "store-siparisler": {
     anahtar: "store-siparisler",
     baslik: "Ekip Mağaza Siparişleri",
-    ozet: "Bölgenizdeki saha temsilcilerinin kazandıkları puanlarla mağazadan (HBStore) verdikleri siparişleri ve teslimat durumlarını takip etmenizi sağlar.",
+    ozet: "Bölgenizdeki saha temsilcilerinin kazandıkları puanlarla mağazadan (FirmaStore) verdikleri siparişleri ve teslimat durumlarını takip etmenizi sağlar.",
     maddeler: [],
   },
 
@@ -486,49 +486,6 @@ export const SAYFA_REHBERLERI: Record<string, SayfaRehberBilgisi> = {
     baslik: "İndirim Onayı",
     ozet: "Üyeler tamamladıkları yayınlardan kazandıkları puanları, ürünleri satın alırken indirim olarak kullanılabilir. Size iletilen indirim taleplerini bu sayfada yönetebilir ve işlem geçmişlerinizi görebilirsiniz.",
     maddeler: [],
-  },
-
-  // ─── 8. ÜRETİCİ ANA SAYFA (YAYIN LİSTESİ) ──────────────────────────────────
-  "uretici-yayin-listesi": {
-    anahtar: "uretici-yayin-listesi",
-    baslik: "Yayın Listesi Sütunları ve Anlamları",
-    altBaslik: "Tablodaki sütunların, aşama ve durum rozetlerinin detayları.",
-    ozet: "Bu tablo tüm içeriklerinizin üretim ve yayın durumunu gösterir. Satırlara tıklayarak ilgili içeriğin detayına ulaşabilirsiniz.",
-    maddeler: [
-      {
-        baslik: "ID (Talep Numarası)",
-        aciklama: "FirmaAdı_No formatında her talebe özel üretilen tekil kimliktir (Örn: Cogniti_10001).",
-        ikon: "🆔",
-      },
-      {
-        baslik: "Üretim Yöntemi (Üretim Varyantları)",
-        aciklama: "Yayının hangi üretim varyantı ile üretildiğini gösterir.",
-        linkKelime: "üretim varyantı",
-        ikon: "📦",
-        altModal: VARYANT_ALT_MODAL,
-      },
-      {
-        baslik: "Aşama",
-        aciklama: "Talebin üretim hattında şu an hangi adımda olduğunu belirtir: Senaryo, seçilen öğrenme aracı veya Soru Seti.",
-        ikon: "🏷️",
-      },
-      {
-        baslik: "Durum",
-        aciklama: "Güncel operasyonel durumu simgeler: Onayınız Bekleniyor (🔴), İncelemede (🟡), Hazırlanıyor (⚪) veya Yayında (🟢).",
-        ikon: "🚥",
-      },
-      {
-        baslik: "Yayın Tarihi",
-        aciklama: "İçeriğin canlı yayına alındığı tarih veya son durumunun güncellendiği tarihtir.",
-        ikon: "📅",
-      },
-      {
-        baslik: "Detay ve Yönlendirme (›)",
-        aciklama: "Satıra tıkladığınızda; talep henüz üretimdeyse onay/inceleme geçmişine, canlı yayındaysa yayının kendi izleme ekranına gidersiniz.",
-        ikon: "👉",
-      },
-    ],
-    ipucu: "Üstteki renkli özet kartlara tıklayarak tabloyu 'Sizden Onay Bekleyenler', 'Yayına Alınmayı Bekleyenler' veya 'Yayında Olanlar' şeklinde anında filtreleyebilirsiniz.",
   },
 
   // ─── 9. TALEPLER: AKTİF OPERASYON (İŞ LİSTESİ) ────────────────────────────

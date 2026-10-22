@@ -1,6 +1,7 @@
 // app/kullanicilar/page.tsx
 "use client";
 
+import { panelBaslangici } from "@/lib/panel/baslangic";
 import { SadeFormSecimi } from "@/components/kontrol/SadeKontroller";
 
 import { useAuth } from "@/app/providers/AuthProvider";
@@ -67,7 +68,7 @@ export default function KullanicilarPage() {
     // (29.07.2026). Proxy bekçisi asıl katman; buradaki kontrol ekranın
     // yetkisiz kullanıcıya bir an bile çizilmemesi içindir.
     if (!ADMIN_ROLLER.includes((oturumKullanici.rol ?? "").toLowerCase())) {
-      router.push("/ana-sayfa");
+      router.push(panelBaslangici(oturumKullanici.rol).yol);
     }
   }, [oturumKullanici, authYukleniyor, router]);
 

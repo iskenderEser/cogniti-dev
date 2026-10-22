@@ -7,7 +7,7 @@ import { type EclubGezinmeFirmasi } from "@/lib/eclub/firmaGezinme";
 // Sol liste (SolListe) ve mobil drawer (MobilDrawer) bu bildirimsel ağaçtan beslenir.
 // Rol/aktiflik koşulları eski components/Navbar.tsx'ten BİREBİR alınmıştır (Faz 3'te silindi)
 // (davranış-korur; KARAR-3). Notlar:
-//   • "Ana Sayfa" navbar bilgi pill'idir → bu ağaçta YOKTUR (KARAR-5/6).
+//   • Üretici dışındaki rollerin "Ana Sayfa" bağlantısı navbar bilgi pill'idir; bu ağaçta yoktur.
 //   • eclub_kisi dar gezinmesi KARAR-4 gereği layout'ta çözülür → bu ağaçta YOKTUR.
 //   • Koşullar rolKucu üzerinden çözülür (setler küçük harf). Mevcut Navbar üretim
 //     hattı koşulunda ham `rol` kullanıyordu; sistemde roller küçük harf olduğundan
@@ -205,8 +205,8 @@ const mobilKisiselHbstoreGorunur = (ctx: NavContext) =>
   ctx.storeAcik && STORE_ALABILEN_ROLLER.includes(ctx.rolKucu);
 
 /**
- * Mobil drawer'da kişisel HBStore yollarını masaüstü gruplarından ayırır.
- * Masaüstü sidebar'daki kişisel HBStore bağlantıları varsa mobilde tekrarlanmaz.
+ * Mobil drawer'da kişisel FirmaStore yollarını masaüstü gruplarından ayırır.
+ * Masaüstü sidebar'daki kişisel FirmaStore bağlantıları varsa mobilde tekrarlanmaz.
  */
 export function mobilPanelNavOlustur(gruplar: NavGrup[], ctx: NavContext): NavGrup[] {
   const temizGruplar = gruplar.map((grup) => ({
@@ -220,9 +220,9 @@ export function mobilPanelNavOlustur(gruplar: NavGrup[], ctx: NavContext): NavGr
   if (!mobilKisiselHbstoreGorunur(ctx)) return temizGruplar;
 
   const hbstoreGrubu: NavGrup = {
-    baslik: "HBStore",
+    baslik: "FirmaStore",
     oglar: [
-      { etiket: "HBStore", path: "/store", tamEslesme: true, gate: mobilKisiselHbstoreGorunur },
+      { etiket: "FirmaStore", path: "/store", tamEslesme: true, gate: mobilKisiselHbstoreGorunur },
       { etiket: "Siparişlerim", path: "/store/siparislerim", gate: mobilKisiselHbstoreGorunur },
       { etiket: "Adreslerim", path: "/store/adreslerim", gate: mobilKisiselHbstoreGorunur },
     ],

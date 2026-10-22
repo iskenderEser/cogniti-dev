@@ -1,3 +1,4 @@
+import * as baslangic from "@/lib/panel/baslangic";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -42,10 +43,11 @@ async function ortam(pathname: string, yukleniyor = false, beklet = false) {
     react: React, "react/jsx-runtime": jsxRuntime, "lucide-react": icons,
     "next/navigation": { usePathname: () => pathname, useRouter: () => router, useSearchParams: () => searchParams },
     "next/link": { default: ({ href, children, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => React.createElement("a", { href, ...props }, children) },
-    "./panelNav.config": nav, "@/lib/utils/roller": roller, "@/lib/ogrenmeAraci/turSunumu": turSunumu,
+    "./panelNav.config": nav, "@/lib/utils/roller": roller,
+    "@/lib/panel/baslangic": baslangic, "@/lib/ogrenmeAraci/turSunumu": turSunumu,
     "@/lib/utils": { cn: (...values: unknown[]) => values.filter(Boolean).join(" ") },
     "@/lib/utils/adSoyadBicimle": { adSoyadBicimle: (ad: string) => ad },
-    "./tema-secici.module.css": css, "./sayfa-yenile.module.css": css, "@/components/panel/bilgi/bilgi.module.css": css,
+    "./cogniti-hakkinda.module.css": css, "./tema-secici.module.css": css, "./sayfa-yenile.module.css": css,
     "@/app/providers/TemaProvider": { useTema: () => ({ tema: "mavi", temaDegistir: noop }) },
     "@/app/providers/AuthProvider": { useAuth: () => auth },
     "@/components/marka/CognitiLogo": { default: () => React.createElement("span", null, "Cogniti") },
@@ -61,8 +63,6 @@ async function ortam(pathname: string, yukleniyor = false, beklet = false) {
       AlertDialogCancel: button, ...Object.fromEntries(["AlertDialogContent", "AlertDialogDescription", "AlertDialogFooter", "AlertDialogHeader", "AlertDialogTitle"].map(key => [key, childrenOnly])),
     },
     "@/components/ui/tooltip": Object.fromEntries(["Tooltip", "TooltipContent", "TooltipProvider", "TooltipTrigger"].map(key => [key, childrenOnly])),
-    "@/components/panel/bilgi/OgrenmeZinciri": { default: ({ baslangicIndex }: { baslangicIndex: number }) => React.createElement("div", { "data-zincir": baslangicIndex }) },
-    "@/components/panel/bilgi/BilgiSayfaCercevesi": { default: childrenOnly },
     "@/app/(panel)/layout": { default: ({ children }: { children: React.ReactNode }) => React.createElement("div", { "data-ic-kullanici": true }, children) },
     "./_components/EclubGecisKarti": { default: () => null },
     "./_components/EczanemAnaSayfaUstBolum": { default: ({ ad, firmaAdi, onYenile }: { ad: string; firmaAdi?: string; onYenile: () => void }) => React.createElement("header", null, React.createElement("h1", null, firmaAdi || `Merhaba ${ad}, 👋`), React.createElement("button", { "aria-label": "Yenile", onClick: onYenile }, "Yenile")) },
@@ -108,10 +108,10 @@ async function ortam(pathname: string, yukleniyor = false, beklet = false) {
     vm.runInNewContext(compiled, { exports, require: (id: string) => { assert.ok(id in modules, id); return modules[id]; } });
     return exports[ad];
   }
-  modules["./_components/EczanemNedir"] = { default: yukle("app/nedir/_components/EczanemNedir.tsx") };
+  modules["@/components/panel/bilgi/CognitiHakkinda"] = { default: yukle("components/panel/bilgi/CognitiHakkinda.tsx") };
   modules["./_components/EczanemAnaSayfaSkeleton"] = { default: yukle("app/eczanem/_components/EczanemAnaSayfaSkeleton.tsx"), EczanemRaflarSkeleton: yukleNamed("app/eczanem/_components/EczanemAnaSayfaSkeleton.tsx", "EczanemRaflarSkeleton") };
   modules["./_components/EczanemUrunFiltresi"] = { default: yukle("app/eczanem/_components/EczanemUrunFiltresi.tsx") };
-  const dosya = pathname === "/nedir" ? "app/nedir/page.tsx" : `app${pathname}/page.tsx`;
+  const dosya = `app${pathname}/page.tsx`;
   const Sayfa = yukle(dosya);
   const container = dom.document.createElement("div");
   dom.document.body.append(container);
@@ -170,37 +170,7 @@ test("Puanlarım ortak kabuğu kullanır ve yenileme mevcut puan bileşenine akt
   } finally { await o.kapat(); }
 });
 
-test("Nedir oturum çözülmeden iç kabuğu açmaz; üyenin öğrenme zinciri ortak kabukta açılır", async () => {
-  const o = await ortam("/nedir", true);
-  try {
-    await o.render();
-    assert.ok(o.container.querySelector('[role="status"]'));
-    assert.equal(o.container.querySelector("[data-ic-kullanici]"), null);
-    o.auth.kullanici = o.uye; o.auth.yukleniyor = false;
-    await o.render();
-    assert.equal(o.container.querySelectorAll("#kity-navbar").length, 1);
-    assert.ok(o.container.querySelector("[data-panel-sidebar]"));
-    assert.equal(o.container.querySelector("[data-zincir]")?.getAttribute("data-zincir"), "3");
-    assert.equal(o.container.querySelector("[data-ic-kullanici]"), null);
-    assert.equal(o.istekler.length, 0);
-  } finally { await o.kapat(); }
-});
-
-test("Nasıl Çalışır ortak kabuktadır; dört adım ve Puanlarım bağlantısı korunur", async () => {
-  const o = await ortam("/eczanem/nasil-calisir");
-  try {
-    await o.render();
-    assert.equal(o.container.querySelectorAll("#kity-navbar").length, 1);
-    const adimlar = o.container.querySelector('[aria-label="Nasıl çalışır adımları"]')!;
-    assert.equal(adimlar.querySelectorAll("button").length, 4);
-    await o.click(adimlar.querySelectorAll("button")[3]);
-    assert.equal(adimlar.querySelectorAll("button")[3].getAttribute("aria-pressed"), "true");
-    assert.ok(o.container.querySelector('a[href="/eczanem/puanlarim"]'));
-    assert.equal(o.istekler.length, 0);
-  } finally { await o.kapat(); }
-});
-
-for (const path of ["/eczanem/puanlarim", "/eczanem/nasil-calisir"]) {
+for (const path of ["/eczanem/puanlarim"]) {
   test(`${path} oturumsuz ziyaretçiyi yönlendirir; üye olmayanı içerik bileşenlerine sokmaz`, async () => {
     const o = await ortam(path, true);
     try {

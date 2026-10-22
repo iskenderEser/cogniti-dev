@@ -51,8 +51,8 @@ test("mutlu: müşteri ana sayfası belirlenen beş yayın rafını ve ayrı Pua
   assert.doesNotMatch(oynatici, /if \(!res\.ok\)[\s\S]{0,320}izlemeBitirildiRef\.current = false/);
   assert.match(ilerlemeRoute, /\.eq\("musteri_id", kimlik\.musteriId!\)/);
   assert.match(uyeBaglantisi, /etiket: "Ana Sayfa", path: "\/eczanem"/);
-  assert.match(uyeBaglantisi, /etiket: "Nedir", path: "\/nedir"/);
-  assert.match(uyeBaglantisi, /etiket: "Nasıl Çalışır", path: "\/eczanem\/nasil-calisir"/);
+  assert.doesNotMatch(uyeBaglantisi, /Cogniti Hakkında|\/hakkinda/);
+  assert.doesNotMatch(uyeBaglantisi, /etiket: "(?:Nedir|Nasıl Çalışır)"/);
   assert.match(puanSayfasi, /<EczanemPuanlarim/);
   assert.doesNotMatch(sayfa, /<EczanemPuanlarim/);
 

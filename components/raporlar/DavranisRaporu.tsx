@@ -1,5 +1,6 @@
 'use client';
 
+import { panelBaslangici } from "@/lib/panel/baslangic";
 import { SadeKontrolButonu, SadeKontrolGrubu } from "@/components/kontrol/SadeKontroller";
 
 import styles from '@/app/(panel)/raporlar/utt/utt-report.module.css';
@@ -90,7 +91,7 @@ export default function DavranisRaporu({ rol }: { rol: 'utt' | 'bm' | 'tm' | 'yo
   const bekliyor = yukleniyor || (!data && loading);
   return <div className={styles.page} style={{ fontFamily: "'Nunito', sans-serif" }}>
     <div className={styles.container}>
-      <Link href="/ana-sayfa" className="mb-3 inline-flex items-center gap-1.5 text-xs font-bold text-[var(--tema-yerel-rapor-yardimci-metin-10)]"><ArrowLeft size={14} /> Ana Sayfa</Link>
+      <Link href={panelBaslangici(kullanici?.rol).yol} className="mb-3 inline-flex items-center gap-1.5 text-xs font-bold text-[var(--tema-yerel-rapor-yardimci-metin-10)]"><ArrowLeft size={14} /> {panelBaslangici(kullanici?.rol).etiket}</Link>
       <SayfaYenileBasligi className={styles.header}
         baslik={<h1 className="text-2xl font-extrabold tracking-tight text-[var(--tema-yerel-rapor-ana-metin-07)]">T-Club Raporları</h1>}
 

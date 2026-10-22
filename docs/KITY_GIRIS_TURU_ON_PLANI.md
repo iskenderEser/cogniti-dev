@@ -1,3 +1,5 @@
+> **Arşiv — 21 Ekim 2026:** Üretici Ana Sayfa kaldırma onayı kapsamında bu sayfaya özel tur, tercih ve test kodları kaldırıldı. Aşağıdaki metin geçmiş plan kaydıdır; güncel uygulama talimatı değildir. Genel rehber motoru ve demo korunur.
+
 # Kity — giriş sonrası tanıtım turu ön planı
 
 Tarih: 17 Ekim 2026. Son güncelleme: 18 Ekim 2026.

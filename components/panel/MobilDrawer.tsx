@@ -4,8 +4,8 @@
 // (docs/ana_sayfa_kabuk_donusum_is_plani.md).
 //
 // Hamburger → soldan açılan drawer. İçerik masaüstüyle aynı kaynaklardan türetilir:
-//   • üstte 5 bilgi pill'i (PanelNavbar ile aynı liste),
-//   • altında sol liste ağacı (PANEL_NAV + mobil HBStore grubu, aynı gate + rozet mantığı).
+//   • üstte bilgi pill'leri (PanelNavbar ile aynı liste),
+//   • altında sol liste ağacı (PANEL_NAV + mobil FirmaStore grubu, aynı gate + rozet mantığı).
 // Rozetler prop'tan gelir (B kararı — layout tek sefer çeker). Bir öğeye tıklanınca
 // hedefe gidilir ve drawer kapanır.
 //
@@ -38,13 +38,12 @@ type MobilDrawerProps = NavContext & {
 // PanelNavbar ile birebir aynı bilgi pill'i listesi.
 const BILGI_PILLERI: { etiket: string; path: string }[] = [
   { etiket: "Ana Sayfa", path: "/ana-sayfa" },
-  { etiket: "Nedir", path: "/nedir" },
-  { etiket: "Nasıl Çalışır", path: "/nasil-calisir" },
 ];
 
 export default function MobilDrawer(props: MobilDrawerProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const bilgiPilleri = props.bilgiPilleri ?? BILGI_PILLERI;
   const gruplar = mobilPanelNavOlustur(props.gruplar ?? PANEL_NAV, props);
 
   const cozPath = (oge: NavOge) => typeof oge.path === "function" ? oge.path(props) : (oge.path ?? "");
@@ -221,13 +220,13 @@ export default function MobilDrawer(props: MobilDrawerProps) {
         </div>
 
         {/* Bilgi pilleri */}
-        <div className="flex flex-col gap-1">
-          {(props.bilgiPilleri ?? BILGI_PILLERI).map((p) => (
+        {bilgiPilleri.length > 0 && <div className="flex flex-col gap-1">
+          {bilgiPilleri.map((p) => (
             <Fragment key={p.path}>{Satir({ etiket: p.etiket, secili: p.etiket === "Ana Sayfa" ? props.anaSayfaSecili : undefined, onSecim: p.etiket === "Ana Sayfa" ? props.onAnaSayfa : undefined, path: p.etiket === "Ana Sayfa" ? (props.anaSayfaYolu ?? p.path) : p.path, tamEslesme: true })}</Fragment>
           ))}
-        </div>
+        </div>}
 
-        <div className="h-px my-3" style={{ background: "var(--tema-mobil-menu-ayirici)" }} />
+        {bilgiPilleri.length > 0 && <div className="h-px my-3" style={{ background: "var(--tema-mobil-menu-ayirici)" }} />}
 
         {/* Fonksiyonel ağaç */}
         <div className="flex flex-col gap-4">
@@ -252,7 +251,7 @@ export default function MobilDrawer(props: MobilDrawerProps) {
                   aria-expanded={acik}
                   onClick={() => grupToggle(grup.baslik)}
                   className="flex w-full cursor-pointer items-center justify-between border-none bg-transparent"
-                  style={{ minHeight: "44px", fontSize: "12px", fontWeight: 800, color: grup.baslik === "HBStore" ? "var(--tema-hbstore-vurgu)" : "var(--tema-baslik)", textTransform: "uppercase", letterSpacing: "0.06em", padding: "2px 12px 4px", fontFamily: "'Nunito', sans-serif" }}
+                  style={{ minHeight: "44px", fontSize: "12px", fontWeight: 800, color: grup.baslik === "FirmaStore" ? "var(--tema-hbstore-vurgu)" : "var(--tema-baslik)", textTransform: "uppercase", letterSpacing: "0.06em", padding: "2px 12px 4px", fontFamily: "'Nunito', sans-serif" }}
                 >
                   <span>{grup.baslik}</span>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--tema-baslik)" strokeWidth={2.5}

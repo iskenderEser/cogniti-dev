@@ -8,12 +8,13 @@
 // tıklamada uygulama içinden (authed) görülür. Eczanem'de müşteri kimliği
 // hiçbir yüke girmez (İP-§9, TR §5.5).
 //
+import { panelBaslangici } from "@/lib/panel/baslangic";
 import { IU_ROLU, MUSTERI_ROLU, URETICI_ROLLER, TUKETICI_ROLLER, ECLUB_TUKETICI_ROLLERI } from "@/lib/utils/roller";
 import { eclubFirmaYolu } from "@/lib/eclub/firmaGezinme";
 import type { PushBaglami, PushOlayTuru, PushYuku } from "./tipler";
 
-function icKullaniciYuku(baslik: string, govde: string): PushYuku {
-  return { baslik, govde, url: "/ana-sayfa" };
+function icKullaniciYuku(baslik: string, govde: string, rol: string): PushYuku {
+  return { baslik, govde, url: panelBaslangici(rol).yol };
 }
 
 /**
@@ -26,13 +27,13 @@ export function icerikUret(olayTuru: PushOlayTuru, aliciRol: string, baglam: Pus
   switch (olayTuru) {
     case "uretim_durum_gecisi":
       if (aliciRol === IU_ROLU) {
-        return icKullaniciYuku("Cogniti — Üretim Hattı", "Bir içerik sizden işlem bekliyor.");
+        return icKullaniciYuku("Cogniti — Üretim Hattı", "Bir içerik sizden işlem bekliyor.", aliciRol);
       }
       if (URETICI_ROLLER.includes(aliciRol)) {
-        return icKullaniciYuku("Cogniti — Üretim Hattı", "Bir içeriğinizin durumu güncellendi.");
+        return { baslik: "Cogniti — Üretim Hattı", govde: "Bir içeriğinizin durumu güncellendi.", url: "/yayin-takip" };
       }
       // Diğer iç roller (ör. bilgilendirme amaçlı alıcılar) için jenerik metin.
-      return icKullaniciYuku("Cogniti", "Sizi ilgilendiren bir gelişme var.");
+      return icKullaniciYuku("Cogniti", "Sizi ilgilendiren bir gelişme var.", aliciRol);
 
     case "video_onerisi":
       if (TUKETICI_ROLLER.includes(aliciRol)) {
@@ -65,7 +66,7 @@ export function icerikUret(olayTuru: PushOlayTuru, aliciRol: string, baglam: Pus
     case "challenge":
       return baglam.yayinId
         ? { baslik: "Challenge Club", govde: "Size bir challenge geldi.", url: `/challenge-club/izle/${encodeURIComponent(baglam.yayinId)}${baglam.bagId ? `?challenge_id=${encodeURIComponent(baglam.bagId)}` : ""}` }
-        : icKullaniciYuku("Challenge Club", "Size bir challenge geldi.");
+        : icKullaniciYuku("Challenge Club", "Size bir challenge geldi.", aliciRol);
 
     case "eczanem_gonderim":
       if (aliciRol === MUSTERI_ROLU) {
@@ -84,8 +85,8 @@ export function icerikUret(olayTuru: PushOlayTuru, aliciRol: string, baglam: Pus
 
     case "store_siparis":
       if (ECLUB_TUKETICI_ROLLERI.includes(aliciRol)) {
-        return { baslik: "Cogniti Store", govde: "Siparişinizde gelişme var.", url: "/eclub/store" };
+        return { baslik: "FirmaStore", govde: "Siparişinizde gelişme var.", url: "/eclub/store" };
       }
-      return icKullaniciYuku("Cogniti Store", "Siparişinizde gelişme var.");
+      return icKullaniciYuku("FirmaStore", "Siparişinizde gelişme var.", aliciRol);
   }
 }

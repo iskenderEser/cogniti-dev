@@ -2,6 +2,7 @@
 // hesap güvenliği. Puan/indirim işlemleri sol menüdeki ayrı Puanlarım sayfasıdır.
 "use client";
 
+import { panelBaslangici } from "@/lib/panel/baslangic";
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Layers } from "lucide-react";
@@ -102,7 +103,7 @@ function EczanemPanelIcerik() {
   useEffect(() => {
     if (yukleniyor) return;
     if (!kullanici) { router.replace("/login"); return; }
-    if (!musteri) { router.replace("/ana-sayfa"); return; }
+    if (!musteri) { router.replace(panelBaslangici(kullanici.rol).yol); return; }
     void videolariCek();
     return () => videoIstegiRef.current?.abort();
   }, [kullanici, musteri, router, videolariCek, yukleniyor]);

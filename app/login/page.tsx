@@ -1,64 +1,18 @@
-// app/login/page.tsx
-//
-// Giriş / karşılama sayfası — iki panelli yerleşim (13.07.2026 tasarımı):
-// solda koyu zeminde marka anlatısı (başlık + dört modül), sağda sade giriş.
-// Tek vurgu rengi bordo (#bc2d0d); giriş akışı mantığı B-06 ile aynıdır
-// (kimlik kaynağı useAuth, firma-aktif kontrolü useEffect'te).
-
 "use client";
 
+import { panelBaslangici } from "@/lib/panel/baslangic";
 import CognitiLogo from "@/components/marka/CognitiLogo";
 import { createClient } from "@/lib/supabase/client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { beniHatirlaKaydet } from "@/lib/utils/beniHatirla";
-import { mobilKarsilamaYonlendiricisiOlustur } from "@/lib/auth/mobilKarsilama";
+import { useTema } from "@/app/providers/TemaProvider";
+import CognitiHakkinda from "@/components/panel/bilgi/CognitiHakkinda";
+import { Eye, EyeOff, LogIn } from "lucide-react";
+import styles from "./login.module.css";
+import switchStyles from "@/components/tema/tema-secici.module.css";
 import GirisAltBilgileri from "./_components/GirisAltBilgileri";
-
-const BORDO = "var(--tema-yerel-giris-vurgu-metin-01)";
-// F-04 (18.07.2026): giriş ekranı renk/yerleşim talebi — sol %50 açık zemin
-// (#f3f4f7) + logo sol üst-orta + metin/ikon #737373 (Eczanem kalbi bordo),
-// sağ %50 #ffffff + "Giriş" başlığı. Madde listesi: docs/fiziksel_tespitler_ve_cozumler.md F-04.
-const GRI_METIN = "var(--tema-yerel-giris-yardimci-metin-03)";
-
-// Sol paneldeki modül tanıtımları — cümleler İskender'le birlikte yazıldı (18.07.2026).
-// Kalıp: "amaç + İÇİN + hedef kitle + yüklem"; değer zinciri sırası temsilci →
-// lider → eczane → danışan. Eczanem satırında açık kazanç vaadi BİLİNÇLİ yok:
-// kamuya açık alanda eczane lehine doğrudan fayda yazılamaz (rekabet/mevzuat
-// hassasiyeti, İskender kararı) — "öğrenmeyi teşvik" zımni faydadır.
-// Kanal ifadesi bilinçli tekil ve jenerik ("eczaneden" — danışanın kendi eczanesi):
-// "eczaneler aracılığıyla" sistem eczanelerini işaret ederdi, sistemde olmayan
-// eczanenin rekabette yenik düşeceği iması doğardı (İskender kararı, 18.07).
-// İkon dili: üç Club kendi baş harfiyle (tek desen), Eczanem kalple ayrışır.
-// ("+" bilinçli kullanılmadı — eczacılık bağlamında yanlış anlaşılabilir.)
-const MODULLER = [
-  {
-    ad: "T-Club",
-    aciklama: "Öğrenmenin sürekliliği için temsilcilere fırsatlar sunar",
-    ikon: <span className="text-base font-extrabold">T</span>,
-  },
-  {
-    ad: "C-Club",
-    aciklama: "Değişimin sürdürülebilirliği için liderlerin öğrenmesini destekler",
-    ikon: <span className="text-base font-extrabold">C</span>,
-  },
-  {
-    ad: "E-Club",
-    aciklama: "Değer yaratan bilgiye ulaştırmak için eczaneleri motive eder",
-    ikon: <span className="text-base font-extrabold">E</span>,
-  },
-  {
-    ad: "Eczanem",
-    aciklama: "Ürün bilgisine eczaneden ulaşılması için danışanları teşvik eder",
-    // F-04/5: kalbin çizgi rengi bordo — currentColor değil, sabit.
-    ikon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--tema-yerel-giris-vurgu-metin-01)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 20s-7-4.4-9.2-8.8C1.5 8.4 3.4 5 6.6 5 8.7 5 10.5 6.3 12 8c1.5-1.7 3.3-3 5.4-3 3.2 0 5.1 3.4 3.8 6.2C19 15.6 12 20 12 20z" />
-      </svg>
-    ),
-  },
-];
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -75,7 +29,13 @@ export default function LoginPage() {
   const [sifirlamaMesaj, setSifirlamaMesaj] = useState("");
   const router = useRouter();
   const { kullanici, yukleniyor, cikisYap } = useAuth();
-  const [mobilGirisYolunuCoz] = useState(mobilKarsilamaYonlendiricisiOlustur);
+
+  const [girisAcik, setGirisAcik] = useState(false);
+  const kimlikRef = useRef<HTMLInputElement>(null);
+  const sifirlamaRef = useRef<HTMLInputElement>(null);
+  const girisButonuRef = useRef<HTMLButtonElement>(null);
+  const karsilamaKaydirma = useRef(0);
+  const { tema, temaDegistir } = useTema();
 
   useEffect(() => {
     if (yukleniyor) return;
@@ -85,8 +45,7 @@ export default function LoginPage() {
 
     // E-Club kişisi (eczacı/teknisyen) → kendi paneline; Eczanem müşterisi →
     // /eczanem paneline (müşteri de bu sayfadan e-posta/telefon + şifre ile girer);
-    // admin → /admin; diğerleri → firma-aktif kontrolünden geçip /ana-sayfa.
-    // Ana Sayfa kullanıcılarının ilk mobil girişi /nedir ile karşılanır.
+    // admin → /admin; üretici → /yayin-yonetimi; diğer iç roller → /ana-sayfa.
     // Kimlik kaynağı useAuth'tur (B-06/D3 — user_metadata okuması kaldırıldı:
     // metadata girişte iliştirilir ve bayatlayabilir, rolCozucu dersi).
     const yonlendir = async () => {
@@ -113,22 +72,17 @@ export default function LoginPage() {
         if (iptalEdildi) return;
         if (firma && firma.aktif === false) {
           await cikisYap();
+          setGirisAcik(true);
           setHata("Firmanızın sisteme erişimi şu anda kapalıdır. Lütfen yöneticinizle görüşün.");
           return;
         }
       }
 
-      const hedef = await mobilGirisYolunuCoz(
-        createClient().auth,
-        kullanici.id,
-        window.matchMedia("(max-width: 767px)").matches,
-        kullanici.rol === "admin" ? "/admin" : "/ana-sayfa",
-      );
-      if (!iptalEdildi) router.replace(hedef);
+      if (!iptalEdildi) router.replace(kullanici.rol === "admin" ? "/admin" : panelBaslangici(kullanici.rol).yol);
     };
     yonlendir();
     return () => { iptalEdildi = true; };
-  }, [cikisYap, kullanici, mobilGirisYolunuCoz, router, yukleniyor]);
+  }, [cikisYap, kullanici, router, yukleniyor]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -198,218 +152,93 @@ export default function LoginPage() {
     );
   };
 
+  useEffect(() => {
+    if (girisAcik) (sifirlamaAcik ? sifirlamaRef : kimlikRef).current?.focus({ preventScroll: true });
+  }, [girisAcik, sifirlamaAcik]);
+
+  function girisiAc() {
+    karsilamaKaydirma.current = window.scrollY;
+    setSifirlamaAcik(false);
+    setHata("");
+    setGirisAcik(true);
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }
+
+  function karsilamayaDon() {
+    setGirisAcik(false);
+    window.requestAnimationFrame(() => {
+      window.scrollTo({ top: karsilamaKaydirma.current, behavior: "instant" });
+      girisButonuRef.current?.focus({ preventScroll: true });
+    });
+  }
+
   return (
-    <div className="min-h-screen flex flex-col justify-between" style={{ fontFamily: "'Nunito', sans-serif" }}>
-      <div className="flex-1 flex flex-col md:flex-row">
-        {/* Sol panel — marka anlatısı (F-04): %50 genişlik, açık zemin #f3f4f7,
-            logo sol üst-orta, metin ve ikonlar #737373 (Eczanem kalbi bordo) */}
-        <div className="md:w-1/2 flex items-center justify-center px-6 py-10 md:px-12 lg:px-16"
-          style={{ background: "var(--tema-yerel-giris-sayfa-zemini-02)" }}>
-          {/* F-04 hizalama: masaüstünde sol blok 3cm yukarı, sağ blok 3cm aşağı —
-              metin alanının orta çizgisi giriş alanının ekseniyle çakışır (İskender, ekran görseliyle) */}
-          <div className="max-w-md w-full md:-translate-y-[75px]">
-          {/* Şeffaf kenarlar mevcut 150 × 150 logo alanına sığdırılır; yerleşim korunur. */}
-          <CognitiLogo className="object-contain mx-auto mb-8 scale-110" style={{ width: 150, height: 150 }} />
-
-          {/* Positioning-why cümlesi (İskender, 18.07.2026): "Öğrenmenin V Hali" kalktı,
-              slogan başlık oldu. "Kazanmak" tanımı: docs/fiziksel_tespitler_ve_cozumler.md F-04 Ek 3. */}
-          <h1 className="text-2xl md:text-3xl lg:text-3xl font-extrabold leading-tight mb-8 md:mb-10" style={{ color: GRI_METIN }}>
-            bilgi taşır
-          </h1>
-
-          <div className="flex flex-col gap-4 md:gap-5">
-            {MODULLER.map((m) => (
-              <div key={m.ad} className="flex items-start gap-3">
-                <span className="flex-shrink-0 flex items-center justify-center rounded-lg"
-                  style={{
-                    width: 38, height: 38,
-                    background: "var(--tema-yerel-giris-eylem-zemin-01)",
-                    border: "1px solid var(--tema-yerel-giris-cizgi-02)",
-                    color: GRI_METIN,
-                  }}>
-                  {m.ikon}
-                </span>
-                <div className="min-w-0">
-                  <div className="text-base font-bold" style={{ color: GRI_METIN }}>{m.ad}</div>
-                  <div className="text-sm leading-relaxed" style={{ color: GRI_METIN }}>{m.aciklama}</div>
+    <div className={styles.page}>
+      <header className={styles.header} hidden={girisAcik}>
+        <a className={styles.brand} href="#" aria-label="Cogniti" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }}>
+          <CognitiLogo width={220} height={73} />
+        </a>
+        <button ref={girisButonuRef} className={styles.action} type="button" aria-controls="giris-alani" onClick={girisiAc}>
+          <LogIn size={16} aria-hidden="true" />Giriş Yap
+        </button>
+      </header>
+      <main>
+        <div hidden={girisAcik}><CognitiHakkinda /></div>
+        <section id="giris-alani" className={styles.authPage} aria-labelledby="giris-basligi" hidden={!girisAcik}>
+          <div className={styles.authContent}>
+            <CognitiLogo className={styles.authLogo} width={200} height={66} />
+            <h1 className={styles.heading} id="giris-basligi">{sifirlamaAcik ? "Şifre Sıfırlama" : "Giriş Yap"}</h1>
+            {sifirlamaAcik ? (
+              <>
+                <p className={styles.resetDescription}>Kayıtlı e-posta adresinizi girin; şifre sıfırlama bağlantısı gönderelim.</p>
+                <form onSubmit={handleSifirlamaGonder} className={styles.form}>
+                  <div className={styles.field}>
+                    <label htmlFor="sifirlama-email">E-posta</label>
+                    <input ref={sifirlamaRef} id="sifirlama-email" type="email" value={sifirlamaEmail} onChange={(e) => setSifirlamaEmail(e.target.value)} required autoComplete="email" placeholder="ornek@sirket.com" />
+                  </div>
+                  {sifirlamaMesaj && <p className={styles.message} role="status">{sifirlamaMesaj}</p>}
+                  <button type="submit" disabled={sifirlamaGonderiliyor} className={styles.submit}>
+                    {sifirlamaGonderiliyor ? "Gönderiliyor..." : "Sıfırlama Bağlantısı Gönder"}
+                  </button>
+                  <button type="button" className={`${styles.link} ${styles.backLogin}`} onClick={() => { setSifirlamaAcik(false); setSifirlamaMesaj(""); }}>← Girişe dön</button>
+                </form>
+              </>
+            ) : (
+              <form onSubmit={handleLogin} className={styles.form}>
+                <div className={styles.field}>
+                  <label htmlFor="giris-kimlik">E-posta veya Cep Telefonu</label>
+                  <input ref={kimlikRef} id="giris-kimlik" type="text" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="username" placeholder="E-posta ya da cep telefon numarası" />
                 </div>
-              </div>
-            ))}
+                <div className={styles.field}>
+                  <label htmlFor="giris-sifre">Şifre</label>
+                  <div className={styles.password}>
+                    <input id="giris-sifre" type={sifreGoster ? "text" : "password"} value={sifre} onChange={(e) => setSifre(e.target.value)} required autoComplete="current-password" placeholder="••••••••" />
+                    <button type="button" className={styles.eye} onClick={() => setSifreGoster(!sifreGoster)} aria-label={sifreGoster ? "Şifreyi gizle" : "Şifreyi göster"} aria-pressed={sifreGoster}>
+                      {sifreGoster ? <EyeOff size={17} aria-hidden="true" /> : <Eye size={17} aria-hidden="true" />}
+                    </button>
+                  </div>
+                </div>
+                <div className={styles.options}>
+                  <label className={styles.remember}><input type="checkbox" checked={beniHatirla} onChange={(e) => setBeniHatirla(e.target.checked)} />Beni hatırla</label>
+                  <button type="button" className={styles.link} onClick={() => { setSifirlamaEmail(email.includes("@") ? email : ""); setSifirlamaMesaj(""); setSifirlamaAcik(true); }}>Şifremi unuttum</button>
+                </div>
+                {hata && <p className={`${styles.message} ${styles.error}`} role="alert">{hata}</p>}
+                <button type="submit" disabled={loading} className={styles.submit}>{loading ? "Giriş yapılıyor..." : "Giriş Yap"}</button>
+              </form>
+            )}
+            <button type="button" className={styles.back} onClick={karsilamayaDon}>← Cogniti’yi tanıyın</button>
+          </div>
+        </section>
+      </main>
+      <GirisAltBilgileri gorunum={
+        <div className={styles.appearance}><span>Görünüm</span>
+          <div className={`${switchStyles.secici} ${styles.themeSwitch}`}>
+            <button type="button" role="switch" aria-label="Mavi ve yeşil görünüm arasında geçiş yap" aria-checked={tema === "mavi"} className={switchStyles[tema]} onClick={() => temaDegistir(tema === "mavi" ? "yesil" : "mavi")}>
+              <span className={switchStyles.anahtar} aria-hidden="true"><span className={switchStyles.topuz} /></span>
+            </button>
           </div>
         </div>
-      </div>
-
-      {/* Sağ panel — giriş (F-04): %50 genişlik, zemin #ffffff, logo sola taşındı,
-          form bloğunun üstünde sola yaslı bold "Giriş" başlığı */}
-      <div className="md:w-1/2 flex flex-col items-center justify-center px-6 py-10 md:py-6"
-        style={{ background: "var(--tema-yerel-giris-kart-02)" }}>
-        <div className="w-full max-w-sm md:translate-y-[60px]">
-          {!sifirlamaAcik && (
-            <h2 className="text-xl font-bold text-left mb-6" style={{ color: GRI_METIN }}>Giriş</h2>
-          )}
-
-          {sifirlamaAcik ? (
-          /* F-03/A: şifre sıfırlama görünümü — giriş formuyla yer değiştirir */
-          <form onSubmit={handleSifirlamaGonder} className="flex flex-col gap-4">
-            <div>
-              <h2 className="text-base font-bold text-[var(--tema-yerel-giris-ana-metin-03)] m-0 mb-1">Şifre Sıfırlama</h2>
-              <p className="text-xs text-[var(--tema-yerel-giris-yardimci-metin-01)] m-0 leading-relaxed">
-                Kayıtlı e-posta adresinizi girin; şifre sıfırlama bağlantısı gönderelim.
-              </p>
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-[var(--tema-yerel-giris-yardimci-metin-01)] mb-1.5">E-posta</label>
-              <input
-                type="email"
-                value={sifirlamaEmail}
-                onChange={(e) => setSifirlamaEmail(e.target.value)}
-                required
-                autoComplete="email"
-                placeholder="ornek@sirket.com"
-                className="w-full border border-[var(--tema-yerel-giris-cizgi-03)] rounded-xl px-3.5 py-2.5 text-sm bg-[var(--tema-yerel-giris-kart-01)] text-[var(--tema-yerel-giris-ana-metin-03)] outline-none box-border transition-shadow focus:border-[var(--tema-yerel-giris-vurgu-cizgi-01)] focus:ring-2 focus:ring-[var(--tema-yerel-giris-vurgu-odak-01)]/15"
-                style={{ fontFamily: "'Nunito', sans-serif" }}
-              />
-            </div>
-
-            {sifirlamaMesaj && (
-              <div className="bg-[var(--tema-yerel-giris-sayfa-zemini-03)] border border-[var(--tema-yerel-giris-cizgi-04)] rounded-xl px-3 py-2">
-                <p className="text-xs text-[var(--tema-yerel-giris-ana-metin-04)] m-0 leading-relaxed">{sifirlamaMesaj}</p>
-              </div>
-            )}
-
-            <button
-              type="submit"
-              disabled={sifirlamaGonderiliyor}
-              className="w-full text-[var(--tema-yerel-giris-ters-metin-01)] font-bold rounded-xl py-3 text-sm border-none transition-opacity hover:opacity-90"
-              style={{
-                background: BORDO,
-                cursor: sifirlamaGonderiliyor ? "not-allowed" : "pointer",
-                opacity: sifirlamaGonderiliyor ? 0.6 : 1,
-                fontFamily: "'Nunito', sans-serif",
-              }}
-            >
-              {sifirlamaGonderiliyor ? "Gönderiliyor..." : "Sıfırlama Bağlantısı Gönder"}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => { setSifirlamaAcik(false); setSifirlamaMesaj(""); }}
-              className="bg-transparent border-none p-0 text-xs cursor-pointer mx-auto"
-              style={{ color: BORDO, fontFamily: "'Nunito', sans-serif" }}
-            >
-              ← Girişe dön
-            </button>
-          </form>
-          ) : (
-          <form onSubmit={handleLogin} className="flex flex-col gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-[var(--tema-yerel-giris-yardimci-metin-01)] mb-1.5">E-posta veya Cep Telefonu</label>
-              <input
-                type="text"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                autoComplete="username"
-                placeholder="E-posta ya da cep telefon numarası"
-                className="w-full border border-[var(--tema-yerel-giris-cizgi-03)] rounded-xl px-3.5 py-2.5 text-sm bg-[var(--tema-yerel-giris-kart-01)] text-[var(--tema-yerel-giris-ana-metin-03)] outline-none box-border transition-shadow focus:border-[var(--tema-yerel-giris-vurgu-cizgi-01)] focus:ring-2 focus:ring-[var(--tema-yerel-giris-vurgu-odak-01)]/15"
-                style={{ fontFamily: "'Nunito', sans-serif" }}
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-[var(--tema-yerel-giris-yardimci-metin-01)] mb-1.5">Şifre</label>
-              <div className="relative">
-                <input
-                  type={sifreGoster ? "text" : "password"}
-                  value={sifre}
-                  onChange={(e) => setSifre(e.target.value)}
-                  required
-                  autoComplete="current-password"
-                  placeholder="••••••••"
-                  className="w-full border border-[var(--tema-yerel-giris-cizgi-03)] rounded-xl pl-3.5 pr-10 py-2.5 text-sm bg-[var(--tema-yerel-giris-kart-01)] text-[var(--tema-yerel-giris-ana-metin-03)] outline-none box-border transition-shadow focus:border-[var(--tema-yerel-giris-vurgu-cizgi-01)] focus:ring-2 focus:ring-[var(--tema-yerel-giris-vurgu-odak-01)]/15"
-                  style={{ fontFamily: "'Nunito', sans-serif" }}
-                />
-                <button
-                  type="button"
-                  onClick={() => setSifreGoster(!sifreGoster)}
-                  aria-label={sifreGoster ? "Şifreyi gizle" : "Şifreyi göster"}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 bg-transparent border-none p-0 cursor-pointer text-[var(--tema-yerel-giris-yardimci-metin-02)] hover:text-[var(--tema-yerel-giris-ana-metin-01)]"
-                >
-                  {sifreGoster ? (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19" />
-                      <path d="M14.12 14.12a3 3 0 11-4.24-4.24" />
-                      <path d="M1 1l22 22" />
-                    </svg>
-                  ) : (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                      <circle cx="12" cy="12" r="3" />
-                    </svg>
-                  )}
-                </button>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <label className="flex items-center gap-1.5 text-xs text-[var(--tema-yerel-giris-yardimci-metin-01)] cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={beniHatirla}
-                  onChange={(e) => setBeniHatirla(e.target.checked)}
-                  className="w-3 h-3"
-                  style={{ accentColor: BORDO }}
-                />
-                Beni hatırla
-              </label>
-              {/* F-03/A: sıfırlama görünümünü açar; girilmiş e-posta öndoldurulur */}
-              <button
-                type="button"
-                onClick={() => { setSifirlamaEmail(email); setSifirlamaMesaj(""); setSifirlamaAcik(true); }}
-                className="bg-transparent border-none p-0 text-xs cursor-pointer"
-                style={{ color: BORDO, fontFamily: "'Nunito', sans-serif" }}
-              >
-                Şifremi unuttum
-              </button>
-            </div>
-
-            {hata && (
-              <div className="flex items-center gap-2 bg-[var(--tema-yerel-giris-islevsel-zemin-01)] border border-[var(--tema-yerel-giris-islevsel-cizgi-01)] rounded-xl px-3 py-2">
-                <svg className="w-3 h-3 flex-shrink-0" style={{ color: "var(--tema-yerel-giris-hata-metni)" }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <p className="text-xs m-0" style={{ color: "var(--tema-yerel-giris-hata-metni)" }}>{hata}</p>
-              </div>
-            )}
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full text-[var(--tema-yerel-giris-ters-metin-01)] font-bold rounded-xl py-3 text-sm border-none flex items-center justify-center gap-1.5 transition-opacity hover:opacity-90"
-              style={{
-                background: BORDO,
-                cursor: loading ? "not-allowed" : "pointer",
-                opacity: loading ? 0.6 : 1,
-                fontFamily: "'Nunito', sans-serif",
-              }}
-            >
-              {loading ? (
-                <>
-                  <svg className="animate-spin w-3 h-3" fill="none" viewBox="0 0 24 24">
-                    <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                  </svg>
-                  Giriş yapılıyor...
-                </>
-              ) : "Giriş Yap"}
-            </button>
-          </form>
-          )}
-
-          <GirisAltBilgileri />
-        </div>
-      </div>
-    </div>
+      } />
     </div>
   );
 }

@@ -3,6 +3,8 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { redirect } from "next/navigation";
+import { panelBaslangici } from "@/lib/panel/baslangic";
 import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { URETICI_ROLLER, YONETICI_ROLLER } from "@/lib/utils/roller";
@@ -19,9 +21,6 @@ function AnaSayfaYukleniyor() {
   );
 }
 
-const UreticiAnaSayfa = dynamic(() => import("@/components/ana-sayfa/UreticiAnaSayfa"), {
-  loading: () => <AnaSayfaYukleniyor />,
-});
 const IuAnaSayfa = dynamic(() => import("@/components/ana-sayfa/IuAnaSayfa"), {
   loading: () => <AnaSayfaYukleniyor />,
 });
@@ -46,10 +45,6 @@ const ROLE_MAP: Record<string, (k: AuthKullanici) => React.ReactNode> = {
   tm:     (k) => <TmAnaSayfa user={k} adSoyad={k.adSoyad} />,
 };
 
-URETICI_ROLLER.forEach(r => {
-  ROLE_MAP[r] = (k) => <UreticiAnaSayfa user={k} rol={k.rol} adSoyad={k.adSoyad} />;
-});
-
 YONETICI_ROLLER.forEach(r => {
   ROLE_MAP[r] = (k) => <YoneticiAnaSayfa user={k} rol={k.rol} adSoyad={k.adSoyad} />;
 });
@@ -63,6 +58,7 @@ export default function AnaSayfaPage() {
   if (!kullanici) return null;
 
   const rol = kullanici.rol?.trim().toLowerCase();
+  if (rol && URETICI_ROLLER.includes(rol)) redirect(panelBaslangici(rol).yol);
   const Content = rol ? ROLE_MAP[rol]?.(kullanici) : null;
 
   if (!rol || !Content) {

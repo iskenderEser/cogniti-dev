@@ -1,3 +1,4 @@
+import { panelBaslangici } from "@/lib/panel/baslangic";
 import { createServerClient } from "@supabase/ssr";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { NextResponse, type NextRequest } from "next/server";
@@ -33,6 +34,12 @@ export async function proxy(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser();
   const { pathname } = request.nextUrl;
+  // Yalnız bir yetki/modül dönüşü gerektiğinde rolü çöz; normal istek yoluna sorgu ekleme.
+  const panelBaslangicinaDon = async (istemci: SupabaseClient, bilinenRol?: string) => {
+    if (!user) return NextResponse.redirect(new URL("/login", request.url));
+    const rol = bilinenRol ?? await rolCozucu(istemci, user.id);
+    return NextResponse.redirect(new URL(panelBaslangici(rol).yol, request.url));
+  };
   const eclubFirmaRotasi = pathname.match(/^\/eclub\/firma\/([^/]+)\/(yayinlar|yayin-tamamlama-performansi|hediye-ceki-talebi|hediye-ceki-takibi|performans|hediye-cekleri|cek-talepleri)(?:\/|$)/);
   if (user?.app_metadata.eclub_davet_bekliyor === true && ![
     "/login", "/sifre-olustur", "/sifre-olustur/api", "/sifre-yenile", "/davet-bekliyor",
@@ -110,7 +117,7 @@ export async function proxy(request: NextRequest) {
 
     if (!ADMIN_ROLLER.includes(kRol)) {
       if (kApiYolu) return NextResponse.json({ error: "Bu sayfaya erişim yetkiniz yok." }, { status: 403 });
-      return NextResponse.redirect(new URL("/ana-sayfa", request.url));
+      return panelBaslangicinaDon(kSupabase, kRol);
     }
   }
   // -------------------------------------------------------------------------
@@ -163,7 +170,7 @@ export async function proxy(request: NextRequest) {
             { status: 403 }
           );
         }
-        return NextResponse.redirect(new URL("/ana-sayfa", request.url));
+        return panelBaslangicinaDon(ccSupabase);
       }
     }
     // cc_aktif = true veya firma yok → geç (akış aşağıda sürer)
@@ -188,7 +195,7 @@ export async function proxy(request: NextRequest) {
 
     if (!YAYINDAKI_VIDEO_GORENLER.includes(yvRol) && (yvApiYolu || !TUKETICI_ROLLER.includes(yvRol))) {
       if (yvApiYolu) return NextResponse.json({ error: "Bu sayfaya erişim yetkiniz yok." }, { status: 403 });
-      return NextResponse.redirect(new URL("/ana-sayfa", request.url));
+      return panelBaslangicinaDon(yvSupabase, yvRol);
     }
     if (!yvApiYolu && URETICI_ROLLER.includes(yvRol)) {
       return NextResponse.redirect(new URL("/tum-yayinlar", request.url));
@@ -206,13 +213,13 @@ export async function proxy(request: NextRequest) {
     );
     const katalogRol = await rolCozucu(katalogSupabase, user.id);
     if (!URETICI_ROLLER.includes(katalogRol)) {
-      return NextResponse.redirect(new URL("/ana-sayfa", request.url));
+      return panelBaslangicinaDon(katalogSupabase, katalogRol);
     }
   }
   // -------------------------------------------------------------------------
 
-  // --- HBStore firma bekçisi -----------------------------------------------
-  // /store/* (sayfa + API) yalnızca firması HBStore açık (firmalar.hbstore_aktif
+  // --- FirmaStore firma bekçisi -----------------------------------------------
+  // /store/* (sayfa + API) yalnızca firması FirmaStore açık (firmalar.hbstore_aktif
   // = true) olan kullanıcıya açıktır. Admin bu işi FirmaSidebar toggle'ı ile
   // firma bazında kapatır; kapalı firmada o firmanın hiçbir kullanıcısı
   // (sipariş veren UTT/KD_UTT/BM, sipariş izleyen TM/GM/yönetici...) store'a
@@ -251,11 +258,11 @@ export async function proxy(request: NextRequest) {
       if (storeFirma && storeFirma.hbstore_aktif === false) {
         if (storeApiYolu) {
           return NextResponse.json(
-            { error: "HBStore firmanız için kapalıdır." },
+            { error: "FirmaStore firmanız için kapalıdır." },
             { status: 403 }
           );
         }
-        return NextResponse.redirect(new URL("/ana-sayfa", request.url));
+        return panelBaslangicinaDon(storeSupabase);
       }
     }
     // hbstore_aktif = true veya firma yok → geç
@@ -313,7 +320,7 @@ export async function proxy(request: NextRequest) {
             { status: 403 }
           );
         }
-        return NextResponse.redirect(new URL("/ana-sayfa", request.url));
+        return panelBaslangicinaDon(esSupabase);
       }
     } else {
       // E-Club kişisinde firma doğrudan kimlikte değil; aktif eczane bağından çözülür.
@@ -383,7 +390,7 @@ export async function proxy(request: NextRequest) {
             { status: 403 }
           );
         }
-        return NextResponse.redirect(new URL("/ana-sayfa", request.url));
+        return panelBaslangicinaDon(eclubSupabase);
       }
     } else {
       try {
@@ -415,23 +422,6 @@ export async function proxy(request: NextRequest) {
   // /eczanem/bm ve /eczanem/tm (iç uygulama), sonra genel /eczanem
   // (müşteri). Girişsiz istisnalar: müşteri giriş sayfası/API'leri ve davet
   // kabulü — bunlar oturum ÖNCESİ akışlardır, koruma OTP mekanizmasındadır.
-  // Ortak bilgi adresinde Eczanem üyesinin mevcut modül kapısı korunur.
-  // Firma ve E-Club kullanıcıları kendi panel kabuğunda aynı adresi kullanır.
-  if (pathname === "/nedir") {
-    if (!user) return NextResponse.redirect(new URL("/login", request.url));
-    const bilgiSupabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
-    const bilgiRolu = await rolCozucu(bilgiSupabase, user.id);
-    if (bilgiRolu === MUSTERI_ROLU) {
-      const erisim = await eczanemRolErisimi(bilgiSupabase, user.id, bilgiRolu);
-      if (!erisim.ok || !erisim.acik) {
-        return NextResponse.redirect(new URL("/eczanem/kapali", request.url));
-      }
-    }
-  }
-
   if (pathname.startsWith("/eczanem")) {
     const girissizYol =
       pathname.startsWith("/eczanem/giris") ||
@@ -469,7 +459,7 @@ export async function proxy(request: NextRequest) {
           if (apiYolu) {
             return NextResponse.json({ error: "Bu bölüm eczacı/teknisyene açıktır." }, { status: 403 });
           }
-          return NextResponse.redirect(new URL(rol === MUSTERI_ROLU ? "/eczanem" : "/ana-sayfa", request.url));
+          return NextResponse.redirect(new URL(rol === MUSTERI_ROLU ? "/eczanem" : panelBaslangici(rol).yol, request.url));
         }
       } else if (uttDali) {
         if (!TUKETICI_ROLLER.includes(rol)) {
@@ -478,7 +468,7 @@ export async function proxy(request: NextRequest) {
             return NextResponse.json({ error: "Bu bölüm UTT'ye açıktır." }, { status: 403 });
           }
           return NextResponse.redirect(
-            new URL(ECLUB_TUKETICI_ROLLERI.includes(rol) ? "/eczanem/eczane" : rol === MUSTERI_ROLU ? "/eczanem" : "/ana-sayfa", request.url)
+            new URL(ECLUB_TUKETICI_ROLLERI.includes(rol) ? "/eczanem/eczane" : rol === MUSTERI_ROLU ? "/eczanem" : panelBaslangici(rol).yol, request.url)
           );
         }
       } else if (bmDali) {
@@ -488,14 +478,14 @@ export async function proxy(request: NextRequest) {
             return NextResponse.json({ error: "Bu bölüm BM rolüne açıktır." }, { status: 403 });
           }
           return NextResponse.redirect(
-            new URL(ECLUB_TUKETICI_ROLLERI.includes(rol) ? "/eczanem/eczane" : rol === MUSTERI_ROLU ? "/eczanem" : "/ana-sayfa", request.url)
+            new URL(ECLUB_TUKETICI_ROLLERI.includes(rol) ? "/eczanem/eczane" : rol === MUSTERI_ROLU ? "/eczanem" : panelBaslangici(rol).yol, request.url)
           );
         }
       } else if (tmDali) {
         if (rol !== "tm") {
           rolUygun = false;
           if (apiYolu) return NextResponse.json({ error: "Bu bölüm TM rolüne açıktır." }, { status: 403 });
-          return NextResponse.redirect(new URL("/ana-sayfa", request.url));
+          return NextResponse.redirect(new URL(panelBaslangici(rol).yol, request.url));
         }
       } else if (rol !== MUSTERI_ROLU) {
         rolUygun = false;
@@ -503,7 +493,7 @@ export async function proxy(request: NextRequest) {
           return NextResponse.json({ error: "Bu bölüm Eczanem üyelerine açıktır." }, { status: 403 });
         }
         return NextResponse.redirect(
-          new URL(ECLUB_TUKETICI_ROLLERI.includes(rol) ? "/eczanem/eczane" : "/ana-sayfa", request.url)
+          new URL(ECLUB_TUKETICI_ROLLERI.includes(rol) ? "/eczanem/eczane" : panelBaslangici(rol).yol, request.url)
         );
       }
 

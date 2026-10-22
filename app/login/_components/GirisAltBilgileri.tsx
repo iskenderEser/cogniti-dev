@@ -1,21 +1,18 @@
 "use client";
 
+import type { ReactNode } from "react";
+import styles from "../login.module.css";
 import { Dialog } from "radix-ui";
 import { YASAL_METINLER } from "./yasalMetinler";
 
 const BAGLANTI_SINIFI =
   "rounded-sm text-center underline-offset-4 hover:text-[var(--tema-yerel-giris-yardimci-metin-01)] hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--tema-yerel-giris-odak-01)]";
 
-export default function GirisAltBilgileri() {
+export default function GirisAltBilgileri({ gorunum }: { gorunum?: ReactNode }) {
   return (
-    // Masaüstünde eski telif satırının yüksekliği korunur; giriş formu yer değiştirmez.
-    <div className="relative mt-20 md:mt-10 md:h-6">
-      <div className="bg-[var(--tema-yerel-giris-kart-01)] pb-8 md:absolute md:inset-x-0 md:top-10">
-        <section
-          aria-label="Sözleşmeler ve şirket bilgileri"
-          className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,0.6fr)] items-start gap-x-6 text-center text-xs leading-relaxed text-[var(--tema-yerel-giris-yardimci-metin-02)]"
-        >
-          <ul aria-label="Sözleşmeler" className="m-0 flex list-none flex-col gap-2 p-0">
+    <footer className={styles.footer}>
+      <section aria-label="Sözleşmeler ve şirket bilgileri" className={styles.footerRow}>
+          <ul aria-label="Sözleşmeler" className={styles.legalLinks}>
             {YASAL_METINLER.map((metin) => (
               <li key={metin.baslik}>
                 <Dialog.Root>
@@ -70,7 +67,7 @@ export default function GirisAltBilgileri() {
             ))}
           </ul>
 
-          <address aria-label="Şirket iletişim bilgileri" className="flex min-w-0 flex-col items-center gap-2 not-italic">
+          <address aria-label="Şirket iletişim bilgileri" className={styles.contactLinks}>
             <a
               href="https://www.mill.tr"
               target="_blank"
@@ -86,12 +83,12 @@ export default function GirisAltBilgileri() {
               info@mill.tr
             </a>
           </address>
-        </section>
+      </section>
 
-        <div className="mt-6 text-center text-xs text-[var(--tema-yerel-giris-yardimci-metin-02)]">
-          © 2026 Cogniti · Tüm hakları saklıdır.
-        </div>
+      <div className={styles.footerBottom}>
+        <p className={styles.copyright}>© 2026 Cogniti · Tüm hakları saklıdır.</p>
+        {gorunum}
       </div>
-    </div>
+    </footer>
   );
 }

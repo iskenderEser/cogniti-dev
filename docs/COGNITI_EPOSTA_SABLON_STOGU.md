@@ -222,13 +222,13 @@ Ortak gövde: varsa adla hitap, aşağıdaki metin, **“Siparişi görüntüle:
 
 | Kod | Durum | Konu | Duruma özel metin |
 | --- | --- | --- | --- |
-| E25 | `beklemede` | Cogniti Store — Siparişiniz alındı | {{siparis_no}} numaralı siparişiniz alındı ve beklemede. Güncel durumu Cogniti üzerinden görüntüleyebilirsiniz. |
-| E26 | `kargoda` | Cogniti Store — Siparişiniz kargoda | {{siparis_no}} numaralı siparişiniz kargoda. Kayıtlı gönderim bilgilerini Cogniti üzerinden görüntüleyebilirsiniz. |
-| E27 | `teslim_edildi` | Cogniti Store — Siparişiniz teslim edildi | {{siparis_no}} numaralı siparişiniz teslim edildi olarak kaydedildi. Ayrıntıları Cogniti üzerinden görüntüleyebilirsiniz. |
-| E28 | `iptal` | Cogniti Store — Siparişiniz iptal edildi | {{siparis_no}} numaralı siparişiniz iptal edildi. İşlem ayrıntılarını Cogniti üzerinden görüntüleyebilirsiniz. |
-| E29 | Genel sipariş gelişmesi | Cogniti Store — Siparişiniz güncellendi | Siparişinizde bir gelişme var. Güncel durumu Cogniti üzerinden görüntüleyebilirsiniz. |
+| E25 | `beklemede` | FirmaStore — Siparişiniz alındı | {{siparis_no}} numaralı siparişiniz alındı ve beklemede. Güncel durumu Cogniti üzerinden görüntüleyebilirsiniz. |
+| E26 | `kargoda` | FirmaStore — Siparişiniz kargoda | {{siparis_no}} numaralı siparişiniz kargoda. Kayıtlı gönderim bilgilerini Cogniti üzerinden görüntüleyebilirsiniz. |
+| E27 | `teslim_edildi` | FirmaStore — Siparişiniz teslim edildi | {{siparis_no}} numaralı siparişiniz teslim edildi olarak kaydedildi. Ayrıntıları Cogniti üzerinden görüntüleyebilirsiniz. |
+| E28 | `iptal` | FirmaStore — Siparişiniz iptal edildi | {{siparis_no}} numaralı siparişiniz iptal edildi. İşlem ayrıntılarını Cogniti üzerinden görüntüleyebilirsiniz. |
+| E29 | Genel sipariş gelişmesi | FirmaStore — Siparişiniz güncellendi | Siparişinizde bir gelişme var. Güncel durumu Cogniti üzerinden görüntüleyebilirsiniz. |
 
-**Alıcı ve kanal:** E25–E28 mevcut HBStore sipariş durumlarına dayalı stoktur; yeni e-posta hedeflemesi onaylanmadı. Sipariş sahibi için içerik hazırlanmıştır. E29 mevcut `store_siparis` push içerik tanımına karşılık gelir; rolüne göre iç kullanıcı veya E-Club Store yüzeyine bağlanır. Bu tanımın bulunması, aktif bir sipariş push tetikleyicisi olduğu anlamına gelmez. HBStore'un dört fiziksel sipariş durumu E-Club hediye çeki süreçlerine taşınmaz.
+**Alıcı ve kanal:** E25–E28 mevcut FirmaStore sipariş durumlarına dayalı stoktur; yeni e-posta hedeflemesi onaylanmadı. Sipariş sahibi için içerik hazırlanmıştır. E29 mevcut `store_siparis` push içerik tanımına karşılık gelir; rolüne göre iç kullanıcı veya E-Club Store yüzeyine bağlanır. Bu tanımın bulunması, aktif bir sipariş push tetikleyicisi olduğu anlamına gelmez. FirmaStore'un dört fiziksel sipariş durumu E-Club hediye çeki süreçlerine taşınmaz.
 
 **Kaynaklar:** `lib/tclub/store/tipler.ts`, `lib/tclub/store/sabitler.ts`, `lib/tclub/store/siparis.ts`, `app/admin/store/api/siparis/route.ts`, `lib/push/icerik.ts`.
 

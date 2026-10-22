@@ -5,8 +5,11 @@ import { createRoot } from "react-dom/client";
 import { GlobalWindow } from "happy-dom";
 import YuruyenRehber from "@/components/rehber/YuruyenRehber";
 import KityVeda from "@/components/rehber/KityVeda";
-import { KITY_URETICI_ADIMLARI, KITY_METINLERI, kityKarsilamasi } from "@/lib/rehber/kityGirisTuru";
 import { rehberKonumu, rehberMerkezi } from "@/components/rehber/konum";
+
+const TUR_METINLERI = { merhaba: "Merhaba, turu başlatmak ister misin?", veda: "Görüşmek üzere." };
+const TUR_ADIMLARI = Array.from({ length: 4 }, (_, i) => ({ hedefId: `ornek-durak-${i}`, baslik: `Durak ${i + 1}`, aciklama: "Örnek rehber alanı." }));
+const turKarsilamasi = (ad: string) => ({ hedefId: "ornek-karsilama", baslik: `Merhaba ${ad}!`, aciklama: TUR_METINLERI.merhaba });
 
 const win = new GlobalWindow({ width: 1366, height: 900 });
 for (const key of Object.getOwnPropertyNames(win)) {
@@ -42,11 +45,11 @@ const adimlar = [
   { hedefId: "hedef-iki", baslik: "İkinci durak", aciklama: "İkinci alan." },
 ];
 
-test("üretici karşılaması karar bekler; Evet dört durağı açar, Hayır vedayla kapanır", async () => {
+test("rehber karşılaması karar bekler; Evet dört durağı açar, Hayır vedayla kapanır", async () => {
   for (const cevap of ["Evet", "Hayır"]) {
     const alan = win.document.createElement("div");
-    const karsilama = kityKarsilamasi("Ayşe");
-    const hedefler = [karsilama, ...KITY_URETICI_ADIMLARI].map((a, i) => {
+    const karsilama = turKarsilamasi("Ayşe");
+    const hedefler = [karsilama, ...TUR_ADIMLARI].map((a, i) => {
       const e = win.document.createElement("div");
       e.id = a.hedefId;
       e.getBoundingClientRect = () => ({ left: 300, top: 100 + i * 80, width: 220, height: 60, right: 520, bottom: 160 + i * 80, x: 300, y: 100 + i * 80, toJSON() {} });
@@ -64,12 +67,12 @@ test("üretici karşılaması karar bekler; Evet dört durağı açar, Hayır ve
     let kapanis = 0;
     try {
       await act(async () => root.render(createElement(YuruyenRehber, {
-        adimlar: KITY_URETICI_ADIMLARI, karsilama, acik: true,
-        onKapat: () => kapanis++, tarayiciSesiKullan: false, vedaMetni: KITY_METINLERI.veda,
+        adimlar: TUR_ADIMLARI, karsilama, acik: true,
+        onKapat: () => kapanis++, tarayiciSesiKullan: false, vedaMetni: TUR_METINLERI.veda,
       })));
       await kareIlerle();
       assert.match(alan.textContent ?? "", /Merhaba Ayşe!/);
-      assert.match(alan.textContent ?? "", /istersen bu ekrandaki bazı başlıkları/);
+      assert.match(alan.textContent ?? "", /Merhaba, turu başlatmak ister misin/);
       assert.equal(otomatikZamanlayici, 0, "Kullanıcı yanıt vermeden tur için zamanlayıcı kurulmaz");
       assert.equal(alan.querySelector(".vurgu"), null);
       const secim = [...alan.querySelectorAll("button")].find(b => b.textContent === cevap);
@@ -80,7 +83,7 @@ test("üretici karşılaması karar bekler; Evet dört durağı açar, Hayır ve
         const duraklat = alan.querySelector<HTMLButtonElement>('[aria-label="Otomatik turu duraklat"]');
         assert.ok(duraklat);
         await act(async () => duraklat.click());
-        for (const [i, durak] of KITY_URETICI_ADIMLARI.entries()) {
+        for (const [i, durak] of TUR_ADIMLARI.entries()) {
           assert.equal(alan.querySelector("h2")?.textContent, durak.baslik);
           assert.match(alan.querySelector(".adimEtiketi")?.textContent ?? "", new RegExp("0" + (i + 1) + " / 04"));
           assert.ok(alan.querySelector(".vurgu"));
@@ -90,7 +93,7 @@ test("üretici karşılaması karar bekler; Evet dört durağı açar, Hayır ve
           await kareIlerle();
         }
       }
-      assert.match(alan.textContent ?? "", /Eğlenceli öğrenmeler dilerim/);
+      assert.match(alan.textContent ?? "", /Görüşmek üzere/);
       await kareIlerle(80);
       assert.equal(kapanis, 1);
     } finally {

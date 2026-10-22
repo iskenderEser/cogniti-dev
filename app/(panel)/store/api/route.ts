@@ -1,6 +1,6 @@
 // app/store/api/route.ts
 //
-// HBStore vitrin endpoint'i.
+// FirmaStore vitrin endpoint'i.
 //
 // GET ?tip=urunler&kategori_id=X  → Aktif ürünler (opsiyonel kategori filtresi)
 // GET ?tip=kategoriler            → Aktif kategoriler
@@ -42,19 +42,19 @@ export async function GET(request: NextRequest) {
     const adminSupabase = createAdminClient();
     const rol = await rolCozucu(adminSupabase, user.id);
     if (!STORE_ALABILEN_ROLLER.includes(rol)) {
-      return rolHatasi("HBStore'a erişim yetkiniz yok.");
+      return rolHatasi("FirmaStore'a erişim yetkiniz yok.");
     }
 
     const firmaBaglami = await hbstoreFirmaBaglami(adminSupabase, user.id);
     if (firmaBaglami.hata) {
       return hataYaniti(
         "Firma bilgisi alınamadı.",
-        "HBStore firma bağlamı",
+        "FirmaStore firma bağlamı",
         firmaBaglami.hata,
       );
     }
     if (!firmaBaglami.firmaId || !firmaBaglami.hbstoreAktif) {
-      return rolHatasi("Firmanız için HBStore kullanıma açık değil.");
+      return rolHatasi("Firmanız için FirmaStore kullanıma açık değil.");
     }
 
     const { searchParams } = new URL(request.url);

@@ -1,5 +1,5 @@
 // tests/hbstoreTakvim.smoke.test.ts
-// HBStore Günleri dönemlik takvim sözleşmesi testi (Tamamlanan Çeyreği Takip Eden Ayın İlk 7 Günü).
+// FirmaStore Günleri dönemlik takvim sözleşmesi testi (Tamamlanan Çeyreği Takip Eden Ayın İlk 7 Günü).
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -81,8 +81,8 @@ test("takvim: durum detayları, sonraki pencere ve kalan süre metinleri doğru 
   assert.equal(durumKapali.sonrakiPencere.etiket, "01.10.2026–07.10.2026");
   assert.equal(durumKapali.sonrakiPencere.donemAdi, "Temmuz–Eylül");
   assert.equal(durumKapali.aktifPencere, null);
-  assert.ok(durumKapali.durumMetni.includes("HBStore Günleri’ne"));
-  assert.ok(durumKapali.navMetni.includes("HBStore Günleri’ne"));
+  assert.ok(durumKapali.durumMetni.includes("FirmaStore Günlerine"));
+  assert.ok(durumKapali.navMetni.includes("FirmaStore Günlerine"));
   assert.ok(durumKapali.bakiyeDonemEtiketi.includes("01.10.2026–07.10.2026 siparişi"));
 
   // 3 Ekim 2026 15:30 (açık — 4 gün 8 sa kaldı)
@@ -91,8 +91,8 @@ test("takvim: durum detayları, sonraki pencere ve kalan süre metinleri doğru 
   assert.equal(durumAcik.sonrakiDonemEtiketi, "01.10.2026–07.10.2026");
   assert.equal(durumAcik.aktifPencere?.etiket, "01.10.2026–07.10.2026");
   assert.equal(durumAcik.aktifPencere?.donemAdi, "Temmuz–Eylül");
-  assert.ok(durumAcik.durumMetni.includes("HBStore Günleri açık"));
-  assert.ok(durumAcik.navMetni.includes("HBStore Açık"));
+  assert.ok(durumAcik.durumMetni.includes("FirmaStore Günleri açık"));
+  assert.ok(durumAcik.navMetni.includes("FirmaStore Açık"));
   assert.ok(durumAcik.bakiyeDonemEtiketi.includes("Temmuz–Eylül (Q3)"));
 
   // 15 Ocak 2027 (kapalı — sonraki pencere 1–7 Nisan 2027)
@@ -129,10 +129,10 @@ test("güvenlik: kapalı dönemde sipariş reddi mesajı sonraki dönemi net iç
   assert.equal(hbstoreSiparisAcikMi(kapaliTarih), false);
 
   const durum = hbstoreTakvimDurumu(kapaliTarih);
-  const beklenenHata = `HBStore şu an siparişe kapalıdır. Siparişler yalnızca HBStore Günleri'nde (${durum.sonrakiDonemEtiketi}) verilebilir.`;
+  const beklenenHata = `FirmaStore şu an siparişe kapalıdır. Siparişler yalnızca FirmaStore Günleri'nde (${durum.sonrakiDonemEtiketi}) verilebilir.`;
 
   assert.ok(beklenenHata.includes("01.10.2026–07.10.2026"));
-  assert.ok(beklenenHata.includes("yalnızca HBStore Günleri"));
+  assert.ok(beklenenHata.includes("yalnızca FirmaStore Günleri"));
 });
 
 test("bağımsızlık: iptal ve teslimat operasyonları takvim kısıtından muaftır", async () => {

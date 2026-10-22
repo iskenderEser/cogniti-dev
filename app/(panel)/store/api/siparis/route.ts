@@ -1,6 +1,6 @@
 // app/store/api/siparis/route.ts
 //
-// HBStore sipariş endpoint'i.
+// FirmaStore sipariş endpoint'i.
 //
 // POST   → Yeni sipariş oluştur. Body: { urun_id, adres_id, adet }
 // PATCH  → Mevcut sipariş üzerinde işlem:
@@ -111,11 +111,11 @@ export async function POST(request: NextRequest) {
       return rolHatasi("Sipariş verme yetkiniz yok.");
     }
 
-    // Sipariş dönemi kontrolü (HBStore Günleri)
+    // Sipariş dönemi kontrolü (FirmaStore Günleri)
     if (!hbstoreSiparisAcikMi()) {
       const durum = hbstoreTakvimDurumu();
       return isKuraluHatasi(
-        `HBStore şu an siparişe kapalıdır. Siparişler yalnızca HBStore Günleri'nde (${durum.sonrakiDonemEtiketi}) verilebilir.`
+        `FirmaStore şu an siparişe kapalıdır. Siparişler yalnızca FirmaStore Günleri'nde (${durum.sonrakiDonemEtiketi}) verilebilir.`
       );
     }
 

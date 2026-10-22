@@ -1,5 +1,6 @@
 "use client";
 
+import { panelBaslangici } from "@/lib/panel/baslangic";
 import EclubGonderimPaneli from "./_components/EclubGonderimPaneli";
 import EclubPlanlananlar from "./_components/EclubPlanlananlar";
 
@@ -65,7 +66,7 @@ function UttEclubVideolarimPage() {
   useEffect(() => {
     if (authYukleniyor) return;
     if (!kullanici) { router.push("/login"); return; }
-    if (!rolUygun) router.push("/ana-sayfa");
+    if (!rolUygun) router.push(panelBaslangici(kullanici.rol).yol);
   }, [kullanici, authYukleniyor, rolUygun, router]);
 
   const gruplar = useMemo(() => ({

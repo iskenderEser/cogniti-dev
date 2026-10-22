@@ -30,8 +30,8 @@ Bu dosya, `ROL_BAZLI_SIDEBAR_URL_INCELEMESI.md` içindeki ilk önerilerden sonra
 | `/yayindaki-videolar/satis` | [/egitim-yayinlari/satis-egitimleri](http://localhost:3000/egitim-yayinlari/satis-egitimleri) |
 | `/yayindaki-videolar/yonetim` | [/egitim-yayinlari/yonetim-egitimleri](http://localhost:3000/egitim-yayinlari/yonetim-egitimleri) |
 | `/yayindaki-videolar/ik` | [/egitim-yayinlari/ik-egitimleri](http://localhost:3000/egitim-yayinlari/ik-egitimleri) |
-| `/eczanem/hapbilgi-nedir` | [/nedir](http://localhost:3000/nedir) |
-| `/hapbilgi-nedir` | [/nedir](http://localhost:3000/nedir) |
+| `/eczanem/hapbilgi-nedir` | [/hakkinda](http://localhost:3000/hakkinda) |
+| `/hapbilgi-nedir` | [/hakkinda](http://localhost:3000/hakkinda) |
 
 ## Korunan kararlar
 
@@ -49,11 +49,11 @@ Bu dosya, `ROL_BAZLI_SIDEBAR_URL_INCELEMESI.md` içindeki ilk önerilerden sonra
 - Eski adresler için yeni yönlendirme eklenmedi. Eğitim ana sayfa kısayolları ilk kategoriye doğrudan bağlandı.
 - Taşınan route klasörleri altındaki API çağrıları, bunların importları, Bi yönlendirmeleri ve firma/rol bekçileri yeni yollarla eşitlendi.
 
-## Nedir bağlantısının kapsamı
+## Cogniti karşılama ve giriş kapsamı — 21 Ekim 2026 son kararı
 
-Kullanıcı ortak bilgi bağlantısı için **tüm rollerde Nedir → /nedir** kararını onayladı. Ortak navbar, mobil drawer, Eczanem navbarı, ilk mobil giriş ve Bi bağlantıları `/nedir` kullanır. Eczanem üyesi kendi navbarı ve mevcut açıklamasıyla; firma ve E-Club kullanıcıları mevcut panel kabuğu ve içerikleriyle açılır. Eczanem üyesinin modül erişim kapısı korunur. Admin için yeni menü eklenmedi; mevcut panel yönlendirmesi korunur. Eski bilgi adresleri için yeni yönlendirme eklenmedi.
+Onaylanan mockup mevcut `/login` sayfasına uygulandı. Cogniti içeriği oturum öncesinde tam sayfa görünür; Giriş Yap aynı sayfada ortalanmış formu açar. “← Cogniti’yi tanıyın” bağlantısı aynı içeriğe döner. Navbar ve mobil menülerdeki Cogniti Hakkında kaldırıldı; ilk mobil giriş de rolün normal ana sayfasını açar. `/hakkinda` adresi kullanıcı kararıyla yönlendirme bırakılmadan kaldırıldı. `/login` oturum açılmış kullanıcıyı mevcut kimlik/firma kontrolünden geçirerek `/admin`, `/ana-sayfa`, `/eclub/ana-sayfa` veya `/eczanem` adresine yönlendirir. Eski `/nedir`, `/nasil-calisir` ve `/eczanem/nasil-calisir` sayfaları geri eklenmedi.
 
-## Doğrulama
+## Önceki URL çalışmasının doğrulaması — 18 Ekim 2026
 
 - `npm run typecheck:build`: başarılı.
 - Yeni URL kontrolleri: bütün rol kümelerinde sidebar hedeflerinin sayfa dosyası bulunuyor; altı eğitim kategorisinde UTT/KD_UTT ile BM/TM/yönetici ekran ayrımı korunuyor; yeni lig adreslerinde kapalı firma modülleri API'yi engelliyor; `/nedir` Eczanem erişim kapısını koruyor.
@@ -62,3 +62,7 @@ Kullanıcı ortak bilgi bağlantısı için **tüm rollerde Nedir → /nedir** k
 - Taşınan CSS dosyası Git'teki önceki içeriğiyle bayt düzeyinde aynı. Font, ölçü ve renk değişikliği yapılmadı.
 - Mevcut `panelNavbarOzet.smoke.test.ts` dosyasındaki bir HBStore metin kontrolü başarısız: test `HBStore Günleri’ne`, değişmemiş takvim kaynağı `HBStore Günlerine` bekliyor/üretiyor. URL değişikliğine bağlı değil; takvim veya bu metin beklentisi değiştirilmedi.
 - Gerçek kullanıcı oturumuyla son ekran ve akış kontrolü kullanıcı tarafından yapıldı ve 18.10.2026 tarihinde doğrulandı. Bu doğrulama kullanıcı bildirimidir; ajan Chrome kullanmadı.
+
+## Üretici başlangıcı — 21 Ekim 2026
+
+Kullanıcı, üretici rollerin Ana Sayfa pill'i ve özel ekran kodunun tamamen kaldırılmasını ve yeni başlangıcın `/yayin-yonetimi` olmasını onayladı. Üreticinin giriş, logo ve genel panel dönüş hedefi Yayın Yönetimi'dir. Ortak `/ana-sayfa` sayfası diğer roller için kalır; üreticinin eski adres ziyareti Yayın Yönetimi'ne yönlenir. Ortak `/ana-sayfa/api` üreticiye 403 döner. Üretim durum push hedefi `/yayin-takip` olur. Diğer kimliklerin rotaları korunur.

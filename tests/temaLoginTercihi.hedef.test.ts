@@ -299,7 +299,7 @@ test("tema okuma hatasında önceki kullanıcının rengi uygulanmaz veya hesaba
   } finally { await ortam.kapat(); }
 });
 
-test("oturumsuz açılış tarayıcının yeşilini korur; hesaba giriş yapmadan tercih kaydı yazılmaz", async () => {
+test("oturumsuz renk seçimi yalnız tarayıcıya kaydolur ve hesaba taşınmaz", async () => {
   const ortam = await temaOrtami({}, "yesil");
   try {
     await ortam.giris(null, true);
@@ -308,8 +308,13 @@ test("oturumsuz açılış tarayıcının yeşilini korur; hesaba giriş yapmada
     await ortam.giris(null);
     assert.equal(ortam.secili(), "yesil");
     await ortam.sec("mavi");
-    assert.equal(ortam.secili(), "yesil", "oturumsuz renk seçimi kabul edilmemeli");
-    assert.equal(ortam.tarayici(), "yesil", "oturumsuz eylem tarayıcı kaydını değiştirmemeli");
+    assert.equal(ortam.secili(), "mavi");
+    assert.equal(ortam.tarayici(), "mavi");
+    await ortam.yenidenAc();
+    assert.equal(ortam.secili(), "mavi");
+    await ortam.sec("yesil");
+    await ortam.giris({ id: "yeni-hesap" });
+    assert.equal(ortam.secili(), "mavi", "tarayıcı seçimi hesaba taşınmamalı");
     assert.equal(ortam.yazmalar.length, 0);
   } finally { await ortam.kapat(); }
 });

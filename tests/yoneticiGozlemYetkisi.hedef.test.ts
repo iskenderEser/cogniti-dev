@@ -143,7 +143,7 @@ test("yasaklı işlem API'leri yönetici isteğini gövde okumadan ve veri yazma
 
 test("Challenge Club doğrudan URL'si BM dışındaki rolü işlem yüzeyi kurmadan geri gönderir", () => {
   once(challengeSayfasi, 'if (r !== "bm")', "setUser(kullanici)");
-  assert.match(challengeSayfasi, /if \(r !== "bm"\) \{\s*router\.replace\("\/ana-sayfa"\);\s*return;/);
+  assert.match(challengeSayfasi, /if \(r !== "bm"\) \{\s*router\.replace\(panelBaslangici\(r\)\.yol\);\s*return;/);
 });
 
 test("Yayın Yönetimi doğrudan URL'si yönetici için veri ve işlem yüzeyini kurmaz", () => {

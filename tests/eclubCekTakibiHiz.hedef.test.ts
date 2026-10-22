@@ -1,3 +1,4 @@
+import * as baslangic from "@/lib/panel/baslangic";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -40,6 +41,7 @@ test("takip dönüşü beklemez; doğrulama sonrası bildirim okunur, iptal iki 
   const searchParams = new URLSearchParams();
   const modules: Record<string, unknown> = {
     react: React, "react/jsx-runtime": jsxRuntime, "next/link": { default: children },
+    "@/lib/panel/baslangic": baslangic,
     "next/navigation": { useRouter: () => router, useSearchParams: () => searchParams },
     "lucide-react": Object.fromEntries(["Check", "CheckCircle2", "Clock3", "Copy", "Gift", "Store", "XCircle"].map(k => [k, empty])),
     "@/app/providers/AuthProvider": { useAuth: () => ({ kullanici, yukleniyor: false }) },

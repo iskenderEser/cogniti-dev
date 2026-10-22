@@ -1,10 +1,11 @@
 // app/(panel)/store/page.tsx
 //
-// HBStore vitrin sayfası. UTT/KD_UTT/BM görür.
+// FirmaStore vitrin sayfası. UTT/KD_UTT/BM görür.
 // Genel site dokusuna (1480px, Nunito, kurumsal stat kartları, modern filtreler) uygun olarak modernize edilmiştir.
 
 "use client";
 
+import { panelBaslangici } from "@/lib/panel/baslangic";
 import { SadeKontrolButonu, SadeKontrolGrubu } from "@/components/kontrol/SadeKontroller";
 
 import { useAuth } from "@/app/providers/AuthProvider";
@@ -183,7 +184,7 @@ export default function StorePage() {
       return;
     }
     if (!STORE_ALABILEN_ROLLER.includes(rolKucu)) {
-      router.push("/ana-sayfa");
+      router.push(panelBaslangici(rolKucu).yol);
       return;
     }
   }, [kullanici, authYukleniyor, rolKucu, router]);
@@ -285,7 +286,7 @@ export default function StorePage() {
         <SayfaYenileBasligi className="flex flex-wrap items-end justify-between gap-4"
           baslik={<div className="inline-flex items-center">
             <h1 className="mt-1 text-2xl font-extrabold tracking-[-0.025em] text-[var(--tema-yerel-magaza-ana-metin-06)] md:text-[28px]">
-              HBStore
+              FirmaStore
             </h1>
             <SayfaRehberi anahtar="store-magaza" className="ml-1.5 -translate-y-1.5" />
           </div>}
@@ -311,16 +312,16 @@ export default function StorePage() {
           </div></>}
         />
 
-        {/* HBStore Günleri Takvim Durumu Bannerı */}
+        {/* FirmaStore Günleri Takvim Durumu Bannerı */}
         {takvim && (takvim.acik ? (
-          <section aria-label="HBStore Günleri Durumu" className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[var(--tema-yerel-magaza-islevsel-cizgi-06)] bg-[var(--tema-yerel-magaza-islevsel-zemin-03)] px-4 py-3 shadow-[0_4px_14px_var(--tema-yerel-magaza-islevsel-golge-01)]">
+          <section aria-label="FirmaStore Günleri Durumu" className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[var(--tema-yerel-magaza-islevsel-cizgi-06)] bg-[var(--tema-yerel-magaza-islevsel-zemin-03)] px-4 py-3 shadow-[0_4px_14px_var(--tema-yerel-magaza-islevsel-golge-01)]">
             <div className="flex items-center gap-2.5">
               <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-[var(--tema-yerel-magaza-islevsel-zemin-11)] text-[var(--tema-yerel-magaza-islevsel-metin-02)]">
                 <Sparkles size={16} />
               </span>
               <div>
                 <div className="flex items-center gap-2">
-                  <strong className="text-xs font-black text-[var(--tema-yerel-magaza-islevsel-metin-02)]">HBStore Günleri Açık</strong>
+                  <strong className="text-xs font-black text-[var(--tema-yerel-magaza-islevsel-metin-02)]">FirmaStore Günleri Açık</strong>
                   <span className="rounded-full bg-[var(--tema-yerel-magaza-islevsel-zemin-12)] px-2 py-0.5 text-[10px] font-extrabold text-[var(--tema-yerel-magaza-ters-metin-01)] shadow-sm">
                     Sipariş Verilebilir
                   </span>
@@ -335,20 +336,20 @@ export default function StorePage() {
             </div>
           </section>
         ) : (
-          <section aria-label="HBStore Günleri Durumu" className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[var(--tema-yerel-magaza-islevsel-cizgi-02)] bg-[var(--tema-yerel-magaza-islevsel-zemin-04)] px-4 py-3 shadow-[0_4px_14px_var(--tema-yerel-magaza-islevsel-golge-02)]">
+          <section aria-label="FirmaStore Günleri Durumu" className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[var(--tema-yerel-magaza-islevsel-cizgi-02)] bg-[var(--tema-yerel-magaza-islevsel-zemin-04)] px-4 py-3 shadow-[0_4px_14px_var(--tema-yerel-magaza-islevsel-golge-02)]">
             <div className="flex items-center gap-2.5">
               <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-[var(--tema-yerel-magaza-islevsel-zemin-13)] text-[var(--tema-yerel-magaza-islevsel-metin-06)]">
                 <ShoppingBag size={16} />
               </span>
               <div>
                 <div className="flex items-center gap-2">
-                  <strong className="text-xs font-black text-[var(--tema-yerel-magaza-islevsel-metin-05)]">HBStore Günleri Kapalı</strong>
+                  <strong className="text-xs font-black text-[var(--tema-yerel-magaza-islevsel-metin-05)]">FirmaStore Günleri Kapalı</strong>
                   <span className="rounded-full bg-[var(--tema-yerel-magaza-islevsel-zemin-14)] px-2 py-0.5 text-[10px] font-extrabold text-[var(--tema-yerel-magaza-ters-metin-01)] shadow-sm">
                     Sonraki: {takvim.sonrakiDonemEtiketi}
                   </span>
                 </div>
                 <p className="mt-0.5 text-xs font-semibold text-[var(--tema-yerel-magaza-islevsel-metin-07)]">
-                  Siparişler yalnızca HBStore Günleri&apos;nde alınır. Açılışa <strong>{takvim.kalanSureMetni}</strong> kaldı. Ürünleri inceleyebilirsiniz.
+                  Siparişler yalnızca FirmaStore Günleri&apos;nde alınır. Açılışa <strong>{takvim.kalanSureMetni}</strong> kaldı. Ürünleri inceleyebilirsiniz.
                 </p>
               </div>
             </div>
@@ -359,7 +360,7 @@ export default function StorePage() {
         ))}
 
         {/* 3'lü Stat Kartları */}
-        <section aria-label="HBStore Durum Özeti" className="grid grid-cols-1 gap-3 md:grid-cols-3">
+        <section aria-label="FirmaStore Durum Özeti" className="grid grid-cols-1 gap-3 md:grid-cols-3">
           <StatKarti
             ikon={Coins}
             etiket={storeAcik ? "Kullanılabilir Puanım" : "Biriken Puanım"}
@@ -370,7 +371,7 @@ export default function StorePage() {
           />
           <StatKarti
             ikon={ShoppingBag}
-            etiket="HBStore Ürünleri"
+            etiket="FirmaStore Ürünleri"
             deger={urunler.length}
             detay="Aktif siparişe açık ürün çeşidi"
             renk="var(--tema-yerel-magaza-eylem-metin-01)"
@@ -445,7 +446,7 @@ export default function StorePage() {
             </p>
           </div>
         ) : (
-          <section aria-label="HBStore Ürün Listesi" className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <section aria-label="FirmaStore Ürün Listesi" className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {filtrelenmisUrunler.map((u) => (
               <UrunKarti
                 key={u.urun_id}

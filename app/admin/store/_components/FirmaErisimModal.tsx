@@ -122,7 +122,7 @@ export default function FirmaErisimModal({ urun, onKapat, hata, basari }: FirmaE
                 <div style={{ minWidth: 0 }}>
                   <div style={{ color: "var(--tema-yerel-yonetim-ana-metin-04)", fontWeight: 700, fontSize: "12px" }}>{firma.firma_adi}</div>
                   <div style={{ color: "var(--tema-yerel-yonetim-yardimci-metin-01)", fontSize: "10px", marginTop: "2px" }}>
-                    {!firma.aktif ? "Firma pasif" : firma.hbstore_aktif ? "HBStore açık" : "HBStore kapalı"}
+                    {!firma.aktif ? "Firma pasif" : firma.hbstore_aktif ? "FirmaStore açık" : "FirmaStore kapalı"}
                   </div>
                 </div>
                 <button

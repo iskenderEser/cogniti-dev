@@ -1,4 +1,4 @@
-// HBStore global ürünlerinin firma bazlı açık/kapalı istisnaları.
+// FirmaStore global ürünlerinin firma bazlı açık/kapalı istisnaları.
 // Ayar satırı yoksa ürün firmaya açıktır; tablo yalnız kapalı istisnaları tutar.
 
 import { NextRequest, NextResponse } from "next/server";
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
     ]);
 
     if (firmaSonucu.error) {
-      return hataYaniti("Firmalar alınamadı.", "firmalar SELECT — HBStore ürün erişimi", firmaSonucu.error);
+      return hataYaniti("Firmalar alınamadı.", "firmalar SELECT — FirmaStore ürün erişimi", firmaSonucu.error);
     }
     if (ayarSonucu.error) {
       return hataYaniti(

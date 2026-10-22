@@ -21,6 +21,7 @@
 
 "use client";
 
+import { panelBaslangici } from "@/lib/panel/baslangic";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowDownRight, ArrowUpRight, Gauge } from "lucide-react";
@@ -257,7 +258,7 @@ export default function CcLigiPage() {
       <div className="max-w-5xl mx-auto px-3 py-3 md:px-4 md:py-6">
         {/* Geri linki */}
         <button
-          onClick={() => router.push("/ana-sayfa")}
+          onClick={() => router.push(panelBaslangici(kullanici?.rol).yol)}
           className="flex items-center gap-1.5 text-xs mb-4 bg-transparent border-none cursor-pointer"
           style={{ color: GRI_METIN, fontFamily: "'Nunito', sans-serif" }}
         >
@@ -275,7 +276,7 @@ export default function CcLigiPage() {
               d="M15 19l-7-7 7-7"
             />
           </svg>
-          Ana Sayfa
+          {panelBaslangici(kullanici?.rol).etiket}
         </button>
 
         {/* Başlık */}

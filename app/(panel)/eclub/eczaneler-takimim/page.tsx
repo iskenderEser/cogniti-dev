@@ -1,5 +1,6 @@
 "use client";
 
+import { panelBaslangici } from "@/lib/panel/baslangic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Building2, Edit3, Gift, LoaderCircle, Plus, Search, Trophy, Users, UserCheck } from "lucide-react";
@@ -96,7 +97,7 @@ function UttEclubEczanelerimPage() {
   useEffect(() => {
     if (authYukleniyor) return;
     if (!kullanici) { router.push("/login"); return; }
-    if (!rolUygun) router.push("/ana-sayfa");
+    if (!rolUygun) router.push(panelBaslangici(kullanici.rol).yol);
     void takimAdiCek();
   }, [kullanici, authYukleniyor, rolUygun, router, takimAdiCek]);
 

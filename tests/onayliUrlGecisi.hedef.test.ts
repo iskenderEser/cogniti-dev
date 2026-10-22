@@ -1,3 +1,4 @@
+import * as baslangic from "@/lib/panel/baslangic";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
@@ -33,6 +34,7 @@ test("tüm rollerin masaüstü ve mobil sidebar hedefleri mevcut sayfalara karş
     }
   }
   tara("app");
+  assert.ok(!routes.includes("/hakkinda"), "Kaldırılan Hakkında adresi sayfa veya yönlendirme sunmamalı");
   for (const rolKucu of [...roller.TUM_ROLLER, ...roller.ECLUB_TUKETICI_ROLLERI]) {
     const ctx = { rolKucu, storeAcik: true, ccAcik: true, eclubAcik: true, eclubStoreAcik: true, eczanemAcik: true };
     function kontrol(oge: NavOge) {
@@ -44,7 +46,7 @@ test("tüm rollerin masaüstü ve mobil sidebar hedefleri mevcut sayfalara karş
     const gruplar = roller.ECLUB_TUKETICI_ROLLERI.includes(rolKucu) ? eclubKisiNavOlustur([]) : mobilPanelNavOlustur(PANEL_NAV, ctx);
     gruplar.forEach(g => g.oglar.forEach(kontrol));
   }
-  for (const old of ["/cc-ligi", "/eclub/ligi", "/eclub/eczanelerim", "/videolar", "/store/siparisler", "/videolarim/[kategori]", "/yayindaki-videolar/[kategori]"]) {
+  for (const old of ["/nedir", "/nasil-calisir", "/eczanem/nasil-calisir", "/cc-ligi", "/eclub/ligi", "/eclub/eczanelerim", "/videolar", "/store/siparisler", "/videolarim/[kategori]", "/yayindaki-videolar/[kategori]"]) {
     assert.ok(!routes.includes(old), old);
   }
 });
@@ -63,6 +65,7 @@ test("altı tam eğitim adresi aynı içerik türünü korur ve rolün mevcut ek
         "@/components/yayin/BmEgitimYayinlari": { default: "katalog-ekrani" },
         "@/lib/video/uttVideoKategorileri": kategoriler,
         "@/lib/utils/roller": roller,
+    "@/lib/panel/baslangic": baslangic,
       });
       const element = exports.default();
       assert.equal(element.type, roller.TUKETICI_ROLLER.includes(rol) ? "utt-ekrani" : "katalog-ekrani");
@@ -83,43 +86,12 @@ test("yeni lig adreslerinde kapalı firma modülleri API erişimini engeller", a
       "@supabase/supabase-js": { createClient: () => ({ from: () => query }) },
       "next/server": { NextResponse: { next: () => ({ status: 200 }), json: (_data: unknown, init: { status: number }) => ({ status: init.status }) } },
       "@/lib/utils/roller": roller,
+    "@/lib/panel/baslangic": baslangic,
       "@/lib/utils/rolCozucu": {},
       "@/lib/eclub/firmaGezinme": {},
       "@/lib/eclub/kisiErisim": {},
       "@/lib/eczanem/erisim": {},
     });
     assert.equal((await exports.proxy({ nextUrl: new URL(`http://localhost${path}`) })).status, 403, path);
-  }
-});
-
-test("ortak /nedir adresi firma rollerine açılır ve Eczanem üyesinin modül kapısını korur", async () => {
-  for (const [rol, acik, expected] of [["musteri", true, 200], ["musteri", false, 307], ["utt", false, 200], ["eczaci", false, 200]] as const) {
-    const exports = yukle("proxy.ts", {
-      "@supabase/ssr": { createServerClient: () => ({ auth: { getUser: async () => ({ data: { user: { id: "u", app_metadata: {} } } }) } }) },
-      "@supabase/supabase-js": { createClient: () => ({}) },
-      "next/server": { NextResponse: { next: () => ({ status: 200 }), redirect: () => ({ status: 307 }) } },
-      "@/lib/utils/roller": roller,
-      "@/lib/utils/rolCozucu": { rolCozucu: async () => rol },
-      "@/lib/eclub/firmaGezinme": {},
-      "@/lib/eclub/kisiErisim": {},
-      "@/lib/eczanem/erisim": { eczanemRolErisimi: async () => ({ ok: true, acik }) },
-    });
-    const url = "http://localhost/nedir";
-    assert.equal((await exports.proxy({ nextUrl: new URL(url), url })).status, expected);
-  }
-});
-
-test("ortak Nedir sayfası Eczanem üyesiyle diğer rollerin mevcut kabuklarını ayırır", () => {
-  for (const kimlik of ["musteri", "kullanici", "eclub_kisi"]) {
-    const exports = yukle("app/nedir/page.tsx", {
-      "react/jsx-runtime": jsxRuntime,
-      "@/app/providers/AuthProvider": { useAuth: () => ({ kullanici: { kimlik_turu: kimlik } }) },
-      "@/app/(panel)/layout": { default: "panel-kabugu" },
-      "@/components/panel/bilgi/BilgiSayfaCercevesi": { default: "bilgi-cercevesi" },
-      "@/components/panel/bilgi/OgrenmeZinciri": { default: "ogrenme-zinciri" },
-      "@/lib/utils/roller": roller,
-      "./_components/EczanemNedir": { default: "eczanem-kabugu" },
-    });
-    assert.equal(exports.default().type, kimlik === "musteri" ? "eczanem-kabugu" : "panel-kabugu");
   }
 });

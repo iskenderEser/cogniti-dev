@@ -6,6 +6,7 @@
 
 "use client";
 
+import { panelBaslangici } from "@/lib/panel/baslangic";
 import { SadeKontrolButonu, SadeKontrolGrubu } from "@/components/kontrol/SadeKontroller";
 
 import { useAuth } from "@/app/providers/AuthProvider";
@@ -183,7 +184,7 @@ export default function ChallengeClubPage() {
     }
     const r = (kullanici.rol ?? "").toLowerCase();
     if (r !== "bm") {
-      router.replace("/ana-sayfa");
+      router.replace(panelBaslangici(r).yol);
       return;
     }
     setUser(kullanici);

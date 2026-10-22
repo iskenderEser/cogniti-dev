@@ -7,7 +7,6 @@
 // "bu talep hangi aşamada, hangi durumda" sorusunu yanıtlar.
 //
 // Neden ortak dosya: aynı soruyu iki ekran soruyor —
-//   • üretici ana sayfası (Yayın Listesi)  → lib/utils/anaSayfa/uretici.ts
 //   • Talepler sayfası (devam eden / iptal ayrımı) → app/talepler/api/route.ts
 // Kaskadı iki yere kopyalamak, iki ekranın zamanla farklı cevap vermesi demektir.
 //

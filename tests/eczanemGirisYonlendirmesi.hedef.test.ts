@@ -1,3 +1,4 @@
+import * as baslangic from "@/lib/panel/baslangic";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -13,6 +14,7 @@ function oturumsuzProxy() {
     "@supabase/supabase-js": { createClient: beklenmeyenSorgu },
     "next/server": { NextResponse: { next: () => new Response(null), redirect: (url: URL) => Response.redirect(url, 307), json: Response.json } },
     "@/lib/utils/roller": roller,
+    "@/lib/panel/baslangic": baslangic,
     "@/lib/utils/rolCozucu": { rolCozucu: beklenmeyenSorgu },
     "@/lib/eclub/firmaGezinme": { eclubFirmaRotasiKapsami: beklenmeyenSorgu },
     "@/lib/eclub/kisiErisim": { eclubKisiErisimi: beklenmeyenSorgu },
@@ -26,7 +28,7 @@ function oturumsuzProxy() {
 
 test("oturumsuz Eczanem sayfaları ortak girişe yönlenir; silinmiş giriş adresine gitmez", async () => {
   const proxy = oturumsuzProxy();
-  for (const path of ["/eczanem", "/eczanem/puanlarim", "/eczanem/nasil-calisir", "/eczanem/eczane", "/eczanem/utt", "/eczanem/bm", "/eczanem/tm"]) {
+  for (const path of ["/eczanem", "/eczanem/puanlarim", "/eczanem/eczane", "/eczanem/utt", "/eczanem/bm", "/eczanem/tm"]) {
     const response = await proxy(path);
     assert.equal(response.status, 307, path);
     assert.equal(response.headers.get("location"), "http://localhost/login", path);

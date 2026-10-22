@@ -1,3 +1,4 @@
+import * as baslangic from "@/lib/panel/baslangic";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -10,7 +11,7 @@ import * as nav from "@/components/panel/panelNav.config";
 import * as roller from "@/lib/utils/roller";
 import { eczanemUyeMenusuOlustur } from "@/app/eczanem/_components/eczanemUyeMenusu";
 
-async function ortam(uye = true, silmeAktif = true) {
+async function ortam(uye = true, silmeAktif = true, rol = "utt") {
   const dom = new Window({ url: `http://localhost${uye ? "/eczanem" : "/ana-sayfa"}` });
   for (const key of ["window", "document", "navigator", "HTMLElement", "HTMLButtonElement", "Element", "Node", "Event", "MouseEvent", "KeyboardEvent"] as const) {
     Object.defineProperty(globalThis, key, { configurable: true, value: dom[key] });
@@ -26,6 +27,7 @@ async function ortam(uye = true, silmeAktif = true) {
     react: React, "react/jsx-runtime": jsxRuntime,
     "next/navigation": { usePathname: () => uye ? "/eczanem" : "/ana-sayfa", useRouter: () => router },
     "./panelNav.config": nav, "@/lib/utils/roller": roller,
+    "@/lib/panel/baslangic": baslangic,
     "./tema-secici.module.css": { default: new Proxy({}, { get: (_, key) => String(key) }) },
     "@/app/providers/TemaProvider": { useTema: () => ({ tema, temaDegistir: (secim: string) => { tema = secim; renkler.push(secim); } }) },
     "@/app/providers/AuthProvider": { useAuth: () => ({ kullanici: { id: "uye", ad: "Örnek", adSoyad: "Örnek Üye", email: "uye@example.invalid", rol: "musteri", kimlik_turu: "musteri", telefon: "00000001234" }, yukleniyor: false, cikisYap }) },
@@ -61,7 +63,7 @@ async function ortam(uye = true, silmeAktif = true) {
   const root = createRoot(container);
   const render = () => act(async () => root.render(uye
     ? React.createElement(Baglanti, { gruplar: eczanemUyeMenusuOlustur(), onHesapSil: silmeAktif ? () => { silmeler++; } : undefined }, React.createElement("h1", null, "Üye içeriği"))
-    : React.createElement(Kabuk, { navbar: { adSoyad: "İç Kullanıcı", onCikis: cikisYap }, gruplar: [], badge: {}, baglam: { rolKucu: "utt", kimlikTuru: "kullanici", storeAcik: false, ccAcik: false, eclubAcik: false, eclubStoreAcik: false, eczanemAcik: false } }, "İçerik")));
+    : React.createElement(Kabuk, { navbar: { adSoyad: "İç Kullanıcı", onCikis: cikisYap, anaSayfaYolu: baslangic.panelBaslangici(rol).yol, bilgiPilleri: roller.URETICI_ROLLER.includes(rol) ? [] : undefined }, gruplar: [], badge: {}, baglam: { rolKucu: rol, kimlikTuru: "kullanici", storeAcik: false, ccAcik: false, eclubAcik: false, eclubStoreAcik: false, eczanemAcik: false } }, "İçerik")));
   return {
     dom, container, yollar, renkler, istekler, render,
     silmeler: () => silmeler, cikislar: () => cikislar,
@@ -73,17 +75,17 @@ async function ortam(uye = true, silmeAktif = true) {
   };
 }
 
-test("ortak kabukta üyenin üç navbar bağlantısı ve gerçek renk anahtarı çalışır", async () => {
+test("ortak kabukta üyenin ana sayfa bağlantısı ve gerçek renk anahtarı çalışır", async () => {
   const o = await ortam();
   try {
     await o.render();
     assert.equal(o.container.querySelectorAll("#kity-navbar").length, 1);
     assert.equal(o.container.querySelectorAll("[data-panel-sidebar]").length, 1);
-    for (const [etiket, yol] of [["Ana Sayfa", "/eczanem"], ["Nedir", "/nedir"], ["Nasıl Çalışır", "/eczanem/nasil-calisir"]]) {
+    for (const [etiket, yol] of [["Ana Sayfa", "/eczanem"]]) {
       await o.click([...o.navbar().querySelectorAll("button")].find(el => el.textContent === etiket));
       assert.equal(o.yollar.at(-1), yol);
     }
-    assert.equal([...o.navbar().querySelectorAll("button")].some(el => el.textContent === "Puanlarım"), false);
+    assert.equal([...o.navbar().querySelectorAll("button")].some(el => ["Nedir", "Nasıl Çalışır", "Puanlarım", "Cogniti Hakkında"].includes(el.textContent ?? "")), false);
     assert.match(o.container.querySelector("[data-panel-sidebar]")!.textContent!, /Puanlarım/);
     await o.click(o.navbar().querySelector('[role="switch"]'));
     await o.render();
@@ -94,14 +96,14 @@ test("ortak kabukta üyenin üç navbar bağlantısı ve gerçek renk anahtarı 
   } finally { await o.kapat(); }
 });
 
-test("ortak mobil menü üyenin Nasıl Çalışır adresine gider; çıkışta menü kapanır", async () => {
+test("ortak mobil menü üyenin ana sayfasına gider; çıkışta menü kapanır", async () => {
   const o = await ortam();
   try {
     await o.render();
     await o.click(o.navbar().querySelector('[aria-label="Menü"]'));
     assert.ok(o.drawer());
-    await o.click([...o.drawer()!.querySelectorAll("button")].find(el => el.textContent === "Nasıl Çalışır"));
-    assert.equal(o.yollar.at(-1), "/eczanem/nasil-calisir");
+    await o.click([...o.drawer()!.querySelectorAll("button")].find(el => el.textContent === "Ana Sayfa"));
+    assert.equal(o.yollar.at(-1), "/eczanem");
     assert.equal(o.drawer(), undefined);
     await o.click(o.navbar().querySelector('[aria-label="Menü"]'));
     await o.click([...o.drawer()!.querySelectorAll("button")].find(el => el.textContent?.trim() === "Çıkış"));
@@ -166,7 +168,7 @@ test("iç kullanıcının ortak navbarında varsayılan bilgi ve profil adresler
   const o = await ortam(false);
   try {
     await o.render();
-    for (const [etiket, yol] of [["Ana Sayfa", "/ana-sayfa"], ["Nasıl Çalışır", "/nasil-calisir"]]) {
+    for (const [etiket, yol] of [["Ana Sayfa", "/ana-sayfa"]]) {
       await o.click([...o.navbar().querySelectorAll("button")].find(el => el.textContent === etiket));
       assert.equal(o.yollar.at(-1), yol);
     }
@@ -174,7 +176,24 @@ test("iç kullanıcının ortak navbarında varsayılan bilgi ve profil adresler
     assert.equal(o.yollar.at(-1), "/profil");
     assert.equal(o.navbar().querySelector('[role="menu"]'), null);
     await o.click(o.navbar().querySelector('[aria-label="Menü"]'));
-    await o.click([...o.drawer()!.querySelectorAll("button")].find(el => el.textContent === "Nasıl Çalışır"));
-    assert.equal(o.yollar.at(-1), "/nasil-calisir");
+    await o.click([...o.drawer()!.querySelectorAll("button")].find(el => el.textContent === "Ana Sayfa"));
+    assert.equal(o.yollar.at(-1), "/ana-sayfa");
   } finally { await o.kapat(); }
 });
+
+for (const rol of roller.TUM_ROLLER) {
+  test(`${rol}: masaüstü ve mobil Ana Sayfa görünürlüğü, logo hedefi`, async () => {
+    const o = await ortam(false, true, rol);
+    try {
+      await o.render();
+      const uretici = roller.URETICI_ROLLER.includes(rol);
+      const anaSayfaSayisi = (alan: Element) => [...alan.querySelectorAll("button")].filter(el => el.textContent === "Ana Sayfa").length;
+      assert.equal(anaSayfaSayisi(o.navbar()), uretici ? 0 : 1);
+      await o.click(o.navbar().querySelector("#kity-karsilama"));
+      assert.equal(o.yollar.at(-1), uretici ? "/yayin-yonetimi" : "/ana-sayfa");
+      await o.click(o.navbar().querySelector('[aria-label="Menü"]'));
+      assert.ok(o.drawer());
+      assert.equal(anaSayfaSayisi(o.drawer()!), uretici ? 0 : 1);
+    } finally { await o.kapat(); }
+  });
+}

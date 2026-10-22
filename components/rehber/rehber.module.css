@@ -25,8 +25,6 @@
 .geri:disabled { opacity: .35; }
 .ileri { padding: 0 12px; background: #324f43; color: #fff; border: 0; }
 .balon button:focus-visible { outline: 2px solid #a0784d; outline-offset: 3px; }
-.tercih { display: flex; align-items: center; gap: 7px; margin-top: 10px; padding-top: 8px; border-top: 1px solid #e0d6c6; font-size: 11px; color: #68766e; cursor: pointer; }
-.tercih input { accent-color: #324f43; }
 .vedaKarakteri { background-image: url('/rehber/kity-veda.png'); background-size: 400% 100%; }
 .vedaMesaji { position: fixed; margin: 0; transform: translateX(-50%); width: min(430px, calc(100vw - 32px)); text-align: center; font-size: 14px; font-weight: 700; color: #355545; text-shadow: 0 1px 8px #fffefb; }
 .vedaMesaji > span { display: block; margin-top: 4px; color: #967346; font-size: 10px; letter-spacing: 1.5px; font-weight: 600; }

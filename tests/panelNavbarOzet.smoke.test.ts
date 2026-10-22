@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import test from "node:test";
-import { PANEL_NAV, type NavContext } from "@/components/panel/panelNav.config";
+import { PANEL_NAV, mobilPanelNavOlustur, type NavContext } from "@/components/panel/panelNav.config";
 import { STORE_ALABILEN_ROLLER } from "@/lib/utils/roller";
 
 const kok = process.cwd();
@@ -21,10 +21,10 @@ test("UTT navbar özeti yalnızca takım sırası ve sipariş puanını taşır"
   assert.match(navbar, /Takım Sırası:/);
   assert.match(navbar, /Sipariş:/);
   assert.match(navbar, /router\.push\("\/store"\)/);
-  assert.match(navbar, />\s*HBStore\s*<\/button>/);
+  assert.match(navbar, />\s*FirmaStore\s*<\/button>/);
   assert.match(navbar, /\{hbStoreGoster && \(/);
   assert.match(layout, /hbStoreGoster: !isEclubKisi && etkinFlags\.storeAcik && STORE_ALABILEN_ROLLER\.includes\(rolKucu\)/);
-  assert.match(storeSayfasi, /<h1[^>]*>\s*HBStore\s*<\/h1>/);
+  assert.match(storeSayfasi, /<h1[^>]*>\s*FirmaStore\s*<\/h1>/);
   assert.doesNotMatch(navbar, /Haftalık:/);
   assert.doesNotMatch(navbar, /haftalikPuan/);
 
@@ -36,14 +36,14 @@ test("UTT navbar özeti yalnızca takım sırası ve sipariş puanını taşır"
   assert.match(profilApi, /siparis_puani/);
 });
 
-test("HBStore navbar girişi yalnız kişisel sipariş verebilen rollere açılır", () => {
+test("FirmaStore navbar girişi yalnız kişisel sipariş verebilen rollere açılır", () => {
   assert.deepEqual(STORE_ALABILEN_ROLLER, ["utt", "kd_utt", "bm"]);
   for (const rol of ["tm", "pm", "gm", "admin", "iu"]) {
     assert.ok(!STORE_ALABILEN_ROLLER.includes(rol));
   }
 });
 
-test("HBStore adı rehber ve BM menüsünde tutarlı kalır", () => {
+test("FirmaStore adı rehber ve BM menüsünde tutarlı kalır", () => {
   const rehber = oku("lib/rehber/sayfaRehberi.ts");
   const storeSayfasi = oku("app/(panel)/store/page.tsx");
   const siparislerimSayfasi = oku("app/(panel)/store/siparislerim/page.tsx");
@@ -63,37 +63,37 @@ test("HBStore adı rehber ve BM menüsünde tutarlı kalır", () => {
     eclubStoreAcik: false,
     eczanemAcik: false,
   };
-  const cclub = PANEL_NAV.find((grup) => grup.baslik === "C-Club");
-  assert.ok(cclub);
+  const storeGrubu = mobilPanelNavOlustur(PANEL_NAV, bmBaglami).find((grup) => grup.baslik === "FirmaStore");
+  assert.ok(storeGrubu);
 
-  const bmEtiketleri = cclub.oglar
+  const bmEtiketleri = storeGrubu.oglar
     .filter((oge) => !oge.gate || oge.gate(bmBaglami))
     .map((oge) => oge.etiket);
 
-  assert.match(hbStoreRehberi, /baslik: "HBStore"/);
-  assert.match(hbStoreRehberi, /baslik: "HBStore Günleri"/);
-  assert.match(hbStoreRehberi, /HBStore açıkken/);
-  assert.match(hbStoreRehberi, /HBStore kapalıyken/);
+  assert.match(hbStoreRehberi, /baslik: "FirmaStore"/);
+  assert.match(hbStoreRehberi, /baslik: "FirmaStore Günleri"/);
+  assert.match(hbStoreRehberi, /FirmaStore açıkken/);
+  assert.match(hbStoreRehberi, /FirmaStore kapalıyken/);
   assert.doesNotMatch(hbStoreRehberi, /Mağazam/);
   assert.doesNotMatch(hbStoreRehberi, /Mağaza/);
-  assert.match(storeSayfasi, /HBStore Günleri Açık/);
-  assert.match(storeSayfasi, /HBStore Günleri Kapalı/);
-  assert.match(storeSayfasi, /Siparişler yalnızca HBStore Günleri/);
+  assert.match(storeSayfasi, /FirmaStore Günleri Açık/);
+  assert.match(storeSayfasi, /FirmaStore Günleri Kapalı/);
+  assert.match(storeSayfasi, /Siparişler yalnızca FirmaStore Günleri/);
   assert.doesNotMatch(storeSayfasi, /verebilrisiniz|Mağaza/);
-  assert.match(siparislerimSayfasi, /HBStore&apos;a Dön/);
-  assert.match(siparislerimSayfasi, /HBStore&apos;dan/);
+  assert.match(siparislerimSayfasi, /FirmaStore&apos;a Dön/);
+  assert.match(siparislerimSayfasi, /FirmaStore&apos;dan/);
   assert.doesNotMatch(siparislerimSayfasi, /Mağaza/);
-  assert.match(adreslerimSayfasi, /HBStore&apos;dan/);
+  assert.match(adreslerimSayfasi, /FirmaStore&apos;dan/);
   assert.doesNotMatch(adreslerimSayfasi, /Mağaza/);
-  assert.match(urunDetaySayfasi, /HBStore Günleri Kapalı/);
-  assert.match(urunDetaySayfasi, /HBStore&apos;a Dön/);
-  assert.doesNotMatch(urunDetaySayfasi, /Mağaza|(?<!HB)Store Günleri/);
-  assert.match(siparisApi, /yalnızca HBStore Günleri'nde/);
-  assert.doesNotMatch(siparisApi, /(?<!HB)Store Günleri/);
-  assert.match(hbstoreTakvimi, /HBStore Günleri açık/);
-  assert.match(hbstoreTakvimi, /HBStore Günleri’ne/);
-  assert.doesNotMatch(hbstoreTakvimi, /(?<!HB)Store Günleri|(?<!HB)Store Açık/);
-  assert.ok(bmEtiketleri.includes("HBStore"));
+  assert.match(urunDetaySayfasi, /FirmaStore Günleri Kapalı/);
+  assert.match(urunDetaySayfasi, /FirmaStore&apos;a Dön/);
+  assert.doesNotMatch(urunDetaySayfasi, /Mağaza|(?<!Firma)Store Günleri/);
+  assert.match(siparisApi, /yalnızca FirmaStore Günleri'nde/);
+  assert.doesNotMatch(siparisApi, /(?<!Firma)Store Günleri/);
+  assert.match(hbstoreTakvimi, /FirmaStore Günleri açık/);
+  assert.match(hbstoreTakvimi, /FirmaStore Günlerine/);
+  assert.doesNotMatch(hbstoreTakvimi, /(?<!Firma)Store Günleri|(?<!Firma)Store Açık/);
+  assert.ok(bmEtiketleri.includes("FirmaStore"));
   assert.ok(!bmEtiketleri.includes("Mağazam"));
 });
 

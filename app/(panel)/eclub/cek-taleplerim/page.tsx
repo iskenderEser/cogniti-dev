@@ -1,5 +1,6 @@
 "use client";
 
+import { panelBaslangici } from "@/lib/panel/baslangic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -80,7 +81,7 @@ export default function EclubCekTaleplerimPage() {
   useEffect(() => {
     if (authYukleniyor) return;
     if (!kullanici) { router.replace("/login"); return; }
-    if (!eclubKisi) { router.replace("/ana-sayfa"); return; }
+    if (!eclubKisi) { router.replace(panelBaslangici(kullanici.rol).yol); return; }
     void talepleriCek(true);
     return () => { istekSirasi.current += 1; };
   }, [kullanici, authYukleniyor, eclubKisi, router, talepleriCek]);

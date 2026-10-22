@@ -5,6 +5,7 @@
 
 "use client";
 
+import { panelBaslangici } from "@/lib/panel/baslangic";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -91,7 +92,7 @@ export default function SiparislerimPage() {
 
     const r = kullanici.rol.toLowerCase();
     if (!STORE_ALABILEN_ROLLER.includes(r)) {
-      router.push("/ana-sayfa");
+      router.push(panelBaslangici(kullanici.rol).yol);
       return;
     }
 
@@ -258,7 +259,7 @@ export default function SiparislerimPage() {
               href="/store"
               className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--tema-yerel-magaza-cizgi-07)] bg-[var(--tema-yerel-magaza-kart-01)] px-3.5 py-2 text-xs font-extrabold text-[var(--tema-yerel-magaza-ana-metin-07)] shadow-sm transition-colors hover:bg-[var(--tema-yerel-magaza-sayfa-zemini-05)]"
             >
-              <ShoppingBag size={14} /> HBStore&apos;a Dön
+              <ShoppingBag size={14} /> FirmaStore&apos;a Dön
             </Link>
             <Link
               href="/store/adreslerim"
@@ -274,7 +275,7 @@ export default function SiparislerimPage() {
             ikon={Package}
             etiket="Toplam Siparişim"
             deger={ozet.toplam}
-            detay="HBStore'dan verilen tüm siparişler"
+            detay="FirmaStore'dan verilen tüm siparişler"
             renk="var(--tema-yerel-magaza-eylem-metin-01)"
             zemin="var(--tema-yerel-magaza-secim-zemin-04)"
           />
@@ -315,13 +316,13 @@ export default function SiparislerimPage() {
             </span>
             <h3 className="mt-3 text-sm font-extrabold text-[var(--tema-yerel-magaza-ana-metin-01)]">Henüz siparişiniz yok</h3>
             <p className="mt-1 max-w-sm text-xs font-semibold text-[var(--tema-yerel-magaza-yardimci-metin-08)]">
-              HBStore&apos;dan puanlarınızla ürün seçip ilk siparişinizi hemen oluşturabilirsiniz.
+              FirmaStore&apos;dan puanlarınızla ürün seçip ilk siparişinizi hemen oluşturabilirsiniz.
             </p>
             <Link
               href="/store"
               className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-[var(--tema-yerel-magaza-eylem-zemin-01)] px-4 py-2 text-xs font-extrabold text-[var(--tema-yerel-magaza-ters-metin-01)] shadow-sm hover:bg-[var(--tema-yerel-magaza-eylem-zemin-02)]"
             >
-              HBStore&apos;a Git
+              FirmaStore&apos;a Git
             </Link>
           </div>
         ) : (

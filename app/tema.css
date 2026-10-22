@@ -69,9 +69,10 @@
   --tema-secici-dolgu: color-mix(in srgb, #f9fafb 95%, #000 5%);
   --tema-ust-menu-pill-zemin: rgba(0,0,0,0.04);
   --tema-ust-menu-pill-cizgi: rgba(0,0,0,0.08);
-  --tema-ust-menu-pill-secili-zemin: #fef2f2;
-  --tema-ust-menu-pill-secili-cizgi: #fecaca;
-  --tema-ust-menu-pill-hover: rgba(188,45,13,0.07);
+  --tema-ust-menu-pill-secili-metin: var(--tema-eylem);
+  --tema-ust-menu-pill-secili-zemin: var(--tema-secili);
+  --tema-ust-menu-pill-secili-cizgi: var(--tema-menu-secili-halka);
+  --tema-ust-menu-pill-hover: color-mix(in srgb, var(--tema-eylem) 7%, transparent);
   --tema-ust-menu-logo-ayirici: var(--color-slate-200);
   --tema-ust-menu-ayirici: var(--color-gray-200);
   --tema-ust-menu-ozet-ayirici: #d1d5db;
@@ -80,6 +81,21 @@
   --tema-gezinme-avatar-zemin: #d4d4d4;
   --tema-gezinme-avatar-cizgi: #c9c9c9;
   --tema-mobil-menu-ayirici: #f0f0f0;
+
+  /* Hakkında: mevcut mavi tasarım ve ortak yeşil palet karşılıkları. */
+  --tema-hakkinda-baslik: #091c46;
+  --tema-hakkinda-aciklama: #65748e;
+  --tema-hakkinda-vurgu: #338eed;
+  --tema-hakkinda-cizgi: #e5edf8;
+  --tema-hakkinda-simge-zemin: #f0f6ff;
+  --tema-hakkinda-adim-cizgi: #bad7fb;
+  --tema-hakkinda-isik-baslangic: #d7e6ff;
+  --tema-hakkinda-isik-orta: #e8f1ff;
+  --tema-hakkinda-isik-son: #f9fbff;
+  --tema-hakkinda-hat-baslangic: #4f9fff;
+  --tema-hakkinda-hat-orta: #75b2ff;
+  --tema-hakkinda-hat-son: #9bc8ff;
+  --tema-hakkinda-nokta: #63a9f8;
 }
 
 [data-tema="yesil"] {
@@ -149,6 +165,7 @@
   --tema-secici-dolgu: #f3f1e6;
   --tema-ust-menu-pill-zemin: color-mix(in srgb, var(--tema-vurgu) 4%, transparent);
   --tema-ust-menu-pill-cizgi: color-mix(in srgb, var(--tema-vurgu) 8%, transparent);
+  --tema-ust-menu-pill-secili-metin: var(--tema-vurgu);
   --tema-ust-menu-pill-secili-zemin: var(--tema-secili);
   --tema-ust-menu-pill-secili-cizgi: var(--tema-cizgi);
   --tema-ust-menu-pill-hover: color-mix(in srgb, var(--tema-vurgu) 7%, transparent);
@@ -160,6 +177,21 @@
   --tema-gezinme-avatar-zemin: var(--tema-bilgi-zemini);
   --tema-gezinme-avatar-cizgi: var(--tema-cizgi);
   --tema-mobil-menu-ayirici: var(--tema-cizgi);
+
+  /* Hakkında: mevcut mavi tasarım ve ortak yeşil palet karşılıkları. */
+  --tema-hakkinda-baslik: var(--tema-baslik);
+  --tema-hakkinda-aciklama: var(--tema-ikincil-metin);
+  --tema-hakkinda-vurgu: var(--tema-eylem);
+  --tema-hakkinda-cizgi: var(--tema-cizgi);
+  --tema-hakkinda-simge-zemin: var(--tema-secili);
+  --tema-hakkinda-adim-cizgi: var(--tema-menu-secili-halka);
+  --tema-hakkinda-isik-baslangic: color-mix(in srgb, var(--tema-eylem) 16%, var(--tema-yuzey));
+  --tema-hakkinda-isik-orta: var(--tema-secili);
+  --tema-hakkinda-isik-son: var(--tema-zemin);
+  --tema-hakkinda-hat-baslangic: var(--tema-eylem);
+  --tema-hakkinda-hat-orta: var(--tema-eylem);
+  --tema-hakkinda-hat-son: var(--tema-eylem);
+  --tema-hakkinda-nokta: var(--tema-eylem);
 }
 
 :root,
@@ -1803,7 +1835,6 @@
   --tema-yerel-ana-sayfa-islevsel-metin-11: #6d28d9;
   --tema-yerel-ana-sayfa-islevsel-zemin-09: #fff7ed;
   --tema-yerel-ana-sayfa-islevsel-metin-12: #c2410c;
-  --tema-yerel-ana-sayfa-islevsel-metin-13: #bc2d0d;
   --tema-yerel-ana-sayfa-islevsel-metin-14: #15803d;
   --tema-yerel-ana-sayfa-golge-01: rgba(0,0,0,0.08);
   --tema-yerel-ana-sayfa-ortu-01: rgba(0,0,0,0.5);
@@ -3000,8 +3031,6 @@
   --tema-yerel-ana-sayfa-cizgi-08: #dfe7f1;
   --tema-yerel-ana-sayfa-yardimci-metin-06: #9ca3af;
   --tema-yerel-ana-sayfa-cizgi-09: #e5e7eb;
-  --tema-yerel-ana-sayfa-yardimci-metin-07: var(--color-gray-200);
-  --tema-yerel-ana-sayfa-cizgi-10: var(--color-gray-100);
   --tema-yerel-ana-sayfa-sayfa-zemini-03: var(--color-gray-200);
   --tema-yerel-ana-sayfa-ana-metin-04: var(--color-gray-600);
   --tema-yerel-ana-sayfa-cizgi-11: var(--color-gray-300);
@@ -4295,8 +4324,6 @@
   --tema-yerel-ana-sayfa-cizgi-08: var(--tema-cizgi);
   --tema-yerel-ana-sayfa-yardimci-metin-06: var(--tema-ikincil-metin);
   --tema-yerel-ana-sayfa-cizgi-09: var(--tema-cizgi);
-  --tema-yerel-ana-sayfa-yardimci-metin-07: var(--tema-ikincil-metin);
-  --tema-yerel-ana-sayfa-cizgi-10: var(--tema-cizgi);
   --tema-yerel-ana-sayfa-sayfa-zemini-03: var(--tema-bilgi-zemini);
   --tema-yerel-ana-sayfa-ana-metin-04: var(--tema-metin);
   --tema-yerel-ana-sayfa-cizgi-11: var(--tema-cizgi);

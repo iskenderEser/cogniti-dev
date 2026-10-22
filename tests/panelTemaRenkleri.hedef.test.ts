@@ -107,14 +107,17 @@ test("bütün tanımlı rollerde üst/sol/mobil menü yüzeyleri iki temanın or
         for (const element of [sidebar, drawer]) assert.equal(window.getComputedStyle(element).backgroundColor, renk(window, "--tema-yan-zemin"), `${rolKucu}/${tema}/menu`);
         const bilgiPilleri = Array.from(navbar.querySelectorAll("button"));
         const aktifPill = bilgiPilleri.find(button => button.textContent === "Ana Sayfa")!;
-        const pasifPill = bilgiPilleri.find(button => button.textContent === "Nedir")!;
-        assert.equal(window.getComputedStyle(aktifPill).color, renk(window, "--tema-vurgu"));
+        assert.equal(bilgiPilleri.some(button => button.textContent === "Cogniti Hakkında"), false);
+        assert.equal(window.getComputedStyle(aktifPill).color, renk(window, "--tema-ust-menu-pill-secili-metin"));
+        assert.equal(temaDegeri(tema, "--tema-ust-menu-pill-secili-metin"), tema === "mavi" ? "#2563eb" : "#355545");
+        assert.equal(temaDegeri(tema, "--tema-ust-menu-pill-secili-zemin"), tema === "mavi" ? "#eff6ff" : "#edf2e7");
+        assert.equal(temaDegeri(tema, "--tema-ust-menu-pill-secili-cizgi"), tema === "mavi" ? "rgba(86,174,255,0.35)" : "#dfe3d7");
+        assert.equal(temaDegeri(tema, "--tema-ust-menu-pill-hover"), `color-mix(in srgb, ${tema === "mavi" ? "#2563eb" : "#355545"} 7%, transparent)`);
         assert.equal(window.getComputedStyle(aktifPill).backgroundColor, renk(window, "--tema-ust-menu-pill-secili-zemin"));
-        assert.equal(window.getComputedStyle(pasifPill).color, renk(window, "--tema-gezinme-metin"));
         const mobilAktif = Array.from(drawer.querySelectorAll("button")).find(button => button.textContent === "Ana Sayfa")!;
         assert.equal(window.getComputedStyle(mobilAktif).color, renk(window, "--tema-menu-secili-metin"));
         for (const rozet of window.document.querySelectorAll('span[style*="min-width:18px"]')) assert.equal(window.getComputedStyle(rozet).backgroundColor, renk(window, "--tema-vurgu"));
-        const store = window.document.querySelector('[aria-label="HBStore\'u aç"]');
+        const store = window.document.querySelector('[aria-label="FirmaStore\'u aç"]');
         assert.equal(Boolean(store), roller.STORE_ALABILEN_ROLLER.includes(rolKucu));
         if (store) assert.match(window.getComputedStyle(store).backgroundImage, /#ff9a1f/);
       }
@@ -140,7 +143,7 @@ test("aktif öğe ve rozet doğru temayı alır; iç içe mavi kapsam geri döne
   } finally { await window.happyDOM.close(); }
 });
 
-test("HBStore kimliği ve mobil örtü/gölge iki temada aynıdır; Tailwind mavi tonları kaybolmaz", async () => {
+test("FirmaStore kimliği ve mobil örtü/gölge iki temada aynıdır; Tailwind mavi tonları kaybolmaz", async () => {
   const window = ortam("");
   try {
     const fixed = ["--tema-hbstore-vurgu", "--tema-mobil-menu-ortu", "--tema-mobil-menu-golge"];

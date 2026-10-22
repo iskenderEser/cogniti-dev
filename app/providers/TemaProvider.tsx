@@ -87,16 +87,16 @@ export function TemaProvider({ children }: { children: ReactNode }) {
   }, [kullaniciId, yukleniyor, uygula]);
 
   const temaDegistir = useCallback((yeniTema: Tema) => {
-    if (!kullaniciId || yukleniyor) return;
+    if (yukleniyor) return;
     uygula(yeniTema);
     try {
       // Yalnız açık seçim login görünümünü günceller; hesap okuması güncellemez.
       window.localStorage.setItem(TARAYICI_TEMA_ANAHTARI, yeniTema);
     } catch {
-      // Tarayıcı depolaması kapalı olsa da hesap tercihi sunucuda kaydedilir.
+      // Tarayıcı depolaması kapalı olsa da seçilen görünüm uygulanır.
     }
     const surum = ++degisimRef.current;
-    kaydet(kullaniciId, yeniTema, surum);
+    if (kullaniciId) kaydet(kullaniciId, yeniTema, surum);
   }, [kullaniciId, yukleniyor, uygula, kaydet]);
 
   return <TemaContext.Provider value={{ tema, temaDegistir }}>{children}</TemaContext.Provider>;

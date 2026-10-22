@@ -1,6 +1,6 @@
 // app/admin/_components/global/HbStorePaneli.tsx
 //
-// M2-b — HBStore yönetiminin ana panele gömülü hâli (plan A.1'deki YETİM
+// M2-b — FirmaStore yönetiminin ana panele gömülü hâli (plan A.1'deki YETİM
 // sayfanın taşınması). Eski /admin/store sayfasının kabuksuz içeriği:
 // auth ve hata konteyneri ana panelin işidir. Global bağlamdır (katalog
 // globaldir; ürün satırındaki Firma Erişimi yalnız firma bazlı kapatma
@@ -35,7 +35,7 @@ export default function HbStorePaneli({ hata, basari }: HbStorePaneliProps) {
   return (
     <div>
       <h2 style={{ fontSize: "16px", fontWeight: 700, color: "var(--tema-yerel-yonetim-ana-metin-01)", marginBottom: "16px" }}>
-        HBStore Yönetimi <span style={{ fontSize: "12px", fontWeight: 600, color: "var(--tema-yerel-yonetim-yardimci-metin-01)" }}>(global — tüm firmalar)</span>
+        FirmaStore Yönetimi <span style={{ fontSize: "12px", fontWeight: 600, color: "var(--tema-yerel-yonetim-yardimci-metin-01)" }}>(global — tüm firmalar)</span>
       </h2>
       <SekmeBari aktifSekme={aktifSekme} setAktifSekme={setAktifSekme} />
 

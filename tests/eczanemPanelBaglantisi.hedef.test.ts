@@ -1,3 +1,4 @@
+import * as baslangic from "@/lib/panel/baslangic";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -41,6 +42,7 @@ async function ortam() {
   const router = { replace: (yol: string) => yonlendirmeler.push(yol) };
   const modules: Record<string, unknown> = {
     react: React, "react/jsx-runtime": jsxRuntime,
+    "@/lib/panel/baslangic": baslangic,
     "next/navigation": { useRouter: () => router },
     "@/app/providers/AuthProvider": { useAuth: () => auth },
     "@/lib/utils/roller": { MUSTERI_ROLU },

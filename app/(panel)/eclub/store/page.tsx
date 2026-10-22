@@ -1,5 +1,6 @@
 "use client";
 
+import { panelBaslangici } from "@/lib/panel/baslangic";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
@@ -80,7 +81,7 @@ export default function EclubStorePage() {
       router.replace("/login");
       return;
     }
-    if (!eclubKisi) router.replace("/ana-sayfa");
+    if (!eclubKisi) router.replace(panelBaslangici(kullanici.rol).yol);
   }, [authYukleniyor, kullanici, eclubKisi, router]);
 
   useEffect(() => {

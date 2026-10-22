@@ -26,10 +26,10 @@ function sabitYollar(gruplar: ReturnType<typeof mobilPanelNavOlustur>) {
   );
 }
 
-test("mobil HBStore grubu UTT, KD_UTT ve BM için C-Club bayrağından bağımsız ve tekil görünür", () => {
+test("mobil FirmaStore grubu UTT, KD_UTT ve BM için C-Club bayrağından bağımsız ve tekil görünür", () => {
   for (const rolKucu of ["utt", "kd_utt", "bm"]) {
     const mobilNav = mobilPanelNavOlustur(PANEL_NAV, { ...temelBaglam, rolKucu });
-    const hbstoreIndexi = mobilNav.findIndex((grup) => grup.baslik === "HBStore");
+    const hbstoreIndexi = mobilNav.findIndex((grup) => grup.baslik === "FirmaStore");
     const eczanemIndexi = mobilNav.findIndex((grup) => grup.baslik === "Eczanem");
     const hbstore = mobilNav[hbstoreIndexi];
 
@@ -47,20 +47,20 @@ test("mobil HBStore grubu UTT, KD_UTT ve BM için C-Club bayrağından bağıms�
   const drawer = fs.readFileSync(path.join(process.cwd(), "components/panel/MobilDrawer.tsx"), "utf8");
   assert.match(drawer, /mobilPanelNavOlustur\(props\.gruplar \?\? PANEL_NAV, props\)/);
   assert.match(drawer, /minHeight: "44px"/);
-  assert.match(drawer, /grup\.baslik === "HBStore" \? "var\(--tema-hbstore-vurgu\)"/);
+  assert.match(drawer, /grup\.baslik === "FirmaStore" \? "var\(--tema-hbstore-vurgu\)"/);
   assert.match(drawer, /router\.push\(path\); props\.onKapat\(\)/);
 });
 
-test("mobil HBStore grubu kapalı mağazada ve yetkisiz rollerde görünmez", () => {
+test("mobil FirmaStore grubu kapalı mağazada ve yetkisiz rollerde görünmez", () => {
   const kapaliMagaza = mobilPanelNavOlustur(PANEL_NAV, { ...temelBaglam, storeAcik: false });
-  assert.equal(kapaliMagaza.some((grup) => grup.baslik === "HBStore"), false);
+  assert.equal(kapaliMagaza.some((grup) => grup.baslik === "FirmaStore"), false);
   for (const storeYolu of kisiselStoreYollari) {
     assert.equal(sabitYollar(kapaliMagaza).includes(storeYolu), false);
   }
 
   for (const rolKucu of ["tm", "pm", "gm", "admin", "iu"]) {
     const mobilNav = mobilPanelNavOlustur(PANEL_NAV, { ...temelBaglam, rolKucu });
-    assert.equal(mobilNav.some((grup) => grup.baslik === "HBStore"), false);
+    assert.equal(mobilNav.some((grup) => grup.baslik === "FirmaStore"), false);
     for (const storeYolu of kisiselStoreYollari) {
       assert.equal(sabitYollar(mobilNav).includes(storeYolu), false);
     }

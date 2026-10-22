@@ -1,3 +1,4 @@
+import * as baslangic from "@/lib/panel/baslangic";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -52,6 +53,7 @@ test("admin kapanış yanıtı iki anahtarı birlikte günceller; yeniden açıl
   const kullanici = { rol: "admin", firma_id: null };
   const moduller: Record<string, unknown> = {
     react: React,
+    "@/lib/panel/baslangic": baslangic,
     "next/navigation": { useRouter: () => ({ replace: () => {} }) },
     "@/app/providers/AuthProvider": { useAuth: () => ({ kullanici, yukleniyor: false, cikisYap: () => {} }) },
     "@/components/HataMesaji": { useHataMesaji: () => ({ mesajlar: [], hata: (metin: string) => hatalar.push(metin), basari: () => {} }) },

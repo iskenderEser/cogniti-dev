@@ -1,3 +1,4 @@
+import { panelBaslangici } from "@/lib/panel/baslangic";
 import { redirect } from "next/navigation";
 import { createAdminClient, createClient } from "@/lib/supabase/server";
 import { rolCozucu } from "@/lib/utils/rolCozucu";
@@ -11,7 +12,7 @@ export default async function EczanemBmMutabakatTakipPage() {
   if (error || !user) redirect("/login");
 
   const rol = await rolCozucu(adminSupabase, user.id);
-  if (rol !== "bm") redirect("/ana-sayfa");
+  if (rol !== "bm") redirect(panelBaslangici(rol).yol);
 
   return <BmMutabakatTakipClient />;
 }

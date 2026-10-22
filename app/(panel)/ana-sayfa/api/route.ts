@@ -2,14 +2,13 @@
 import { NextResponse } from "next/server";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { sunucuHatasi, yetkiHatasi, rolHatasi, validasyonHatasi } from "@/lib/utils/hataIsle";
-import { IU_ROLU, TUKETICI_ROLLER, URETICI_ROLLER, YONETICI_ROLLER } from "@/lib/utils/roller";
+import { IU_ROLU, TUKETICI_ROLLER, YONETICI_ROLLER } from "@/lib/utils/roller";
 import { getBmAnaSayfaIstatistikleri, type BmStatSecimi } from "@/lib/utils/anaSayfa/bm";
 import { OGRENME_ARACI_TURLERI } from "@/lib/ogrenmeAraci/tipler";
 import { PERIYOTLAR } from "@/lib/utils/raporUtils";
 import { getUttAnaSayfaVeri } from "@/lib/utils/anaSayfa/utt";
 import { getTmAnaSayfaIstatistikleri, type TmStatSecimi } from "@/lib/utils/anaSayfa/tm";
 import { getIuAnaSayfaVeri } from "@/lib/utils/anaSayfa/iu";
-import { getUreticiAnaSayfaVeri } from "@/lib/utils/anaSayfa/uretici";
 import { getYoneticiAnaSayfaVeri } from "@/lib/utils/anaSayfa/yonetici";
 import { getAnaSayfaVideolari, getSahaAnaSayfaVideolari, getTmAnaSayfaYayinlari } from "@/lib/video/anaSayfaVideolari";
 import { rolCozucu } from "@/lib/utils/rolCozucu";
@@ -64,8 +63,7 @@ export async function GET(request: Request) {
       veriSozu = getUttAnaSayfaVeri(user.id, adminSupabase);
     } else if (rol === IU_ROLU) {
       veriSozu = getIuAnaSayfaVeri(user.id, adminSupabase) as unknown as Promise<Record<string, unknown>>;
-    } else if (URETICI_ROLLER.includes(rol)) {
-      veriSozu = getUreticiAnaSayfaVeri(user.id, adminSupabase);
+
     } else if (YONETICI_ROLLER.includes(rol)) {
       veriSozu = getYoneticiAnaSayfaVeri(user.id, adminSupabase);
     } else {
@@ -82,7 +80,7 @@ export async function GET(request: Request) {
 
     // Yalnız-izleme rolleri için ana sayfa video listesini ekle.
     // UTT/KD_UTT kendi video verisini (getUttAnaSayfaVeri) kullanmaya devam eder.
-    // getAnaSayfaVideolari, video görmeyen roller (İK, IU) için boş dizi döndürür → bölüm çıkmaz.
+    // İçerik Üreticisi için video listesi boştur; üretici rolleri bu API'ye erişmez.
     const videoSozu = !TUKETICI_ROLLER.includes(rol)
       ? rol === "bm"
         ? getSahaAnaSayfaVideolari(user.id, rol, adminSupabase)
