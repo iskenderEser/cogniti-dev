@@ -1,18 +1,25 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { yayinDetayModaliGorebilir } from "@/lib/utils/roller";
 import type { AracTuruRaporSatiri, AracRaporDetayKapsami, AracYayinSayfasi } from "@/lib/rapor/paylasilan/aracTuruDagilimi";
-import { Video, Headphones, Image as ImageIcon, BookOpen, Users, Sparkles, ExternalLink, Info } from "lucide-react";
+import { Video, Headphones, Image as ImageIcon, BookOpen, Sparkles, ExternalLink, Info } from "lucide-react";
 import YayinDetayModal from "./YayinDetayModal";
+import styles from "./OgrenmeAraciPerformansi.module.css";
 
 const ADLAR: Record<AracTuruRaporSatiri["arac_turu"], string> = {
   video: "Video",
   podcast: "Podcast",
   gorsel: "Dijital Broşür",
   flip_pdf: "Literatür",
+};
+
+const TUKETIM_ADLARI: Record<AracTuruRaporSatiri["arac_turu"], string> = {
+  video: "İzleme",
+  podcast: "Dinleme",
+  gorsel: "İnceleme",
+  flip_pdf: "Okuma",
 };
 
 const ARAC_TEMASI: Record<
@@ -66,22 +73,17 @@ const ROL_ADLARI: Record<string, string> = {
   diger: "Diğer Roller",
 };
 
-const ROL_KISA_ADLARI: Record<string, string> = {
-  utt: "UTT",
-  kd_utt: "KD-UTT",
-  temsilci: "UTT",
-  bm: "BM",
-  tm: "TM",
-  eczaci: "Eczacı",
-  ikinci_eczaci: "2. Eczacı",
-  yardimci_eczaci: "Yrd. Eczacı",
-  eczane_teknisyeni: "Teknisyen",
-  teknisyen: "Teknisyen",
-  musteri: "Danışan",
-  eczanem: "Danışan",
-  yonetici: "Yönetici",
-  diger: "Diğer",
-};
+const ROL_SATIRLARI = [
+  [
+    { ad: "UTT", roller: ["utt", "kd_utt", "temsilci"] },
+    { ad: "BM", roller: ["bm"] },
+  ],
+  [
+    { ad: "Eczacı", roller: ["eczaci", "ikinci_eczaci", "yardimci_eczaci"] },
+    { ad: "Ecz.Tekn.", roller: ["eczane_teknisyeni", "teknisyen"] },
+    { ad: "Danışan", roller: ["musteri", "eczanem"] },
+  ],
+];
 
 const oran = (deger: number | null) => deger === null ? "—" : `%${deger.toLocaleString("tr-TR")}`;
 const sayi = (deger: number) => (deger ?? 0).toLocaleString("tr-TR");
@@ -89,10 +91,12 @@ const sayi = (deger: number) => (deger ?? 0).toLocaleString("tr-TR");
 export default function OgrenmeAraciPerformansi({
   dagilim,
   periyotBasligi = "Seçili Dönem",
+  aciklama,
   detayKapsami,
 }: {
   dagilim?: AracTuruRaporSatiri[];
   periyotBasligi?: string;
+  aciklama?: string;
   detayKapsami?: AracRaporDetayKapsami;
 }) {
   const { kullanici } = useAuth();
@@ -113,127 +117,91 @@ export default function OgrenmeAraciPerformansi({
       {/* Header */}
       <div className="border-b border-[var(--tema-yerel-rapor-cizgi-12)] px-4 py-3 sm:px-5 sm:py-3.5">
         <h2 className="text-base font-extrabold text-[var(--tema-yerel-rapor-ana-metin-20)]">Öğrenme Aracı Performansı</h2>
+        {aciklama && (
+          <p className="mt-0.5 text-[11px] font-medium text-[var(--tema-yerel-rapor-yardimci-metin-08)]">{aciklama}</p>
+        )}
       </div>
 
-      {/* 4 Format Kartı */}
-      <div className="grid grid-cols-1 gap-3.5 p-4 sm:grid-cols-2 lg:grid-cols-4 sm:p-5">
+      {/* HTML mockup'taki dört araç kartı; mevcut SQL değerleri kullanılır. */}
+      <div className={styles.grid}>
         {dagilim.map((satir) => {
           const tema = ARAC_TEMASI[satir.arac_turu];
           const Icon = tema.icon;
-          const rollerListesi = Object.entries(satir.roller ?? {}).filter(
-            ([_, m]) => (m.tamamlama ?? 0) > 0 || (m.baslatma ?? 0) > 0 || (m.kazanilan_puan ?? 0) > 0
-          );
-          const tamamlamaOrani =
-            satir.baslatma > 0
-              ? Math.min(100, Math.round((satir.tamamlama / satir.baslatma) * 100))
-              : null;
+          const tamamlamaOrani = satir.tamamlama_orani ?? null;
           const netPuanYuzdesi =
             toplamTumAraclarNetPuan > 0 && satir.net_kazanilan_puan > 0
               ? Math.round((satir.net_kazanilan_puan / toplamTumAraclarNetPuan) * 100)
               : null;
 
           return (
-            <div
-              key={satir.arac_turu}
-              className="flex flex-col justify-between rounded-2xl border border-[var(--tema-yerel-rapor-cizgi-09)] bg-[var(--tema-yerel-rapor-sayfa-zemini-17)] p-4 transition-all hover:border-[var(--tema-yerel-rapor-cizgi-44)] hover:shadow-[0_6px_20px_var(--tema-yerel-rapor-golge-15)]"
-            >
-              <div>
-                {/* Kart Üst Başlığı */}
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <span
-                      className="flex h-9 w-9 items-center justify-center rounded-xl"
-                      style={{ backgroundColor: tema.acikRenk, color: tema.renk }}
-                    >
-                      <Icon className="h-4.5 w-4.5" />
-                    </span>
-                    <strong className="text-sm font-extrabold text-[var(--tema-yerel-rapor-ana-metin-07)]">
-                      {ADLAR[satir.arac_turu]}
-                    </strong>
+            <article key={satir.arac_turu} className={styles.article + " " + styles[satir.arac_turu]} aria-label={ADLAR[satir.arac_turu] + " · " + periyotBasligi}>
+              <header className={styles.head}>
+                <h3>{ADLAR[satir.arac_turu]}</h3>
+                <Icon aria-hidden="true" />
+              </header>
+              <div className={styles.content}>
+                <div className={styles.eyebrow}>{periyotBasligi}</div>
+                <div className={styles.hero}>
+                  <div>
+                    <div className={styles.big} data-metrik="tamamlama">{sayi(satir.tamamlama)}</div>
+                    <div className={styles.label}>Tamamlanan</div>
                   </div>
-                  <span className={`rounded-full px-2.5 py-0.5 text-[10px] font-extrabold ${tema.badgeRenk}`}>
-                    {sayi(satir.yayin_sayisi)} Yeni Yayın · {periyotBasligi}
-                  </span>
-                </div>
-
-                {/* Ana Rakam: Toplam Tüketim */}
-                <div className="rounded-xl border border-[var(--tema-yerel-rapor-cizgi-34)] bg-[var(--tema-yerel-rapor-kart-04)] p-3 mb-3">
-                  <div className="text-[10px] font-extrabold uppercase tracking-wide text-[var(--tema-yerel-rapor-yardimci-metin-64)]">
-                    {periyotBasligi} Kümülatif Tüketim
-                  </div>
-                  <div className="mt-0.5 flex items-baseline justify-between">
-                    <strong className="text-2xl font-black tabular-nums text-[var(--tema-yerel-rapor-ana-metin-07)]">
-                      {sayi(satir.tamamlama)}
-                    </strong>
-                    {tamamlamaOrani !== null && (
-                      <span className="text-[11px] font-extrabold text-[var(--tema-yerel-rapor-islevsel-metin-06)]">
-                        %{tamamlamaOrani} Tamamlama
-                      </span>
-                    )}
-                  </div>
-                  <div className="mt-1 flex items-center justify-between text-[10px] font-medium text-[var(--tema-yerel-rapor-yardimci-metin-65)]">
-                    <span>{sayi(satir.baslatma)} Başlatma</span>
-                    <span>Yeni yayın puanı: {sayi(satir.kayitli_arac_puani)} p</span>
+                  <div
+                    className={styles.ring}
+                    style={{ background: "conic-gradient(var(--yapka-accent) " + ((tamamlamaOrani ?? 0) * 3.6) + "deg, var(--yapka-soft) 0)" }}
+                    role="img"
+                    aria-label={tamamlamaOrani === null ? "Tamamlanma oranı: veri yok" : "Tamamlanma oranı: yüzde " + tamamlamaOrani}
+                  >
+                    <div className={styles.ringCenter} data-metrik="tamamlama_orani">{oran(tamamlamaOrani)}</div>
                   </div>
                 </div>
-
-                {/* Puan Dengesi (Kazanılan / Kaybedilen / Net Puan + % Payı) */}
-                <div className="rounded-xl border border-[var(--tema-yerel-rapor-cizgi-34)] bg-[var(--tema-yerel-rapor-kart-04)] p-2.5 mb-3">
-                  <div className="flex items-center justify-between text-[10px] font-bold text-[var(--tema-yerel-rapor-yardimci-metin-14)] mb-1">
-                    <span>{periyotBasligi} Oluşan Puan</span>
-                    <div className="flex items-center gap-1.5">
-                      {netPuanYuzdesi !== null && (
-                        <span className="rounded bg-[var(--tema-yerel-rapor-secim-zemin-01)] px-1.5 py-0.5 text-[9px] font-extrabold text-[var(--tema-yerel-rapor-eylem-metin-06)]" title="Tüm araçların net puanı içindeki payı">
-                          %{netPuanYuzdesi} Pay
-                        </span>
-                      )}
-                      <strong className="text-xs font-black text-[var(--tema-yerel-rapor-eylem-metin-06)]">
-                        {sayi(satir.net_kazanilan_puan)} p Net
-                      </strong>
-                    </div>
+                <div className={styles.mini}>
+                  <div>
+                    <b data-metrik="toplam_yayin_sayisi">{satir.toplam_yayin_sayisi == null ? "—" : sayi(satir.toplam_yayin_sayisi)}</b>
+                    <div className={styles.label}>Toplam içerik</div>
                   </div>
-                  <div className="flex items-center justify-between text-[10px] font-extrabold pt-1 border-t border-[var(--tema-yerel-rapor-cizgi-45)]">
-                    <span className="text-[var(--tema-yerel-rapor-islevsel-metin-06)]">+{sayi(satir.kazanilan_puan)}</span>
-                    <span className="text-[var(--tema-yerel-rapor-islevsel-metin-07)]">−{sayi(satir.kaybedilen_puan)}</span>
+                  <div>
+                    <b data-metrik="baslatma">{sayi(satir.baslatma)}</b>
+                    <div className={styles.label}>Başlatılan</div>
                   </div>
                 </div>
-
-                {/* Rol Tüketim Önizlemesi */}
-                {rollerListesi.length > 0 ? (
-                  <div className="mb-2">
-                    <div className="text-[10px] font-extrabold uppercase tracking-wider text-[var(--tema-yerel-rapor-yardimci-metin-08)] mb-1.5 flex items-center gap-1">
-                      <Users className="h-3 w-3" />
-                      <span>ROL TÜKETİM SAYILARI</span>
+                <section className={styles.points} aria-label="Puan Katkısı">
+                  <div className={styles.scoreTop}>
+                    <div>
+                      <span>Net puan</span>
+                      <b data-metrik="net_kazanilan_puan" className={satir.net_kazanilan_puan < 0 ? styles.negative : undefined}>{sayi(satir.net_kazanilan_puan)}</b>
                     </div>
-                    <div className="flex flex-wrap gap-1">
-                      {rollerListesi.slice(0, 3).map(([rol, m]) => {
-                        const rolKisa = ROL_KISA_ADLARI[rol] ?? rol.toUpperCase();
-                        const rolAdi = ROL_ADLARI[rol] ?? rol;
-                        return (
-                          <span
-                            key={rol}
-                            className="inline-flex items-center gap-1 rounded-md bg-[var(--tema-yerel-rapor-secim-zemin-14)] px-2 py-0.5 text-[10px] font-bold text-[var(--tema-yerel-rapor-ana-metin-21)]"
-                            title={`${rolAdi}: ${sayi(m.tamamlama)} tamamlama`}
-                          >
-                            <span>{rolKisa}</span>
-                            <strong className="text-[var(--tema-yerel-rapor-ana-metin-07)]">{sayi(m.tamamlama)}</strong>
-                          </span>
-                        );
-                      })}
-                      {rollerListesi.length > 3 && (
-                        <span className="rounded-md bg-[var(--tema-yerel-rapor-secim-zemin-14)] px-1.5 py-0.5 text-[10px] font-bold text-[var(--tema-yerel-rapor-yardimci-metin-64)]">
-                          +{rollerListesi.length - 3}
-                        </span>
-                      )}
+                    <div className={styles.success} title="Tüm araçların pozitif net puanları içindeki pay.">
+                      <span>Başarı</span>
+                      <b data-metrik="basari">{oran(netPuanYuzdesi)}</b>
                     </div>
                   </div>
-                ) : (
-                  <div className="text-[10px] font-medium text-[var(--tema-yerel-rapor-yardimci-metin-66)] italic py-1 mb-2">
-                    Dönemde henüz tüketim kaydı yok.
+                  <div className={styles.scoreBottom}>
+                    <div><span>Kazanılan</span><b data-metrik="kazanilan_puan">{sayi(satir.kazanilan_puan)}</b></div>
+                    <span className={styles.separator} aria-hidden="true">|</span>
+                    <div><span>Kaybedilen</span><b data-metrik="kaybedilen_puan" className={satir.kaybedilen_puan > 0 ? styles.negative : undefined}>{sayi(satir.kaybedilen_puan)}</b></div>
+                    <span className={styles.separator} aria-hidden="true">|</span>
+                    <div title="Seçili dönemde yayına açılmış ve hâlen yayında olan yayınların tanımlı öğrenme aracı puanları toplamı.">
+                      <span>Potansiyel</span><b data-metrik="potansiyel_puan">{satir.potansiyel_puan == null ? "—" : sayi(satir.potansiyel_puan)}</b>
+                    </div>
                   </div>
-                )}
+                </section>
+                <section className={styles.audience} aria-label={TUKETIM_ADLARI[satir.arac_turu] + " Sayıları"}>
+                  <div className={styles.audienceTitle}>{TUKETIM_ADLARI[satir.arac_turu]} Sayıları</div>
+                  <div className={styles.allRoles}>
+                    {ROL_SATIRLARI.flat().map((grup) => {
+                      const toplam = grup.roller.reduce((adet, rol) => adet + (satir.roller?.[rol]?.tamamlama ?? 0), 0);
+                      return (
+                        <div key={grup.ad} className={styles.roleCell} data-rol={grup.ad}>
+                          <div className={styles.roleName}>{grup.ad}</div>
+                          <b>{sayi(toplam)}</b>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </section>
               </div>
-            </div>
+            </article>
           );
         })}
       </div>

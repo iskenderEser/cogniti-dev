@@ -277,7 +277,7 @@ test('prefetch yeni Temsilci kapsamına yazar; hata geçerli önbelleği veya T�
   const istekler: string[] = [];
   let mod: 'utt' | 'tumu' | 'http-hatasi' | 'ag-hatasi' = 'utt';
   dom.sessionStorage.setItem('hb_uretim_raporu_v2_p1_bu_ay_utt', JSON.stringify(onbellekRaporu(9999)));
-  dom.sessionStorage.setItem('hb_uretim_raporu_v3_p1_bu_ay_tumu', JSON.stringify(onbellekRaporu(100)));
+  dom.sessionStorage.setItem('hb_uretim_raporu_v6_p1_bu_ay_tumu', JSON.stringify(onbellekRaporu(100)));
   const cache = yukle<OnbellekModulu>('app/(panel)/raporlar/yayin-raporlari/_hooks/uretimRaporuOnbellek.ts', {}, {
     window: dom, sessionStorage: dom.sessionStorage,
     fetch: async (url: string) => {
@@ -301,7 +301,7 @@ test('prefetch yeni Temsilci kapsamına yazar; hata geçerli önbelleği veya T�
     mod = 'tumu';
     assert.equal((await cache.prefetchUretimRaporu('bu_ay', 'p1'))?.uretim.turler[0].adet, 200);
     assert.match(istekler[istekler.length - 1], /rapor_rolu=tumu/);
-    assert.equal(JSON.parse(dom.sessionStorage.getItem('hb_uretim_raporu_v3_p1_bu_ay_tumu')!).uretim.turler[0].adet, 200);
+    assert.equal(JSON.parse(dom.sessionStorage.getItem('hb_uretim_raporu_v6_p1_bu_ay_tumu')!).uretim.turler[0].adet, 200);
     assert.equal(cache.getUretimRaporuOnbellek('bu_ay', 'p1', 'utt')?.uretim.turler[0].adet, 5);
   } finally { await dom.happyDOM.close(); }
 });
@@ -320,6 +320,11 @@ test('sayfa, hook ve önbellek: iki kartın rol/dönem verileri, hata ve geciken
   const hook = yukle<Record<string, unknown>>('app/(panel)/raporlar/yayin-raporlari/_hooks/useUretimRaporu.ts', { react: React, './uretimRaporuOnbellek': cache },
     { fetch: (url: string, options: { signal: AbortSignal }) => new Promise<Response>((cevapla) => istekler.push({ url, signal: options.signal, cevapla })) });
   const bos = () => null;
+  const { default: KonuKarti } = yukle<typeof import("@/components/raporlar/YayinKonuPerformansi")>("components/raporlar/YayinKonuPerformansi.tsx", {
+    react: React, "react/jsx-runtime": jsxRuntime, "lucide-react": { X: bos },
+    "@/lib/utils/raporUtils": { formatPuan: (n: number) => n.toLocaleString("tr-TR") },
+    "./YayinKonuPerformansi.module.css": { default: new Proxy({}, { get: (_target, key) => String(key) }) },
+  });
   const { default: Page } = yukle<{ default: React.ComponentType }>('app/(panel)/raporlar/yayin-raporlari/page.tsx', {
     react: React, 'react/jsx-runtime': jsxRuntime, 'next/link': { default: bos },
     'lucide-react': { ArrowLeft: bos, BookOpenCheck: bos, Layers: bos, X: bos },
@@ -329,7 +334,8 @@ test('sayfa, hook ve önbellek: iki kartın rol/dönem verileri, hata ve geciken
     '@/components/ui/yenile-butonu': { YenileButonu: ({ onYenile }: { onYenile: () => void }) => React.createElement('button', { onClick: onYenile }, 'Yenile') },
     '@/components/raporlar/RaporPeriyotSecici': { default: ({ onDegistir }: { onDegistir: (x: string) => void }) => React.createElement('button', { onClick: () => onDegistir('bu_yil') }, 'Yıllık test') },
     '@/lib/utils/raporUtils': { formatPuan: String }, '@/components/rehber/SayfaRehberi': { default: bos },
-    '@/components/rehber/UretimVaryantlariModal': { default: bos },
+    '@/components/rehber/UretimVaryantlariModal': { default: ({ acik, onKapat }: { acik: boolean; onKapat: () => void }) => acik ? React.createElement('button', { onClick: onKapat }, 'Varyant rehberi kapat') : null },
+    '@/components/raporlar/YayinKonuPerformansi': { default: KonuKarti },
     '@/components/raporlar/OgrenmeAraciPerformansi': { default: ({ detayKapsami }: { detayKapsami?: { raporRolu: string } }) => React.createElement('span', {}, 'Araç rapor rolü: ' + detayKapsami?.raporRolu) },
     '@/lib/uretici/yetenekler': { ureticiYetenegi: () => ({ acabilecegiTalepTurleri: ['urun_egitimi'] }) },
     '../utt/utt-report.module.css': { default: {} }, './yayin-raporlari.module.css': { default: {} },
@@ -349,14 +355,23 @@ test('sayfa, hook ve önbellek: iki kartın rol/dönem verileri, hata ve geciken
     await act(async () => root.render(React.createElement(Page)));
     assert.match(son().url, /periyot=bu_ay&rapor_rolu=tumu/);
     await act(async () => son().cevapla(cevap(100)));
-    assert.match(metin(), /100 Yayın/);
+    assert.match(metin(), /100 yayın/);
     assert.match(metin(), /Sentetik Ürün 100/);
     await sec('Temsilci');
-    assert.doesNotMatch(metin(), /100 Yayın/);
+    assert.doesNotMatch(metin(), /100 yayın/);
     assert.doesNotMatch(metin(), /Sentetik Ürün 100|Sentetik Ürün 777/);
     assert.match(son().url, /rapor_rolu=utt/);
     await act(async () => son().cevapla(cevap(10)));
-    assert.match(metin(), /10 Yayın/); assert.match(metin(), /%25/); assert.match(metin(), /%75/);
+    assert.match(metin(), /10 yayın/); assert.match(metin(), /%25/); assert.match(metin(), /%75/);
+    const varyantlar = [...container.querySelectorAll('[data-varyant]')];
+    assert.deepEqual(varyantlar.map((v) => v.getAttribute('data-varyant')), ['normal','hazir_video']);
+    assert.deepEqual(varyantlar.map((v) => v.querySelector('[role="progressbar"]')!.getAttribute('aria-valuenow')), ['25','75']);
+    assert.deepEqual(varyantlar.map((v) => v.querySelector('[role="progressbar"]')!.firstElementChild!.getAttribute('style')), ['width: 25%;','width: 75%;']);
+    const rehber = container.querySelector('button[aria-label="Üretim varyantlarını göster"]')!;
+    await act(async () => (rehber as unknown as HTMLButtonElement).click());
+    assert.match(metin(), /Varyant rehberi kapat/);
+    await sec('Varyant rehberi kapat');
+    assert.doesNotMatch(metin(), /Varyant rehberi kapat/);
     assert.match(metin(), /Sentetik Ürün 10/);
     await sec('Yıllık test');
     const geciken = son();
@@ -364,73 +379,73 @@ test('sayfa, hook ve önbellek: iki kartın rol/dönem verileri, hata ve geciken
     assert.equal(geciken.signal.aborted, true);
     const tumuYillik = son();
     await act(async () => geciken.cevapla(cevap(999)));
-    assert.doesNotMatch(metin(), /999 Yayın/);
+    assert.doesNotMatch(metin(), /999 yayın/);
     assert.doesNotMatch(metin(), /Sentetik Ürün 999/);
     assert.equal(cache.getUretimRaporuOnbellek('bu_yil', 'p1', 'utt'), null);
     await act(async () => tumuYillik.cevapla(cevap(200)));
     await sec('Temsilci');
-    assert.doesNotMatch(metin(), /200 Yayın/);
+    assert.doesNotMatch(metin(), /200 yayın/);
     assert.doesNotMatch(metin(), /Sentetik Ürün 200|Sentetik Ürün 888/);
     await act(async () => son().cevapla(Response.json({ success: false, hata: 'Temsilci verisi okunamadı' }, { status: 500 })));
     assert.match(metin(), /Temsilci verisi okunamadı/);
     assert.doesNotMatch(metin(), /Sentetik Ürün 200|Sentetik Ürün 888/);
-    await sec('Tümü'); assert.match(metin(), /200 Yayın/);
+    await sec('Tümü'); assert.match(metin(), /200 yayın/);
     await sec('Temsilci'); await act(async () => son().cevapla(cevap(20)));
-    assert.match(metin(), /20 Yayın/);
+    assert.match(metin(), /20 yayın/);
     assert.match(metin(), /Sentetik Ürün 20/);
     await sec('Yenile'); assert.match(son().url, /periyot=bu_yil&rapor_rolu=utt/);
     await act(async () => son().cevapla(cevap(21)));
-    assert.match(metin(), /21 Yayın/);
+    assert.match(metin(), /21 yayın/);
     assert.match(metin(), /Sentetik Ürün 21/);
     await sec('Yenile');
     await act(async () => son().cevapla(Response.json({ success: false, hata: 'Sentetik yenileme hatası' }, { status: 500 })));
     assert.match(metin(), /Sentetik Ürün 21/);
     assert.doesNotMatch(metin(), /Sentetik Ürün 200|Sentetik Ürün 888/);
     await sec('BM'); assert.match(son().url, /periyot=bu_yil&rapor_rolu=bm/);
-    assert.doesNotMatch(metin(), /Sentetik Ürün 21|21 Yayın/);
+    assert.doesNotMatch(metin(), /Sentetik Ürün 21|21 yayın/);
     await act(async () => son().cevapla(cevap(70)));
-    assert.match(metin(), /70 Yayın/); assert.match(metin(), /Sentetik Ürün 70/); assert.match(metin(), /Araç rapor rolü: bm/);
+    assert.match(metin(), /70 yayın/); assert.match(metin(), /Sentetik Ürün 70/); assert.match(metin(), /Araç rapor rolü: bm/);
     await sec('Yenile'); const gecikenBm = son(); await sec('Temsilci');
     assert.equal(gecikenBm.signal.aborted, true);
     await act(async () => gecikenBm.cevapla(cevap(999)));
-    assert.doesNotMatch(metin(), /999 Yayın|Sentetik Ürün 999|Sentetik Ürün 70/);
-    assert.match(metin(), /21 Yayın/); assert.match(metin(), /Araç rapor rolü: utt/);
-    await sec('Tümü'); assert.match(metin(), /200 Yayın/); assert.match(metin(), /Araç rapor rolü: tumu/);
-    await sec('BM'); assert.match(metin(), /70 Yayın/); assert.match(metin(), /Araç rapor rolü: bm/);
+    assert.doesNotMatch(metin(), /999 yayın|Sentetik Ürün 999|Sentetik Ürün 70/);
+    assert.match(metin(), /21 yayın/); assert.match(metin(), /Araç rapor rolü: utt/);
+    await sec('Tümü'); assert.match(metin(), /200 yayın/); assert.match(metin(), /Araç rapor rolü: tumu/);
+    await sec('BM'); assert.match(metin(), /70 yayın/); assert.match(metin(), /Araç rapor rolü: bm/);
     assert.equal(cache.getUretimRaporuOnbellek('bu_yil', 'p1', 'bm')?.uretim.turler[0].adet, 70);
     assert.equal(cache.getUretimRaporuOnbellek('bu_yil', 'p1', 'utt')?.uretim.turler[0].adet, 21);
     assert.equal(cache.getUretimRaporuOnbellek('bu_yil', 'p1', 'tumu')?.uretim.turler[0].adet, 200);
     await sec('Eczacı'); assert.match(son().url, /periyot=bu_yil&rapor_rolu=eczaci/);
-    assert.doesNotMatch(metin(), /Sentetik Ürün 70|70 Yayın/);
+    assert.doesNotMatch(metin(), /Sentetik Ürün 70|70 yayın/);
     await act(async () => son().cevapla(cevap(80)));
-    assert.match(metin(), /80 Yayın/); assert.match(metin(), /Araç rapor rolü: eczaci/);
+    assert.match(metin(), /80 yayın/); assert.match(metin(), /Araç rapor rolü: eczaci/);
     await sec('Yenile'); const gecikenEczaci = son(); await sec('BM');
     assert.equal(gecikenEczaci.signal.aborted, true);
     await act(async () => gecikenEczaci.cevapla(cevap(998)));
-    assert.doesNotMatch(metin(), /998 Yayın|Sentetik Ürün 998/); assert.match(metin(), /70 Yayın/);
-    await sec('Eczacı'); assert.match(metin(), /80 Yayın/);
+    assert.doesNotMatch(metin(), /998 yayın|Sentetik Ürün 998/); assert.match(metin(), /70 yayın/);
+    await sec('Eczacı'); assert.match(metin(), /80 yayın/);
     assert.equal(cache.getUretimRaporuOnbellek('bu_yil', 'p1', 'eczaci')?.uretim.turler[0].adet, 80);
     assert.equal(cache.getUretimRaporuOnbellek('bu_yil', 'p1', 'bm')?.uretim.turler[0].adet, 70);
     await sec('Eczane Teknisyeni'); assert.match(son().url, /periyot=bu_yil&rapor_rolu=eczane_teknisyeni/);
-    assert.doesNotMatch(metin(), /Sentetik Ürün 80|80 Yayın/);
+    assert.doesNotMatch(metin(), /Sentetik Ürün 80|80 yayın/);
     await act(async () => son().cevapla(cevap(90)));
-    assert.match(metin(), /90 Yayın/); assert.match(metin(), /Araç rapor rolü: eczane_teknisyeni/);
+    assert.match(metin(), /90 yayın/); assert.match(metin(), /Araç rapor rolü: eczane_teknisyeni/);
     await sec('Yenile'); const gecikenTeknisyen = son(); await sec('Eczacı');
     assert.equal(gecikenTeknisyen.signal.aborted, true);
     await act(async () => gecikenTeknisyen.cevapla(cevap(997)));
-    assert.doesNotMatch(metin(), /997 Yayın|Sentetik Ürün 997/); assert.match(metin(), /80 Yayın/);
-    await sec('Eczane Teknisyeni'); assert.match(metin(), /90 Yayın/);
+    assert.doesNotMatch(metin(), /997 yayın|Sentetik Ürün 997/); assert.match(metin(), /80 yayın/);
+    await sec('Eczane Teknisyeni'); assert.match(metin(), /90 yayın/);
     assert.equal(cache.getUretimRaporuOnbellek('bu_yil', 'p1', 'eczane_teknisyeni')?.uretim.turler[0].adet, 90);
     assert.equal(cache.getUretimRaporuOnbellek('bu_yil', 'p1', 'eczaci')?.uretim.turler[0].adet, 80);
     await sec('Eczanem Üyesi'); assert.match(son().url, /periyot=bu_yil&rapor_rolu=eczanem/);
-    assert.doesNotMatch(metin(), /Sentetik Ürün 90|90 Yayın/);
+    assert.doesNotMatch(metin(), /Sentetik Ürün 90|90 yayın/);
     await act(async () => son().cevapla(cevap(110)));
-    assert.match(metin(), /110 Yayın/); assert.match(metin(), /Araç rapor rolü: eczanem/);
+    assert.match(metin(), /110 yayın/); assert.match(metin(), /Araç rapor rolü: eczanem/);
     await sec('Yenile'); const gecikenUye = son(); await sec('Eczane Teknisyeni');
     assert.equal(gecikenUye.signal.aborted, true);
     await act(async () => gecikenUye.cevapla(cevap(996)));
-    assert.doesNotMatch(metin(), /996 Yayın|Sentetik Ürün 996/); assert.match(metin(), /90 Yayın/);
-    await sec('Eczanem Üyesi'); assert.match(metin(), /110 Yayın/);
+    assert.doesNotMatch(metin(), /996 yayın|Sentetik Ürün 996/); assert.match(metin(), /90 yayın/);
+    await sec('Eczanem Üyesi'); assert.match(metin(), /110 yayın/);
     assert.equal(cache.getUretimRaporuOnbellek('bu_yil', 'p1', 'eczanem')?.uretim.turler[0].adet, 110);
     assert.equal(cache.getUretimRaporuOnbellek('bu_yil', 'p1', 'eczane_teknisyeni')?.uretim.turler[0].adet, 90);
   } finally { await act(async () => root.unmount()); await dom.happyDOM.close(); }

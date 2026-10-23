@@ -13,7 +13,6 @@ import {
   ArrowLeft,
   BookOpenCheck,
   Layers,
-  X,
 } from 'lucide-react';
 import { useAuth } from '@/app/providers/AuthProvider';
 import { useUretimRaporu } from './_hooks/useUretimRaporu';
@@ -23,6 +22,7 @@ import { formatPuan, type Periyot } from '@/lib/utils/raporUtils';
 import SayfaRehberi from '@/components/rehber/SayfaRehberi';
 import UretimVaryantlariModal from '@/components/rehber/UretimVaryantlariModal';
 import OgrenmeAraciPerformansi from '@/components/raporlar/OgrenmeAraciPerformansi';
+import YayinKonuPerformansi from '@/components/raporlar/YayinKonuPerformansi';
 import { ureticiYetenegi } from '@/lib/uretici/yetenekler';
 import styles from '../utt/utt-report.module.css';
 import raporStyles from './yayin-raporlari.module.css';
@@ -63,11 +63,11 @@ const VARYANT_ADLARI: Record<string, string> = {
   hazir_ikisi: 'Öğrenme aracı ve soru seti sizden.',
 };
 
-const VARYANT_ROZETLERI: Record<string, { etiket: string; arkaPlan: string; renk: string }> = {
-  normal: { etiket: 'V1', arkaPlan: 'var(--tema-yerel-rapor-islevsel-zemin-14)', renk: 'var(--tema-yerel-rapor-islevsel-metin-21)' },
-  hazir_video: { etiket: 'V2', arkaPlan: 'var(--tema-yerel-rapor-islevsel-zemin-15)', renk: 'var(--tema-yerel-rapor-islevsel-metin-16)' },
-  hazir_set: { etiket: 'V3', arkaPlan: 'var(--tema-yerel-rapor-islevsel-zemin-16)', renk: 'var(--tema-yerel-rapor-islevsel-metin-06)' },
-  hazir_ikisi: { etiket: 'V4', arkaPlan: 'var(--tema-yerel-rapor-islevsel-zemin-17)', renk: 'var(--tema-yerel-rapor-islevsel-metin-22)' },
+const VARYANT_ROZETLERI: Record<string, { etiket: string }> = {
+  normal: { etiket: 'V1' },
+  hazir_video: { etiket: 'V2' },
+  hazir_set: { etiket: 'V3' },
+  hazir_ikisi: { etiket: 'V4' },
 };
 
 export default function UretimRaporlariPage() {
@@ -154,66 +154,55 @@ export default function UretimRaporlariPage() {
           <>
         <div className="mb-4">
           {/* Varyant Dağılımı Kartı */}
-          <section className={`${styles.panel} p-4 sm:p-5 flex flex-col justify-between`}>
-            <div className="mb-3 flex items-center justify-between">
+          <section className={raporStyles.varyantPanel}>
+            <header className={raporStyles.varyantBaslik}>
               <div>
-                <h2 className="text-base font-extrabold text-[var(--tema-yerel-rapor-ana-metin-06)]">Yayın Üretim Yöntemleri (Varyantlar) ve Dağılımları</h2>
-                <p className="mt-0.5 text-xs text-[var(--tema-yerel-rapor-yardimci-metin-20)]">
-                  Yayınlarınızın üretim yöntemleri{" "}
-                  <button
-                    type="button"
-                    onClick={() => setVaryantModalAcik(true)}
-                    className="font-bold text-[var(--tema-yerel-rapor-eylem-metin-09)] hover:text-[var(--tema-yerel-rapor-eylem-metin-10)] underline underline-offset-2 cursor-pointer inline"
-                  >
-                    (varyantları)
-                  </button>{" "}
-                  ve dağılımlarına genel bakış
-                </p>
+                <h2>Yayın Üretim Yöntemleri (Varyantlar) ve Dağılımları</h2>
+                <p>Yayınlarınızın üretim yöntemleri <button type="button" className={raporStyles.varyantBaglantisi} onClick={() => setVaryantModalAcik(true)} aria-label="Varyant açıklamalarını göster">(varyantları)</button> ve dağılımlarını görebilirsiniz.</p>
               </div>
-              <div className={styles.sectionIcon}><Layers className="h-4 w-4" /></div>
-            </div>
+              <button
+                type="button"
+                onClick={() => setVaryantModalAcik(true)}
+                className={raporStyles.varyantRehber}
+                aria-label="Üretim varyantlarını göster"
+                title="Üretim varyantları"
+              >
+                <Layers aria-hidden="true" />
+              </button>
+            </header>
             {(() => {
               const toplamVaryant = data.uretim.varyantlar.reduce((toplam, v) => toplam + v.adet, 0);
               return (
-                <div className="grid grid-cols-2 gap-2 mt-1">
+                <div className={raporStyles.varyantlar}>
                   {data.uretim.varyantlar.map((v) => {
                     const yuzde = toplamVaryant > 0 ? Math.round((v.adet / toplamVaryant) * 100) : 0;
                     const rozet = VARYANT_ROZETLERI[v.kod];
                     return (
-                      <div key={v.kod} className="rounded-xl border border-[var(--tema-yerel-rapor-cizgi-05)] bg-[var(--tema-yerel-rapor-sayfa-zemini-01)] p-2.5 flex flex-col justify-between">
-                        <div className="flex items-center gap-2">
-                          {rozet && (
-                            <span
-                              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10px] font-black"
-                              style={{ backgroundColor: rozet.arkaPlan, color: rozet.renk }}
-                            >
-                              {rozet.etiket}
-                            </span>
-                          )}
-                          <span
-                            className="block text-[11px] font-bold leading-snug"
-                            style={{ color: rozet?.renk ?? 'var(--tema-yerel-rapor-yardimci-metin-14)' }}
-                          >
-                            {VARYANT_ADLARI[v.kod] ?? v.ad}
-                          </span>
+                      <article
+                        key={v.kod}
+                        data-varyant={v.kod}
+                        className={raporStyles.varyantKarti + " " + (raporStyles[v.kod] ?? "")}
+                        aria-label={(rozet?.etiket ?? v.ad) + ", " + v.adet + " yayın, yüzde " + yuzde}
+                      >
+                        <div className={raporStyles.varyantYontem}>
+                          {rozet && <span className={raporStyles.varyantRozet}>{rozet.etiket}</span>}
+                          <span className={raporStyles.varyantAciklama}>{VARYANT_ADLARI[v.kod] ?? v.ad}</span>
                         </div>
-                        <div className="flex items-baseline justify-between mt-2 pt-1 border-t border-[var(--tema-yerel-rapor-cizgi-30)]">
-                          <strong
-                            className="text-sm sm:text-base font-extrabold"
-                            style={{ color: rozet?.renk ?? 'var(--tema-yerel-rapor-ana-metin-07)' }}
-                          >
-                            {v.adet} Yayın
-                          </strong>
-                          {toplamVaryant > 0 && (
-                            <span
-                              className="text-[11px] font-extrabold"
-                              style={{ color: rozet?.renk ?? 'var(--tema-yerel-rapor-eylem-metin-06)' }}
-                            >
-                              %{yuzde}
-                            </span>
-                          )}
+                        <div className={raporStyles.varyantSayilar}>
+                          <div className={raporStyles.varyantAdet}>{v.adet.toLocaleString('tr-TR')}<span> yayın</span></div>
+                          <span className={raporStyles.varyantYuzde}>%{yuzde}</span>
                         </div>
-                      </div>
+                        <div
+                          className={raporStyles.varyantCubuk}
+                          role="progressbar"
+                          aria-label={(rozet?.etiket ?? v.ad) + " yayın payı"}
+                          aria-valuenow={yuzde}
+                          aria-valuemin={0}
+                          aria-valuemax={100}
+                        >
+                          <div className={raporStyles.varyantDolgu} style={{ width: yuzde + "%" }} />
+                        </div>
+                      </article>
                     );
                   })}
                 </div>
@@ -223,14 +212,14 @@ export default function UretimRaporlariPage() {
         </div>
 
         {/* Yayın Konusu ve Saha Etkisi (6 Sütun Tek Satır) */}
-        <section className={`${styles.panel} ${styles.section}`}>
+        <section className={ureticiRaporu ? "mb-4" : styles.panel + " " + styles.section}>
           {!ureticiRaporu && (
             <>
               <div className={styles.sectionHeader}>
                 <div>
                   <h2 className="text-base font-extrabold text-[var(--tema-yerel-rapor-ana-metin-06)]">Yayın Konusu ve Saha Etkisi</h2>
                   <p className="mt-0.5 text-[11px] font-medium text-[var(--tema-yerel-rapor-yardimci-metin-08)]">
-                    Yayına alma sayıları ve sahada oluşturduğu tüketim karşılığı
+                    Yayınlarınızdan kazanılan net puanları görebilirsiniz
                   </p>
                 </div>
                 <div className={styles.sectionIcon}><BookOpenCheck className="h-4 w-4" /></div>
@@ -288,84 +277,12 @@ export default function UretimRaporlariPage() {
             : seciliEgitimDetayi
               ? [seciliEgitimDetayi]
               : []
-          ).map((egitimDetayi, indeks) => (
-            <div
-              key={egitimDetayi.egitim_turu}
-              className={ureticiRaporu && indeks === 0 ? '' : 'mt-5 pt-4 border-t border-[var(--tema-yerel-rapor-cizgi-33)]'}
-            >
-              <div className="mb-3 flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2 min-w-0">
-                  <span
-                    className="h-2.5 w-2.5 rounded-full shrink-0"
-                    style={{
-                      backgroundColor: EGITIM_TURU_RENK[egitimDetayi.egitim_turu] ?? 'var(--tema-yerel-rapor-eylem-zemin-01)',
-                    }}
-                  />
-                  <h3 className="text-sm font-extrabold text-[var(--tema-yerel-rapor-ana-metin-07)] truncate">
-                    {egitimDetayi.egitim_adi} Yayın Performansı
-                  </h3>
-                  {!ureticiRaporu && (
-                    <span className="hidden sm:inline text-[11px] font-semibold text-[var(--tema-yerel-rapor-yardimci-metin-08)]">
-                      · Seçili konunun dönem performansı
-                    </span>
-                  )}
-                </div>
-                {!ureticiRaporu && (
-                  <button
-                    type="button"
-                    onClick={() => setSeciliEgitimTuru(null)}
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-full text-[var(--tema-yerel-rapor-yardimci-metin-14)] hover:bg-[var(--tema-yerel-rapor-sayfa-zemini-22)] hover:text-[var(--tema-yerel-rapor-ana-metin-07)] transition-colors shrink-0 cursor-pointer"
-                    aria-label="Detayı kapat"
-                    title="Detayı Kapat"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                )}
-              </div>
-
-              <div
-                className={`grid grid-cols-2 sm:grid-cols-4 gap-2.5 w-full ${
-                  (egitimDetayi.urun_dagilimi ?? []).some((u) => u.urun_id != null) ? 'mb-3.5' : 'mb-0'
-                }`}
-              >
-                <div className="rounded-xl border border-[var(--tema-yerel-rapor-cizgi-05)] bg-[var(--tema-yerel-rapor-sayfa-zemini-01)] p-3 text-center">
-                  <span className="text-[10px] font-bold text-[var(--tema-yerel-rapor-yardimci-metin-08)] uppercase">Yayına Alınan</span>
-                  <strong className="block text-lg font-black text-[var(--tema-yerel-rapor-ana-metin-07)] mt-0.5">{egitimDetayi.donemde_yayina_alinan}</strong>
-                </div>
-                <div className="rounded-xl border border-[var(--tema-yerel-rapor-cizgi-05)] bg-[var(--tema-yerel-rapor-sayfa-zemini-01)] p-3 text-center">
-                  <span className="text-[10px] font-bold text-[var(--tema-yerel-rapor-yardimci-metin-08)] uppercase">Tamamlanan İzleme</span>
-                  <strong className="block text-lg font-black text-[var(--tema-yerel-rapor-eylem-metin-06)] mt-0.5">{egitimDetayi.tamamlanan_izleme}</strong>
-                </div>
-                <div className="rounded-xl border border-[var(--tema-yerel-rapor-cizgi-05)] bg-[var(--tema-yerel-rapor-sayfa-zemini-01)] p-3 text-center">
-                  <span className="text-[10px] font-bold text-[var(--tema-yerel-rapor-yardimci-metin-08)] uppercase">Kazanılan Puan</span>
-                  <strong className="block text-lg font-black text-[var(--tema-yerel-rapor-islevsel-metin-06)] mt-0.5">+{formatPuan(egitimDetayi.kazanilan_toplam)}</strong>
-                </div>
-                <div className="rounded-xl border border-[var(--tema-yerel-rapor-cizgi-05)] bg-[var(--tema-yerel-rapor-sayfa-zemini-01)] p-3 text-center">
-                  <span className="text-[10px] font-bold text-[var(--tema-yerel-rapor-yardimci-metin-08)] uppercase">Net Puan</span>
-                  <strong className="block text-lg font-black text-[var(--tema-yerel-rapor-ana-metin-07)] mt-0.5">{formatPuan(egitimDetayi.net_puan)} p</strong>
-                </div>
-              </div>
-
-              {(egitimDetayi.urun_dagilimi ?? []).some((u) => u.urun_id != null) && (
-                <div className="rounded-xl border border-[var(--tema-yerel-rapor-cizgi-34)] bg-[var(--tema-yerel-rapor-sayfa-zemini-17)] p-3">
-                  <div className="text-[11px] font-extrabold uppercase tracking-wide text-[var(--tema-yerel-rapor-yardimci-metin-28)] mb-2">
-                    Ürün Bazlı Puan Dağılımı
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-                    {egitimDetayi.urun_dagilimi.filter((u) => u.urun_id != null).map((u) => (
-                      <div key={u.urun_id ?? u.urun_adi} className="rounded-lg border border-[var(--tema-yerel-rapor-cizgi-05)] bg-[var(--tema-yerel-rapor-kart-04)] p-2.5 flex items-center justify-between">
-                        <strong className="text-xs font-extrabold text-[var(--tema-yerel-rapor-ana-metin-07)] truncate mr-2">{u.urun_adi}</strong>
-                        <div className="flex items-center gap-2 text-xs font-bold shrink-0">
-                          <span className="text-[var(--tema-yerel-rapor-islevsel-metin-06)]">+{formatPuan(u.kazanilan_toplam)}</span>
-                          <span className="text-[var(--tema-yerel-rapor-islevsel-metin-07)]">−{formatPuan(u.kaybedilen_toplam)}</span>
-                          <strong className="text-[var(--tema-yerel-rapor-eylem-metin-06)]">{formatPuan(u.net_puan)} p</strong>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
+          ).map((egitimDetayi) => (
+            <YayinKonuPerformansi
+              key={JSON.stringify([kullanici?.id, periyot, seciliRaporRolu, egitimDetayi.egitim_turu])}
+              detay={egitimDetayi}
+              onKapat={ureticiRaporu ? undefined : () => setSeciliEgitimTuru(null)}
+            />
           ))}
         </section>
 
@@ -373,6 +290,7 @@ export default function UretimRaporlariPage() {
         <OgrenmeAraciPerformansi
           key={JSON.stringify([kullanici?.id, periyot, seciliRaporRolu, data.arac_turu_tarih_araligi])}
           dagilim={data.arac_turu_dagilimi}
+          aciklama="Yayın araçlarının performanslarını detaylı analiz edebilirsiniz"
           periyotBasligi={PERIYOT_BASLIK[periyot]}
           detayKapsami={data.arac_turu_tarih_araligi ? {
             ...data.arac_turu_tarih_araligi, periyot,
