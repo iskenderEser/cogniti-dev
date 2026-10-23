@@ -11,88 +11,90 @@ const ARACLAR = [
 ] as const;
 
 const ADIMLAR = [
-  { baslik: "Yayını tamamlayın", aciklama: "Öğrenme araçlarıyla iletilen yayınları tamamlayın" },
+  { baslik: "Yayını tamamlayın", aciklama: "Tanıtım ve öğrenme araçlarıyla iletilen yayınları tamamlayın" },
   { baslik: "Soruları cevaplayın", aciklama: "Tamamladığınız yayınların sorularını cevaplayın" },
   { baslik: "Puan kazanın", aciklama: "Tamamladığınız yayınlardan ve doğru cevapladığınız sorulardan puan kazanın" },
 ] as const;
 
-/** Kullanıcının Cogniti hero SVG'si; metin dar ekranda yeniden akar. */
+/** Metin alanı sakin tutulan, sayfa boyunca kenarlardan akan bilgi çizgileri. */
 export default function CognitiHakkinda() {
   const id = useId();
 
   return (
     <article className={styles.zemin} aria-label="Cogniti Hakkında">
+      <svg
+        className={styles.gorsel}
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 1600 1200"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <defs>
+          <linearGradient id={`${id}-kenar-akisi`}>
+            <stop offset="0" stopColor="white" stopOpacity=".8" />
+            <stop offset=".1" stopColor="white" stopOpacity=".35" />
+            <stop offset=".23" stopColor="white" stopOpacity="0" />
+            <stop offset=".77" stopColor="white" stopOpacity="0" />
+            <stop offset=".9" stopColor="white" stopOpacity=".35" />
+            <stop offset="1" stopColor="white" stopOpacity=".8" />
+          </linearGradient>
+          <mask id={`${id}-metin-korumasi`}>
+            <rect width="1600" height="1200" fill={`url(#${id}-kenar-akisi)`} />
+          </mask>
+        </defs>
+        <g mask={`url(#${id}-metin-korumasi)`} fill="none" stroke="#237ac8" strokeWidth="1" strokeLinecap="round">
+          {[
+            "M-120 65 C180 20 300 350 700 290 S1260 80 1720 190",
+            "M-120 110 C200 60 340 420 760 340 S1320 130 1720 245",
+            "M-120 200 C180 330 380 60 740 180 S1270 520 1720 390",
+            "M-120 430 C170 520 420 310 800 470 S1330 750 1720 580",
+            "M-120 650 C220 540 440 810 810 690 S1320 460 1720 760",
+            "M-120 730 C200 620 470 910 850 780 S1340 550 1720 850",
+            "M-120 940 C180 1080 430 770 820 930 S1320 1190 1720 1040",
+            "M-120 1030 C190 1150 470 890 860 1030 S1350 1270 1720 1140",
+          ].map((d, index) => (
+            <g key={d} className={index % 2 ? styles.hatIkincil : styles.hat}>
+              <path d={d} vectorEffect="non-scaling-stroke" />
+              <path
+                d={d}
+                pathLength="1000"
+                vectorEffect="non-scaling-stroke"
+                className={styles.akis}
+                style={{ animationDelay: `${index * -7}s` }}
+              />
+            </g>
+          ))}
+        </g>
+      </svg>
       <header className={styles.sahne}>
-        <svg
-          className={styles.gorsel}
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 1728 864"
-          preserveAspectRatio="xMinYMid slice"
-          aria-hidden="true"
-          focusable="false"
-        >
-          <defs>
-            <radialGradient id={`${id}-leftGlow`} cx="10%" cy="49%" r="85%">
-              <stop offset="0" stopColor="var(--tema-hakkinda-isik-baslangic)" stopOpacity=".85"/>
-              <stop offset=".62" stopColor="var(--tema-hakkinda-isik-orta)" stopOpacity=".65"/>
-              <stop offset="1" stopColor="var(--tema-hakkinda-isik-son)" stopOpacity=".08"/>
-            </radialGradient>
-            <linearGradient id={`${id}-lineBlue`} x1="0" y1="0" x2="1" y2=".35">
-              <stop offset="0" stopColor="var(--tema-hakkinda-hat-baslangic)" stopOpacity=".42"/>
-              <stop offset=".54" stopColor="var(--tema-hakkinda-hat-orta)" stopOpacity=".26"/>
-              <stop offset="1" stopColor="var(--tema-hakkinda-hat-son)" stopOpacity="0"/>
-            </linearGradient>
-            <filter id={`${id}-softBlur`} x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="25"/></filter>
-            <clipPath id={`${id}-viewport`}><rect width="1728" height="864"/></clipPath>
-          </defs>
-          <g clipPath={`url(#${id}-viewport)`}>
-            <rect width="1728" height="864" fill="var(--tema-yuzey)"/>
-            <ellipse cx="-85" cy="450" rx="375" ry="415" fill={`url(#${id}-leftGlow)`} filter={`url(#${id}-softBlur)`}/>
-            <path d="M -265 55 C -70 -18 55 33 191 172 C 312 302 333 452 259 635 C 180 820 -29 863 -245 913 Z" fill={`url(#${id}-leftGlow)`} opacity=".60"/>
-            <g fill="none" stroke={`url(#${id}-lineBlue)`} strokeWidth="1.15" strokeLinecap="round">
-              <path d="M-80 65 C180 6 310 32 514 88 S980 295 1390 287 S1630 227 1810 196"/>
-              <path d="M-90 133 C180 90 349 100 525 171 S794 363 1130 410 S1570 407 1800 346"/>
-              <path d="M-65 205 C132 186 334 219 535 304 S819 437 1116 441 S1584 425 1815 477"/>
-              <path d="M-40 725 C227 706 413 628 625 581 S977 503 1190 529 S1590 655 1800 678"/>
-              <path d="M-100 785 C167 859 377 791 549 705 S859 535 1052 517 S1456 617 1800 647"/>
-              <path d="M-45 839 C163 763 300 791 525 747 S841 617 1063 599 S1479 725 1810 752"/>
-              <path d="M-45 12 C144 118 287 160 482 241 S805 386 1051 412"/>
-              <path d="M-25 820 C245 738 374 656 548 578 S890 475 1165 493"/>
-              <path d="M-60 551 C100 404 221 282 405 298 S781 399 1100 465" opacity=".42"/>
-            </g>
-            <g fill="var(--tema-hakkinda-nokta)" opacity=".77">
-              <circle cx="344" cy="80" r="6.5"/>
-              <circle cx="712" cy="184" r="12"/>
-              <circle cx="182" cy="185" r="8"/>
-              <circle cx="640" cy="255" r="5"/>
-              <circle cx="472" cy="303" r="8"/>
-              <circle cx="931" cy="431" r="6" opacity=".38"/>
-              <circle cx="962" cy="810" r="7" opacity=".72"/>
-              <circle cx="415" cy="641" r="6"/>
-              <circle cx="125" cy="707" r="7.5"/>
-              <circle cx="470" cy="756" r="10.5"/>
-              <circle cx="592" cy="739" r="6" opacity=".57"/>
-              <circle cx="702" cy="679" r="4.5" opacity=".3"/>
-            </g>
-          </g>
-        </svg>
+
         <div className={styles.metin}>
           <p className={styles.bolumEtiketi}>COGNITI NEDİR?</p>
-          <h1 className={styles.bolumBasligi}>Bilgiyi ulaştırır, öğrenmeyi motive eder.</h1>
-          <p className={styles.aciklama}>
-            Öğrenmenin sürekliliği, isteklilik ve güvenilir bilgiyle artıyor. Cogniti puan ekosistemi sayesinde
-            <br className={styles.aciklamaSatirSonu} />{" "}
-            öğrenme isteğini artırırken, kanıta dayalı bilgileri ulaştırarak öğrenmeyi iki kat artırabilir.
-          </p>
+          <h1 className={`${styles.bolumBasligi} ${styles.anaBaslik}`}>
+            İlaç ve eczacılık sektörüne odaklı{" "}
+            <span className={styles.anaBaslikAltSatir}>e-öğrenme ve e-tanıtım platformudur</span>
+          </h1>
+          <p className={styles.vurguCumlesi}>Her tanıtım, karşılıklı öğrenmedir.</p>
+          <div className={styles.yaklasimlar}>
+            <div className={styles.yaklasim}>
+              <p>E-öğrenme uygulaması, saha ekiplerinin verimli tanıtım yapabilmeleri için ihtiyaçları olan sürekli öğrenme fırsatını sunar.</p>
+            </div>
+            <div className={styles.yaklasim}>
+              <p>E-tanıtım uygulaması, merkezine saha ekiplerini alarak eczacılara, eczane teknisyenlerine ve son tüketiciye kadar kanıta dayalı bilgiyi ulaştırır.</p>
+            </div>
+          </div>
         </div>
       </header>
 
       <div className={styles.icerik}>
+
+
         <section className={styles.bolum} aria-labelledby={`${id}-araclar`}>
-          <p className={styles.bolumEtiketi}>Öğrenme araçları</p>
+          <p className={styles.bolumEtiketi}>Tanıtım ve Öğrenme Araçları</p>
           <h2 className={styles.bolumBasligi} id={`${id}-araclar`}>İzleyin, dinleyin, okuyun</h2>
           <p className={styles.bolumAciklamasi}>
-            Herkes farklı öğrenir. Farklı öğrenme araçları sayesinde bilgi daha kalıcıdır.
+            Herkes farklı öğrenir. Farklı tanıtım ve öğrenme araçları sayesinde verimlilik artar.
           </p>
           <div className={styles.araclar}>
             {ARACLAR.map(({ tur, simge: Simge }) => (
@@ -105,8 +107,9 @@ export default function CognitiHakkinda() {
         </section>
 
         <section className={styles.bolum} aria-labelledby={`${id}-ogrenme`}>
-          <p className={styles.bolumEtiketi}>Öğrenme süreci</p>
+          <p className={styles.bolumEtiketi}>Tanıtım ve Öğrenme Süreci</p>
           <h2 className={styles.bolumBasligi} id={`${id}-ogrenme`}>Tamamlayın, cevaplayın, kazanın</h2>
+          <p className={styles.bolumAciklamasi}>Öğrenme motive edildiğinde, tanıtım kalıcı olur.</p>
           <ol className={styles.adimlar} aria-label="Öğrenme adımları">
             {ADIMLAR.map((adim, index) => (
               <li className={styles.adim} key={adim.baslik}>
