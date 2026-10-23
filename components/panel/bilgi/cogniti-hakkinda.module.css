@@ -12,9 +12,9 @@
   display: grid;
   align-items: center;
   width: 100%;
-  aspect-ratio: 2 / 1;
-  max-height: 650px;
-  min-height: 340px;
+  aspect-ratio: 20 / 9;
+  max-height: 585px;
+  min-height: 306px;
   overflow: hidden;
 }
 
@@ -53,9 +53,9 @@
 /* Görüntü alanı yerine panelin kullanılabilir içerik genişliği esas alınır. */
 @container (max-width: 560px) {
   .sahne {
-    min-height: 440px;
+    min-height: 396px;
     aspect-ratio: auto;
-    padding-block: 72px;
+    padding-block: 64px;
   }
 
   .metin {
@@ -71,7 +71,7 @@
 }
 
 .bolum {
-  padding-block: 64px;
+  padding-block: 48px;
   border-top: 1px solid var(--tema-hakkinda-cizgi);
 }
 
@@ -95,7 +95,7 @@
 
 .bolumAciklamasi, .arac p, .adim p {
   color: var(--tema-hakkinda-aciklama);
-  font-size: 15px;
+  font-size: clamp(15px, 1.2cqw, 18px);
   font-weight: 400;
   line-height: 1.8;
 }
@@ -106,7 +106,7 @@
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 28px;
-  margin-top: 36px;
+  margin-top: 32px;
 }
 
 .simge {
@@ -128,13 +128,13 @@
   line-height: 1.4;
 }
 
-.arac p { margin: 0; font-size: 14px; }
+.arac p { margin: 0; }
 
 .adimlar {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 36px;
-  margin: 36px 0 0;
+  margin: 32px 0 0;
   padding: 0;
   list-style: none;
 }
@@ -152,7 +152,7 @@
 
 @container (max-width: 560px) {
   .icerik { padding-inline: 24px; }
-  .bolum { padding-block: 40px; }
+  .bolum { padding-block: 32px; }
   .araclar { gap: 28px 20px; }
   .arac h3 { font-size: 16px; }
   .adimlar { grid-template-columns: 1fr; gap: 28px; }

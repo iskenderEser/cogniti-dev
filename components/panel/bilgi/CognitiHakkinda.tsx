@@ -78,12 +78,11 @@ export default function CognitiHakkinda() {
         </svg>
         <div className={styles.metin}>
           <p className={styles.bolumEtiketi}>COGNITI NEDİR?</p>
-          <p className={styles.aciklama} style={{ fontSize: 14, margin: "0 0 12px" }}>Hap bilgilerle hızlı öğrenme platformudur.</p>
-          <h1 className={styles.bolumBasligi}>Öğrenmeyi motive ederek, bilgiyi ulaştırır.</h1>
+          <h1 className={styles.bolumBasligi}>Bilgiyi ulaştırır, öğrenmeyi motive eder.</h1>
           <p className={styles.aciklama}>
-            Bilgi güvenilir olduğunda öğrenme isteği artar. Cogniti güvenilir bilgiyi farklı öğrenme araçları ile ulaştırır ve
+            Öğrenmenin sürekliliği, isteklilik ve güvenilir bilgiyle artıyor. Cogniti puan ekosistemi sayesinde
             <br className={styles.aciklamaSatirSonu} />{" "}
-            puan ekosistemi sayesinde öğrenmeyi iki kat artırır.
+            öğrenme isteğini artırırken, kanıta dayalı bilgileri ulaştırarak öğrenmeyi iki kat artırabilir.
           </p>
         </div>
       </header>
@@ -99,20 +98,19 @@ export default function CognitiHakkinda() {
             {ARACLAR.map(({ tur, simge: Simge }) => (
               <div className={styles.arac} key={tur}>
                 <span className={styles.simge} aria-hidden="true"><Simge size={23} strokeWidth={1.5} /></span>
-                <h3>{YAYIN_TURU_SUNUMU[tur].etiket}</h3>
+                <h3>{tur === "flip_pdf" ? "Bilimsel Belge" : YAYIN_TURU_SUNUMU[tur].etiket}</h3>
               </div>
             ))}
           </div>
         </section>
 
         <section className={styles.bolum} aria-labelledby={`${id}-ogrenme`}>
-          <p className={styles.bolumEtiketi}>Öğrenme nasıl işler?</p>
+          <p className={styles.bolumEtiketi}>Öğrenme süreci</p>
           <h2 className={styles.bolumBasligi} id={`${id}-ogrenme`}>Tamamlayın, cevaplayın, kazanın</h2>
           <ol className={styles.adimlar} aria-label="Öğrenme adımları">
             {ADIMLAR.map((adim, index) => (
               <li className={styles.adim} key={adim.baslik}>
                 <span className={styles.adimNo} aria-hidden="true">0{index + 1}</span>
-                <h3>{adim.baslik}</h3>
                 <p>{adim.aciklama}</p>
               </li>
             ))}
