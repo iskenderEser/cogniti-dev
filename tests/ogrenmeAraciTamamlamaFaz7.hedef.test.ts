@@ -51,7 +51,8 @@ test("cevap bulunmadığında başarı yüzdesi sıfır yerine null olur", () =>
 test("kayıtlı araç puanı gerçek kazanım ve kayıptan ayrı tutulur", () => {
   assert.match(ortak, /kayitli_arac_puani/);
   assert.match(raporSql, /COALESCE\(g\.kazanilan_puan, 0\) - COALESCE\(g\.kaybedilen_puan, 0\)/);
-  assert.match(panel, /satir\.kayitli_arac_puani/);
+  assert.doesNotMatch(panel, /satir\.kayitli_arac_puani/);
+  assert.match(panel, /satir\.potansiyel_puan/);
   assert.match(panel, /satir\.net_kazanilan_puan/);
 });
 

@@ -55,8 +55,8 @@ export interface RaporData {
 }
 
 const bellekHaritasi = new Map<string, RaporData>();
-// SQL özetleri ve sayfalı detaylar yeni yanıt biçimidir; eski iki rolün kayıtları okunmaz.
-const CACHE_PREFIX = "hb_uretim_raporu_v3_";
+// SQL’den gelen Potansiyel Puanı içermeyen eski yanıtlar okunmaz.
+const CACHE_PREFIX = "hb_uretim_raporu_v6_";
 const onbellekAnahtari = (periyot: string, kullaniciId: string, raporRolu: UretimRaporRolu) =>
   `${kullaniciId}_${periyot}_${raporRolu}`;
 

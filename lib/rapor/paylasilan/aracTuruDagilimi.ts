@@ -21,6 +21,9 @@ type OlayToplami = {
 export interface AracTuruRaporSatiri extends OlayToplami {
   arac_turu: OgrenmeAraciTuru;
   yayin_sayisi: number;
+  toplam_yayin_sayisi?: number;
+  potansiyel_puan?: number;
+  tamamlama_orani?: number | null;
   kayitli_arac_puani: number;
   net_kazanilan_puan: number;
   dogru_cevap_yuzdesi: number | null;
@@ -55,10 +58,35 @@ const rpcArgumanlari = (girdi: AracRaporGirdisi) => ({
 
 // Sayısal toplamlar SQL'den gelir; burada yalnız yanıtın veri tipleri uyarlanır.
 export async function aracTuruDagilimi(db: SupabaseClient, girdi: AracRaporGirdisi): Promise<AracTuruRaporSatiri[]> {
-  const { data, error } = await db.rpc('get_yayin_raporlari_arac_performansi_v1', rpcArgumanlari(girdi));
-  if (error || !Array.isArray(data) || data.length !== TURLER.length) {
+  const [{ data, error }, tuketimYaniti, potansiyelYaniti] = await Promise.all([
+    db.rpc('get_yayin_raporlari_arac_performansi_v1', rpcArgumanlari(girdi)),
+    db.rpc('get_yayin_raporlari_arac_tuketimi_v1', rpcArgumanlari(girdi)),
+    db.rpc('get_yayin_raporlari_arac_potansiyel_puani_v1', rpcArgumanlari(girdi)),
+  ]);
+  if (error || !Array.isArray(data) || data.length !== TURLER.length
+    || new Set(data.map((r) => r.arac_turu)).size !== TURLER.length
+    || data.some((r) => !TURLER.includes(r.arac_turu))) {
     throw new Error('Öğrenme aracı türü rapor kaynağı okunamadı.');
   }
+  const hamTuketim = tuketimYaniti.data;
+  if (tuketimYaniti.error || !Array.isArray(hamTuketim) || hamTuketim.length !== TURLER.length
+    || new Set(hamTuketim.map((r) => r.arac_turu)).size !== TURLER.length
+    || hamTuketim.some((r) => !TURLER.includes(r.arac_turu)
+      || ['toplam_yayin_sayisi', 'baslatma', 'tamamlama'].some((alan) => r[alan] == null
+        || !Number.isSafeInteger(Number(r[alan])) || Number(r[alan]) < 0)
+      || (r.tamamlama_orani !== null && (r.tamamlama_orani == null
+        || !Number.isFinite(Number(r.tamamlama_orani)) || Number(r.tamamlama_orani) < 0 || Number(r.tamamlama_orani) > 100)))) {
+    throw new Error('Öğrenme aracı tüketim özeti okunamadı.');
+  }
+  const hamPotansiyel = potansiyelYaniti.data;
+  if (potansiyelYaniti.error || !Array.isArray(hamPotansiyel) || hamPotansiyel.length !== TURLER.length
+    || new Set(hamPotansiyel.map((r) => r.arac_turu)).size !== TURLER.length
+    || hamPotansiyel.some((r) => !TURLER.includes(r.arac_turu) || r.potansiyel_puan == null
+      || !Number.isSafeInteger(Number(r.potansiyel_puan)) || Number(r.potansiyel_puan) < 0)) {
+    throw new Error('Öğrenme aracı potansiyel puanı okunamadı.');
+  }
+  const potansiyeller = new Map<string, number>(hamPotansiyel.map((r) => [r.arac_turu, Number(r.potansiyel_puan)]));
+  const tuketimler = new Map<string, Record<string, unknown>>(hamTuketim.map((r) => [r.arac_turu, r]));
   const satirlar = new Map<string, Record<string, unknown>>(data.map((satir) => [satir.arac_turu, satir]));
   return TURLER.map((arac_turu) => {
     const ham = satirlar.get(arac_turu);
@@ -71,6 +99,11 @@ export async function aracTuruDagilimi(db: SupabaseClient, girdi: AracRaporGirdi
     }]));
     return {
       arac_turu, ...toplam, roller,
+      potansiyel_puan: potansiyeller.get(arac_turu)!,
+      toplam_yayin_sayisi: sayi(tuketimler.get(arac_turu)!.toplam_yayin_sayisi),
+      baslatma: sayi(tuketimler.get(arac_turu)!.baslatma),
+      tamamlama: sayi(tuketimler.get(arac_turu)!.tamamlama),
+      tamamlama_orani: tuketimler.get(arac_turu)!.tamamlama_orani === null ? null : sayi(tuketimler.get(arac_turu)!.tamamlama_orani),
       yayin_sayisi: sayi(ham.yayin_sayisi), kayitli_arac_puani: sayi(ham.kayitli_arac_puani),
       net_kazanilan_puan: sayi(ham.net_kazanilan_puan),
       dogru_cevap_yuzdesi: ham.dogru_cevap_yuzdesi == null ? null : sayi(ham.dogru_cevap_yuzdesi),

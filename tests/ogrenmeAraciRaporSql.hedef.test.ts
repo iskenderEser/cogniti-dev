@@ -33,6 +33,13 @@ const id = (n: number) => `00000000-0000-4000-8000-${String(n).padStart(12, '0')
 type Fixture = { anahtar: string; kapsam: { raporKimligi: string }; aralik: { baslangic: string; bitis: string }; araclar: AracTuruRaporSatiri[]; kart_metni: string };
 const referans: Fixture[] = JSON.parse(readFileSync('tests/fixtures/yayin-arac-performansi-tumu.json', 'utf8'));
 const bos = () => null;
+const metrik = (kart: Element, alan: string) => kart.querySelector('[data-metrik="' + alan + '"]')!.textContent;
+const tuketimSatirlari = (rows: AracTuruRaporSatiri[]) => rows.map((r) => ({
+  arac_turu: r.arac_turu, toplam_yayin_sayisi: r.toplam_yayin_sayisi ?? r.yayin_sayisi,
+  baslatma: r.baslatma, tamamlama: r.tamamlama,
+  tamamlama_orani: r.baslatma > 0 ? Math.min(100, Math.round(100 * r.tamamlama / r.baslatma)) : null,
+}));
+const potansiyelSatirlari = (rows: AracTuruRaporSatiri[]) => rows.map((r) => ({ arac_turu: r.arac_turu, potansiyel_puan: r.potansiyel_puan ?? r.kayitli_arac_puani }));
 function kartModulu(fetchMock?: typeof fetch) {
   return yukle<typeof import('@/components/raporlar/OgrenmeAraciPerformansi')>('components/raporlar/OgrenmeAraciPerformansi.tsx', {
     react: React, 'react/jsx-runtime': jsxRuntime, 'next/link': { default: bos },
@@ -40,14 +47,17 @@ function kartModulu(fetchMock?: typeof fetch) {
     '@/lib/utils/roller': roller,
     'lucide-react': Object.fromEntries(['Video','Headphones','Image','BookOpen','Users','Sparkles','ExternalLink','Info'].map((x) => [x, bos])),
     './YayinDetayModal': { default: bos },
+    './OgrenmeAraciPerformansi.module.css': { default: new Proxy({}, { get: (_target, key) => String(key) }) },
   }, fetchMock ? { fetch: fetchMock } : {});
 }
 
 for (const f of referans) {
-  test(`${f.anahtar}: SQL yanıtının dört araçtaki tüm değerleri ve mevcut kart metni Tümü referansını korur`, async () => {
+  test(`${f.anahtar}: SQL yanıtının mevcut değerleri korunur, dört araç onaylı YAPKA düzeninde gösterilir`, async () => {
     const calls: Array<{ name: string; args: unknown }> = [];
     const db = { rpc: async (name: string, args: unknown) => {
       calls.push({ name, args: plain(args) });
+      if (name.endsWith('tuketimi_v1')) return { data: tuketimSatirlari(f.araclar).reverse(), error: null };
+      if (name.endsWith('potansiyel_puani_v1')) return { data: potansiyelSatirlari(f.araclar).reverse(), error: null };
       const rows = name.endsWith('performansi_v1') ? f.araclar.map((x) => ({ ...x, yayin_sayisi: String(x.yayin_sayisi), etkilesim_yayin_sayisi: x.yayinlar.length })).reverse()
         : f.araclar.find((x) => x.arac_turu === (args as { p_arac_turu: string }).p_arac_turu)!.yayinlar;
       return { data: rows, error: null };
@@ -56,8 +66,9 @@ for (const f of referans) {
     const result = await ortak.aracTuruDagilimi(db, input);
     for (const [i, row] of result.entries()) {
       const old = f.araclar[i];
-      const { yayinlar: _oldList, ...oldSummary } = old;
-      const { yayinlar: _newList, etkilesim_yayin_sayisi, ...newSummary } = row;
+      const oldSummary = Object.fromEntries(Object.entries(old).filter(([key]) => key !== 'yayinlar'));
+      const newSummary = Object.fromEntries(Object.entries(row).filter(([key]) => !['yayinlar','etkilesim_yayin_sayisi','toplam_yayin_sayisi','tamamlama_orani','potansiyel_puan'].includes(key)));
+      const { etkilesim_yayin_sayisi } = row;
       assert.deepEqual(plain(newSummary), oldSummary);
       assert.equal(etkilesim_yayin_sayisi, old.yayinlar.length);
       assert.equal(row.yayinlar.length, 0);
@@ -65,7 +76,7 @@ for (const f of referans) {
       assert.deepEqual(plain(detail.yayinlar), old.yayinlar);
       row.yayinlar = detail.yayinlar;
     }
-    assert.equal(calls.length, 5);
+    assert.equal(calls.length, 7);
     assert.deepEqual(calls[0], { name: 'get_yayin_raporlari_arac_performansi_v1', args: {
       p_yonetici_id: input.raporKimligi, p_baslangic: input.baslangic, p_bitis: input.bitis, p_rapor_rolu: 'tumu',
     } });
@@ -75,7 +86,24 @@ for (const f of referans) {
     const dom = new Window();
     try {
       dom.document.body.innerHTML = renderToStaticMarkup(React.createElement(Card, { dagilim: result, periyotBasligi: labels[period] }));
-      assert.equal(dom.document.body.textContent.replace(/\s+/g, ' ').trim(), f.kart_metni);
+      const section = dom.document.querySelector('section')!;
+      const cards = [...section.children[1].children];
+      assert.equal(cards.length, 4);
+      const sum = result.reduce((n, r) => n + Math.max(0, r.net_kazanilan_puan), 0);
+      for (const [index, card] of cards.entries()) {
+        const row = result[index];
+        const points = card.querySelector('section[aria-label="Puan Katkısı"]')!;
+        const num = (n: number) => n.toLocaleString('tr-TR');
+        const ratio = row.baslatma > 0 ? '%' + Math.min(100, Math.round(100 * row.tamamlama / row.baslatma)) : '—';
+        const share = sum > 0 && row.net_kazanilan_puan > 0 ? '%' + Math.round(100 * row.net_kazanilan_puan / sum) : '—';
+        assert.deepEqual(['toplam_yayin_sayisi','baslatma','tamamlama','tamamlama_orani'].map((alan) => metrik(card, alan)), [num(row.toplam_yayin_sayisi!), num(row.baslatma), num(row.tamamlama), ratio]);
+        assert.deepEqual(['potansiyel_puan','kazanilan_puan','kaybedilen_puan','net_kazanilan_puan','basari'].map((alan) => metrik(card, alan)), [num(row.potansiyel_puan!), num(row.kazanilan_puan), num(row.kaybedilen_puan), num(row.net_kazanilan_puan), share]);
+        assert.equal(points.getAttribute('aria-label'), 'Puan Katkısı');
+        assert.match(card.querySelector('[role="img"]')!.getAttribute('aria-label')!, /Tamamlanma oranı/);
+        assert.equal(card.querySelector('.eyebrow')!.textContent, labels[period]);
+        assert.doesNotMatch(card.textContent!, /Yeni Yayın|Yeni yayın puanı|Oluşan Puan/);
+      }
+      assert.equal(section.querySelectorAll('details').length, 4);
     } finally { await dom.happyDOM.close(); }
   });
 }
@@ -83,7 +111,7 @@ for (const f of referans) {
 test('SQL neti ve başarı yüzdesi uygulamada yeniden hesaplanmaz; eksik/hatalı yanıt Tümü’ye dönmez', async () => {
   const original = referans[0].araclar.map((x) => ({ ...x, net_kazanilan_puan: 987, dogru_cevap_yuzdesi: 12.3 }));
   const args: unknown[] = [];
-  const db = { rpc: async (_n: string, a: unknown) => { args.push(a); return { data: original, error: null }; } } as unknown as SupabaseClient;
+  const db = { rpc: async (_n: string, a: unknown) => { args.push(a); return _n.endsWith('tuketimi_v1') ? { data: tuketimSatirlari(original), error: null } : _n.endsWith('potansiyel_puani_v1') ? { data: potansiyelSatirlari(original), error: null } : { data: original, error: null }; } } as unknown as SupabaseClient;
   const input = { baslangic, bitis, raporKimligi: 'pm', raporRolu: 'utt' as const };
   const result = await ortak.aracTuruDagilimi(db, input);
   assert.equal(result[0].net_kazanilan_puan, 987);
@@ -119,6 +147,8 @@ function apiFixture(rol = 'pm', authenticated = true, fail = false) {
     maybeSingle: async () => ({ data: { kullanici_id: id(3), firma_adi: 'Sentetik Firma' } }) };
   const db = { from: () => q, rpc: async (name: string, args: Record<string, unknown>) => {
     calls.push({ name, args: plain(args) });
+    if (name.endsWith('tuketimi_v1') && !fail) return { data: tuketimSatirlari(referans[0].araclar), error: null };
+    if (name.endsWith('potansiyel_puani_v1') && !fail) return { data: potansiyelSatirlari(referans[0].araclar), error: null };
     return fail ? { data: null, error: {} } : { data: name.endsWith('performansi_v1') ? referans[0].araclar : [], error: null };
   } };
   const { GET } = yukle<typeof import('@/app/(panel)/raporlar/api/uretim/route')>('app/(panel)/raporlar/api/uretim/route.ts', {
@@ -143,9 +173,10 @@ for (const role of [...roller.URETICI_ROLLER, ...roller.YONETICI_ROLLER, ...roll
       assert.deepEqual((await res.json()).data.arac_turu_tarih_araligi, { baslangic, bitis });
       for (const tool of turler) assert.equal((await f.GET(request(detailsQuery.replace('arac_turu=video', 'arac_turu=' + tool).replace('rapor_rolu=utt', 'rapor_rolu=' + reportRole)))).status, 200);
     }
-    assert.equal(f.calls.length, 30); assert.equal(f.firstTwo(), 6);
-    assert.ok(f.calls.every((c) => c.args.p_yonetici_id === reportId && c.args.p_baslangic === baslangic && c.args.p_bitis === bitis));
-    assert.deepEqual(f.calls.map((c) => c.args.p_rapor_rolu), [...Array(5).fill('tumu'), ...Array(5).fill('utt'), ...Array(5).fill('bm'), ...Array(5).fill('eczaci'), ...Array(5).fill('eczane_teknisyeni'), ...Array(5).fill('eczanem')]);
+    assert.equal(f.calls.length, 42); assert.equal(f.firstTwo(), 6);
+    assert.ok(f.calls.every((c) => c.args.p_yonetici_id === reportId));
+    assert.ok(f.calls.every((c) => c.args.p_baslangic === baslangic && c.args.p_bitis === bitis));
+    assert.deepEqual(f.calls.map((c) => c.args.p_rapor_rolu), [...Array(7).fill('tumu'), ...Array(7).fill('utt'), ...Array(7).fill('bm'), ...Array(7).fill('eczaci'), ...Array(7).fill('eczane_teknisyeni'), ...Array(7).fill('eczanem')]);
   });
 }
 
@@ -161,7 +192,7 @@ test('API oturum/yetki, hatalı araç/imleç/tarih ve RPC hatalarını reddeder'
   const bad = apiFixture('pm', true, true);
   assert.equal((await bad.GET(request('rapor_rolu=utt'))).status, 500);
   assert.equal((await bad.GET(request(detailsQuery))).status, 500);
-  assert.equal(bad.calls.length, 2);
+  assert.equal(bad.calls.length, 4);
 });
 
 test('React: detay açılana kadar istek yok; dört araç, sayfalama, hata/tekrar ve eski yanıtın iptali', async () => {
@@ -209,14 +240,142 @@ test('React: dört aracın boş özetinde sıfırlar görünür; boş detaylar i
   const { createRoot } = await import('react-dom/client');
   let requests = 0;
   const { default: Card } = kartModulu((async () => { requests++; throw new Error('Boş kapsam sorgulanmamalı'); }) as typeof fetch);
-  const db = { rpc: async () => ({ data: turler.map((arac_turu) => ({ arac_turu })), error: null }) } as unknown as SupabaseClient;
+  const db = { rpc: async (name: string) => name.endsWith('potansiyel_puani_v1') ? { data: turler.map((arac_turu) => ({ arac_turu, potansiyel_puan: 0 })), error: null } : name.endsWith('tuketimi_v1') ? { data: turler.map((arac_turu) => ({ arac_turu, toplam_yayin_sayisi: 0, baslatma: 0, tamamlama: 0, tamamlama_orani: null })), error: null } : { data: turler.map((arac_turu) => ({ arac_turu })), error: null } } as unknown as SupabaseClient;
   const rows = await ortak.aracTuruDagilimi(db, { baslangic, bitis, raporKimligi: 'pm', raporRolu: 'utt' });
   const container = dom.document.createElement('div'), root = createRoot(container);
   try {
     await act(async () => root.render(React.createElement(Card, { dagilim: rows, detayKapsami: { baslangic, bitis, periyot: 'bu_ay', raporRolu: 'utt' } })));
-    assert.equal((container.textContent!.match(/0 Yeni Yayın/g) ?? []).length, 4);
+    assert.doesNotMatch(container.textContent!, /Yeni Yayın/);
+    assert.equal((container.textContent!.match(/Potansiyel/g) ?? []).length, 4);
+    assert.equal(metrik(container.querySelector('article')!, 'toplam_yayin_sayisi'), '0');
     for (const el of container.querySelectorAll('details')) await act(async () => { el.open = true; el.dispatchEvent(new dom.Event('toggle')); });
     assert.equal(requests, 0);
     assert.equal((container.textContent!.match(/Bu dönemde etkileşim alan yayın yok/g) ?? []).length, 4);
   } finally { await act(async () => root.unmount()); await dom.happyDOM.close(); }
+});
+
+
+for (const reportRole of ['tumu','utt','bm','eczaci','eczane_teknisyeni','eczanem'] as const) {
+  for (const scope of ['uretici','firma'] as const) {
+    test(scope + '/' + reportRole + ': 1. alt kart dört dönemde yeni SQL’den gelir; puanlar ve detaylar korunur', async () => {
+      for (const period of referans.filter((r) => r.anahtar.startsWith(scope + ':'))) {
+        const calls: Array<{ name: string; args: Record<string, unknown> }> = [];
+        const sqlRows = turler.map((arac_turu, i) => ({
+          arac_turu, toplam_yayin_sayisi: String(100 + i), baslatma: String(200 + i),
+          tamamlama: String(50 + i), tamamlama_orani: i === 3 ? null : String(40 + i),
+        })).reverse();
+        const db = { rpc: async (name: string, args: Record<string, unknown>) => {
+          calls.push({ name, args: plain(args) });
+          return { data: name.endsWith('tuketimi_v1') ? sqlRows : name.endsWith('potansiyel_puani_v1') ? turler.map((arac_turu, i) => ({ arac_turu, potansiyel_puan: String(800 + i) })).reverse() : period.araclar, error: null };
+        } } as unknown as SupabaseClient;
+        const result = await ortak.aracTuruDagilimi(db, { ...period.aralik, raporKimligi: scope, raporRolu: reportRole });
+        assert.deepEqual(plain(result.map((r) => r.toplam_yayin_sayisi)), [100,101,102,103]);
+        assert.deepEqual(plain(result.map((r) => r.baslatma)), [200,201,202,203]);
+        assert.deepEqual(plain(result.map((r) => r.tamamlama)), [50,51,52,53]);
+        assert.deepEqual(plain(result.map((r) => r.tamamlama_orani)), [40,41,42,null]);
+        assert.deepEqual(plain(result.map((r) => r.potansiyel_puan)), [800,801,802,803]);
+        assert.deepEqual(calls[2], { name: 'get_yayin_raporlari_arac_potansiyel_puani_v1', args: {
+          p_yonetici_id: scope, p_baslangic: period.aralik.baslangic, p_bitis: period.aralik.bitis, p_rapor_rolu: reportRole,
+        } });
+        assert.deepEqual(calls[1], { name: 'get_yayin_raporlari_arac_tuketimi_v1', args: {
+          p_yonetici_id: scope, p_baslangic: period.aralik.baslangic, p_bitis: period.aralik.bitis, p_rapor_rolu: reportRole,
+        } });
+        for (const [i, row] of result.entries()) {
+          assert.equal(row.yayin_sayisi, period.araclar[i].yayin_sayisi);
+          assert.equal(row.kazanilan_puan, period.araclar[i].kazanilan_puan);
+          assert.equal(row.kaybedilen_puan, period.araclar[i].kaybedilen_puan);
+          assert.equal(row.net_kazanilan_puan, period.araclar[i].net_kazanilan_puan);
+          assert.deepEqual(plain(row.roller), period.araclar[i].roller);
+        }
+        const { default: Card } = kartModulu();
+        const dom = new Window();
+        try {
+          dom.document.body.innerHTML = renderToStaticMarkup(React.createElement(Card, { dagilim: result }));
+          const cards = [...dom.document.querySelector('section')!.children[1].children];
+          assert.deepEqual(['toplam_yayin_sayisi','baslatma','tamamlama','tamamlama_orani'].map((alan) => metrik(cards[0], alan)), ['100','200','50','%40']);
+          for (const [i, card] of cards.entries()) assert.equal(metrik(card, 'potansiyel_puan'), String(800 + i));
+        } finally { await dom.happyDOM.close(); }
+      }
+    });
+  }
+}
+
+test('tüketim SQL hatası/eksik yanıtı gizlenmez; eski toplam RPC’ye veya yerel hesaba dönülmez', async () => {
+  const input = { baslangic, bitis, raporKimligi: 'pm', raporRolu: 'utt' as const };
+  const good = tuketimSatirlari(referans[0].araclar);
+  const response = (answer: unknown) => ({ rpc: async (name: string) => {
+    assert.doesNotMatch(name, /toplamlari_v1/);
+    return name.endsWith('tuketimi_v1') ? answer : { data: referans[0].araclar, error: null };
+  } }) as unknown as SupabaseClient;
+  for (const bad of [
+    ...['PGRST202','42883','42501'].map((code) => ({ data: null, error: { code } })),
+    { data: [], error: null },
+    { data: good.map((r) => ({ ...r, toplam_yayin_sayisi: -1 })), error: null },
+    { data: good.map((r) => ({ ...r, baslatma: null })), error: null },
+    { data: good.map((r) => ({ ...r, tamamlama: 1.5 })), error: null },
+    { data: good.map((r) => ({ ...r, tamamlama_orani: 101 })), error: null },
+    { data: good.map((r) => ({ ...r, tamamlama_orani: undefined })), error: null },
+    { data: turler.map(() => good[0]), error: null },
+  ]) await assert.rejects(ortak.aracTuruDagilimi(response(bad), input), /tüketim özeti/);
+});
+
+
+test('Potansiyel Puan SQL hataları/eksik tutarlar gizlenmez; sıfır puan sıfır olarak gösterilir', async () => {
+  const input = { baslangic, bitis, raporKimligi: 'pm', raporRolu: 'utt' as const };
+  const base = referans[0].araclar;
+  const good = turler.map((arac_turu) => ({ arac_turu, potansiyel_puan: 0 }));
+  const response = (answer: unknown) => ({ rpc: async (name: string) => {
+    if (name.endsWith('potansiyel_puani_v1')) return answer;
+    return { data: name.endsWith('tuketimi_v1') ? tuketimSatirlari(base) : base, error: null };
+  } }) as unknown as SupabaseClient;
+  for (const bad of [
+    ...['PGRST202','42883','42501'].map((code) => ({ data: null, error: { code } })),
+    { data: [], error: null },
+    { data: good.map((r) => ({ ...r, potansiyel_puan: null })), error: null },
+    { data: good.map((r) => ({ ...r, potansiyel_puan: -1 })), error: null },
+    { data: good.map((r) => ({ ...r, potansiyel_puan: 1.5 })), error: null },
+    { data: good.map((r) => ({ ...r, potansiyel_puan: 'bozuk' })), error: null },
+    { data: good.map(() => good[0]), error: null },
+  ]) await assert.rejects(ortak.aracTuruDagilimi(response(bad), input), /potansiyel puanı/);
+  const rows = await ortak.aracTuruDagilimi(response({ data: good, error: null }), input);
+  assert.deepEqual(plain(rows.map((r) => r.potansiyel_puan)), [0,0,0,0]);
+  const { default: Card } = kartModulu();
+  const dom = new Window();
+  try {
+    dom.document.body.innerHTML = renderToStaticMarkup(React.createElement(Card, { dagilim: rows }));
+    const cards = [...dom.document.querySelector('section')!.children[1].children];
+    for (const card of cards) {
+      assert.equal(metrik(card, 'potansiyel_puan'), '0');
+    }
+  } finally { await dom.happyDOM.close(); }
+});
+
+
+test('Rol sayıları: dört araçta tek satırda beş grup, ikinci eczacı toplamı ve boş kayıtta sıfır', async () => {
+  const rolVerisi = {
+    utt: { baslatma: 80, tamamlama: 2 }, kd_utt: { baslatma: 90, tamamlama: 3 },
+    bm: { baslatma: 50, tamamlama: 4 },
+    eczaci: { baslatma: 40, tamamlama: 5 }, ikinci_eczaci: { baslatma: 30, tamamlama: 7 },
+    yardimci_eczaci: { baslatma: 20, tamamlama: 1 },
+    eczane_teknisyeni: { baslatma: 10, tamamlama: 6 },
+    musteri: { baslatma: 100, tamamlama: 8 },
+    yonetici: { baslatma: 200, tamamlama: 99 }, diger: { baslatma: 300, tamamlama: 99 },
+  };
+  const rows = referans[0].araclar.map((r, i) => ({ ...r, roller: i === 3 ? {} : rolVerisi }));
+  const { default: Card } = kartModulu();
+  const dom = new Window();
+  try {
+    dom.document.body.innerHTML = renderToStaticMarkup(React.createElement(Card, { dagilim: rows }));
+    const cards = [...dom.document.querySelector('section')!.children[1].children];
+    const titles = ['İzleme Sayıları','Dinleme Sayıları','İnceleme Sayıları','Okuma Sayıları'];
+    for (const [i, card] of cards.entries()) {
+      const area = card.querySelector('.audience')!;
+      assert.equal(area.getAttribute('aria-label'), titles[i]);
+      const cells = [...area.querySelectorAll('[data-rol]')];
+      assert.equal(cells.length, 5);
+      assert.deepEqual(cells.map((cell) => cell.getAttribute('data-rol')), ['UTT','BM','Eczacı','Ecz.Tekn.','Danışan']);
+      assert.deepEqual(cells.map((cell) => cell.lastElementChild!.textContent), i === 3 ? ['0','0','0','0','0'] : ['5','4','13','6','8']);
+      assert.doesNotMatch(area.textContent!, /Yönetici|Diğer|henüz tüketim kaydı/);
+    }
+  } finally { await dom.happyDOM.close(); }
 });
