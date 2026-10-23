@@ -25,7 +25,7 @@ import { tekrarIzlemeKontrol } from "@/lib/cclub/tekrarIzlemeKontrol";
 import { challengeOlustur } from "@/lib/cclub/kayit";
 import { AYLIK_MAX_GONDERIM } from "@/lib/cclub/sabitler";
 import { ayBaslangici } from "@/lib/zaman/kontrol";
-import { gecerliTurBaslangiclari } from "@/lib/tclub/tur/kayit";
+import { gecerliTur, gecerliTurBaslangiclari } from "@/lib/tclub/tur/kayit";
 import { rolCozucu } from "@/lib/utils/rolCozucu";
 import { ccKartMetrikleri } from "@/lib/cclub/kartDetaylari";
 import { ogrenmeAraciBayraklari } from "@/lib/ogrenmeAraci/bayraklar";
@@ -393,6 +393,13 @@ export async function POST(request: NextRequest) {
       return isKuraluHatasi("Bu öğrenme aracını önce kendiniz tamamlamadan challenge'a alamazsınız.");
     }
 
+    // Alıcı tamamlaması yalnız yayının geçerli turu içinde engel oluşturur.
+    const turSonuc = await gecerliTur(adminSupabase, yayin_id);
+    if (!turSonuc.ok || !turSonuc.tur) {
+      return hataYaniti("Yayının geçerli turu doğrulanamadı.", "gecerliTur — challenge alıcı kontrolü", turSonuc.error);
+    }
+    const turBaslangici = turSonuc.tur.baslangic_tarihi;
+
     const gonderenAdi = `${kullanici.ad} ${kullanici.soyad}`;
     const videoAdi = yayin.urun_adi ?? yayin.teknik_adi ?? "öğrenme aracı";
 
@@ -425,8 +432,8 @@ export async function POST(request: NextRequest) {
 
       // İş kuralı 3: Tekrar izleme (alıcı bu videoyu izlemiş mi)
       const alanAdi = `${alanKullanici.ad} ${alanKullanici.soyad}`;
-      const tekrar = await tekrarIzlemeKontrol(adminSupabase, alan_id, alanAdi, yayin_id);
-      if (!tekrar.izlenmemis) { atlanan.push({ alan_id, sebep: `${tekrar.izleyenAdi} bu videoyu zaten izlemiş.` }); continue; }
+      const tekrar = await tekrarIzlemeKontrol(adminSupabase, alan_id, alanAdi, yayin_id, turBaslangici);
+      if (!tekrar.izlenmemis) { atlanan.push({ alan_id, sebep: `${tekrar.izleyenAdi} bu yayını geçerli turda zaten tamamlamış.` }); continue; }
 
 
       // Oluştur

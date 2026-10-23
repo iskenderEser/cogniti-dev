@@ -2,7 +2,7 @@
 // Alıcı BM verilen videoyu daha önce izlemiş mi kontrolü.
 //
 // CC iş kuralı: BM-A bir videoyu BM-B'ye göndermek isterse, BM-B o videoyu
-// daha önce tamamlamışsa gönderim engellenir. Bu fonksiyon engelin tespitini yapar.
+// geçerli turda tamamlamışsa gönderim engellenir. Bu fonksiyon engelin tespitini yapar.
 //
 // İlgili dokümantasyon: Karar Belgesi 5 (lib katmanı), iş kuralı 4. madde.
 
@@ -10,19 +10,21 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { TekrarIzlemeSonuc } from "@/lib/cclub/tipler";
 
 /**
- * Alıcı BM bu videoyu izleyip tamamlamış mı kontrol eder.
+ * Alıcı BM bu yayını geçerli turda tamamlamış mı kontrol eder.
  *
  * @param supabase - Supabase client
  * @param alanId - Kontrol edilen BM'in kullanici_id'si
  * @param alanAdi - "Ad Soyad" formatında BM adı (UI mesajı için arayan tarafa hatırlatılır)
- * @param yayinId - Kontrol edilen video yayını
+ * @param yayinId - Kontrol edilen yayın
+ * @param turBaslangici - Yayının doğrulanmış geçerli tur başlangıcı
  * @returns izlenmemis=true ise gönderim engeli yok; false ise alanAdi UI mesajı için kullanılır.
  */
 export async function tekrarIzlemeKontrol(
   supabase: SupabaseClient,
   alanId: string,
   alanAdi: string,
-  yayinId: string
+  yayinId: string,
+  turBaslangici: string
 ): Promise<TekrarIzlemeSonuc> {
   const { data, error } = await supabase
     .from("cc_izleme_kayitlari")
@@ -30,6 +32,7 @@ export async function tekrarIzlemeKontrol(
     .eq("bm_id", alanId)
     .eq("yayin_id", yayinId)
     .eq("tamamlandi_mi", true)
+    .gte("izleme_baslangic", turBaslangici)
     .limit(1)
     .maybeSingle();
 

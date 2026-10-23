@@ -8,7 +8,8 @@
 --   (bu, Faz 2'de video tamamlanırken cc_izleme_tamamla içinde yapılıyor).
 --   Referral yalnız cevap başarıyla kaydedilince verilmeye devam eder.
 --
--- Gövdeler canlı pg_get_functiondef çıktısından birebir; yalnız [Faz 5] işaretli
+-- 23.10.2026 bulgu 2: CC fonksiyonundaki eski tarih engeli kaldırıldı.
+-- İlk kayıt canlı pg_get_functiondef çıktısına dayanır; ilk Faz 5 geçişinde [Faz 5] işaretli
 -- satırlar eklenmiş/çıkarılmıştır. İskender tarafından çalıştırılır (tek transaction).
 
 BEGIN;
@@ -160,9 +161,7 @@ BEGIN
        OR v_challenge.yayin_id <> v_izleme.yayin_id THEN
       RAISE EXCEPTION 'İzlemenin challenge bağı doğrulanamadı.' USING ERRCODE = 'P0001';
     END IF;
-    IF v_challenge.son_tarih < clock_timestamp() THEN
-      RAISE EXCEPTION 'Challenge süresi dolmuş.' USING ERRCODE = 'P0001';
-    END IF;
+    -- Süresiz challenge: tarihsel son_tarih cevap veya referral için engel değildir.
 
     SELECT COALESCE(MAX(
       CASE WHEN (sa.deger #>> '{}') ~ '^[0-9]+$' THEN (sa.deger #>> '{}')::integer END
