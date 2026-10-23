@@ -12,7 +12,7 @@ import { TUM_ROLLER } from "@/lib/utils/roller";
 import * as turSunumu from "@/lib/ogrenmeAraci/turSunumu";
 
 type Kimlik = { id: string; rol?: string; kimlik_turu?: string; firma_id?: string };
-async function ortam(kullanici: Kimlik | null = null, aktif = true) {
+async function ortam(kullanici: Kimlik | null = null, aktif = true, sayfa: "login" | "karsilama" = "login") {
   const dom = new Window({ url: "http://localhost/login" });
   for (const key of ["window", "document", "navigator", "HTMLElement", "Element", "Node", "Event", "MouseEvent", "HTMLInputElement"] as const) Object.defineProperty(globalThis, key, { configurable: true, value: dom[key] });
   Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
@@ -31,6 +31,7 @@ async function ortam(kullanici: Kimlik | null = null, aktif = true) {
   const css = { default: new Proxy({}, { get: (_, key) => String(key) }) };
   const modules: Record<string, unknown> = {
     react: React, "react/jsx-runtime": jsxRuntime, "lucide-react": icons,
+    "next/link": { default: ({ children, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => React.createElement("a", props, children) },
     "@/lib/panel/baslangic": baslangic,
     "next/navigation": { useRouter: () => router },
     "@/app/providers/AuthProvider": { useAuth: () => auth },
@@ -52,7 +53,9 @@ async function ortam(kullanici: Kimlik | null = null, aktif = true) {
     assert.ok(exports.default); return exports.default;
   }
   modules["@/components/panel/bilgi/CognitiHakkinda"] = { default: yukle("components/panel/bilgi/CognitiHakkinda.tsx") };
-  const Sayfa = yukle("app/login/page.tsx");
+  modules["@/app/login/login.module.css"] = css;
+  modules["@/app/login/_components/GirisAltBilgileri"] = modules["./_components/GirisAltBilgileri"];
+  const Sayfa = yukle(sayfa === "login" ? "app/login/page.tsx" : "app/_components/KarsilamaSayfasi.tsx");
   const container = dom.document.createElement("div"); dom.document.body.append(container);
   const root = createRoot(container);
   const render = () => act(async () => root.render(React.createElement(Sayfa)));
@@ -69,17 +72,15 @@ async function ortam(kullanici: Kimlik | null = null, aktif = true) {
   };
 }
 
-test("karşılama → modalsız giriş → sıfırlama → Cogniti’ye dönüş; değerler ve odak korunur", async () => {
+test("login doğrudan formu açar; sıfırlama, değerler ve odak korunur; dönüş ayrı adrestedir", async () => {
   const o = await ortam();
   try {
     await o.render();
-    assert.equal(o.container.querySelector("header")!.hidden, false);
-    const icerik = o.container.querySelector('article[aria-label="Cogniti Hakkında"]')!;
-    assert.ok(icerik); assert.equal(icerik.querySelectorAll("h3").length, 7);
-    await o.click(o.button("Giriş Yap"));
-    assert.equal(o.container.querySelector("header")!.hidden, true);
+    assert.equal(o.container.querySelector('article[aria-label="Cogniti Hakkında"]'), null);
+    assert.equal(o.container.querySelector("header"), null);
     assert.equal(o.container.querySelector('[role="dialog"]'), null);
     assert.equal(o.dom.document.activeElement?.id, "giris-kimlik");
+    assert.equal(o.container.querySelector<HTMLElement>("#giris-alani")!.hidden, false);
     await o.yaz("giris-kimlik", "ornek@example.invalid"); await o.yaz("giris-sifre", "sahte-sifre");
     await o.click(o.container.querySelector('[aria-label="Şifreyi göster"]'));
     assert.equal(o.container.querySelector<HTMLInputElement>("#giris-sifre")!.type, "text");
@@ -91,10 +92,25 @@ test("karşılama → modalsız giriş → sıfırlama → Cogniti’ye dönüş
     assert.match(o.container.querySelector('[role="status"]')!.textContent!, /kayıtlıysa/);
     await o.click(o.button("← Girişe dön"));
     assert.equal(o.container.querySelector<HTMLInputElement>("#giris-sifre")!.value, "sahte-sifre");
-    await o.click(o.button("← Cogniti’yi tanıyın"));
-    await act(async () => { await new Promise(resolve => setTimeout(resolve, 30)); });
-    assert.equal(o.container.querySelector("header")!.hidden, false);
-    assert.equal(o.container.querySelector<HTMLElement>("#giris-alani")!.hidden, true);
+    const back = [...o.container.querySelectorAll('a')].find((link) => link.textContent === "← Cogniti’yi tanıyın")!;
+    assert.equal(back.getAttribute('href'), '/ana-sayfa');
+    assert.equal(o.girisler.length, 0);
+  } finally { await o.kapat(); }
+});
+
+test("karşılama ayrı sayfada açıklamaları gösterir; Giriş Yap /login bağlantısıdır", async () => {
+  const o = await ortam(null, true, "karsilama");
+  try {
+    await o.render();
+    const article = o.container.querySelector('article[aria-label="Cogniti Hakkında"]')!;
+    assert.ok(article);
+    assert.equal(article.querySelectorAll("h3").length, 4);
+    assert.match(article.textContent!, /Bilgiyi ulaştırır, öğrenmeyi motive eder/);
+    assert.equal(o.container.querySelector("form"), null);
+    const link = [...o.container.querySelectorAll("a")].find((a) => a.textContent === "Giriş Yap")!;
+    assert.equal(link.getAttribute("href"), "/login");
+    assert.equal(o.container.querySelector('a[aria-label="Cogniti"]')!.getAttribute('href'), '/');
+    assert.deepEqual(o.yollar, []);
     assert.equal(o.girisler.length, 0);
   } finally { await o.kapat(); }
 });
@@ -102,7 +118,7 @@ test("karşılama → modalsız giriş → sıfırlama → Cogniti’ye dönüş
 test("e-posta girişi, beni hatırla ve servis hata mesajı korunur", async () => {
   const o = await ortam();
   try {
-    await o.render(); await o.click(o.button("Giriş Yap"));
+    await o.render();
     await o.yaz("giris-kimlik", "  ornek@example.invalid  "); await o.yaz("giris-sifre", "sahte-sifre");
     await o.click(o.container.querySelector('input[type="checkbox"]')); await o.submit();
     assert.deepEqual(JSON.parse(JSON.stringify(o.girisler)), [{ email: "ornek@example.invalid", password: "sahte-sifre" }]);
@@ -116,7 +132,7 @@ test("e-posta girişi, beni hatırla ve servis hata mesajı korunur", async () =
 test("telefon girişi mevcut API’ye gider; sıfırlama hatası görünür kalır", async () => {
   const o = await ortam();
   try {
-    await o.render(); await o.click(o.button("Giriş Yap"));
+    await o.render();
     await o.yaz("giris-kimlik", "05000000000"); await o.yaz("giris-sifre", "sahte-sifre"); await o.submit();
     assert.deepEqual(o.istekler, [{ telefon: "05000000000", sifre: "sahte-sifre" }]);
     assert.equal(o.girisler.length, 0); assert.match(o.container.querySelector('[role="alert"]')!.textContent!, /Telefon/);
@@ -149,7 +165,7 @@ test("kapalı firma çıkış yapar ve giriş formunda hata gösterir", async ()
 test("başarılı telefon girişi mevcut tam sayfa hedefini ve hatırlama tercihini korur", async () => {
   const o = await ortam();
   try {
-    await o.render(); await o.click(o.button("Giriş Yap"));
+    await o.render();
     o.telefonBasarisi(); await o.yaz("giris-kimlik", "05000000000"); await o.yaz("giris-sifre", "sahte-sifre"); await o.submit();
     assert.equal(o.dom.location.pathname, "/eczanem"); assert.deepEqual(o.tercihler, [true]);
   } finally { await o.kapat(); }
@@ -158,7 +174,7 @@ test("başarılı telefon girişi mevcut tam sayfa hedefini ve hatırlama tercih
 test("bekleyen davet oturumu davet ekranına yönlenir", async () => {
   const o = await ortam();
   try {
-    await o.render(); await o.click(o.button("Giriş Yap"));
+    await o.render();
     o.davet(); await o.yaz("giris-kimlik", "ornek@example.invalid"); await o.yaz("giris-sifre", "sahte-sifre"); await o.submit();
     assert.equal(o.dom.location.pathname, "/davet-bekliyor"); assert.deepEqual(o.tercihler, []);
   } finally { await o.kapat(); }

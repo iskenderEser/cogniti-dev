@@ -1,6 +1,5 @@
-// app/page.tsx
-import { redirect } from "next/navigation";
+import KarsilamaSayfasi from "./_components/KarsilamaSayfasi";
 
 export default function Home() {
-  redirect("/login");
+  return <KarsilamaSayfasi />;
 }

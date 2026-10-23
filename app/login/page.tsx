@@ -8,8 +8,8 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { beniHatirlaKaydet } from "@/lib/utils/beniHatirla";
 import { useTema } from "@/app/providers/TemaProvider";
-import CognitiHakkinda from "@/components/panel/bilgi/CognitiHakkinda";
-import { Eye, EyeOff, LogIn } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
+import Link from "next/link";
 import styles from "./login.module.css";
 import switchStyles from "@/components/tema/tema-secici.module.css";
 import GirisAltBilgileri from "./_components/GirisAltBilgileri";
@@ -30,11 +30,8 @@ export default function LoginPage() {
   const router = useRouter();
   const { kullanici, yukleniyor, cikisYap } = useAuth();
 
-  const [girisAcik, setGirisAcik] = useState(false);
   const kimlikRef = useRef<HTMLInputElement>(null);
   const sifirlamaRef = useRef<HTMLInputElement>(null);
-  const girisButonuRef = useRef<HTMLButtonElement>(null);
-  const karsilamaKaydirma = useRef(0);
   const { tema, temaDegistir } = useTema();
 
   useEffect(() => {
@@ -72,7 +69,6 @@ export default function LoginPage() {
         if (iptalEdildi) return;
         if (firma && firma.aktif === false) {
           await cikisYap();
-          setGirisAcik(true);
           setHata("Firmanızın sisteme erişimi şu anda kapalıdır. Lütfen yöneticinizle görüşün.");
           return;
         }
@@ -153,38 +149,13 @@ export default function LoginPage() {
   };
 
   useEffect(() => {
-    if (girisAcik) (sifirlamaAcik ? sifirlamaRef : kimlikRef).current?.focus({ preventScroll: true });
-  }, [girisAcik, sifirlamaAcik]);
-
-  function girisiAc() {
-    karsilamaKaydirma.current = window.scrollY;
-    setSifirlamaAcik(false);
-    setHata("");
-    setGirisAcik(true);
-    window.scrollTo({ top: 0, behavior: "instant" });
-  }
-
-  function karsilamayaDon() {
-    setGirisAcik(false);
-    window.requestAnimationFrame(() => {
-      window.scrollTo({ top: karsilamaKaydirma.current, behavior: "instant" });
-      girisButonuRef.current?.focus({ preventScroll: true });
-    });
-  }
+    (sifirlamaAcik ? sifirlamaRef : kimlikRef).current?.focus({ preventScroll: true });
+  }, [sifirlamaAcik]);
 
   return (
     <div className={styles.page}>
-      <header className={styles.header} hidden={girisAcik}>
-        <a className={styles.brand} href="#" aria-label="Cogniti" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }}>
-          <CognitiLogo width={220} height={73} />
-        </a>
-        <button ref={girisButonuRef} className={styles.action} type="button" aria-controls="giris-alani" onClick={girisiAc}>
-          <LogIn size={16} aria-hidden="true" />Giriş Yap
-        </button>
-      </header>
       <main>
-        <div hidden={girisAcik}><CognitiHakkinda /></div>
-        <section id="giris-alani" className={styles.authPage} aria-labelledby="giris-basligi" hidden={!girisAcik}>
+        <section id="giris-alani" className={styles.authPage} aria-labelledby="giris-basligi">
           <div className={styles.authContent}>
             <CognitiLogo className={styles.authLogo} width={200} height={66} />
             <h1 className={styles.heading} id="giris-basligi">{sifirlamaAcik ? "Şifre Sıfırlama" : "Giriş Yap"}</h1>
@@ -226,7 +197,7 @@ export default function LoginPage() {
                 <button type="submit" disabled={loading} className={styles.submit}>{loading ? "Giriş yapılıyor..." : "Giriş Yap"}</button>
               </form>
             )}
-            <button type="button" className={styles.back} onClick={karsilamayaDon}>← Cogniti’yi tanıyın</button>
+            <Link href="/ana-sayfa" className={styles.back}>← Cogniti’yi tanıyın</Link>
           </div>
         </section>
       </main>

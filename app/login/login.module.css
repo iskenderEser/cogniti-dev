@@ -2,7 +2,7 @@
 .page :where(button, input) { font-family: inherit; }
 .page [hidden] { display: none !important; }
 .page :where(button, a):focus-visible { outline: 2px solid var(--tema-kontrol-odak); outline-offset: 4px; }
-.header { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 104px; padding: 16px 7% 16px 12.27%; background: var(--tema-ust-menu-zemin); border-bottom: 1px solid var(--tema-cizgi); }
+.header { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 104px; padding: 16px max(56px, calc((100% - 1160px) / 2 + 56px)); background: var(--tema-ust-menu-zemin); border-bottom: 1px solid var(--tema-cizgi); }
 .brand { display: flex; align-items: center; text-decoration: none; }
 .brand img { display: block; width: 220px; height: auto; }
 .action { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 40px; padding: 9px 22px; border: 1px solid var(--tema-kontrol-eylem); border-radius: 999px; background: var(--tema-kontrol-eylem); color: var(--tema-kontrol-eylem-metin); font-size: 13px; font-weight: 700; line-height: 20px; cursor: pointer; }
@@ -45,14 +45,14 @@
 .themeSwitch { height: auto; padding: 0; }
 .themeSwitch button { height: 20px; }
 @media (max-width: 800px) {
-  .header { min-height: 90px; padding: 14px 7% 14px 12.27%; }
+  .header { min-height: 90px; padding: 14px 32px; }
   .brand img { width: 190px; }
   .footer { padding-inline: 32px; }
   .footerRow { align-items: flex-start; flex-direction: column; gap: 20px; }
   .legalLinks { gap: 12px 18px; }
 }
 @media (max-width: 560px) {
-  .header { min-height: 80px; padding: 14px 8%; gap: 16px; }
+  .header { min-height: 80px; padding: 14px 24px; gap: 16px; }
   .brand img { width: 156px; }
   .action { min-height: 37px; padding: 7px 15px; font-size: 12px; gap: 7px; }
   .action svg { width: 14px; height: 14px; }

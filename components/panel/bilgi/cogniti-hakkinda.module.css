@@ -28,8 +28,10 @@
 }
 
 .metin {
+  width: min(100%, 1160px);
   min-width: 0;
-  padding-inline: 12.27% 7%;
+  margin-inline: auto;
+  padding-inline: 56px;
   transform: translateY(8%);
 }
 
@@ -59,7 +61,7 @@
   }
 
   .metin {
-    padding-inline: 8%;
+    padding-inline: 24px;
     transform: none;
   }
 }
@@ -145,13 +147,13 @@
 
 
 @container (max-width: 800px) {
-  .icerik { padding-inline: 32px; }
+  .metin, .icerik { padding-inline: 32px; }
   .araclar { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; }
   .adimlar { gap: 24px; }
 }
 
 @container (max-width: 560px) {
-  .icerik { padding-inline: 24px; }
+  .metin, .icerik { padding-inline: 24px; }
   .bolum { padding-block: 32px; }
   .araclar { gap: 28px 20px; }
   .arac h3 { font-size: 16px; }

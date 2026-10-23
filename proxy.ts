@@ -34,6 +34,16 @@ export async function proxy(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser();
   const { pathname } = request.nextUrl;
+  // /ana-sayfa oturumlu kullanıcıda mevcut paneldir; ziyaretçide karşılama sayfasıdır.
+  // İçerik / üzerinden sunulur, tarayıcı adresi /ana-sayfa olarak kalır.
+  if (pathname === "/ana-sayfa" && !user) {
+    const hedef = new URL(request.url);
+    hedef.pathname = "/";
+    const karsilamaResponse = NextResponse.rewrite(hedef, { request });
+    supabaseResponse.cookies.getAll().forEach((cookie) => karsilamaResponse.cookies.set(cookie));
+    return karsilamaResponse;
+  }
+
   // Yalnız bir yetki/modül dönüşü gerektiğinde rolü çöz; normal istek yoluna sorgu ekleme.
   const panelBaslangicinaDon = async (istemci: SupabaseClient, bilinenRol?: string) => {
     if (!user) return NextResponse.redirect(new URL("/login", request.url));
