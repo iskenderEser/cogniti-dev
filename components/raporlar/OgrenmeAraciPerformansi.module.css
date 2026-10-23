@@ -1,9 +1,9 @@
 .grid {
-  --yapka-paper: light-dark(#fff, #162331);
-  --yapka-ink: light-dark(#1c3049, #e8eef7);
-  --yapka-muted: light-dark(#708199, #a9b7cb);
-  --yapka-line: light-dark(#e6ebf1, #344457);
-  --yapka-soft: light-dark(#f3f6fa, #1e2d40);
+  --yapka-paper: var(--tema-yayin-kart);
+  --yapka-ink: var(--tema-yayin-arac-metin);
+  --yapka-muted: var(--tema-yayin-arac-yardimci);
+  --yapka-line: var(--tema-yayin-arac-cizgi);
+  --yapka-soft: var(--tema-yayin-arac-zemin);
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   grid-auto-rows: 1fr;
@@ -14,10 +14,10 @@
   font-family: Arial, sans-serif;
 }
 .grid * { box-sizing: border-box; }
-.video { --yapka-accent: light-dark(#dd6566, #f29b9d); }
-.podcast { --yapka-accent: light-dark(#8d74c8, #c1abea); }
-.gorsel { --yapka-accent: light-dark(#498faf, #8bc4df); }
-.flip_pdf { --yapka-accent: light-dark(#bc9453, #dcb77c); }
+.video { --yapka-accent: var(--tema-yayin-video-vurgu); }
+.podcast { --yapka-accent: var(--tema-yayin-podcast-vurgu); }
+.gorsel { --yapka-accent: var(--tema-yayin-brosur-vurgu); }
+.flip_pdf { --yapka-accent: var(--tema-yayin-literatur-vurgu); }
 .article {
   min-width: 0;
   overflow: hidden;
@@ -57,7 +57,7 @@
 .scoreBottom div span { font-size: 10px; color: var(--yapka-muted); }
 .scoreBottom b { font-size: 15px; font-weight: 500; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .separator { color: var(--yapka-muted); font-size: 13px; padding-bottom: 1px; }
-.negative { color: light-dark(#c15b57, #eea3a0); }
+.negative { color: var(--tema-yayin-arac-kayip); }
 .audience { margin-top: 14px; }
 .audienceTitle { font-size: 10px; letter-spacing: .5px; color: var(--yapka-muted); margin-bottom: 10px; text-transform: uppercase; }
 .allRoles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: end; text-align: center; }

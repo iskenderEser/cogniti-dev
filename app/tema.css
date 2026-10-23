@@ -4726,3 +4726,52 @@
   --tema-cizim-madalya-donem-zemin: linear-gradient(140deg, #03142f 0%, #07549c 30%, #163f78 50%, #0862b0 70%, #020d21 100%);
 }
 
+
+/* Yayın Raporları: mavi tasarım korunur, yeşil görünüm ortak paletten çözülür. */
+:root,
+[data-tema="mavi"] {
+  --tema-yayin-kart: #fff;
+  --tema-yayin-metin: #263b55;
+  --tema-yayin-varyant-yardimci: #74859c;
+  --tema-yayin-varyant-cizgi: #e3eaf2;
+  --tema-yayin-varyant-iz: #eef2f7;
+  --tema-yayin-konu-yardimci: #72849a;
+  --tema-yayin-konu-cizgi: #e5ebf3;
+  --tema-yayin-konu-zemin: #f5f8fc;
+  --tema-yayin-konu-vurgu: #438fc2;
+  --tema-yayin-arac-metin: #1c3049;
+  --tema-yayin-arac-yardimci: #708199;
+  --tema-yayin-arac-cizgi: #e6ebf1;
+  --tema-yayin-arac-zemin: #f3f6fa;
+}
+[data-tema="yesil"] {
+  --tema-yayin-kart: var(--tema-yuzey);
+  --tema-yayin-metin: var(--tema-metin);
+  --tema-yayin-varyant-yardimci: var(--tema-ikincil-metin);
+  --tema-yayin-varyant-cizgi: var(--tema-cizgi);
+  --tema-yayin-varyant-iz: var(--tema-bilgi-zemini);
+  --tema-yayin-konu-yardimci: var(--tema-ikincil-metin);
+  --tema-yayin-konu-cizgi: var(--tema-cizgi);
+  --tema-yayin-konu-zemin: var(--tema-bilgi-zemini);
+  --tema-yayin-konu-vurgu: var(--tema-eylem);
+  --tema-yayin-arac-metin: var(--tema-metin);
+  --tema-yayin-arac-yardimci: var(--tema-ikincil-metin);
+  --tema-yayin-arac-cizgi: var(--tema-cizgi);
+  --tema-yayin-arac-zemin: var(--tema-bilgi-zemini);
+}
+/* Araç/varyant kimlikleri ve kazanım/kayıp anlam renkleri iki temada da korunur. */
+:root,
+[data-tema="mavi"],
+[data-tema="yesil"] {
+  --tema-yayin-varyant-v1: #348bc9;
+  --tema-yayin-varyant-v2: #8c72d5;
+  --tema-yayin-varyant-v3: #389b7d;
+  --tema-yayin-varyant-v4: #cf9440;
+  --tema-yayin-kazanim: #29896c;
+  --tema-yayin-konu-kayip: #cd6661;
+  --tema-yayin-video-vurgu: #dd6566;
+  --tema-yayin-podcast-vurgu: #8d74c8;
+  --tema-yayin-brosur-vurgu: #498faf;
+  --tema-yayin-literatur-vurgu: #bc9453;
+  --tema-yayin-arac-kayip: #c15b57;
+}

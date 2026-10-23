@@ -1,12 +1,12 @@
 .card {
-  --konu-paper: light-dark(#fff, #172331);
-  --konu-ink: light-dark(#263b55, #e6eef8);
-  --konu-muted: light-dark(#72849a, #a6b6c9);
-  --konu-line: light-dark(#e5ebf3, #34465b);
-  --konu-soft: light-dark(#f5f8fc, #203044);
-  --konu-blue: light-dark(#438fc2, #80bbe3);
-  --konu-green: light-dark(#29896c, #83cfb2);
-  --konu-red: light-dark(#cd6661, #eca29d);
+  --konu-paper: var(--tema-yayin-kart);
+  --konu-ink: var(--tema-yayin-metin);
+  --konu-muted: var(--tema-yayin-konu-yardimci);
+  --konu-line: var(--tema-yayin-konu-cizgi);
+  --konu-soft: var(--tema-yayin-konu-zemin);
+  --konu-blue: var(--tema-yayin-konu-vurgu);
+  --konu-green: var(--tema-yayin-kazanim);
+  --konu-red: var(--tema-yayin-konu-kayip);
   container-type: inline-size;
   min-width: 0;
   padding: 24px;
