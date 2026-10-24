@@ -22,6 +22,7 @@ export async function GET(request: Request) {
     const firmalar = kapsam.map((firma) => ({
       firma_id: firma.firma_id, firma_adi: firma.firma_adi,
       logo_url: firma.logo_url ?? null, eclub_store_aktif: firma.eclub_store_aktif === true,
+      eczanem_aktif: firma.eclub_aktif === true && firma.eczanem_aktif === true,
     })).sort((a, b) => a.firma_adi.localeCompare(b.firma_adi, "tr"));
     if (!firmaId && firmaRotasi === null) return NextResponse.json({ firmalar });
     const { data: urunler, error: urunHatasi } = await admin.from("urunler")

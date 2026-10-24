@@ -53,18 +53,19 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Yayında mı kontrol et
+    // İlk yayından sonra puan kilitlenir; yayını durdurmak bu kilidi kaldırmaz.
     const { data: yayin, error: yayinError } = await adminSupabase
       .from("yayin_yonetimi")
       .select("yayin_id")
       .eq("soru_seti_durum_id", soru_seti_durum_id)
-      .eq("durum", "yayinda")
-      .single();
+      .in("durum", ["yayinda", "Durduruldu"])
+      .limit(1)
+      .maybeSingle();
 
-    if (yayinError && yayinError.code !== "PGRST116") {
-      return hataYaniti("Yayın durumu sorgulanırken hata oluştu.", "yayin_yonetimi tablosu SELECT — Yayinda kontrolü", yayinError);
+    if (yayinError) {
+      return hataYaniti("Yayın geçmişi sorgulanırken hata oluştu.", "yayin_yonetimi SELECT — puan kilidi", yayinError);
     }
-    if (yayin) return isKuraluHatasi("Video yayında olduğu için soru puanları değiştirilemez. Önce yayını durdurun.");
+    if (yayin) return isKuraluHatasi("İlk kez yayımlandıktan sonra doğru cevap puanları değiştirilemez. Yayının durdurulması bu kuralı değiştirmez.");
 
     // Tüm puanlar tek upsert ile kaydedilir.
     // UNIQUE constraint: (soru_seti_durum_id, soru_index) — var olanı günceller, olmayanı insert eder.

@@ -40,8 +40,16 @@ export async function POST(request: NextRequest) {
       return validasyonHatasi(`Öğrenme aracı puanı 40-70 arasında ve 5'in katı olmalıdır. Girilen değer: ${video_puani}`, ["video_puani"]);
     }
 
-    const { data: yayin } = await adminSupabase.from("yayin_yonetimi").select("yayin_id").eq("arac_durum_id", arac_durum_id).eq("durum", "yayinda").maybeSingle();
-    if (yayin) return isKuraluHatasi("Öğrenme aracı yayında olduğu için puan değiştirilemez. Önce yayını durdurun.");
+    // İlk yayından sonra puan kilitlenir; yayını durdurmak bu kilidi kaldırmaz.
+    const { data: yayin, error: yayinError } = await adminSupabase
+      .from("yayin_yonetimi")
+      .select("yayin_id")
+      .eq("arac_durum_id", arac_durum_id)
+      .in("durum", ["yayinda", "Durduruldu"])
+      .limit(1)
+      .maybeSingle();
+    if (yayinError) return hataYaniti("Yayın geçmişi sorgulanırken hata oluştu.", "yayin_yonetimi SELECT — puan kilidi", yayinError);
+    if (yayin) return isKuraluHatasi("İlk kez yayımlandıktan sonra öğrenme aracı puanı değiştirilemez. Yayının durdurulması bu kuralı değiştirmez.");
     const { data: mevcut, error: mevcutHata } = await adminSupabase.from("ogrenme_araci_puanlari").select("arac_puan_id").eq("arac_durum_id", arac_durum_id).maybeSingle();
     if (mevcutHata) return hataYaniti("Mevcut araç puanı okunamadı.", "ogrenme_araci_puanlari SELECT", mevcutHata);
     const sonuc = mevcut
