@@ -24,6 +24,12 @@ async function ortam(uye = true, silmeAktif = true, rol = "utt") {
   const router = { push: (yol: string) => yollar.push(yol), replace: (yol: string) => yollar.push(yol), prefetch: noop };
   const cikisYap = async () => { cikislar++; };
   const modules: Record<string, unknown> = {
+    "@/components/rehber/EczaneKullanimKilavuzu": { default: () => null },
+    "@/components/rehber/UreticiKullanimKilavuzu": { default: () => null },
+    "@/lib/rehber/uttKilavuzu": { uttKilavuzunuSec: () => ({ giris: [], bolumler: [] }) },
+    "@/lib/rehber/bmKilavuzu": { bmKilavuzunuSec: () => ({ giris: [], bolumler: [] }) },
+    "@/lib/rehber/tmKilavuzu": { tmKilavuzunuSec: () => ({ giris: [], bolumler: [] }) },
+    "@/lib/rehber/yoneticiKilavuzu": { yoneticiKilavuzunuSec: () => ({ giris: [], bolumler: [] }) },
     react: React, "react/jsx-runtime": jsxRuntime,
     "next/navigation": { usePathname: () => uye ? "/eczanem" : "/ana-sayfa", useRouter: () => router },
     "./panelNav.config": nav, "@/lib/utils/roller": roller,
@@ -69,7 +75,7 @@ async function ortam(uye = true, silmeAktif = true, rol = "utt") {
     silmeler: () => silmeler, cikislar: () => cikislar,
     click: (element: Element | null | undefined) => { assert.ok(element); return act(async () => { (element as HTMLElement).click(); }); },
     tus: (key: string) => act(async () => dom.document.dispatchEvent(new dom.KeyboardEvent("keydown", { key, bubbles: true }))),
-    navbar: () => container.querySelector("#kity-navbar")!,
+    navbar: () => container.querySelector("#panel-navbar")!,
     drawer: () => [...container.querySelectorAll<HTMLDivElement>("div[style]")].find(el => el.style.width === "270px"),
     kapat: async () => { await act(async () => root.unmount()); await dom.happyDOM.close(); },
   };
@@ -79,7 +85,7 @@ test("ortak kabukta üyenin ana sayfa bağlantısı ve gerçek renk anahtarı ç
   const o = await ortam();
   try {
     await o.render();
-    assert.equal(o.container.querySelectorAll("#kity-navbar").length, 1);
+    assert.equal(o.container.querySelectorAll("#panel-navbar").length, 1);
     assert.equal(o.container.querySelectorAll("[data-panel-sidebar]").length, 1);
     for (const [etiket, yol] of [["Ana Sayfa", "/eczanem"]]) {
       await o.click([...o.navbar().querySelectorAll("button")].find(el => el.textContent === etiket));
@@ -189,7 +195,7 @@ for (const rol of roller.TUM_ROLLER) {
       const uretici = roller.URETICI_ROLLER.includes(rol);
       const anaSayfaSayisi = (alan: Element) => [...alan.querySelectorAll("button")].filter(el => el.textContent === "Ana Sayfa").length;
       assert.equal(anaSayfaSayisi(o.navbar()), uretici ? 0 : 1);
-      await o.click(o.navbar().querySelector("#kity-karsilama"));
+      await o.click(o.navbar().querySelector("#panel-ana-sayfa"));
       assert.equal(o.yollar.at(-1), uretici ? "/yayin-yonetimi" : "/ana-sayfa");
       await o.click(o.navbar().querySelector('[aria-label="Menü"]'));
       assert.ok(o.drawer());

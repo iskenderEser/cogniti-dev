@@ -40,6 +40,12 @@ async function ortam(pathname: string, yukleniyor = false, beklet = false) {
     videolar: ["a", "b"].map(id => ({ gonderim_id: id, yayin_id: id, eczane_id: id, urun_adi: `Ürün ${id}`, arac_turu: "video", gelis_tarihi: "2026-10-20", izleme_basladi: false, izlendi: false, begeni_sayisi: 0, favori_sayisi: 0, izlenme_sayisi: 0 })),
   };
   const modules: Record<string, unknown> = {
+    "@/components/rehber/EczaneKullanimKilavuzu": { default: () => null },
+    "@/components/rehber/UreticiKullanimKilavuzu": { default: () => null },
+    "@/lib/rehber/uttKilavuzu": { uttKilavuzunuSec: () => ({ giris: [], bolumler: [] }) },
+    "@/lib/rehber/bmKilavuzu": { bmKilavuzunuSec: () => ({ giris: [], bolumler: [] }) },
+    "@/lib/rehber/tmKilavuzu": { tmKilavuzunuSec: () => ({ giris: [], bolumler: [] }) },
+    "@/lib/rehber/yoneticiKilavuzu": { yoneticiKilavuzunuSec: () => ({ giris: [], bolumler: [] }) },
     react: React, "react/jsx-runtime": jsxRuntime, "lucide-react": icons,
     "next/navigation": { usePathname: () => pathname, useRouter: () => router, useSearchParams: () => searchParams },
     "next/link": { default: ({ href, children, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => React.createElement("a", { href, ...props }, children) },
@@ -130,7 +136,7 @@ test("ana sayfa gerçek ortak kabukta kapsamı ve yenilemede seçimi korur; prof
   const o = await ortam("/eczanem");
   try {
     await o.render();
-    assert.equal(o.container.querySelectorAll("#kity-navbar").length, 1);
+    assert.equal(o.container.querySelectorAll("#panel-navbar").length, 1);
     assert.equal(o.container.querySelectorAll("main").length, 1);
     assert.ok(o.container.querySelector('[role="switch"]'));
     const sidebar = o.container.querySelector("[data-panel-sidebar]")!;
@@ -160,7 +166,7 @@ test("Puanlarım ortak kabuğu kullanır ve yenileme mevcut puan bileşenine akt
   const o = await ortam("/eczanem/puanlarim");
   try {
     await o.render();
-    assert.equal(o.container.querySelectorAll("#kity-navbar").length, 1);
+    assert.equal(o.container.querySelectorAll("#panel-navbar").length, 1);
     const puan = o.container.querySelector("[data-puan-yenileme]")!;
     assert.equal(puan.getAttribute("data-puan-yenileme"), "0");
     await o.click(o.container.querySelector('[aria-label="Yenile"]'));
@@ -179,11 +185,11 @@ for (const path of ["/eczanem/puanlarim"]) {
       o.auth.yukleniyor = false;
       await o.render();
       assert.equal(o.yollar.at(-1), "/login");
-      assert.equal(o.container.querySelector("#kity-navbar"), null);
+      assert.equal(o.container.querySelector("#panel-navbar"), null);
       o.auth.kullanici = { ...o.uye, kimlik_turu: "kullanici", rol: "utt" };
       await o.render();
       assert.equal(o.yollar.at(-1), "/ana-sayfa");
-      assert.equal(o.container.querySelector("#kity-navbar"), null);
+      assert.equal(o.container.querySelector("#panel-navbar"), null);
       assert.equal(o.istekler.length, 0);
     } finally { await o.kapat(); }
   });
@@ -295,24 +301,24 @@ test("Ana Sayfa, logo ve mobil bağlantı seçili kapsamı ve oynatıcıyı temi
     const sidebar = o.container.querySelector("[data-panel-sidebar]")!;
     const grup = [...sidebar.querySelectorAll("button")].find(el => el.textContent === "Eczanelerim")!;
     if (grup.getAttribute("aria-expanded") === "false") await o.click(grup);
-    const anaButonu = () => [...o.container.querySelectorAll("#kity-navbar button")].find(el => el.textContent === "Ana Sayfa")!;
+    const anaButonu = () => [...o.container.querySelectorAll("#panel-navbar button")].find(el => el.textContent === "Ana Sayfa")!;
     assert.equal(anaButonu().getAttribute("aria-pressed"), "true");
     const tumButonu = () => [...sidebar.querySelectorAll("[data-nav-secim]")].find(el => el.textContent === "Tüm İçerikler")!;
     assert.equal(tumButonu().getAttribute("aria-pressed"), "false");
     const raf = () => o.container.querySelector('[data-raf="Yeni Yayınlar"]')!;
     const kapsamSec = async () => { const baslik = [...sidebar.querySelectorAll("button")].find(el => el.textContent === "Eczanelerim")!; if (baslik.getAttribute("aria-expanded") === "false") await o.click(baslik); await o.click([...sidebar.querySelectorAll("[data-nav-secim]")].find(el => el.textContent === "Eczane a")); assert.equal(raf().textContent, "Ürün a"); assert.equal(anaButonu().getAttribute("aria-pressed"), "false"); };
     await kapsamSec();
-    await o.click([...o.container.querySelectorAll("#kity-navbar button")].find(el => el.textContent === "Ana Sayfa"));
+    await o.click([...o.container.querySelectorAll("#panel-navbar button")].find(el => el.textContent === "Ana Sayfa"));
     assert.equal(raf().querySelectorAll("button").length, 2);
     assert.equal(tumButonu().getAttribute("aria-pressed"), "false");
     await kapsamSec(); await o.click(raf().querySelector("button"));
     assert.ok(o.container.querySelector("[data-oynatici]"));
-    await o.click(o.container.querySelector("#kity-karsilama"));
+    await o.click(o.container.querySelector("#panel-ana-sayfa"));
     assert.equal(o.container.querySelector("[data-oynatici]"), null);
     assert.equal(raf().querySelectorAll("button").length, 2);
     assert.equal(tumButonu().getAttribute("aria-pressed"), "false");
     await kapsamSec(); await o.click(o.container.querySelector('[aria-label="Menü"]'));
-    const mobilAnaSayfa = [...o.container.querySelectorAll("button")].find(el => el.textContent === "Ana Sayfa" && !el.closest("#kity-navbar"));
+    const mobilAnaSayfa = [...o.container.querySelectorAll("button")].find(el => el.textContent === "Ana Sayfa" && !el.closest("#panel-navbar"));
     await o.click(mobilAnaSayfa); assert.equal(raf().querySelectorAll("button").length, 2);
     assert.equal(tumButonu().getAttribute("aria-pressed"), "false");
     await kapsamSec();
@@ -320,7 +326,7 @@ test("Ana Sayfa, logo ve mobil bağlantı seçili kapsamı ve oynatıcıyı temi
     assert.equal(raf().querySelectorAll("button").length, 2);
     assert.equal(tumButonu().getAttribute("aria-pressed"), "true");
     assert.equal(anaButonu().getAttribute("aria-pressed"), "false");
-    await o.click([...o.container.querySelectorAll("#kity-navbar button")].find(el => el.textContent === "Ana Sayfa"));
+    await o.click([...o.container.querySelectorAll("#panel-navbar button")].find(el => el.textContent === "Ana Sayfa"));
     assert.equal(tumButonu().getAttribute("aria-pressed"), "false");
     assert.equal(anaButonu().getAttribute("aria-pressed"), "true");
     assert.equal(o.yollar.at(-1), "/eczanem");

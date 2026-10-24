@@ -104,7 +104,7 @@ for (const mobil of [false, true]) {
     const o = await ortam(mobil);
     try {
       await o.render();
-      await o.click([...o.container.querySelectorAll("button[data-kity-menu]")].find(el => el.getAttribute("data-kity-menu") === encodeURIComponent("Eczanelerim")));
+      await o.click([...o.container.querySelectorAll("button")].find(el => el.textContent?.trim() === "Eczanelerim"));
       await o.click(o.bul("data-nav-dal", ["eczane", "a"]));
       assert.equal(o.bul("data-nav-dal", ["eczane", "b"])!.getAttribute("aria-expanded"), "false");
       assert.equal(o.secimler.length, 0);

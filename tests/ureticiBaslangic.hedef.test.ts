@@ -180,8 +180,8 @@ test("gerçek panel layout'u 13 üreticide boş bilgi pilleri ve yeni logo hedef
   } finally { await act(async () => root.unmount()); await dom.happyDOM.close(); }
 });
 
-test("kaldırılan üretici ekranı, veri ve tur dosyaları artık mevcut değil", () => {
-  for (const dosya of ["components/ana-sayfa/UreticiAnaSayfa.tsx", "lib/utils/anaSayfa/uretici.ts", "components/rehber/KityGirisTuru.tsx", "lib/rehber/kityGirisTuru.ts", "lib/auth/kityTercihi.ts"]) {
+test("kaldırılan üretici ekranı, veri dosyaları artık mevcut değil", () => {
+  for (const dosya of ["components/ana-sayfa/UreticiAnaSayfa.tsx", "lib/utils/anaSayfa/uretici.ts"]) {
     assert.equal(existsSync(dosya), false, dosya);
   }
 });

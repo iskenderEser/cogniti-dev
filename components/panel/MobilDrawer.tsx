@@ -211,6 +211,7 @@ export default function MobilDrawer(props: MobilDrawerProps) {
         {/* Kapat */}
         <div className="flex justify-end mb-1">
           <button
+            aria-label="Menüyü kapat"
             onClick={props.onKapat}
             className="bg-transparent border-none cursor-pointer"
             style={{ fontSize: "20px", color: "var(--tema-yardimci-metin)", lineHeight: 1, padding: "2px 6px" }}
@@ -247,7 +248,6 @@ export default function MobilDrawer(props: MobilDrawerProps) {
               <div key={grup.baslik} className="flex flex-col gap-1">
                 <button
                   type="button"
-                  data-kity-menu={encodeURIComponent(grup.baslik)}
                   aria-expanded={acik}
                   onClick={() => grupToggle(grup.baslik)}
                   className="flex w-full cursor-pointer items-center justify-between border-none bg-transparent"

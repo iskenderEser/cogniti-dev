@@ -64,7 +64,7 @@ export default function RenkKarsilastirma({ navbarDili = false }: { navbarDili?:
         <span className={styles.menuOgesi}><Compass size={16} /> Keşfet</span>
         <span className={styles.menuOgesi}><Heart size={16} /> Favorilerim</span>
         <span className={styles.menuOgesi}><Trophy size={16} /> Ligim</span>
-        <div className={styles.menuAlt}><span className={styles.minikIsaret}>✦</span><p>Öğrenmenin<br /><strong>yeni bir bakışı var.</strong></p><Link href="/rehber-demo">Rehber demosu <ArrowUpRight size={13} /></Link></div>
+        <div className={styles.menuAlt}><span className={styles.minikIsaret}>✦</span><p>Öğrenmenin<br /><strong>yeni bir bakışı var.</strong></p></div>
         <div className={styles.profil}><span><UserRound size={17} /></span><p>Örnek kullanıcı<small>Üye çalışma alanı</small></p></div>
       </aside>
 
