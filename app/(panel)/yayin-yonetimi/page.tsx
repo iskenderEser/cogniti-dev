@@ -249,12 +249,21 @@ function YayinYonetimiIcerik() {
 
         <div className="flex min-w-0 flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
           <YayinDurumuToggle aktifDurum={aktifSekme} onDurumDegistir={setAktifSekme} />
-          <ListeArama
-            arama={aktifSekme === "bekleyen" ? bekleyenListe.arama : aktifSekme === "yayinda" ? yayindaListe.arama : durdurulanListe.arama}
-            yukseklik="secim"
-            genislik="w-full"
-            className="w-full sm:ml-auto sm:w-[344px] sm:shrink"
-          />
+          {aktifSekme === "bekleyen" ? (
+            <ListeArama
+              arama={bekleyenListe.arama}
+              yukseklik="secim"
+              genislik="w-full"
+              className="w-full sm:ml-auto sm:w-[344px] sm:shrink"
+            />
+          ) : (
+            <ListeArama
+              arama={aktifSekme === "yayinda" ? yayindaListe.arama : durdurulanListe.arama}
+              yukseklik="secim"
+              genislik="w-full"
+              className="w-full sm:ml-auto sm:w-[344px] sm:shrink"
+            />
+          )}
         </div>
 
         {yy.loading ? (
