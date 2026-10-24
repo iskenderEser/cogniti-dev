@@ -353,8 +353,6 @@ Alan adı dosya yolundan üretilmiş bulma etiketidir; ortak bileşen birden faz
 | public/icon-512.png | 43360 | Piksel içeriği; CSS renk sabiti değildir. Varlık olarak kaydedildi. |
 | public/kursu_5_0926-banner.png | 1226918 | Piksel içeriği; CSS renk sabiti değildir. Varlık olarak kaydedildi. |
 | public/logo-download.png | 29235 | Piksel içeriği; CSS renk sabiti değildir. Varlık olarak kaydedildi. |
-| public/rehber/cogniti-sprite.png | 1459093 | Piksel içeriği; CSS renk sabiti değildir. Varlık olarak kaydedildi. |
-| public/rehber/kity-veda.png | 1366557 | Piksel içeriği; CSS renk sabiti değildir. Varlık olarak kaydedildi. |
 
 ## 12. İnceleme sonucu ve sınırı
 

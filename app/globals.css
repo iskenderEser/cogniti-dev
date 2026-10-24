@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @import "./tema.css";
 
+/* Dokümanlardaki kod örnekleri uygulama sınıfı olarak derlenmez. */
+@source not "../docs";
+
 :root {
   --radius: 0.75rem;
 }
