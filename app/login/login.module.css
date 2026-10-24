@@ -65,3 +65,29 @@
   .footerBottom { gap: 14px; flex-wrap: wrap; }
 }
 @media (prefers-reduced-motion: reduce) { .page * { scroll-behavior: auto !important; transition: none !important; } }
+
+/* Karşılama sayfasının telefon ve tablet düzeni. */
+@media (max-width: 1024px) {
+  .welcomePage .header { min-height: 88px; padding-inline: 32px; gap: 20px; }
+  .welcomePage .brand { min-width: 0; flex-shrink: 1; }
+  .welcomePage .brand img { max-width: 100%; }
+  .welcomePage .action { flex-shrink: 0; min-height: 44px; white-space: nowrap; }
+  .welcomePage .footer { padding-inline: 32px; font-size: 12px; }
+  .welcomePage .footerRow { align-items: flex-start; flex-direction: column; gap: 16px; }
+  .welcomePage .legalLinks { gap: 4px 20px; }
+  .welcomePage .legalLinks button,
+  .welcomePage .contactLinks a { display: inline-flex; align-items: center; min-height: 44px; }
+  .welcomePage .themeSwitch button { min-width: 44px; min-height: 44px; }
+  .welcomePage .appearance { font-size: 12px; }
+  .welcomePage .copyright { font-size: 11px; line-height: 1.6; }
+}
+@media (max-width: 560px) {
+  .welcomePage .header { min-height: 76px; padding: 12px 20px; gap: 12px; }
+  .welcomePage .brand img { width: clamp(132px, 40vw, 156px); }
+  .welcomePage .action { padding: 10px 16px; }
+  .welcomePage .footer { padding: 20px 20px 24px; }
+  .welcomePage .legalLinks { width: 100%; flex-direction: column; align-items: stretch; gap: 0; }
+  .welcomePage .legalLinks button { width: 100%; white-space: normal; text-align: left; line-height: 1.6; }
+  .welcomePage .contactLinks { gap: 4px 16px; }
+  .welcomePage .footerBottom { align-items: flex-start; flex-direction: column; gap: 8px; margin-top: 16px; }
+}

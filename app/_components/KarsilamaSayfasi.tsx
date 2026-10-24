@@ -13,7 +13,7 @@ import switchStyles from "@/components/tema/tema-secici.module.css";
 export default function KarsilamaSayfasi() {
   const { tema, temaDegistir } = useTema();
   return (
-    <div className={styles.page}>
+    <div className={`${styles.page} ${styles.welcomePage}`}>
       <header className={styles.header}>
         <Link className={styles.brand} href="/" aria-label="Cogniti">
           <CognitiLogo width={220} height={73} />
