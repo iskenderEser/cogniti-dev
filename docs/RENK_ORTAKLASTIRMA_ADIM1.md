@@ -22,7 +22,6 @@ Kaynak: [sade-kontroller.module.css](../components/kontrol/sade-kontroller.modul
 | `--blue` | Kontrol vurgusu, seçili seçenek/sekme, kapsül zemini ve checkbox vurgusu | `#237ac8` | `--tema-kontrol-eylem` | `var(--tema-eylem)` → `#355545` | Rehber demosundaki eylem rengi |
 | `--hover` | Seçenek üzerine gelme/seçim zemini ve kapsül üzerine gelme zemini | `#edf6ff` | `--tema-kontrol-hover` | `var(--tema-secili)` → `#edf2e7` | Rehber demosundaki seçili sekme zemini |
 
-Yeşil kaynak referansları: [rehber-demo CSS](../app/rehber-demo/demo.module.css) ve [rehber CSS](../components/rehber/rehber.module.css). Bunların ortak paletteki karşılıkları kullanıldı.
 
 Bu grup mevcut altı yerel değişkenle sınırlıdır. Doğrudan yazılmış focus/ok renkleri, gölgeler, seçili kapsülün beyaz metni, yerel sayfa istisnaları ve diğer aileler bu adımda taşınmadı. Durum/başarı/hata renkleri değiştirilmedi. Kontrol mavisi `#237ac8`, genel eylem mavisi `#2563eb` ile birleştirilmedi.
 

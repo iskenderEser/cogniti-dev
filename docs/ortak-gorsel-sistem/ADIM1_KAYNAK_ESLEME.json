@@ -2138,21 +2138,6 @@
       "envanterleAyni": true
     },
     {
-      "dosya": "app/rehber-demo/RehberDemo.tsx",
-      "sha256": "d18b56f5779f1dd36fc7613fb7e35dd380900a170392eb2c6a0adfa1f4ea3ccb",
-      "envanterleAyni": true
-    },
-    {
-      "dosya": "app/rehber-demo/demo.module.css",
-      "sha256": "5a406a2cc530bf36aeb581647ee49b4a4aae8d67af30da5182a7fd56fa5ff5a7",
-      "envanterleAyni": true
-    },
-    {
-      "dosya": "app/rehber-demo/page.tsx",
-      "sha256": "d3f479b8c82cdf87eb8d47a57a46db105af6668d885ff31c4c2c192a377079cf",
-      "envanterleAyni": true
-    },
-    {
       "dosya": "app/renk-demo/RenkKarsilastirma.tsx",
       "sha256": "9b3ad3720d4578094d0903724b09408a9e2c0032d95180baac393c2de4e002e3",
       "envanterleAyni": true
@@ -2828,11 +2813,6 @@
       "envanterleAyni": true
     },
     {
-      "dosya": "components/rehber/KityVeda.tsx",
-      "sha256": "e2e3beb3fc4867f92c81577dba0b98257e81f9e5b78f8b47a83d1952573b6e47",
-      "envanterleAyni": true
-    },
-    {
       "dosya": "components/rehber/SayfaRehberi.tsx",
       "sha256": "310ababdf3c61d5cbc755738bf9804a4b276a9f88705ec5d8c20202cb6166977",
       "envanterleAyni": true
@@ -2840,21 +2820,6 @@
     {
       "dosya": "components/rehber/UretimVaryantlariModal.tsx",
       "sha256": "ccc56fa15becd2376f0ec2ad368e718d384e1e62800d93be83960c162b8cf6d0",
-      "envanterleAyni": true
-    },
-    {
-      "dosya": "components/rehber/YuruyenRehber.tsx",
-      "sha256": "de281117116a28f3de25593769894b94b4c27a904e82a10b88ecfcab03f599b5",
-      "envanterleAyni": true
-    },
-    {
-      "dosya": "components/rehber/konum.ts",
-      "sha256": "9b54fd958245333662ff60e18ae61e6126ec5135a540e437f694934807674834",
-      "envanterleAyni": true
-    },
-    {
-      "dosya": "components/rehber/rehber.module.css",
-      "sha256": "18f83a456ac1ded3fe3e628728abfa7b7bdb0b4cb0b9854100c906927d596d86",
       "envanterleAyni": true
     },
     {

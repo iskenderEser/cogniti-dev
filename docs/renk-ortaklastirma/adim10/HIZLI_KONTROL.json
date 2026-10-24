@@ -1163,27 +1163,6 @@
       ]
     },
     {
-      "dosya": "components/rehber/rehber.module.css",
-      "adet": 37,
-      "ornekler": [
-        {
-          "satir": 1,
-          "deger": "#253b36",
-          "tur": "hex"
-        },
-        {
-          "satir": 2,
-          "deger": "#b68650",
-          "tur": "hex"
-        },
-        {
-          "satir": 2,
-          "deger": "#b6865017",
-          "tur": "hex"
-        }
-      ]
-    },
-    {
       "dosya": "components/ui/badge.tsx",
       "adet": 25,
       "ornekler": [
@@ -1553,22 +1532,6 @@
           "satir": 76,
           "deger": "text-muted-foreground",
           "tur": "tailwind-renk"
-        }
-      ]
-    },
-    {
-      "dosya": "components/rehber/YuruyenRehber.tsx",
-      "adet": 2,
-      "ornekler": [
-        {
-          "satir": 208,
-          "deger": "#a16a35",
-          "tur": "hex"
-        },
-        {
-          "satir": 209,
-          "deger": "#a16a35",
-          "tur": "hex"
         }
       ]
     },

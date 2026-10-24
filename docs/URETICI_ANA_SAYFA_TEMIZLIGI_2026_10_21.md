@@ -22,11 +22,7 @@ Tam silinen uygulama dosyaları:
 
 - `components/ana-sayfa/UreticiAnaSayfa.tsx`
 - `lib/utils/anaSayfa/uretici.ts`
-- `components/rehber/KityGirisTuru.tsx`
-- `lib/rehber/kityGirisTuru.ts`
-- `lib/auth/kityTercihi.ts`
 
-Bunlara özel `tests/kityGirisTuru.hedef.test.ts` de silindi. Üretici ekranının dinamik importu, rol eşlemesi, API dalı, `rolTeknikKullanirMi` yardımcısı, `uretici-yayin-listesi` rehber kaydı, tur tercihi CSS'i ve üç tek kullanımlık tema değişkeninin beş tanımı kaldırıldı. Ortak test dosyalarındaki yalnız kaldırılan ekrana ait beklentiler çıkarıldı; genel rehber motoru testleri bağımsız örnek veriye geçirildi.
 
 Genel rehber motoru, ortak liste/pill/tanbur bileşenleri, üretim zinciri, Talepler, raporlar ve SQL görünümleri korundu. Kullanıcı metadata'sı veya tarayıcı deposu topluca temizlenmedi. Önceden var olan yerel değişiklikler geri alınmadı.
 
@@ -72,4 +68,3 @@ Aşağıdaki kontrol adları mevcut ve temizlik öncesi kopyada eşleşti:
 
 Bu kontrollerin bir bölümü güncel olmayan dosya yolu, metin veya kaynak şekli beklentileridir. Eksik `/raporlar/eczanem` dosyasını bekleyen Faz 7 test dosyası da bu gruptadır. Görev dışı ekran/iş kuralları bu testleri yeşile çevirmek amacıyla değiştirilmedi.
 
-Güncel davranış `docs/BLUEBOOK.MD` ve `docs/ONAYLI_URL_DEGISIKLIKLERI_2026_10_18.md` içine işlendi. Eski Kity planı arşiv olarak işaretlendi.

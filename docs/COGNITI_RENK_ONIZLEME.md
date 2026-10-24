@@ -28,7 +28,6 @@ Ana palet artık `app/tema.css` ortak kaynağından gelir; tema kimlikleri `lib/
 | Ek puan rozeti | Yeşil gradyan | `#e8eedd`, metin `#536d4c` |
 | Açılan pencere | Beyaz | `#fffefb`, kenar `#e0d6c6` |
 
-Kullanıcının düzeltmesiyle yalnız zemin değil tüm renk ayrıntıları walkthrough referansına uyarlandı. Kaynaklar `app/rehber-demo/demo.module.css` ve `components/rehber/rehber.module.css`: sayfa, panel, sekme, düğme, kapak, puan alanı, balon ve odak renkleri doğrudan bu dosyalardan alındı. Yoğun kartlardaki küçük metinler için walkthrough balonunun okunaklı `#68766e` rengi kullanıldı.
 
 Örnek kartların varsayılan video/görsel kapakları açık adaçayı, podcast/literatür kapakları krem ve sütlü kahve tonları kullanır. Yayın türü pilleri, durum metinleri, puan/ek puan, beğeni/favori, çizgiler, gezinme, pencere ve odak ayrıntıları da bu palete uyar. Durumların metinleri ve seçili simgelerin doluluğu korunur. Yüklenmiş gerçek yayın görsellerine filtre veya renk müdahalesi uygulanmaz. İki palet kullanıcı tarafından benimsendi; gerçek ekranların dönüşümü aşamalı ilerleyecek.
 

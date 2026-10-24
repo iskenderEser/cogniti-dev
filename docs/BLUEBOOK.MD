@@ -441,7 +441,6 @@ Kulüp motorları ve ortak platform katmanları, ortak mimari ilkeler içinde ke
 
 1. **`YayinKarti` ile HOYK Tekilleştirmesi:** Farklı yayın modüllerindeki dağınık kart sunumları tek kanonik `components/yayin/YayinKarti.tsx` bileşeni altında birleştirilmiştir. Kart üzerinde thumbnail, öğrenme aracı türü pill'i (`YayinTuruPill`), durum ve içerik türü kapsülü, beğeni, favori ve izlenme sayaçları standartlaştırılmıştır. Ürün adı mobilde `text-base leading-[22px] font-bold`, masaüstünde `sm:text-xs` (12px) tipografisiyle sunulur. Video puanı `video_puani != null` koşulunda mobilde `{video_puani} P`, tablet ve masaüstünde `{video_puani} Puan` olarak (önünde “+” bulunmaksızın) tüm rollerde şeffaf gösterilir; bu görsel şeffaflık izleyiciye puan kazanma yetkisi doğurmaz ve yetkiler API düzeyinde korunur. Extra puan yalnız `extra_puan > 0` olduğunda `+{extra_puan} Extra` rozetiyle basılır. Kart genişletme alanları olarak `solUstRozet`, `sagUstEkRozet`, `puanYaniRozet`, `altEkIcerik` ve `hoverOverlay` prop'ları sağlanmıştır.
 2. **`MobilYayinAkisi` ile 2 + 5 Mobil Liste Sözleşmesi:** `components/yayin/MobilYayinAkisi.tsx`, kapsama alınan yayın yüzeylerinin (UTT/KD_UTT ana sayfa, kategori ve öneriler; Saha BM/TM ana sayfa rafları; Yönetici ana sayfa ve yayındaki videolar; Üretici sizin/tüm yayınlarınız; C-Club gelen/giden listeleri; E-Club firma video kataloğu; Eczanem video rafları; Yayın Yönetimi aktif yayınlar) merkezi dikey mobil liste motorudur. Mobilde tek sütun dikey liste (`grid-cols-1`) sunar; başlangıçta 2 kayıt açılır ve “Daha Fazla Göster” butonuyla her seferinde en fazla 5 kayıt eklenir. `Number.isFinite` ve pozitif tam sayı dilimleme sınırları uygulanmıştır. Kategori, sekme, kapsam veya arama alanı değiştiğinde (`sifirlamaAnahtari`) akış güvenli biçimde 2 kayda sıfırlanır; aynı kapsamda veri yenilendiğinde kullanıcının açtığı kayıt sayısı korunur. Tablet ve masaüstü grid veya yatay raf düzenleri `masaustuIcerik` prop'u üzerinden eksiksiz korunur.
-3. **`HayaletTanburSecici` Ortak Bileşeni ve Rol Kapsamı:** `components/navigasyon/HayaletTanburSecici.tsx`, mobil ana sayfalarda sağ kenarda yüzen dikey 3D kutusuz silindir navigasyon tekerleği olarak sisteme eklenmiştir. Dokunma ve fare tekerleğini destekler, açıkken arka plan kaydırmasını kilitler ve lokal buğu efektiyle odak sağlar. Seçilen bölümü sayfanın mevcut state'ine bağlar; yayın erişim yetkisi üretmez. Güncel ana sayfa akışında UTT/KD_UTT, BM, TM ve yönetici yüzeylerinde kullanılır. Üretici ana sayfasında koşulsuz Tanbur bulunduğunu söyleyen eski kayıt geçerli değildir: 13 üretici rolü `lib/panel/baslangic.ts` üzerinden `/yayin-yonetimi` adresine yönlendirilir; ana sayfa rol haritasında üretici içeriği açılmaz. Yönetici ana sayfasında Tanbur `tanburBolumleri.length > 1` koşuluna bağlıdır. BM'nin ortak saha raflarında `SahaVideoRaflari`, TM'nin kendi raf görünümünde `TmAnaSayfa` kullanılır. UTT/KD_UTT ana sayfasında Tanbur aktif durum filtresi açık değilken çizilir.
 4. **Arama/Kategori/Kapsam Sıfırlama Sözleşmesi:** `components/liste/IcerikFiltreBari.tsx` bileşeni ve `useOneriler` kancası entegrasyonuyla; arama metni, arama alanı veya aktif/tamamlanan sekmesi değiştiğinde mobil yayın akışının otomatik olarak ilk 2 kayda dönmesi kilitlenmiştir.
 5. **Erişilebilirlik (a11y) Düzeltmeleri:** Özel raf veya bölüm başlığı tasarımları bozulmadan, koşullu ve güvenli kapsayıcı ID'leri (`aria-labelledby`) üzerinden ekran okuyucu ve erişilebilirlik bağlantıları güvenceye alınmıştır.
 6. **Kullanıcı Bazlı UTT Panel Önbelleği ve Organizasyon Önbelleği:** Rol ana sayfaları `app/(panel)/ana-sayfa/page.tsx` içinde `next/dynamic` ile yüklenir; kullanılan yöntem `React.lazy` değildir. UTT ana sayfa verileri kullanıcı kimliğine göre izole edilerek önbelleğe alınır (`utt_anasayfa_veri_${user.id}`) ve aynı cihazdaki hesaplar arasında veri karışması engellenir; UTT organizasyon zinciri için 5 dakikalık sunucu içi (`in-memory`) önbellek (`ORG_CACHE_TTL = 5 * 60 * 1000`) kurulmuştur. Eski bağımsız mobil akordeon ve sayaç tekrarları tasfiye edilmiştir. Önbellekler yetki kaynağı değildir, sunucu güvenlik denetimleri korunur.
@@ -815,14 +814,6 @@ Kaldırılmış veya taşınmış yollar aktif dosya gibi listelenmez; mevcut es
 | `AuthProvider.tsx` | UI / React | Supabase oturumunu ve v_auth_kimlik görünümündeki kullanıcı kimliği/rol bilgisini arayüze sağlayan ortak kimlik bağlamıdır. |
 | `PushAbonelik.tsx` | UI / React | Oturum açan kullanıcı için tarayıcı bildirim desteğini ve izin tercihini yönetir; abonelik kaydını sunucu API'siyle eşleştirir. |
 | `TemaProvider.tsx` | UI / React | Tema tercihini hesap ve oturumsuz tarayıcı kapsamlarında yönetir; kök data-tema niteliğini uygular. |
-
-### 📁 app/rehber-demo/
-
-| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
-|---|:---:|---|
-| `RehberDemo.tsx` | UI / React | Rehber Demo arayüz bileşenini veya sağlayıcısını tanımlar. |
-| `demo.module.css` | Stil / CSS | demo.module yüzeyinin yerleşim, tema ve responsive stillerini tanımlar. |
-| `page.tsx` | UI / Sayfa | `rehber-demo` kapsamındaki sayfa girişini veya yönlendirmesini tanımlar. |
 
 ### 📁 app/renk-demo/
 
@@ -2897,7 +2888,6 @@ Kaldırılmış veya taşınmış yollar aktif dosya gibi listelenmez; mevcut es
 
 | Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
 |---|:---:|---|
-| `kityHedef.ts` | TypeScript / Lib | kity Hedef kapsamında `kityHedefiniBul`, `kityHedefiniBekle` kaynaklarını sağlar. |
 | `sayfaRehberi.ts` | TypeScript / Lib | Cogniti kapsamında `VARYANT_ALT_MODAL`, `SAYFA_REHBERLERI` işlev ve sabitlerini ve `AltModalKart`, `AltModalBilgisi`, `RehberMadde` veri sözleşmelerini sağlar; sayfa Rehberi iş kurallarını tek modülde toplar. |
 
 ### 📁 lib/soru/
@@ -3326,12 +3316,8 @@ Kaldırılmış veya taşınmış yollar aktif dosya gibi listelenmez; mevcut es
 
 | Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
 |---|:---:|---|
-| `KityVeda.tsx` | UI / React | Kity Veda arayüz bileşenini veya sağlayıcısını tanımlar. |
 | `SayfaRehberi.tsx` | UI / React | sayfa Rehberi, Cogniti ekranındaki ilgili bilgileri ve kullanıcı eylemlerini sunan React bileşenidir. |
 | `UretimVaryantlariModal.tsx` | UI / React | Uretim Varyantlari Modal arayüz bileşenini veya sağlayıcısını tanımlar. |
-| `YuruyenRehber.tsx` | UI / React | Yuruyen Rehber arayüz bileşenini veya sağlayıcısını tanımlar. |
-| `konum.ts` | TypeScript / Lib | konum kapsamında `rehberKonumu`, `yuruyusSuresi`, `rehberMerkezi` kaynaklarını sağlar. |
-| `rehber.module.css` | Stil / CSS | rehber.module yüzeyinin yerleşim, tema ve responsive stillerini tanımlar. |
 
 ### 📁 components/soru/
 
@@ -3984,7 +3970,6 @@ Kaldırılmış veya taşınmış yollar aktif dosya gibi listelenmez; mevcut es
 | `izlemeSonucToplamPuan.smoke.test.ts` | Test / Kaynak | “soru sonucu aynı izlemeye ait bütün başarılı puan kalemlerinin toplamını gösterir” dahil ilgili davranış senaryolarını içerir. Bu kayıt testin çalıştırıldığına dair sonuç değildir. |
 | `karsilamaRotalari.hedef.test.ts` | Test / Kaynak | “oturumsuz /ana-sayfa adresi korunarak kök karşılama içeriği sunulur” dahil ilgili davranış senaryolarını içerir. Bu kayıt testin çalıştırıldığına dair sonuç değildir. |
 | `kdUttMutabakatErisimi.hedef.test.ts` | Test / Kaynak | “Mutabakat menüsü UTT ve KD_UTT için aynı; diğer rollere ve kapalı modüle açılmaz” dahil ilgili davranış senaryolarını içerir. Bu kayıt testin çalıştırıldığına dair sonuç değildir. |
-| `kityHedef.hedef.test.ts` | Test / Kaynak | “masaüstü ve mobil kopyalarından yalnız görünür hedef seçilir” dahil ilgili davranış senaryolarını içerir. Bu kayıt testin çalıştırıldığına dair sonuç değildir. |
 | `kursuYerlesimi.smoke.test.ts` | Test / Kaynak | “kursuYerlesimi: Normal durumda ilk 3 benzersiz şekilde kürsüye yerleşir” dahil ilgili davranış senaryolarını içerir. Bu kayıt testin çalıştırıldığına dair sonuç değildir. |
 | `literaturKapakVeThumbnail.smoke.test.ts` | Test / Kaynak | “Kapak beyanı: JPG/JPEG doğru uzantı ve MIME kabul edilir” dahil ilgili davranış senaryolarını içerir. Bu kayıt testin çalıştırıldığına dair sonuç değildir. |
 | `literaturModernizasyonFaz3.hedef.test.ts` | Test / Kaynak | “PDF sayfa sayısı ve arama metni sunucudaki baytlardan çıkarılır” dahil ilgili davranış senaryolarını içerir. Bu kayıt testin çalıştırıldığına dair sonuç değildir. |
@@ -4110,7 +4095,6 @@ Kaldırılmış veya taşınmış yollar aktif dosya gibi listelenmez; mevcut es
 | `yoneticiDavranisRaporu.smoke.test.ts` | Test / Kaynak | “Yönetici firma takımlarını gerçek adlarıyla alır; varsayılan takım raporu TM hesabıyla aynıdır” dahil ilgili davranış senaryolarını içerir. Bu kayıt testin çalıştırıldığına dair sonuç değildir. |
 | `yoneticiGozlemYetkisi.hedef.test.ts` | Test / TypeScript | “yönetici kataloğu dört öğrenme aracının kimliğini ve türünü taşır” davranışını otomatik olarak doğrulayan hedef testidir. |
 | `yonetimYenileme.smoke.test.ts` | Test / TypeScript | “mutlu: üretim, yönetim ve sipariş takip yüzeyleri ortak YenileButonu kullanır” davranışını otomatik olarak doğrulayan smoke testidir. |
-| `yuruyenRehber.hedef.test.ts` | Test / Kaynak | “rehber karşılaması karar bekler; Evet dört durağı açar, Hayır vedayla kapanır” dahil ilgili davranış senaryolarını içerir. Bu kayıt testin çalıştırıldığına dair sonuç değildir. |
 | `zaman.sinir.smoke.test.ts` | Test / TypeScript | “mutlu: gun ici bir an dogru TR gunune ve periyoda cozulur” davranışını otomatik olarak doğrulayan smoke testidir. |
 
 ### 📁 tests/fixtures/
@@ -4156,7 +4140,6 @@ Kaldırılmış veya taşınmış yollar aktif dosya gibi listelenmez; mevcut es
 | `ECLUB_UYELIK_DAVETI.md` | Dokümantasyon | E-Club üyelik daveti sürecinin kurulum ve uygulama kayıtlarını tutar. |
 | `ECZA_DEPO_KATALOGU_YUKLEME.md` | Dokümantasyon | Ecza depo kataloğunun kontrol ve Supabase yükleme adımlarını açıklar. |
 | `HOYK_SAYFA_ROL_KART_BILGILERI_ENVANTERI.md` | Dokümantasyon | Yayın kartlarının sayfa ve rol bazında gösterdiği alanları karşılaştıran HOYK envanteridir. |
-| `KITY_GIRIS_TURU_ON_PLANI.md` | Dokümantasyon | Kity giriş sonrası tanıtım turunun ön planıdır; planın varlığı canlı entegrasyonun tamamlandığını göstermez. |
 | `LOGIN_KARSILAMA_DOGRULAMA_2026_10_21.md` | Dokümantasyon | 21 Ekim 2026 karşılama ve giriş değişikliklerinin doğrulama kaydıdır; tarihsel sonuçları yeni bir test çalıştırması olarak sunmaz. |
 | `ONAYLI_URL_DEGISIKLIKLERI_2026_10_18.md` | Dokümantasyon | 18 Ekim 2026 tarihinde onaylanan URL değişikliklerini kaydeder. |
 | `ORTAK_GORSEL_SISTEM_MATRISI.md` | Dokümantasyon | ORTAK GORSEL SISTEM MATRISI konusundaki proje açıklama, plan veya kayıtlarını tutar. |
@@ -4177,7 +4160,6 @@ Kaldırılmış veya taşınmış yollar aktif dosya gibi listelenmez; mevcut es
 | `TEMA_ALTYAPISI.md` | Dokümantasyon | Ortak tema altyapısının tasarımını ve kaynak bağlantılarını açıklar. |
 | `URETICI_ANA_SAYFA_TEMIZLIGI_2026_10_21.md` | Dokümantasyon | Üretici ana sayfasının kaldırılması, Yayın Yönetimi başlangıcı ve ilgili temizliğin uygulama/doğrulama kayıtlarını tutar. |
 | `VERCEL_GIT_ENTEGRASYONU.md` | Dokümantasyon | Vercel–GitHub dağıtım olayının kök nedenini ve Vercel cronlarından Supabase zamanlayıcısına geçirilen güncel yapıyı kaydeder. |
-| `ktiy_rehber_demo.md` | Dokümantasyon | Hareketli Kity rehberinin demo kapsamını belgeler. |
 | `mobil_dikey_yayin_akisi_envanter_faz0.md` | Dokümantasyon | Mobil dikey yayın akışı mimarisine geçişte tüm rol, rota ve liste yüzeylerinin teknik envanterini ve kart işaretleme kurallarını belgeler. |
 
 ### 📁 docs/hukuki/
@@ -4348,14 +4330,11 @@ Kaldırılmış veya taşınmış yollar aktif dosya gibi listelenmez; mevcut es
 
 | Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
 |---|:---:|---|
-| `cogniti-sprite.png` | Görsel / Varlık | Hareketli rehber sunumunda kullanılan Cogniti sprite görselidir. |
-| `kity-veda.png` | Görsel / Varlık | Kity rehberinin veda sunumunda kullanılan görseldir. |
 
 ### 📁 public/rehber/ses/
 
 | Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
 |---|:---:|---|
-| `kity-merhaba-mia.mp3` | Ses / Varlık | Kity rehberinin karşılama ses varlığıdır. |
 
 ---
 

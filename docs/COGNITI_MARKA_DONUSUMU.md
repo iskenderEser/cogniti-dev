@@ -27,7 +27,6 @@ Yerel kodda marka adı, iki temanın logosu ve favicon/PWA simgeleri uygulandı.
 2. Favicon ve uygulama simgesi için soldaki hız çizgileri onaylandı ve uygulandı.
 3. Canlı domain geçişinde hosting/DNS, Supabase site/redirect adresleri, Bunny izinli origin/domain alanları, ortam değişkenleri ve e-posta gönderici ayarları gerçek hesaplar üzerinden ele alınmalı. Bu ayarlara işlem yapılmadı. Mevcut `HAPBILGI_SITE_URL` değişkeninin adı teknik uyumluluk için korunur; canlı değerinin yeni domain olması gerekir.
 4. Veritabanı dönüşümü kullanıcı tarafından uygulandı ve sonuçla doğrulandı. Eczanem'in üç bannerı ve E-Club ana sayfa bannerı kullanıcı tarafından yeni logoyla güncellendiği bildirilerek tamamlandı.
-5. Kity ve renk demoları tarihsel örnek içeriklerini korur. Mia'nın mevcut MP3 kaydı eski marka adını söylüyor; Kity adımında Cogniti metinleriyle yeni kayıt hazırlanacak. Kayıt kendiliğinden değiştirilmedi.
 6. Kullanıcının kararıyla e-posta gönderici/domain teknik kurulumu gerçek e-posta ile kayıt testleri aşamasına ertelendi. AGENTS.md'ye bu aşamada hatırlatma kuralı eklendi. E-posta içerik taslakları `docs/COGNITI_EPOSTA_SABLON_STOGU.md` içinde tutuluyor; taslak hazırlığı gönderim entegrasyonu veya gerçek teslimat testi değildir.
 
 ## Korunanlar
