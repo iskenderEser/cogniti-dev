@@ -2,7 +2,11 @@
 
 25 Ekim 2026. Kullanıcı kararı: yayın bittikten sonra 7 gün indirme erişimi.
 
-## Yapılan değişiklikler
+## 26 Ekim 2026 — Daily yerel kontrollere geçiş
+
+Viva'nın özel kayıt düğmeleri ve `chat-webvtt` isteyen başlangıç çağrısı kaldırıldı. Kayıt Daily arayüzünden sunucu tarafından yönetilir. Yerel kayıt menüsünün sohbet çıktısı üretimi canlıda doğrulanmadı; yeni kayıtlarda sohbet dosyası oluşacağı garanti edilmez. Mevcut video/sohbet dosyalarının indirme ve yetkilendirme akışı korunur. Aşağıdaki başlangıç düğmesine ilişkin maddeler önceki uygulamanın tarihsel kaydıdır.
+
+## Önceki uygulama
 
 - Eski “Sohbeti aç / metni indir” kısayolu, ayrılmadan önce indirme uyarısı ve kapanış ara ekranı kaldırıldı.
 - Sunucunun Kaydı başlat düğmesi Daily SDK startRecording({type:"cloud",dataOutputs:["chat-webvtt"]}) kullanır. Otomatik kayıt kapalıdır. Kamera, mikrofon, ekran paylaşımı ve sohbet Daily Prebuilt içinde kalır.
