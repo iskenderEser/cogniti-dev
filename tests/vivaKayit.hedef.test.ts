@@ -58,5 +58,5 @@ test('kapanışta kayıt durmadan oda kapatılmaz; hata kalıcı işte yeniden d
 });
 test('yalnız sunucu cloud kayıt yetkisi alır; otomatik başlangıç her rolde kapalıdır',()=>{
  const d={baslangic:new Date(Date.now()-60000).toISOString(),bitis:new Date(Date.now()+60000).toISOString(),oturum_bitis:null,kimlik:`uye:${id}`,ad:'Test',oda:{guncel:true,kapanmis:false,oda_adi:oda}};
- for(const rol of ['sunucu','katilimci','izleyici'] as const){const a=vivaDailyTokenAyarlari({...d,rol} as VivaKatilimBaglami);assert.equal(a.enable_recording,rol==='sunucu'?'cloud':false);assert.equal(a.enable_recording_ui,false);assert.equal(a.start_cloud_recording,false);}
+ for(const rol of ['sunucu','katilimci','izleyici'] as const){const a=vivaDailyTokenAyarlari({...d,rol} as VivaKatilimBaglami);assert.equal(a.enable_recording,rol==='sunucu'?'cloud':false);assert.equal(a.enable_recording_ui,rol==='sunucu');assert.equal(a.start_cloud_recording,false);}
 });

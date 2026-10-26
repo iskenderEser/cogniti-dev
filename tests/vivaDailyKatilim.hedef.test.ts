@@ -33,9 +33,9 @@ function sunucuYukle(db:unknown={},user:unknown=null) {
  return yukle<typeof import('@/lib/viva/sunucu')>('lib/viva/sunucu.ts',{'node:crypto':crypto,'next/server':{NextResponse:{json:(d:unknown,i:ResponseInit)=>Response.json(d,i)}},'@/lib/supabase/server':{createClient:async()=>({auth:{getUser:async()=>({data:{user},error:null})}}),createAdminClient:()=>db},'@/lib/utils/rolCozucu':{rolCozucu:async()=> 'utt'},'@/lib/utils/roller':roller,'./sozlesme':sozlesme,'./eposta':eposta});
 }
 
-test('üç rolün sağlayıcı izinleri ve otomatik kayıt kapalıdır',()=>{
+test('üç rolün yetkileri korunur; ikinci katılım önizlemesi ve otomatik kayıt kapalıdır',()=>{
  for(const rol of ['sunucu','katilimci','izleyici'] as const){const d=baglam(rol),p=vivaDailyTokenAyarlari(d);
-  assert.equal(p.is_owner,rol==='sunucu');assert.equal(p.permissions.canAdmin,rol==='sunucu');assert.equal(p.enable_recording_ui,false);assert.equal(p.enable_recording,rol==='sunucu'?'cloud':false);assert.equal(p.permissions.canSend,rol!=='izleyici');assert.equal(p.enable_screenshare,rol!=='izleyici');assert.equal(p.permissions.canReceive.base,true);assert.equal(p.start_cloud_recording,false);assert.equal(p.auto_start_transcription,false);assert.equal(p.knocking,false);assert.equal(p.enable_prejoin_ui,true);
+  assert.equal(p.is_owner,rol==='sunucu');assert.equal(p.permissions.canAdmin,rol==='sunucu');assert.equal(p.enable_recording_ui,rol==='sunucu');assert.equal(p.enable_recording,rol==='sunucu'?'cloud':false);assert.equal(p.permissions.canSend,rol!=='izleyici');assert.equal(p.enable_screenshare,rol!=='izleyici');assert.equal(p.permissions.canReceive.base,true);assert.equal(p.start_cloud_recording,false);assert.equal(p.auto_start_transcription,false);assert.equal(p.knocking,false);assert.equal(p.enable_prejoin_ui,false);
  }
 });
 test('token odası, kimliği ve süre sonu sunucu bağlamından gelir; e-posta içermez',()=>{

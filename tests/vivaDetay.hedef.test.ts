@@ -46,10 +46,9 @@ async function ortam(handler:(url:string,init?:RequestInit)=>ResponseData|Promis
  const style={default:new Proxy({},{get:(_,k)=>String(k)})};
  const modules:Record<string,unknown>={react:React,'react/jsx-runtime':jsxRuntime,'next/link':{default:({children,...p}:React.ComponentProps<'a'>)=>React.createElement('a',p,children)},'next/navigation':{useRouter:()=>({push:(p:string)=>paths.push(p),replace:(p:string)=>paths.push(p)})},'lucide-react':icons,'radix-ui':radix,'@/components/ui/button':buttons,'@/components/ui/card':cards,'@/components/ui/input':inputs,'@/components/ui/label':labels,'@/components/kontrol/SadeKontroller':controls,'@/components/ui/alert-dialog':dialogs,'@/components/ui/sayfa-yenile-basligi':heading,'@/components/ui/yenile-butonu':refresh,'@/lib/viva/sozlesme':contract,'@/lib/viva/eposta':eposta,'@/lib/viva/detay':detail,'@/lib/utils/roller':roles,'@/lib/viva/takvim':calendar,'@/lib/viva/indirme':download,'./viva.module.css':style,'./viva-oda.module.css':{default:new Proxy({},{get:(_,k)=>String(k)})},'./viva-form.module.css':style,'./viva-detay.module.css':style,'./VivaOdaAlani':{default:()=>null},'./VivaEpostaAlani':{default:()=>null}};
  const context={fetch:fetcher,window:dom,document:dom.document,navigator:dom.navigator};
- modules['@/lib/viva/anketArsiv']=load('lib/viva/anketArsiv.ts',modules,context);
- const arsiv=load('components/viva/VivaAnketArsivi.tsx',modules,context),kayit=load('components/viva/VivaKayitlar.tsx',modules,context);
- modules['./VivaAnketArsivi']=arsiv;modules['./VivaKayitlar']=kayit;modules['./VivaDetayIcerigi']=load('components/viva/VivaDetayIcerigi.tsx',modules,context);
- const components={detail:load('components/viva/VivaEkrani.tsx',modules,context).default,archive:arsiv.default,records:kayit.default,library:load('components/viva/VivaKayitKutuphanesi.tsx',modules,context).default};
+ const kayit=load('components/viva/VivaKayitlar.tsx',modules,context);
+ modules['./VivaKayitlar']=kayit;modules['./VivaDetayIcerigi']=load('components/viva/VivaDetayIcerigi.tsx',modules,context);
+ const components={detail:load('components/viva/VivaEkrani.tsx',modules,context).default,records:kayit.default,library:load('components/viva/VivaKayitKutuphanesi.tsx',modules,context).default};
  return{c,doc:dom.document,requests,paths,links,
  render:async(kind:keyof typeof components='detail',props:Record<string,unknown>={})=>act(async()=>root.render(React.createElement(components[kind],kind==='detail'?{gorunum:'detay',etkinlikId:id(),...props}:props))),
  click:async(text:string,dialog=false)=>{const b=[...dom.document.querySelectorAll<HTMLButtonElement>(dialog?'[role=alertdialog] button':'button')].find(x=>x.textContent===text||x.getAttribute('aria-label')===text);assert(b,text);await act(async()=>b.click())},
@@ -59,18 +58,18 @@ async function ortam(handler:(url:string,init?:RequestInit)=>ResponseData|Promis
  };
 }
 test('detay bölüm ve giriş dönüş yolları yalnız izinli Viva adreslerine açılır',()=>{
- assert.equal(detail.vivaDetayBolumu(['kayitlar']),'ozet');assert.equal(detail.vivaDetayBolumu('yanlis'),'ozet');assert.equal(detail.vivaDetayYolu(id(),'anket'),`/viva/${id()}?bolum=anket`);
+ assert.equal(detail.vivaDetayBolumu(['kayitlar']),'ozet');assert.equal(detail.vivaDetayBolumu('yanlis'),'ozet');assert.equal(detail.vivaDetayBolumu('anket'),'ozet');
  for(const p of [`/viva/${id()}?bolum=katilimcilar`,'/viva/kayitlar','/viva/yeni?tur=anlik'])assert.equal(contract.vivaDonusYolu(`?viva=${encodeURIComponent(p)}`),p);
  for(const p of [`/viva/${id()}?bolum=yanlis`,`/viva/${id()}?bolum=anket&next=https://evil.test`,`/viva/${id()}?bolum=anket&bolum=kayitlar`,'/viva/../../admin','//evil.test'])assert.equal(contract.vivaDonusYolu(`?viva=${encodeURIComponent(p)}`),null);
  assert.throws(()=>detail.vivaKayitSayfasi(new URLSearchParams('offset=-1')));assert.throws(()=>detail.vivaKayitSayfasi(new URLSearchParams('offset=1.5')));
 });
 test('sahip dört bölümü değiştirir; doğrudan kayıt bağlantısı yalnız kayıt verisini yükler',async()=>{
  const o=await ortam(url=>({data:url.includes('baglam')?baglam:url.includes('/api/kayit?')?{kayitlar:[],indirme_bitis:null,suresi_doldu:false}:detay}));
- try{await o.render('detail',{ilkBolum:'kayitlar'});assert.equal(o.c.querySelectorAll('[role=tab]').length,4);assert(o.c.querySelector('[aria-label="Viva kayıtları"]'));assert(!o.requests.some(r=>r.url.includes('/api/anket')));await o.tab('Katılımcılar ve davetler');assert.match(o.c.textContent!,/İlker Test/);assert.equal(o.paths.at(-1),`/viva/${id()}?bolum=katilimcilar`);await o.input('[aria-label="Etkinlik katılımcılarını ara"]','ilker');assert.match(o.c.textContent!,/İlker Test/);await o.click('Yenile');assert.equal(o.c.querySelector<HTMLInputElement>('[aria-label="Etkinlik katılımcılarını ara"]')!.value,'ilker');assert.equal(o.c.querySelector('[role=tab][aria-selected=true]')!.textContent,'Katılımcılar ve davetler');}finally{await o.close()}
+ try{await o.render('detail',{ilkBolum:'kayitlar'});assert.equal(o.c.querySelectorAll('[role=tab]').length,3);assert(o.c.querySelector('[aria-label="Viva kayıtları"]'));assert(!o.requests.some(r=>r.url.includes('/api/anket')));await o.tab('Katılımcılar ve davetler');assert.match(o.c.textContent!,/İlker Test/);assert.equal(o.paths.at(-1),`/viva/${id()}?bolum=katilimcilar`);await o.input('[aria-label="Etkinlik katılımcılarını ara"]','ilker');assert.match(o.c.textContent!,/İlker Test/);await o.click('Yenile');assert.equal(o.c.querySelector<HTMLInputElement>('[aria-label="Etkinlik katılımcılarını ara"]')!.value,'ilker');assert.equal(o.c.querySelector('[role=tab][aria-selected=true]')!.textContent,'Katılımcılar ve davetler');}finally{await o.close()}
 });
 test('davetli yönetim bölümüne yönlendirilse de yalnız genel bakış görür',async()=>{
  const o=await ortam(url=>({data:url.includes('baglam')?{...baglam,olusturabilir:false}:{...detay,etkinlik:{...e,yonetebilir:false}}}));
- try{await o.render('detail',{ilkBolum:'anket'});assert(!o.c.querySelector('[role=tab]'));assert(!o.c.textContent!.includes('İlker Test'));assert(!o.c.querySelector('a[href="/viva/kayitlar"]'));assert(!o.requests.some(r=>r.url.includes('/api/anket')||r.url.includes('/api/kayit')));assert(o.c.textContent!.includes('Bu buluşma hakkında'))}finally{await o.close()}
+ try{await o.render('detail',{ilkBolum:'katilimcilar'});assert(!o.c.querySelector('[role=tab]'));assert(!o.c.textContent!.includes('İlker Test'));assert(!o.c.querySelector('a[href="/viva/kayitlar"]'));assert(!o.requests.some(r=>r.url.includes('/api/anket')||r.url.includes('/api/kayit')));assert(o.c.textContent!.includes('Bu buluşma hakkında'))}finally{await o.close()}
 });
 test('katılımcı çıkarma onaydan önce yazmaz; sürümü ve gerçek kişi kimliğini gönderir',async()=>{
  const posts:Record<string,unknown>[]=[];const o=await ortam((url,init)=>{if(init?.method==='POST'){posts.push(JSON.parse(String(init.body)));return{data:{mesaj:'Erişim kapandı'}}}return{data:url.includes('baglam')?baglam:detay}});
@@ -87,15 +86,6 @@ test('sona eren etkinlikte davet geçmişi okunur, yeni davet veya iptal işlemi
 test('detay yenilemesinde erişim reddi önceki kişileri ve yönetim bağlantılarını kaldırır',async()=>{
  let kapali=false;const o=await ortam(url=>kapali?{status:403,data:{hata:'Erişim kapalı'}}:{data:url.includes('baglam')?baglam:detay});
  try{await o.render('detail',{ilkBolum:'katilimcilar'});assert.match(o.c.textContent!,/İlker Test/);kapali=true;await o.click('Yenile');assert(!o.c.textContent!.includes('İlker Test'));assert(!o.c.querySelector('[role=tab]'));assert.match(o.c.textContent!,/Erişim kapalı/)}finally{await o.close()}
-});
-const anket={soru:{id:id(9),question:'Konu anlaşılır mı?',options:['Evet','Kısmen']},acik:false,sayilar:[3,1],secim:null,surum:3,acildi:'2026-10-25T21:30:00Z',kapandi:'2026-10-25T22:00:00Z'};
-test('anket arşivi gerçek sayılardan yüzdeleri çıkarır, Türkiye tarihini gösterir ve yetki reddinde sonuçları temizler',async()=>{
- let kapali=false;const o=await ortam(()=>kapali?{status:403,data:{hata:'Anket erişimi yok'}}:{data:{oturumlar:[anket],sorular:[]}});
- try{await o.render('archive',{etkinlikId:id()});const meters=o.c.querySelectorAll('[role=meter]');assert.equal(meters.length,2);assert.equal(meters[0].getAttribute('aria-valuenow'),'75');assert.match(o.c.textContent!,/4 cevap/);assert.match(o.c.textContent!,/26 Eki 2026/);kapali=true;await o.click('Sonuçları yenile');assert.equal(o.c.querySelectorAll('[role=meter]').length,0);assert.match(o.c.textContent!,/Anket erişimi yok/)}finally{await o.close()}
-});
-test('anket boş ve sıfır cevap durumunda hayali cevap veya NaN üretmez',async()=>{
- const o=await ortam(()=>({data:{oturumlar:[{...anket,sayilar:[0,0]}],sorular:[]}}));try{await o.render('archive',{etkinlikId:id()});assert.match(o.c.textContent!,/0 cevap/);assert(!o.c.textContent!.includes('NaN'));assert.equal(o.c.querySelector('[role=meter]')!.getAttribute('aria-valuenow'),'0')}finally{await o.close()}
- const b=await ortam(()=>({data:{oturumlar:[],sorular:[{id:id(9)}]}}));try{await b.render('archive',{etkinlikId:id()});assert.match(b.c.textContent!,/1 soru yayın odasında hazır bekliyor/)}finally{await b.close()}
 });
 const kayit={anahtar:'daily:test',id:id(20),baslangic:'2026-10-25T10:00:00Z',sure:125,durum:'hazir'};
 test('kayıt parçaları hazır/hazırlanıyor/hata durumlarını ayırır; video ve sohbet mevcut APIden ayrı istenir',async()=>{

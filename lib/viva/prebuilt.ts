@@ -1,10 +1,7 @@
-import type { DailyCall, DailyFactoryOptions, DailyThemeConfig, DailyThemeColors, DailyCustomIntegrations, DailyInputVideoProcessorSettings, DailyEventObjectNonFatalError, DailyEventObjectNetworkConnectionEvent } from "@daily-co/daily-js";
-import { vivaAnketBagla, type VivaAnketDurumu, type VivaAnketTaslagi } from "./anket";
-import type { VivaAnketDeposu } from "./anketArsiv";
+import type { DailyCall, DailyFactoryOptions, DailyThemeConfig, DailyThemeColors, DailyCustomIntegrations, DailyEventObjectNetworkConnectionEvent } from "@daily-co/daily-js";
 import { cizimRenkCozucu, cizimTemasiniIzle } from "@/lib/tema/cizimRenkleri";
 
 export type VivaPrebuiltSdk = Pick<typeof import("@daily-co/daily-js").default, "createFrame" | "supportedBrowser">;
-export type VivaArkaPlan = { tur: "yok" | "bulanik" } | { tur: "gorsel"; kaynak: ArrayBuffer };
 export interface VivaGorusmeGirdisi {
   durum: "hazir"; rol: "sunucu" | "katilimci" | "izleyici"; url: string; token: string; bitis: string;
 }
@@ -35,12 +32,18 @@ export function vivaPrebuiltTemasi(oge: Element): DailyThemeConfig {
   }));
   return { colors };
 }
-/** Yalnız belgelenen Prebuilt CSS kancaları; medya ve yerleşim kontrolleri saklanmaz. */
+/** Prebuilt stilleri ve alt çubuğun renkleri; medya ve yerleşim kontrolleri saklanmaz. */
 export const VIVA_PREBUILT_CSS = `
 body.cogniti-viva { font-family: Nunito, ui-rounded, system-ui, sans-serif; }
 body.cogniti-viva button, body.cogniti-viva input, body.cogniti-viva select { font-family: inherit; }
 body.cogniti-viva .daily-video-tile { border-radius: 12px; overflow: hidden; }
 body.cogniti-viva .daily-controls { border-radius: 12px; }
+/* Daily'nin mevcut alt çubuğuyla sınırlı; ikon altındaki metinler kendi rengini korur. */
+body.cogniti-viva .tray { --viva-kontrol-mavisi: #237ac8; }
+body.cogniti-viva .tray button:not(#btn-leave) svg { color: var(--viva-kontrol-mavisi) !important; }
+/* Kapalı kamera/mikrofon ve ayrılma Daily'nin kırmızısını; bitirme ikonu active kırmızısını kullanır. */
+body.cogniti-viva #more-menu-custom-cognitiHerkesIcinBitir img { background: #f63135 !important; border-radius: 4px; }
+
 `;
 // create/destroy sırası sayfa değişimleri ve StrictMode yeniden bağlanmaları arasında korunur.
 let kaynakSirasi: Promise<unknown> = Promise.resolve();
@@ -57,21 +60,17 @@ export function vivaPrebuiltBaslat(v: {
   hata: (mesaj: string) => void;
   paylasimDestegi: (baslatabilir: boolean) => void;
   baglanti?: (kesik: boolean) => void;
-  arkaPlanDestegi?: (destekli: boolean) => void;
-  arkaPlanHatasi?: (mesaj: string) => void;
-  kayit?: (durum: "basladi" | "durdu" | "hata", instanceId?: string) => void;
+  kayitDurdu?: (instanceId?: string) => void;
+  bitirmeIstegi?: () => void;
   entegrasyonlar?: DailyCustomIntegrations;
-  anket?: (durum: VivaAnketDurumu) => void;
-  anketDeposu?: VivaAnketDeposu;
 }) {
   let kapali = false; let call: DailyCall | null = null; let temizlik: Promise<void> | null = null;
-  let gorusmede = false, videoIsleme = false;
+  let gorusmede = false;
   let temayiBirak = () => {};
-  let anket: ReturnType<typeof vivaAnketBagla> | null = null;
   const dinleyiciler: (() => void)[] = [];
   function kapat(): Promise<void> {
     if (temizlik) return temizlik;
-    kapali = true; anket?.temizle(); temayiBirak(); dinleyiciler.splice(0).forEach(fn => fn());
+    kapali = true; temayiBirak(); dinleyiciler.splice(0).forEach(fn => fn());
     temizlik = sirada(async () => {
       if (!call) return;
       try { if (!call.isDestroyed()) await call.destroy(); }
@@ -88,8 +87,6 @@ export function vivaPrebuiltBaslat(v: {
     const sdk = await (v.sdkYukle ?? (async () => (await import("@daily-co/daily-js")).default))();
     if (kapali) return;
     const destek = sdk.supportedBrowser();
-    videoIsleme = destek.supportsVideoProcessing === true;
-    v.arkaPlanDestegi?.(videoIsleme);
     if (!destek.supported) {
       v.hata("Bu tarayıcı canlı görüşmeyi desteklemiyor. Güncel Chrome, Edge veya Safari ile yeniden deneyin.");
       return;
@@ -102,11 +99,17 @@ export function vivaPrebuiltBaslat(v: {
         showUserNameChangeUI: false, bodyClass: "cogniti-viva", cssText: VIVA_PREBUILT_CSS,
         layoutConfig: { grid: { minTilesPerPage: 1, maxTilesPerPage: 9 } }, theme: vivaPrebuiltTemasi(v.kapsayici),
         iframeStyle: { width: "100%", height: "100%", border: "0", display: "block" },
+        ...(v.girdi.rol === "sunucu" && v.bitirmeIstegi ? { customTrayButtons: {
+          cognitiHerkesIcinBitir: {
+            // Daily iframe'i HTTPS ikon ister; localhost denemesinde de aynı ikon kullanılır.
+            iconPath: "https://api.iconify.design/lucide/power.svg?color=%23ffffff&width=24&height=24",
+            label: "Yayını bitir", tooltip: "Yayını bitir", visualState: "active",
+          },
+        } } : {}),
         ...(v.girdi.rol === "sunucu" && v.entegrasyonlar ? { customIntegrations: v.entegrasyonlar } : {}),
       };
       call = sdk.createFrame(v.kapsayici, ayarlar); etkin = call;
       const c = call;
-      if (v.anket) anket = vivaAnketBagla(c, v.girdi.rol, v.anket, v.anketDeposu);
       const iframe = c.iframe();
       if (iframe) { iframe.title = "Viva canlı görüşme"; iframe.referrerPolicy = "no-referrer"; }
       v.paylasimDestegi(destek.supportsScreenShare);
@@ -121,6 +124,13 @@ export function vivaPrebuiltBaslat(v: {
         v.durum("ayrildi"); void kapat().catch(() => undefined);
       });
       izle("error", hata);
+      if (v.girdi.rol === "sunucu" && v.bitirmeIstegi) {
+        const bitirmeIstegi = (e?: { button_id: string }) => {
+          if (!kapali && gorusmede && e?.button_id === "cognitiHerkesIcinBitir") v.bitirmeIstegi?.();
+        };
+        c.on("custom-button-click", bitirmeIstegi);
+        dinleyiciler.push(() => c.off("custom-button-click", bitirmeIstegi));
+      }
       if (v.baglanti) {
         const kesilenler = new Set<DailyEventObjectNetworkConnectionEvent["type"]>();
         const agDurumu = (e: DailyEventObjectNetworkConnectionEvent) => {
@@ -134,19 +144,10 @@ export function vivaPrebuiltBaslat(v: {
         c.on("network-connection", agDurumu);
         dinleyiciler.push(() => c.off("network-connection", agDurumu));
       }
-      if (v.arkaPlanHatasi) {
-        const islemeHatasi = (e: DailyEventObjectNonFatalError) => {
-          if (!kapali && ["input-settings-error", "video-processor-error"].includes(e.type))
-            v.arkaPlanHatasi?.("Arka plan uygulanamadı. Farklı bir JPEG/PNG görseliyle veya bulanıklaştırmayla yeniden deneyin.");
-        };
-        c.on("nonfatal-error", islemeHatasi); dinleyiciler.push(() => c.off("nonfatal-error", islemeHatasi));
-      }
-      // Yerel durum yalnız kullanıcı bildirimi; hazır dosya sunucuda Daily API/webhook ile doğrulanır.
-      const kayitBasladi = (e?: { instanceId?: string }) => { if (!kapali) v.kayit?.("basladi", e?.instanceId); };
-      const kayitDurdu = (e?: { instanceId?: string }) => { if (!kapali) v.kayit?.("durdu", e?.instanceId); };
-      const kayitHata = (e?: { instanceId?: string }) => { if (!kapali) v.kayit?.("hata", e?.instanceId); };
-      c.on("recording-started", kayitBasladi); c.on("recording-stopped", kayitDurdu); c.on("recording-error", kayitHata);
-      dinleyiciler.push(() => { c.off("recording-started", kayitBasladi); c.off("recording-stopped", kayitDurdu); c.off("recording-error", kayitHata); });
+      // Kayıt Daily arayüzünden yönetilir; durma olayı Viva arşiviyle eşleştirilir.
+      const kayitDurdu = (e?: { instanceId?: string }) => { if (!kapali) v.kayitDurdu?.(e?.instanceId); };
+      c.on("recording-stopped", kayitDurdu);
+      dinleyiciler.push(() => c.off("recording-stopped", kayitDurdu));
       temayiBirak = cizimTemasiniIzle(v.kapsayici, () => {
         if (!kapali && !c.isDestroyed()) void c.setTheme(vivaPrebuiltTemasi(v.kapsayici)).catch(() => undefined);
       });
@@ -156,29 +157,5 @@ export function vivaPrebuiltBaslat(v: {
       }).catch(hata);
     });
   })().catch(hata);
-  function kaydiBaslat() {
-    if (kapali || !call || call.isDestroyed() || v.girdi.rol !== "sunucu") return false;
-    call.startRecording({ type: "cloud", dataOutputs: ["chat-webvtt"] });
-    return true;
-  }
-  function kaydiDurdur() {
-    if (kapali || !call || call.isDestroyed() || v.girdi.rol !== "sunucu") return false;
-    call.stopRecording();
-    return true;
-  }
-  async function arkaPlanDegistir(secim: VivaArkaPlan) {
-    if (kapali || !call || call.isDestroyed() || !gorusmede) throw Error("Önce görüşmeye katılın.");
-    if (v.girdi.rol === "izleyici") throw Error("İzleyici kamera arka planını değiştiremez.");
-    if (!videoIsleme) throw Error("Bu cihaz veya tarayıcı arka plan efektlerini desteklemiyor.");
-    let processor: DailyInputVideoProcessorSettings;
-    if (secim.tur === "gorsel") {
-      if (!secim.kaynak.byteLength || secim.kaynak.byteLength > 5 * 1024 * 1024) throw Error("En fazla 5 MB boyutunda bir görsel seçin.");
-      processor = { type: "background-image", config: { source: secim.kaynak } };
-    } else processor = secim.tur === "bulanik" ? { type: "background-blur", config: { strength: 0.8 } } : { type: "none" };
-    await call.updateInputSettings({ video: { processor } });
-  }
-  return { hazir, kapat, kaydiBaslat, kaydiDurdur, arkaPlanDegistir,
-    anketAc: (soru: VivaAnketTaslagi) => { if (!anket || kapali) throw Error("Önce görüşmeye katılın."); return anket.ac(soru); },
-    anketKapat: () => anket?.kapat(), anketCevapla: (secim: number) => anket?.cevapla(secim),
-  };
+  return { hazir, kapat };
 }

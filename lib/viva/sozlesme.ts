@@ -73,7 +73,7 @@ export function vivaDonusYolu(aranan: string): string | null {
   const p = new URLSearchParams(sorgu);
   if ([...p.keys()].length !== 1) return null;
   if (yol === "/viva/yeni" && ["anlik", "planli"].includes(p.get("tur") ?? "")) return `${yol}?tur=${p.get("tur")}`;
-  if (/^\/viva\/[0-9a-f-]{36}$/.test(yol) && ["ozet", "katilimcilar", "anket", "kayitlar"].includes(p.get("bolum") ?? "")) return `${yol}?bolum=${p.get("bolum")}`;
+  if (/^\/viva\/[0-9a-f-]{36}$/.test(yol) && ["ozet", "katilimcilar", "kayitlar"].includes(p.get("bolum") ?? "")) return `${yol}?bolum=${p.get("bolum")}`;
   if (/^\/viva\/[0-9a-f-]{36}\/oda$/.test(yol) && p.get("baslat") === "1") return `${yol}?baslat=1`;
   return null;
 }

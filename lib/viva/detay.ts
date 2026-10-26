@@ -1,7 +1,7 @@
 import { vivaUuidMu, type VivaEtkinlik } from './sozlesme';
 export const VIVA_DETAY_BOLUMLERI = [
   { deger: 'ozet', etiket: 'Genel bakış' }, { deger: 'katilimcilar', etiket: 'Katılımcılar ve davetler' },
-  { deger: 'anket', etiket: 'Soru / Anket' }, { deger: 'kayitlar', etiket: 'Yayın kayıtları' },
+  { deger: 'kayitlar', etiket: 'Yayın kayıtları' },
 ] as const;
 export type VivaDetayBolumu = typeof VIVA_DETAY_BOLUMLERI[number]['deger'];
 export function vivaDetayBolumu(v: unknown): VivaDetayBolumu {

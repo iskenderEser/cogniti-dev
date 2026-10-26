@@ -135,7 +135,7 @@ function MisafirIcerigi({ token }: { token: string }) {
           <Button className={styles.fullButton} disabled={kontrolEdiliyor} onClick={() => setOda(true)}><Video aria-hidden="true" />Yayın odasını aç</Button>
         </>}
         {islemHatasi && <p role="alert" className={styles.error}>{islemHatasi}</p>}{mesaj && <p role="status" className={styles.message}>{mesaj}</p>}
-        <div className={styles.note}><Info aria-hidden="true" /><p>Bu davet yalnızca bu etkinliği izlemek içindir. Kamera ve mikrofon gönderemez, anketlere cevap veremezsiniz. Erişiminiz etkinlik bitiminde kapanır.</p></div>
+        <div className={styles.note}><Info aria-hidden="true" /><p>Bu davet yalnızca bu etkinliği izlemek içindir. Kamera ve mikrofon gönderemezsiniz. Erişiminiz etkinlik bitiminde kapanır.</p></div>
       </section>
     </div>}
     {bilgi?.dogrulandi && oda && <section className={styles.guestRoom} aria-label="Misafir yayın odası">

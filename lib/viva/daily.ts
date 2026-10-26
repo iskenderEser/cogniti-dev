@@ -22,7 +22,7 @@ export interface VivaDailyApi {
 export interface VivaDailyTokenAyarlari {
   room_name: string; user_id: string; user_name: string; is_owner: boolean;
   nbf: number; exp: number; eject_at_token_exp: true;
-  enable_screenshare: boolean; enable_prejoin_ui: true; enable_recording_ui: boolean; enable_recording?: false | "cloud";
+  enable_screenshare: boolean; enable_prejoin_ui: false; enable_recording_ui: boolean; enable_recording?: false | "cloud";
   start_video_off: true; start_audio_off: true; start_cloud_recording: false;
   auto_start_transcription: false; knocking: false; lang: "tr";
   permissions: { hasPresence: true; canSend: boolean; canReceive: { base: true }; canAdmin: boolean };

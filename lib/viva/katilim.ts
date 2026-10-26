@@ -47,7 +47,7 @@ export function vivaDailyTokenAyarlari(d: VivaKatilimBaglami, simdi = Date.now()
     room_name: d.oda.oda_adi, user_id: vivaDailyKisiKimligi(d.kimlik + (d.rol === "izleyici" && d.oturum_izi ? `:${d.oturum_izi}` : "")), user_name: d.ad,
     is_owner: d.rol === "sunucu", nbf: Math.floor(bas / 1000), exp: Math.floor(bit / 1000),
     eject_at_token_exp: true, enable_screenshare: d.rol !== "izleyici",
-    enable_prejoin_ui: true, enable_recording_ui: false,
+    enable_prejoin_ui: false, enable_recording_ui: d.rol === "sunucu",
     enable_recording: d.rol === "sunucu" ? "cloud" : false,
     start_video_off: true, start_audio_off: true, start_cloud_recording: false,
     auto_start_transcription: false, knocking: false, lang: "tr",
