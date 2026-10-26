@@ -25,6 +25,7 @@
     "test:smoke:tz": "TZ=UTC node --import ./tests/_alias.mjs --test tests/*.smoke.test.ts && TZ=Pacific/Kiritimati node --import ./tests/_alias.mjs --test tests/*.smoke.test.ts"
   },
   "dependencies": {
+    "@daily-co/daily-js": "0.94.0",
     "@supabase/ssr": "^0.9.0",
     "@supabase/supabase-js": "^2.99.3",
     "class-variance-authority": "^0.7.1",

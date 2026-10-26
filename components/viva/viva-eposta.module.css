@@ -1,0 +1,19 @@
+.field { margin-top: 18px; min-width: 0; }
+.field > label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 7px; }
+.alan { display: flex; flex-wrap: wrap; align-items: flex-start; align-content: flex-start; gap: 6px; min-height: 96px; padding: 10px; border: 1px solid var(--tema-kontrol-cizgi); border-radius: 12px; background: var(--tema-yuzey); color: var(--tema-kontrol-metin); }
+.alan:focus-within { outline: 2px solid var(--tema-kontrol-odak); outline-offset: 3px; }
+.alan.hatali { border-color: var(--tema-hata); }
+.pill { display: inline-flex; align-items: center; gap: 5px; min-width: 0; max-width: 100%; min-height: 30px; padding: 2px 5px 2px 9px; border: 1px solid var(--tema-kontrol-cizgi); border-radius: 999px; background: var(--tema-kontrol-hover); color: var(--tema-kontrol-eylem); font-size: 12px; line-height: 1.4; }
+.pill > span { min-width: 0; overflow-wrap: anywhere; }
+.pill button { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 26px; height: 26px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: inherit; cursor: pointer; }
+.pill button:hover { background: var(--tema-kontrol-hover); }
+.pill button svg { width: 13px; height: 13px; }
+.pill button:disabled { opacity: .5; cursor: default; }
+.alan textarea.girdi { display: block; flex: 1 1 220px; width: auto; min-width: min(100%, 180px); max-width: 100%; min-height: 30px; margin: 0; padding: 5px 2px; border: 0; border-radius: 0; outline: none; box-shadow: none; resize: none; background: transparent; color: inherit; font-family: inherit; font-size: 14px; line-height: 20px; }
+.alan textarea.girdi:focus-visible { outline: none; }
+.girdi::placeholder { color: var(--tema-ikincil-metin); }
+.field .yardim, .field .durum { font-size: 11px; line-height: 1.5; margin-top: 7px; color: var(--tema-ikincil-metin); }
+.field .durum:empty { display: none; }
+.field .durum[role=alert] { color: var(--tema-hata); }
+@media (max-width: 520px) { .alan textarea.girdi { font-size: 16px; } }
+@media (pointer: coarse) { .pill { min-height: 36px; }.pill button { width: 32px; height: 32px; } }

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-3 -3 626 504" role="img" aria-label="Viva mavi kıvrımlı oynat ve kamera simgesi"><defs>
+<linearGradient id="arkaKamera" x1="430" y1="330" x2="610" y2="120" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#087BFF" /><stop offset=".55" stop-color="#3FA7FC" /><stop offset="1" stop-color="#91DDF8" /></linearGradient>
+<linearGradient id="solSerit" x1="40" y1="120" x2="90" y2="420" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#0062E6" /><stop offset=".46" stop-color="#2393FA" /><stop offset="1" stop-color="#79CCF9" /></linearGradient>
+<linearGradient id="altSerit" x1="22" y1="455" x2="359" y2="305" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#108DFF" /><stop offset=".45" stop-color="#006BF7" /><stop offset="1" stop-color="#07388F" /></linearGradient>
+<linearGradient id="ustSerit" x1="40" y1="35" x2="423" y2="260" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#93EEFA" /><stop offset=".38" stop-color="#309FF6" /><stop offset=".72" stop-color="#0069F7" /><stop offset="1" stop-color="#0342B7" /></linearGradient>
+</defs>
+<path d="M408 187L568 96C596 80 620 95 620 127V399C620 433 596 444 569 429L410 341Z" fill="url(#arkaKamera)" />
+<path d="M0 154C10 111 61 102 99 127L135 150V377L100 399C48 428 0 401 0 368Z" fill="url(#solSerit)" />
+<path d="M0 368C12 400 51 410 99 387L300 273L370 313C397 329 404 351 379 378L181 481C110 520 0 481 0 385Z" fill="url(#altSerit)" />
+<path d="M0 154V119C0 38 68 -14 139 4C158 9 173 16 190 26L364 127C401 149 421 178 421 219V301C421 337 408 360 379 378C400 354 396 332 370 313L96 138C53 110 13 108 0 154Z" fill="url(#ustSerit)" /></svg>
