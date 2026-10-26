@@ -1,6 +1,6 @@
-import VivaEkrani from "@/components/viva/VivaEkrani";
-export default async function Page({ searchParams }: { searchParams: Promise<{ tur?: string }> }) {
+import { redirect } from "next/navigation";
+
+export default async function Page({ searchParams }: { searchParams: Promise<{ tur?: string | string[] }> }) {
   const { tur } = await searchParams;
-  const ilkTur = tur === "anlik" || tur === "planli" ? tur : undefined;
-  return <VivaEkrani key={ilkTur ?? "secim"} gorunum="yeni" ilkTur={ilkTur} />;
+  redirect(tur === "anlik" ? "/viva?tur=anlik" : "/viva");
 }

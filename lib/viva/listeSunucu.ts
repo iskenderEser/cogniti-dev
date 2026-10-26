@@ -4,7 +4,7 @@ import { vivaListeHesapla, type VivaListeSorgusu, type VivaListeYaniti } from '.
 import type { VivaBaglam, VivaEtkinlik } from './sozlesme';
 
 /** Yeni salt okunur RPC; kurulum gelene kadar eski yetkili RPC'nin bütün sayfalarıyla uyumludur. */
-export async function vivaListeEkraniOku(sorgu: VivaListeSorgusu, signal?: AbortSignal): Promise<VivaListeYaniti> {
+async function eskiListeEkraniOku(sorgu: VivaListeSorgusu, signal?: AbortSignal): Promise<VivaListeYaniti> {
   const { db, user } = await vivaKullanici();
   const { data, error } = await db.rpc('viva_liste_ekrani', { p_auth: user.id, p_veri: { ...sorgu } });
   if (!error) return data as VivaListeYaniti;
@@ -25,5 +25,26 @@ export async function vivaListeEkraniOku(sorgu: VivaListeSorgusu, signal?: Abort
     if (!yeni) throw new VivaHatasi('Etkinlikler değişti. Listeyi yeniden yükleyin.', 409);
   }
   // Hiçbir zaman eksik veriyle yanlış "etkinlik yok" veya yanlış sayaç döndürme.
+  throw new VivaHatasi('Etkinlik listesi şu anda hazırlanamadı. Lütfen daha sonra yeniden deneyin.', 503);
+}
+
+/** Mevcut RPC'nin tüm yetkili sonuçları ayrıştırılır; sayaç ve sayfalama filtre sonrası hesaplanır. */
+export async function vivaListeEkraniOku(sorgu: VivaListeSorgusu, signal?: AbortSignal): Promise<VivaListeYaniti> {
+  if (sorgu.bolum !== 'ileri' && sorgu.bolum !== 'canli') return eskiListeEkraniOku(sorgu, signal);
+  const kartlar = new Map<string, VivaListeYaniti['etkinlikler'][number]>();
+  let ilk: VivaListeYaniti | undefined;
+  for (let offset = 0; offset < 5_000; offset += 20) {
+    signal?.throwIfAborted();
+    const sayfa = await eskiListeEkraniOku({ ...sorgu, bolum: 'yaklasan', gun: null, offset }, signal);
+    ilk ??= sayfa;
+    const onceki = kartlar.size;
+    for (const kart of [...sayfa.canlilar, ...sayfa.etkinlikler]) kartlar.set(kart.etkinlik_id, kart);
+    if (!sayfa.devam_var) {
+      const sonuc = vivaListeHesapla([...kartlar.values()], sorgu, ilk.olusturabilir, new Date(ilk.simdi));
+      const zenginlestir = (kart: VivaListeYaniti['etkinlikler'][number]) => ({ ...kart, katilimci_sayisi: kartlar.get(kart.etkinlik_id)?.katilimci_sayisi ?? null });
+      return { ...sonuc, uyumluluk: ilk.uyumluluk, etkinlikler: sonuc.etkinlikler.map(zenginlestir), siradaki: sonuc.siradaki ? zenginlestir(sonuc.siradaki) : null };
+    }
+    if (kartlar.size === onceki) throw new VivaHatasi('Etkinlikler değişti. Listeyi yeniden yükleyin.', 409);
+  }
   throw new VivaHatasi('Etkinlik listesi şu anda hazırlanamadı. Lütfen daha sonra yeniden deneyin.', 503);
 }

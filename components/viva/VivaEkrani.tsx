@@ -6,14 +6,17 @@ import formStyles from "./viva-form.module.css";
 import detayStyles from "./viva-detay.module.css";
 import odaStyles from "./viva-oda.module.css";
 import VivaDetayIcerigi from "./VivaDetayIcerigi";
-import { vivaDetayBolumu, vivaDetayYolu, type VivaDetayBolumu } from "@/lib/viva/detay";
+import { vivaDetayBolumu, vivaDetayYolu, vivaEtkinlikKaynagi, vivaListeKaynakEtiketi, type VivaDetayBolumu, type VivaListeKaynagi } from "@/lib/viva/detay";
 import { YenileButonu } from "@/components/ui/yenile-butonu";
 import VivaOdaAlani from "./VivaOdaAlani";
 import VivaEpostaAlani from "./VivaEpostaAlani";
+import VivaKaydirilabilirTablo from "./VivaKaydirilabilirTablo";
 import { vivaEpostalariAyir } from "@/lib/viva/eposta";
+import { vivaFirmaBolgeGruplari, vivaKisiSecimEtiketi } from "@/lib/viva/davetSecimi";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
-import { ArrowLeft, ArrowRight, CalendarDays, ChevronRight, Plus, VideoOff } from "lucide-react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type FormEvent } from "react";
+import { ArrowRight, CalendarDays, ChevronRight, Plus, RotateCw, Search, UserRoundMinus, VideoOff, X } from "lucide-react";
+import { Dialog } from "radix-ui";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -44,6 +47,18 @@ function EtkinlikFormu({ baglam, detay, onKaydet, ilkTur }: { ilkTur?: "anlik" |
   const e = detay?.etkinlik;
   const [baslik, setBaslik] = useState(e?.baslik ?? "");
   const [aciklama, setAciklama] = useState(e?.aciklama ?? "");
+  const aciklamaAlani = useRef<HTMLTextAreaElement>(null);
+  useLayoutEffect(() => {
+    function boyutla() {
+      const alan = aciklamaAlani.current;
+      if (!alan) return;
+      alan.style.height = "auto";
+      alan.style.height = `${Math.max(88, alan.scrollHeight + alan.offsetHeight - alan.clientHeight)}px`;
+    }
+    boyutla();
+    window.addEventListener("resize", boyutla);
+    return () => window.removeEventListener("resize", boyutla);
+  }, [aciklama]);
   const [tur, setTur] = useState(e ? "planli" : ilkTur ?? "");
   const [tarih, setTarih] = useState(e ? vivaTarihGirdisi(e.baslangic).slice(0, 10) : "");
   const [saat, setSaat] = useState(e ? vivaTarihGirdisi(e.baslangic).slice(11) : "");
@@ -57,7 +72,8 @@ function EtkinlikFormu({ baglam, detay, onKaydet, ilkTur }: { ilkTur?: "anlik" |
   const kilit = useRef(false);
   const anahtar = useRef<string | null>(null);
   const girdiOzeti = useRef("");
-  const secenekler = baglam.kisiler.map(k => ({ deger: `${k.tur}:${k.id}`, etiket: k.ad, altBilgi: `${k.tur === "eclub" ? "EClub" : "Firma içi"} · ${k.alt}` }));
+  const secenekler = baglam.kisiler.map(k => ({ deger: `${k.tur}:${k.id}`, etiket: vivaKisiSecimEtiketi(k), altBilgi: `${k.tur === "eclub" ? "EClub" : "Firma içi"} · ${k.alt}` }));
+  const firmaGruplari = vivaFirmaBolgeGruplari(baglam.kisiler);
   const firmaSecenekleri = secenekler.filter(k => k.deger.startsWith("ic:"));
   const eclubSecenekleri = secenekler.filter(k => k.deger.startsWith("eclub:"));
   const eclubDavetEdilebilir = baglam.eclub_davet_edebilir ?? eclubSecenekleri.length > 0;
@@ -73,12 +89,12 @@ function EtkinlikFormu({ baglam, detay, onKaydet, ilkTur }: { ilkTur?: "anlik" |
       setDavetEpostalari(epostalar.adresler);
       setEpostaGirdisi(epostalar.girdi);
       if (epostalar.hatali) throw Error("Hatalı veya tamamlanmamış e-posta adreslerini düzeltin.");
-      if (!["anlik", "planli"].includes(tur)) throw Error("Şimdi başlat veya Yayın planla seçeneğini seçin.");
+      if (!["anlik", "planli"].includes(tur)) throw Error("Anlık Etkinlik veya Planlı Etkinlik seçeneğini seçin.");
       const sureDakika = Number(sure);
       if (!Number.isInteger(sureDakika) || sureDakika < 1 || sureDakika > 1440) throw Error("Yayın süresi 1–1440 dakika olmalıdır.");
       const taslak = (event.nativeEvent as SubmitEvent).submitter?.getAttribute("value") === "taslak";
       const anlik = tur === "anlik";
-      if (anlik && taslak) throw Error("Taslak için Yayın planla seçeneğini kullanın.");
+      if (anlik && taslak) throw Error("Taslak için Planlı Etkinlik seçeneğini kullanın.");
       const baslangic = anlik ? null : vivaYerelZamaniUtc(`${tarih}T${saat}`);
       const v: Record<string, unknown> & VivaDavetEpostaGirdisi = { baslik, aciklama, yayin_turu: tur, durum: taslak ? "taslak" : "planlandi",
         ...(baslangic ? { baslangic, bitis: new Date(Date.parse(baslangic) + sureDakika * 60_000).toISOString() } : { sure_dakika: sureDakika }),
@@ -97,67 +113,57 @@ function EtkinlikFormu({ baglam, detay, onKaydet, ilkTur }: { ilkTur?: "anlik" |
     } catch (err) { setHata(err instanceof Error ? err.message : "Kaydedilemedi."); }
     finally { kilit.current = false; setBusy(false); }
   }
-  let onizlemeTarihi = "Tarih seçilmedi";
-  if (tarih) {
-    try { onizlemeTarihi = new Intl.DateTimeFormat("tr-TR", { dateStyle: "long", timeZone: "Europe/Istanbul" }).format(new Date(vivaYerelZamaniUtc(`${tarih}T12:00`))); }
-    catch { onizlemeTarihi = "Geçerli bir tarih seçin"; }
-  }
   return <div className={formStyles.layout}>
-    <Card className={formStyles.formCard}>
       <form onSubmit={kaydet} aria-label="Viva etkinlik formu" aria-busy={busy}>
         <fieldset disabled={busy} className={formStyles.fields}>
+          <div className={tur ? formStyles.detailsGrid : undefined}>
           <section className={formStyles.section} aria-labelledby="viva-bilgi-baslik">
             <h2 id="viva-bilgi-baslik"><span aria-hidden="true">01</span>Yayın bilgileri</h2>
             {!e && <div className={formStyles.field}><p className={formStyles.legend}>Yayın türü *</p><SadeKapsulFiltre etiket="Yayın türü" deger={tur} onDegistir={setTur} secenekler={[
-              { deger: "anlik", etiket: "Şimdi başlat" }, { deger: "planli", etiket: "Yayın planla" },
+              { deger: "anlik", etiket: "Anlık Etkinlik" }, { deger: "planli", etiket: "Planlı Etkinlik" },
             ]} /></div>}
             {e?.durum === "taslak" && <p className={formStyles.draftNote}>Taslak · Yalnız size görünür</p>}
             <div className={formStyles.field}><Label htmlFor="viva-baslik">Yayın başlığı *</Label><Input id="viva-baslik" required maxLength={160} value={baslik} onChange={x => setBaslik(x.target.value)} placeholder="Örn. Ekibimizle haftalık buluşma" /></div>
-            <div className={formStyles.field}><Label htmlFor="viva-aciklama">Açıklama</Label><textarea id="viva-aciklama" maxLength={4000} value={aciklama} onChange={x => setAciklama(x.target.value)} placeholder="Yayın hakkında kısa bilgi verebilirsiniz." aria-describedby="viva-aciklama-yardim" /><p id="viva-aciklama-yardim" className={formStyles.help}>Katılımcılar etkinlik detayında bu açıklamayı görür.</p></div>
+            <div className={formStyles.field}><Label htmlFor="viva-aciklama">Açıklama</Label><textarea ref={aciklamaAlani} id="viva-aciklama" maxLength={4000} value={aciklama} onChange={x => setAciklama(x.target.value)} placeholder="Yayın hakkında kısa bilgi verebilirsiniz." aria-describedby="viva-aciklama-yardim" /><p id="viva-aciklama-yardim" className={formStyles.help}>Katılımcılar etkinlik detayında bu açıklamayı görür.</p></div>
           </section>
           {tur && <section className={formStyles.section} aria-labelledby="viva-zaman-baslik">
             <h2 id="viva-zaman-baslik"><span aria-hidden="true">02</span>{tur === "anlik" ? "Yayın süresi" : "Tarih ve saat"}</h2>
-            {tur === "planli" && <p className={formStyles.sectionDescription}>Tarih ve saati ayrı ayrı seçin. Bugün daha sonraki bir saati de planlayabilirsiniz.</p>}
             <div className={formStyles.timeGrid}>
               {tur === "planli" && <>
-                <div className={formStyles.field}><Label htmlFor="viva-tarih">Başlangıç tarihi *</Label><SadeTarihAlani id="viva-tarih" required value={tarih} onChange={x => setTarih(x.target.value)} /></div>
+                <div className={`${formStyles.field} ${formStyles.dateField}`}><Label htmlFor="viva-tarih">Başlangıç tarihi *</Label><SadeTarihAlani id="viva-tarih" required value={tarih} onChange={x => setTarih(x.target.value)} /></div>
                 <div className={formStyles.field}><Label htmlFor="viva-saat">Başlangıç saati *</Label><Input id="viva-saat" type="time" required step={60} value={saat} onChange={x => setSaat(x.target.value)} /></div>
               </>}
               <div className={formStyles.field}><Label htmlFor="viva-sure">Süre (dakika) *</Label><Input id="viva-sure" type="number" required min={1} max={1440} step={1} value={sure} onChange={x => setSure(x.target.value)} /></div>
             </div>
           </section>}
+          </div>
           <section className={formStyles.section} aria-labelledby="viva-katilimci-baslik">
             <h2 id="viva-katilimci-baslik"><span aria-hidden="true">{tur ? "03" : "02"}</span>Davetliler</h2>
+            <div className={formStyles.inviteSelectionLayout}>
             <div className={formStyles.inviteSelectors}>
-              <SadeCokluAliciSecimi secenekler={firmaSecenekleri} degerler={firmaSecili} onDegistir={degerler => setSecili(onceki => [...onceki.filter(k => !k.startsWith("ic:")), ...degerler])} etiket="Firmanız" aliciAdi="davetli" placeholder="Firmanız" className="w-full min-w-0" disabled={busy} />
+              <SadeCokluAliciSecimi gruplar={firmaGruplari} secenekler={firmaSecenekleri} degerler={firmaSecili} onDegistir={degerler => setSecili(onceki => [...onceki.filter(k => !k.startsWith("ic:")), ...degerler])} etiket="Firmanız" aliciAdi="davetli" placeholder="Firmanız" className="w-full min-w-0" disabled={busy} />
               {eclubDavetEdilebilir && <SadeCokluAliciSecimi secenekler={eclubSecenekleri} degerler={eclubSecili} onDegistir={degerler => setSecili(onceki => [...onceki.filter(k => !k.startsWith("eclub:")), ...degerler])} etiket="E-Club Üyeleri" aliciAdi="davetli" placeholder="E-Club Üyeleri" className="w-full min-w-0" disabled={busy} />}
             </div>
-            {secili.length > 0 && <ul className={formStyles.selectedChips} aria-label="Seçili katılımcılar">{secili.map(k => <li key={k} className={eskiSecimler.includes(k) ? formStyles.invalidChip : undefined}>{secenekler.find(x => x.deger === k)?.etiket ?? detay?.katilimcilar.find(x => `${x.tur}:${x.id}` === k)?.ad ?? "Kapsam dışı katılımcı"}</li>)}</ul>}
+            <div className={formStyles.selectedBox} role="group" aria-label="Seçilen davetliler">
+              <p className={formStyles.selectedBoxLabel} aria-live="polite">Seçilen davetliler{secili.length > 0 ? ` (${secili.length})` : ""}</p>
+              {secili.length > 0 ? <ul className={formStyles.selectedChips} aria-label="Seçili katılımcılar">{secili.map(k => {
+                const eskiKisi = detay?.katilimcilar.find(x => `${x.tur}:${x.id}` === k);
+                const etiket = secenekler.find(x => x.deger === k)?.etiket ?? (eskiKisi ? vivaKisiSecimEtiketi(eskiKisi) : "Kapsam dışı katılımcı");
+                return <li key={k} className={eskiSecimler.includes(k) ? formStyles.invalidChip : undefined}><span>{etiket}</span><button type="button" className={formStyles.removeChip} aria-label={`${etiket} davetini kaldır`} disabled={busy} onClick={() => setSecili(onceki => onceki.filter(deger => deger !== k))}><X aria-hidden="true" /></button></li>;
+              })}</ul> : <p className={formStyles.selectedPlaceholder}>Henüz davetli seçilmedi.</p>}
+            </div>
+            </div>
             {eskiSecimler.length > 0 && <div role="alert" className={formStyles.invalidSelection}><p>{eskiSecimler.length} seçim artık kapsamınızda bulunmuyor.</p><Button type="button" variant="outline" onClick={() => setSecili(x => x.filter(k => !eskiSecimler.includes(k)))}>Geçersiz seçimleri kaldır</Button></div>}
             <VivaEpostaAlani adresler={davetEpostalari} girdi={epostaGirdisi} onAdresler={setDavetEpostalari} onGirdi={setEpostaGirdisi} disabled={busy} />
           </section>
         </fieldset>
         {hata && <p role="alert" className={formStyles.formError}>{hata}</p>}
         <div className={formStyles.formActions}>
-          <Button asChild variant="outline"><Link href={e ? `/viva/${e.etkinlik_id}` : "/viva"}>Vazgeç</Link></Button>
+          <Button asChild variant="outline"><Link href={e ? `/viva/${e.etkinlik_id}` : "/viva/yayinlar"}>Vazgeç</Link></Button>
           {tur === "planli" && e?.durum !== "planlandi" && <Button type="submit" value="taslak" variant="outline" disabled={busy} className={formStyles.push}>Taslak olarak kaydet</Button>}
           <Button type="submit" disabled={busy || !tur} className={tur !== "planli" || e?.durum === "planlandi" ? formStyles.push : undefined}>{busy ? "Kaydediliyor…" : e && e.durum !== "taslak" ? "Değişiklikleri kaydet" : tur === "anlik" ? "Yayını başlat" : "Etkinliği planla"}<ArrowRight aria-hidden="true" /></Button>
         </div>
       </form>
-    </Card>
-    <aside className={formStyles.aside} aria-label="Etkinlik hazırlığı">
-      <Card className={formStyles.helpCard}><h2>Buluşmanızı hazırlarken</h2><ul>
-        <li>Net bir başlık ve kısa bir açıklama, ekibinizin hazırlanmasını kolaylaştırır.</li>
-        <li>Planlı yayını daha sonra Google veya Outlook takviminize ekleyebilirsiniz.</li>
-        <li>Taslaklar yalnız size görünür; hazır olduğunuzda planlayabilirsiniz.</li>
-      </ul></Card>
-      <Card className={formStyles.preview} aria-label="Etkinlik önizlemesi">
-        <p className={formStyles.kicker}>ETKİNLİK ÖNİZLEMESİ</p><h3>{baslik.trim() || "Buluşmanızın başlığı"}</h3>
-        <p>{tur === "anlik" ? "Şimdi başlayacak" : tur === "planli" ? <>{onizlemeTarihi}{saat && ` · ${saat}`}</> : "Yayın türü seçilmedi"}</p>
-        <p>{sure || "—"} dakika · {secili.length} katılımcı</p>
-        <p>{e ? `${e.sahip_adi} · ${e.firma_adi}` : baglam.kapsam}</p>
-      </Card>
-    </aside>
   </div>;
 }
 
@@ -178,9 +184,13 @@ const epostaDurumYazisi = {
 } as const;
 function DavetYonetimi({ detay, onDegis }: { detay: VivaDetay; onDegis: (d: VivaDetay) => void }) {
   const [ad, setAd] = useState(""); const [eposta, setEposta] = useState("");
+  const [arama, setArama] = useState("");
   const [link, setLink] = useState(""); const [hata, setHata] = useState(""); const [mesaj, setMesaj] = useState("");
   const [busy, setBusy] = useState(false); const kilit = useRef(false);
+  const [davetAcik, setDavetAcik] = useState(false);
   const e = detay.etkinlik;
+  const sorgu = arama.trim().toLocaleLowerCase("tr-TR");
+  const davetler = detay.davetler.filter(d => [d.ad, d.kurum_adi ?? ""].some(ad => ad.toLocaleLowerCase("tr-TR").includes(sorgu)));
   async function islem(islem: string, ek: Record<string, unknown>) {
     if (kilit.current) return;
     kilit.current = true; setBusy(true); setHata(""); setMesaj(""); setLink("");
@@ -194,32 +204,38 @@ function DavetYonetimi({ detay, onDegis }: { detay: VivaDetay; onDegis: (d: Viva
     finally { kilit.current = false; setBusy(false); }
   }
   return <section className={detayStyles.invites} aria-labelledby="viva-davet-baslik">
-    <h2 id="viva-davet-baslik" className="text-lg font-semibold">Özel davetliler</h2>
-    <p className="text-sm text-muted-foreground">Misafir, bağlantıyla davetteki e-posta adresini doğrular. Erişimi bu etkinliğin bitişiyle sona erer. Aynı adrese yeni davet oluşturmak eski bağlantıyı kapatır.</p>
-    {e.durum === "planlandi" && e.oda_acik && <form onSubmit={x => { x.preventDefault(); void islem("davet_ekle", { ad, eposta }); }} className={detayStyles.inviteForm}>
+    <div className={`${detayStyles.paneHead} ${detayStyles.participantHead}`}><div className={detayStyles.participantHeading}><h2 id="viva-davet-baslik">Özel davetliler <span>({detay.davetler.length})</span></h2>
+      {e.durum === "planlandi" && e.oda_acik && <Dialog.Root open={davetAcik} onOpenChange={acik => { if (!busy) { setDavetAcik(acik); if (!acik) setLink(""); } }}>
+        <Dialog.Trigger asChild><Button variant="ghost" disabled={busy}><Plus aria-hidden="true" />Özel davetli ekle</Button></Dialog.Trigger>
+        <Dialog.Portal><Dialog.Overlay className={detayStyles.inviteOverlay} /><Dialog.Content className={detayStyles.inviteDialog}>
+          <Dialog.Title className={detayStyles.inviteDialogTitle}>Özel davetli ekle</Dialog.Title>
+          <Dialog.Description className={detayStyles.inviteDialogDescription}>Ad ve e-posta bilgileriyle bu etkinliğe özel bir davet bağlantısı oluşturun.</Dialog.Description>
+          <Dialog.Close asChild><Button type="button" variant="ghost" size="icon" aria-label="Kapat" className={detayStyles.inviteDialogClose} disabled={busy}><X aria-hidden="true" /></Button></Dialog.Close>
+              <form onSubmit={x => { x.preventDefault(); void islem("davet_ekle", { ad, eposta }); }} className={detayStyles.inviteForm}>
       <div className="space-y-2"><Label htmlFor="viva-misafir-ad">Ad soyad</Label><Input id="viva-misafir-ad" required maxLength={120} value={ad} disabled={busy} onChange={x => setAd(x.target.value)} /></div>
       <div className="space-y-2"><Label htmlFor="viva-misafir-mail">E-posta</Label><Input id="viva-misafir-mail" required type="email" maxLength={254} value={eposta} disabled={busy} onChange={x => setEposta(x.target.value)} /></div>
       <Button type="submit" disabled={busy} className="md:col-span-2 md:w-fit">Davet bağlantısı oluştur</Button>
-    </form>}
+              </form>
     {link && <div className={detayStyles.linkBox}><Label htmlFor="viva-davet-link">Davet bağlantısı — bu ekrandayken kopyalayın</Label><Input id="viva-davet-link" readOnly value={link} onFocus={x => x.target.select()} /><Button variant="outline" onClick={async () => {
       try { await navigator.clipboard.writeText(link); setMesaj("Bağlantı kopyalandı."); }
       catch { setMesaj("Bağlantıyı seçip kopyalayabilirsiniz."); }
     }}>Bağlantıyı kopyala</Button></div>}
-    {hata && <p role="alert" className="text-sm text-destructive">{hata}</p>}{mesaj && <p role="status" className="text-sm">{mesaj}</p>}
-    <h3 className={detayStyles.subheading}>Davet listesi <span className={detayStyles.pill}>Yalnız izleyici</span></h3>
-    {!detay.davetler.length && <p className={detayStyles.emptyText}>Henüz özel davetli bulunmuyor.</p>}
-    <ul className={detayStyles.dataList}>{detay.davetler.map(d => {
+          {hata && <p role="alert" className="text-sm text-destructive">{hata}</p>}{mesaj && <p role="status" className="text-sm">{mesaj}</p>}
+        </Dialog.Content></Dialog.Portal>
+      </Dialog.Root>}
+    </div><label className={detayStyles.search}><Search aria-hidden="true" /><input type="search" aria-label="Özel davetlileri ara" value={arama} onChange={x => setArama(x.target.value)} placeholder="Ad soyad veya kurum adı…" /></label></div>
+    {!davetAcik && <>{hata && <p role="alert" className="text-sm text-destructive">{hata}</p>}{mesaj && <p role="status" className="text-sm">{mesaj}</p>}</>}
+    <VivaKaydirilabilirTablo satirSayisi={davetler.length} etiket="Özel davetliler" arama={arama}><table className={detayStyles.participantTable} aria-label="Özel davetliler"><thead><tr><th scope="col">Kurum Adı</th><th scope="col">Ad Soyad</th><th scope="col">Unvan</th><th scope="col">E-posta</th></tr></thead><tbody>{!davetler.length && <tr><td colSpan={4} className={detayStyles.emptyText}>{arama ? "Eşleşen özel davetli bulunmuyor." : "Henüz özel davetli bulunmuyor."}</td></tr>}{davetler.map(d => {
       const otomatik = detay.eposta_davetleri?.find(x => x.davet_id === d.davet_id);
       const yenidenDenenebilir = e.yonetebilir && !d.iptal && e.oda_acik && ["planlandi", "canli"].includes(e.durum)
         && otomatik && ["bekliyor", "hata"].includes(otomatik.durum) && otomatik.deneme_sayisi < 5;
-      return <li key={d.davet_id} className={detayStyles.dataRow}><div className={detayStyles.identity}><span className={detayStyles.avatar} aria-hidden="true">{d.ad.trim().split(/\s+/).slice(0, 2).map(n => n[0]).join("")}</span><div><strong>{d.ad}</strong><span>{d.eposta} · {d.iptal ? "İptal edildi" : otomatik ? epostaDurumYazisi[otomatik.durum] : "İzleyici"}</span></div></div>
-        <div className="flex flex-wrap gap-2">{yenidenDenenebilir && <Button variant="outline" disabled={busy} onClick={() => void islem("davet_yeniden_dene", { davet_id: d.davet_id })}>Yeniden dene</Button>}
-        {!d.iptal && e.oda_acik && ["planlandi", "canli"].includes(e.durum) && <AlertDialog><AlertDialogTrigger asChild><Button variant="outline" disabled={busy}>Daveti iptal et</Button></AlertDialogTrigger><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Davet iptal edilsin mi?</AlertDialogTitle><AlertDialogDescription>{d.ad} adlı misafirin bağlantısı ve etkinliğe erişimi kapatılacak.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Vazgeç</AlertDialogCancel><AlertDialogAction onClick={() => void islem("davet_iptal", { davet_id: d.davet_id })}>Daveti iptal et</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>}</div></li>;
-    })}</ul>
+      return <tr key={d.davet_id}><td>{d.kurum_adi || "—"}</td><td><div className={detayStyles.participantIdentity}><strong>{d.ad}</strong><div className={detayStyles.rowActions}>{yenidenDenenebilir && <Button variant="outline" disabled={busy} onClick={() => void islem("davet_yeniden_dene", { davet_id: d.davet_id })} title="Yeniden dene" size="icon"><RotateCw aria-hidden="true" /><span className="sr-only">Yeniden dene</span></Button>}
+        {!d.iptal && e.oda_acik && ["planlandi", "canli"].includes(e.durum) && <AlertDialog><AlertDialogTrigger asChild><Button variant="ghost" size="icon" disabled={busy} title="Daveti iptal et"><UserRoundMinus aria-hidden="true" /><span className="sr-only">Daveti iptal et</span></Button></AlertDialogTrigger><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Davet iptal edilsin mi?</AlertDialogTitle><AlertDialogDescription>{d.ad} adlı misafirin bağlantısı ve etkinliğe erişimi kapatılacak.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Vazgeç</AlertDialogCancel><AlertDialogAction onClick={() => void islem("davet_iptal", { davet_id: d.davet_id })}>Daveti iptal et</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>}</div></div><span className={detayStyles.inviteStatus}>{d.iptal ? "İptal edildi" : otomatik ? epostaDurumYazisi[otomatik.durum] : "İzleyici"}</span></td><td>{d.unvan || "—"}</td><td>{d.eposta}</td></tr>;
+    })}</tbody></table></VivaKaydirilabilirTablo>
   </section>;
 }
 
-export default function VivaEkrani({ gorunum, etkinlikId, onizleme = false, anlikBaslat = false, ilkTur, ilkBolum = "ozet" }: { ilkBolum?: VivaDetayBolumu; ilkTur?: "anlik" | "planli"; gorunum: VivaGorunum; etkinlikId?: string; onizleme?: boolean; anlikBaslat?: boolean }) {
+export default function VivaEkrani({ gorunum, etkinlikId, onizleme = false, anlikBaslat = false, ilkTur, ilkBolum = "katilimcilar", listeKaynagi = null }: { ilkBolum?: VivaDetayBolumu; listeKaynagi?: VivaListeKaynagi | null; ilkTur?: "anlik" | "planli"; gorunum: VivaGorunum; etkinlikId?: string; onizleme?: boolean; anlikBaslat?: boolean }) {
   const router = useRouter();
   const [okunuyor, setOkunuyor] = useState(true);
   const [bolum, setBolum] = useState(vivaDetayBolumu(ilkBolum));
@@ -252,7 +268,13 @@ export default function VivaEkrani({ gorunum, etkinlikId, onizleme = false, anli
     document.addEventListener("visibilitychange", yenile);
     return () => { window.clearInterval(timer); document.removeEventListener("visibilitychange", yenile); };
   }, [etkinlikId, gorunum]);
-  const guncelle = (detay: VivaDetay) => setData(d => d ? { ...d, detay } : d);
+  const guncelle = (detay: VivaDetay) => setData(d => d ? { ...d, detay: { ...detay, etkinlik: { ...detay.etkinlik,
+    yayin_basladi: detay.etkinlik.yayin_basladi ?? d.detay?.etkinlik.yayin_basladi,
+    yayin_baslangici: detay.etkinlik.yayin_baslangici === undefined ? d.detay?.etkinlik.yayin_baslangici : detay.etkinlik.yayin_baslangici,
+  }, katilimcilar: detay.katilimcilar.map(k => ({
+    ...k, eposta: k.eposta === undefined ? d.detay?.katilimcilar.find(eski => eski.tur === k.tur && eski.id === k.id)?.eposta : k.eposta,
+    eczane_adi: k.eczane_adi === undefined ? d.detay?.katilimcilar.find(eski => eski.tur === k.tur && eski.id === k.id)?.eczane_adi : k.eczane_adi,
+  })) } } : d);
   async function katilimciCikar(kisi: { id: string; tur: string }) {
     if (!e || busy) return;
     setBusy(true); setHata("");
@@ -271,29 +293,30 @@ export default function VivaEkrani({ gorunum, etkinlikId, onizleme = false, anli
     finally { setBusy(false); }
   }
   const e = data?.detay?.etkinlik;
+  const etkinlikKaynagi = listeKaynagi ?? (e ? vivaEtkinlikKaynagi(e) : null);
   if (gorunum === "yeni" || gorunum === "duzenle") {
     const duzenle = gorunum === "duzenle";
     const baslik = duzenle ? "Etkinliği düzenle" : "Etkinlik oluştur";
     const yetkili = data?.baglam.olusturabilir && (!duzenle || (e?.yonetebilir && e.yayin_turu !== "anlik" && ["taslak", "planlandi"].includes(e.durum)));
+    const konum = <nav className={formStyles.breadcrumb} aria-label="İçerik konumu"><span>Cogniti</span><ChevronRight aria-hidden="true" />{duzenle ? <><Link href="/viva">Viva</Link><ChevronRight aria-hidden="true" /><Link href="/viva/yayinlar">Viva Yayınlar</Link><ChevronRight aria-hidden="true" /><span aria-current="page">{baslik}</span></> : <span aria-current="page">Viva</span>}</nav>;
     return <main className={formStyles.screen}>
-      <SayfaYenileBasligi ustBilgi={<nav className={formStyles.breadcrumb} aria-label="İçerik konumu"><span>Cogniti</span><ChevronRight aria-hidden="true" /><Link href="/viva">Viva</Link><ChevronRight aria-hidden="true" /><span aria-current="page">{baslik}</span></nav>}
+      {duzenle ? <SayfaYenileBasligi ustBilgi={konum}
         baslik={<h1 className={formStyles.pageTitle}>{baslik}</h1>}
-        aciklama={duzenle ? <p className={formStyles.description}>Buluşmanızın bilgilerini ve katılımcılarını güncelleyin.</p> : undefined} />
+        aciklama={<p className={formStyles.description}>Buluşmanızın bilgilerini ve katılımcılarını güncelleyin.</p>} /> : <header className={formStyles.formHeader}>{konum}<Link href="/viva/yayinlar" className={formStyles.browseLink}>Viva Yayınlar<ChevronRight aria-hidden="true" /></Link></header>}
       {hata && <div className={formStyles.loadError} role="alert"><p>{hata}</p><Button variant="outline" onClick={() => setYenileme(n => n + 1)}>Yeniden dene</Button></div>}
       {!data && !hata && <div role="status" className={formStyles.loading}>Etkinlik formu yükleniyor…</div>}
       {data && (yetkili
         ? <EtkinlikFormu key={`${etkinlikId ?? "yeni"}-${yenileme}`} baglam={data.baglam} detay={data.detay} ilkTur={ilkTur} onKaydet={(d, anlik) => { guncelle(d); router.push(`/viva/${d.etkinlik.etkinlik_id}${anlik ? "/oda?baslat=1" : ""}`); }} />
         : <Card className={formStyles.loadError}><p role="alert">Bu etkinliği oluşturma veya düzenleme yetkiniz yok.</p></Card>)}
-      <Link className={formStyles.backLink} href="/viva"><ArrowLeft aria-hidden="true" />Viva etkinliklerine dön</Link>
     </main>;
   }
   if (gorunum === "detay") return <main className={detayStyles.screen}>
-    <SayfaYenileBasligi ustBilgi={<nav className={detayStyles.breadcrumb} aria-label="İçerik konumu"><span>Cogniti</span><ChevronRight aria-hidden="true" /><Link href="/viva">Viva</Link><ChevronRight aria-hidden="true" /><span aria-current="page">Etkinlik detayları</span></nav>}
-      baslik={<h1 className={detayStyles.pageTitle}>Etkinlik detayları</h1>}
+    <SayfaYenileBasligi ustBilgi={<nav className={detayStyles.breadcrumb} aria-label="İçerik konumu"><span>Cogniti</span><ChevronRight aria-hidden="true" /><Link href="/viva">Viva</Link><ChevronRight aria-hidden="true" /><Link href={etkinlikKaynagi ? `/viva/yayinlar?kaynak=${etkinlikKaynagi}` : "/viva/yayinlar"}>Viva Yayınlar</Link><ChevronRight aria-hidden="true" /><span aria-current="page">Etkinlik detayları</span></nav>}
+      baslik={<div className={detayStyles.titleWithContext}><h1 className={detayStyles.pageTitle}>Etkinlik detayları</h1>{etkinlikKaynagi && <span className={detayStyles.sourceContext}>{vivaListeKaynakEtiketi(etkinlikKaynagi)}</span>}</div>}
       aksiyon={<YenileButonu yenileniyor={okunuyor} disabled={busy} onYenile={() => setYenileme(n => n + 1)} />} />
     {hata && <p role="alert" className={detayStyles.error}>{hata}</p>}{uyari && <p role="status" className={detayStyles.note}>{uyari}</p>}
     {!data && !hata && <p role="status" className={detayStyles.loading}>Etkinlik yükleniyor…</p>}
-    {data?.detay && e && <VivaDetayIcerigi key={e.etkinlik_id} detay={data.detay} yenilemeSayaci={yenileme} bolum={bolum} onBolum={v => { setBolum(v); router.replace(vivaDetayYolu(e.etkinlik_id, v), { scroll: false }); }} busy={busy}
+    {data?.detay && e && <VivaDetayIcerigi key={e.etkinlik_id} detay={data.detay} yenilemeSayaci={yenileme} bolum={bolum} onBolum={v => { setBolum(v); router.replace(vivaDetayYolu(e.etkinlik_id, v, listeKaynagi), { scroll: false }); }} busy={busy}
       onIptal={() => void iptal()} onCikar={k => void katilimciCikar(k)} takvim={<TakvimDugmeleri e={e} />}
       davetler={<DavetYonetimi detay={data.detay} onDegis={guncelle} />} />}
   </main>;
@@ -304,7 +327,7 @@ export default function VivaEkrani({ gorunum, etkinlikId, onizleme = false, anli
   </main>;
   return <main className={`${styles.screen} mx-auto w-full max-w-5xl space-y-6 p-4 pb-12 text-foreground md:p-8`}>
     <header className="flex flex-wrap items-center justify-between gap-4"><div><Link href="/viva" className="text-sm font-semibold text-primary">Cogniti · Viva</Link><h1 className="mt-2 text-2xl font-bold">Viva</h1>{gorunum === "liste" && <p className="mt-2 text-sm text-muted-foreground">Etkinliklerinizi planlayın, ekibinizle buluşun.</p>}</div>
-      <div className="flex flex-wrap gap-2"><Button variant="outline" onClick={() => setYenileme(n => n + 1)}>Yenile</Button>{gorunum === "liste" && data?.baglam.olusturabilir && <Button asChild><Link href="/viva/yeni"><Plus aria-hidden="true" />Etkinlik oluştur</Link></Button>}{gorunum !== "liste" && <Button asChild variant="outline"><Link href="/viva">Viva’ya dön</Link></Button>}</div>
+      <div className="flex flex-wrap gap-2"><Button variant="outline" onClick={() => setYenileme(n => n + 1)}>Yenile</Button>{gorunum === "liste" && data?.baglam.olusturabilir && <Button asChild><Link href="/viva"><Plus aria-hidden="true" />Etkinlik oluştur</Link></Button>}{gorunum !== "liste" && <Button asChild variant="outline"><Link href="/viva">Viva’ya dön</Link></Button>}</div>
     </header>
     {hata && <p role="alert" className="rounded-lg border border-destructive/40 p-4 text-sm text-destructive">{hata}</p>}
     {uyari && <p role="status" className="text-sm text-muted-foreground">{uyari}</p>}

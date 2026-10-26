@@ -50,3 +50,19 @@ test('davet kapsamı: ayrıntı e-posta metadatasını okur; eski kayıt sözle�
  const db=readFileSync('scripts/sql/viva_davet_kapsami.sql','utf8');
  assert.doesNotMatch(db,/CREATE OR REPLACE FUNCTION public\.viva_islem/);
 });
+
+test('davet bölgesi: yalnız RPC adayları zenginleştirilir; E-Club kimliği veya kapsam dışı kişi sorgulanmaz',async()=>{
+ const o=ortam('pm');const diger='00000000-0000-4000-8000-000000000002',bolge='00000000-0000-4000-8000-000000000003';
+ const baglam:sozlesme.VivaBaglam={olusturabilir:true,kapsam:'Firma',kisiler:[{id:userId,tur:'ic',ad:'Ali',alt:'utt'},{id:diger,tur:'eclub',ad:'Ece',alt:'eczaci'}]};
+ const sorgular:{tablo:string;kolon:string;ids:string[]}[]=[];
+ const db={from:(tablo:string)=>({select:()=>({in:(kolon:string,ids:string[])=>{sorgular.push({tablo,kolon,ids:[...ids]});return tablo==='kullanicilar'?{eq:async()=>({data:[{kullanici_id:userId,bolge_id:bolge},{kullanici_id:diger,bolge_id:bolge}],error:null})}:Promise.resolve({data:[{bolge_id:bolge,bolge_adi:'Ankara'}],error:null});}})})} as unknown as Parameters<typeof o.api.vivaFirmaBolgeBilgileriniEkle>[0];
+ const sonuc=await o.api.vivaFirmaBolgeBilgileriniEkle(db,baglam);
+ assert.deepEqual(sorgular[0],{tablo:'kullanicilar',kolon:'kullanici_id',ids:[userId]});assert.equal(sorgular[1].tablo,'bolgeler');
+ assert.equal(sonuc.kisiler.length,2);assert.equal(sonuc.kisiler[0].bolge_adi,'Ankara');assert.equal(sonuc.kisiler[0].bolge_id,bolge);assert.equal(sonuc.kisiler[1],baglam.kisiler[1]);
+ assert.equal(baglam.kisiler[0].bolge_adi,undefined);
+});
+test('davet bölgesi: sorgu hatası gizlenmez ve aday listesi uydurulmaz',async()=>{
+ const o=ortam('tm'),hata={code:'42501'};
+ const db={from:()=>({select:()=>({in:()=>({eq:async()=>({data:null,error:hata})})})})} as unknown as Parameters<typeof o.api.vivaFirmaBolgeBilgileriniEkle>[0];
+ await assert.rejects(o.api.vivaFirmaBolgeBilgileriniEkle(db,{olusturabilir:true,kapsam:'Firma',kisiler:[{id:userId,tur:'ic',ad:'Ali',alt:'utt'}]}),e=>e===hata);
+});

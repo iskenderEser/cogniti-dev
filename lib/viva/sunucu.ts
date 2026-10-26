@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { createAdminClient, createClient } from "@/lib/supabase/server";
 import { rolCozucu } from "@/lib/utils/rolCozucu";
 import { ECLUB_TUKETICI_ROLLERI } from "@/lib/utils/roller";
-import { vivaFormDogrula, vivaIcRolMu, vivaUuidMu } from "./sozlesme";
+import { vivaFormDogrula, vivaIcRolMu, vivaUuidMu, type VivaDetay, type VivaBaglam } from "./sozlesme";
 import { vivaDavetEpostalariDogrula } from "./eposta";
 
 export class VivaHatasi extends Error {
@@ -58,6 +58,115 @@ export async function vivaKullanici() {
   if (!vivaIcRolMu(rol) && !ECLUB_TUKETICI_ROLLERI.includes(rol)) throw new VivaHatasi("Viva erişiminiz yok.", 403);
   return { db, user, rol };
 }
+async function vivaYayinZamanlariniEkle(db: ReturnType<typeof createAdminClient>, detay: VivaDetay): Promise<VivaDetay> {
+  const e = detay?.etkinlik;
+  if (!e || !vivaUuidMu(e.etkinlik_id) || !vivaUuidMu(e.sahip_id)) return detay;
+  if (!["canli", "sona_erdi"].includes(e.durum)) return { ...detay, etkinlik: { ...e, yayin_basladi: false, yayin_baslangici: null } };
+  const [yasam, oda] = await Promise.all([
+    db.from("viva_daily_yasam").select("oturum_id").eq("etkinlik_id", e.etkinlik_id).maybeSingle(),
+    db.from("viva_daily_odalar").select("domain, oda_adi").eq("etkinlik_id", e.etkinlik_id).maybeSingle(),
+  ]);
+  if (yasam.error) throw yasam.error;
+  if (oda.error) throw oda.error;
+  const basladi = e.durum === "canli" || Boolean(yasam.data?.oturum_id);
+  let baslangic: string | null = null;
+  if (basladi && oda.data && /^[a-zA-Z0-9_-]+$/.test(oda.data.oda_adi)) {
+    // Katılım tokenındaki sunucu kimliğiyle eşleştirilir; misafirin odaya girişi yayın başlangıcı değildir.
+    const sunucuKimligi = `vi_${vivaHash(`viva:uye:${e.sahip_id}`).slice(0, 32)}`;
+    const { data: olaylar, error } = await db.from("viva_daily_olaylar").select("veri")
+      .eq("domain", oda.data.domain).eq("tur", "participant.joined").eq("veri->>user_id", sunucuKimligi)
+      .or(`veri->>room_name.eq.${oda.data.oda_adi},veri->>room.eq.${oda.data.oda_adi}`)
+      .order("alindi", { ascending: true }).limit(100);
+    if (error) throw error;
+    const zamanlar = (olaylar ?? []).flatMap(olay => {
+      const veri = olay.veri as Record<string, unknown> | null;
+      const ham = veri?.joined_at ?? veri?.timestamp;
+      const sayi = typeof ham === "number" || (typeof ham === "string" && /^\d+(?:\.\d+)?$/.test(ham)) ? Number(ham) : NaN;
+      const zaman = Number.isFinite(sayi) ? sayi * (sayi < 1e12 ? 1000 : 1) : typeof ham === "string" ? Date.parse(ham) : NaN;
+      return Number.isFinite(zaman) ? [zaman] : [];
+    });
+    if (zamanlar.length) baslangic = new Date(Math.min(...zamanlar)).toISOString();
+  }
+  return { ...detay, etkinlik: { ...e, yayin_basladi: basladi, yayin_baslangici: baslangic } };
+}
+
+async function vivaKatilimciBilgileriniEkle(db: ReturnType<typeof createAdminClient>, authId: string, detay: VivaDetay): Promise<VivaDetay> {
+  if (!detay?.etkinlik || detay.etkinlik.sahip_id !== authId || detay.etkinlik.yonetebilir !== true
+    || !Array.isArray(detay.katilimcilar) || !detay.katilimcilar.length) return detay;
+  const epostalar = new Map<string, string | null>();
+  const eczaneler = new Map<string, Set<string>>();
+  const kisiFirmalari = new Map<string, string>();
+  const firmaAdlari = new Map<string, string>();
+  await Promise.all((["ic", "eclub"] as const).map(async tur => {
+    const ids = [...new Set(detay.katilimcilar.filter(k => k.tur === tur && vivaUuidMu(k.id)).map(k => k.id))];
+    for (let offset = 0; offset < ids.length; offset += 200) {
+      const grup = ids.slice(offset, offset + 200);
+      if (tur === "ic") {
+        const { data, error } = await db.from("kullanicilar").select("kullanici_id, eposta, firma_id").in("kullanici_id", grup);
+        if (error) throw error;
+        for (const kisi of data ?? []) {
+          epostalar.set(`ic:${kisi.kullanici_id}`, kisi.eposta);
+          if (vivaUuidMu(kisi.firma_id)) kisiFirmalari.set(kisi.kullanici_id, kisi.firma_id);
+        }
+      } else {
+        const { data, error } = await db.from("eclub_kisiler").select("kisi_id, eposta").in("kisi_id", grup);
+        if (error) throw error;
+        for (const kisi of data ?? []) epostalar.set(`eclub:${kisi.kisi_id}`, kisi.eposta);
+        const { data: baglar, error: bagHatasi } = await db.from("eclub_kisi_eczane")
+          .select("kisi_id, eclub_eczaneler ( eclub_eczane_master ( eczane_adi ) )").in("kisi_id", grup).eq("aktif_mi", true);
+        if (bagHatasi) throw bagHatasi;
+        type Master = { eczane_adi: string | null };
+        type Eczane = { eclub_eczane_master?: Master | Master[] | null };
+        type EczaneBagi = { kisi_id: string; eclub_eczaneler?: Eczane | Eczane[] | null };
+        for (const bag of (baglar ?? []) as EczaneBagi[]) {
+          const eczane = Array.isArray(bag.eclub_eczaneler) ? bag.eclub_eczaneler : [bag.eclub_eczaneler];
+          for (const e of eczane) {
+            const master = Array.isArray(e?.eclub_eczane_master) ? e.eclub_eczane_master : [e?.eclub_eczane_master];
+            for (const m of master) if (m?.eczane_adi) {
+              const adlar = eczaneler.get(bag.kisi_id) ?? new Set<string>();
+              adlar.add(m.eczane_adi); eczaneler.set(bag.kisi_id, adlar);
+            }
+          }
+        }
+      }
+    }
+  }));
+  const firmaIds = [...new Set(kisiFirmalari.values())];
+  for (let offset = 0; offset < firmaIds.length; offset += 200) {
+    const { data, error } = await db.from("firmalar").select("firma_id, firma_adi").in("firma_id", firmaIds.slice(offset, offset + 200));
+    if (error) throw error;
+    for (const firma of data ?? []) firmaAdlari.set(firma.firma_id, firma.firma_adi);
+  }
+  return { ...detay, katilimcilar: detay.katilimcilar.map(k => ({ ...k, eposta: epostalar.get(`${k.tur}:${k.id}`) ?? null,
+    firma_adi: k.tur === "ic" ? firmaAdlari.get(kisiFirmalari.get(k.id) ?? "") ?? null : null,
+    eczane_adi: k.tur === "eclub" ? [...(eczaneler.get(k.id) ?? [])].sort((a, b) => a.localeCompare(b, "tr")).join(", ") || null : null,
+  })) };
+}
+
+/** Yalnız yetkili RPC listesindeki kimlikler zenginleştirilir; yeni davet adayı üretilmez. */
+export async function vivaFirmaBolgeBilgileriniEkle(db: ReturnType<typeof createAdminClient>, baglam: VivaBaglam): Promise<VivaBaglam> {
+  if (!baglam?.olusturabilir || !Array.isArray(baglam.kisiler)) return baglam;
+  const ids = [...new Set(baglam.kisiler.filter(k => k.tur === "ic" && vivaUuidMu(k.id)).map(k => k.id))];
+  if (!ids.length) return baglam;
+  const kisiBolgeleri = new Map<string, string | null>();
+  for (let offset = 0; offset < ids.length; offset += 200) {
+    const { data, error } = await db.from("kullanicilar").select("kullanici_id, bolge_id")
+      .in("kullanici_id", ids.slice(offset, offset + 200)).eq("aktif_mi", true);
+    if (error) throw error;
+    for (const k of data ?? []) kisiBolgeleri.set(k.kullanici_id, k.bolge_id);
+  }
+  const bolgeIds = [...new Set([...kisiBolgeleri.values()].filter((id): id is string => Boolean(id)))];
+  const bolgeAdlari = new Map<string, string>();
+  for (let offset = 0; offset < bolgeIds.length; offset += 200) {
+    const { data, error } = await db.from("bolgeler").select("bolge_id, bolge_adi").in("bolge_id", bolgeIds.slice(offset, offset + 200));
+    if (error) throw error;
+    for (const b of data ?? []) bolgeAdlari.set(b.bolge_id, b.bolge_adi);
+  }
+  return { ...baglam, kisiler: baglam.kisiler.map(k => k.tur !== "ic" ? k : { ...k,
+    bolge_id: kisiBolgeleri.get(k.id) ?? null, bolge_adi: bolgeAdlari.get(kisiBolgeleri.get(k.id) ?? "") ?? null,
+  }) };
+}
+
 export async function vivaOku(islem: string, veri: Record<string, unknown>) {
   const { db, user } = await vivaKullanici();
   const { data, error } = islem === "baglam"
@@ -66,7 +175,8 @@ export async function vivaOku(islem: string, veri: Record<string, unknown>) {
       ? await db.rpc("viva_eposta_detay", { p_auth: user.id, p_id: veri.etkinlik_id })
       : await db.rpc("viva_islem", { p_auth: user.id, p_islem: islem, p_veri: veri });
   if (error) throw error;
-  return data;
+  if (islem === "baglam") return vivaFirmaBolgeBilgileriniEkle(db, data);
+  return islem === "detay" ? vivaKatilimciBilgileriniEkle(db, user.id, await vivaYayinZamanlariniEkle(db, data)) : data;
 }
 
 async function vivaDavetYetkisiniDogrula(db: ReturnType<typeof createAdminClient>, authId: string, etkinlikId: string, yeni: boolean) {

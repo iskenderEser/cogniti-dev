@@ -120,29 +120,62 @@ export function SadeSekmeler<T extends string>({ secenekler, deger, onDegistir, 
   </Tabs.Root>;
 }
 
-export function SadeCokluAliciSecimi<T extends string>({ secenekler, degerler, onDegistir, etiket = "Alıcı", disabled = false, className, aliciAdi = "alıcı", placeholder = "Alıcıları seçin", onAcikDegistir, yukleniyor = false }: {
+export function SadeCokluAliciSecimi<T extends string>({ secenekler, degerler, onDegistir, etiket = "Alıcı", disabled = false, className, aliciAdi = "alıcı", placeholder = "Alıcıları seçin", onAcikDegistir, yukleniyor = false, gruplar = [] }: {
   secenekler: readonly KontrolSecenegi<T>[]; degerler: readonly T[];
   onDegistir: (degerler: T[]) => void; etiket?: string; disabled?: boolean; className?: string;
   aliciAdi?: string; placeholder?: string; onAcikDegistir?: (acik: boolean) => void; yukleniyor?: boolean;
+  gruplar?: readonly { id: string; etiket: string; degerler: readonly T[] }[];
 }) {
   const [acik, setAcik] = useState(false);
   const [arama, setArama] = useState("");
   const input = useRef<HTMLInputElement>(null);
   const uygunlar = secenekler.filter((s) => !s.disabled);
   const tumuSecili = uygunlar.length > 0 && uygunlar.every((s) => degerler.includes(s.deger));
+  const [acikGruplar, setAcikGruplar] = useState<string[]>([]);
+  const grupKimligi = useId();
+  const grupluDegerler = new Set(gruplar.flatMap(g => [...g.degerler]));
+  const tekiller = secenekler.filter(s => !grupluDegerler.has(s.deger));
+  const gorunenGruplar = gruplar.map(g => {
+    const adaylar = secenekler.filter(s => g.degerler.includes(s.deger));
+    const bolgeEslesir = g.etiket.toLocaleLowerCase("tr-TR").includes(arama.trim().toLocaleLowerCase("tr-TR"));
+    return { ...g, adaylar, gorunenler: bolgeEslesir ? adaylar : filtrele(adaylar, arama) };
+  }).filter(g => g.gorunenler.length);
+  const kisiSatiri = (s: KontrolSecenegi<T>) => <label key={s.deger} aria-disabled={s.disabled || undefined} className={cn(styles.option, styles.check)}>
+    <input type="checkbox" disabled={s.disabled} checked={degerler.includes(s.deger)} onChange={(e) => onDegistir(e.target.checked ? [...degerler, s.deger] : degerler.filter((d) => d !== s.deger))} />
+    <span>{s.etiket}{s.altBilgi && <span className={styles.sub}>{s.altBilgi}</span>}</span>
+  </label>;
+
   return <Popover.Root open={acik && !disabled} onOpenChange={(open) => { setAcik(open); setArama(""); onAcikDegistir?.(open); }}>
     <Popover.Trigger asChild><button type="button" disabled={disabled} aria-label={etiket} className={cn(styles.trigger, className)}>
       <span className={styles.name} aria-live="polite">{degerler.length ? `${degerler.length} ${aliciAdi} seçildi` : placeholder}</span><SadeAsagiOk />
     </button></Popover.Trigger>
     <Popover.Portal><Popover.Content align="start" sideOffset={7} collisionPadding={12} className={styles.menu} aria-label={`${etiket} seçimi`} onOpenAutoFocus={(e) => { e.preventDefault(); input.current?.focus(); }}>
-      <input ref={input} type="search" aria-label={`${etiket} adıyla ara`} placeholder={`${etiket} adıyla ara`} className={styles.search} value={arama} onChange={(e) => setArama(e.target.value)} />
+      <input ref={input} type="search" aria-label={gruplar.length ? "Kişi veya bölge adıyla ara" : `${etiket} adıyla ara`} placeholder={gruplar.length ? "Kişi veya bölge adıyla ara" : `${etiket} adıyla ara`} className={styles.search} value={arama} onChange={(e) => { setArama(e.target.value); if (e.target.value.trim()) setAcikGruplar(gruplar.map(g => g.id)); }} />
       {yukleniyor ? <p role="status" className={styles.empty}>Yükleniyor…</p> : <button type="button" className={styles.option} disabled={uygunlar.length === 0} onClick={() => onDegistir(tumuSecili ? [] : uygunlar.map((s) => s.deger))}>{tumuSecili ? "Seçimleri Kaldır" : `Tümünü Seç (${uygunlar.length})`}</button>}
       <div className={styles.options}>
-        {!yukleniyor && filtrele(secenekler, arama).map((s) => <label key={s.deger} aria-disabled={s.disabled || undefined} className={cn(styles.option, styles.check)}>
-          <input type="checkbox" disabled={s.disabled} checked={degerler.includes(s.deger)} onChange={(e) => onDegistir(e.target.checked ? [...degerler, s.deger] : degerler.filter((d) => d !== s.deger))} />
-          <span>{s.etiket}{s.altBilgi && <span className={styles.sub}>{s.altBilgi}</span>}</span>
-        </label>)}
-        {!yukleniyor && !filtrele(secenekler, arama).length && <p role="status" className={styles.empty}>Sonuç bulunamadı.</p>}
+        {!yukleniyor && gorunenGruplar.map((g, i) => {
+          const uygun = g.adaylar.filter(s => !s.disabled).map(s => s.deger);
+          const secilen = uygun.filter(d => degerler.includes(d)).length;
+          const tamami = uygun.length > 0 && secilen === uygun.length;
+          const acildi = acikGruplar.includes(g.id);
+          const panelId = `${grupKimligi}-${i}`;
+          return <div key={g.id} className={styles.recipientGroup}>
+            <div className={styles.recipientGroupHeader}>
+              <label className={cn(styles.option, styles.check)}>
+                <input type="checkbox" aria-label={`${g.etiket} bölgesindeki UTT'leri seç`} disabled={!uygun.length} checked={tamami}
+                  ref={el => { if (el) el.indeterminate = secilen > 0 && !tamami; }}
+                  onChange={() => onDegistir(tamami ? degerler.filter(d => !uygun.includes(d)) : [...new Set([...degerler, ...uygun])])} />
+                <span>{g.etiket}<span className={styles.sub}>{uygun.length} UTT · {secilen} seçili</span></span>
+              </label>
+              <button type="button" className={styles.recipientGroupToggle} aria-label={`${g.etiket} UTT listesini ${acildi ? "kapat" : "aç"}`}
+                aria-expanded={acildi} aria-controls={panelId} onClick={() => setAcikGruplar(onceki => onceki.includes(g.id) ? onceki.filter(id => id !== g.id) : [...onceki, g.id])}><SadeAsagiOk /></button>
+            </div>
+            {acildi && <div id={panelId} className={styles.recipientGroupMembers} role="group" aria-label={`${g.etiket} UTT'leri`}>{g.gorunenler.map(kisiSatiri)}</div>}
+          </div>;
+        })}
+        {!yukleniyor && gruplar.length > 0 && filtrele(tekiller, arama).length > 0 && <p className={styles.recipientGroupOthers}>Diğer firma çalışanları</p>}
+        {!yukleniyor && filtrele(tekiller, arama).map(kisiSatiri)}
+        {!yukleniyor && !gorunenGruplar.length && !filtrele(tekiller, arama).length && <p role="status" className={styles.empty}>Sonuç bulunamadı.</p>}
       </div>
     </Popover.Content></Popover.Portal>
   </Popover.Root>;

@@ -14,7 +14,11 @@ const form = { etkinlik_id: id, baslik: 'Eğitim', aciklama: '', yayin_turu: 'pl
   baslangic: '2027-01-01T21:30:00Z', bitis: '2027-01-01T22:00:00Z', katilimcilar: [] };
 type Ayarlar = { rol?: string; oturum?: boolean; sahip?: string; yonetebilir?: boolean;
   olusturabilir?: boolean; mevcutSahip?: string; yetkiHatasi?: { code: string }; okumaHatasi?: { code: string };
-  kayitHatasi?: { code: string }; yenidenDeneHatasi?: { code: string }; anahtar?: string | null };
+  kayitHatasi?: { code: string }; yenidenDeneHatasi?: { code: string }; anahtar?: string | null;
+  detay?: Record<string, unknown>; kisiEpostalari?: { tur: string; id: string; eposta: string | null; firma_id?: string | null }[];
+  firmalar?: { firma_id: string; firma_adi: string }[];
+  eczaneBaglari?: { kisi_id: string; eczane_adi: string; aktif_mi: boolean }[];
+  yayinOturumu?: string | null; sunucuGirisleri?: { joined_at?: string | number; timestamp?: string | number }[] };
 type Istek = { ad: string; girdi: Record<string, unknown> };
 
 function ortam(ayar: Ayarlar = {}) {
@@ -24,12 +28,38 @@ function ortam(ayar: Ayarlar = {}) {
     rpc: async (ad: string, girdi: Record<string, unknown>) => {
       istekler.push({ ad, girdi });
       if (ad === 'viva_davet_baglami') return { data: { olusturabilir: ayar.olusturabilir ?? true }, error: ayar.yetkiHatasi ?? null };
+      if (ad === 'viva_eposta_detay' && ayar.detay) return { data: ayar.detay, error: null };
       if (ad === 'viva_eposta_kaydet') return { data: { etkinlik: { etkinlik_id: id }, eposta_davetleri: [] }, error: ayar.kayitHatasi ?? null };
       if (ad === 'viva_eposta_yeniden_dene') return { data: { etkinlik: { etkinlik_id: id }, eposta_davetleri: [{ davet_id: baskaId, durum: 'bekliyor' }] }, error: ayar.yenidenDeneHatasi ?? null };
       if (girdi.p_islem === 'detay') return { data: { etkinlik: { sahip_id: ayar.sahip ?? id, yonetebilir: ayar.yonetebilir ?? true } }, error: ayar.yetkiHatasi ?? null };
       return { data: { etkinlik: { etkinlik_id: id } }, error: null };
     },
     from: (tablo: string) => {
+      if (['viva_daily_yasam','viva_daily_odalar'].includes(tablo)) return {select:()=>({eq:(kolon:string,deger:string)=>{
+        assert.equal(kolon,'etkinlik_id');assert.equal(deger,id);
+        return {maybeSingle:async()=>({data:tablo==='viva_daily_yasam'?{oturum_id:ayar.yayinOturumu??null}:{domain:'cogniti-viva.daily.co',oda_adi:'viva-test-n1'},error:null})};
+      }})};
+      if (tablo==='viva_daily_olaylar') {
+        const filtreler:Record<string,unknown>={};
+        const sorgu={eq:(alan:string,deger:string)=>{filtreler[alan]=deger;return sorgu;},or:(filtre:string)=>{filtreler.oda=filtre;return sorgu;},order:()=>sorgu,limit:async()=>{
+          istekler.push({ad:tablo,girdi:filtreler});return {data:(ayar.sunucuGirisleri??[]).map(veri=>({veri})),error:null};
+        }};
+        return {select:()=>sorgu};
+      }
+      if (tablo==='eclub_kisi_eczane') return { select: (alan:string) => ({ in: (kolon:string,ids:string[]) => ({ eq: async (filtre:string,aktif:boolean) => {
+        assert.equal(kolon,'kisi_id');assert.equal(filtre,'aktif_mi');assert.equal(aktif,true);
+        istekler.push({ad:tablo,girdi:{alan,kolon,ids}});
+        return {data:(ayar.eczaneBaglari??[]).filter(b=>ids.includes(b.kisi_id)&&b.aktif_mi===aktif).map(b=>({kisi_id:b.kisi_id,eclub_eczaneler:{eclub_eczane_master:{eczane_adi:b.eczane_adi}}})),error:null};
+      } }) }) };
+      if (tablo==='firmalar') return {select:(alan:string)=>({in:async(kolon:string,ids:string[])=>{
+        istekler.push({ad:tablo,girdi:{alan,kolon,ids}});
+        return {data:(ayar.firmalar??[]).filter(f=>ids.includes(f.firma_id)),error:ayar.okumaHatasi??null};
+      }})};
+      if (['kullanicilar','eclub_kisiler'].includes(tablo)) return { select: (alan: string) => ({ in: async (kolon: string, ids: string[]) => {
+        istekler.push({ ad: tablo, girdi: { alan, kolon, ids } });
+        const tur=tablo==='kullanicilar'?'ic':'eclub';
+        return { data: (ayar.kisiEpostalari ?? []).filter(k=>k.tur===tur&&ids.includes(k.id)).map(k=>({[kolon]:k.id,eposta:k.eposta,firma_id:k.firma_id??null})), error: ayar.okumaHatasi ?? null };
+      } }) };
       assert.equal(tablo, 'viva_etkinlikler');
       return { select: (alan: string) => {
         assert.equal(alan, 'sahip_id');
@@ -67,6 +97,39 @@ const durum = (status: number, metin?: RegExp) => (hata: unknown) => {
   if (metin) assert.match((hata as Error).message, metin);
   return true;
 };
+
+test('Katılımcı e-postaları yalnız düzenleyenin yetkili detayında ve seçili kişi kimliklerinden okunur',async()=>{
+  const detay={etkinlik:{sahip_id:id,yonetebilir:true},katilimcilar:[{tur:'ic',id:baskaId},{tur:'eclub',id:baskaId}],davetler:[]};
+  const kisiEpostalari=[{tur:'ic',id:baskaId,eposta:'ekip@example.invalid'},{tur:'eclub',id:baskaId,eposta:'uye@example.invalid'},{tur:'ic',id,eposta:'secili-degil@example.invalid'}];
+  const eczaneBaglari=[{kisi_id:baskaId,eczane_adi:'Örnek Eczanesi',aktif_mi:true},{kisi_id:baskaId,eczane_adi:'Eski Eczane',aktif_mi:false},{kisi_id:id,eczane_adi:'Seçilmemiş Eczane',aktif_mi:true}];
+  const o=ortam({detay,kisiEpostalari,eczaneBaglari});
+  const sonuc=await o.oku('detay',{etkinlik_id:id}) as {katilimcilar:{eposta:string;eczane_adi:string|null}[]};
+  assert.deepEqual(sonuc.katilimcilar.map(k=>k.eposta),['ekip@example.invalid','uye@example.invalid']);
+  assert.deepEqual(sonuc.katilimcilar.map(k=>k.eczane_adi),[null,'Örnek Eczanesi']);
+  assert.equal(JSON.stringify(o.istekler.find(i=>i.ad==='eclub_kisi_eczane')?.girdi.ids),JSON.stringify([baskaId]));
+  const okumalar=o.istekler.filter(i=>['kullanicilar','eclub_kisiler'].includes(i.ad));
+  assert.equal(okumalar.length,2);assert(okumalar.every(i=>JSON.stringify(i.girdi.ids)===JSON.stringify([baskaId])));
+  for(const etkinlik of [{sahip_id:baskaId,yonetebilir:true},{sahip_id:id,yonetebilir:false}]){
+    const kapali=ortam({detay:{...detay,etkinlik},kisiEpostalari});
+    await kapali.oku('detay',{etkinlik_id:id});
+    assert(!kapali.istekler.some(i=>['kullanicilar','eclub_kisiler'].includes(i.ad)));
+  }
+  const hata={code:'42501'};const kapali=ortam({detay,kisiEpostalari,okumaHatasi:hata});
+  await assert.rejects(kapali.oku('detay',{etkinlik_id:id}),e=>e===hata);
+});
+test('detay yayın başlangıcını gerçek sunucu girişinden alır; hiç açılmamış sona eren yayını ayırır',async()=>{
+ const etkinlik={...form,sahip_id:id,yonetebilir:false,durum:'canli'};
+ const o=ortam({detay:{etkinlik,katilimcilar:[],davetler:[]},yayinOturumu:baskaId,sunucuGirisleri:[{joined_at:'2026-10-26T14:03:00Z'},{joined_at:'2026-10-26T14:00:00Z'}]});
+ const sonuc=await o.oku('detay',{etkinlik_id:id}) as {etkinlik:{yayin_basladi:boolean;yayin_baslangici:string|null}};
+ assert.equal(sonuc.etkinlik.yayin_basladi,true);assert.equal(sonuc.etkinlik.yayin_baslangici,'2026-10-26T14:00:00.000Z');
+ const okuma=o.istekler.find(i=>i.ad==='viva_daily_olaylar');assert(okuma);
+ const kimlik=`vi_${crypto.createHash('sha256').update(`viva:uye:${id}`).digest('hex').slice(0,32)}`;
+ assert.equal(okuma.girdi['veri->>user_id'],kimlik);assert.equal(okuma.girdi.tur,'participant.joined');assert.match(String(okuma.girdi.oda),/viva-test-n1/);
+ const acilmadi=ortam({detay:{etkinlik:{...etkinlik,durum:'sona_erdi'},katilimcilar:[],davetler:[]}});
+ const gecmis=await acilmadi.oku('detay',{etkinlik_id:id}) as {etkinlik:{yayin_basladi:boolean;yayin_baslangici:string|null}};
+ assert.equal(gecmis.etkinlik.yayin_basladi,false);assert.equal(gecmis.etkinlik.yayin_baslangici,null);
+ assert(!acilmadi.istekler.some(i=>i.ad==='viva_daily_olaylar'));
+});
 
 test('E-posta kaydı: oluşturma ve düzenleme normalize adreslerle atomik RPCye bağlanır', async () => {
   for (const islem of ['olustur', 'kaydet']) for (const durumAdi of ['taslak', 'planlandi']) {
@@ -220,4 +283,18 @@ test('E-posta yeniden deneme yalnız sahibin ayrı RPCsine gider; etkinlik veya 
     await assert.rejects(x.yaz('davet_yeniden_dene', { etkinlik_id: id, surum: 4, davet_id: baskaId }));
   }
   await assert.rejects(ortam().yaz('davet_yeniden_dene', { etkinlik_id: id, surum: 4, davet_id: 'bozuk' }), durum(400));
+});
+
+test('Katılımcının firma adı kendi firma kimliğinden okunur; etkinliğin firması veya seçilmemiş kişi kullanılmaz',async()=>{
+ const firmaId='00000000-0000-4000-8000-000000000003';
+ const detay={etkinlik:{sahip_id:id,yonetebilir:true,firma_adi:'Etkinliği düzenleyen firma'},katilimcilar:[{tur:'ic',id:baskaId},{tur:'eclub',id:baskaId}],davetler:[]};
+ const kisiEpostalari=[{tur:'ic',id:baskaId,eposta:'ekip@example.invalid',firma_id:firmaId},{tur:'ic',id,eposta:'secili-degil@example.invalid',firma_id:id}];
+ const firmalar=[{firma_id:firmaId,firma_adi:'Çalışanın firması'},{firma_id:id,firma_adi:'Seçilmemiş firma'}];
+ const o=ortam({detay,kisiEpostalari,firmalar});
+ const sonuc=await o.oku('detay',{etkinlik_id:id}) as {katilimcilar:{firma_adi:string|null}[]};
+ assert.deepEqual(sonuc.katilimcilar.map(k=>k.firma_adi),['Çalışanın firması',null]);
+ assert.equal(JSON.stringify(o.istekler.find(i=>i.ad==='firmalar')?.girdi.ids),JSON.stringify([firmaId]));
+ for(const etkinlik of [{sahip_id:baskaId,yonetebilir:true},{sahip_id:id,yonetebilir:false}]){
+  const kapali=ortam({detay:{...detay,etkinlik},kisiEpostalari,firmalar});await kapali.oku('detay',{etkinlik_id:id});assert(!kapali.istekler.some(i=>i.ad==='firmalar'));
+ }
 });

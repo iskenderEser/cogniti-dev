@@ -6,14 +6,16 @@ export const VIVA_DURUMLARI = {
 } as const;
 export type VivaDurum = keyof typeof VIVA_DURUMLARI;
 export type VivaHedefTuru = "ic" | "eclub";
-export interface VivaKisi { id: string; tur: VivaHedefTuru; ad: string; alt: string }
+export interface VivaKisi { id: string; tur: VivaHedefTuru; ad: string; alt: string; eposta?: string | null; eczane_adi?: string | null; firma_adi?: string | null; bolge_id?: string | null; bolge_adi?: string | null }
 export interface VivaEtkinlik {
   etkinlik_id: string; baslik: string; aciklama: string; baslangic: string; bitis: string;
   durum: VivaDurum; surum: number; sahip_id: string; sahip_adi: string; firma_adi: string;
   yonetebilir: boolean; oda_acik: boolean;
   yayin_turu?: "anlik" | "planli";
+  yayin_basladi?: boolean;
+  yayin_baslangici?: string | null;
 }
-export interface VivaDavet { davet_id: string; ad: string; eposta: string; iptal: boolean }
+export interface VivaDavet { davet_id: string; ad: string; eposta: string; iptal: boolean; kurum_adi?: string | null; unvan?: string | null }
 export interface VivaDavetEpostaGirdisi { davet_epostalari: string[] }
 export type VivaEpostaDavetDurumu = "taslak" | "bekliyor" | "gonderiliyor" | "gonderildi" | "hata" | "kontrol" | "iptal";
 export interface VivaEpostaDaveti {
@@ -68,12 +70,25 @@ export function vivaDonusYolu(aranan: string): string | null {
   const adres = new URLSearchParams(aranan).get("viva");
   if (!adres || adres.split("?").length > 2) return null;
   const [yol, sorgu = ""] = adres.split("?");
-  if (!/^\/viva(?:\/(?:yeni|kayitlar|[0-9a-f-]{36}(?:\/(?:oda|duzenle))?))?$/.test(yol)) return null;
+  if (!/^\/viva(?:\/(?:yeni|yayinlar|kayitlar|[0-9a-f-]{36}(?:\/(?:oda|duzenle))?))?$/.test(yol)) return null;
   if (!sorgu) return yol;
   const p = new URLSearchParams(sorgu);
-  if ([...p.keys()].length !== 1) return null;
-  if (yol === "/viva/yeni" && ["anlik", "planli"].includes(p.get("tur") ?? "")) return `${yol}?tur=${p.get("tur")}`;
-  if (/^\/viva\/[0-9a-f-]{36}$/.test(yol) && ["ozet", "katilimcilar", "kayitlar"].includes(p.get("bolum") ?? "")) return `${yol}?bolum=${p.get("bolum")}`;
-  if (/^\/viva\/[0-9a-f-]{36}\/oda$/.test(yol) && p.get("baslat") === "1") return `${yol}?baslat=1`;
+  const keys = [...p.keys()];
+  if (keys.length !== new Set(keys).size || keys.length > 2) return null;
+  const kaynak = p.get("kaynak");
+  const [kaynakBolum, kaynakKapsam, kaynakEk] = kaynak?.split("-") ?? [];
+  const kaynakGecerli = Boolean(kaynak && !kaynakEk
+    && ["ileri", "canli", "gecmis", "taslak"].includes(kaynakBolum)
+    && ["duzenlediklerim", "davetlerim"].includes(kaynakKapsam)
+    && !(kaynakBolum === "taslak" && kaynakKapsam === "davetlerim"));
+  if (keys.length === 1 && ["/viva", "/viva/yayinlar"].includes(yol) && kaynakGecerli) return `/viva/yayinlar?kaynak=${kaynak}`;
+  if (keys.length === 1 && ["/viva", "/viva/yeni"].includes(yol) && ["anlik", "planli"].includes(p.get("tur") ?? "")) return `${yol}?tur=${p.get("tur")}`;
+  if (/^\/viva\/[0-9a-f-]{36}$/.test(yol)) {
+    const bolum = p.get("bolum");
+    if (keys.some(k => k !== "bolum" && k !== "kaynak") || (bolum && !["katilimcilar", "kayitlar"].includes(bolum)) || (kaynak && !kaynakGecerli)) return null;
+    if (keys.length === 1 && bolum) return `${yol}?bolum=${bolum}`;
+    if (kaynakGecerli) return `${yol}?${bolum ? `bolum=${bolum}&` : ""}kaynak=${kaynak}`;
+  }
+  if (keys.length === 1 && /^\/viva\/[0-9a-f-]{36}\/oda$/.test(yol) && p.get("baslat") === "1") return `${yol}?baslat=1`;
   return null;
 }

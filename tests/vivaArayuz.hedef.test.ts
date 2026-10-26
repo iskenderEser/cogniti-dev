@@ -10,6 +10,7 @@ import { webcrypto } from "node:crypto";
 import { Window } from "happy-dom";
 import * as sozlesme from "@/lib/viva/sozlesme";
 import * as eposta from "@/lib/viva/eposta";
+import * as davetSecimi from "@/lib/viva/davetSecimi";
 import * as takvim from "@/lib/viva/takvim";
 import * as buttons from "@/components/ui/button";
 import * as cards from "@/components/ui/card";
@@ -45,16 +46,17 @@ async function ortam(handler:(url:string,init?:RequestInit)=>{status?:number;dat
  function yukle(file:string){const exports:Record<string,React.ComponentType<Record<string,unknown>>>= {};const code=ts.transpileModule(readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX,target:ts.ScriptTarget.ES2022}}).outputText;
  vm.runInNewContext(code,{exports,require:(name:string)=>{assert.ok(name in modules,name);return modules[name];},window:dom,document:dom.document,navigator:dom.navigator,fetch:fetcher,AbortController,crypto:webcrypto,Error,URL:TestURL,Blob,setTimeout:(fn:()=>void)=>{fn();return 0;},encodeURIComponent,console});return exports;}
  modules['./VivaDurumAlani']=yukle('components/viva/VivaDurumAlani.tsx');
+ modules['./VivaKaydirilabilirTablo']=yukle('components/viva/VivaKaydirilabilirTablo.tsx');
  modules['./VivaDetayIcerigi']=yukle('components/viva/VivaDetayIcerigi.tsx');
- modules['@/lib/viva/eposta']=eposta;
+ modules['@/lib/viva/eposta']=eposta;modules['@/lib/viva/davetSecimi']=davetSecimi;
  modules['./viva-eposta.module.css']={default:new Proxy({},{get:(_,k)=>String(k)})};
  modules['./VivaEpostaAlani']=yukle('components/viva/VivaEpostaAlani.tsx');
  const viva=yukle('components/viva/VivaEkrani.tsx');modules['./VivaEkrani']=viva;
  return{c,doc:dom.document,paths,acilan,indirilen,dosyalar,render:async(props:Record<string,unknown>,guest=false)=>{const comp=guest?yukle('components/viva/VivaMisafir.tsx').default:viva.default;await act(async()=>{root.render(React.createElement(comp,props));});},
  confirm:async(text:string)=>{const b=[...dom.document.querySelectorAll('[role=alertdialog] button')].find(x=>x.textContent===text);assert.ok(b,text);await act(async()=>(b as HTMLElement).click());},
  click:async(text:string)=>{const b=[...c.querySelectorAll('button')].find(x=>x.textContent===text);assert.ok(b,text);await act(async()=>b.click());},
- input:async(selector:string,value:string)=>{const el=c.querySelector<HTMLInputElement>(selector);assert.ok(el,selector);await act(async()=>{const setter=Object.getOwnPropertyDescriptor(el.tagName==='TEXTAREA'?dom.HTMLTextAreaElement.prototype:dom.HTMLInputElement.prototype,'value')!.set!;setter.call(el,value);el.dispatchEvent(new dom.Event('input',{bubbles:true}));});},
-  submit:async(selector='form')=>{const form=c.querySelector(selector);assert.ok(form);await act(async()=>form.dispatchEvent(new dom.Event('submit',{bubbles:true,cancelable:true})));},
+ input:async(selector:string,value:string)=>{const el=c.querySelector<HTMLInputElement>(selector) ?? dom.document.querySelector<HTMLInputElement>(`[role=dialog] ${selector}`);assert.ok(el,selector);await act(async()=>{const setter=Object.getOwnPropertyDescriptor(el.tagName==='TEXTAREA'?dom.HTMLTextAreaElement.prototype:dom.HTMLInputElement.prototype,'value')!.set!;setter.call(el,value);el.dispatchEvent(new dom.Event('input',{bubbles:true}));});},
+  submit:async(selector='form')=>{const form=c.querySelector(selector) ?? dom.document.querySelector(`[role=dialog] ${selector}`);assert.ok(form);await act(async()=>form.dispatchEvent(new dom.Event('submit',{bubbles:true,cancelable:true})));},
  close:async()=>{await act(async()=>root.unmount());await dom.happyDOM.close();}};
 }
 test('üye Viva listesinde etkinlik görebilir; oluşturma eylemi sunulmaz',async()=>{
@@ -64,7 +66,7 @@ test('üye Viva listesinde etkinlik görebilir; oluşturma eylemi sunulmaz',asyn
 test('form Türkiye saatini gönderir; yanıt kaybında aynı işlem anahtarını korur',async()=>{
  const istekler:Record<string,unknown>[]=[];
  const o=await ortam((_url,init)=>{if(init?.method==='POST'){const body=JSON.parse(String(init.body));istekler.push(body);return istekler.length===1?{status:503,data:{hata:'Bağlantı kesildi'}}:{data:{etkinlik:{...e,etkinlik_id:body.etkinlik_id},katilimcilar:[],davetler:[]}};}return{data:{olusturabilir:true,kapsam:'Kendi takımınız',kisiler:[]}};});
- try{await o.render({gorunum:'yeni'});await o.click('Yayın planla');await o.input('#viva-baslik','Eğitim');await o.input('#viva-tarih','2027-01-02');await o.input('#viva-saat','00:30');await o.input('#viva-sure','30');await o.submit();assert.match(o.c.textContent!,/Bağlantı kesildi/);await o.submit();assert.equal(istekler.length,2);assert.equal(istekler[0].baslangic,'2027-01-01T21:30:00.000Z');assert.equal(istekler[0].bitis,'2027-01-01T22:00:00.000Z');assert.equal(istekler[0].etkinlik_id,istekler[1].etkinlik_id);assert.equal(o.paths.length,1);}finally{await o.close();}
+ try{await o.render({gorunum:'yeni'});await o.click('Planlı Etkinlik');await o.input('#viva-baslik','Eğitim');await o.input('#viva-tarih','2027-01-02');await o.input('#viva-saat','00:30');await o.input('#viva-sure','30');await o.submit();assert.match(o.c.textContent!,/Bağlantı kesildi/);await o.submit();assert.equal(istekler.length,2);assert.equal(istekler[0].baslangic,'2027-01-01T21:30:00.000Z');assert.equal(istekler[0].bitis,'2027-01-01T22:00:00.000Z');assert.equal(istekler[0].etkinlik_id,istekler[1].etkinlik_id);assert.equal(o.paths.length,1);}finally{await o.close();}
 });
 test('yayın odası kamera, mikrofon veya sohbet kontrollerini yeniden üretmez',async()=>{
  const o=await ortam(url=>({data:url.includes('baglam')?{olusturabilir:false,kapsam:'Davet',kisiler:[]}:{etkinlik:{...e,yonetebilir:false},katilimcilar:[],davetler:[]}}));
@@ -83,20 +85,20 @@ test('misafir e-posta koduyla doğrulanır; iptal kontrolünde oda kapanır',asy
 test('iç kullanıcı planlanmış etkinlik oluşturur ve detayına yönlenir',async()=>{
  const istekler:Record<string,unknown>[]=[];
  const o=await ortam((_url,init)=>{if(init?.method==='POST'){const body=JSON.parse(String(init.body));istekler.push(body);return{data:{etkinlik:{...e,etkinlik_id:body.etkinlik_id},katilimcilar:[],davetler:[]}};}return{data:{olusturabilir:true,kapsam:'Kendi bölgeniz',kisiler:[]}};});
- try{await o.render({gorunum:'yeni'});await o.click('Yayın planla');await o.input('#viva-baslik','Planlanmış tanıtım');await o.input('#viva-tarih','2027-01-02');await o.input('#viva-saat','00:30');await o.input('#viva-sure','30');await o.submit();assert.equal(istekler.length,1);assert.equal(istekler[0].islem,'olustur');assert.equal(istekler[0].durum,'planlandi');assert.equal(o.paths[0],`/viva/${istekler[0].etkinlik_id}`);}finally{await o.close();}
+ try{await o.render({gorunum:'yeni'});await o.click('Planlı Etkinlik');await o.input('#viva-baslik','Planlanmış tanıtım');await o.input('#viva-tarih','2027-01-02');await o.input('#viva-saat','00:30');await o.input('#viva-sure','30');await o.submit();assert.equal(istekler.length,1);assert.equal(istekler[0].islem,'olustur');assert.equal(istekler[0].durum,'planlandi');assert.equal(o.paths[0],`/viva/${istekler[0].etkinlik_id}`);}finally{await o.close();}
 });
 test('önce yayın türü seçilir; tarih değiştirmek saat atamaz veya seçili saati değiştirmez',async()=>{
  const istekler:unknown[]=[];const o=await ortam((_url,init)=>{if(init?.method==='POST')istekler.push(init.body);return{data:{olusturabilir:true,kapsam:'Firma',kisiler:[]}};});
  try{await o.render({gorunum:'yeni'});assert.equal(o.c.querySelector('#viva-tarih'),null);assert.equal(o.c.querySelector('#viva-saat'),null);
-  await o.click('Yayın planla');await o.input('#viva-baslik','Plan');await o.input('#viva-tarih','2027-01-02');assert.equal(o.c.querySelector<HTMLInputElement>('#viva-saat')!.value,'');
+  await o.click('Planlı Etkinlik');await o.input('#viva-baslik','Plan');await o.input('#viva-tarih','2027-01-02');assert.equal(o.c.querySelector<HTMLInputElement>('#viva-saat')!.value,'');
   await o.submit();assert.equal(istekler.length,0);assert.match(o.c.textContent!,/tarih ve saat seçin/);
   await o.input('#viva-saat','14:20');await o.input('#viva-tarih','2027-01-03');assert.equal(o.c.querySelector<HTMLInputElement>('#viva-saat')!.value,'14:20');
-  await o.click('Şimdi başlat');assert.equal(o.c.querySelector('#viva-tarih'),null);assert.equal(o.c.querySelector('#viva-saat'),null);
+  await o.click('Anlık Etkinlik');assert.equal(o.c.querySelector('#viva-tarih'),null);assert.equal(o.c.querySelector('#viva-saat'),null);
  }finally{await o.close();}
 });
 test('anlık yayında tarih gönderilmez; yanıt kaybında aynı anahtarla yeniden denenir ve oda açılır',async()=>{
  const istekler:Record<string,unknown>[]=[];const o=await ortam((_url,init)=>{if(init?.method==='POST'){const b=JSON.parse(String(init.body));istekler.push(b);return istekler.length===1?{status:503,data:{hata:'Yanıt kayboldu'}}:{data:{etkinlik:{...e,yayin_turu:'anlik',etkinlik_id:b.etkinlik_id},katilimcilar:[],davetler:[]}};}return{data:{olusturabilir:true,kapsam:'Firma',kisiler:[]}};});
- try{await o.render({gorunum:'yeni'});await o.click('Şimdi başlat');await o.input('#viva-baslik','Anlık');await o.input('#viva-sure','45');await o.submit();await o.submit();
+ try{await o.render({gorunum:'yeni'});await o.click('Anlık Etkinlik');await o.input('#viva-baslik','Anlık');await o.input('#viva-sure','45');await o.submit();await o.submit();
   assert.equal(istekler.length,2);assert.equal(istekler[0].yayin_turu,'anlik');assert.equal(istekler[0].sure_dakika,45);assert.equal('baslangic' in istekler[0],false);assert.equal('bitis' in istekler[0],false);assert.equal(istekler[0].etkinlik_id,istekler[1].etkinlik_id);assert.equal(o.paths[0],`/viva/${istekler[0].etkinlik_id}/oda?baslat=1`);
  }finally{await o.close();}
 });
@@ -118,7 +120,7 @@ test('anlık başlangıç yalnız etkinlik sahibinin anlık yayınında otomatik
 test('taslak kaydetme ayrı bir eylemdir; planlanmış yayının durumu yanlışlıkla taslağa dönmez',async()=>{
  const istekler:Record<string,unknown>[]=[];
  const o=await ortam((_url,init)=>{if(init?.method==='POST'){const b=JSON.parse(String(init.body));istekler.push(b);return{data:{etkinlik:{...e,durum:'taslak'},katilimcilar:[],davetler:[]}};}return{data:{olusturabilir:true,kapsam:'Firma',kisiler:[]}};});
- try{await o.render({gorunum:'yeni'});await o.click('Yayın planla');await o.input('#viva-baslik','Taslak');await o.input('#viva-tarih','2027-01-02');await o.input('#viva-saat','12:00');await o.click('Taslak olarak kaydet');assert.equal(istekler.length,1);assert.equal(istekler[0].durum,'taslak');assert.equal(istekler[0].yayin_turu,'planli');}finally{await o.close();}
+ try{await o.render({gorunum:'yeni'});await o.click('Planlı Etkinlik');await o.input('#viva-baslik','Taslak');await o.input('#viva-tarih','2027-01-02');await o.input('#viva-saat','12:00');await o.click('Taslak olarak kaydet');assert.equal(istekler.length,1);assert.equal(istekler[0].durum,'taslak');assert.equal(istekler[0].yayin_turu,'planli');}finally{await o.close();}
 });
 test('düzenlemede kapsamdan çıkan katılımcı kaldırılmadan kayıt gönderilmez',async()=>{
  const istekler:Record<string,unknown>[]=[];const detay={etkinlik:e,katilimcilar:[{id,tur:'eclub',ad:'Eski katılımcı',alt:'Eczacı'}],davetler:[]};
@@ -133,7 +135,7 @@ test('özel davet bağlantısı oluşturulur; davet iptali güncel sürümü gö
  const istekler:Record<string,unknown>[]=[];
  const detay={etkinlik:e,katilimcilar:[],davetler:[] as {davet_id:string;ad:string;eposta:string;iptal:boolean}[]};
  const o=await ortam((url,init)=>{if(init?.method==='POST'){const b=JSON.parse(String(init.body));istekler.push(b);if(b.islem==='davet_ekle')return{data:{...detay,etkinlik:{...e,surum:2},davetler:[{davet_id:id,ad:'Test Misafiri',eposta:'viva@example.invalid',iptal:false}],davet_yolu:'/viva/davet/sentetik-token'}};return{data:{...detay,etkinlik:{...e,surum:3},davetler:[{davet_id:id,ad:'Test Misafiri',eposta:'viva@example.invalid',iptal:true}]}};}return{data:url.includes('baglam')?{olusturabilir:true,kapsam:'Firma',kisiler:[]}:detay};});
- try{await o.render({gorunum:'detay',etkinlikId:id,ilkBolum:'katilimcilar'});await o.input('#viva-misafir-ad','Test Misafiri');await o.input('#viva-misafir-mail','viva@example.invalid');await o.submit();assert.equal(o.c.querySelector<HTMLInputElement>('#viva-davet-link')?.value,'http://localhost/viva/davet/sentetik-token');await o.click('Daveti iptal et');assert.equal(istekler.length,1);await o.confirm('Daveti iptal et');assert.deepEqual(istekler.map(x=>[x.islem,x.surum]),[['davet_ekle',1],['davet_iptal',2]]);assert.match(o.c.textContent!,/Davet iptal edildi/);assert.equal(o.c.querySelector('#viva-davet-link'),null);}finally{await o.close();}
+ try{await o.render({gorunum:'detay',etkinlikId:id,ilkBolum:'katilimcilar'});assert.equal(o.c.querySelector('form'),null);await o.click('Özel davetli ekle');assert(o.doc.querySelector('[role=dialog]'));await o.input('#viva-misafir-ad','Test Misafiri');await o.input('#viva-misafir-mail','viva@example.invalid');await o.submit();assert.equal(o.doc.querySelector<HTMLInputElement>('[role=dialog] #viva-davet-link')?.value,'http://localhost/viva/davet/sentetik-token');await act(async()=>o.doc.querySelector<HTMLButtonElement>('[role=dialog] button[aria-label=Kapat]')!.click());assert.equal(o.doc.querySelector('[role=dialog]'),null);await o.click('Daveti iptal et');assert.equal(istekler.length,1);await o.confirm('Daveti iptal et');assert.deepEqual(istekler.map(x=>[x.islem,x.surum]),[['davet_ekle',1],['davet_iptal',2]]);assert.match(o.c.textContent!,/Davet iptal edildi/);assert.equal(o.c.querySelector('#viva-davet-link'),null);}finally{await o.close();}
 });
 test('otomatik davetlerin gönderim durumu görünür; yalnız bekleyen ve hatalı kayıt yeniden kuyruğa alınır',async()=>{
  const davet=(n:number,durum:string)=>({davet_id:`00000000-0000-4000-8000-${String(n).padStart(12,'0')}`,ad:`Davetli ${n}`,eposta:`kisi${n}@example.invalid`,iptal:false,durum,deneme_sayisi:durum==='hata'?1:0,son_deneme:null,gonderim_zamani:null,hata_kodu:null});
@@ -155,27 +157,30 @@ test('yetkisiz kullanıcı düzenleme formunu ve yönetim bağlantılarını gö
 });
 
 // Adım 3: onaylı form yerleşiminin gerçek işlemlerle bağı.
-test('form türü bağlantıdan açılır; önizleme yazılan gerçek bilgiyi gösterir ve kendiliğinden kayıt yapmaz',async()=>{
+test('form türü bağlantıdan açılır; girilen bilgiler korunur ve önizleme kartı gösterilmez',async()=>{
  const istekler:string[]=[];const o=await ortam((url)=>{istekler.push(url);return{data:{olusturabilir:true,kapsam:'Kendi takımınız',kisiler:[]}}});
  try{await o.render({gorunum:'yeni',ilkTur:'planli'});assert.ok(o.c.querySelector('#viva-tarih'));assert.equal(o.c.querySelector('button[aria-label="Yenile"]'),null);
+  const nav=o.c.querySelector('nav[aria-label="İçerik konumu"]')!;assert.equal(nav.querySelector('[aria-current=page]')?.textContent,'Viva');assert.equal(o.c.querySelector('h1'),null);assert(o.c.querySelector('header a[href="/viva/yayinlar"]'));assert.equal([...o.c.querySelectorAll('a')].find(a=>a.textContent==='Vazgeç')?.getAttribute('href'),'/viva/yayinlar');
+  const aciklama=o.c.querySelector<HTMLTextAreaElement>('#viva-aciklama')!;let yazininYuksekligi=240;Object.defineProperty(aciklama,'scrollHeight',{configurable:true,get:()=>yazininYuksekligi});
+  await o.input('#viva-aciklama','Uzun açıklama\nİkinci satır');assert.equal(aciklama.style.height,'240px');yazininYuksekligi=40;await o.input('#viva-aciklama','Kısa açıklama');assert.equal(aciklama.style.height,'88px');
   await o.input('#viva-baslik','Yeni ekip buluşması');await o.input('#viva-aciklama','Hazırlık notlarımız');await o.input('#viva-tarih','2027-01-02');await o.input('#viva-saat','14:20');await o.input('#viva-sure','45');
-  const preview=o.c.querySelector('[aria-label="Etkinlik önizlemesi"]')!;assert.match(preview.textContent!,/Yeni ekip buluşması/);assert.match(preview.textContent!,/2 Ocak 2027 · 14:20/);assert.match(preview.textContent!,/45 dakika · 0 katılımcı/);assert.match(preview.textContent!,/Kendi takımınız/);assert.doesNotMatch(preview.textContent!,/Merve|Hepifarma/);
+  assert.equal(o.c.querySelector('[aria-label="Etkinlik önizlemesi"]'),null);assert.equal(o.c.querySelector('aside'),null);assert.equal(o.c.querySelector<HTMLInputElement>('#viva-baslik')!.value,'Yeni ekip buluşması');assert.equal(o.c.querySelector<HTMLInputElement>('#viva-saat')!.value,'14:20');
   assert.equal(o.c.querySelectorAll('form section h2').length,3);assert.deepEqual(istekler,['/viva/api?islem=baglam']);
  }finally{await o.close();}
 });
-test('anlık form derin bağlantıda tarih ve taslak sunmaz; önizleme başlangıcı doğru belirtir',async()=>{
+test('anlık form derin bağlantıda tarih, taslak veya önizleme sunmaz',async()=>{
  const o=await ortam(()=>({data:{olusturabilir:true,kapsam:'Firma',kisiler:[]}}));
- try{await o.render({gorunum:'yeni',ilkTur:'anlik'});assert.equal(o.c.querySelector('#viva-tarih'),null);assert.equal(o.c.querySelector('button[value="taslak"]'),null);assert.match(o.c.querySelector('[aria-label="Etkinlik önizlemesi"]')!.textContent!,/Şimdi başlayacak/);}finally{await o.close();}
+ try{await o.render({gorunum:'yeni',ilkTur:'anlik'});assert.equal(o.c.querySelector('#viva-tarih'),null);assert.equal(o.c.querySelector('button[value="taslak"]'),null);assert.equal(o.c.querySelector('[aria-label="Etkinlik önizlemesi"]'),null);}finally{await o.close();}
 });
 test('taslak mevcut verileriyle açılır; planlandığında aynı kimlik ve sürüm gönderilir',async()=>{
  const istekler:Record<string,unknown>[]=[];const detay={etkinlik:{...e,durum:'taslak',surum:7},katilimcilar:[],davetler:[]};
  const o=await ortam((url,init)=>{if(init?.method==='POST'){const b=JSON.parse(String(init.body));istekler.push(b);return{data:{...detay,etkinlik:{...e,surum:8}}};}return{data:url.includes('baglam')?{olusturabilir:true,kapsam:'Firma',kisiler:[]}:detay};});
  try{await o.render({gorunum:'duzenle',etkinlikId:id});assert.match(o.c.textContent!,/Taslak · Yalnız size görünür/);assert.equal(o.c.querySelector<HTMLInputElement>('#viva-tarih')!.value,'2027-01-02');assert.equal(o.c.querySelector<HTMLInputElement>('#viva-saat')!.value,'00:30');assert.equal(o.c.querySelector<HTMLInputElement>('#viva-sure')!.value,'30');assert.ok(o.c.querySelector('button[value="taslak"]'));await o.click('Etkinliği planla');assert.equal(istekler[0].islem,'kaydet');assert.equal(istekler[0].etkinlik_id,id);assert.equal(istekler[0].surum,7);assert.equal(istekler[0].durum,'planlandi');assert.equal(o.paths[0],`/viva/${id}`);}finally{await o.close();}
 });
-test('planlanmış etkinlik düzenlenirken taslağa dönmez ve gerçek katılımcılar önizlenir',async()=>{
+test('planlanmış etkinlik düzenlenirken taslağa dönmez ve seçili katılımcılar korunur',async()=>{
  const istekler:Record<string,unknown>[]=[];const detay={etkinlik:e,katilimcilar:[{id,tur:'ic',ad:'Test Katılımcısı',alt:'Takım'}],davetler:[]};
  const o=await ortam((url,init)=>{if(init?.method==='POST'){istekler.push(JSON.parse(String(init.body)));return{data:detay}}return{data:url.includes('baglam')?{olusturabilir:true,kapsam:'Firma',kisiler:detay.katilimcilar}:detay}});
- try{await o.render({gorunum:'duzenle',etkinlikId:id});assert.equal(o.c.querySelector('button[value="taslak"]'),null);assert.match(o.c.querySelector('[aria-label="Seçili katılımcılar"]')!.textContent!,/Test Katılımcısı/);assert.match(o.c.querySelector('[aria-label="Etkinlik önizlemesi"]')!.textContent!,/1 katılımcı/);await o.input('#viva-baslik','Güncellenen buluşma');await o.click('Değişiklikleri kaydet');assert.equal(istekler[0].durum,'planlandi');assert.deepEqual(istekler[0].katilimcilar,[{tur:'ic',id}]);assert.equal(istekler[0].baslik,'Güncellenen buluşma');}finally{await o.close();}
+ try{await o.render({gorunum:'duzenle',etkinlikId:id});assert.equal(o.c.querySelector('button[value="taslak"]'),null);assert.match(o.c.querySelector('[aria-label="Seçili katılımcılar"]')!.textContent!,/Test Katılımcısı/);await o.input('#viva-baslik','Güncellenen buluşma');await o.click('Değişiklikleri kaydet');assert.equal(istekler[0].durum,'planlandi');assert.deepEqual(istekler[0].katilimcilar,[{tur:'ic',id}]);assert.equal(istekler[0].baslik,'Güncellenen buluşma');}finally{await o.close();}
 });
 test('form geçersiz süre ve geçmiş planı engeller; hata halinde yazılan alanları korur',async()=>{
  const istekler:Record<string,unknown>[]=[];const o=await ortam((_url,init)=>{if(init?.method==='POST')istekler.push(JSON.parse(String(init.body)));return{data:{olusturabilir:true,kapsam:'Firma',kisiler:[]}}});
@@ -184,10 +189,10 @@ test('form geçersiz süre ve geçmiş planı engeller; hata halinde yazılan al
   await o.input('#viva-sure','60');await o.input('#viva-tarih','2026-10-24');await o.submit();assert.match(o.c.querySelector('[role="alert"]')!.textContent!,/gelecekte/);assert.equal(istekler.length,0);assert.equal(o.c.querySelector<HTMLInputElement>('#viva-baslik')!.value,'Korunan başlık');assert.equal(o.c.querySelector<HTMLTextAreaElement>('#viva-aciklama')!.value,'Korunan açıklama');assert.equal(o.c.querySelector<HTMLInputElement>('#viva-saat')!.value,'12:00');
  }finally{await o.close();}
 });
-test('kapsam dışındaki seçimin kaldırılması chip ve katılımcı sayısını birlikte günceller',async()=>{
+test('kapsam dışındaki seçimin kaldırılması chip ve uyarıyı temizler',async()=>{
  const detay={etkinlik:e,katilimcilar:[{id,tur:'eclub',ad:'Eski katılımcı',alt:'Eczacı'}],davetler:[]};
  const o=await ortam(url=>({data:url.includes('baglam')?{olusturabilir:true,kapsam:'Firma',kisiler:[]}:detay}));
- try{await o.render({gorunum:'duzenle',etkinlikId:id});assert.match(o.c.querySelector('[aria-label="Seçili katılımcılar"]')!.textContent!,/Eski katılımcı/);await o.click('Geçersiz seçimleri kaldır');assert.equal(o.c.querySelector('[aria-label="Seçili katılımcılar"]'),null);assert.match(o.c.querySelector('[aria-label="Etkinlik önizlemesi"]')!.textContent!,/0 katılımcı/);}finally{await o.close();}
+ try{await o.render({gorunum:'duzenle',etkinlikId:id});assert.match(o.c.querySelector('[aria-label="Seçili katılımcılar"]')!.textContent!,/Eski katılımcı/);await o.click('Geçersiz seçimleri kaldır');assert.equal(o.c.querySelector('[aria-label="Seçili katılımcılar"]'),null);assert.equal(o.c.querySelector('[role="alert"]'),null);}finally{await o.close();}
 });
 test('canlı, sona ermiş, iptal edilmiş ve anlık etkinlik düzenleme formu açamaz',async()=>{
  for(const ek of [{durum:'canli'},{durum:'sona_erdi'},{durum:'iptal'},{yayin_turu:'anlik'}]){
@@ -391,5 +396,54 @@ test('E-posta kaydı: son pill kaldırıldığında boş liste açıkça gönder
   await o.render({gorunum:'duzenle',etkinlikId:id});
   await act(async()=>o.c.querySelector<HTMLButtonElement>('button[aria-label="bir@example.com adresini kaldır"]')!.click());
   await o.click('Taslak olarak kaydet');assert.equal(istekler.length,1);assert.deepEqual(istekler[0].davet_epostalari,[]);
+ }finally{await o.close();}
+});
+
+test('Davetliler: bölge toplu seçimi, tekil UTT ve diğer davetliler sağ kutuda unvanlarıyla korunur',async()=>{
+ const u1='00000000-0000-4000-8000-000000000011',u2='00000000-0000-4000-8000-000000000012',u3='00000000-0000-4000-8000-000000000013';
+ const bm='00000000-0000-4000-8000-000000000014',ecz='00000000-0000-4000-8000-000000000015';
+ const kisiler=[
+  {id:u1,tur:'ic',ad:'Ali Bir',alt:'utt',bolge_id:'ankara',bolge_adi:'Ankara'},
+  {id:u2,tur:'ic',ad:'Ayşe İki',alt:'kd_utt',bolge_id:'ankara',bolge_adi:'Ankara'},
+  {id:u3,tur:'ic',ad:'Can Üç',alt:'utt',bolge_id:'izmir',bolge_adi:'İzmir'},
+  {id:bm,tur:'ic',ad:'Deniz Dört',alt:'bm',bolge_id:'ankara',bolge_adi:'Ankara'},
+  {id:ecz,tur:'eclub',ad:'Ece Beş',alt:'eczaci'},
+ ];
+ const istekler:Record<string,unknown>[]=[];
+ const detay={etkinlik:e,katilimcilar:[kisiler[4]],davetler:[]};
+ const o=await ortam((url,init)=>{if(init?.method==='POST'){istekler.push(JSON.parse(String(init.body)));return{data:detay};}return{data:url.includes('baglam')?{olusturabilir:true,kapsam:'Firma',kisiler,eclub_davet_edebilir:true}:detay};});
+ try{
+  await o.render({gorunum:'duzenle',etkinlikId:id});await o.input('#viva-baslik','Bölge toplantısı');
+  const box=o.c.querySelector('[aria-label="Seçilen davetliler"]')!;assert(box);assert.equal(box.previousElementSibling?.className,'inviteSelectors');
+  await o.click('Firmanız');const menu=o.doc.querySelector('[aria-label="Firmanız seçimi"]')!;
+  const ankara=menu.querySelector<HTMLInputElement>('input[aria-label="Ankara bölgesindeki UTT\'leri seç"]')!;
+  const izmir=menu.querySelector<HTMLInputElement>('input[aria-label="İzmir bölgesindeki UTT\'leri seç"]')!;
+  assert(ankara);assert(izmir);assert(!menu.textContent!.includes('Ali Bir'));
+  await act(async()=>ankara.click());assert.match(box.textContent!,/UTT · Ali Bir/);assert.match(box.textContent!,/Kd.UTT · Ayşe İki/);assert(!box.textContent!.includes('Deniz Dört'));
+  const expand=menu.querySelector<HTMLButtonElement>('button[aria-label="Ankara UTT listesini aç"]')!;await act(async()=>expand.click());
+  const ali=[...menu.querySelectorAll('label')].find(l=>l.textContent?.includes('UTT · Ali Bir'))!.querySelector<HTMLInputElement>('input')!;
+  await act(async()=>ali.click());assert(ankara.indeterminate);assert(!box.textContent!.includes('Ali Bir'));assert(box.textContent!.includes('Ayşe İki'));
+  await act(async()=>izmir.click());assert(box.textContent!.includes('Can Üç'));assert(box.textContent!.includes('Ayşe İki'));
+  await act(async()=>ankara.click());assert(box.textContent!.includes('Ali Bir'));await act(async()=>ankara.click());assert(!box.textContent!.includes('Ali Bir'));assert(!box.textContent!.includes('Ayşe İki'));assert(box.textContent!.includes('Can Üç'));
+  const deniz=[...menu.querySelectorAll('label')].find(l=>l.textContent?.includes('BM · Deniz Dört'))!.querySelector<HTMLInputElement>('input')!;
+  await act(async()=>deniz.click());await act(async()=>o.c.querySelector<HTMLButtonElement>('button[aria-label="Firmanız"]')!.click());
+  assert.match(box.textContent!,/BM · Deniz Dört/);assert.match(box.textContent!,/Ecz\. · Ece Beş/);assert.equal(box.querySelectorAll('li').length,3);
+  const kaldir=box.querySelector<HTMLButtonElement>('button[aria-label="BM · Deniz Dört davetini kaldır"]')!;assert(kaldir);assert.equal(kaldir.type,'button');
+  await act(async()=>kaldir.click());assert(!box.textContent!.includes('Deniz Dört'));assert.equal(box.querySelectorAll('li').length,2);assert.match(box.textContent!,/UTT · Can Üç/);assert.match(box.textContent!,/Ecz\. · Ece Beş/);
+  await act(async()=>o.c.querySelector<HTMLButtonElement>('button[aria-label="Firmanız"]')!.click());
+  const guncelMenu=o.doc.querySelector('[aria-label="Firmanız seçimi"]')!;
+  assert.equal([...guncelMenu.querySelectorAll('label')].find(l=>l.textContent?.includes('BM · Deniz Dört'))!.querySelector<HTMLInputElement>('input')!.checked,false);
+  await act(async()=>o.c.querySelector<HTMLButtonElement>('button[aria-label="Firmanız"]')!.click());
+  await o.submit();const beklenen=[{tur:'eclub',id:ecz},{tur:'ic',id:u3}];assert.deepEqual(istekler[0].katilimcilar,beklenen);
+ }finally{await o.close();}
+});
+test('Davetliler: bölge araması bölgenin UTTlerini gösterir; bölgesiz firma rolleri kaybolmaz',async()=>{
+ const kisiler=[{id,tur:'ic',ad:'Ali Örnek',alt:'utt',bolge_id:'ankara',bolge_adi:'Ankara'},
+  {id:'00000000-0000-4000-8000-000000000022',tur:'ic',ad:'Deniz Örnek',alt:'pm'}];
+ const o=await ortam(()=>({data:{olusturabilir:true,kapsam:'Firma',kisiler}}));
+ try{await o.render({gorunum:'yeni',ilkTur:'anlik'});await o.click('Firmanız');const menu=o.doc.querySelector('[aria-label="Firmanız seçimi"]')!;
+  assert(menu.textContent!.includes('PM · Deniz Örnek'));const search=menu.querySelector<HTMLInputElement>('input[type=search]')!;
+  await act(async()=>{const win=search.ownerDocument.defaultView!;const setter=Object.getOwnPropertyDescriptor(win.HTMLInputElement.prototype,'value')!.set!;setter.call(search,'ankara');search.dispatchEvent(new win.Event('input',{bubbles:true}));});
+  assert(menu.textContent!.includes('UTT · Ali Örnek'));assert(!menu.textContent!.includes('Deniz Örnek'));
  }finally{await o.close();}
 });
