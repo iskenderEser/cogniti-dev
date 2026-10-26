@@ -360,7 +360,7 @@ export default function PanelNavbar({
           </button>
         </div>
       </div>
-      {vivaGoster && <div className="absolute left-1/2 z-[51] flex h-9 w-32 -translate-x-1/2 items-start justify-center pt-0.5" style={{ top: "calc(100% - 1px)" }}>
+      {vivaGoster && <div className="absolute left-1/2 z-[51] flex h-9 w-32 -translate-x-1/2 -translate-y-5 sm:translate-y-0 items-start justify-center pt-0.5" style={{ top: "calc(100% - 1px)" }}>
         <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 128 38" preserveAspectRatio="none" aria-hidden="true" style={{ filter: "drop-shadow(0 3px 3px color-mix(in srgb, var(--tema-metin) 5%, transparent))" }}>
           <path d="M0 1C8 1 10 5 14 17L16 24C19 33 23 37 31 37H97C105 37 109 33 112 24L114 17C118 5 120 1 128 1V-2H0Z" fill="var(--tema-ust-menu-zemin)" />
         </svg>
