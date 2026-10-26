@@ -1,0 +1,150 @@
+{
+  "engine": "PostgreSQL/WASM (PGlite), tek bağlantı",
+  "concurrency_verified": false,
+  "not_run": [
+    "İki bağımsız bağlantıyla kilit bekleme ve eş zamanlı yarış testleri"
+  ],
+  "postgres": "18.6",
+  "passed": 27,
+  "tests": [
+    "Migration gerçek PostgreSQL üzerinde iki kez kurulabilir",
+    "Tüm iç roller kendi firma kapsamında etkinlik oluşturabilir",
+    "Organizasyonsuz İÜ/admin yalnız Cogniti platform ekibini seçer",
+    "UTT iç katılımcılarda kendi bölgesini korur",
+    "PM/TM takımı ve medikal firma sınırı uygulanır",
+    "UTT yalnız kendi aktif EClub listesinden katılımcı seçer",
+    "EClub üyesi oluşturucu değildir, normal davetli olabilir",
+    "Taslak davetli listesinde görünmez; yetkisiz detay reddedilir",
+    "Aynı oluşturma anahtarı aynı etkinliği döndürür",
+    "Planlanan etkinlik yalnız seçilen ve halen yetkili üyeye açılır",
+    "Farklı firma ve kapsam dışı katılımcıyla kayıt oluşturulmaz",
+    "Yinelenen katılımcı bütün oluşturma işlemini geri alır",
+    "Geçmişe planlama, sahte canlı durumu ve ters tarihler reddedilir",
+    "Eski sürümden ikinci düzenleme reddedilir (sıralı)",
+    "Planlanmış etkinlik taslağa geri alınamaz",
+    "Özel davet Cogniti üyeliği oluşturmaz, ham bağlantı saklamaz",
+    "Kod gönderiminde yinelenen istek hız sınırına takılır (tek bağlantı)",
+    "Hatalı kod denemeleri kalıcı sayılır ve beş denemede kapanır",
+    "Yeni kod eskisini geçersizleştirir; doğrulama tek kullanımlıdır",
+    "Kodun ve misafir oturumunun süresi dolunca erişim kapanır",
+    "Yeni davet aynı e-postanın eski bağlantı ve oturumunu kapatır",
+    "Davet iptali ve etkinlik tarihi değişimi erişimi günceller",
+    "Kişi–eczane bağının kalkması üyeye erişimi kapatır",
+    "Düzenleyenin pasife alınması hem üye hem misafir erişimini kapatır",
+    "İptal sonrası eski sürüm etkinliği geri açamaz (sıralı)",
+    "anon/authenticated tabloları veya Viva fonksiyonlarını doğrudan kullanamaz",
+    "Liste sayfalaması 20 kayıt ve devam bilgisini üretir"
+  ],
+  "scope": "Yerel PostgreSQL/WASM, sahte temel şema, gerçek Viva migration/RPC; sıralı sürüm ve erişim kontrolleri. Canlı Supabase, e-posta ve çok bağlantılı yarış testi yok.",
+  "sql_sha256": "4f2f638498dd63358226981eda68ea1c2eadbb97bb9195a5e5d5f9fe48dfd5cf",
+  "application": {
+    "passed": 21,
+    "failed": 0,
+    "scope": "Gerçek TS/React kodu, sahte DB/ağ/e-posta bağımlılıkları",
+    "files": [
+      "tests/vivaAsama1.hedef.test.ts",
+      "tests/vivaArayuz.hedef.test.ts"
+    ]
+  },
+  "regression": {
+    "passed": 47,
+    "failed_preexisting": 1,
+    "failure": "loginKarsilama karşılama sloganı beklentisi; orijinal projede de aynı hata",
+    "files": [
+      "tests/loginKarsilama.hedef.test.ts",
+      "tests/onayliUrlGecisi.hedef.test.ts",
+      "tests/panelCokKatmanliMenu.hedef.test.ts",
+      "tests/mobilHbstoreNavigasyonu.smoke.test.ts"
+    ]
+  },
+  "typecheck": "başarılı",
+  "lint": {
+    "new_code_errors": 0,
+    "rpc_snapshot_warnings": 3,
+    "preexisting_layout_error": "react-hooks/set-state-in-effect"
+  },
+  "live_database": "Kullanıcının paylaştığı çıktılar: üç tablo ve iki giriş fonksiyonu mevcut. İlk SQL: 27 başarılı, 2 atlandı, 0 başarısız. Tamamlayıcı EClub SQL: 7 başarılı, 0 atlandı, 0 başarısız; önceki iki eksik senaryo doğrulandı. Ajan DB’ye erişmedi.",
+  "browser": "DB bağlantısı olmayan örnek verili form ve katılımcı seçici incelendi; tam cihaz/tema doğrulaması yapılmadı.",
+  "user_executed_sql": {
+    "date": "2026-10-25",
+    "passed": 27,
+    "skipped": 2,
+    "failed": 0,
+    "info": 1,
+    "skipped_tests": [
+      "05 — EClub taslak erişimi",
+      "09 — EClub plan erişimi"
+    ],
+    "reason": "Seçilen UTT kapsamında Auth kimliği bağlı aktif EClub üyesi bulunamadı.",
+    "evidence": "VIVA_ASAMA_1_KULLANICI_SQL_SONUCU.md",
+    "followup_sql": "VIVA_ASAMA_1_ECLUB_SQL_TEST.sql",
+    "followup_status": "Kullanıcı çalıştırdı ve sonuç paylaştı: 7 başarılı, 0 atlandı, 0 başarısız; önceki iki eksik EClub senaryosu doğrulandı.",
+    "followup_result": {
+      "date": "2026-10-25",
+      "passed": 7,
+      "skipped": 0,
+      "failed": 0,
+      "tests": [
+        "Kapsamı uygun UTT–EClub çifti bulundu",
+        "Davetli EClub üyesi taslağa erişemez",
+        "Taslak detay isteği de reddedilir",
+        "Planlama sonrası davetli EClub üyesi erişir",
+        "Üye detay görür; yönetim ve kişi listeleri açılmaz",
+        "Katılımcı çıkarılınca erişim kapanır",
+        "Çıkarılmış üyenin detay isteği reddedilir"
+      ],
+      "resolves_initial_skipped_tests": true
+    }
+  },
+  "ui_followup": {
+    "date": "2026-10-25",
+    "passed": 21,
+    "failed": 0,
+    "scope": "Gerçek React bileşenleri; sahte ağ/DB/e-posta. Görsel yerleşim ölçülmedi.",
+    "typecheck": "başarılı",
+    "lint": {
+      "errors": 0,
+      "warnings": 0,
+      "files": [
+        "components/viva/VivaEkrani.tsx",
+        "components/viva/VivaMisafir.tsx",
+        "tests/vivaArayuz.hedef.test.ts"
+      ]
+    },
+    "report": "VIVA_ASAMA_1_ARAYUZ_KONTROLU.md",
+    "responsive_changes": "Viva kapsamlı düğme metni kaydırma, 44 px hedefler, dar ekran kart/alan ve katılımcı seçim düzeni; gerçek tarayıcı doğrulaması bekliyor."
+  },
+  "technical_debt": {
+    "id": "TB-03",
+    "source": "docs/REDBOOK.MD",
+    "status": "AÇIK",
+    "deferred_by": "Kullanıcı — 25 Ekim 2026",
+    "scope": "Gerçek e-posta teslimatı ve gerçek tarayıcıdaki misafir doğrulama/çerez/iptal/süre akışı",
+    "blocks_stage_1": false
+  },
+  "stage_1_acceptance": {
+    "status": "TAMAMLANDI",
+    "date": "2026-10-25",
+    "accepted_by": "Kullanıcı",
+    "basis": "Viva Cogniti’ye kuruldu ve ekranda görüldü; kullanıcı aşama kabulünü onayladı.",
+    "mobile": "Canlı telefon kontrolü push sonrasında; kapanış engeli değil.",
+    "tablet": "Fiziksel tablet yok; kapanış engeli değil.",
+    "email": "REDBOOK TB-03 teknik borcunda.",
+    "test_evidence_unchanged": true,
+    "checklist": {
+      "original_items": 74,
+      "closed": 72,
+      "transferred": 2,
+      "transferred_ids": [
+        "1.6.08",
+        "1.6.12"
+      ],
+      "unclassified": 0,
+      "followups": {
+        "F-01": "Push sonrası telefon ve gerçek tarayıcı/tema kontrolü; tablet yok.",
+        "F-02": "REDBOOK TB-03 gerçek e-posta/misafir oturumu teknik borcu.",
+        "F-03": "İki bağımsız bağlantıyla yarış doğrulaması yapılmadı."
+      }
+    }
+  }
+}

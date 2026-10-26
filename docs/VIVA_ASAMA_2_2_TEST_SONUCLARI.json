@@ -1,0 +1,255 @@
+{
+  "date": "2026-10-25",
+  "step": "2.2",
+  "status": "2.2 teknik teslimi ve 2.3 katılım bağlantısı tamamlandı; görsel/gerçek görüşme doğrulaması kullanıcıda.",
+  "database_access_by_agent": false,
+  "sql_executed_by_agent": false,
+  "application_tests": {
+    "passed": 67,
+    "failed": 0,
+    "new_step_2_2": 25,
+    "previous_viva_regression": 42,
+    "scope": "Sahte DB/ağ bağımlılıkları; gerçek katılım, API ve React kodu."
+  },
+  "daily_api_live": {
+    "date": "2026-10-25",
+    "domain": "cogniti-viva.daily.co",
+    "database_access": false,
+    "meeting_joined": false,
+    "recording_started": false,
+    "tests": [
+      {
+        "test": "sunucu tokenı Daily tarafından oda/kimlik/süre/medya/yönetim izinleriyle doğrulanır",
+        "passed": true
+      },
+      {
+        "test": "katilimci tokenı Daily tarafından oda/kimlik/süre/medya/yönetim izinleriyle doğrulanır",
+        "passed": true
+      },
+      {
+        "test": "katilimci boş gerçek Daily odasında sunucuyu bekler ve token alamaz",
+        "passed": true
+      },
+      {
+        "test": "izleyici tokenı Daily tarafından oda/kimlik/süre/medya/yönetim izinleriyle doğrulanır",
+        "passed": true
+      },
+      {
+        "test": "izleyici boş gerçek Daily odasında sunucuyu bekler ve token alamaz",
+        "passed": true
+      },
+      {
+        "test": "Daily gelecekte başlayacak nbf tokenını erken doğrulamaz",
+        "passed": true
+      }
+    ],
+    "cleanup": {
+      "delete_http": 200,
+      "read_after_delete_http": 404
+    },
+    "passed": 6
+  },
+  "typecheck": "başarılı",
+  "lint": {
+    "errors": 0,
+    "warnings": 3,
+    "reason": "RPC adları eski yerel sema.json kaydında yok; DB şeması çekilmedi."
+  },
+  "user_sql": {
+    "install": "scripts/sql/viva_asama2_2.sql",
+    "test": "scripts/sql/viva_asama2_2_test.sql",
+    "test_count": 24,
+    "status": "Kullanıcı çalıştırdı: 4/4 kurulum kontrolü true, 24/24 SQL testi başarılı; ajan SQL çalıştırmadı.",
+    "install_checks": {
+      "katilim_fonksiyonu": true,
+      "anonim_erisim_kapali": true,
+      "istemci_rpc_kapali": true,
+      "sunucu_rpc_acik": true
+    },
+    "passed": 24,
+    "failed": 0,
+    "skipped": 0,
+    "results": [
+      {
+        "sira": 1,
+        "test": "01 — Taslak etkinlikte sahip de katılım alamaz",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 2,
+        "test": "02 — Üye ve misafir kimliği karıştırılamaz",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 3,
+        "test": "03 — Yalnız etkinlik sahibi sunucu rolü alır",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 4,
+        "test": "04 — Başlangıç ve bitiş katılım kapısına taşınır",
+        "sonuc": "BAŞARILI",
+        "detay": "Başlangıç öncesi token vermeme kuralı uygulama katmanında ayrıca sınanır."
+      },
+      {
+        "sira": 5,
+        "test": "05 — Davet edilmemiş kullanıcı katılım alamaz",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 6,
+        "test": "06 — Başka veya olmayan etkinliğe geçilemez",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 7,
+        "test": "07 — Yalnız davet bağlantısı katılım sağlamaz",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 8,
+        "test": "08 — Doğrulanmamış e-posta oturumu reddedilir",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 9,
+        "test": "09 — Doğrulanmış misafir yalnız etkinliğe özel izleyicidir",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 10,
+        "test": "10 — Yanlış cookie özetiyle katılım reddedilir",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 11,
+        "test": "11 — Süresi dolmuş misafir oturumu reddedilir",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 12,
+        "test": "12 — Oturum yenilenince eski cookie erişemez",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 13,
+        "test": "13 — Yeni doğrulanmış oturum izleyici kalır",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 14,
+        "test": "14 — İptal edilmiş davet yeni token alamaz",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 15,
+        "test": "15 — Yenilenen davet eski bağlantıyı açmaz",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 16,
+        "test": "16 — Kapalı oda hazır eşleşme olarak dönmez",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 17,
+        "test": "17 — Değişen tarihte eski oda güncel sayılmaz",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 18,
+        "test": "18 — Firma üyesi sunucu değil katılımcı rolü alır",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 19,
+        "test": "19 — Çıkarılmış firma üyesi yeni katılım alamaz",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 20,
+        "test": "20 — İptal etkinliğe sahip ve misafir katılamaz",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 21,
+        "test": "21 — Bitişi geçmiş etkinliğe katılım reddedilir",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 22,
+        "test": "22 — EClub üyesi katılımcıdır, sunucu değildir",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 23,
+        "test": "23 — Çıkarılmış EClub üyesi yeni katılım alamaz",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 24,
+        "test": "24 — Katılım RPCsi yalnız sunucuya açıktır",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      }
+    ],
+    "evidence": "VIVA_ASAMA_2_2_KULLANICI_SQL_SONUCU.md",
+    "scope": "Yetki RPCsi ve sıralı SQL kuralları. Daily token/medya, gerçek e-posta/cookie akışı ve iki bağlantılı yarış sınanmaz. Test kayıtları ROLLBACK ile geri alınır."
+  },
+  "security_contract": {
+    "private_room_only": true,
+    "tokenless_knocking": false,
+    "wait_for_verified_host_presence": true,
+    "guest_email_session_required": true,
+    "authority_checked_again_before_token_release": true,
+    "token_stored": false,
+    "token_in_url": false,
+    "auto_recording": false,
+    "expiry": "Etkinlik bitişi; misafirde doğrulanmış oturum bitişiyle en erken olan. eject_at_token_exp=true.",
+    "revocation_limit": "Yeni katılım API isteği iptali/üyelikten çıkarılmayı yeniden denetler. Önceden teslim edilmiş bearer tokenın anında iptali bu adımda yok; aktif oturum ve yeniden giriş engeli 2.4te bağlanacak."
+  },
+  "not_done": [
+    "Gerçek Prebuilt görüşmesinde host varlığı, medya gönderme engeli ve süre sonunda çıkarma (2.3/2.6)",
+    "Tokenın tarayıcı belleğinden join() çağrısına aktarılması (2.3)",
+    "Aktif görüşmeden çıkarma, ban ve eski tokenla yeniden girişin kapanması (2.4)",
+    "Elle kayıt ve webhooklar (2.5)",
+    "Gerçek e-posta teslimatı ve cookie ile uçtan uca misafir girişi (mevcut TB-03)",
+    "İki bağımsız DB bağlantısıyla yarış (2.6)"
+  ],
+  "next_step": "2.3 — Daily Prebuilt arayüzü; kullanıcı devam demeden başlanmayacak.",
+  "sha256": {
+    "lib/viva/daily.ts": "89082b2a65818baa950140cd2dd0948bf549070ca8a1f75b7708af46354b1bde",
+    "lib/viva/katilim.ts": "8ea461d662c21ae1098b97e937717552e46baaa772db27269a5f8b7a9813ca21",
+    "lib/viva/katilimSunucu.ts": "7ad1153edeb9b836a4226ea9986969e3a61233ac78ed3c3b7e05c5e0b1d22691",
+    "app/(panel)/viva/api/katilim/route.ts": "71d81fae304fcd0bfb978c5bfa8b4d05cd9d6d763128387b7b214a72dc9f3923",
+    "app/viva/davet/[token]/katilim/route.ts": "f69b48bf33ecea6bfde3f12aaa08f78da9860c178ba9bab98ee248591462ce46",
+    "scripts/sql/viva_asama2_2.sql": "b60574f7345ce7773f929c0100a3dd98146c6de55e7852ec550eb33f8afb9e23",
+    "scripts/sql/viva_asama2_2_test.sql": "d82b6a76d45a7dc10fe93f63b9de4d8a88fa0ddf6117c3d6d748d9c3381c023d",
+    "tests/vivaDailyKatilim.hedef.test.ts": "643af5555c9f20f232a458ce2c2e27ca7a65d3bcd59e8f8c58710b98ac83c77a"
+  },
+  "linked_checks_open": {
+    "2.2.09": "Bağlantı tamamlandı; gerçek host katılımıyla görsel/görüşme doğrulaması kullanıcının sorumluluğunda."
+  }
+}

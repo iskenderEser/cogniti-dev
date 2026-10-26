@@ -1,0 +1,44 @@
+{
+  "asama": "2.5",
+  "tarih": "2026-10-25",
+  "hedefli_teknik_test": {
+    "toplam": 6,
+    "basarili": 6,
+    "basarisiz": 0
+  },
+  "typecheck": "basarili",
+  "lint": {
+    "hata": 0,
+    "uyari": 3,
+    "aciklama": "Yerel sema snapshot yeni RPC adlarini icermiyor; DB semasi cekilmedi."
+  },
+  "ajan_db_erisimi": false,
+  "ajan_sql_calistirdi": false,
+  "kullanici_sql_sonucu": {
+    "kurulum": {
+      "olay_tablosu": true,
+      "kayit_tablosu": true,
+      "kayit_fonksiyonu": true,
+      "istemci_rpc_kapali": true
+    },
+    "toplam": 7,
+    "basarili": 7,
+    "basarisiz": 0,
+    "testler": [
+      "Bir etkinlikte iki kayıt parçası korunur",
+      "Tekrar/geç başlama ve geç hata hazır kaydı geriye götürmez",
+      "Yabancı kayıt göremez; sahibi hazır kimliğe erişir",
+      "Geç hazır olayı bitmiş etkinliği yeniden açmaz",
+      "Yabancı domain/oda eşleşmez",
+      "Olay tekildir, kişisel alanlar atılır, yanlış kira reddedilir",
+      "Kayıt/olay tabloları ve RPC istemciye kapalıdır"
+    ],
+    "kaynak": "Kullanıcının paylaştığı SQL sonuçları"
+  },
+  "production_webhook_kaydi": "deployment sonrasi",
+  "cron": "onceki adimda kullanici pasif kurdu; aktivasyon deployment sonrasi",
+  "gercek_gorusme_kayit_oynatma_gorsel_test": "kullanici yapacak",
+  "commit_push": false,
+  "asama_2_6_basladi": false,
+  "teknik_teslim": "tamamlandi; production webhook/cron etkinligi deployment sonrasinda"
+}

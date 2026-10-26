@@ -5004,3 +5004,12 @@ Ortak gövde: varsa adla hitap, aşağıdaki metin, **“Talebi görüntüle: {{
 ### Üretici Ana Sayfa temizliği — 21 Ekim 2026
 
 Kullanıcı onayıyla 13 üretici rolünün Ana Sayfa pill'i ve mobil bilgi satırı kaldırıldı. Üretici başlangıcı ve Cogniti logosunun hedefi `/yayin-yonetimi`; eski `/ana-sayfa` ziyaretleri rol bazlı aynı hedefe gider. Üreticiye ait özet/liste bileşeni, veri hazırlayıcısı, Ana Sayfa API dalı, özel rehber/tur/tercih kodları, tek kullanımlık yardımcı ve tema tanımları kaldırıldı. Ortak API üreticide 403 döner; diğer rol dalları korunur. Üretim durum push bağlantısı `/yayin-takip` olur. Ortak panelin başlangıç hedefi `lib/panel/baslangic.ts` içinde çözülür. Üretici rapor/lig bağlantıları ve yetki/modül dönüşleri buna uyar. Ortak üretim zinciri, Talepler, rapor SQL'leri, genel rehber motoru ve diğer kimliklerin Ana Sayfa'ları korunur. DB migration veya veri silme gerekmez. Doğrulama sonuçları `docs/URETICI_ANA_SAYFA_TEMIZLIGI_2026_10_21.md` içinde kaydedilir.
+
+
+### 26 Ekim 2026 — Viva davet kapsamı
+
+Kullanıcının onayladığı davet matrisi: UTT/KD_UTT firma içinden yalnız kendi bölgesindeki UTT/KD_UTT ve BM'yi davet eder. BM, TM, PM ailesi, Medikal, Eğitim, İK ve yönetici rolleri kendi firmasındaki tüm çalışanları davet edebilir; firma içi davette bu rollere takım/bölge filtresi uygulanmaz.
+
+E-Club daveti ayrı kurala bağlıdır: UTT/KD_UTT kendi portföyü; BM kendi bölgesi; TM ve PM/JR_PM/KD_PM kendi takımı; Medikal, Eğitim ve yönetici rolleri firma kapsamındaki aktif eczane–kişi ilişkileri. İK'nın E-Club daveti yoktur. Admin/İÜ'nün mevcut kapsamı, E-Club üyesinin yalnız davetli olması ve özel misafir akışı korunur. Firma/modül/aktiflik kontrolleri devam eder.
+
+Davetliler alanındaki iki aramalı çoklu seçim listesi **Firmanız** ve **E-Club Üyeleri** adlarını kullanır. Seçimler birbirini silmez; tek kayıtta birlikte gönderilir. E-Club listesinin görünürlüğü kişi sayısından bağımsız sunucu yetkisiyle belirlenir. `viva_davet_baglami` güncel bağlamı, `viva_ic_kapsam` ve `viva_eclub_kapsam` listeleme, kayıt ve oda erişimindeki aynı kapsamı sağlar. Kurulum dosyası: `scripts/sql/viva_davet_kapsami.sql`; kullanıcı tarafından uygulanacak. Dosyanın hazırlanması canlı veritabanında kurulduğu anlamına gelmez.

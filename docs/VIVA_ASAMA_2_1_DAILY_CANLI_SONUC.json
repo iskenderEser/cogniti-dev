@@ -1,0 +1,65 @@
+{
+  "date": "2026-10-25",
+  "domain": "cogniti-viva.daily.co",
+  "api_authenticated": true,
+  "db_access": false,
+  "meeting_joined": false,
+  "recording_started": false,
+  "tests": [
+    {
+      "test": "Özel test odası oluşturma ve alan/ayar doğrulaması",
+      "passed": true
+    },
+    {
+      "test": "Aynı isimle tekrar çağrı oda çoğaltmaz",
+      "passed": true
+    },
+    {
+      "test": "Bitiş değişikliğini mevcut Daily odasına uygulama",
+      "passed": true
+    }
+  ],
+  "calls": [
+    {
+      "method": "GET",
+      "islem": "oda",
+      "status": 404
+    },
+    {
+      "method": "POST",
+      "islem": "olustur",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "islem": "oda",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "islem": "oda",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "islem": "oda",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "islem": "oda",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "islem": "oda",
+      "status": 200
+    }
+  ],
+  "cleaned_up": true,
+  "cleanup_status": {
+    "delete": 200,
+    "read_after_delete": 404
+  },
+  "passed": 3
+}

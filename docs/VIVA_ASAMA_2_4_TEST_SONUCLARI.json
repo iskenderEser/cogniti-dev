@@ -1,0 +1,80 @@
+{
+  "date": "2026-10-25",
+  "step": "2.4",
+  "status": "Kod ve kullanıcı SQL doğrulaması tamamlandı; cron tek kayıt olarak pasif kuruldu. Deployment sonrası etkinleştirme bekliyor.",
+  "targeted_tests": {
+    "passed": 6,
+    "failed": 0
+  },
+  "daily_live": {
+    "offline_ban": true,
+    "empty_room_close": true,
+    "meeting_joined": false
+  },
+  "typecheck": "başarılı",
+  "database_access_by_agent": false,
+  "sql_executed": false,
+  "user_sql_tests": 9,
+  "visual_test_owner": "Kullanıcı",
+  "next_step_started": false,
+  "remaining": [
+    "Deployment sonrası cron etkinleştirmesi",
+    "Aktif kayıt durdurmayı 2.5 kayıt bağlantısıyla ekleme",
+    "Görsel ve gerçek görüşme kontrolleri kullanıcıda"
+  ],
+  "user_sql": {
+    "install_checks": {
+      "erisim_tablosu": true,
+      "yasam_tablosu": true,
+      "yasam_fonksiyonu": true,
+      "istemci_rpc_kapali": true
+    },
+    "passed": 9,
+    "failed": 0,
+    "skipped": 0,
+    "results": [
+      {
+        "test": "Başkası görüşmeyi bitiremez",
+        "passed": true
+      },
+      {
+        "test": "Başlangıç saatinden önce canlıya geçilemez",
+        "passed": true
+      },
+      {
+        "test": "Geçerli başlangıç canlı yapar; tekrar sürüm artırmaz",
+        "passed": true
+      },
+      {
+        "test": "Eski sağlayıcı oturumu yeni görüşmeyi kapatmaz",
+        "passed": true
+      },
+      {
+        "test": "İptal davet kalıcı çıkarma/ban işine girer",
+        "passed": true
+      },
+      {
+        "test": "Eski iş sonucu reddedilir; hata yeniden denenebilir",
+        "passed": true
+      },
+      {
+        "test": "Herkes için bitir kalıcıdır; tekrar ve eski katılım açamaz",
+        "passed": true
+      },
+      {
+        "test": "Süre sonu tarayıcı olmadan kapanış işine dönüşür",
+        "passed": true
+      },
+      {
+        "test": "Yaşam döngüsü tablo ve RPC istemciye kapalıdır",
+        "passed": true
+      }
+    ],
+    "cron": {
+      "cron_tek_kayit": true,
+      "cron_aktif": false
+    },
+    "source": "Kullanıcının sohbet çıktıları",
+    "evidence": "VIVA_ASAMA_2_4_KULLANICI_SQL_SONUCU.md"
+  }
+}

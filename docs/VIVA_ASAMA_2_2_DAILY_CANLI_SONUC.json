@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-25",
+  "domain": "cogniti-viva.daily.co",
+  "database_access": false,
+  "meeting_joined": false,
+  "recording_started": false,
+  "tests": [
+    {
+      "test": "sunucu tokenı Daily tarafından oda/kimlik/süre/medya/yönetim izinleriyle doğrulanır",
+      "passed": true
+    },
+    {
+      "test": "katilimci tokenı Daily tarafından oda/kimlik/süre/medya/yönetim izinleriyle doğrulanır",
+      "passed": true
+    },
+    {
+      "test": "katilimci boş gerçek Daily odasında sunucuyu bekler ve token alamaz",
+      "passed": true
+    },
+    {
+      "test": "izleyici tokenı Daily tarafından oda/kimlik/süre/medya/yönetim izinleriyle doğrulanır",
+      "passed": true
+    },
+    {
+      "test": "izleyici boş gerçek Daily odasında sunucuyu bekler ve token alamaz",
+      "passed": true
+    },
+    {
+      "test": "Daily gelecekte başlayacak nbf tokenını erken doğrulamaz",
+      "passed": true
+    }
+  ],
+  "cleanup": {
+    "delete_http": 200,
+    "read_after_delete_http": 404
+  },
+  "passed": 6
+}

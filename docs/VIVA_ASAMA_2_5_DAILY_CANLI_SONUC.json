@@ -1,0 +1,15 @@
+{
+  "tarih": "2026-10-25T09:51:12.709Z",
+  "hesap": {
+    "domain_eslesiyor": true,
+    "max_streaming_instances_per_room": 2,
+    "enable_recording": null
+  },
+  "gercek_daily_kontroller": [
+    "Sunucu cloud / katılımcı kayıt kapalı yetkisi sağlayıcı tokenında doğrulandı (Daily false değerini boş dizgeye normalleştiriyor)",
+    "Geçici özel oda kayıt listesi boş; durdurma yolu güvenli biçimde tamamlandı"
+  ],
+  "gecici_oda_silindi": true,
+  "gercek_medya_ve_kayit_uretilmedi": true,
+  "db_sql_calistirilmadi": true
+}

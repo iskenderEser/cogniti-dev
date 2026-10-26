@@ -42,3 +42,16 @@
   yalnız değiştirilen PDF/kapak/ana görselin yeniden yüklenmesine izin veren akış
   tamamlanmalıdır. Ham Bunny Storage yolları istemciye açılmamalıdır.
   *Kayıt tarihi: 15 Eylül 2026 — İskender talebiyle Faz 4 ertelendi.*
+
+- **[TB-03] Viva özel davetinde gerçek e-posta teslimatı ve uçtan uca doğrulama kontrolü.**
+  Mevcut test hesaplarının e-posta adresleri sentetiktir. Gerçek adrese kodun
+  ulaşması, kodla giriş ve HttpOnly misafir oturumunun gerçek tarayıcıda
+  sürmesi henüz doğrulanmadı. SQL erişim/kod/süre kuralları kullanıcı tarafından;
+  uygulama gönderim davranışı sahte taşıma katmanıyla sınandı. Bu kontroller
+  gerçek e-posta teslimatı yerine geçmez. Gönderici domaini/adresi ve Resend
+  yapılandırması hazır olduğunda izinli gerçek test adresiyle kontrol edilecek;
+  kod ve oturum bilgileri belgelere yazılmayacak. Davet iptali ve etkinlik
+  bitiminde doğrulanmış misafir oturumunun kapanması da aynı akışta sınanacak.
+  **Durum: AÇIK — kullanıcı kararıyla teknik borca alındı; Viva 1. aşamasının
+  kapanışını bekletmeyecek.** Doğrulama gereksinimi uygulamada korunur.
+  *Kayıt tarihi: 25 Ekim 2026 — İskender talebiyle.*

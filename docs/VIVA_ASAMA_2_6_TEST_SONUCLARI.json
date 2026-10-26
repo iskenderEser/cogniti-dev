@@ -1,0 +1,22 @@
+{
+  "asama": "2.6",
+  "tarih": "2026-10-25",
+  "durum": "gelistirme_ve_teknik_teslim_hazir",
+  "bu_adim_hedefli_testler": { "katilim_rol_oda_surum": 4, "sdk_temizlik_onizleme_baslangic_reddi": 3, "kayit_erisim_yetkisi_ve_hazir_yeniden_deneme": 3, "toplam": 10, "basarili": 10, "basarisiz": 0 },
+  "onceki_88_test_yeniden_calistirildi": false,
+  "typecheck": "basarili",
+  "lint_degisen_uretim_dosyalari": { "hata": 0, "uyari": 0 },
+  "secili_next_compile": { "basarili": true, "derleme_saniye": 4.3, "tam_uygulama_production_kabulu": false, "prerender_generate_calistirildi": false },
+  "onceki_kullanici_sql_kaniti": { "2.1": 18, "2.2": 24, "2.4": 9, "2.5": 7 },
+  "iki_baglantili_sql_yarisi": "A/B dosyalari hazir; kullanici henuz calistirmadi",
+  "ajan_db_erisimi": false,
+  "ajan_sql_calistirdi": false,
+  "gercek_gorusme_ve_kayit_dosyasi": "kullanici_canli_kabulu_bekliyor",
+  "tarayici_csp_cerez_tam_ekran": "onizleme_kodu_hazir; kullanici_kontrolu_bekliyor",
+  "fiziksel_tablet": "yok; test_edilmedi",
+  "gercek_eposta": "REDBOOK_TB03",
+  "production_webhook_cron": "deployment_sonrasi_aktif_edilecek; calisiyor_sayilmadi",
+  "commit_push_deployment": false,
+  "ikinci_asama_kullanici_kabulu": "bekleniyor",
+  "ucuncu_asama_basladi": false
+}

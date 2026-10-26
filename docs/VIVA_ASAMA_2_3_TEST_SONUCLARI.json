@@ -1,0 +1,27 @@
+{
+  "date": "2026-10-25",
+  "step": "2.3",
+  "status": "Teknik geliştirme tamamlandı; görsel/gerçek görüşme testleri kullanıcıda.",
+  "sdk": "@daily-co/daily-js@0.94.0",
+  "tests": {
+    "passed": 88,
+    "failed": 0,
+    "new": 21,
+    "previous": 67,
+    "scope": "Uygulama/React ve SDK taklidi; gerçek medya görüşmesi değil."
+  },
+  "typecheck": "başarılı",
+  "lint": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "compile": "Viva rotaları Next compile modunda başarılı; tam production build veya deployment değil.",
+  "database_access_by_agent": false,
+  "sql_executed": false,
+  "new_sql_required": false,
+  "visual_test_owner": "Kullanıcı; açık talimatıyla",
+  "real_meeting_tested": false,
+  "commit_or_push": false,
+  "next_step_started": false,
+  "next_step": "2.4 — yaşam döngüsü; kullanıcı devam onayı beklenecek."
+}

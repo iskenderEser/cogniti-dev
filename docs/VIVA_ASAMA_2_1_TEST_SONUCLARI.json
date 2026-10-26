@@ -1,0 +1,230 @@
+{
+  "date": "2026-10-25",
+  "step": "2.1",
+  "status": "2.1 tamamlandı; kullanıcı kurulum ve 18 SQL test sonucuyla doğrulandı. 2.2 başlamadı.",
+  "domain": "cogniti-viva.daily.co",
+  "database_access_by_agent": false,
+  "sql_executed_by_agent": false,
+  "application_tests": {
+    "passed": 42,
+    "failed": 0,
+    "new_step_2_1": 21,
+    "stage_1_regression": 21,
+    "scope": "Sahte DB/ağ bağımlılıkları; gerçek TS/React kodu."
+  },
+  "daily_api_live": {
+    "date": "2026-10-25",
+    "domain": "cogniti-viva.daily.co",
+    "api_authenticated": true,
+    "db_access": false,
+    "meeting_joined": false,
+    "recording_started": false,
+    "tests": [
+      {
+        "test": "Özel test odası oluşturma ve alan/ayar doğrulaması",
+        "passed": true
+      },
+      {
+        "test": "Aynı isimle tekrar çağrı oda çoğaltmaz",
+        "passed": true
+      },
+      {
+        "test": "Bitiş değişikliğini mevcut Daily odasına uygulama",
+        "passed": true
+      }
+    ],
+    "calls": [
+      {
+        "method": "GET",
+        "islem": "oda",
+        "status": 404
+      },
+      {
+        "method": "POST",
+        "islem": "olustur",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "islem": "oda",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "islem": "oda",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "islem": "oda",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "islem": "oda",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "islem": "oda",
+        "status": 200
+      }
+    ],
+    "cleaned_up": true,
+    "cleanup_status": {
+      "delete": 200,
+      "read_after_delete": 404
+    },
+    "passed": 3
+  },
+  "typecheck": "başarılı",
+  "lint": {
+    "errors": 0,
+    "warnings": 1,
+    "reason": "Yeni RPC yerel sema.json kaydında yok; DB şeması çekilmedi."
+  },
+  "user_sql": {
+    "install": "scripts/sql/viva_asama2_1.sql",
+    "test": "scripts/sql/viva_asama2_1_test.sql",
+    "test_count": 18,
+    "status": "Kullanıcı çalıştırdı ve başarılı sonuçları paylaştı; ajan SQL çalıştırmadı.",
+    "install_checks": {
+      "oda_tablosu": true,
+      "oda_fonksiyonu": true,
+      "rls_etkin": true,
+      "anonim_erisim_kapali": true,
+      "istemci_rpc_kapali": true
+    },
+    "passed": 18,
+    "failed": 0,
+    "skipped": 0,
+    "results": [
+      {
+        "sira": 1,
+        "test": "Yeni etkinlikte oda henüz yok",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 2,
+        "test": "Başkasının oda eşleştirmesi okunamaz",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 3,
+        "test": "Taslak için oda işi ayrılamaz",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 4,
+        "test": "Daily dışı domain reddedilir",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 5,
+        "test": "Tek oda kimliği ve iş kirası üretilir",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 6,
+        "test": "İş sürerken ikinci çağrı bekler ve gizli kira dönmez",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 7,
+        "test": "Yanlış kira ile iş tamamlanamaz",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 8,
+        "test": "Doğru kira mevcut sürümü hazır yapar",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 9,
+        "test": "Tarih/sürüm değişince eski eşleşme güncel sayılmaz",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 10,
+        "test": "Yeniden deneme aynı oda adıyla yeni tarih hedefler",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 11,
+        "test": "İş sırasında etkinlik değişirse eski sonuç 409 olur",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 12,
+        "test": "Süresi dolmuş iş yeni kirayla aynı odada kurtarılır",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 13,
+        "test": "Eski iş yeni işin durumunu ezemez",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 14,
+        "test": "Sağlayıcı hatası kira bırakılarak kaydedilir",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 15,
+        "test": "Mevcut eşleşme başka Daily alanına taşınamaz",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 16,
+        "test": "Kapalı oda aynı kimlikle tekrar açılamaz",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 17,
+        "test": "İptal edilmiş etkinlikte yeni oda işi kapalıdır",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      },
+      {
+        "sira": 18,
+        "test": "Anon/authenticated tabloya veya RPCye doğrudan erişemez",
+        "sonuc": "BAŞARILI",
+        "detay": null
+      }
+    ],
+    "scope": "Sıralı iş kuralı testi; Daily API, iki bağlantılı yarış ve gerçek görüşme sınanmaz. Test kayıtları ROLLBACK ile geri alınır.",
+    "evidence": "VIVA_ASAMA_2_1_KULLANICI_SQL_SONUCU.md"
+  },
+  "next_step": "2.2 — katılımcı/izleyici token ve izin eşleştirmesi; kullanıcı devam demeden başlanmayacak.",
+  "not_done": [
+    "İki bağımsız DB bağlantısıyla eş zamanlı yarış",
+    "Daily katılım tokenı/rol/bekleme odası denemesi (2.2)",
+    "Prebuilt ve ses/görüntü görüşmesi (2.3)",
+    "Aktif görüşmeyi iptal/bitirme (2.4)",
+    "Kayıt ve webhook kurulumu (2.5)"
+  ],
+  "sha256": {
+    "lib/viva/daily.ts": "36a2c8b515a16647817a8a55818d78048f48673a213ec1b3ea6cdb1b3c70864c",
+    "lib/viva/oda.ts": "1d7317574f4df2e03980b4b745a528cf87cc11e0dafde672e8a6758f3d3996bf",
+    "app/(panel)/viva/api/oda/route.ts": "b58ab3e8796e08c9772ac60a7bc7dccba3c1c76b1e01d497c0ffa65a2cfc7c8a",
+    "scripts/sql/viva_asama2_1.sql": "aeeb6001df9469a4788ce292841c55b39e3fbf8b25312891a292e732fc996819",
+    "scripts/sql/viva_asama2_1_test.sql": "0d9b7ae32e022a0773dbd121c04f7c91f90063a7b021a2f31090c244162b967a",
+    "tests/vivaDailyOda.hedef.test.ts": "e44d69437f8986cad499458f4f2e0cfca7c7be0dad25df069d982c30d1a13db9"
+  }
+}
