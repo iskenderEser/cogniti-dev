@@ -8,6 +8,8 @@ import { tmKilavuzunuSec } from "@/lib/rehber/tmKilavuzu";
 import { bmKilavuzunuSec } from "@/lib/rehber/bmKilavuzu";
 import { uttKilavuzunuSec } from "@/lib/rehber/uttKilavuzu";
 import { TUKETICI_ROLLER, URETICI_ROLLER, YONETICI_ROLLER, ECLUB_TUKETICI_ROLLERI } from "@/lib/utils/roller";
+import { useTema } from "@/app/providers/TemaProvider";
+import TemaSecici from "@/components/tema/TemaSecici";
 import PanelNavbar, { type PanelNavbarProps } from "./PanelNavbar";
 import SolListe from "./SolListe";
 import MobilDrawer from "./MobilDrawer";
@@ -25,6 +27,8 @@ interface Props {
 /** PanelLayout'tan taşınan ortak yerleşim; kimlik veya uzak veri işlemi yapmaz. */
 export default function PanelKabugu({ children, navbar, baglam, gruplar, badge, bildirimler }: Props) {
   const [drawerAcik, setDrawerAcik] = useState(false);
+  const { tema, temaDegistir } = useTema();
+  const renkAnahtari = navbar.temaSeciciGoster !== false ? <TemaSecici tema={tema} onTemaDegistir={temaDegistir} yerlesim="satir" /> : undefined;
   const uttKilavuzu = useMemo(() => uttKilavuzunuSec(baglam.eclubAcik, baglam.eczanemAcik), [baglam.eclubAcik, baglam.eczanemAcik]);
 
   const bmKilavuzu = useMemo(() => bmKilavuzunuSec({ ccAcik: baglam.ccAcik, eclubAcik: baglam.eclubAcik, eclubStoreAcik: baglam.eclubStoreAcik, eczanemAcik: baglam.eczanemAcik }), [baglam.ccAcik, baglam.eclubAcik, baglam.eclubStoreAcik, baglam.eczanemAcik]);
@@ -40,6 +44,7 @@ export default function PanelKabugu({ children, navbar, baglam, gruplar, badge, 
         {...baglam}
         gruplar={gruplar}
         badge={badge}
+        altAlan={renkAnahtari}
         acik={drawerAcik}
         onKapat={() => setDrawerAcik(false)}
         onCikis={navbar.onCikis}
@@ -49,7 +54,7 @@ export default function PanelKabugu({ children, navbar, baglam, gruplar, badge, 
         bilgiPilleri={navbar.bilgiPilleri}
       />
       <div className="flex flex-1" style={{ minHeight: 0 }}>
-        <SolListe {...baglam} gruplar={gruplar} badge={badge} />
+        <SolListe {...baglam} gruplar={gruplar} badge={badge} altAlan={renkAnahtari} />
         <main className="flex-1 overflow-y-auto" style={{ minWidth: 0 }}>
           {children}
         </main>

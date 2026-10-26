@@ -2,15 +2,13 @@
 //
 // Panel üst barı. Sol: logo. Orta: bilgi pill'leri + (UTT/KD_UTT'de) dikey çizgi
 // ardından kişisel özet pill'leri (Takım Sırası · Sipariş Puanı) ve FirmaStore kısayolu.
-// Sağ: ad-soyad (bordo) + avatar; Çıkış adın altında. Fonksiyonel gezinme sol listede.
+// Sağ: Viva kısayolu + ad-soyad + avatar; Çıkış adın altında.
 
 "use client";
 
 import CognitiLogo from "@/components/marka/CognitiLogo";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { useTema } from "@/app/providers/TemaProvider";
-import TemaSecici from "@/components/tema/TemaSecici";
 
 const BORDO = "var(--tema-vurgu)";
 
@@ -86,6 +84,8 @@ export interface PanelNavbarProps {
   siparisPuaniGoster?: boolean;
   // FirmaStore giriş pill'i yalnız mağazadan kişisel sipariş verebilen rollerde görünür.
   hbStoreGoster?: boolean;
+  // Mevcut Viva gezinme yetkisi layout tarafından çözülür.
+  vivaGoster?: boolean;
   // Dış müşteri ana sayfası /eclub/ana-sayfa'dir; iç kullanıcıda varsayılan korunur.
   anaSayfaYolu?: string;
   onAnaSayfa?: () => void;
@@ -106,11 +106,6 @@ export interface PanelNavbarProps {
 const BILGI_PILLERI: { key: string; etiket: string; path: string }[] = [
   { key: "ana-sayfa", etiket: "Ana Sayfa", path: "/ana-sayfa" },
 ];
-
-function PanelTemaSecici() {
-  const { tema, temaDegistir } = useTema();
-  return <TemaSecici tema={tema} onTemaDegistir={temaDegistir} />;
-}
 
 function ProfilDugmesi({ harfler, menu, mobil = false }: { harfler?: string; menu?: ReactNode; mobil?: boolean }) {
   const router = useRouter();
@@ -173,6 +168,7 @@ export default function PanelNavbar({
   ozet,
   siparisPuaniGoster,
   hbStoreGoster,
+  vivaGoster = false,
   anaSayfaYolu = "/ana-sayfa",
   onAnaSayfa,
   anaSayfaSecili,
@@ -180,7 +176,6 @@ export default function PanelNavbar({
   firmaLogoUrl,
   ogrenmePlatformuAktif,
   firmaAdi,
-  temaSeciciGoster = true,
   bilgiPilleri = BILGI_PILLERI,
   profilMenusu,
   profilAltBilgi,
@@ -210,6 +205,27 @@ export default function PanelNavbar({
       fontFamily: "'Nunito', sans-serif",
     };
   };
+
+  const vivaAktif = pathname === "/viva" || pathname.startsWith("/viva/");
+  const vivaPill = () => vivaGoster && <button
+    type="button"
+    aria-label="Viva'yı aç"
+    aria-current={vivaAktif ? "page" : undefined}
+    title="Viva"
+    onClick={() => router.push("/viva")}
+    onMouseEnter={() => setHover("viva")}
+    onMouseLeave={() => setHover(null)}
+    className={`${pillClass(vivaAktif)} shrink-0 gap-1.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--tema-kontrol-odak)]`}
+    style={{
+      padding: "3px 9px",
+      background: hover === "viva" ? "var(--tema-kontrol-hover)" : "transparent",
+      fontFamily: "'Nunito', sans-serif",
+    }}
+  >
+    {/* SVG logo kendi vektör oranıyla gösterilir. */}
+    {/* eslint-disable-next-line @next/next/no-img-element */}
+    <img src="/marka/viva/viva-mavi-ribon-yatay.svg" alt="Viva" width={62} height={18} style={{ display: "block", objectFit: "contain" }} />
+  </button>;
 
   const bashHarfler = adSoyad
     ? `${adSoyad.split(" ")[0]?.[0] ?? ""}${adSoyad.split(" ")[1]?.[0] ?? ""}`
@@ -253,7 +269,7 @@ export default function PanelNavbar({
                 {/* Sabit Metin (8.5px) */}
                 <span
                   style={{ fontFamily: "'Nunito', sans-serif" }}
-                  className="text-[8.5px] sm:text-[9.5px] xl:text-[11.5px] font-normal text-[var(--tema-ust-menu-aciklama)] tracking-tight whitespace-nowrap ml-1 sm:ml-2 xl:ml-2.5"
+                  className="hidden sm:inline text-[8.5px] sm:text-[9.5px] xl:text-[11.5px] font-normal text-[var(--tema-ust-menu-aciklama)] tracking-tight whitespace-nowrap ml-1 sm:ml-2 xl:ml-2.5"
                 >
                   resmi öğrenme platformu
                 </span>
@@ -344,7 +360,12 @@ export default function PanelNavbar({
           </button>
         </div>
       </div>
-      {temaSeciciGoster && <PanelTemaSecici />}
+      {vivaGoster && <div className="absolute left-1/2 z-[51] flex h-9 w-32 -translate-x-1/2 items-start justify-center pt-0.5" style={{ top: "calc(100% - 1px)" }}>
+        <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 128 38" preserveAspectRatio="none" aria-hidden="true" style={{ filter: "drop-shadow(0 3px 3px color-mix(in srgb, var(--tema-metin) 5%, transparent))" }}>
+          <path d="M0 1C8 1 10 5 14 17L16 24C19 33 23 37 31 37H97C105 37 109 33 112 24L114 17C118 5 120 1 128 1V-2H0Z" fill="var(--tema-ust-menu-zemin)" />
+        </svg>
+        {vivaPill()}
+      </div>}
     </nav>
   );
 }

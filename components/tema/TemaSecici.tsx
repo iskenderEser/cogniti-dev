@@ -8,17 +8,20 @@ const KENAR = "M0 1H10C16 1 18 4 21 14L24 23C27 31 31 35 38 35H82C89 35 93 31 96
 export default function TemaSecici({
   tema,
   onTemaDegistir,
+  yerlesim = "navbar",
 }: {
   tema: Tema;
+  yerlesim?: "navbar" | "satir";
   onTemaDegistir: (tema: Tema) => void;
 }) {
   const sonrakiTema: Tema = tema === "mavi" ? "yesil" : "mavi";
 
   return (
-    <div className={styles.dil}>
-      <svg className={styles.yuzey} viewBox="0 0 120 37" preserveAspectRatio="none" aria-hidden="true">
+    <div className={yerlesim === "satir" ? styles.satir : styles.dil}>
+      {yerlesim === "satir" && <span className={styles.baslik}>Görünüm değişimi</span>}
+      {yerlesim === "navbar" && <svg className={styles.yuzey} viewBox="0 0 120 37" preserveAspectRatio="none" aria-hidden="true">
         <path d={`${KENAR}V-2H0Z`} className={styles.dolgu} />
-      </svg>
+      </svg>}
       <div className={styles.secici}>
         <button
           type="button"

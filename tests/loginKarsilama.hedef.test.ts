@@ -1,3 +1,4 @@
+import * as vivaSozlesme from "@/lib/viva/sozlesme";
 import * as baslangic from "@/lib/panel/baslangic";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -12,27 +13,32 @@ import { TUM_ROLLER } from "@/lib/utils/roller";
 import * as turSunumu from "@/lib/ogrenmeAraci/turSunumu";
 
 type Kimlik = { id: string; rol?: string; kimlik_turu?: string; firma_id?: string };
-async function ortam(kullanici: Kimlik | null = null, aktif = true, sayfa: "login" | "karsilama" = "login") {
-  const dom = new Window({ url: "http://localhost/login" });
+async function ortam(kullanici: Kimlik | null = null, aktif = true, sayfa: "login" | "karsilama" = "login", adres = "/login") {
+  const dom = new Window({ url: `http://localhost${adres}` });
   for (const key of ["window", "document", "navigator", "HTMLElement", "Element", "Node", "Event", "MouseEvent", "HTMLInputElement"] as const) Object.defineProperty(globalThis, key, { configurable: true, value: dom[key] });
   Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
   const { createRoot } = await import("react-dom/client");
   const auth = { kullanici, yukleniyor: false, cikisYap: async () => { cikislar++; } };
   const yollar: string[] = [], girisler: unknown[] = [], sifirlamalar: unknown[] = [], tercihler: boolean[] = [], istekler: unknown[] = [];
   let cikislar = 0, tema = "mavi", girisHatasi = false, resetHatasi = false, davetBekliyor = false, telefonBasarili = false;
+  let firmaBekleyen: Promise<{data:{aktif:boolean}}> | null = null;
   const supabase = {
     auth: {
       signInWithPassword: async (veri: unknown) => { girisler.push(veri); return { data: { user: { app_metadata: { eclub_davet_bekliyor: davetBekliyor } } }, error: girisHatasi ? {} : null }; },
       resetPasswordForEmail: async (...veri: unknown[]) => { sifirlamalar.push(veri); return { error: resetHatasi ? {} : null }; },
     },
-    from: (tablo: string) => { assert.equal(tablo, "firmalar"); const q = { select: () => q, eq: () => q, single: async () => ({ data: { aktif } }) }; return q; },
+    from: (tablo: string) => { assert.equal(tablo, "firmalar"); const q = { select: () => q, eq: () => q, single: async () => firmaBekleyen ?? ({ data: { aktif } }) }; return q; },
   };
-  const router = { replace: (yol: string) => yollar.push(yol) };
+  const istemciYollari: string[] = [];
+  const router = { replace: (yol: string) => istemciYollari.push(yol) };
+  const tamGecis = dom.location.replace.bind(dom.location);
+  dom.location.replace = (yol: string) => { yollar.push(yol); tamGecis(yol); };
   const css = { default: new Proxy({}, { get: (_, key) => String(key) }) };
   const modules: Record<string, unknown> = {
     react: React, "react/jsx-runtime": jsxRuntime, "lucide-react": icons,
     "next/link": { default: ({ children, ...props }: React.PropsWithChildren<React.AnchorHTMLAttributes<HTMLAnchorElement>>) => React.createElement("a", props, children) },
     "@/lib/panel/baslangic": baslangic,
+    "@/lib/viva/sozlesme": vivaSozlesme,
     "next/navigation": { useRouter: () => router },
     "@/app/providers/AuthProvider": { useAuth: () => auth },
     "@/app/providers/TemaProvider": { useTema: () => ({ tema, temaDegistir: (secim: string) => { tema = secim; } }) },
@@ -62,7 +68,8 @@ async function ortam(kullanici: Kimlik | null = null, aktif = true, sayfa: "logi
   const click = (el: Element | null | undefined) => { assert.ok(el); return act(async () => { (el as HTMLElement).click(); }); };
   const button = (text: string) => [...container.querySelectorAll("button")].find(el => el.textContent === text);
   return {
-    dom, container, auth, yollar, girisler, sifirlamalar, tercihler, istekler, render, click, button,
+    dom, container, auth, yollar, istemciYollari, girisler, sifirlamalar, tercihler, istekler, render, click, button,
+    firmayiBeklet: () => { let yanitla!:(v:{data:{aktif:boolean}})=>void; firmaBekleyen=new Promise(r=>{yanitla=r;});return () => yanitla({data:{aktif:true}}); },
     cikislar: () => cikislar,
     davet: () => { davetBekliyor = true; }, telefonBasarisi: () => { telefonBasarili = true; },
     hataliGiris: () => { girisHatasi = true; }, hataliReset: () => { resetHatasi = true; },
@@ -93,7 +100,7 @@ test("login doğrudan formu açar; sıfırlama, değerler ve odak korunur; dön�
     await o.click(o.button("← Girişe dön"));
     assert.equal(o.container.querySelector<HTMLInputElement>("#giris-sifre")!.value, "sahte-sifre");
     const back = [...o.container.querySelectorAll('a')].find((link) => link.textContent === "← Cogniti’yi tanıyın")!;
-    assert.equal(back.getAttribute('href'), '/ana-sayfa');
+    assert.equal(back.getAttribute('href'), '/welcome');
     assert.equal(o.girisler.length, 0);
   } finally { await o.kapat(); }
 });
@@ -105,11 +112,11 @@ test("karşılama ayrı sayfada açıklamaları gösterir; Giriş Yap /login ba�
     const article = o.container.querySelector('article[aria-label="Cogniti Hakkında"]')!;
     assert.ok(article);
     assert.equal(article.querySelectorAll("h3").length, 4);
-    assert.match(article.textContent!, /Bilgiyi ulaştırır, öğrenmeyi motive eder/);
+    assert.match(article.textContent!, /Tanıtım ve Öğrenme/);
     assert.equal(o.container.querySelector("form"), null);
     const link = [...o.container.querySelectorAll("a")].find((a) => a.textContent === "Giriş Yap")!;
     assert.equal(link.getAttribute("href"), "/login");
-    assert.equal(o.container.querySelector('a[aria-label="Cogniti"]')!.getAttribute('href'), '/');
+    assert.equal(o.container.querySelector('a[aria-label="Cogniti"]')!.getAttribute('href'), '/welcome');
     assert.deepEqual(o.yollar, []);
     assert.equal(o.girisler.length, 0);
   } finally { await o.kapat(); }
@@ -178,4 +185,23 @@ test("bekleyen davet oturumu davet ekranına yönlenir", async () => {
     o.davet(); await o.yaz("giris-kimlik", "ornek@example.invalid"); await o.yaz("giris-sifre", "sahte-sifre"); await o.submit();
     assert.equal(o.dom.location.pathname, "/davet-bekliyor"); assert.deepEqual(o.tercihler, []);
   } finally { await o.kapat(); }
+});
+
+
+test("Viva bağlantısından girişte iç kullanıcı ve EClub üyesi etkinliğe döner", async () => {
+  const id = "00000000-0000-4000-8000-000000000001";
+  for (const kimlik of [{ id, rol: "pm", kimlik_turu: "kullanici" }, { id, rol: "eczaci", kimlik_turu: "eclub_kisi" }]) {
+    const o = await ortam(kimlik, true, "login", `/login?viva=${encodeURIComponent(`/viva/${id}/oda`)}`);
+    try { await o.render(); assert.equal(o.yollar.at(-1), `/viva/${id}/oda`); } finally { await o.kapat(); }
+  }
+});
+
+
+test("giriş sonrası UTT hedefi eski karşılama cache'i yerine tam sayfa isteğiyle açılır", async () => {
+ const o=await ortam();try{await o.render();assert.deepEqual(o.yollar,[]);o.auth.kullanici={id:'utt',rol:'utt',kimlik_turu:'kullanici',firma_id:'firma'};await o.render();assert.deepEqual(o.yollar,['/ana-sayfa']);assert.deepEqual(o.istemciYollari,[]);assert.equal(o.dom.location.pathname,'/ana-sayfa');}finally{await o.kapat();}
+});
+
+
+test("Cogniti’yi tanıyın tam sayfa dönüşü geç kalan giriş yönlendirmesiyle ezilmez",async()=>{
+ const o=await ortam();try{await o.render();const release=o.firmayiBeklet();o.auth.kullanici={id:'utt',rol:'utt',kimlik_turu:'kullanici',firma_id:'firma'};await o.render();const gecisler:string[]=[];const assign=o.dom.location.assign.bind(o.dom.location);o.dom.location.assign=(yol:string)=>{gecisler.push(yol);assign(yol);};const link=[...o.container.querySelectorAll('a')].find(a=>a.textContent==='← Cogniti’yi tanıyın')!;await o.click(link);assert.deepEqual(gecisler,['/welcome']);assert.equal(o.dom.location.pathname,'/welcome');await act(async()=>release());assert.deepEqual(o.yollar,[]);assert.deepEqual(o.istemciYollari,[]);}finally{await o.kapat();}
 });

@@ -1,5 +1,5 @@
-import KarsilamaSayfasi from "./_components/KarsilamaSayfasi";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return <KarsilamaSayfasi />;
+  redirect("/welcome");
 }

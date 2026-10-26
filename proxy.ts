@@ -9,6 +9,10 @@ import { eclubKisiErisimi } from "@/lib/eclub/kisiErisim";
 import { ECZANEM_KAPALI_MESAJI, eczanemRolErisimi } from "@/lib/eczanem/erisim";
 
 export async function proxy(request: NextRequest) {
+  // Daily başlangıç testi dahil HMAC kontrolü route içinde; oturum/DB çağrısı gerekmez.
+  if (request.nextUrl.pathname === "/api/viva/daily-webhook") return NextResponse.next({ request });
+  // Karşılama adresleri herkese açıktır; oturuma göre panel içeriğine dönüşmez.
+  if (["/", "/welcome"].includes(request.nextUrl.pathname)) return NextResponse.next({ request });
   let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(
@@ -34,14 +38,15 @@ export async function proxy(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser();
   const { pathname } = request.nextUrl;
-  // /ana-sayfa oturumlu kullanıcıda mevcut paneldir; ziyaretçide karşılama sayfasıdır.
-  // İçerik / üzerinden sunulur, tarayıcı adresi /ana-sayfa olarak kalır.
-  if (pathname === "/ana-sayfa" && !user) {
-    const hedef = new URL(request.url);
-    hedef.pathname = "/";
-    const karsilamaResponse = NextResponse.rewrite(hedef, { request });
-    supabaseResponse.cookies.getAll().forEach((cookie) => karsilamaResponse.cookies.set(cookie));
-    return karsilamaResponse;
+  // Kullanıcı paneli ve karşılama ayrı adreslerdir; /ana-sayfa asla rewrite edilmez.
+  if (pathname === "/ana-sayfa") {
+    if (!user) {
+      const girisResponse = NextResponse.redirect(new URL("/login", request.url));
+      supabaseResponse.cookies.getAll().forEach((cookie) => girisResponse.cookies.set(cookie));
+      girisResponse.headers.set("Cache-Control", "private, no-store");
+      return girisResponse;
+    }
+    supabaseResponse.headers.set("Cache-Control", "private, no-store");
   }
 
   // Yalnız bir yetki/modül dönüşü gerektiğinde rolü çöz; normal istek yoluna sorgu ekleme.

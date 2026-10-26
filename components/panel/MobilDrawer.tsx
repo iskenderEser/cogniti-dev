@@ -18,12 +18,13 @@
 "use client";
 
 import { useRouter, usePathname } from "next/navigation";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState, type ReactNode } from "react";
 import { PANEL_NAV, mobilPanelNavOlustur, navOgeAktifMi, navOgeVeyaAltiAktifMi, navSecimIzi, type NavContext, type NavGrup, type NavOge } from "./panelNav.config";
 import { URETICI_ROLLER } from "@/lib/utils/roller";
 
 type MobilDrawerProps = NavContext & {
   acik: boolean;
+  altAlan?: ReactNode;
   onKapat: () => void;
   onCikis: () => void;
   badge: Record<string, number>;
@@ -205,9 +206,10 @@ export default function MobilDrawer(props: MobilDrawerProps) {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="absolute top-0 left-0 h-full overflow-y-auto"
+        className="absolute top-0 left-0 flex h-full flex-col overflow-hidden"
         style={{ width: "270px", maxWidth: "85vw", background: "var(--tema-yan-zemin)", boxShadow: "2px 0 16px var(--tema-mobil-menu-golge)", padding: "14px 12px" }}
       >
+        <div className="min-h-0 flex-1 overflow-y-auto">
         {/* Kapat */}
         <div className="flex justify-end mb-1">
           <button
@@ -276,6 +278,8 @@ export default function MobilDrawer(props: MobilDrawerProps) {
           </svg>
           Çıkış
         </button>
+        </div>
+        {props.altAlan && <div className="mt-4 flex shrink-0 items-center justify-center border-t border-[var(--tema-cizgi)] pt-3 pb-1">{props.altAlan}</div>}
       </div>
     </div>
   );

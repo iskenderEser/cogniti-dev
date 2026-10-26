@@ -16,7 +16,7 @@
 
 import { panelBaslangici } from "@/lib/panel/baslangic";
 import { useCallback, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/app/providers/AuthProvider";
 import PanelKabugu from "@/components/panel/PanelKabugu";
 import { PANEL_NAV, eclubKisiNavOlustur, type NavContext } from "@/components/panel/panelNav.config";
@@ -25,7 +25,7 @@ import { BILDIRIM_ROZETLERI_DEGISTI, bildirimRozetleriniYenile } from "@/lib/bil
 import { ONERI_ZAMANI_DEGISTI } from "@/lib/tclub/oneri/gorunurluk";
 import YarimYuklemeBildirimi from "@/components/ogrenme-araci/YarimYuklemeBildirimi";
 import YayinSonucBildirimi from "@/components/panel/YayinSonucBildirimi";
-import { STORE_ALABILEN_ROLLER, URETICI_ROLLER } from "@/lib/utils/roller";
+import { STORE_ALABILEN_ROLLER, URETICI_ROLLER, TUM_ROLLER } from "@/lib/utils/roller";
 import { prefetchTalepMerkezi } from "@/app/(panel)/talepler/_hooks/talepOnbellek";
 import { prefetchYayinOzet } from "@/app/(panel)/yayin-yonetimi/_hooks/ozetOnbellek";
 import { prefetchYayinKatalog } from "@/lib/video/katalogOnbellek";
@@ -39,6 +39,8 @@ import {
 
 export default function PanelLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
+  const vivaYolu = pathname === "/viva" || pathname.startsWith("/viva/");
   const { kullanici, yukleniyor, cikisYap } = useAuth();
   const kullaniciId = kullanici?.id ?? null;
 
@@ -57,10 +59,10 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
   // Guard — tek yerde (ana-sayfa'dan birebir; ROLE_MAP kontrolü sayfada kalır).
   useEffect(() => {
     if (yukleniyor) return;
-    if (!kullanici) { router.replace("/login"); return; }
-    if (rolKucu === "admin") { router.replace("/admin"); return; }
+    if (!kullanici) { router.replace(vivaYolu ? `/login?viva=${encodeURIComponent(pathname + window.location.search)}` : "/login"); return; }
+    if (rolKucu === "admin" && !vivaYolu) { router.replace("/admin"); return; }
     if (kullanici.kimlik_turu === "musteri") { router.replace("/eczanem"); return; }
-  }, [kullanici, yukleniyor, rolKucu, router]);
+  }, [kullanici, yukleniyor, rolKucu, router, vivaYolu, pathname]);
 
   // Kullanıcı değiştiğinde veya oturum doğrulandığında kullanıcının kendi önbelleğini yükle
   useEffect(() => {
@@ -257,6 +259,7 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
         ozet: isEclubKisi ? null : etkinOzet,
         siparisPuaniGoster: !isEclubKisi && etkinFlags.storeAcik,
         hbStoreGoster: !isEclubKisi && etkinFlags.storeAcik && STORE_ALABILEN_ROLLER.includes(rolKucu),
+        vivaGoster: isEclubKisi ? etkinFlags.eclubAcik && etkinFirmalar.length > 0 : TUM_ROLLER.includes(rolKucu),
         anaSayfaYolu,
         bilgiPilleri: !isEclubKisi && URETICI_ROLLER.includes(rolKucu) ? [] : undefined,
         eclubStorePuani: isEclubKisi && etkinFlags.eclubStoreAcik ? etkinEclubStorePuani : null,

@@ -42,6 +42,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // SSR çıktısıyla ilk istemci çıktısını aynı tut; son doğrulanmış sekme kimliğini
   // tarayıcının ilk boyamasından hemen önce devreye al.
   useLayoutEffect(() => {
+    if (window.location.pathname === "/login") return;
     const kayitliKullanici = getAuthKullaniciCache();
     if (!kayitliKullanici) return;
     setKullanici(kayitliKullanici);
@@ -50,6 +51,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const supabase = createClient();
+    let kapandi = false, kimlikSurumu = 0;
+    let yenilemeTimer: ReturnType<typeof setTimeout> | undefined;
 
     const kullaniciyiYukle = async (): Promise<void> => {
       // Eğer zaten bir yükleme devam ediyorsa o Promise'i döndür.
@@ -58,9 +61,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return yuklemePromiseRef.current;
       }
 
+      const surum = kimlikSurumu;
+      const guncelMi = () => !kapandi && surum === kimlikSurumu;
       const promise = (async () => {
         try {
           const { data: { user } } = await supabase.auth.getUser();
+          if (!guncelMi()) return;
 
           if (!user) {
             clearAuthKullaniciCache();
@@ -74,6 +80,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (oturumDusurulmeliMi()) {
             beniHatirlaTemizle();
             await guvenliCikisYap(supabase);
+            if (!guncelMi()) return;
             setKullanici(null);
             setYukleniyor(false);
             return;
@@ -94,6 +101,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             .eq("auth_id", user.id)
             .single();
 
+          if (!guncelMi()) return;
           if (error || !data) {
             clearAuthKullaniciCache();
             setKullanici(null);
@@ -120,6 +128,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
           setYukleniyor(false);
         } catch (err: unknown) {
+          if (!guncelMi()) return;
           // AbortError gibi bir yarış geçişi (savunma katmanı) gelirse sessizce geç,
           // single-flight zaten bunu engelliyor ama yine de güvenlik için.
           if (err instanceof Error && err.name === "AbortError") return;
@@ -138,22 +147,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     };
 
-    kullaniciyiYukle();
+    // Önceki anonim okuma giriş olayıyla çakışırsa onun sonucuyla yetinme;
+    // bitmesini bekleyip yeni oturumu ayrıca doğrula. StrictMode kurulumu da bunu kullanır.
+    const tazele = async () => {
+      const surum = kimlikSurumu;
+      const onceki = yuklemePromiseRef.current;
+      if (onceki) await onceki;
+      if (!kapandi && surum === kimlikSurumu) await kullaniciyiYukle();
+    };
+    void tazele();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === "SIGNED_OUT") {
+        kimlikSurumu++; clearTimeout(yenilemeTimer);
         clearAuthKullaniciCache();
-        setKullanici(null);
+        setKullanici(null); setYukleniyor(false);
         // Tüm kimlikler (müşteri dahil) /login üzerinden giriş yapar.
         router.push("/login");
       } else if (event === "SIGNED_IN") {
-        // Token yenilemesi de SIGNED_IN'i tetikler. Single-flight devam eden
-        // yükleme varsa onu bekler, ayrı bir getUser çağrısı yapmaz.
-        kullaniciyiYukle();
+        kimlikSurumu++; clearTimeout(yenilemeTimer);
+        // Supabase bildiriminin kilidi ve giriş çerezinin yazımı tamamlandıktan sonra oku.
+        // Callback Promise döndürmez ve kendi içinde başka auth isteği başlatmaz.
+        yenilemeTimer = setTimeout(() => { void tazele(); }, 0);
       }
     });
 
-    return () => subscription.unsubscribe();
+    return () => { kapandi = true; clearTimeout(yenilemeTimer); subscription.unsubscribe(); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

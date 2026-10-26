@@ -7,6 +7,7 @@
 
 "use client";
 
+import Link from "next/link";
 import { GLOBAL_BOLUMLER, GlobalBolumId, RENK_BORDO, RENK_GRI } from "../_constants";
 
 interface AdminUstBarProps {
@@ -46,6 +47,7 @@ export default function AdminUstBar(p: AdminUstBarProps) {
       </button>
 
       <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+        <Link href="/viva" style={{ color: "white", fontSize: "12px", padding: "6px 12px", border: "1px solid rgba(255,255,255,0.25)", borderRadius: "8px" }}>Viva</Link>
         {GLOBAL_BOLUMLER.map((b) => {
           const aktif = p.globalBolum === b.id;
           return (

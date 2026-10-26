@@ -9,13 +9,13 @@ import GirisAltBilgileri from "@/app/login/_components/GirisAltBilgileri";
 import styles from "@/app/login/login.module.css";
 import switchStyles from "@/components/tema/tema-secici.module.css";
 
-/** Herkese açık karşılama; / ve oturumsuz /ana-sayfa aynı içeriği sunar. */
+/** Herkese açık karşılama yalnız /welcome adresinde sunulur. */
 export default function KarsilamaSayfasi() {
   const { tema, temaDegistir } = useTema();
   return (
     <div className={`${styles.page} ${styles.welcomePage}`}>
       <header className={styles.header}>
-        <Link className={styles.brand} href="/" aria-label="Cogniti">
+        <Link className={styles.brand} href="/welcome" aria-label="Cogniti">
           <CognitiLogo width={220} height={73} />
         </Link>
         <Link className={styles.action} href="/login">

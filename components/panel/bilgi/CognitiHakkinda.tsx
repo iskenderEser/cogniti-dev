@@ -1,13 +1,13 @@
 import { useId } from "react";
-import { BookOpen, FileImage, Headphones, Play } from "lucide-react";
+import { BadgeCheck, BookOpen, FileImage, Headphones, MessageSquareText, Play, Trophy, UsersRound } from "lucide-react";
 import { YAYIN_TURU_SUNUMU } from "@/lib/ogrenmeAraci/turSunumu";
 import styles from "./cogniti-hakkinda.module.css";
 
 const ARACLAR = [
-  { tur: "video", simge: Play },
-  { tur: "podcast", simge: Headphones },
-  { tur: "gorsel", simge: FileImage },
-  { tur: "flip_pdf", simge: BookOpen },
+  { tur: "video", simge: Play, aciklama: "Tanıtımlarınızı görsel içerikle güçlendirin" },
+  { tur: "podcast", simge: Headphones, aciklama: "Öğrenmeyi sesli içerikle sürdürün" },
+  { tur: "gorsel", simge: FileImage, aciklama: "Ürün bilgilerinizi kolayca paylaşın" },
+  { tur: "flip_pdf", simge: BookOpen, aciklama: "Tanıtımlarınızı bilimsel kaynaklarla destekleyin" },
 ] as const;
 
 const ADIMLAR = [
@@ -77,11 +77,25 @@ export default function CognitiHakkinda() {
           </h1>
           <p className={styles.vurguCumlesi}>Her tanıtım, karşılıklı öğrenmedir.</p>
           <div className={styles.yaklasimlar}>
-            <div className={styles.yaklasim}>
-              <p>E-öğrenme uygulaması, saha ekiplerinin verimli tanıtım yapabilmeleri için ihtiyaçları olan sürekli öğrenme fırsatını sunar.</p>
+            <div className={styles.yaklasimBlok}>
+              <div className={styles.yaklasim}>
+                <Trophy className={styles.yaklasimIkon} aria-hidden="true" />
+                <p><strong className={styles.celAdi}>Cogniti E-Learning (CEL)</strong> ile öğrenmede rekabet yaratarak, saha ekiplerinizin bilgi edinmesini eğlenceli hale getirebilirsiniz</p>
+              </div>
+              <div className={styles.yaklasim}>
+                <MessageSquareText className={styles.yaklasimIkon} aria-hidden="true" />
+                <p>Bölge Müdürleri ikili çalışmalar sonrasında gözlemledikleri gelişim alanları için <strong className={styles.celAdi}>Cogniti E-Learning (CEL)</strong> üzerinden öneriler iletirken, sonuçlarını ölçebilirsiniz</p>
+              </div>
             </div>
-            <div className={styles.yaklasim}>
-              <p>E-tanıtım uygulaması, merkezine saha ekiplerini alarak eczacılara, eczane teknisyenlerine ve son tüketiciye kadar kanıta dayalı bilgiyi ulaştırır.</p>
+            <div className={styles.yaklasimBlok}>
+              <div className={styles.yaklasim}>
+                <UsersRound className={styles.yaklasimIkon} aria-hidden="true" />
+                <p>Saha ekibiniz, <strong>Cogniti E-Promotion (CEP)</strong> uygulamasıyla eczacı ve eczane teknisyenlerinden oluşan takımlar kurup, yapacakları e-tanıtımlarla şirket içinde diğer takımlarla rekabet ederken, eczanelerin tanıtıma olan ilgisini analiz edebilirsiniz.</p>
+              </div>
+              <div className={styles.yaklasim}>
+                <BadgeCheck className={styles.yaklasimIkon} aria-hidden="true" />
+                <p>Eczaneler saha ekibiniz sayesinde <strong>Cogniti E-Promotion (CEP)</strong> ile danışanlara ürünleriniz hakkında kanıta dayalı bilgiye iletip, marka sadakatini güçlendirirken, ürünlerinizin eczanelerden alınmasını teşvik edebilirsiniz.</p>
+              </div>
             </div>
           </div>
         </div>
@@ -97,12 +111,25 @@ export default function CognitiHakkinda() {
             Herkes farklı öğrenir. Farklı tanıtım ve öğrenme araçları sayesinde verimlilik artar.
           </p>
           <div className={styles.araclar}>
-            {ARACLAR.map(({ tur, simge: Simge }) => (
+            {ARACLAR.map(({ tur, simge: Simge, aciklama }) => (
               <div className={styles.arac} key={tur}>
                 <span className={styles.simge} aria-hidden="true"><Simge size={23} strokeWidth={1.5} /></span>
                 <h3>{tur === "flip_pdf" ? "Bilimsel Belge" : YAYIN_TURU_SUNUMU[tur].etiket}</h3>
+                <p>{aciklama}</p>
               </div>
             ))}
+          </div>
+        </section>
+
+        <section className={`${styles.bolum} ${styles.vivaBolumu}`} aria-labelledby={`${id}-viva`}>
+          <h2 className={`${styles.bolumBasligi} ${styles.vivaBasligi}`} id={`${id}-viva`}>
+            <span className={styles.vivaBaslikMetni}>COGNITI CANLI YAYIN ARACI</span>
+            <span className={styles.vivaNokta} aria-hidden="true" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/marka/viva/viva-mavi-ribon-yatay.svg" alt="Viva" width={111} height={32} style={{ display: "block", objectFit: "contain" }} />
+          </h2>
+          <div className={styles.vivaAlan}>
+            <p className={styles.bolumAciklamasi}>Cogniti canlı yayın aracı Viva sayesinde ekibinizle, eczacılarla, eczane teknisyenleriyle ve danışanlarla çevrim içi (online) iletişim kurabilir, öğrenmeyi ya da da tanıtımlarınızı uzaktan da devam ettirebilirsiniz.</p>
           </div>
         </section>
 

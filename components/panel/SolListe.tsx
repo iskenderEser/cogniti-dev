@@ -17,7 +17,7 @@
 "use client";
 
 import { useRouter, usePathname } from "next/navigation";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState, type ReactNode } from "react";
 import { PANEL_NAV, navOgeAktifMi, navOgeVeyaAltiAktifMi, navSecimIzi, type NavContext, type NavGrup, type NavOge } from "./panelNav.config";
 import { prefetchTalepMerkezi } from "@/app/(panel)/talepler/_hooks/talepOnbellek";
 import { prefetchYayinOzet } from "@/app/(panel)/yayin-yonetimi/_hooks/ozetOnbellek";
@@ -27,6 +27,7 @@ import { useAuth } from "@/app/providers/AuthProvider";
 
 type SolListeProps = NavContext & {
   badge: Record<string, number>;
+  altAlan?: ReactNode;
   // Çizilecek ağaç — layout verir (eclub_kisi'de ECLUB_KISI_NAV). Varsayılan PANEL_NAV.
   gruplar?: NavGrup[];
 };
@@ -199,10 +200,10 @@ export default function SolListe(props: SolListeProps) {
   return (
     <aside
       data-panel-sidebar
-      className="hidden md:block flex-shrink-0 overflow-y-auto"
+      className="hidden md:flex min-h-0 flex-col flex-shrink-0"
       style={{ width: "240px", borderRight: "0.5px solid var(--tema-cizgi)", padding: "16px 12px", background: "var(--tema-yan-zemin)" }}
     >
-      <div className="flex flex-col gap-4">
+      <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto">
         {gruplar.map((grup) => {
           const gorunur = grup.oglar.filter((o) => o.gate(props));
           if (gorunur.length === 0) return null;
@@ -236,6 +237,7 @@ export default function SolListe(props: SolListeProps) {
           );
         })}
       </div>
+      {props.altAlan && <div className="mt-4 flex shrink-0 items-center justify-center border-t border-[var(--tema-cizgi)] pt-3 pb-1">{props.altAlan}</div>}
     </aside>
   );
 }

@@ -1,15 +1,15 @@
 "use client";
 
+import { vivaDonusYolu } from "@/lib/viva/sozlesme";
 import { panelBaslangici } from "@/lib/panel/baslangic";
+import Link from "next/link";
 import CognitiLogo from "@/components/marka/CognitiLogo";
 import { createClient } from "@/lib/supabase/client";
 import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { beniHatirlaKaydet } from "@/lib/utils/beniHatirla";
 import { useTema } from "@/app/providers/TemaProvider";
 import { Eye, EyeOff } from "lucide-react";
-import Link from "next/link";
 import styles from "./login.module.css";
 import switchStyles from "@/components/tema/tema-secici.module.css";
 import GirisAltBilgileri from "./_components/GirisAltBilgileri";
@@ -27,15 +27,15 @@ export default function LoginPage() {
   const [sifirlamaEmail, setSifirlamaEmail] = useState("");
   const [sifirlamaGonderiliyor, setSifirlamaGonderiliyor] = useState(false);
   const [sifirlamaMesaj, setSifirlamaMesaj] = useState("");
-  const router = useRouter();
   const { kullanici, yukleniyor, cikisYap } = useAuth();
 
   const kimlikRef = useRef<HTMLInputElement>(null);
+  const karsilamayaDonuluyor = useRef(false);
   const sifirlamaRef = useRef<HTMLInputElement>(null);
   const { tema, temaDegistir } = useTema();
 
   useEffect(() => {
-    if (yukleniyor) return;
+    if (yukleniyor || karsilamayaDonuluyor.current) return;
     if (!kullanici) return;
     if (kullanici.rol === undefined) return;
     let iptalEdildi = false;
@@ -45,13 +45,14 @@ export default function LoginPage() {
     // admin → /admin; üretici → /yayin-yonetimi; diğer iç roller → /ana-sayfa.
     // Kimlik kaynağı useAuth'tur (B-06/D3 — user_metadata okuması kaldırıldı:
     // metadata girişte iliştirilir ve bayatlayabilir, rolCozucu dersi).
+    // Giriş sonrası sunucu oturumu ile kullanıcı panelini yeni istekle aç.
     const yonlendir = async () => {
       if (kullanici.kimlik_turu === "eclub_kisi") {
-        router.replace("/eclub/ana-sayfa");
+        window.location.replace(vivaDonusYolu(window.location.search) ?? "/eclub/ana-sayfa");
         return;
       }
       if (kullanici.kimlik_turu === "musteri") {
-        router.replace("/eczanem");
+        window.location.replace("/eczanem");
         return;
       }
 
@@ -66,7 +67,7 @@ export default function LoginPage() {
           .eq("firma_id", kullanici.firma_id)
           .single();
 
-        if (iptalEdildi) return;
+        if (iptalEdildi || karsilamayaDonuluyor.current) return;
         if (firma && firma.aktif === false) {
           await cikisYap();
           setHata("Firmanızın sisteme erişimi şu anda kapalıdır. Lütfen yöneticinizle görüşün.");
@@ -74,11 +75,11 @@ export default function LoginPage() {
         }
       }
 
-      if (!iptalEdildi) router.replace(kullanici.rol === "admin" ? "/admin" : panelBaslangici(kullanici.rol).yol);
+      if (!iptalEdildi && !karsilamayaDonuluyor.current) window.location.replace(vivaDonusYolu(window.location.search) ?? (kullanici.rol === "admin" ? "/admin" : panelBaslangici(kullanici.rol).yol));
     };
     yonlendir();
     return () => { iptalEdildi = true; };
-  }, [cikisYap, kullanici, router, yukleniyor]);
+  }, [cikisYap, kullanici, yukleniyor]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -102,7 +103,7 @@ export default function LoginPage() {
         if (!res.ok) { setHata(data.hata ?? "Telefon veya şifre hatalı."); setLoading(false); return; }
         beniHatirlaKaydet(beniHatirla);
         // Tam sayfa geçiş: AuthProvider yeni oturumu temiz durumla yüklesin.
-        window.location.href = data.yonlendir ?? "/login";
+        window.location.href = vivaDonusYolu(window.location.search) ?? data.yonlendir ?? "/login";
       } catch {
         setHata("Giriş yapılamadı; yeniden deneyin.");
         setLoading(false);
@@ -197,7 +198,7 @@ export default function LoginPage() {
                 <button type="submit" disabled={loading} className={styles.submit}>{loading ? "Giriş yapılıyor..." : "Giriş Yap"}</button>
               </form>
             )}
-            <Link href="/ana-sayfa" className={styles.back}>← Cogniti’yi tanıyın</Link>
+            <Link href="/welcome" prefetch={false} className={styles.back} onClick={e => { e.preventDefault(); karsilamayaDonuluyor.current = true; window.location.assign("/welcome"); }}>← Cogniti’yi tanıyın</Link>
           </div>
         </section>
       </main>
