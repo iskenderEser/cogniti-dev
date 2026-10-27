@@ -674,7 +674,7 @@ export async function musteriyeGonder(
     p_yayin_id: yayinId,
     p_musteri_idler: istenen,
   });
-  if (error) return { ok: false, hata: "Gönderim veritabanında tamamlanamadı.", gonderilen: 0, atlanan: 0 };
+  if (error) return { ok: false, hata: musteriTokenHatasi(error), gonderilen: 0, atlanan: 0 };
   const sonuc = Array.isArray(data) ? data[0] : data;
   if (!sonuc?.ok) return { ok: false, hata: sonuc?.hata ?? "Gönderim tamamlanamadı.", gonderilen: 0, atlanan: Number(sonuc?.atlanan) || 0 };
   const gonderilen = Number(sonuc.gonderilen) || 0;
@@ -690,4 +690,50 @@ export async function musteriyeGonder(
   }
 
   return { ok: true, gonderilen, atlanan };
+}
+
+
+function musteriTokenHatasi(error: { code?: string; message?: string }): string {
+  if (error.code === "P0001" && error.message === "COGNITI_TOKEN:bakiye_yetersiz") {
+    return "Yayın sahibi firmanın token bakiyesi yetersiz. Seçilen gönderimlerin hiçbiri yapılmadı.";
+  }
+  if (error.code === "P0001" && error.message === "COGNITI_TOKEN:hesap_yok") {
+    return "Yayın sahibi firmanın token hesabı henüz açılmamış. Seçilen gönderimlerin hiçbiri yapılmadı.";
+  }
+  return "Gönderim veritabanında tamamlanamadı.";
+}
+
+/** Bütün seçili yayınlar ve müşteriler tek RPC'de kaydedilir. Push yalnız başarıdan sonra yapılır. */
+export async function musterilereTopluGonder(
+  adminSupabase: SupabaseClient, eczaneId: string, gonderenKisiId: string,
+  yayinIdler: string[], musteriIdler: string[],
+): Promise<MusteriGonderimSonuc & { gonderilenYayin?: number }> {
+  const yayinlar = [...new Set(yayinIdler)];
+  const musteriler = [...new Set(musteriIdler)];
+  if (!yayinlar.length || !musteriler.length || yayinlar.length * musteriler.length > 10000) {
+    return { ok: false, hata: "Tek istekte 1–10.000 yayın-müşteri gönderimi seçilmelidir.", gonderilen: 0, atlanan: 0 };
+  }
+  for (const yayinId of yayinlar) {
+    const erisim = await eczaneYayinErisimiDogrula(adminSupabase, eczaneId, yayinId);
+    if (!erisim.ok) return { ok: false, hata: erisim.hata ?? "Eczanem erişimi doğrulanamadı.", gonderilen: 0, atlanan: 0 };
+  }
+  const { data, error } = await adminSupabase.rpc("cogniti_token_eczanem_toplu_gonder", {
+    p_eczane_id: eczaneId, p_gonderen_kisi_id: gonderenKisiId,
+    p_yayin_idler: yayinlar, p_musteri_idler: musteriler,
+  });
+  if (error) return { ok: false, hata: musteriTokenHatasi(error), gonderilen: 0, atlanan: 0 };
+  if (!data || data.ok !== true || !Number.isInteger(data.gonderilen) || data.gonderilen < 0
+    || !Number.isInteger(data.atlanan) || data.atlanan < 0 || !Array.isArray(data.sonuclar)
+    || data.sonuclar.some((s: { yayin_id?: unknown; musteri_idler?: unknown } | null) =>
+      !s || typeof s.yayin_id !== "string" || !Array.isArray(s.musteri_idler) || s.musteri_idler.some((id: unknown) => typeof id !== "string"))) {
+    return { ok: false, hata: "Gönderim sonucu okunamadı. Tekrar denemeden önce gönderim listenizi kontrol edin.", gonderilen: 0, atlanan: 0 };
+  }
+  const sonuclar = data.sonuclar as { yayin_id: string; musteri_idler: string[] }[];
+  for (const sonuc of sonuclar) {
+    if (sonuc.musteri_idler.length) {
+      pushYayinlaEczanemMusterilereArkada(adminSupabase, "eczanem_gonderim", sonuc.musteri_idler, { yayinId: sonuc.yayin_id });
+    }
+  }
+  return { ok: true, gonderilen: data.gonderilen, atlanan: data.atlanan,
+    gonderilenYayin: sonuclar.filter(s => s.musteri_idler.length > 0).length };
 }

@@ -152,36 +152,25 @@ export default function EczanemDagitimPage() {
     const sonuc: DanisanGonderimSonucu = { gonderilenKayit: 0, gonderilenYayin: 0, atlanan: 0, hatalar: [] };
     if (seciliYayinlar.length === 0 || musteriIdler.length === 0 || topluGonderiliyor) return sonuc;
     setTopluGonderiliyor(true);
-    const basariliYayinlar = new Set<string>();
     try {
-      for (const yayin of seciliYayinlar) {
-        for (let baslangic = 0; baslangic < musteriIdler.length; baslangic += 100) {
-          const parca = musteriIdler.slice(baslangic, baslangic + 100);
-          try {
-            const res = await fetch(API, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ yayin_id: yayin.yayin_id, musteri_idler: parca }),
-            });
-            const data = await res.json();
-            if (!res.ok) {
-              sonuc.atlanan += parca.length;
-              sonuc.hatalar.push(`${yayin.urun_adi}: ${data.hata ?? "Gönderilemedi."}`);
-              continue;
-            }
-            const gonderilen = Number(data.gonderilen) || 0;
-            const atlanan = Number(data.atlanan) || 0;
-            sonuc.gonderilenKayit += gonderilen;
-            sonuc.atlanan += atlanan;
-            if (gonderilen > 0) basariliYayinlar.add(yayin.yayin_id);
-            if (atlanan > 0) sonuc.hatalar.push(`${yayin.urun_adi}: ${atlanan} danışana gönderim atlandı.`);
-          } catch {
-            sonuc.atlanan += parca.length;
-            sonuc.hatalar.push(`${yayin.urun_adi}: Gönderilemedi.`);
-          }
+      try {
+        const res = await fetch(API, {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ yayin_idler: seciliYayinlar.map(yayin => yayin.yayin_id), musteri_idler: musteriIdler }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          sonuc.atlanan = seciliYayinlar.length * musteriIdler.length;
+          sonuc.hatalar.push(data.hata ?? "Gönderim tamamlanamadı.");
+        } else {
+          sonuc.gonderilenKayit = Number(data.gonderilen) || 0;
+          sonuc.atlanan = Number(data.atlanan) || 0;
+          sonuc.gonderilenYayin = Number(data.gonderilen_yayin) || 0;
+          if (sonuc.atlanan > 0) sonuc.hatalar.push(`${sonuc.atlanan} gönderim atlandı.`);
         }
+      } catch {
+        sonuc.hatalar.push("Gönderim sonucu alınamadı. Tekrar denemeden önce gönderim listenizi kontrol edin.");
       }
-      sonuc.gonderilenYayin = basariliYayinlar.size;
       setGonderimSonucu(sonuc);
       if (sonuc.gonderilenKayit > 0) basari(`${sonuc.gonderilenKayit} gönderim tamamlandı.`);
       await veriCek();

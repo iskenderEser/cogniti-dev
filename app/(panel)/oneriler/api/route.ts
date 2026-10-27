@@ -494,59 +494,58 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Tüm kontroller geçti — INSERT döngüsü
-    const kaydedilenler = [];
-    const kaydedilemeyenler: Array<{ yayin_id: string; kullanici_id: string; hata: string }> = [];
+    // Toplu öneri tek INSERT ile kaydedilir. Token hatasında tamamı geri alınır.
+    const kayitlar = [];
     for (const oneri of oneriler) {
-      const { yayin_id, kullanici_id, oneri_baslangic, oneri_bitis } = oneri;
-
-      const tarih = oneriTarihKurali(oneri_baslangic, oneri_bitis);
+      const tarih = oneriTarihKurali(oneri.oneri_baslangic, oneri.oneri_bitis);
       if (!tarih.gecerli) {
-        kaydedilemeyenler.push({ yayin_id, kullanici_id, hata: "Öneri tarihi gönderim sırasında geçersiz oldu." });
-        continue;
+        return isKuraluHatasi("Öneri tarihi gönderim sırasında geçersiz oldu. Gönderim yapılmadı.");
       }
+      kayitlar.push({
+        yayin_id: oneri.yayin_id,
+        oneren_id: user.id,
+        kullanici_id: oneri.kullanici_id,
+        oneri_baslangic: tarih.baslangic_timestamp,
+        oneri_bitis: tarih.bitis_timestamp,
+        izlendi_mi: false,
+      });
+    }
+    const { data: kaydedilenler, error: oneriError } = await adminSupabase
+      .from("oneri_kayitlari")
+      .insert(kayitlar)
+      .select("oneri_id, yayin_id, kullanici_id, oneri_baslangic, oneri_bitis");
 
-      const { data: yeniOneri, error: oneriError } = await adminSupabase
-        .from("oneri_kayitlari")
-        .insert({
-          yayin_id,
-          oneren_id: user.id,
-          kullanici_id,
-          oneri_baslangic: tarih.baslangic_timestamp,
-          oneri_bitis: tarih.bitis_timestamp,
-          izlendi_mi: false,
-        })
-        .select("oneri_id, yayin_id, kullanici_id, oneri_baslangic, oneri_bitis")
-        .single();
-
-      if (oneriError) {
-        console.error("[UYARI] Öneri kaydedilemedi:", { yayin_id, kullanici_id, hata: oneriError.message });
-        kaydedilemeyenler.push({ yayin_id, kullanici_id, hata: "Öneri kaydedilemedi." });
-        continue;
+    if (oneriError) {
+      if (oneriError.code === "P0001") {
+        if (oneriError.message === "COGNITI_TOKEN:bakiye_yetersiz") {
+          return isKuraluHatasi("Firmanızın token bakiyesi bu gönderim için yetersiz. Hiçbir öneri gönderilmedi.");
+        }
+        if (oneriError.message === "COGNITI_TOKEN:hesap_yok") {
+          return isKuraluHatasi("Firmanızın token hesabı henüz açılmamış. Hiçbir öneri gönderilmedi.");
+        }
       }
+      return hataYaniti("Öneriler kaydedilemedi. Gönderim yapılmadı.", "oneri_kayitlari toplu INSERT", oneriError);
+    }
+    if (!kaydedilenler?.length) {
+      return hataYaniti("Gönderim sonucu alınamadı. Tekrar denemeden önce öneri listenizi kontrol edin.", "oneri_kayitlari toplu INSERT sonucu", null);
+    }
 
-      kaydedilenler.push(yeniOneri);
-
-      const urun_adi = yayinMap.get(yayin_id)?.urun_adi ?? "-";
+    for (const yeniOneri of kaydedilenler) {
+      const urun_adi = yayinMap.get(yeniOneri.yayin_id)?.urun_adi ?? "-";
       await bildirimOlustur({
         adminSupabase,
-        alici_id: kullanici_id,
+        alici_id: yeniOneri.kullanici_id,
         gonderen_id: user.id,
         kayit_turu: "oneri",
         kayit_id: yeniOneri.oneri_id,
         mesaj: `Yeni izleme öneriniz var: ${urun_adi}`,
       });
     }
-
-    const tamamıBasarili = kaydedilenler.length === oneriler.length;
     return NextResponse.json({
-      mesaj: tamamıBasarili
-        ? `${kaydedilenler.length} öneri kaydedildi.`
-        : `${kaydedilenler.length} öneri kaydedildi, ${kaydedilemeyenler.length} öneri kaydedilemedi.`,
+      mesaj: `${kaydedilenler.length} öneri kaydedildi.`,
       oneriler: kaydedilenler,
-      basarisizlar: kaydedilemeyenler,
-      ...(!kaydedilenler.length ? { hata: "Önerilerin hiçbiri kaydedilemedi." } : {}),
-    }, { status: kaydedilenler.length ? 201 : 500 });
+      basarisizlar: [],
+    }, { status: 201 });
 
   } catch (err) {
     return sunucuHatasi(err, "POST /oneriler/api");

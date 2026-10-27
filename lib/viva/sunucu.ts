@@ -32,6 +32,16 @@ export function vivaYanit(data: unknown, status = 200) {
 export function vivaHata(err: unknown) {
   if (err instanceof VivaHatasi) return vivaYanit({ hata: err.message }, err.status);
   const e = err as { code?: string; message?: string };
+  if (e.code === "P0001") {
+    const tokenMesajlari: Record<string, string> = {
+      "COGNITI_TOKEN:bakiye_yetersiz": "Firmanızın token bakiyesi seçilen Viva davetleri için yetersiz. İşlem kaydedilmedi, token düşülmedi.",
+      "COGNITI_TOKEN:hesap_yok": "Firmanızın token hesabı henüz açılmamış. Viva davet işlemi kaydedilmedi.",
+      "COGNITI_TOKEN:viva_kimlik_belirsiz": "Bu e-posta birden fazla davetliyle eşleşiyor. Davet listesini kontrol edin.",
+      "COGNITI_TOKEN:viva_firma_yok": "Viva davetinin gönderici firma bilgisi doğrulanamadı. İşlem kaydedilmedi.",
+    };
+    const mesaj = tokenMesajlari[e.message ?? ""];
+    if (mesaj) return vivaYanit({ hata: mesaj }, 422);
+  }
   if (e.code === "42501") return vivaYanit({ hata: "Bu etkinlik veya işlem için erişiminiz yok." }, 403);
   if (e.code === "40001") return vivaYanit({ hata: "Etkinlik değişti. Güncel halini açıp yeniden deneyin." }, 409);
   if (["22023", "22007", "22008", "22P02", "23514", "23505", "23503"].includes(e.code ?? "")) return vivaYanit({ hata: "Bilgiler geçersiz veya güncelliğini yitirmiş. Kontrol edip yeniden deneyin." }, 400);

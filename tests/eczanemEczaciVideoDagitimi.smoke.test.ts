@@ -27,14 +27,17 @@ test("eczacı sayfası HOYK seçimi ve iki aşamalı danışan gönderimi kullan
   assert.doesNotMatch(sayfa, /EczanemVideoGonderimSatiri|AlertDialog/);
 });
 
-test("çoklu yayın uygunluğu danışan ve yayın çiftiyle okunur; POST mevcut RPC yolunu kullanır", () => {
+test("çoklu yayın uygunluğu danışan ve yayın çiftiyle okunur; POST tek atomik toplu RPC yolunu kullanır", () => {
   assert.match(panel, /yayin_idler: parca\.join\(","\)/);
   assert.match(panel, /gonderilmis\.has\(`\$\{yayin\.yayin_id\}::\$\{danisan\.musteri_id\}`\)/);
   assert.match(api, /eczaneUyeGonderimDurumlari/);
   assert.match(gonderim, /\.from\("eczanem_gonderimler"\)/);
   assert.match(gonderim, /\.select\("yayin_id, urun_adi, teknik_adi, firma_adi, talep_no, video_puani, icerik_turu/);
   assert.match(gonderim, /video_puani: ad\?\.video_puani \?\? null/);
-  assert.match(sayfa, /musteri_idler: parca/);
+  assert.match(sayfa, /yayin_idler: seciliYayinlar\.map/);
+  assert.match(sayfa, /musteri_idler: musteriIdler/);
+  assert.match(api, /musterilereTopluGonder\(adminSupabase, eden\.eczaneId!, eden\.kisiId!/);
+  assert.match(gonderim, /rpc\("cogniti_token_eczanem_toplu_gonder"/);
   assert.match(gonderim, /rpc\("eczanem_musterilere_video_gonder"/);
 });
 

@@ -167,6 +167,9 @@ export async function PATCH(
     if (!error && !guncellenen && eclubAcikOlmali) {
       return validasyonHatasi("Eczanem’i açmak için önce E-Club’ı açın.", ["eclub_aktif"]);
     }
+    if (error?.message?.includes("COGNITI_TOKEN:yeniden_acilis_bakiye_gerekli")) {
+      return validasyonHatasi("Firmayı yeniden açmak için önce token yükleyin.", ["aktif"]);
+    }
     if (error?.code === "23514" && error.message.includes("firmalar_eczanem_eclub_bagimliligi")) {
       return validasyonHatasi("Eczanem’i açmak için önce E-Club’ı açın.", ["eclub_aktif"]);
     }

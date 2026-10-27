@@ -25,6 +25,7 @@ import TopluTekilSilModal from "./_components/TopluTekilSilModal";
 import FirmaVeriSilModal from "./_components/FirmaVeriSilModal";
 import FirmaSidebar from "./_components/FirmaSidebar";
 import ModulSekmeBari from "./_components/ModulSekmeBari";
+import TokenYonetimi from "./_components/TokenYonetimi";
 import ModulDurumKarti from "./_components/ModulDurumKarti";
 import SekmeBari from "./_components/SekmeBari";
 import TekilGirisFormu from "./_components/TekilGirisFormu";
@@ -199,6 +200,8 @@ export default function AdminPanel() {
                   <KullaniciListesi {...kullaniciListesi} takimlar={admin.takimlar} />
                 </>
               )}
+
+              {seciliSekme === "token" && <TokenYonetimi key={f.firma_id} firmaId={f.firma_id} />}
 
               {seciliSekme === "organizasyon" && <TakimBolgeFormu {...takimBolge} />}
 

@@ -11,6 +11,7 @@ import { tarifeVeBarkodYaz } from "@/lib/eczanem/tarife";
 import { rolCozucu } from "@/lib/utils/rolCozucu";
 import { yayinThumbnailCevabi, type YayinKapakGirdisi } from "@/lib/ogrenmeAraci/yayinThumbnail";
 import { kapakYayinKapisiDogrula } from "@/lib/ogrenmeAraci/sozlesme";
+import { yayinTokenHatasi } from "@/lib/token/yayinHatasi";
 import { baremTablosuDogrula } from "@/lib/eclub/store/eclubStoreTipler";
 
 const YAYIN_LISTE_ALANLARI = "yayin_id, arac_id, soru_seti_durum_id, durum, yayin_tarihi, durdurma_tarihi, urun_adi, teknik_adi, video_url, thumbnail_url, video_puani, soru_puani, sorular, hedef_roller, talep_no, firma_adi, egitim_turu, arac_turu, arac_kapak_yolu, arac_dosya_yolu, arac_metadata, video_suresi_saniye, arac_metadata_dogrulandi";
@@ -337,7 +338,11 @@ export async function POST(request: NextRequest) {
       .select("yayin_id, durum, yayin_tarihi")
       .single();
 
-    if (yayinError) return hataYaniti("Yayına alınamadı.", "yayin_yonetimi tablosu INSERT", yayinError);
+    if (yayinError) {
+      const tokenHatasi = yayinTokenHatasi(yayinError);
+      if (tokenHatasi) return isKuraluHatasi(tokenHatasi);
+      return hataYaniti("Yayına alınamadı.", "yayin_yonetimi tablosu INSERT", yayinError);
+    }
 
     const yayinKontrol = veriKontrol(yeniYayin, "yayin_yonetimi tablosu INSERT — dönen veri", "Yayın oluşturuldu ancak veri döndürülemedi.");
     if (!yayinKontrol.gecerli) return yayinKontrol.yanit;
@@ -364,44 +369,21 @@ export async function POST(request: NextRequest) {
       console.error("[UYARI] Tur-1 kaydı açılamadı:", { yayin_id: yeniYayin.yayin_id, hata: turSonuc.error });
     }
 
-    // Hedef rollerdeki kullanıcılara bildirim gönder
-    // v_yayin_detay view ile tek sorguda takim_id + urun_adi alınır (eski 5 SELECT zinciri yerine).
+    // Token kaydı, ilk gerçek gönderimin alıcı listesini saklar. Bildirim/push
+    // başarısızlığı tüketimi geri almaz; alıcının içeriği açması beklenmez.
     try {
-      const { data: yayinDetay } = await adminSupabase
-        .from("v_yayin_detay")
-        .select("takim_id, urun_adi")
-        .eq("yayin_id", yeniYayin.yayin_id)
-        .single();
-
-      const urun_adi = yayinDetay?.urun_adi ?? "-";
-
-      if (yayinDetay?.takim_id) {
-        const { data: bolgeler } = await adminSupabase
-          .from("bolgeler")
-          .select("bolge_id")
-          .eq("takim_id", yayinDetay.takim_id);
-
-        const bolgeIdler = (bolgeler ?? []).map(b => b.bolge_id);
-
-        if (bolgeIdler.length > 0) {
-          const { data: hedefKullanicilar } = await adminSupabase
-            .from("kullanicilar")
-            .select("kullanici_id")
-            .in("bolge_id", bolgeIdler)
-            .in("rol", hedefRoller)
-            .eq("aktif_mi", true);
-
-          const hedefIdler = (hedefKullanicilar ?? []).map(k => k.kullanici_id);
-
-          await cokluBildirimOlustur({
-            adminSupabase,
-            alici_idler: hedefIdler,
-            gonderen_id: user.id,
-            kayit_turu: "yayin",
-            kayit_id: yeniYayin.yayin_id,
-            mesaj: `Yeni öğrenme içeriği yayında: ${urun_adi}`,
-          });
-        }
+      const [{ data: yayinDetay }, { data: alicilar, error: aliciHatasi }] = await Promise.all([
+        adminSupabase.from("v_yayin_detay").select("urun_adi").eq("yayin_id", yeniYayin.yayin_id).single(),
+        adminSupabase.rpc("cogniti_token_yayin_gonderim_alicilari", { p_yayin_id: yeniYayin.yayin_id }),
+      ]);
+      if (aliciHatasi) throw new Error("Yayın gönderim alıcıları okunamadı.");
+      const hedefIdler = (alicilar ?? []).map((k: { kullanici_id: string }) => k.kullanici_id);
+      if (hedefIdler.length > 0) {
+        await cokluBildirimOlustur({
+          adminSupabase, alici_idler: hedefIdler, gonderen_id: user.id,
+          kayit_turu: "yayin", kayit_id: yeniYayin.yayin_id,
+          mesaj: `Yeni öğrenme içeriği yayında: ${yayinDetay?.urun_adi ?? "-"}`,
+        });
       }
     } catch (bildirimHatasi) {
       console.error("[UYARI] Yayın bildirimleri gönderilemedi:", bildirimHatasi);

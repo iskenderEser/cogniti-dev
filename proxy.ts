@@ -65,6 +65,22 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/davet-bekliyor", request.url));
   }
 
+  // Token nedeniyle pasif olan firmalarda açık oturumları da sonraki istekte durdur.
+  // Login ve parola işlemleri erişilebilir; admin, firma hesabını yönetmeye devam eder.
+  if (user && !["/login", "/sifre-olustur", "/sifre-olustur/api", "/sifre-yenile"].includes(pathname) && !pathname.startsWith("/admin")) {
+    const kontrolDb = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+    const { data: kimlik, error: kimlikHatasi } = await kontrolDb.from("kullanicilar").select("rol,firma_id").eq("kullanici_id",user.id).maybeSingle();
+    if (kimlikHatasi) return NextResponse.json({ error: "Firma durumu doğrulanamadı." }, { status: 503 });
+    if (kimlik?.firma_id && kimlik.rol !== "admin") {
+      const { data: firma, error: firmaHatasi } = await kontrolDb.from("firmalar").select("aktif").eq("firma_id",kimlik.firma_id).maybeSingle();
+      if (firmaHatasi || !firma) return NextResponse.json({ error: "Firma durumu doğrulanamadı." }, { status: 503 });
+      if (firma.aktif === false) {
+        if (pathname.startsWith("/api/") || pathname.includes("/api/") || pathname.endsWith("/api")) return NextResponse.json({ error: "Firmanızın sisteme erişimi kapalıdır. Lütfen Cogniti ile iletişime geçin." }, { status: 403 });
+        return NextResponse.redirect(new URL("/login", request.url));
+      }
+    }
+  }
+
   let eclubKisiErisimPromise: ReturnType<typeof eclubKisiErisimi> | null = null;
   const eclubKisiErisimOku = (istemci: SupabaseClient) => {
     if (!user) throw new Error("E-Club kişi erişimi için oturum gerekir.");

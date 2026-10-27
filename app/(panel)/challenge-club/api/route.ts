@@ -13,7 +13,7 @@
 // POST → Challenge gönder. Body: { yayin_id, alan_id }
 //
 // Lib katmanı maksimum kullanılır: uygunAliciListesi, kotaKontrol (3 fonksiyon),
-// tekrarIzlemeKontrol, kayit.challengeOlustur.
+// tekrarIzlemeKontrol, topluGonderim.challengeTopluOlustur.
 // Bu route ince orchestration — iş mantığı lib/cc/* içinde.
 
 import { NextRequest, NextResponse } from "next/server";
@@ -22,7 +22,7 @@ import { hataYaniti, yetkiHatasi, rolHatasi, validasyonHatasi, isKuraluHatasi, s
 import { uygunAliciListesi } from "@/lib/cclub/uygunAliciListesi";
 import { aylikKotaKontrol, aliciAylikKontrol } from "@/lib/cclub/kotaKontrol";
 import { tekrarIzlemeKontrol } from "@/lib/cclub/tekrarIzlemeKontrol";
-import { challengeOlustur } from "@/lib/cclub/kayit";
+import { challengeTopluOlustur } from "@/lib/cclub/topluGonderim";
 import { AYLIK_MAX_GONDERIM } from "@/lib/cclub/sabitler";
 import { ayBaslangici } from "@/lib/zaman/kontrol";
 import { gecerliTur, gecerliTurBaslangiclari } from "@/lib/tclub/tur/kayit";
@@ -403,9 +403,8 @@ export async function POST(request: NextRequest) {
     const gonderenAdi = `${kullanici.ad} ${kullanici.soyad}`;
     const videoAdi = yayin.urun_adi ?? yayin.teknik_adi ?? "öğrenme aracı";
 
-    // Çok alıcı → atla-raporla. Kurallar alıcı başına uygulanır; aylık kota her
-    // turda yeniden okunur (başarılı gönderim kotayı tüketir).
-    const gonderilen: string[] = [];
+    // Ön kontroller alıcı bazındadır. Gerçek yazım tek RPC içinde yapılır.
+    const uygunAlicilar: string[] = [];
     const atlanan: { alan_id: string; sebep: string }[] = [];
 
     for (const alan_id of benzersizAlicilar) {
@@ -436,14 +435,20 @@ export async function POST(request: NextRequest) {
       if (!tekrar.izlenmemis) { atlanan.push({ alan_id, sebep: `${tekrar.izleyenAdi} bu yayını geçerli turda zaten tamamlamış.` }); continue; }
 
 
-      // Oluştur
-      const sonuc = await challengeOlustur(
-        adminSupabase,
-        { gonderen_id: kullanici.kullanici_id, alan_id, yayin_id },
-        { gonderenAdi, videoAdi }
-      );
-      if (!sonuc.ok) { atlanan.push({ alan_id, sebep: sonuc.error ?? "Challenge gönderilemedi." }); continue; }
-      gonderilen.push(alan_id);
+      uygunAlicilar.push(alan_id);
+    }
+
+    let gonderilen: string[] = [];
+    if (uygunAlicilar.length) {
+      const sonuc = await challengeTopluOlustur(adminSupabase,
+        { gonderen_id: kullanici.kullanici_id, yayin_id, alan_idler: uygunAlicilar },
+        { gonderenAdi, videoAdi });
+      if (!sonuc.ok) {
+        return sonuc.tokenHatasi ? isKuraluHatasi(sonuc.hata)
+          : hataYaniti(sonuc.hata, "C-Club toplu gönderim", null);
+      }
+      gonderilen = sonuc.gonderilen;
+      atlanan.push(...sonuc.atlanan);
     }
 
     return NextResponse.json({

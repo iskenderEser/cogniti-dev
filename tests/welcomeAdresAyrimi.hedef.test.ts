@@ -6,12 +6,12 @@ import ts from 'typescript';
 import * as roles from '@/lib/utils/roller';
 import * as baslangic from '@/lib/panel/baslangic';
 function load(path:string,modules:Record<string,unknown>){const exports:Record<string,any>={};const code=ts.transpileModule(readFileSync(path,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;vm.runInNewContext(code,{exports,URL,process:{env:{}},require:(n:string)=>{assert(n in modules,n);return modules[n];}});return exports;}
-function ortam(user:unknown=null,refreshCookie=false){let authReads=0,roleReads=0;const fresh={name:'sb-test-auth-token',value:'refreshed'};
+function ortam(user:unknown=null,refreshCookie=false,firmaAktif=true){let authReads=0,roleReads=0;const fresh={name:'sb-test-auth-token',value:'refreshed'};
  const response=(r:Response)=>Object.assign(r,{cookies:{values:[] as unknown[],getAll(){return this.values;},set(cookie:unknown,value?:unknown){this.values.push(typeof cookie==='string'?{name:cookie,value}:cookie);}}});
  const modules:Record<string,unknown>={
   '@/lib/panel/baslangic':baslangic,'@/lib/utils/roller':roles,
   '@supabase/ssr':{createServerClient:(_u:unknown,_k:unknown,opts:any)=>({auth:{getUser:async()=>{authReads++;if(refreshCookie)opts.cookies.setAll([fresh]);return{data:{user}};}}})},
-  '@supabase/supabase-js':{createClient:()=>{throw Error('Beklenmeyen veri isteği');}},
+  '@supabase/supabase-js':{createClient:()=>({from:(tablo:string)=>{const q={select:()=>q,eq:()=>q,maybeSingle:async()=>tablo==='kullanicilar'?{data:{rol:'utt',firma_id:'firma'},error:null}:tablo==='firmalar'?{data:{aktif:firmaAktif},error:null}:Promise.reject(Error('Beklenmeyen tablo'))};return q;}})},
   'next/server':{NextResponse:{next:()=>response(new Response(null)),redirect:(url:URL)=>response(new Response(null,{status:307,headers:{location:String(url)}})),json:Response.json,rewrite:()=>{throw Error('Welcome ve panel rewrite ile birleştirilemez');}}},
   '@/lib/utils/rolCozucu':{rolCozucu:async()=>{roleReads++;return 'utt';}},
   '@/lib/eclub/firmaGezinme':{eclubFirmaRotasiKapsami:()=>[]},'@/lib/eclub/kisiErisim':{eclubKisiErisimi:()=>{throw Error('Beklenmeyen kişi sorgusu');}},'@/lib/eczanem/erisim':{ECZANEM_KAPALI_MESAJI:'Kapalı',eczanemRolErisimi:()=>{throw Error('Beklenmeyen modül sorgusu');}},
@@ -31,3 +31,6 @@ test('oturumlu /ana-sayfa panel rotasında kalır; welcome veya rol dönüşü y
 test('kök adres yalnız /welcome yönlendirmesidir',()=>{
  const targets:string[]=[];const m=load('app/page.tsx',{'next/navigation':{redirect:(p:string)=>{targets.push(p);}}});m.default();assert.deepEqual(targets,['/welcome']);
 });
+
+test('pasif firmanın açık oturumu sayfadan girişe yönlenir',async()=>{const o=ortam({id:'utt',app_metadata:{}},false,false);const r=await o.request('/ana-sayfa');assert.equal(r.status,307);assert.equal(r.headers.get('location'),'http://localhost/login');});
+test('pasif firmanın açık oturumu API isteğinde reddedilir',async()=>{const o=ortam({id:'utt',app_metadata:{}},false,false);const r=await o.request('/token/api/rapor');assert.equal(r.status,403);});

@@ -25,6 +25,7 @@ import { BILDIRIM_ROZETLERI_DEGISTI, bildirimRozetleriniYenile } from "@/lib/bil
 import { ONERI_ZAMANI_DEGISTI } from "@/lib/tclub/oneri/gorunurluk";
 import YarimYuklemeBildirimi from "@/components/ogrenme-araci/YarimYuklemeBildirimi";
 import YayinSonucBildirimi from "@/components/panel/YayinSonucBildirimi";
+import TokenDevamOnayi from "@/components/panel/TokenDevamOnayi";
 import { STORE_ALABILEN_ROLLER, URETICI_ROLLER, TUM_ROLLER } from "@/lib/utils/roller";
 import { prefetchTalepMerkezi } from "@/app/(panel)/talepler/_hooks/talepOnbellek";
 import { prefetchYayinOzet } from "@/app/(panel)/yayin-yonetimi/_hooks/ozetOnbellek";
@@ -271,7 +272,7 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
       baglam={ctx}
       gruplar={gruplar}
       badge={badge}
-      bildirimler={<><YarimYuklemeBildirimi /><YayinSonucBildirimi /></>}
+      bildirimler={<><YarimYuklemeBildirimi /><YayinSonucBildirimi />{!isEclubKisi && rolKucu !== "admin" && <TokenDevamOnayi key={kullanici.id} kullaniciId={kullanici.id} pathname={pathname} />}</>}
     >
       {children}
     </PanelKabugu>

@@ -8,7 +8,7 @@ import { sunucuHatasi, yetkiHatasi, rolHatasi, validasyonHatasi, isKuraluHatasi 
 import { rolCozucu } from "@/lib/utils/rolCozucu";
 import { ECLUB_TUKETICI_ROLLERI } from "@/lib/utils/roller";
 import { eczaciAktifEczanesi } from "@/lib/eczanem/eczaci";
-import { eczaneGelenVideolar, eczaneAktifUyeler, eczaneUyeGonderimDurumlari, eczaneVideoGonderimOzetleri, musteriyeGonder } from "@/lib/eczanem/gonderim";
+import { eczaneGelenVideolar, eczaneAktifUyeler, eczaneUyeGonderimDurumlari, eczaneVideoGonderimOzetleri, musterilereTopluGonder } from "@/lib/eczanem/gonderim";
 
 const UUID_DESENI = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -98,24 +98,25 @@ export async function POST(request: NextRequest) {
     if (!eden.ok) return isKuraluHatasi(eden.hata ?? "Eczane bağı bulunamadı.");
 
     const body = await request.json();
-    const yayinId = body?.yayin_id;
+    const yayinIdler = body?.yayin_idler ?? (body?.yayin_id ? [body.yayin_id] : []);
     const musteriIdler = body?.musteri_idler;
-    if (typeof yayinId !== "string" || !UUID_DESENI.test(yayinId)) return validasyonHatasi("Geçerli bir yayin_id zorunludur.", ["yayin_id"]);
-    if (!Array.isArray(musteriIdler) || musteriIdler.length === 0) {
-      return validasyonHatasi("En az bir müşteri seçilmelidir.", ["musteri_idler"]);
+    if (!Array.isArray(yayinIdler) || !yayinIdler.length || yayinIdler.some((id: unknown) => typeof id !== "string" || !UUID_DESENI.test(id))) {
+      return validasyonHatasi("Geçerli yayınlar seçilmelidir.", ["yayin_idler"]);
     }
-    if (musteriIdler.length > 100 || musteriIdler.some((id) => typeof id !== "string" || !UUID_DESENI.test(id))) {
-      return validasyonHatasi("Tek işlemde en fazla 100 geçerli müşteri seçilebilir.", ["musteri_idler"]);
+    if (!Array.isArray(musteriIdler) || !musteriIdler.length || musteriIdler.some((id: unknown) => typeof id !== "string" || !UUID_DESENI.test(id))) {
+      return validasyonHatasi("Geçerli müşteriler seçilmelidir.", ["musteri_idler"]);
     }
-
-    const sonuc = await musteriyeGonder(adminSupabase, eden.eczaneId!, eden.kisiId!, yayinId, musteriIdler);
+    if (yayinIdler.length * musteriIdler.length > 10000) {
+      return validasyonHatasi("Tek istekte en fazla 10.000 yayın-müşteri gönderimi seçilebilir.");
+    }
+    const sonuc = await musterilereTopluGonder(adminSupabase, eden.eczaneId!, eden.kisiId!, yayinIdler, musteriIdler);
     if (!sonuc.ok) return isKuraluHatasi(sonuc.hata ?? "Gönderim başarısız.");
 
     const mesaj =
       sonuc.atlanan > 0
         ? `${sonuc.gonderilen} müşteriye gönderildi, ${sonuc.atlanan} atlandı (zaten gönderilmiş/üye değil).`
         : `${sonuc.gonderilen} müşteriye gönderildi.`;
-    return NextResponse.json({ ok: true, mesaj, gonderilen: sonuc.gonderilen, atlanan: sonuc.atlanan }, { status: 201 });
+    return NextResponse.json({ ok: true, mesaj, gonderilen: sonuc.gonderilen, atlanan: sonuc.atlanan, gonderilen_yayin: sonuc.gonderilenYayin ?? 0 }, { status: 201 });
   } catch (err) {
     return sunucuHatasi(err, "POST /eczanem/eczane/api/gonderim");
   }

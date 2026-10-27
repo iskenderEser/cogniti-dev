@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { hataYaniti, veriKontrol, sunucuHatasi, yetkiHatasi, rolHatasi, validasyonHatasi, isKuraluHatasi } from "@/lib/utils/hataIsle";
+import { yayinTokenHatasi } from "@/lib/token/yayinHatasi";
 import { URETICI_ROLLER } from "@/lib/utils/roller";
 import { rolCozucu } from "@/lib/utils/rolCozucu";
 
@@ -47,7 +48,11 @@ export async function PUT(
       if (islem === "hemen_yayinla") {
         const { data: aktiveSayisi, error: rpcError } = await adminSupabase
           .rpc("yayin_planlananlari_aktive", { p_yayin_id: yayin_id });
-        if (rpcError) return hataYaniti("Yayın aktive edilemedi.", "yayin_planlananlari_aktive RPC", rpcError);
+        if (rpcError) {
+          const tokenHatasi = yayinTokenHatasi(rpcError);
+          if (tokenHatasi) return isKuraluHatasi(tokenHatasi);
+          return hataYaniti("Yayın aktive edilemedi.", "yayin_planlananlari_aktive RPC", rpcError);
+        }
         if (!aktiveSayisi) return isKuraluHatasi("Aktivasyon gerçekleşmedi — yayın planlandı durumunda olmayabilir.");
         return NextResponse.json({ mesaj: "Yayın hemen yayına alındı." }, { status: 200 });
       }

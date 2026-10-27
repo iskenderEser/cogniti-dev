@@ -72,7 +72,10 @@ function apiHazirla(rows: Satir[], opts: { aylik?: number; aliciyaGonderildi?: b
     "@/lib/cclub/uygunAliciListesi": {},
     "@/lib/cclub/kotaKontrol": { aylikKotaKontrol, aliciAylikKontrol },
     "@/lib/cclub/tekrarIzlemeKontrol": { tekrarIzlemeKontrol },
-    "@/lib/cclub/kayit": { challengeOlustur: async () => { gonderim++; return { ok: true }; } },
+    "@/lib/cclub/topluGonderim": { challengeTopluOlustur: async (_db: unknown, girdi: { alan_idler: string[] }) => {
+      gonderim += girdi.alan_idler.length;
+      return { ok: true, gonderilen: girdi.alan_idler, atlanan: [] };
+    } },
     "@/lib/cclub/sabitler": { AYLIK_MAX_GONDERIM: 3 },
     "@/lib/zaman/kontrol": {},
     "@/lib/tclub/tur/kayit": {

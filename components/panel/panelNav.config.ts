@@ -193,6 +193,7 @@ export const PANEL_NAV: NavGrup[] = [
       { etiket: "Mutabakat Takip", path: "/eczanem/tm/mutabakat-takip", tamEslesme: true, gate: (c) => c.eclubAcik && c.eczanemAcik && c.rolKucu === "tm" },
     ],
   },
+  { baslik: "Hesap", oglar: [{ etiket: "Token Kullanımı", path: "/token", gate: (c) => c.kimlikTuru !== "eclub_kisi" && c.rolKucu !== "admin" }] },
 ];
 
 const MOBIL_KISISEL_HBSTORE_YOLLARI = new Set([
