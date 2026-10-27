@@ -164,3 +164,14 @@ Mevcut E-Club Adım 11 test sonuçları (`docs/ECLUB_GONDERIM_ADIM11_TEST_SONUCL
   }
 }
 ```
+
+## Cogniti token sistemi — bekleyen teknik borç (27 Ekim 2026)
+
+Token sisteminin temel uygulaması ve SQL kurulumları yapılmıştır; aşağıdaki işler beklemektedir. Ayrıntılar `docs/COGNITI_TOKEN_PLANI.md` ve `docs/BLUEBOOK.MD` içindedir. Kullanıcı SQL dosyalarını kendisi çalıştırır; veritabanında SQL çalıştırma.
+
+- Planlı yayının gerçek açılışında token tüketimini doğrula; plan kaydında tüketim olmadığını kullanıcı doğruladı.
+- 100 token uyarısını, yetkili onayıyla 1.500 token yüklenmesini, sıfır bakiye sonrası pasife almayı ve adminin token yükleyip yeniden açmasını gerçek ekranlarda doğrula.
+- Token ekranının firma rollerindeki görünümünü ve yetkilerini gerçek kullanıcılarla kontrol et; kullanıcıyla görsel düzenlemeleri ele al. Eczacılar ve eczane çalışanları token bilgisi görmez.
+- Eczanem tüketiminde gönderim anındaki bağlayan UTT, bölge ve takım bilgisini koruyacak tarihsel kapsamı ele al. Şu anda mevcut bağ ve organizasyon kullanıldığından geçmiş görünüm değişebilir.
+- Eş zamanlı işlem testi kullanıcı kararıyla geçildi; doğrulanmış kabul etme ve yeni bir yöntem için kullanıcı talimatını bekle.
+- Token çalışması ve ilgili dosyalar henüz commit ve push edilmedi; bu işlemler kullanıcı talimatıyla yapılır.
