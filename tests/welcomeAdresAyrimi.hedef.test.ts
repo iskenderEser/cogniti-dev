@@ -19,7 +19,7 @@ function ortam(user:unknown=null,refreshCookie=false){let authReads=0,roleReads=
  const proxy=load('proxy.ts',modules).proxy;
  return{get authReads(){return authReads;},get roleReads(){return roleReads;},request:(path:string)=>proxy({url:'http://localhost'+path,nextUrl:new URL('http://localhost'+path),cookies:{getAll:()=>[],set:()=>{}}})};
 }
-for(const path of ['/','/welcome'])test(`${path} oturumdan bağımsız herkese açıktır; auth veya rol sorgusu yapılmaz`,async()=>{
+for(const path of ['/','/welcome','/welcome/fiyatlar'])test(`${path} oturumdan bağımsız herkese açıktır; auth veya rol sorgusu yapılmaz`,async()=>{
  for(const user of [null,{id:'utt',app_metadata:{}},{id:'davet',app_metadata:{eclub_davet_bekliyor:true}}]){const o=ortam(user);const r=await o.request(path);assert.equal(r.status,200);assert.equal(o.authReads,0);assert.equal(o.roleReads,0);}
 });
 test('oturumsuz /ana-sayfa welcome içeriği sunmaz; /login adresine yönlenir',async()=>{

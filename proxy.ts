@@ -12,7 +12,7 @@ export async function proxy(request: NextRequest) {
   // Daily başlangıç testi dahil HMAC kontrolü route içinde; oturum/DB çağrısı gerekmez.
   if (request.nextUrl.pathname === "/api/viva/daily-webhook") return NextResponse.next({ request });
   // Karşılama adresleri herkese açıktır; oturuma göre panel içeriğine dönüşmez.
-  if (["/", "/welcome"].includes(request.nextUrl.pathname)) return NextResponse.next({ request });
+  if (["/", "/welcome", "/welcome/fiyatlar", "/api/musteri-talebi"].includes(request.nextUrl.pathname)) return NextResponse.next({ request });
   let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(

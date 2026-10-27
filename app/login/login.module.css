@@ -91,3 +91,9 @@
   .welcomePage .contactLinks { gap: 4px 16px; }
   .welcomePage .footerBottom { align-items: flex-start; flex-direction: column; gap: 8px; margin-top: 16px; }
 }
+
+.welcomeActions { display: flex; align-items: center; gap: 28px; flex-shrink: 0; }
+.pricingNav { color: var(--tema-baslik); font-size: 13px; font-weight: 800; text-decoration: none; }
+.pricingNav:hover, .pricingNav[aria-current="page"] { color: var(--tema-kontrol-eylem); }
+@media (max-width: 560px) { .welcomeActions { gap: 12px; } .pricingNav { font-size: 12px; } }
+@media (max-width: 350px) { .welcomePage .header { padding-inline: 12px; gap: 6px; } .welcomePage .brand img { width: 125px; } .welcomeActions { gap: 8px; } .welcomePage .action { padding-inline: 10px; } }

@@ -58,6 +58,7 @@ async function ortam(kullanici: Kimlik | null = null, aktif = true, sayfa: "logi
     });
     assert.ok(exports.default); return exports.default;
   }
+  modules["./FiyatlarIcerigi"] = { default: () => React.createElement("div", null, "Fiyatlar") };
   modules["@/components/panel/bilgi/CognitiHakkinda"] = { default: yukle("components/panel/bilgi/CognitiHakkinda.tsx") };
   modules["@/app/login/login.module.css"] = css;
   modules["@/app/login/_components/GirisAltBilgileri"] = modules["./_components/GirisAltBilgileri"];
@@ -116,6 +117,7 @@ test("karşılama ayrı sayfada açıklamaları gösterir; Giriş Yap /login ba�
     assert.equal(o.container.querySelector("form"), null);
     const link = [...o.container.querySelectorAll("a")].find((a) => a.textContent === "Giriş Yap")!;
     assert.equal(link.getAttribute("href"), "/login");
+    assert.equal([...o.container.querySelectorAll("a")].find(a => a.textContent === "Fiyatlar")?.getAttribute("href"), "/welcome/fiyatlar");
     assert.equal(o.container.querySelector('a[aria-label="Cogniti"]')!.getAttribute('href'), '/welcome');
     assert.deepEqual(o.yollar, []);
     assert.equal(o.girisler.length, 0);
