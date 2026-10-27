@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, type ReactNode } from "react";
+import { usePathname } from "next/navigation";
 import EczaneKullanimKilavuzu from "@/components/rehber/EczaneKullanimKilavuzu";
 import UreticiKullanimKilavuzu from "@/components/rehber/UreticiKullanimKilavuzu";
 import { yoneticiKilavuzunuSec } from "@/lib/rehber/yoneticiKilavuzu";
@@ -26,6 +27,8 @@ interface Props {
 
 /** PanelLayout'tan taşınan ortak yerleşim; kimlik veya uzak veri işlemi yapmaz. */
 export default function PanelKabugu({ children, navbar, baglam, gruplar, badge, bildirimler }: Props) {
+  const pathname = usePathname();
+  const vivaYolu = pathname === "/viva" || pathname.startsWith("/viva/");
   const [drawerAcik, setDrawerAcik] = useState(false);
   const { tema, temaDegistir } = useTema();
   const renkAnahtari = navbar.temaSeciciGoster !== false ? <TemaSecici tema={tema} onTemaDegistir={temaDegistir} yerlesim="satir" /> : undefined;
@@ -38,7 +41,7 @@ export default function PanelKabugu({ children, navbar, baglam, gruplar, badge, 
   const yoneticiKilavuzu = useMemo(() => yoneticiKilavuzunuSec(baglam.ccAcik, baglam.eclubAcik), [baglam.ccAcik, baglam.eclubAcik]);
 
   return (
-    <div style={{ height: "100vh", background: "var(--tema-zemin)", fontFamily: "'Nunito', sans-serif", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+    <div data-viva-panel={vivaYolu || undefined} style={{ height: vivaYolu ? "100dvh" : "100vh", background: "var(--tema-zemin)", fontFamily: "'Nunito', sans-serif", display: "flex", flexDirection: "column", overflow: "hidden" }}>
       <PanelNavbar {...navbar} onHamburger={() => setDrawerAcik(true)} />
       <MobilDrawer
         {...baglam}

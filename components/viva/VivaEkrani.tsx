@@ -10,6 +10,7 @@ import { vivaDetayBolumu, vivaDetayYolu, vivaEtkinlikKaynagi, vivaListeKaynakEti
 import { YenileButonu } from "@/components/ui/yenile-butonu";
 import VivaOdaAlani from "./VivaOdaAlani";
 import VivaEpostaAlani from "./VivaEpostaAlani";
+import VivaSaatSecimi from "./VivaSaatSecimi";
 import VivaKaydirilabilirTablo from "./VivaKaydirilabilirTablo";
 import { vivaEpostalariAyir } from "@/lib/viva/eposta";
 import { vivaFirmaBolgeGruplari, vivaKisiSecimEtiketi } from "@/lib/viva/davetSecimi";
@@ -131,7 +132,7 @@ function EtkinlikFormu({ baglam, detay, onKaydet, ilkTur }: { ilkTur?: "anlik" |
             <div className={formStyles.timeGrid}>
               {tur === "planli" && <>
                 <div className={`${formStyles.field} ${formStyles.dateField}`}><Label htmlFor="viva-tarih">Başlangıç tarihi *</Label><SadeTarihAlani id="viva-tarih" required value={tarih} onChange={x => setTarih(x.target.value)} /></div>
-                <div className={formStyles.field}><Label htmlFor="viva-saat">Başlangıç saati *</Label><Input id="viva-saat" type="time" required step={60} value={saat} onChange={x => setSaat(x.target.value)} /></div>
+                <div className={formStyles.field}><Label htmlFor="viva-saat">Başlangıç saati *</Label><VivaSaatSecimi id="viva-saat" value={saat} onChange={setSaat} disabled={busy} /></div>
               </>}
               <div className={formStyles.field}><Label htmlFor="viva-sure">Süre (dakika) *</Label><Input id="viva-sure" type="number" required min={1} max={1440} step={1} value={sure} onChange={x => setSure(x.target.value)} /></div>
             </div>
@@ -302,7 +303,7 @@ export default function VivaEkrani({ gorunum, etkinlikId, onizleme = false, anli
     return <main className={formStyles.screen}>
       {duzenle ? <SayfaYenileBasligi ustBilgi={konum}
         baslik={<h1 className={formStyles.pageTitle}>{baslik}</h1>}
-        aciklama={<p className={formStyles.description}>Buluşmanızın bilgilerini ve katılımcılarını güncelleyin.</p>} /> : <header className={formStyles.formHeader}>{konum}<Link href="/viva/yayinlar" className={formStyles.browseLink}>Viva Yayınlar<ChevronRight aria-hidden="true" /></Link></header>}
+        aciklama={<p className={formStyles.description}>Buluşmanızın bilgilerini ve katılımcılarını güncelleyin.</p>} /> : <><header className={formStyles.formHeader}>{konum}<Link href="/viva/yayinlar" className={formStyles.browseLink}>Viva Yayınlar<ChevronRight aria-hidden="true" /></Link></header><div className="mt-4"><h1 className={formStyles.pageTitle}>Etkinlik düzenleyin</h1></div></>}
       {hata && <div className={formStyles.loadError} role="alert"><p>{hata}</p><Button variant="outline" onClick={() => setYenileme(n => n + 1)}>Yeniden dene</Button></div>}
       {!data && !hata && <div role="status" className={formStyles.loading}>Etkinlik formu yükleniyor…</div>}
       {data && (yetkili

@@ -98,3 +98,34 @@
 .inviteDialogDescription { font-size: 13px; color: var(--tema-ikincil-metin); }
 .inviteDialogClose { position: absolute; right: 12px; top: 12px; }
 .inviteDialog :is(button, input):focus-visible { outline: 2px solid var(--tema-kontrol-odak); outline-offset: 3px; }
+
+.screen, .screen *, .inviteDialog, .inviteDialog * { box-sizing: border-box; }
+.screen { overflow-wrap: anywhere; }
+.detailMeta > span { min-width: 0; max-width: 100%; }
+.inviteForm { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.inviteForm > *, .recordActions > *, .paneHead > * { min-width: 0; max-width: 100%; }
+.screen [data-slot=button], .inviteDialog [data-slot=button] { max-width: 100%; height: auto; min-height: 36px; white-space: normal; overflow-wrap: anywhere; }
+@media (max-width: 760px) {
+  .tabs { display: flex; flex-wrap: nowrap; max-width: 100%; overflow-x: auto; gap: 18px; }
+  .tabs button { flex-shrink: 0; white-space: nowrap; min-height: 44px; }
+  .detailActions { flex-shrink: 1; }
+}
+@media (max-width: 520px) {
+  .summaryCard, .pane { padding: 16px; }
+  .participantHead { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .participantHead .search { height: 44px; }
+  .participantHeading h2 { white-space: normal; }
+  .detailActions [data-slot=button] { flex: 1 1 120px; }
+  .detailMeta { font-size: 12px; }
+  .participantTable { font-size: 13px; }
+  .inviteForm { grid-template-columns: minmax(0, 1fr); }
+  .inviteForm input, .linkBox input { min-height: 44px; font-size: 16px; }
+  .screen [data-slot=button], .inviteDialog [data-slot=button] { min-height: 44px; }
+  .rowActions [data-slot=button] { width: 44px; }
+  .inviteDialog { padding: 20px 16px; max-height: calc(100dvh - 24px); }
+  .recordActions [data-slot=button] { flex: 1 1 140px; }
+  .recordContent p, .expiry { font-size: 12px; }
+  .recordCard { padding: 16px; gap: 12px; }
+  .recordCard .recordThumb { width: 56px; height: 48px; }
+  .recordCard .recordContent { flex-basis: calc(100% - 68px); }
+}

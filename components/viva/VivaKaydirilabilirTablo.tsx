@@ -37,5 +37,5 @@ export default function VivaKaydirilabilirTablo({ children, satirSayisi, etiket,
   }, [satirSayisi, arama]);
 
   return <div ref={alan} className={styles.participantTableWrap} data-scrollable={kaydirilabilir || undefined}
-    role="region" aria-label={`${etiket} listesi`} tabIndex={kaydirilabilir ? 0 : undefined}>{children}</div>;
+    role="region" aria-label={`${etiket} listesi`} tabIndex={0}>{children}</div>;
 }

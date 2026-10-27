@@ -51,6 +51,8 @@ async function ortam(handler:(url:string,init?:RequestInit)=>{status?:number;dat
  modules['@/lib/viva/eposta']=eposta;modules['@/lib/viva/davetSecimi']=davetSecimi;
  modules['./viva-eposta.module.css']={default:new Proxy({},{get:(_,k)=>String(k)})};
  modules['./VivaEpostaAlani']=yukle('components/viva/VivaEpostaAlani.tsx');
+ modules['./viva-saat.module.css']={default:new Proxy({},{get:(_,k)=>String(k)})};
+ modules['./VivaSaatSecimi']=yukle('components/viva/VivaSaatSecimi.tsx');
  const viva=yukle('components/viva/VivaEkrani.tsx');modules['./VivaEkrani']=viva;
  return{c,doc:dom.document,paths,acilan,indirilen,dosyalar,render:async(props:Record<string,unknown>,guest=false)=>{const comp=guest?yukle('components/viva/VivaMisafir.tsx').default:viva.default;await act(async()=>{root.render(React.createElement(comp,props));});},
  confirm:async(text:string)=>{const b=[...dom.document.querySelectorAll('[role=alertdialog] button')].find(x=>x.textContent===text);assert.ok(b,text);await act(async()=>(b as HTMLElement).click());},
@@ -446,4 +448,33 @@ test('Davetliler: bölge araması bölgenin UTTlerini gösterir; bölgesiz firma
   await act(async()=>{const win=search.ownerDocument.defaultView!;const setter=Object.getOwnPropertyDescriptor(win.HTMLInputElement.prototype,'value')!.set!;setter.call(search,'ankara');search.dispatchEvent(new win.Event('input',{bubbles:true}));});
   assert(menu.textContent!.includes('UTT · Ali Örnek'));assert(!menu.textContent!.includes('Deniz Örnek'));
  }finally{await o.close();}
+});
+
+
+test('başlangıç saati aranabilir; özel dakika ve klavye seçimi korunur',async()=>{
+ const o=await ortam(()=>({data:{olusturabilir:true,kisiler:[]}}));
+ try {
+  await o.render({gorunum:'yeni',ilkTur:'planli'});
+  const saat=o.c.querySelector<HTMLInputElement>('#viva-saat')!;
+  assert.ok(saat);
+  await act(async()=>saat.click());
+  assert.equal(saat.getAttribute('aria-expanded'),'true');
+  assert.equal(o.doc.querySelectorAll('[role=option]').length,96);
+  await o.input('#viva-saat','09:');
+  assert.equal(o.doc.querySelectorAll('[role=option]').length,4);
+  await act(async()=>saat.dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowDown',bubbles:true})));
+  await act(async()=>saat.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true})));
+  assert.equal(saat.value,'09:15');
+  assert.equal(saat.getAttribute('aria-expanded'),'false');
+  await o.input('#viva-saat','09:07');
+  assert.equal(o.doc.querySelector('[role=option]')?.textContent,'09:07');
+  await act(async()=>(o.doc.querySelector('[role=option]') as HTMLElement).click());
+  assert.equal(saat.value,'09:07');
+  assert.equal(saat.validity.valid,true);
+  await o.input('#viva-saat','25:00');
+  assert.equal(o.doc.querySelectorAll('[role=option]').length,0);
+  assert.equal(saat.validity.patternMismatch,true);
+  await o.input('#viva-saat','');
+  assert.equal(saat.validity.valueMissing,true);
+ } finally {await o.close();}
 });

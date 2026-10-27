@@ -24,3 +24,19 @@
 @media (max-width: 1250px) { .screen { padding: 24px; } }
 @media (max-width: 760px) { .screen { padding: 22px 20px; } }
 @media (max-width: 520px) { .screen { padding: 20px 16px; }.prejoin { padding: 18px; }.mediaOff { font-size: 9px; }.callFrame { height: max(480px, 76svh); }.roomState { padding: 28px 18px; }.roomState h2 { font-size: 21px; }.stateActions [data-slot=button] { min-height: 44px; } }
+
+.room, .room * { box-sizing: border-box; }
+.room { overflow-wrap: anywhere; }
+.room [data-slot=button] { max-width: 100%; height: auto; white-space: normal; }
+.prejoinCopy, .stateActions { min-width: 0; }
+@media (max-width: 520px) {
+  .screen { padding: 18px 8px max(8px, env(safe-area-inset-bottom)); }
+  .screen .stage { overscroll-behavior: contain; }
+  .prejoin { gap: 16px; min-height: 0; }
+  .previewPlaceholder { min-height: 160px; padding: 18px; }
+  .roomState, .closedRoom { min-height: 0; padding: 24px 16px; }
+  .roomState > p, .closedRoom > p { font-size: 14px; }
+  .stateActions { width: 100%; }
+  .stateActions [data-slot=button] { flex: 1 1 180px; }
+  .reconnect { padding: 12px; }
+}

@@ -7,6 +7,8 @@
   color: var(--tema-metin); font-family: var(--font-nunito), Nunito, sans-serif; font-size: 14px; line-height: 1.5;
   container-type: inline-size;
 }
+.screen *, .screen *::before, .screen *::after { box-sizing: border-box; }
+.screen { overflow-wrap: anywhere; }
 .screen h1, .screen h2, .screen h3, .screen p { margin: 0; }
 .screen h1, .screen h2, .screen h3 { color: var(--tema-baslik); }
 .screen :is(a, button, input, textarea):focus-visible { outline: 2px solid var(--tema-kontrol-odak); outline-offset: 3px; }
@@ -24,7 +26,7 @@
 .section h2 > span { font-size: 10px; font-weight: 800; color: var(--control); }
 .field { min-width: 0; margin-top: 12px; }
 .field > label, .screen .legend { display: block; font-size: 12px; font-weight: 700; margin-bottom: 7px; }
-.field [data-slot=input], .field textarea { width: 100%; border: 1px solid var(--line); border-radius: 12px; background: var(--tema-yuzey); color: var(--tema-kontrol-metin); height: 40px; padding: 0 10px; font-family: inherit; font-size: 14px; box-shadow: none; }
+.field [data-slot=input], .field textarea { display: block; width: 100%; min-width: 0; max-width: 100%; border: 1px solid var(--line); border-radius: 12px; background: var(--tema-yuzey); color: var(--tema-kontrol-metin); height: 40px; padding: 0 10px; font-family: inherit; font-size: 14px; box-shadow: none; }
 .field textarea { display: block; min-height: 88px; height: auto; padding: 10px; line-height: 1.6; resize: vertical; overflow-y: hidden; }
 .field input:is([type=time], [type=number]) { font-size: 12px; font-weight: 800; }
 .field textarea:disabled { opacity: .5; }
@@ -105,3 +107,19 @@
 .browseLink { display: inline-flex; align-items: center; gap: 4px; color: #237AC8; font-size: 12px; font-weight: 700; text-decoration: none; }
 .browseLink svg { width: 14px; height: 14px; }
 .browseLink:hover { text-decoration: underline; }
+
+/* Telefonlarda yerel tarih/saat kontrollerinin iç genişliği sütunları itemez. */
+.timeGrid > *, .field > * { min-width: 0; max-width: 100%; }
+.field input[type=date] { width: 100%; min-width: 0; max-width: 100%; -webkit-appearance: none; appearance: none; }
+.field input::-webkit-date-and-time-value { min-width: 0; text-align: left; }
+@media (max-width: 520px) {
+  .timeGrid { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .timeGrid .dateField { grid-column: auto; }
+  .field > label, .screen .legend { font-size: 13px; }
+  .field input[type=date] { height: 44px; font-size: 16px; }
+  .inviteSelectors > button { min-height: 44px; font-size: 13px; }
+  .formActions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); padding-bottom: env(safe-area-inset-bottom); }
+  .formActions [data-slot=button] { width: 100%; min-width: 0; }
+  .formActions [data-slot=button]:last-child { grid-column: 1 / -1; }
+  .selectedChips li { font-size: 13px; }
+}

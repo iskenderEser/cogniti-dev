@@ -137,3 +137,38 @@
   .sectionTitle > span { font-size: 10px; }.sectionTitle h2 { font-size: 14px; }
 }
 @media (pointer: coarse) { .calendarHeading [data-slot=button] { width: 36px; height: 36px; }.days button { min-height: 36px; } }
+
+.screen, .screen * { box-sizing: border-box; }
+.screen { overflow-wrap: anywhere; container-type: inline-size; }
+.meta, .people, .eventMeta > span { min-width: 0; }
+.calendar, .agenda, .eventCard, .liveCard, .pageHeader > * { min-width: 0; max-width: 100%; }
+.screen [data-slot=button] { max-width: 100%; }
+@media (max-width: 760px) {
+  .tabs { display: flex; flex-wrap: nowrap; max-width: 100%; overflow-x: auto; gap: 20px; }
+  .tabs button { flex-shrink: 0; white-space: nowrap; min-height: 44px; }
+}
+@media (max-width: 520px) {
+  .tabs button { font-size: 13px; }
+  .sectionTitle > span { flex-shrink: 0; font-size: 12px; }
+  .sectionTitle h2 { font-size: 15px; }
+  .filterRow > div button { min-height: 36px; font-size: 12px; }
+  .search { height: 44px; }
+  .eventMeta, .people, .meta { font-size: 12px; }
+  .eventMeta > span { max-width: 100%; }
+  .eventBody h3 { font-size: 16px; }
+  .eventOpen { min-height: 44px; max-width: calc(100% - 66px); white-space: normal; }
+  .footerActions { flex-wrap: wrap; }
+  .footerActions [data-slot=button] { flex: 1 1 120px; height: auto; min-height: 44px; white-space: normal; }
+  .calendar { padding: 16px; }
+  .calendarHeading [data-slot=button] { width: 44px; height: 44px; }
+  .days button { height: 40px; }
+  .calendarLegend { font-size: 12px; flex-wrap: wrap; }
+  .calendarLegend [data-slot=button] { min-height: 44px; font-size: 12px; }
+  .dateFilter { flex-wrap: wrap; }
+  .pageFooter { font-size: 11px; padding-bottom: env(safe-area-inset-bottom); }
+}
+
+/* Yan menü açıkken tabletin kullanılabilir alanına göre de tek sütuna geçer. */
+@container (max-width: 900px) {
+  .contentGrid { grid-template-columns: minmax(0, 1fr); }
+}

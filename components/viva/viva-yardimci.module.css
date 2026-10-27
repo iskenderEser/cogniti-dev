@@ -45,3 +45,16 @@
 @media (max-width: 760px) { .guestPage { padding: 28px 20px; }.guestLayout { grid-template-columns: minmax(0,1fr); gap: 24px; margin-top: 24px; }.welcome h1 { font-size: 28px; }.welcome .summary { margin-bottom: 18px; }.facts { padding: 18px; }.verifyCard { padding: 24px; }.roomPage { padding-top: 24px; }.roomHeader { align-items: flex-start; flex-wrap: wrap; }.roomHeader h1 { font-size: 22px; } }
 @media (max-width: 520px) { .guestPage { padding: 24px 16px; }.guestTop img { width: 130px; }.brandCaption { font-size: 10px; }.welcome h1 { font-size: 27px; }.verifyCard { padding: 22px; }.verifyCard h2 { font-size: 21px; }.surface [data-slot=button] { min-height: 44px; }.statusPanel { padding: 36px 8px; }.statusPanel :is(h1,h2) { font-size: 24px; }.integrationPage { padding: 24px 16px; }.integrationContent { padding: 22px; }.integrationTitle { font-size: 24px; }.integrationContent h2 { font-size: 21px; }.documentPreview { padding: 22px; }.documentPreview h3 { font-size: 23px; }.verifyCard .otp { letter-spacing: 6px; } }
 @media (prefers-reduced-motion: reduce) { .spin { animation: none; } }
+
+.surface img, .surface svg { max-width: 100%; }
+.guestTop > *, .guestRoom, .verifyCard form { min-width: 0; }
+.surface input { min-width: 0; max-width: 100%; }
+@media (max-width: 520px) {
+  .guestTop { flex-wrap: wrap; gap: 10px; }
+  .verifyCard { padding: 20px 16px; }
+  .surface input { min-height: 44px; font-size: 16px; }
+  .surface .help, .brandCaption { font-size: 12px; }
+  .actions { width: 100%; }
+  .actions [data-slot=button] { flex: 1 1 160px; }
+  .guestPage { padding-bottom: max(24px, env(safe-area-inset-bottom)); }
+}

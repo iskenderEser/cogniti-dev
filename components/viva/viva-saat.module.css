@@ -1,0 +1,13 @@
+.field { position: relative; width: 100%; min-width: 0; max-width: 100%; }
+.field [data-slot=input] { box-sizing: border-box; display: block; width: 100%; min-width: 0; max-width: 100%; padding-right: 42px; }
+.field > button { position: absolute; top: 0; right: 0; display: grid; place-items: center; width: 40px; height: 100%; border: 0; border-radius: 0 12px 12px 0; background: transparent; color: #237AC8; cursor: pointer; }
+.field > button svg { width: 16px; height: 16px; }
+.field > button:disabled { cursor: default; opacity: .5; }
+.menu { width: var(--radix-popover-trigger-width, 240px); min-width: min(200px, calc(100vw - 24px)); padding: 6px; }
+.options { max-height: min(304px, calc(var(--radix-popover-content-available-height, 80vh) - 16px)); overflow-y: auto; overscroll-behavior: contain; }
+.option { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 40px; padding: 9px 12px; border: 0; border-radius: 8px; background: transparent; color: var(--tema-kontrol-metin); text-align: left; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
+.option:hover, .option[aria-selected=true], .option[data-aktif=true] { color: #237AC8; background: var(--tema-kontrol-hover); }
+.empty { padding: 12px; color: var(--tema-kontrol-ikincil-metin); font-size: 12px; }
+@media (pointer: coarse) { .option { min-height: 44px; } .field > button { width: 44px; } .field [data-slot=input] { padding-right: 46px; } }
+
+@media (max-width: 520px) { .field [data-slot=input] { height: 44px; font-size: 16px; } .option { min-height: 44px; font-size: 14px; } }

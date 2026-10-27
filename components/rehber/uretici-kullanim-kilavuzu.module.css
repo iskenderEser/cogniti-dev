@@ -73,3 +73,14 @@
 .yazi ol { list-style: decimal; }
 .yazi li { margin-bottom: 10px; padding-left: 3px; }
 .yazi strong { font-weight: 700; color: var(--tema-baslik); }
+
+/* Viva telefon ekranında kapalı kılavuz, içerik boyunca uzanan bir kulakçık kaplamaz. */
+@media (max-width: 639px) {
+  :global(body:has([data-viva-panel])) .panel:not(.acik) { top: auto; bottom: max(16px, env(safe-area-inset-bottom)); right: 8px; width: 44px; height: 44px; transform: none; border: 0; border-radius: 12px; background: transparent; box-shadow: none; }
+  :global(body:has([data-viva-panel])) .panel:not(.acik) .kulakcik { position: static; width: 44px; height: 44px; min-height: 44px; padding: 10px; border: 1px solid var(--tema-cizgi); border-radius: 12px; }
+  :global(body:has([data-viva-panel])) .panel:not(.acik) .kulakcik :is(span, svg:last-child),
+  :global(body:has([data-viva-panel])) .panel:not(.acik) .icerik { display: none; }
+  :global(body:has([data-viva-panel])) .panel.acik { top: 84px; bottom: max(12px, env(safe-area-inset-bottom)); width: calc(100vw - 20px); }
+  :global(body:has([data-viva-panel])) .panel.acik .kulakcik { display: none; }
+  :global(body:has([data-viva-panel])) .kapat { width: 44px; height: 44px; }
+}
