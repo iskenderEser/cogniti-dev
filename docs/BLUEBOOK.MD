@@ -5021,3 +5021,184 @@ Davetliler alanındaki iki aramalı çoklu seçim listesi **Firmanız** ve **E-C
 
 
 **27 Ekim 2026 — Ortak Viva etkinlik detayı:** İleri Tarihli Yayınlar, Başlayan Yayınlar, Geçmiş ve Taslaklar aynı etkinlik detayına açılır. Taslak kartı doğrudan düzenleme formuna atlamaz; düzenleme ortak detayın içinden açılır. Özet, bölüm sekmeleri, katılımcılar ve özel davetlilerin dört sütunlu tabloları bütün durumlarda aynı yerleşimdedir; boş tabloların sütun başlıkları da korunur. Yetkiye bağlı satır işlemleri kişi adının yanında kompakt ikonlarla, özel davet bağlantısı oluşturma formu “Özel davetli ekle” penceresinde sunulur. Mevcut yetki ve durum koşulları korunur.
+
+### 27 Ekim 2026 — Viva: güncel uygulama ve dosya envanteri
+
+Bu kayıt, `23ba51ff`, `1b5b94d8`, `e5ec344a`, `f6e3d22b` ve `d9c68ea4` commitleriyle oluşan kaynak yapısını ve kullanıcı kararlarını açıklar. Aşağıdaki dosya listesi Git tarafından izlenen yolların bu tarihteki görüntüsüdür; tek başına canlı kurulum, gerçek teslimat veya test başarısı kanıtı değildir. Önceki aşama belgeleri hazırlandıkları tarihin kapsamını korur.
+
+**Giriş, form ve mobil:** Viva cebi `/viva` adresindeki etkinlik oluşturma formuna gider; sayfa başlığı “Etkinlik düzenleyin”dir. Planlı ve anlık etkinlik seçimi, davet kapsamı ve `/viva/yayinlar` yönlendirmeleri yukarıdaki kayıtlarda açıklanır. Başlangıç saati `VivaSaatSecimi` ile aranabilir ve yazılabilir: listede 15 dakika aralıklı 96 seçenek vardır, geçerli diğer `SS:DD` değerleri de girilebilir. Mobilde tarih, saat ve süre alanları dar ekranda alt alta yerleşir; davet alanları ve işlem düğmeleri ekrana uyarlanır. Mobil Viva cebinin simgesi yukarı alınmış, cebin gövdesi navbar sınırına bağlı bırakılmıştır. Viva sayfalarında form, liste, detay, kayıt, oda ve misafir görünümlerinin dar ekran stilleri ile kılavuz erişimi düzenlenmiştir.
+
+**Ortak detay:** İleri Tarihli, Başlayan, Geçmiş ve Taslaklar aynı detay yapısını kullanır. Katılımcı tablosu kurum, ad soyad, unvan ve e-posta sütunlarından oluşur. İlk başlık yalnız E-Club kişilerinde “Eczane Adı”, yalnız firma çalışanlarında “Firma Adı”, karma listede “Eczane / Firma Adı” olur; değer ilgili eczane veya firmadan gelir. Özel davetli tablosunun ilk sütunu “Kurum Adı”dır. Tabloların listesi on satırdan sonra kendi alanında kaydırılır; mobilde geniş tablo kendi içinde yatay kaydırılabilir. Özel davetli ekleme formu pencerede açılır. Yetkiye bağlı katılımcı ve davet işlemleri korunur.
+
+**Durum ve işlem kapıları:** Detay durumu `lib/viva/detay.ts` içindeki gerçek durum, başlangıç ve bitiş bilgileriyle hesaplanır. İptal Edildi, Taslak, Gerçekleşmedi, Gerçekleşti, Başladı, Devam ediyor ve Planlandı etiketleri kullanılır; gerçek başlangıç kaydından beş dakika sonra devam eden yayın “Devam ediyor” gösterilir. Başlamamış ve başlangıç zamanı geçmiş veya sonlanmış etkinliklerde düzenleme işlemleri kapatılır; iptal edilen etkinlikte de eylemler kapalıdır. Ayrıca kullanıcı ve sunucu yetkisi kontrolleri uygulanır.
+
+**Daily görüşmesi:** Görüşme alanı Daily Prebuilt kullanır. Kamera, mikrofon, sohbet, ekran paylaşımı, arka plan ve kayıt gibi görüşme kontrollerinin Daily karşılıkları kullanılır. Sunucunun alt çubuğundaki özel “Yayını bitir” düğmesi Viva’nın bitirme işlemine bağlanır; Daily’nin “Ayrıl” düğmesi kişisel ayrılma kontrolüdür. Üstteki ayrı büyük bitirme bandı, Viva yardım penceresi ve tekrarlanan görüşme durum metni kaldırılmıştır. Eski Viva soru/anket arayüzü ve bağlantılı uygulama kodu kaldırılmıştır; `scripts/sql/viva_anket_kaldir.sql` kaldırma kaynağıdır. Bu kayıt Daily’de soru/anket özelliğinin kurulduğu veya etkinleştirildiği anlamına gelmez.
+
+**Ortam ve doğrulama sınırı:** Daily bağlantısı sunucu tarafındaki `DAILY_API_KEY` ve `DAILY_DOMAIN` yapılandırmasına bağlıdır; gizli değerler belgelenmez. Kullanıcı 27 Ekim’de mobil yayının açıldığını bildirmiştir. `d9c68ea4` çalışmasında dar/geniş tarayıcı görünümleri, hedefli testler ve TypeScript kontrolü yapılmıştır; bu, bütün cihazlarda veya tüm test paketinde doğrulama yapıldığı anlamına gelmez. Fiziksel iPhone/Safari ve bu değişikliklerden sonraki gerçek Daily görüşmesi ayrıca sınanmamıştır. E-posta teslimatının uçtan uca durumu için REDBOOK TB-03 takip edilir. SQL dosyasının kaynakta bulunması canlı veritabanına uygulandığını göstermez.
+
+**Güncel Git dosya envanteri:** Aşağıdaki yollar, önceki genel envanterde bulunmayan Viva dosyalarını tamamlar. Sayfalar/API rota ve yetki akışını, bileşenler görünümü, `lib/viva` iş kuralları ve entegrasyonu, SQL dosyaları kurulum/değişim veya denetim kaynaklarını, testler ise senaryo kaynaklarını içerir. Tarihsel aşama belgeleri mevcut uygulamanın tek başına güncel durum kaydı değildir.
+
+**Sayfalar ve API uçları (19):**
+
+- `app/(panel)/viva/[etkinlikId]/duzenle/page.tsx`
+- `app/(panel)/viva/[etkinlikId]/oda/page.tsx`
+- `app/(panel)/viva/[etkinlikId]/page.tsx`
+- `app/(panel)/viva/api/katilim/route.ts`
+- `app/(panel)/viva/api/kayit-kutuphanesi/route.ts`
+- `app/(panel)/viva/api/kayit/route.ts`
+- `app/(panel)/viva/api/oda/route.ts`
+- `app/(panel)/viva/api/route.ts`
+- `app/(panel)/viva/api/yasam/route.ts`
+- `app/(panel)/viva/kayitlar/page.tsx`
+- `app/(panel)/viva/page.tsx`
+- `app/(panel)/viva/yayinlar/page.tsx`
+- `app/(panel)/viva/yeni/page.tsx`
+- `app/api/cron/viva/route.ts`
+- `app/api/viva/daily-webhook/route.ts`
+- `app/viva/davet/[token]/api/route.ts`
+- `app/viva/davet/[token]/katilim/route.ts`
+- `app/viva/davet/[token]/page.tsx`
+- `app/viva/entegrasyon-onizleme/page.tsx`
+
+**Arayüz bileşenleri ve stiller (20):**
+
+- `components/viva/VivaDetayIcerigi.tsx`
+- `components/viva/VivaDurumAlani.tsx`
+- `components/viva/VivaEkrani.tsx`
+- `components/viva/VivaEntegrasyonOnizleme.tsx`
+- `components/viva/VivaEpostaAlani.tsx`
+- `components/viva/VivaKaydirilabilirTablo.tsx`
+- `components/viva/VivaKayitKutuphanesi.tsx`
+- `components/viva/VivaKayitlar.tsx`
+- `components/viva/VivaListeEkrani.tsx`
+- `components/viva/VivaMisafir.tsx`
+- `components/viva/VivaOdaAlani.tsx`
+- `components/viva/VivaSaatSecimi.tsx`
+- `components/viva/viva-detay.module.css`
+- `components/viva/viva-eposta.module.css`
+- `components/viva/viva-form.module.css`
+- `components/viva/viva-liste.module.css`
+- `components/viva/viva-oda.module.css`
+- `components/viva/viva-saat.module.css`
+- `components/viva/viva-yardimci.module.css`
+- `components/viva/viva.module.css`
+
+**İş mantığı ve Daily entegrasyonu (23):**
+
+- `lib/viva/daily.ts`
+- `lib/viva/davetSecimi.ts`
+- `lib/viva/detay.ts`
+- `lib/viva/dosyaLinki.ts`
+- `lib/viva/eposta.ts`
+- `lib/viva/epostaGonderimSunucu.ts`
+- `lib/viva/indirme.ts`
+- `lib/viva/katilim.ts`
+- `lib/viva/katilimSunucu.ts`
+- `lib/viva/kayitKutuphaneSunucu.ts`
+- `lib/viva/kayitSunucu.ts`
+- `lib/viva/liste.ts`
+- `lib/viva/listeSunucu.ts`
+- `lib/viva/oda.ts`
+- `lib/viva/onizleme.ts`
+- `lib/viva/prebuilt.ts`
+- `lib/viva/sozlesme.ts`
+- `lib/viva/sunucu.ts`
+- `lib/viva/takvim.ts`
+- `lib/viva/webhook-events.mjs`
+- `lib/viva/webhook.ts`
+- `lib/viva/yasam.ts`
+- `lib/viva/yasamSunucu.ts`
+
+**SQL kaynakları (22):**
+
+- `scripts/sql/viva_anket_kaldir.sql`
+- `scripts/sql/viva_anlik_planlama.sql`
+- `scripts/sql/viva_asama1.sql`
+- `scripts/sql/viva_asama2_1.sql`
+- `scripts/sql/viva_asama2_1_test.sql`
+- `scripts/sql/viva_asama2_2.sql`
+- `scripts/sql/viva_asama2_2_test.sql`
+- `scripts/sql/viva_asama2_4.sql`
+- `scripts/sql/viva_asama2_4_cron.sql`
+- `scripts/sql/viva_asama2_4_test.sql`
+- `scripts/sql/viva_asama2_5.sql`
+- `scripts/sql/viva_asama2_5_test.sql`
+- `scripts/sql/viva_asama2_6_yaris_A.sql`
+- `scripts/sql/viva_asama2_6_yaris_B.sql`
+- `scripts/sql/viva_davet_kapsami.sql`
+- `scripts/sql/viva_eposta_davetleri.sql`
+- `scripts/sql/viva_eposta_gonderim_isleyici.sql`
+- `scripts/sql/viva_eposta_yeniden_dene.sql`
+- `scripts/sql/viva_hatirlatma_kaldir.sql`
+- `scripts/sql/viva_kayit_indirme_7gun.sql`
+- `scripts/sql/viva_kayit_kutuphanesi.sql`
+- `scripts/sql/viva_liste_ekrani.sql`
+
+**Test ve test verisi kaynakları (26):**
+
+- `tests/_viva-dom.mjs`
+- `tests/fixtures/viva-asama1-postgres.sql`
+- `tests/vivaArayuz.hedef.test.ts`
+- `tests/vivaAsama1.hedef.test.ts`
+- `tests/vivaAsama1.postgres.mjs`
+- `tests/vivaDailyKatilim.hedef.test.ts`
+- `tests/vivaDailyOda.hedef.test.ts`
+- `tests/vivaDavetKapsami.hedef.test.ts`
+- `tests/vivaDavetKapsami.postgres.mjs`
+- `tests/vivaDetay.hedef.test.ts`
+- `tests/vivaEposta.hedef.test.ts`
+- `tests/vivaEpostaGonderim.hedef.test.ts`
+- `tests/vivaEpostaGonderim.postgres.mjs`
+- `tests/vivaEpostaIstegi.hedef.test.ts`
+- `tests/vivaEpostaKayit.postgres.mjs`
+- `tests/vivaEpostaMisafirZinciri.postgres.mjs`
+- `tests/vivaEpostaYenidenDene.postgres.mjs`
+- `tests/vivaIndirme.hedef.test.ts`
+- `tests/vivaKayit.hedef.test.ts`
+- `tests/vivaListe.hedef.test.ts`
+- `tests/vivaMisafir.hedef.test.ts`
+- `tests/vivaPlanlama.hedef.test.ts`
+- `tests/vivaPlanlama.postgres.mjs`
+- `tests/vivaPrebuilt.hedef.test.ts`
+- `tests/vivaTeslim.hedef.test.ts`
+- `tests/vivaYasam.hedef.test.ts`
+
+**Viva belgeleri (31):**
+
+- `docs/VIVA_ASAMA_1_ARAYUZ_KONTROLU.md`
+- `docs/VIVA_ASAMA_1_DETAYLI_CHECKLIST.md`
+- `docs/VIVA_ASAMA_1_KULLANICI_SQL_SONUCU.md`
+- `docs/VIVA_ASAMA_1_TEST_SONUCLARI.json`
+- `docs/VIVA_ASAMA_1_UYGULAMA.md`
+- `docs/VIVA_ASAMA_2_1_DAILY_CANLI_SONUC.json`
+- `docs/VIVA_ASAMA_2_1_KULLANICI_SQL_SONUCU.md`
+- `docs/VIVA_ASAMA_2_1_TEST_SONUCLARI.json`
+- `docs/VIVA_ASAMA_2_1_UYGULAMA.md`
+- `docs/VIVA_ASAMA_2_2_DAILY_CANLI_SONUC.json`
+- `docs/VIVA_ASAMA_2_2_KULLANICI_SQL_SONUCU.md`
+- `docs/VIVA_ASAMA_2_2_TEST_SONUCLARI.json`
+- `docs/VIVA_ASAMA_2_2_UYGULAMA.md`
+- `docs/VIVA_ASAMA_2_3_TEST_SONUCLARI.json`
+- `docs/VIVA_ASAMA_2_3_UYGULAMA.md`
+- `docs/VIVA_ASAMA_2_4_KULLANICI_SQL_SONUCU.md`
+- `docs/VIVA_ASAMA_2_4_TEST_SONUCLARI.json`
+- `docs/VIVA_ASAMA_2_4_UYGULAMA.md`
+- `docs/VIVA_ASAMA_2_5_DAILY_CANLI_SONUC.json`
+- `docs/VIVA_ASAMA_2_5_KULLANICI_SQL_SONUCU.md`
+- `docs/VIVA_ASAMA_2_5_TEST_SONUCLARI.json`
+- `docs/VIVA_ASAMA_2_5_UYGULAMA.md`
+- `docs/VIVA_ASAMA_2_6_TESLIM.md`
+- `docs/VIVA_ASAMA_2_6_TEST_SONUCLARI.json`
+- `docs/VIVA_ASAMA_2_DETAYLI_CHECKLIST.md`
+- `docs/VIVA_DAILY_EK_OZELLIKLER.md`
+- `docs/VIVA_DAILY_ON_ARASTIRMA.md`
+- `docs/VIVA_GELISTIRME_PROJE_ADIMLARI.md`
+- `docs/VIVA_HATIRLATMA_KALDIRMA.md`
+- `docs/VIVA_SOHBET_METNI_INDIRME.md`
+- `docs/VIVA_YAYIN_PLANLAMA.md`
+
+**Marka varlıkları ve operasyon betiği (3):**
+
+- `public/marka/viva/viva-mavi-ribon-simge.svg`
+- `public/marka/viva/viva-mavi-ribon-yatay.svg`
+- `scripts/viva-daily-webhook.mjs`
