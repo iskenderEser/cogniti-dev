@@ -76,17 +76,29 @@ test('tema Cogniti CSS kaynağından gelir; değişim framei yeniden kurmaz',asy
  const o=sdkOrtami(),c=controller(o,container);try{await c.hazir;container.style.setProperty('--tema-eylem','#1d7943');container.setAttribute('data-tema','yesil');await new Promise(r=>setTimeout(r,5));assert.equal(o.frames.length,1);assert.equal(o.frames[0].themes.length,1);assert.ok('colors'in o.frames[0].themes[0]);assert.equal(o.frames[0].themes[0].colors.accent,'#1d7943');await c.kapat();container.setAttribute('data-tema','mavi');await new Promise(r=>setTimeout(r,5));assert.equal(o.frames[0].themes.length,1);}finally{await c.kapat();await dom.happyDOM.close();}
 });
 
-async function arayuz(handler:(url:string,init:RequestInit)=>Promise<{status:number;data:unknown}>|{status:number;data:unknown},sdkOptions:Parameters<typeof sdkOrtami>[0]={}){
+async function arayuz(handler:(url:string,init:RequestInit)=>Promise<{status:number;data:unknown}>|{status:number;data:unknown},sdkOptions:Parameters<typeof sdkOrtami>[0]={},kalici=false){
  const {dom}=domOlustur();for(const key of ['window','document','navigator','HTMLElement','HTMLButtonElement','HTMLInputElement','HTMLTextAreaElement','HTMLDivElement','HTMLSelectElement','DocumentFragment','CustomEvent','NodeFilter','Element','Node','Event','MouseEvent','KeyboardEvent','MutationObserver','getComputedStyle']as const)Object.defineProperty(globalThis,key,{configurable:true,value:key==='getComputedStyle'?dom.getComputedStyle.bind(dom):dom[key]});Object.assign(globalThis,{IS_REACT_ACT_ENVIRONMENT:true,requestAnimationFrame:dom.requestAnimationFrame.bind(dom),cancelAnimationFrame:dom.cancelAnimationFrame.bind(dom)});
  const {createRoot}=await import('react-dom/client');const container=dom.document.createElement('div');dom.document.body.append(container);const root=createRoot(container);const o=sdkOrtami(sdkOptions),calls:{url:string;init:RequestInit}[]=[];const timers=new Map<number,()=>void>();let timerId=0;
- const modules:Record<string,unknown>={react:React,'react/jsx-runtime':jsxRuntime,'next/link':{default:({children,...props}:React.ComponentProps<'a'>)=>React.createElement('a',props,children)},'@/components/ui/button':buttons,'lucide-react':icons,'@/components/ui/alert-dialog':dialogs,'./viva-oda.module.css':{default:new Proxy({},{get:(_,k)=>String(k)})},'./viva.module.css':{default:styles},'@/lib/viva/onizleme':{vivaOnizlemeAyari},'@/lib/viva/prebuilt':{vivaGorusmeGirdisi,vivaPrebuiltBaslat:(v:Parameters<typeof vivaPrebuiltBaslat>[0])=>vivaPrebuiltBaslat({...v,sdkYukle:async()=>o.sdk})}};
+ const modules:Record<string,unknown>={react:React,'react/jsx-runtime':jsxRuntime,'next/image':{default:({alt,...props}:React.ComponentProps<'img'>)=>React.createElement('img',{...props,alt})},'next/link':{default:({children,...props}:React.ComponentProps<'a'>)=>React.createElement('a',props,children)},'@/components/ui/button':buttons,'lucide-react':icons,'@/components/ui/alert-dialog':dialogs,'./viva-oda.module.css':{default:new Proxy({},{get:(_,k)=>String(k)})},'./viva.module.css':{default:styles},'@/lib/viva/onizleme':{vivaOnizlemeAyari},'@/lib/viva/prebuilt':{vivaGorusmeGirdisi,vivaPrebuiltBaslat:(v:Parameters<typeof vivaPrebuiltBaslat>[0])=>vivaPrebuiltBaslat({...v,sdkYukle:async()=>o.sdk})}};
  const eskiFetch=globalThis.fetch;
  const fetcher=async(url:string,init:RequestInit)=>{calls.push({url,init});const r=await handler(url,init);return{ok:r.status<400,status:r.status,json:async()=>r.data};};
  globalThis.fetch=fetcher as typeof fetch;
  const exports:Record<string,React.ComponentType<Record<string,unknown>>>={};const code=ts.transpileModule(readFileSync('components/viva/VivaOdaAlani.tsx','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX,target:ts.ScriptTarget.ES2022}}).outputText;
  vm.runInNewContext(code,{exports,require:(n:string)=>{assert.ok(n in modules,n);return modules[n];},AbortController,window:dom,URL,Date,encodeURIComponent,setTimeout:(fn:()=>void)=>{const i=++timerId;timers.set(i,fn);return i;},clearTimeout:(i:number)=>timers.delete(i),fetch:fetcher});
+ let kimlik: { id: string; kimlik_turu: string } | null = { id: 'kullanici', kimlik_turu: 'kullanici' };
+ const intervals = new Map<number, () => void>(); let intervalId=0;
+ let provider:React.ComponentType<{children:React.ReactNode}>|null=null;
+ let slot:React.ComponentType<Record<string,unknown>>|null=null;
+ if(kalici){
+  modules['@/app/providers/AuthProvider']={useAuth:()=>({kullanici:kimlik})};
+  modules['./VivaOdaAlani']=exports;
+  const pe:Record<string,unknown>={};
+  const pcode=ts.transpileModule(readFileSync('components/viva/VivaGorusmeSaglayici.tsx','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX,target:ts.ScriptTarget.ES2022}}).outputText;
+  vm.runInNewContext(pcode,{exports:pe,require:(n:string)=>{assert.ok(n in modules,n);return modules[n];},window:{addEventListener:dom.addEventListener.bind(dom),removeEventListener:dom.removeEventListener.bind(dom),setInterval:(fn:()=>void)=>{const i=++intervalId;intervals.set(i,fn);return i;},clearInterval:(i:number)=>intervals.delete(i)},document:dom.document,ResizeObserver:dom.ResizeObserver,AbortController,encodeURIComponent,fetch:fetcher});
+  provider=pe.VivaGorusmeSaglayici as typeof provider;slot=pe.VivaKaliciOdaYeri as typeof slot;
+ }
  const tick=async()=>{await act(async()=>{await Promise.resolve();await Promise.resolve();});};
- return{c:container,o,calls,timers,dom,render:async(props:Record<string,unknown>,strict=false)=>{await act(async()=>{const el=React.createElement(exports.default,props);root.render(strict?React.createElement(React.StrictMode,null,el):el);});await tick();},click:async(text:string)=>{const b=[...container.querySelectorAll('button')].find(x=>x.textContent===text);assert.ok(b,text);await act(async()=>b.click());await tick();},confirm:async(text:string)=>{const b=[...dom.document.querySelectorAll<HTMLButtonElement>('[role=alertdialog] button')].find(x=>x.textContent===text);assert.ok(b,text);await act(async()=>b.click());await tick();},emit:async(ad:string,data?:unknown)=>{await act(async()=>o.frames.at(-1)?.emit(ad,data));await tick();},timer:async()=>{const item=timers.entries().next().value;assert.ok(item);timers.delete(item[0]);await act(async()=>item[1]());await tick();},tick,close:async()=>{await act(async()=>root.unmount());await tick();await dom.happyDOM.close();globalThis.fetch=eskiFetch;}};
+ return{c:container,o,calls,timers,dom,intervals,logout:()=>{kimlik=null;},render:async(props:Record<string,unknown>,strict=false)=>{await act(async()=>{const child=kalici?(props.etkinlikId?React.createElement(slot!,props):React.createElement('p',null,'Cogniti başka sayfa')):React.createElement(exports.default,props);const el=kalici?React.createElement(provider!,null,child):child;root.render(strict?React.createElement(React.StrictMode,null,el):el);});await tick();},click:async(text:string)=>{const b=[...container.querySelectorAll('button')].find(x=>x.textContent===text);assert.ok(b,text);await act(async()=>b.click());await tick();},confirm:async(text:string)=>{const b=[...dom.document.querySelectorAll<HTMLButtonElement>('[role=alertdialog] button')].find(x=>x.textContent===text);assert.ok(b,text);await act(async()=>b.click());await tick();},emit:async(ad:string,data?:unknown)=>{await act(async()=>o.frames.at(-1)?.emit(ad,data));await tick();},timer:async()=>{const item=timers.entries().next().value;assert.ok(item);timers.delete(item[0]);await act(async()=>item[1]());await tick();},tick,close:async()=>{await act(async()=>root.unmount());await tick();await dom.happyDOM.close();globalThis.fetch=eskiFetch;}};
 }
 test('katılmadan token alınmaz; hiçbir özel medya kontrolü üretilmez',async()=>{
  const a=await arayuz(()=>({status:200,data:girdi()}));try{await a.render({etkinlikId:id});assert.equal(a.calls.length,0);assert.equal(a.o.frames.length,0);assert.match(a.c.textContent!,/Görüşmeye katıl/);for(const label of ['Kamera','Mikrofon','Sohbet','El kaldır','Herkes için bitir'])assert.equal([...a.c.querySelectorAll('button')].some(x=>x.textContent===label),false);}finally{await a.close();}
@@ -98,7 +110,7 @@ test('misafir aynı bileşeni ve cookie tabanlı özel katılım ucunu kullanır
  let back=0;const a=await arayuz(()=>({status:200,data:{...girdi(),rol:'izleyici'}}));try{await a.render({davetToken:'A'.repeat(43),onDonus:()=>back++});await a.click('Görüşmeye katıl');assert.equal(a.calls[0].url,`/viva/davet/${'A'.repeat(43)}/katilim`);assert.deepEqual(JSON.parse(String(a.calls[0].init.body)),{});assert.equal(a.o.frames[0].joins[0].audioSource,false);await a.emit('left-meeting');await a.click('Etkinlik bilgilerine dön');assert.equal(back,1);}finally{await a.close();}
 });
 test('sunucuyu beklerken iframe kurulmaz; hazır olunca tek frame ve tek join oluşur',async()=>{
- let ready=false;const a=await arayuz(()=>ready?{status:200,data:girdi()}:{status:202,data:{durum:'bekliyor',neden:'sunucu'}});try{await a.render({etkinlikId:id});await a.click('Görüşmeye katıl');assert.match(a.c.textContent!,/Sunucunun görüşmeye katılması bekleniyor/);assert.equal(a.o.frames.length,0);assert.equal(a.timers.size,1);ready=true;await a.timer();assert.equal(a.o.frames.length,1);assert.equal(a.o.frames[0].joins.length,1);assert.equal(a.timers.size,0);}finally{await a.close();}
+ let ready=false;const a=await arayuz(()=>ready?{status:200,data:girdi()}:{status:202,data:{durum:'bekliyor',neden:'sunucu'}});try{await a.render({etkinlikId:id});await a.click('Görüşmeye katıl');assert.match(a.c.textContent!,/Sunucunun görüşmeye katılması bekleniyor/);assert.equal(a.o.frames.length,0);assert.equal(a.timers.size,1);ready=true;await a.timer();assert.equal(a.o.frames.length,1);assert.equal(a.o.frames[0].joins.length,1);assert.equal(a.timers.size,1);}finally{await a.close();}
 });
 test('başlangıç/oda beklemesi anlaşılırdır; kaldırılınca tekrar isteği durur',async()=>{
  for(const neden of ['zaman','oda']){const a=await arayuz(()=>({status:202,data:{durum:'bekliyor',neden}}));await a.render({etkinlikId:id});await a.click('Görüşmeye katıl');assert.equal(a.timers.size,1);const signal=a.calls[0].init.signal!;await a.close();assert.equal(a.timers.size,0);assert.equal(signal.aborted,true);assert.equal(a.o.frames.length,0);}
@@ -129,7 +141,7 @@ test('önizleme yalnız sunucuya ve açık isteğe bağlıdır; token entegrasyo
 });
 test('başlangıç yetkisi reddedilirse sonsuz tekrar yapılmaz; kayıt hatası görüşmeyi kapatmaz',async()=>{
  const a=await arayuz(url=>url==='/viva/api/yasam'?{status:403,data:{hata:'Yetki yok'}}:{status:200,data:{...girdi(),rol:'sunucu'}});
- try{await a.render({etkinlikId:id,surum:1});await a.click('Görüşmeye katıl');await a.emit('joined-meeting');assert.equal(a.timers.size,0);assert.match(a.c.textContent!,/Yayın başlangıcı doğrulanamadı/);await a.emit('recording-error');assert.equal(a.c.querySelector('iframe')?.parentElement?.hidden,false);assert.equal(a.o.frames[0].destroyCount,0);}finally{await a.close();}
+ try{await a.render({etkinlikId:id,surum:1});await a.click('Görüşmeye katıl');await a.emit('joined-meeting');assert.equal(a.timers.size,1);assert.match(a.c.textContent!,/Yayın başlangıcı doğrulanamadı/);await a.emit('recording-error');assert.equal(a.c.querySelector('iframe')?.parentElement?.hidden,false);assert.equal(a.o.frames[0].destroyCount,0);}finally{await a.close();}
 });
 
 test('yayını bitirmek sohbet indirmeye bağlı değildir',async()=>{
@@ -220,5 +232,82 @@ test('üst düğme ve bant kaldırılır; alt güç ikonu aynı onayla ve günce
   await a.emit('network-connection',{type:'sfu',event:'interrupted'});await a.emit('custom-button-click',{button_id:'cognitiHerkesIcinBitir'});assert.equal(a.dom.document.querySelector('[role=alertdialog]'),null);
   await a.emit('network-connection',{type:'sfu',event:'connected'});await a.emit('custom-button-click',{button_id:'cognitiHerkesIcinBitir'});await a.confirm('Herkes için bitir');
   assert.equal(bitirCagrilari().length,1);assert.equal(JSON.parse(String(bitirCagrilari()[0].init.body)).surum,9);assert.equal(a.o.frames[0].destroyCount,1);
+ }finally{await a.close();}
+});
+
+test('son beş dakika herkes için görünür; son dakika kırmızı, sıfırda frame kapanır ve Viva logosu kalır',async()=>{
+ const gercekSimdi=Date.now;let simdi=gercekSimdi();Date.now=()=>simdi;
+ try{for(const rol of ['sunucu','katilimci','izleyici'] as const){
+  const bitis=simdi+301000;let bildirilen=0;
+  const a=await arayuz(url=>url==='/viva/api/yasam'?{status:200,data:{}}:{status:200,data:{...girdi(),rol,bitis:new Date(bitis).toISOString(),yayin_bitis:new Date(bitis).toISOString(),sunucu_zamani:new Date(simdi).toISOString()}});
+  try{await a.render(rol==='izleyici'?{davetToken:'A'.repeat(43),onSureDoldu:()=>bildirilen++}:{etkinlikId:id,onSureDoldu:()=>bildirilen++});await a.click('Görüşmeye katıl');await a.emit('joined-meeting');
+   assert.equal(a.c.querySelector('[role=timer]'),null);
+   simdi+=1000;await a.timer();assert.match(a.c.querySelector('[role=timer]')!.textContent!,/05:00/);assert.equal(a.c.querySelector('[role=timer]')!.getAttribute('data-urgent'),'false');
+   simdi+=240000;await a.timer();assert.match(a.c.querySelector('[role=timer]')!.textContent!,/01:00/);assert.equal(a.c.querySelector('[role=timer]')!.getAttribute('data-urgent'),'true');
+   simdi+=59000;await a.timer();assert.match(a.c.querySelector('[role=timer]')!.textContent!,/00:01/);
+   simdi+=1000;await a.timer();assert.equal(a.o.frames[0].destroyCount,1);assert.equal(a.c.querySelector('iframe'),null);assert(a.c.querySelector('img[alt=Viva]'));assert.match(a.c.textContent!,/Buluşma sona erdi/);assert.equal([...a.c.querySelectorAll('button')].some(b=>b.textContent==='Yeniden katıl'),false);assert.equal(a.timers.size,0);assert.equal(bildirilen,1);
+  }finally{await a.close();}
+ }}finally{Date.now=gercekSimdi;}
+});
+test('geri sayım tarayıcı saatinden sapmış sunucu saatini kullanır',async()=>{
+ const gercekSimdi=Date.now;let simdi=gercekSimdi();Date.now=()=>simdi;
+ const sunucu=simdi+600000,bitis=sunucu+300000;
+ const a=await arayuz(()=>({status:200,data:{...girdi(),bitis:new Date(bitis).toISOString(),yayin_bitis:new Date(bitis).toISOString(),sunucu_zamani:new Date(sunucu).toISOString()}}));
+ try{await a.render({etkinlikId:id});await a.click('Görüşmeye katıl');await a.emit('joined-meeting');assert.match(a.c.querySelector('[role=timer]')!.textContent!,/05:00/);simdi+=300000;await a.timer();assert(a.c.querySelector('img[alt=Viva]'));assert.equal(a.o.frames[0].destroyCount,1);}finally{await a.close();Date.now=gercekSimdi;}
+});
+test('erken biten misafir doğrulaması toplantı bitişi olarak gösterilmez',async()=>{
+ const gercekSimdi=Date.now;let simdi=gercekSimdi();Date.now=()=>simdi;const bas=simdi;
+ const a=await arayuz(()=>({status:200,data:{...girdi(),rol:'izleyici',bitis:new Date(bas+60000).toISOString(),yayin_bitis:new Date(bas+600000).toISOString(),sunucu_zamani:new Date(bas).toISOString()}}));
+ try{await a.render({davetToken:'A'.repeat(43)});await a.click('Görüşmeye katıl');await a.emit('joined-meeting');assert.equal(a.c.querySelector('[role=timer]'),null);simdi+=60000;await a.timer();assert.equal(a.c.querySelector('img[alt=Viva]'),null);assert.match(a.c.textContent!,/Katılım oturumunuzun süresi doldu/);assert.equal(a.o.frames[0].destroyCount,1);}finally{await a.close();Date.now=gercekSimdi;}
+});
+test('Daily tam süre sonunda ayrılma bildirirse yeniden katıl seçeneği açılmaz',async()=>{
+ const gercekSimdi=Date.now;let simdi=gercekSimdi();Date.now=()=>simdi;const bitis=simdi+60000;
+ const a=await arayuz(()=>({status:200,data:{...girdi(),bitis:new Date(bitis).toISOString()}}));
+ try{await a.render({etkinlikId:id});await a.click('Görüşmeye katıl');await a.emit('joined-meeting');simdi=bitis;await a.emit('left-meeting');assert(a.c.querySelector('img[alt=Viva]'));assert.equal(a.timers.size,0);assert.equal(a.o.frames[0].destroyCount,1);}finally{await a.close();Date.now=gercekSimdi;}
+});
+
+test('arka planda bekleyen sekme süre sonunda görünür olunca bağlantıyı hemen kapatır',async()=>{
+ const gercekSimdi=Date.now;let simdi=gercekSimdi();Date.now=()=>simdi;const bitis=simdi+60000;
+ const a=await arayuz(()=>({status:200,data:{...girdi(),bitis:new Date(bitis).toISOString()}}));
+ try{await a.render({etkinlikId:id});await a.click('Görüşmeye katıl');await a.emit('joined-meeting');simdi=bitis+5000;
+  await act(async()=>{a.dom.document.dispatchEvent(new a.dom.Event('visibilitychange'));});await a.tick();
+  assert(a.c.querySelector('img[alt=Viva]'));assert.equal(a.o.frames[0].destroyCount,1);assert.equal(a.timers.size,0);
+ }finally{await a.close();Date.now=gercekSimdi;}
+});
+
+
+test('yayıncı ve katılımcı Cogniti sayfalarında gezerken aynı Daily iframe ve oturum korunur',async()=>{
+ for(const rol of ['sunucu','katilimci'] as const){
+  const a=await arayuz(url=>url==='/viva/api/yasam'?{status:200,data:{}}:{status:200,data:{...girdi(),rol}}, {},true);
+  try{
+   await a.render({etkinlikId:id,surum:1},true);await a.click('Görüşmeye katıl');await a.emit('joined-meeting');
+   const f=a.o.frames[0], iframe=f.iframe, parent=iframe.parentElement;
+   for(let i=0;i<3;i++){
+    await a.render({},true);assert.match(a.c.textContent!,/Cogniti başka sayfa/);
+    assert.equal(f.destroyCount,0);assert.equal(iframe.isConnected,true);assert.equal(iframe.parentElement,parent);
+    assert.equal(a.c.querySelector('[data-viva-kalici-oda]')?.getAttribute('aria-hidden'),'true');
+    await a.render({etkinlikId:id,surum:2+i},true);
+    assert.equal(a.c.querySelector('[data-viva-kalici-oda]')?.getAttribute('aria-hidden'),'false');
+    assert.equal(a.o.frames.length,1);assert.equal(f.joins.length,1);assert.equal(f.destroyCount,0);
+   }
+   assert.equal(a.calls.filter(x=>x.url==='/viva/api/katilim').length,1);
+   await a.render({etkinlikId:'baska-yayin',surum:1},true);
+   assert.match(a.c.textContent!,/Başka bir görüşmeniz açık/);assert.equal(f.destroyCount,0);assert.equal(a.o.frames.length,1);
+   await a.render({etkinlikId:id,surum:5},true);await a.emit('left-meeting');assert.equal(f.destroyCount,1);
+   await a.click('Yeniden katıl');assert.equal(a.o.frames.length,2);
+   await a.render({},true);a.logout();await a.render({},true);assert.equal(a.o.frames[1].destroyCount,1);
+  }finally{await a.close();}
+ }
+});
+
+test('oda sayfası kapalıyken erişim kontrolü sürer; geçici ağ hatası korur, iptal bağlantıyı kapatır',async()=>{
+ let status=500;
+ const a=await arayuz(url=>url==='/viva/api/katilim'?{status:200,data:girdi()}:{status,data:{etkinlik:{oda_acik:false}}},{},true);
+ try{
+  await a.render({etkinlikId:id,surum:1});await a.click('Görüşmeye katıl');await a.emit('joined-meeting');await a.render({});
+  assert.equal(a.intervals.size,1);
+  await act(async()=>{a.intervals.values().next().value!();});await a.tick();assert.equal(a.o.frames[0].destroyCount,0);
+  status=403;await act(async()=>{a.intervals.values().next().value!();});await a.tick();
+  assert.equal(a.o.frames[0].destroyCount,1);assert.equal(a.intervals.size,0);
  }finally{await a.close();}
 });

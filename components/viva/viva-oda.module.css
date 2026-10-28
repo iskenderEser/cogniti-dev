@@ -40,3 +40,15 @@
   .stateActions [data-slot=button] { flex: 1 1 180px; }
   .reconnect { padding: 12px; }
 }
+
+.stage{position:relative}
+.countdown{position:absolute;z-index:2;top:12px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;max-width:calc(100% - 24px);padding:10px 16px;border:1px solid var(--tema-kontrol-cizgi);border-radius:12px;background:var(--tema-yuzey);color:var(--tema-metin);box-shadow:0 4px 18px var(--tema-kontrol-golge);font-size:13px;font-weight:800;pointer-events:none;white-space:nowrap}
+.countdown svg{width:18px;height:18px;flex-shrink:0}
+.countdown strong{font-size:22px;line-height:1;font-variant-numeric:tabular-nums}
+.countdown[data-urgent=true]{background:var(--tema-hata);border-color:var(--tema-hata);color:var(--tema-eylem-metin)}
+.endLogo{display:block;box-sizing:border-box;width:min(325px,80%);height:auto;padding:16px;border-radius:16px;background:var(--tema-eylem-metin)}
+@media(max-width:480px){.countdown{gap:6px;padding:8px 10px;font-size:11px}.countdown strong{font-size:20px}}
+
+/* Ortak layout içindeki oda aynı DOM konumunda yaşar; sayfa yalnız yerini bildirir. */
+.persistentRoom { position: fixed; z-index: 20; margin: 0; padding: 0; max-width: none; }
+.roomSlot { flex: 1; min-width: 0; min-height: 0; width: 100%; }

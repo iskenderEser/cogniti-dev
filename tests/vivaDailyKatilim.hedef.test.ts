@@ -135,3 +135,11 @@ test('katılım uçları GET açmaz; üye rol/domainini ve misafir gövde oturum
 test('katılım API bekleme durumunu 202, erişim reddini 403 olarak döndürür',async()=>{
  const server=sunucuYukle();let red=false;const u=yukle<typeof import('../app/(panel)/viva/api/katilim/route')>('app/(panel)/viva/api/katilim/route.ts',{'@/lib/viva/sunucu':server,'@/lib/viva/daily':{VivaDailyHatasi},'@/lib/viva/katilim':{vivaKatilimHazirla:async()=>{if(red)throw{code:'42501'};return{durum:'bekliyor',neden:'sunucu'};}},'@/lib/viva/katilimSunucu':{vivaUyeKatilimDeposu:async()=>({})}});const req=()=>new Request('https://cogniti.test/viva/api/katilim',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({etkinlik_id:id})});assert.equal((await u.POST(req())).status,202);red=true;const r=await u.POST(req());assert.equal(r.status,403);assert.equal('token'in await r.json(),false);
 });
+
+test('yayın bitişi, misafir token bitişinden ayrı ve sunucu saatiyle döner',async()=>{
+ const d=baglam('izleyici'),a=apiMock();const once=Date.now();
+ const r=await vivaKatilimHazirla({oku:async()=>d},a.api);assert.equal(r.durum,'hazir');
+ if(r.durum!=='hazir')return;
+ assert.equal(r.yayin_bitis,d.bitis);assert.equal(Date.parse(r.bitis),Math.floor(Date.parse(d.oturum_bitis!)/1000)*1000);
+ assert.ok(Date.parse(r.sunucu_zamani)>=once&&Date.parse(r.sunucu_zamani)<=Date.now());
+});

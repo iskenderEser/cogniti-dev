@@ -36,3 +36,15 @@ test("anlık, taslak ve bozuk tarihler takvime aktarılamaz", () => {
     assert.throws(() => vivaGoogleTakvim({ ...e, ...ek }, "https://cogniti.test"));assert.throws(() => vivaOutlookTakvim({ ...e, ...ek }, "https://cogniti.test"));
   }
 });
+
+test("anlık ve planlı süreler yalnız 30, 60 ve 90 dakika kabul edilir",()=>{
+ const bas=Date.parse("2027-01-02T12:00:00Z"),simdi=bas-3600000;
+ for(const dakika of [30,60,90]){
+  assert.equal(vivaFormDogrula({...anlik,sure_dakika:dakika},simdi),null);
+  assert.equal(vivaFormDogrula({...anlik,yayin_turu:"planli",baslangic:new Date(bas).toISOString(),bitis:new Date(bas+dakika*60000).toISOString()},simdi),null);
+ }
+ for(const dakika of [0,5,29,31,45,60.5,91,120,1440,1441,1470]){
+  assert.match(vivaFormDogrula({...anlik,sure_dakika:dakika},simdi)!,/30, 60 veya 90/);
+  assert.ok(vivaFormDogrula({...anlik,yayin_turu:"planli",baslangic:new Date(bas).toISOString(),bitis:new Date(bas+dakika*60000).toISOString()},simdi));
+ }
+});

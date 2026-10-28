@@ -11,3 +11,8 @@
 @media (pointer: coarse) { .option { min-height: 44px; } .field > button { width: 44px; } .field [data-slot=input] { padding-right: 46px; } }
 
 @media (max-width: 520px) { .field [data-slot=input] { height: 44px; font-size: 16px; } .option { min-height: 44px; font-size: 14px; } }
+
+.durationTrigger { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; min-width: 0; height: 40px; padding: 0 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--tema-yuzey); color: var(--tema-kontrol-metin); font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; }
+.durationTrigger:disabled { cursor: default; opacity: .5; }
+.option:focus-visible { outline: none; color: #237AC8; background: var(--tema-kontrol-hover); }
+@media (max-width: 520px), (pointer: coarse) { .durationTrigger { min-height: 44px; font-size: 16px; } }

@@ -6,6 +6,8 @@ import { PushAbonelik } from "@/app/providers/PushAbonelik";
 import { LOGIN_TEMA_BASLANGIC_BETIGI, VARSAYILAN_TEMA } from "@/lib/tema/temalar";
 import { TemaProvider } from "@/app/providers/TemaProvider";
 
+import { VivaGorusmeSaglayici } from "@/components/viva/VivaGorusmeSaglayici";
+
 const nunito = Nunito({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -36,7 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${nunito.variable}`} style={{ fontFamily: "var(--font-nunito), sans-serif" }}>
         <AuthProvider>
           <TemaProvider>
-            {children}
+            <VivaGorusmeSaglayici>{children}</VivaGorusmeSaglayici>
             <PushAbonelik />
           </TemaProvider>
         </AuthProvider>

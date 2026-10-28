@@ -21,6 +21,8 @@ try {
  await db.query(readFileSync('scripts/sql/viva_asama1.sql','utf8'));
  const sql=readFileSync('scripts/sql/viva_anlik_planlama.sql','utf8');
  await check('SQL güncellemesi iki kez uygulanabilir',async()=>{await db.query(sql);await db.query(sql);});
+ const sureSql=readFileSync('scripts/sql/viva_sure_adimlari.sql','utf8');
+ await check('30 dakika kuralı iki kez kurulabilir',async()=>{await db.query(sureSql);await db.query(sureSql);});
  const roleSource=readFileSync('lib/utils/roller.ts','utf8');
  const named=key=>[...roleSource.split(`export const ${key} = [`)[1].split('];')[0].matchAll(/"([a-z_]+)"/g)].map(x=>x[1]);
  const roles=[...named('URETICI_ROLLER'),...named('YONETICI_ROLLER'),'admin','tm','bm','utt','kd_utt','iu'];
@@ -66,6 +68,21 @@ try {
  });
  await check('Anon ve authenticated doğrudan RPC çağramaz',async()=>{
   const r=await db.query("SELECT has_function_privilege('anon','viva_islem(uuid,text,jsonb)','EXECUTE') AS a,has_function_privilege('authenticated','viva_islem(uuid,text,jsonb)','EXECUTE') AS b");assert.equal(r.rows[0].a,false);assert.equal(r.rows[0].b,false);
+ });
+ await check('Doğrudan ve RPC yazımında 30 dakikanın katları zorunludur',async()=>{
+  let n=3000;
+  for(const sure of [5,29,31,45,60.5,91,120,1440,1441]){
+   await assert.rejects(rpc(200,'olustur',{...form(n++),sure_dakika:sure}),{code:'22023'});
+   await assert.rejects(db.query("INSERT INTO viva_etkinlikler(etkinlik_id,sahip_id,firma_id,baslik,baslangic,bitis) VALUES($1,$2,$3,'Kısa',now(),now()+make_interval(secs=>$4))",[id(n++),id(200),id(100),sure*60]),{code:'22023'});
+  }
+  for(const sure of [30,60,90])assert.equal((await rpc(200,'olustur',{...form(n++),sure_dakika:sure})).etkinlik.durum,'planlandi');
+ });
+ await check('Eski kısa kayıtta durum güncellemesi engellenmez; süre değişikliği doğrulanır',async()=>{
+  await db.query('ALTER TABLE viva_etkinlikler DISABLE TRIGGER trg_viva_sure_adimi');
+  await db.query("INSERT INTO viva_etkinlikler(etkinlik_id,sahip_id,firma_id,baslik,baslangic,bitis,olusturma_ozeti) VALUES($1,$2,$3,'Eski kısa',now(),now()+interval '5 minutes','{}')",[id(4000),id(200),id(100)]);
+  await db.query('ALTER TABLE viva_etkinlikler ENABLE TRIGGER trg_viva_sure_adimi');
+  await db.query("UPDATE viva_etkinlikler SET durum='sona_erdi' WHERE etkinlik_id=$1",[id(4000)]);
+  await assert.rejects(db.query("UPDATE viva_etkinlikler SET bitis=baslangic+interval '45 minutes' WHERE etkinlik_id=$1",[id(4000)]),{code:'22023'});
  });
  console.log(`Toplam: ${passed}/${passed}. Yalnız yerel sentetik PostgreSQL; canlı kabul değildir.`);
 } finally {

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import styles from "./viva.module.css";
 import formStyles from "./viva-form.module.css";
 import detayStyles from "./viva-detay.module.css";
@@ -8,15 +9,16 @@ import odaStyles from "./viva-oda.module.css";
 import VivaDetayIcerigi from "./VivaDetayIcerigi";
 import { vivaDetayBolumu, vivaDetayYolu, vivaEtkinlikKaynagi, vivaListeKaynakEtiketi, type VivaDetayBolumu, type VivaListeKaynagi } from "@/lib/viva/detay";
 import { YenileButonu } from "@/components/ui/yenile-butonu";
-import VivaOdaAlani from "./VivaOdaAlani";
+import { VivaKaliciOdaYeri } from "./VivaGorusmeSaglayici";
 import VivaEpostaAlani from "./VivaEpostaAlani";
 import VivaSaatSecimi from "./VivaSaatSecimi";
+import VivaSureSecimi from "./VivaSureSecimi";
 import VivaKaydirilabilirTablo from "./VivaKaydirilabilirTablo";
 import { vivaEpostalariAyir } from "@/lib/viva/eposta";
 import { vivaFirmaBolgeGruplari, vivaKisiSecimEtiketi } from "@/lib/viva/davetSecimi";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type FormEvent } from "react";
-import { ArrowRight, CalendarDays, ChevronRight, Plus, RotateCw, Search, UserRoundMinus, VideoOff, X } from "lucide-react";
+import { ArrowRight, CalendarDays, ChevronRight, Plus, RotateCw, Search, UserRoundMinus, X } from "lucide-react";
 import { Dialog } from "radix-ui";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -26,7 +28,7 @@ import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 import { SadeCokluAliciSecimi, SadeKapsulFiltre, SadeTarihAlani } from "@/components/kontrol/SadeKontroller";
 import { vivaGoogleTakvim, vivaOutlookTakvim } from "@/lib/viva/takvim";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { VIVA_DURUMLARI, vivaFormDogrula, vivaTarih, vivaTarihGirdisi, vivaYerelZamaniUtc, type VivaBaglam, type VivaDavetEpostaGirdisi, type VivaDetay, type VivaEtkinlik } from "@/lib/viva/sozlesme";
+import { VIVA_SURE_HATASI, vivaSureGecerliMi, VIVA_DURUMLARI, vivaFormDogrula, vivaTarih, vivaTarihGirdisi, vivaYerelZamaniUtc, type VivaBaglam, type VivaDavetEpostaGirdisi, type VivaDetay, type VivaEtkinlik } from "@/lib/viva/sozlesme";
 
 export type VivaGorunum = "liste" | "yeni" | "detay" | "duzenle" | "oda";
 export async function vivaIstek<T>(url: string, init?: RequestInit): Promise<T> {
@@ -92,7 +94,7 @@ function EtkinlikFormu({ baglam, detay, onKaydet, ilkTur }: { ilkTur?: "anlik" |
       if (epostalar.hatali) throw Error("Hatalı veya tamamlanmamış e-posta adreslerini düzeltin.");
       if (!["anlik", "planli"].includes(tur)) throw Error("Anlık Etkinlik veya Planlı Etkinlik seçeneğini seçin.");
       const sureDakika = Number(sure);
-      if (!Number.isInteger(sureDakika) || sureDakika < 1 || sureDakika > 1440) throw Error("Yayın süresi 1–1440 dakika olmalıdır.");
+      if (!vivaSureGecerliMi(sureDakika)) throw Error(VIVA_SURE_HATASI);
       const taslak = (event.nativeEvent as SubmitEvent).submitter?.getAttribute("value") === "taslak";
       const anlik = tur === "anlik";
       if (anlik && taslak) throw Error("Taslak için Planlı Etkinlik seçeneğini kullanın.");
@@ -134,7 +136,7 @@ function EtkinlikFormu({ baglam, detay, onKaydet, ilkTur }: { ilkTur?: "anlik" |
                 <div className={`${formStyles.field} ${formStyles.dateField}`}><Label htmlFor="viva-tarih">Başlangıç tarihi *</Label><SadeTarihAlani id="viva-tarih" required value={tarih} onChange={x => setTarih(x.target.value)} /></div>
                 <div className={formStyles.field}><Label htmlFor="viva-saat">Başlangıç saati *</Label><VivaSaatSecimi id="viva-saat" value={saat} onChange={setSaat} disabled={busy} /></div>
               </>}
-              <div className={formStyles.field}><Label htmlFor="viva-sure">Süre (dakika) *</Label><Input id="viva-sure" type="number" required min={1} max={1440} step={1} value={sure} onChange={x => setSure(x.target.value)} /></div>
+              <div className={formStyles.field}><Label htmlFor="viva-sure">Süre (dakika) *</Label><VivaSureSecimi id="viva-sure" value={sure} onChange={setSure} disabled={busy} /></div>
             </div>
           </section>}
           </div>
@@ -324,7 +326,7 @@ export default function VivaEkrani({ gorunum, etkinlikId, onizleme = false, anli
   if (gorunum === "oda") return <main className={odaStyles.screen}>
     {hata && <p role="alert" className={odaStyles.error}>{hata}</p>}{uyari && <p role="status" className={odaStyles.note}>{uyari}</p>}
     {!data && !hata && <p role="status" className={odaStyles.loading}>Yayın odası yükleniyor…</p>}
-    {e && (e.oda_acik ? <VivaOdaAlani key={e.etkinlik_id} etkinlikId={e.etkinlik_id} surum={e.surum} yonetebilir={e.yonetebilir} onizleme={onizleme && e.yonetebilir} otomatikKatil={anlikBaslat && e.yonetebilir && e.yayin_turu === "anlik"} /> : <section className={odaStyles.closedRoom} role="status"><span className={odaStyles.stateIcon}><VideoOff aria-hidden="true" /></span><h2>{e.durum === "iptal" ? "Etkinlik iptal edildi" : e.durum === "sona_erdi" ? "Buluşma sona erdi" : "Yayın odası kapalı"}</h2><p>Etkinliğin yayın odası kapalı. Etkinlik bilgilerini ve erişiminiz olan arşiv bölümlerini detay sayfasında görebilirsiniz.</p><Button asChild variant="outline"><Link href={`/viva/${e.etkinlik_id}`}>Etkinlik detayları</Link></Button></section>)}
+    {e && (e.oda_acik ? <VivaKaliciOdaYeri key={e.etkinlik_id} etkinlikId={e.etkinlik_id} surum={e.surum} yonetebilir={e.yonetebilir} onizleme={onizleme && e.yonetebilir} otomatikKatil={anlikBaslat && e.yonetebilir && e.yayin_turu === "anlik"} /> : <section className={odaStyles.closedRoom} role="status"><Image className={odaStyles.endLogo} src="/marka/viva/viva-mavi-ribon-yatay.svg" alt="Viva" width={325} height={94} /><h2>{e.durum === "iptal" ? "Etkinlik iptal edildi" : e.durum === "sona_erdi" ? "Buluşma sona erdi" : "Yayın odası kapalı"}</h2><p>Etkinliğin yayın odası kapalı. Etkinlik bilgilerini ve erişiminiz olan arşiv bölümlerini detay sayfasında görebilirsiniz.</p><Button asChild variant="outline"><Link href={`/viva/${e.etkinlik_id}`}>Etkinlik detayları</Link></Button></section>)}
   </main>;
   return <main className={`${styles.screen} mx-auto w-full max-w-5xl space-y-6 p-4 pb-12 text-foreground md:p-8`}>
     <header className="flex flex-wrap items-center justify-between gap-4"><div><Link href="/viva" className="text-sm font-semibold text-primary">Cogniti · Viva</Link><h1 className="mt-2 text-2xl font-bold">Viva</h1>{gorunum === "liste" && <p className="mt-2 text-sm text-muted-foreground">Etkinliklerinizi planlayın, ekibinizle buluşun.</p>}</div>

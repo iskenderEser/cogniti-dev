@@ -16,7 +16,7 @@ export interface VivaKatilimDeposu {
   erisimKaydet?: (d: VivaKatilimBaglami, dailyUserId: string) => Promise<void>;
 }
 export type VivaKatilimSonucu = {
-  durum: "hazir"; rol: VivaKatilimRolu; url: string; token: string; bitis: string;
+  durum: "hazir"; rol: VivaKatilimRolu; url: string; token: string; bitis: string; yayin_bitis: string; sunucu_zamani: string;
 } | {
   durum: "bekliyor"; neden: "zaman" | "oda" | "sunucu";
   mesaj: string; tekrar_saniye: number;
@@ -86,5 +86,5 @@ export async function vivaKatilimHazirla(depo: VivaKatilimDeposu, api: VivaDaily
   const son = vivaKatilimBaglami(await depo.oku());
   if (JSON.stringify(son) !== JSON.stringify(d)) throw new VivaDailyHatasi("Etkinlik veya katılım yetkiniz değişti. Yeniden deneyin.", "ETKINLIK_DEGISTI", 409);
   vivaDailyTokenAyarlari(son);
-  return { durum: "hazir", rol: d.rol, url: `https://${api.domain}/${ayarlar.room_name}`, token, bitis: new Date(ayarlar.exp * 1000).toISOString() };
+  return { durum: "hazir", rol: d.rol, url: `https://${api.domain}/${ayarlar.room_name}`, token, bitis: new Date(ayarlar.exp * 1000).toISOString(), yayin_bitis: d.bitis, sunucu_zamani: new Date().toISOString() };
 }

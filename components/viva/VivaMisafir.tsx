@@ -38,6 +38,8 @@ function MisafirIcerigi({ token }: { token: string }) {
   const [islemHatasi, setIslemHatasi] = useState(""); const [mesaj, setMesaj] = useState("");
   const [kod, setKod] = useState(""); const [kodAdimi, setKodAdimi] = useState(false);
   const [busy, setBusy] = useState<"kod" | "dogrula" | null>(null);
+  const [yayinBitti, setYayinBitti] = useState(false);
+  const yayinBittiBildir = useCallback(() => setYayinBitti(true), []);
   const [oda, setOda] = useState(false); const [yenileme, setYenileme] = useState(0);
   const [kontrolEdiliyor, setKontrolEdiliyor] = useState(false);
   const islemKilidi = useRef(false), islemKontrolu = useRef<AbortController | null>(null), bilgiKontrolu = useRef<AbortController | null>(null);
@@ -47,7 +49,7 @@ function MisafirIcerigi({ token }: { token: string }) {
     if (!signal.aborted) { setBilgi(b); setHata(""); setGecersiz(false); if (!b.dogrulandi) setOda(false); }
   }, [url]);
   useEffect(() => {
-    if (islemKilidi.current) return;
+    if (islemKilidi.current || yayinBitti) return;
     const kontrol = new AbortController(); bilgiKontrolu.current = kontrol;
     void yukle(kontrol.signal).catch(e => {
       if (!kontrol.signal.aborted) {
@@ -57,14 +59,15 @@ function MisafirIcerigi({ token }: { token: string }) {
       }
     }).finally(() => { if (!kontrol.signal.aborted) setKontrolEdiliyor(false); });
     return () => kontrol.abort();
-  }, [yukle, yenileme]);
+  }, [yukle, yenileme, yayinBitti]);
   useEffect(() => () => { islemKontrolu.current?.abort(); }, []);
   useEffect(() => {
+    if (yayinBitti) return;
     const yenile = () => { if (document.visibilityState === "visible" && !islemKilidi.current) setYenileme(n => n + 1); };
     const timer = window.setInterval(yenile, 30_000);
     document.addEventListener("visibilitychange", yenile);
     return () => { window.clearInterval(timer); document.removeEventListener("visibilitychange", yenile); };
-  }, []);
+  }, [yayinBitti]);
   function yenidenKontrol() {
     if (islemKilidi.current) return;
     setKontrolEdiliyor(true); setYenileme(n => n + 1);
@@ -140,7 +143,7 @@ function MisafirIcerigi({ token }: { token: string }) {
     </div>}
     {bilgi?.dogrulandi && oda && <section className={styles.guestRoom} aria-label="Misafir yayın odası">
       <header className={styles.roomHeader}><div><Button variant="ghost" onClick={() => setOda(false)}><ArrowLeft aria-hidden="true" />Etkinlik bilgilerine dön</Button><h1>{bilgi.baslik}</h1><p>{vivaTarih(bilgi.baslangic)} – {vivaTarih(bilgi.bitis)} · İzleyici</p></div><span className={styles.viewerTag}>Yalnız izleme</span></header>
-      <VivaOdaAlani davetToken={token} onDonus={() => setOda(false)} />
+      <VivaOdaAlani davetToken={token} onDonus={() => setOda(false)} onSureDoldu={yayinBittiBildir} />
     </section>}
     {bilgi && <div className={styles.refreshLine}><Button variant="ghost" disabled={!!busy || kontrolEdiliyor} onClick={yenidenKontrol}><RefreshCw aria-hidden="true" />{kontrolEdiliyor ? "Kontrol ediliyor…" : "Daveti yeniden kontrol et"}</Button></div>}
     <footer className={styles.guestFooter}>Cogniti · bilgi taşır</footer>

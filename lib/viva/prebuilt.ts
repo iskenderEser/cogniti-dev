@@ -3,20 +3,24 @@ import { cizimRenkCozucu, cizimTemasiniIzle } from "@/lib/tema/cizimRenkleri";
 
 export type VivaPrebuiltSdk = Pick<typeof import("@daily-co/daily-js").default, "createFrame" | "supportedBrowser">;
 export interface VivaGorusmeGirdisi {
-  durum: "hazir"; rol: "sunucu" | "katilimci" | "izleyici"; url: string; token: string; bitis: string;
+  durum: "hazir"; rol: "sunucu" | "katilimci" | "izleyici"; url: string; token: string; bitis: string; yayin_bitis?: string; sunucu_zamani?: string;
 }
 export function vivaGorusmeGirdisi(data: unknown): VivaGorusmeGirdisi {
   const d = data as VivaGorusmeGirdisi | null;
   let url: URL;
   try { url = new URL(d?.url ?? ""); } catch { throw new Error("Görüşme bağlantısı doğrulanamadı."); }
-  if (!d || d.durum !== "hazir" || !["sunucu", "katilimci", "izleyici"].includes(d.rol)
+  const simdi = d?.sunucu_zamani === undefined ? Date.now() : Date.parse(d.sunucu_zamani);
+  if (!d || !Number.isFinite(simdi) || d.durum !== "hazir" || !["sunucu", "katilimci", "izleyici"].includes(d.rol)
     || url.protocol !== "https:" || !/^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.daily\.co$/.test(url.hostname)
     || url.port || url.username || url.password || url.search || url.hash || !/^\/viva-[a-f0-9]{32}-n[1-9][0-9]*$/.test(url.pathname)
     || typeof d.token !== "string" || d.token.length > 16384 || !/^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/.test(d.token)
-    || typeof d.bitis !== "string" || !Number.isFinite(Date.parse(d.bitis)) || Date.parse(d.bitis) <= Date.now()) {
+    || typeof d.bitis !== "string" || !Number.isFinite(Date.parse(d.bitis)) || Date.parse(d.bitis) <= simdi
+    || (d.yayin_bitis !== undefined && (!Number.isFinite(Date.parse(d.yayin_bitis)) || Date.parse(d.yayin_bitis) < Date.parse(d.bitis)))) {
     throw new Error("Görüşme bağlantısı doğrulanamadı veya süresi dolmuş.");
   }
-  return { durum: "hazir", rol: d.rol, url: url.href, token: d.token, bitis: d.bitis };
+  return { durum: "hazir", rol: d.rol, url: url.href, token: d.token, bitis: d.bitis,
+    ...(d.yayin_bitis !== undefined ? { yayin_bitis: d.yayin_bitis } : {}),
+    ...(d.sunucu_zamani !== undefined ? { sunucu_zamani: d.sunucu_zamani } : {}) };
 }
 export function vivaPrebuiltTemasi(oge: Element): DailyThemeConfig {
   const coz = cizimRenkCozucu(oge);
@@ -38,6 +42,36 @@ body.cogniti-viva { font-family: Nunito, ui-rounded, system-ui, sans-serif; }
 body.cogniti-viva button, body.cogniti-viva input, body.cogniti-viva select { font-family: inherit; }
 body.cogniti-viva .daily-video-tile { border-radius: 12px; overflow: hidden; }
 body.cogniti-viva .daily-controls { border-radius: 12px; }
+/* Kamera kapalıyken Daily katılımcı kutusunda görünür; kutunun boyut ve tam ekran değişimlerini izler. */
+body.cogniti-viva .tile.local.noVideo:not(.isScreenshare)::after {
+  content: "Canlı yayın";
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  transform: scale(0.7);
+  transform-origin: top right;
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  max-width: calc(100% - 24px);
+  box-sizing: border-box;
+  padding: 5px 12px 5px 28px;
+  border: 1px solid #dc2626;
+  border-radius: 999px;
+  background: #dc2626;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2224%22 height=%2224%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23ffffff%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%222%22/%3E%3Cpath d=%22M16.24 7.76a6 6 0 0 1 0 8.48M7.76 16.24a6 6 0 0 1 0-8.48M19.07 4.93a10 10 0 0 1 0 14.14M4.93 19.07a10 10 0 0 1 0-14.14%22/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 12px center;
+  background-size: 10px 10px;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 18px;
+  white-space: nowrap;
+  pointer-events: none;
+}
 /* Daily'nin mevcut alt çubuğuyla sınırlı; ikon altındaki metinler kendi rengini korur. */
 body.cogniti-viva .tray { --viva-kontrol-mavisi: #237ac8; }
 body.cogniti-viva .tray button:not(#btn-leave) svg { color: var(--viva-kontrol-mavisi) !important; }

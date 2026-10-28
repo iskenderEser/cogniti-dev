@@ -45,17 +45,24 @@ export const vivaTarih = (utc: string) => new Intl.DateTimeFormat("tr-TR", {
   dateStyle: "medium", timeStyle: "short", timeZone: TR_SAAT_DILIMI,
 }).format(new Date(utc));
 
+export const VIVA_SURE_ADIMI = 30;
+export const VIVA_AZAMI_SURE = 90;
+export const VIVA_SURE_HATASI = "Yayın süresi yalnızca 30, 60 veya 90 dakika olabilir.";
+export const vivaSureGecerliMi = (dakika: unknown): dakika is number => typeof dakika === "number"
+  && Number.isInteger(dakika) && dakika >= VIVA_SURE_ADIMI && dakika <= VIVA_AZAMI_SURE && dakika % VIVA_SURE_ADIMI === 0;
+
 export function vivaFormDogrula(v: Record<string, unknown>, simdi = Date.now()): string | null {
   if (typeof v.baslik !== "string" || !v.baslik.trim() || v.baslik.trim().length > 160) return "Başlık 1–160 karakter olmalıdır.";
   if (typeof v.aciklama !== "string" || v.aciklama.length > 4000) return "Açıklama en fazla 4000 karakter olabilir.";
   if (v.yayin_turu !== undefined && !["anlik", "planli"].includes(String(v.yayin_turu))) return "Yayın türünü seçin.";
   if (v.yayin_turu === "anlik") {
     if (v.durum !== "planlandi" || v.baslangic !== undefined || v.bitis !== undefined) return "Anlık yayının başlangıcı sunucuda belirlenir.";
-    if (!Number.isInteger(v.sure_dakika) || Number(v.sure_dakika) < 1 || Number(v.sure_dakika) > 1440) return "Yayın süresi 1–1440 dakika olmalıdır.";
+    if (!vivaSureGecerliMi(v.sure_dakika)) return VIVA_SURE_HATASI;
   } else {
   const bas = typeof v.baslangic === "string" ? Date.parse(v.baslangic) : NaN;
   const bit = typeof v.bitis === "string" ? Date.parse(v.bitis) : NaN;
   if (!Number.isFinite(bas) || !Number.isFinite(bit) || bit <= bas) return "Bitiş, başlangıçtan sonra olmalıdır.";
+  if (!vivaSureGecerliMi((bit - bas) / 60_000)) return VIVA_SURE_HATASI;
   if (!['taslak', 'planlandi'].includes(String(v.durum))) return "Bu aşamada yalnız taslak veya planlanmış etkinlik kaydedilebilir.";
   if (v.durum === "planlandi" && bas <= simdi) return "Planlanan başlangıç gelecekte olmalıdır.";
   }
