@@ -118,7 +118,7 @@ export default function SolListe(props: SolListeProps) {
           padding: `7px 10px 7px ${10 + seviye * 8}px`,
           fontSize: "14px",
           fontWeight: aktif ? 700 : 600,
-          color: aktif ? "var(--tema-menu-secili-metin)" : "var(--tema-gezinme-metin)",
+          color: aktif ? "var(--tema-menu-secili-metin)" : path === "/token" ? "var(--tema-kontrol-eylem)" : "var(--tema-gezinme-metin)",
           background: aktif ? "var(--tema-menu-secili-zemin)" : isHover ? "var(--tema-menu-hover)" : "transparent",
           boxShadow: aktif ? "inset 0 0 0 1px var(--tema-menu-secili-halka)" : "none",
           fontFamily: "'Nunito', sans-serif",
@@ -211,7 +211,7 @@ export default function SolListe(props: SolListeProps) {
           // Ayrı kimlik kabukları başlığı bilinçli olarak gizleyebilir.
           if (grup.baslikGoster === false) {
             return (
-              <div key={grup.baslik} className="flex flex-col gap-1">
+              <div key={grup.baslik} className="flex flex-col gap-1" style={grup.ayirac ? { borderTop: "1px solid var(--tema-cizgi)", paddingTop: "12px" } : undefined}>
                 {gorunur.map(oge => <Fragment key={oge.anahtar ?? oge.etiket}>{OgeBlogu({ oge })}</Fragment>)}
               </div>
             );

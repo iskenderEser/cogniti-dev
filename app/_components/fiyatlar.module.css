@@ -43,3 +43,47 @@
 @media (max-width: 560px) { .tokenAmount .price { font-size: 23.76px; } }
 
 button.link { border: 0; padding: 0; background: transparent; font: inherit; font-size: 14px; cursor: pointer; }
+
+/* İçerik üretim hizmetleri */
+.productionSection { padding-bottom: 30px; }
+.production { grid-template-columns: minmax(280px, 1.35fr) minmax(0, 2.65fr); gap: 0; padding: 34px 0; border-bottom: 1px solid var(--tema-cizgi); }
+.productionHeading { padding-right: 24px; }
+.productionHeading .eyebrow { margin-bottom: 12px; }
+.productionHeading h2 { font-size: 27px; font-weight: 800; line-height: 1.2; white-space: nowrap; }
+.service { justify-content: center; align-items: flex-start; gap: 12px; padding: 4px 12px; }
+.service:first-child { border-left: 0; padding-left: 12px; }
+.service > svg { width: 28px; height: 28px; stroke-width: 1.8; }
+.service h3 { font-size: 14px; margin: 0 0 8px; }
+.service strong { font-size: 16px; }
+.productionInfo { display: grid; grid-template-columns: 62px minmax(0, 1fr) auto; align-items: center; gap: 20px; margin-top: 16px; padding: 20px 24px 20px 16px; border-radius: 8px; background: var(--tema-secili, #f0f5fd); }
+.productionInfoIcon { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: color-mix(in srgb, var(--tema-kontrol-eylem) 15%, var(--tema-kart-zemini, #fff)); color: var(--tema-kontrol-eylem); }
+.productionInfoIcon svg { width: 27px; height: 27px; stroke-width: 2; }
+.productionInfoText h3 { margin: 0 0 8px; font-size: 20px; font-weight: 800; line-height: 1.25; }
+.productionInfoText p { margin: 0; font-size: 13px; line-height: 1.5; color: var(--tema-ikincil-metin); }
+.productionSteps { list-style: none; display: grid; gap: 8px; margin: 0; padding: 0 0 0 28px; border-left: 1px solid var(--tema-cizgi); }
+.productionSteps li { display: flex; align-items: center; gap: 12px; white-space: nowrap; color: var(--tema-metin); font-size: 13px; }
+.productionSteps li span { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: color-mix(in srgb, var(--tema-kontrol-eylem) 15%, var(--tema-kart-zemini, #fff)); color: var(--tema-kontrol-eylem); }
+.productionSteps svg { width: 16px; height: 16px; stroke-width: 2.5; }
+@media (max-width: 1000px) { .productionHeading h2 { white-space: normal; } .production { grid-template-columns: minmax(215px, 1fr) minmax(0, 2fr); } .service { gap: 8px; padding-inline: 8px; } .service h3 { font-size: 12px; } .service strong { font-size: 13px; } .productionInfo { grid-template-columns: 52px minmax(0, 1fr); } .productionSteps { grid-column: 2; border-left: 0; border-top: 1px solid var(--tema-cizgi); padding: 14px 0 0; } .productionDesktopBreak { display: none; } }
+@media (max-width: 800px) { .production { grid-template-columns: 1fr; gap: 22px; } .productionHeading { border: 0; padding-right: 0; } .service:first-child { padding-left: 0; } }
+@media (max-width: 560px) { .production { padding: 26px 0; } .productionHeading h2 { font-size: 25px; } .services { gap: 22px 0; } .service { justify-content: flex-start; padding-left: 16px; } .service:nth-child(3) { padding-left: 0; } .productionInfo { grid-template-columns: 44px minmax(0, 1fr); align-items: start; gap: 12px; padding: 18px 14px; } .productionInfoIcon { width: 44px; height: 44px; } .productionInfoIcon svg { width: 23px; height: 23px; } .productionInfoText h3 { font-size: 18px; } .productionSteps { grid-column: 1 / -1; } }
+
+/* Dar ekranlarda metin ve hizmet alanlarının taşmasını önler. */
+.productionContent, .productionInfoText, .service > div { min-width: 0; }
+.productionInfoText p { overflow-wrap: anywhere; }
+.productionSteps li { white-space: normal; }
+.productionSteps li span { flex: 0 0 24px; }
+@media (max-width: 360px) {
+  .page { padding-inline: 16px; }
+  .services { grid-template-columns: 1fr; gap: 0; }
+  .service, .service:first-child, .service:nth-child(3) { border-left: 0; border-top: 1px solid var(--tema-cizgi); padding: 14px 0; }
+  .service:first-child { border-top: 0; }
+  .productionInfo { grid-template-columns: minmax(0, 1fr); }
+  .productionSteps { grid-column: 1; }
+}
+
+/* Yarım ekran ve tablet genişliğinde fiyat ve birim aynı satırda kalır. */
+.packagePrice { flex-wrap: nowrap; }
+.packagePrice h3 { font-size: clamp(28px, 3.1vw, 42px); white-space: nowrap; }
+.packagePrice span { font-size: clamp(15px, 1.6vw, 22px); white-space: nowrap; }
+@media (max-width: 700px) { .packagePrice h3 { font-size: 36px; } .packagePrice span { font-size: 22px; } }

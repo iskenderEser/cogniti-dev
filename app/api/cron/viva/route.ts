@@ -4,6 +4,7 @@ import { vivaSunucuMutabakat } from "@/lib/viva/yasamSunucu";
 import { vivaYanit } from "@/lib/viva/sunucu";
 import { vivaKayitMutabakat } from "@/lib/viva/kayitSunucu";
 import { vivaEpostaKuyrugunuIsle } from "@/lib/viva/epostaGonderimSunucu";
+import { vivaTuketimMutabakat } from "@/lib/viva/tuketimSunucu";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -22,7 +23,9 @@ async function isle(req: Request) {
     if (Date.now() - bas > 40_000) break;
     try { await vivaSunucuMutabakat(String(id), db); islenen++; } catch { hatali++; }
   }
-  return vivaYanit({ islenen, hatali, kayit, eposta }, hatali || kayit.hatali || eposta.hatali ? 503 : 200);
+  let tuketim = { islenen: 0, bekleyen: 0, hatali: 0 };
+  try { tuketim = await vivaTuketimMutabakat(db, bas + 52000); } catch { tuketim.hatali++; }
+  return vivaYanit({ islenen, hatali, kayit, eposta, tuketim }, hatali || kayit.hatali || eposta.hatali || tuketim.hatali ? 503 : 200);
 }
 export const GET = isle;
 export const POST = isle;

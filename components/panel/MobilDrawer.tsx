@@ -119,7 +119,7 @@ export default function MobilDrawer(props: MobilDrawerProps) {
           padding: girintili ? "10px 12px 10px 20px" : "10px 12px",
           fontSize: "14px",
           fontWeight: aktif ? 700 : 600,
-          color: aktif ? "var(--tema-menu-secili-metin)" : "var(--tema-gezinme-metin)",
+          color: aktif ? "var(--tema-menu-secili-metin)" : path === "/token" ? "var(--tema-kontrol-eylem)" : "var(--tema-gezinme-metin)",
           background: aktif ? "var(--tema-menu-secili-zemin)" : "transparent",
           fontFamily: "'Nunito', sans-serif",
           minHeight: "44px",
@@ -239,7 +239,7 @@ export default function MobilDrawer(props: MobilDrawerProps) {
 
             if (grup.baslikGoster === false) {
               return (
-                <div key={grup.baslik} className="flex flex-col gap-1">
+                <div key={grup.baslik} className="flex flex-col gap-1" style={grup.ayirac ? { borderTop: "1px solid var(--tema-cizgi)", paddingTop: "12px" } : undefined}>
                   {gorunur.map(oge => <Fragment key={oge.anahtar ?? oge.etiket}>{OgeBlogu({ oge })}</Fragment>)}
                 </div>
               );

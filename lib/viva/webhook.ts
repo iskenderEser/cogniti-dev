@@ -18,7 +18,7 @@ export function vivaWebhookOlayi(value: unknown) {
   if (!o || typeof o.id !== "string" || !o.id || o.id.length > 256 || typeof o.type !== "string" || !VIVA_DAILY_OLAYLAR.includes(o.type as typeof VIVA_DAILY_OLAYLAR[number]) || !o.payload || typeof o.payload !== "object" || Array.isArray(o.payload)) return null;
   const p = o.payload as Record<string, unknown>;
   // İsim, e-posta, userData, share_token, s3key ve indirme URL'si alınmaz.
-  const veri = Object.fromEntries(["room", "room_name", "meeting_id", "session_id", "user_id", "recording_id", "instance_id", "start_ts", "joined_at", "left_at", "timestamp"].flatMap(k => {
+  const veri = Object.fromEntries(["room", "room_name", "meeting_id", "session_id", "user_id", "recording_id", "instance_id", "start_ts", "end_ts", "duration", "joined_at", "left_at", "timestamp"].flatMap(k => {
     const v = p[k]; return typeof v === "string" && v.length <= 256 || typeof v === "number" && Number.isFinite(v) ? [[k, v]] : [];
   }));
   const tekil = o.type.startsWith("participant.") && typeof veri.session_id === "string"

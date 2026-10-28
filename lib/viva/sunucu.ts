@@ -34,6 +34,7 @@ export function vivaHata(err: unknown) {
   const e = err as { code?: string; message?: string };
   if (e.code === "P0001") {
     const tokenMesajlari: Record<string, string> = {
+      "COGNITI_TOKEN:viva_baslangic_bakiye": "Firmanızın token bakiyesi yeni Viva yayını başlatmak için yetersiz. Yeni ayda tekrar deneyebilirsiniz.",
       "COGNITI_TOKEN:bakiye_yetersiz": "Firmanızın token bakiyesi seçilen Viva davetleri için yetersiz. İşlem kaydedilmedi, token düşülmedi.",
       "COGNITI_TOKEN:hesap_yok": "Firmanızın token hesabı henüz açılmamış. Viva davet işlemi kaydedilmedi.",
       "COGNITI_TOKEN:viva_kimlik_belirsiz": "Bu e-posta birden fazla davetliyle eşleşiyor. Davet listesini kontrol edin.",

@@ -61,6 +61,7 @@ export interface NavGrup {
   // false yalnız ayrı kimlik kabuklarında kullanılır. İç sistem PANEL_NAV
   // gruplarında başlık, görünür öğe sayısından bağımsız olarak daima çizilir.
   baslikGoster?: boolean;
+  ayirac?: boolean;
 }
 
 /** Açık kapsam seçimi varsa adres yerine o seçimi kullanır. */
@@ -193,7 +194,7 @@ export const PANEL_NAV: NavGrup[] = [
       { etiket: "Mutabakat Takip", path: "/eczanem/tm/mutabakat-takip", tamEslesme: true, gate: (c) => c.eclubAcik && c.eczanemAcik && c.rolKucu === "tm" },
     ],
   },
-  { baslik: "Hesap", oglar: [{ etiket: "Token Kullanımı", path: "/token", gate: (c) => c.kimlikTuru !== "eclub_kisi" && c.rolKucu !== "admin" }] },
+  { baslik: "Token Kullanımı", baslikGoster: false, ayirac: true, oglar: [{ etiket: "Token Kullanımı", path: "/token", gate: (c) => c.kimlikTuru !== "eclub_kisi" && c.rolKucu !== "admin" }] },
 ];
 
 const MOBIL_KISISEL_HBSTORE_YOLLARI = new Set([

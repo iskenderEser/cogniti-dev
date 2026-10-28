@@ -7,7 +7,7 @@ type Data = {
   hesap: { paket_turu: string; aylik_paket_miktari: number | null; onay_yetkili_id: string | null; token_pasif_at: string | null; token_pasif_neden: string | null } | null;
   bakiye: { net_bakiye: number; paket_asimi: number } | null;
   yuklemeler: { yukleme_id: string; miktar: number; yukleme_turu: string; aciklama: string | null; created_at: string }[];
-  tuketimler: { tuketim_id: string; gonderen_turu: string; gonderen_id: string; alici_turu: string; alici_kimligi: string; islem_turu: string; kaynak_id: string; asim_miktari: number; created_at: string }[];
+  tuketimler: { tuketim_id: string; gonderen_turu: string; gonderen_id: string; alici_turu: string; alici_kimligi: string; islem_turu: string; kaynak_id: string; miktar: number; asim_miktari: number; created_at: string }[];
   kullanicilar: { kullanici_id: string; ad: string; soyad: string; rol: string }[];
 };
 const num = (value: number) => value.toLocaleString("tr-TR");
@@ -67,7 +67,7 @@ export default function TokenYonetimi({ firmaId }: { firmaId: string }) {
       <div style={rowStyle}><label style={labelStyle} htmlFor="token-aciklama">Açıklama</label><input id="token-aciklama" style={inputStyle} maxLength={500} value={aciklama} onChange={e => setAciklama(e.target.value)} /></div>
       <button style={btnBase} disabled={busy || !miktar || !aciklama.trim()} onClick={() => submit({ islem: "yukle", miktar: Number(miktar), aciklama })}>Token yükle</button></>}
       <h4>Son yüklemeler</h4>{data.yuklemeler.length ? <ul>{data.yuklemeler.map(y => <li key={y.yukleme_id}>{date(y.created_at)} · {num(y.miktar)} token · {y.aciklama || y.yukleme_turu}</li>)}</ul> : <p>Yükleme kaydı yok.</p>}
-      <h4>Son tüketimler</h4>{data.tuketimler.length ? <ul>{data.tuketimler.map(t => <li key={t.tuketim_id}>{date(t.created_at)} · {t.islem_turu} · Gönderen: {t.gonderen_id} · Alıcı: {t.alici_kimligi}{t.asim_miktari ? " · Paket aşımı" : ""}</li>)}</ul> : <p>Tüketim kaydı yok.</p>}
+      <h4>Son tüketimler</h4>{data.tuketimler.length ? <ul>{data.tuketimler.map(t => <li key={t.tuketim_id}>{date(t.created_at)} · {t.islem_turu} · {num(t.miktar ?? 1)} token · Gönderen: {t.gonderen_id} · Alıcı: {t.alici_kimligi}{t.asim_miktari ? " · Paket aşımı" : ""}</li>)}</ul> : <p>Tüketim kaydı yok.</p>}
     </>}
   </section>;
 }

@@ -17,7 +17,7 @@ export async function GET(_request: NextRequest, { params }: Context) {
       db.from("cogniti_token_hesaplari").select("paket_turu,aylik_paket_miktari,onay_yetkili_id,token_pasif_at,token_pasif_neden").eq("firma_id", firma_id).maybeSingle(),
       db.rpc("cogniti_token_bakiye", { p_firma: firma_id }),
       db.from("cogniti_token_yuklemeleri").select("yukleme_id,yukleme_turu,miktar,kalan,son_kullanim_at,aciklama,created_at").eq("firma_id", firma_id).order("created_at", { ascending: false }).limit(50),
-      db.from("cogniti_token_tuketimleri").select("tuketim_id,gonderen_turu,gonderen_id,alici_turu,alici_kimligi,islem_turu,kaynak_id,asim_miktari,created_at").eq("firma_id", firma_id).order("created_at", { ascending: false }).limit(50),
+      db.from("cogniti_token_tuketimleri").select("tuketim_id,gonderen_turu,gonderen_id,alici_turu,alici_kimligi,islem_turu,kaynak_id,miktar,asim_miktari,created_at").eq("firma_id", firma_id).order("created_at", { ascending: false }).limit(50),
       db.from("kullanicilar").select("kullanici_id,ad,soyad,rol").eq("firma_id", firma_id).eq("aktif_mi", true).order("ad"),
     ]);
     const error = account.error ?? balance.error ?? loads.error ?? usage.error ?? users.error;
