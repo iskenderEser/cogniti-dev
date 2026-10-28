@@ -23,7 +23,7 @@ export default function FiyatlarIcerigi() {
     <MusteriTalepFormu secim={secim} onKapat={() => setSecim(null)} />
     <h1 className={styles.eyebrow}>FİYATLANDIRMA</h1>
     <section className={styles.payg} aria-labelledby="kullandigin-kadar">
-      <div className={styles.paygDescription}><h2 id="kullandigin-kadar">Kullandığın Kadar Öde</h2><span className={styles.line} /><p>Taahhüt yok, esneklik var.</p><ul><li><Check size={14} /> Ay sonu faturalama</li><li><Check size={14} /> 30 gün ödeme vadesi</li><li><Check size={14} /> Süresiz token kullanımı</li></ul></div>
+      <div className={styles.paygDescription}><h2 id="kullandigin-kadar">Kullandığın Kadar Öde</h2><span className={styles.line} /><p>Taahhüt yok, esneklik var.</p><ul><li><Check size={14} /> Ay sonu faturalama</li><li><Check size={14} /> 30 gün ödeme vadesi</li><li><Check size={14} /> Aylık 1.500 token kullanım limiti</li></ul></div>
       <div className={styles.paygPrice}><strong>9,90 TL</strong><span>/ token</span></div>
       <button type="button" className={styles.link} onClick={() => setSecim("Kullandığın Kadar Öde")}><span><ArrowUpRight size={16}/></span>Kullanmaya Başlayın</button>
     </section>

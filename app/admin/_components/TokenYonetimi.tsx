@@ -22,14 +22,13 @@ export default function TokenYonetimi({ firmaId }: { firmaId: string }) {
   const [paketMiktari, setPaketMiktari] = useState(10000);
   const [miktar, setMiktar] = useState("");
   const [aciklama, setAciklama] = useState("");
-  const [yetkili, setYetkili] = useState("");
   const pending = useRef<{ fingerprint: string; key: string } | null>(null);
   const url = `/admin/api/firmalar/${firmaId}/token`;
   const load = useCallback(async () => {
     const response = await fetch(url, { cache: "no-store" });
     if (!response.ok) throw new Error("Token bilgileri alınamadı.");
     const result = await response.json() as Data;
-    setData(result); setYetkili(result.hesap?.onay_yetkili_id ?? "");
+    setData(result);
   }, [url]);
   useEffect(() => { load().catch(() => setError("Token bilgileri alınamadı.")); }, [load]);
   async function submit(payload: Record<string, unknown>) {
@@ -56,17 +55,17 @@ export default function TokenYonetimi({ firmaId }: { firmaId: string }) {
       <p>Bu firma için henüz token hesabı açılmadı.</p>
       <div style={rowStyle}><label style={labelStyle} htmlFor="token-paket">Paket</label><select id="token-paket" style={inputStyle} value={paket} onChange={e => setPaket(e.target.value)}><option value="kullandigin_kadar_ode">Kullandığın Kadar Öde</option><option value="aylik">Aylık paket</option></select></div>
       {paket === "aylik" && <div style={rowStyle}><label style={labelStyle} htmlFor="token-paket-miktar">Aylık token</label><select id="token-paket-miktar" style={inputStyle} value={paketMiktari} onChange={e => setPaketMiktari(Number(e.target.value))}>{[10000,30000,75000].map(n => <option key={n} value={n}>{num(n)}</option>)}</select></div>}
-      <p>{paket === "aylik" ? "Seçilen miktar ilk dönem için yüklenir." : "Başlangıçta 1.500 süresiz token yüklenir."}</p>
+      <p>{paket === "aylik" ? "Seçilen miktar ilk dönem için yüklenir." : "Her ay 1.500 token tanımlanır."}</p>
       <button style={btnBase} disabled={busy} onClick={() => submit({ islem: "hesap_ac", paket, miktar: paket === "aylik" ? paketMiktari : null })}>Hesabı aç</button>
     </> : <>
       <p>Paket: <strong>{data.hesap.paket_turu === "aylik" ? `Aylık ${num(data.hesap.aylik_paket_miktari ?? 0)} token` : "Kullandığın Kadar Öde"}</strong></p>
-      {data.hesap.token_pasif_neden === "token_bitti" && <p role="status" style={{ color: "#b42318" }}>Firma, token bakiyesi bittiği için {data.hesap.token_pasif_at ? date(data.hesap.token_pasif_at) : ""} tarihinde pasife alındı. Yeniden açmak için token yükleyip firma anahtarını etkinleştirin.</p>}
+      {data.hesap.token_pasif_neden === "token_bitti" && <p role="status" style={{ color: "#b42318" }}>Firma önceki token kuralıyla pasife alındı. Yeni aylık kural kurulduktan sonra durumunu kontrol edin.</p>}
       <p>Bakiye: <strong>{data.bakiye ? num(data.bakiye.net_bakiye) : "—"} token</strong>{data.bakiye && data.bakiye.paket_asimi > 0 ? ` · Paket aşımı: ${num(data.bakiye.paket_asimi)}` : ""}</p>
-      {data.hesap.paket_turu === "kullandigin_kadar_ode" && <><div style={rowStyle}><label style={labelStyle} htmlFor="token-yetkili">Devam onayı</label><select id="token-yetkili" style={inputStyle} value={yetkili} onChange={e => setYetkili(e.target.value)}><option value="">Yetkili seçin</option>{data.kullanicilar.map(k => <option key={k.kullanici_id} value={k.kullanici_id}>{k.ad} {k.soyad} ({k.rol})</option>)}</select></div><button style={btnBase} disabled={busy || !yetkili || yetkili === data.hesap.onay_yetkili_id} onClick={() => submit({ islem: "yetkili", kullanici_id: yetkili })}>Yetkiliyi kaydet</button></>}
-      <h4>Token yükle</h4>
+
+      {data.hesap.paket_turu === "aylik" && <><h4>Token yükle</h4>
       <div style={rowStyle}><label style={labelStyle} htmlFor="token-miktar">Miktar</label><input id="token-miktar" style={inputStyle} type="number" min="1" max="10000000" step="1" value={miktar} onChange={e => setMiktar(e.target.value)} /></div>
       <div style={rowStyle}><label style={labelStyle} htmlFor="token-aciklama">Açıklama</label><input id="token-aciklama" style={inputStyle} maxLength={500} value={aciklama} onChange={e => setAciklama(e.target.value)} /></div>
-      <button style={btnBase} disabled={busy || !miktar || !aciklama.trim()} onClick={() => submit({ islem: "yukle", miktar: Number(miktar), aciklama })}>Token yükle</button>
+      <button style={btnBase} disabled={busy || !miktar || !aciklama.trim()} onClick={() => submit({ islem: "yukle", miktar: Number(miktar), aciklama })}>Token yükle</button></>}
       <h4>Son yüklemeler</h4>{data.yuklemeler.length ? <ul>{data.yuklemeler.map(y => <li key={y.yukleme_id}>{date(y.created_at)} · {num(y.miktar)} token · {y.aciklama || y.yukleme_turu}</li>)}</ul> : <p>Yükleme kaydı yok.</p>}
       <h4>Son tüketimler</h4>{data.tuketimler.length ? <ul>{data.tuketimler.map(t => <li key={t.tuketim_id}>{date(t.created_at)} · {t.islem_turu} · Gönderen: {t.gonderen_id} · Alıcı: {t.alici_kimligi}{t.asim_miktari ? " · Paket aşımı" : ""}</li>)}</ul> : <p>Tüketim kaydı yok.</p>}
     </>}

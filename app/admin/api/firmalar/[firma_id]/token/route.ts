@@ -34,16 +34,6 @@ export async function POST(request: NextRequest, { params }: Context) {
     if (!UUID.test(firma_id)) return validasyonHatasi("Geçersiz firma.", ["firma_id"]);
     const body = await request.json();
     const db = createAdminClient();
-    if (body.islem === "yetkili") {
-      if (typeof body.kullanici_id !== "string" || !UUID.test(body.kullanici_id)) return validasyonHatasi("Yetkili seçin.", ["kullanici_id"]);
-      const person = await db.from("kullanicilar").select("kullanici_id").eq("kullanici_id", body.kullanici_id).eq("firma_id", firma_id).eq("aktif_mi", true).maybeSingle();
-      if (person.error) return hataYaniti("Yetkili kontrol edilemedi.", "admin token yetkili", person.error);
-      if (!person.data) return validasyonHatasi("Firma için aktif kullanıcı seçin.", ["kullanici_id"]);
-      const updated = await db.from("cogniti_token_hesaplari").update({ onay_yetkili_id: body.kullanici_id }).eq("firma_id", firma_id).eq("paket_turu", "kullandigin_kadar_ode").select("firma_id").maybeSingle();
-      if (updated.error) return hataYaniti("Yetkili kaydedilemedi.", "admin token yetkili UPDATE", updated.error);
-      if (!updated.data) return validasyonHatasi("KKÖ hesabı bulunamadı.", ["firma_id"]);
-      return NextResponse.json({ ok: true });
-    }
     if (typeof body.anahtar !== "string" || !UUID.test(body.anahtar)) return validasyonHatasi("İşlem anahtarı geçersiz.", ["anahtar"]);
     if (body.islem === "hesap_ac") {
       if (!["aylik", "kullandigin_kadar_ode"].includes(body.paket)) return validasyonHatasi("Paket seçin.", ["paket"]);

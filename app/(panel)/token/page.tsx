@@ -35,7 +35,7 @@ export default function TokenSayfasi(){
   {!data && yukleniyor ? <p>Bilgiler yükleniyor…</p> : data && !data.hesap_var ? <p>Firmanız için henüz token hesabı açılmadı.</p> : data?.hesap_var && <>
    <div className={styles.stats}>
     <div><span>KALAN TOKEN</span><strong>{n(data.bakiye??0)}</strong><small>Firmanızın kullanılabilir bakiyesi</small></div>
-    <div><span>PAKET</span><strong className={styles.paket}>{data.paket_turu==="aylik"?"Aylık paket":"Kullandığın Kadar Öde"}</strong><small>{data.paket_turu==="aylik"?"2 ay token kullanım süresi":"Süresiz token kullanımı"}</small></div>
+    <div><span>PAKET</span><strong className={styles.paket}>{data.paket_turu==="aylik"?"Aylık paket":"Kullandığın Kadar Öde"}</strong><small>{data.paket_turu==="aylik"?"2 ay token kullanım süresi":"Aylık 1.500 token kullanım limiti"}</small></div>
     <div><span>{(kapsam==="benim"?"Kendi kullanımım":scopeName+" kullanımı").toLocaleUpperCase("tr-TR")}</span><strong>{n(data.toplam??0)}</strong><small>Toplam tüketilen token</small></div>
    </div>
    {(data.paket_asimi??0)>0 && <p className={styles.asim}>Paket aşımı: {n(data.paket_asimi??0)} token</p>}

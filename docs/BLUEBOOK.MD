@@ -7,6 +7,10 @@
 ## 🏛️ Giriş ve Metodoloji
 **HapBilgi BLUEBOOK**, platformun iş modelini, kullanıcı alanlarını, rol ve yetki yapısını, üretim ve yayın akışlarını, öğrenme ve işlem kurallarını, veri mimarisini, arayüz sözleşmelerini ve dosya–tür–işlev envanterini tek kaynakta tanımlayan ana başvuru belgesidir.
 
+### 28 Ekim 2026 — KKÖ kural değişikliği
+
+Kullanıcı kararı: KKÖ bakiyesi her ayın 1’inde 1.500 token olarak yenilenir, kullanılmayan token devretmez ve 1.500 sınırı aşılmaz. GM’den ek yükleme onayı kaldırılır; token biterse yeni aya kadar gönderim durur. Kullanıcı beş SQL testinin başarılı olduğunu ve işleyici ile cronun kurulduğunu doğruladı; gerçek ay geçişi henüz doğrulanmadı. Aşağıdaki 27 Ekim KKÖ bilgileri tarihsel durumdur.
+
 ### 27 Ekim 2026 — Cogniti Token sistemi ve doğrulama durumu
 
 İş planı ve ayrıntılı uygulama kayıtları `docs/COGNITI_TOKEN_PLANI.md` dosyasındadır. Aşağıdaki kodlar çalışma ağacındadır; uygulama değişiklikleri henüz commit veya dağıtım olarak doğrulanmamıştır. Kullanıcı, ilgili SQL kurulum sonuçlarını veritabanında doğrulamıştır. Gerçek kullanıcılarla uçtan uca doğrulanmayan davranışlar tamamlanmış kabul edilmez.

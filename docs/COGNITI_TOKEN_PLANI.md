@@ -2,6 +2,10 @@
 
 **Durum:** Plan. Bu belge geliştirme, veritabanı kurulumu veya canlıya alma işleminin tamamlandığı anlamına gelmez.
 
+## 28 Ekim 2026 — KKÖ kural değişikliği
+
+KKÖ her Türkiye takvim ayının 1’inde 1.500 token ile yenilenecek; önceki aydan kalan token sıfırlanacak ve bakiye 1.500’ü geçmeyecek. GM onayı ve ay içinde ek yükleme kaldırılacak. Bakiye bittiğinde yeni aya kadar gönderim duracak; firma hesabı kapatılmayacak. Kullanıcı beş SQL testinin başarılı olduğunu ve aylık işleyici ile cron kurulum sonuçlarının true olduğunu doğruladı. Gerçek ay geçişi henüz doğrulanmadı. Eski davranış aşağıdaki tarihsel kayıtlarda gösterilmektedir.
+
 ## Kararlaştırılan temel kurallar
 
 - Token tüketimi gönderici üzerinden, gönderim yapıldığı anda hesaplanır; alıcının içeriği açması, görmesi veya okuması beklenmez. Gönderilen her alıcı için 1 token, ilgili firmanın bakiyesinden düşer.
