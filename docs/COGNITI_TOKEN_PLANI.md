@@ -2,11 +2,25 @@
 
 **Durum:** Plan. Bu belge geliştirme, veritabanı kurulumu veya canlıya alma işleminin tamamlandığı anlamına gelmez.
 
+## 28 Ekim 2026 — Viva: gerçek kullanım üzerinden token tüketimi
+
+Bu karar, aşağıdaki tarihsel Viva davet ücretlendirmesinin yerini alır. Davet oluşturmak token tüketmez. Yayın tamamlandığında Daily oturum/katılımcı süreleri alınır; yayın sahibi dahil gerçek katılımlar, çıkışlar ve tekrar girişler toplam kişi-saniyede birleştirilir. İmzalı Daily katılımcı ayrılış olayları, API'de görünmeyen kısa katılımları tamamlar. Eksik veya devam eden oturum kesinleştirilmez; işlem yeniden denenir.
+
+- **Formül:** `toplam kişi-dakika × 0,004 USD × 55 TL × 1,5 ÷ güncel KKÖ token birim fiyatı`. KKÖ fiyatı fiyatlar sayfasıyla ortak kaynaktır (`lib/token/fiyatlandirma.ts`); bugün 9,90 TL. Fiyatlar mutabakat başlangıcında sabitlenir. Ücretsiz Daily kotası veya hacim indirimi bu satış hesabından düşülmez.
+- **Yuvarlama:** Her Viva yayını için yalnız toplam sonuç tam tokena yuvarlanır; 0,5 ve üzeri yukarı, altı aşağı. Sonuç sıfır olabilir. Güncel fiyatla 100 kişinin 60 dakika katılımı 200 token eder.
+- **KKÖ:** Yeni yayın başlarken bakiye sıfırsa başlangıç engellenir. Başlamış yayının gerçek tüketimi mevcut bakiyeyi aşabilir. Örneğin 1.470 tüketilmişken 35 tokenlık Viva, o ayın toplam tüketimini 1.505 yapar; kalan 30 düşer, 5 o ayın paket aşımıdır. Bu 5 token sonraki ayın 1.500 hakkından düşülmez. Firma hesabı açık kalır. Ay kapandıktan sonra gelen mutabakat eski ayın kullanılmamış hakkını ve aşımını düzeltir; yeni ayın hakkına dokunmaz.
+- **Aylık paket:** Mevcut tüketim, negatif bakiye ve sonraki yüklemeden mahsup davranışı sürer.
+- **Geçiş:** Davet tüketim tetikleyicileri kaldırılır; eski ücret kayıtları korunur. Geçmişte davet ücreti alınmış etkinlik ikinci kez ücretlendirilmez. Yeni etkinlikler ile henüz başlamamış ve davet ücreti alınmamış plan/taslaklar yeni modele girer.
+- **İşleyici:** Mevcut Viva cron'u kalıcı mutabakat kuyruğunu işler. Yayın kapanışından en az 45 saniye sonra, en az 30 saniye arayla aynı kullanım verisi iki kez görülünce tüketim tek kayıt olarak yazılır. Bu yüzden anlık/20 saniyelik sonuç taahhüdü yoktur; sağlayıcı gecikmesi ve kuyruk sonuç süresini uzatabilir. Yeniden deneme ve eş zamanlı çağrı ikinci tüketim üretmez. Token raporları kayıt sayısını değil tüketim miktarını toplar.
+- **Doğrulama ve kurulum:** Kod ve SQL hazırlandı. 49 uygulama testi, 14 yerel PostgreSQL senaryosu (rol kapsamı, iki bağlantıyla yarış, KKÖ/aylık, ay geçişi, yuvarlama, eski ücretleri koruma) ve 14 gün sonu rapor testi geçti. TypeScript kontrolü geçti; kapsamlı lint kontrolünde hata yok. Canlı Daily yayınıyla doğrulanmadı. `scripts/sql/cogniti_token_viva_kullanim_kurulum.sql` kullanıcı tarafından çalıştırılacak; canlı veritabanına uygulanmış kabul edilmez. Ayrıntılı geçiş notu: `docs/VIVA_TOKEN_KULLANIM_GECISI.md`.
+
 ## 28 Ekim 2026 — KKÖ kural değişikliği
 
-KKÖ her Türkiye takvim ayının 1’inde 1.500 token ile yenilenecek; önceki aydan kalan token sıfırlanacak ve bakiye 1.500’ü geçmeyecek. GM onayı ve ay içinde ek yükleme kaldırılacak. Bakiye bittiğinde yeni aya kadar gönderim duracak; firma hesabı kapatılmayacak. Kullanıcı beş SQL testinin başarılı olduğunu ve aylık işleyici ile cron kurulum sonuçlarının true olduğunu doğruladı. Gerçek ay geçişi henüz doğrulanmadı. Eski davranış aşağıdaki tarihsel kayıtlarda gösterilmektedir.
+KKÖ her Türkiye takvim ayının 1’inde 1.500 token ile yenilenecek; önceki aydan kalan token sıfırlanacak ve yükleme hakkı 1.500’ü geçmeyecek. Başlamış Viva yayınının sonradan belirlenen tüketimi için yukarıdaki cari ay aşımı istisnası geçerlidir. GM onayı ve ay içinde ek yükleme kaldırılacak. Bakiye bittiğinde yeni aya kadar gönderim duracak; firma hesabı kapatılmayacak. Kullanıcı beş SQL testinin başarılı olduğunu ve aylık işleyici ile cron kurulum sonuçlarının true olduğunu doğruladı. Gerçek ay geçişi henüz doğrulanmadı. Eski davranış aşağıdaki tarihsel kayıtlarda gösterilmektedir.
 
-## Kararlaştırılan temel kurallar
+## İlk uygulamanın tarihsel kuralları
+
+KKÖ ve Viva için yukarıdaki 28 Ekim kararları geçerlidir; aşağıdaki eski kurallar değişiklik öncesi durumu belgeler.
 
 - Token tüketimi gönderici üzerinden, gönderim yapıldığı anda hesaplanır; alıcının içeriği açması, görmesi veya okuması beklenmez. Gönderilen her alıcı için 1 token, ilgili firmanın bakiyesinden düşer.
 
@@ -105,7 +119,9 @@ Bu bölüm başlangıçtaki kod incelemesidir; sonraki adımlardaki uygulama ve 
 - Kullanıcı UTT hedefli gerçek anlık yayında Hepifarma bakiyesinin 1.487 → 1.481 düştüğünü ve altı tüketim kaydı oluştuğunu gösterdi.
 - İleri tarihli yayın planlandığında bakiye 1.481 olarak kaldı. Gerçek planlı açılışın tüketimi ertesi güne bırakıldı; henüz doğrulanmadı.
 
-## 5. Viva davetlerinde token tüketimi
+## 5. Viva davetlerinde token tüketimi — eski model
+
+Bu bölüm tarihsel uygulama kaydıdır. Güncel kural: yukarıdaki 28 Ekim gerçek kullanım modeli.
 
 1. Cogniti kullanıcıları ve özel davetliler için kişi başına 1 token tüket.
 2. `etkinlik_id` ve kişi esas alınarak aynı etkinlikte aynı kişiden yalnız bir kez token düş.
@@ -191,3 +207,10 @@ Bu bölüm başlangıçtaki kod incelemesidir; sonraki adımlardaki uygulama ve 
 7. Önce izole ortamda sahte verilerle çalış; canlı firma bakiyelerini test için değiştirme.
 8. Kurulum ve geçiş sırasını hazırla; gerekli SQL'in uygulanmasını ve sonucunu ayrıca doğrula.
 9. Uygulanan kuralları ve doğrulama sonuçlarını Bluebook'a işle.
+
+
+### 28 Ekim 2026 — cron hedefi, commit öncesi durum
+
+Kullanıcı `cogniti_viva_yasam` görevinin aktif=false olduğunu doğruladı ve sonra aynı görevi active=true yaptı. Dakikalık iki çalıştırma succeeded döndü. İlk HTTP kontrolü eski `hapbilgi.vercel.app` hedefinde 401 ve uygulamanın Yetkisiz erişim yanıtını verdi. Kullanıcının doğruladığı yeni adres doğrultusunda Vault'taki `hapbilgi_cron_base_url` değeri kullanıcı tarafından `https://cogniti-dev.vercel.app` yapıldı. Anahtar adı/değeri değiştirilmedi. Yeni hedefteki 126925 numaralı HTTP kontrolü 200, zaman aşımı yok ve 15 iş/0 hata döndürdü. Bu yanıtta tuketim alanı yoktu; güncel tüketim kodu henüz push/deployment edilmemişti. Otomatik gerçek tüketimin üretim doğrulaması deployment sonrasına kalır. Teknik Hapbilgi adlarının toplu dönüşümü ayrı task kapsamıdır.
+
+Commit öncesi kontrol: `npm run typecheck:build` ve `git diff --check` başarılı. Dokuz hedefli test dosyasında 139 testin 138'i başarılı, biri başarısız: `tests/vivaArayuz.hedef.test.ts` içindeki takvim düğmeleri beklentisi. Bu test gövdesi baz commit'te de aynı; ilgili `VivaDetayIcerigi` bileşeni pakette değiştirilmemiş ve takvim prop'unu göstermiyor. Bu commit hazırlığında ürün davranışı veya test beklentisi değiştirilmedi. Daha önceki tüketim doğrulamasında 17 yerel PostgreSQL senaryosu ve 8 tüketim uygulama testi başarılıydı. Tam production build ve deployment sonrası otomatik kontör kabulü yapılmış sayılmaz.
