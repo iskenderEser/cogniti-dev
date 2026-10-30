@@ -169,6 +169,7 @@ Mevcut E-Club Adım 11 test sonuçları (`docs/ECLUB_GONDERIM_ADIM11_TEST_SONUCL
 
 Token sisteminin temel uygulaması ve SQL kurulumları yapılmıştır; aşağıdaki işler beklemektedir. Ayrıntılar `docs/COGNITI_TOKEN_PLANI.md` ve `docs/BLUEBOOK.MD` içindedir. Kullanıcı SQL dosyalarını kendisi çalıştırır; veritabanında SQL çalıştırma.
 
+- **TB-VIVA-01 — Viva otomatik kontör canlı kabulü bekliyor.** Deployment sonrası cron endpoint’i HTTP 200 ve güncel tüketim adımıyla doğrulandı; o çağrıda iş yoktu. Yeni gerçek yayın için manuel tetikleme olmadan zamanlanmış üretim cron’unun doğru tutarı tek kez düşürdüğünü doğrula. Kullanıcı bunu teknik borç olarak bıraktı; açık test talimatı olmadan gerçek yayın testi başlatma. Kapanma koşulları `docs/VIVA_TOKEN_KULLANIM_GECISI.md` içindedir.
 - Planlı yayının gerçek açılışında token tüketimini doğrula; plan kaydında tüketim olmadığını kullanıcı doğruladı.
 - 28 Ekim KKÖ kararına göre her ay 1.500 token yenilenir, kalan devretmez ve GM onayı kaldırılır. Kullanıcı beş SQL testinin başarılı olduğunu ve kurulum ile cron sonucunun true olduğunu iletti; gerçek ay başı yenilemesini ve tükenen bakiye davranışını doğrula.
 - Token ekranının firma rollerindeki görünümünü ve yetkilerini gerçek kullanıcılarla kontrol et; kullanıcıyla görsel düzenlemeleri ele al. Eczacılar ve eczane çalışanları token bilgisi görmez.

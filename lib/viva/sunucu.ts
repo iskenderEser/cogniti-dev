@@ -186,7 +186,13 @@ export async function vivaOku(islem: string, veri: Record<string, unknown>) {
       ? await db.rpc("viva_eposta_detay", { p_auth: user.id, p_id: veri.etkinlik_id })
       : await db.rpc("viva_islem", { p_auth: user.id, p_islem: islem, p_veri: veri });
   if (error) throw error;
-  if (islem === "baglam") return vivaFirmaBolgeBilgileriniEkle(db, data);
+  if (islem === "baglam") {
+    const baglam = await vivaFirmaBolgeBilgileriniEkle(db, data);
+    if (!baglam.olusturabilir) return baglam;
+    const urunler = await db.rpc("viva_egitim_urunleri", { p_auth: user.id });
+    if (urunler.error) throw urunler.error;
+    return { ...baglam, urunler: urunler.data };
+  }
   return islem === "detay" ? vivaKatilimciBilgileriniEkle(db, user.id, await vivaYayinZamanlariniEkle(db, data)) : data;
 }
 

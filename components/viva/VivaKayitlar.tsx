@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Clock3, Download, Play, Video } from "lucide-react";
 import { YenileButonu } from "@/components/ui/yenile-butonu";
+import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 import { vivaIndirmeAcik } from "@/lib/viva/indirme";
 import { vivaTarih } from "@/lib/viva/sozlesme";
 import styles from "./viva-detay.module.css";
@@ -60,7 +61,7 @@ export default function VivaKayitlar({ etkinlikId, canli, detayTasarimi = false,
     catch (e) { if (!signal?.aborted) setHata(e instanceof Error ? e.message : "Kayıt bağlantısı alınamadı."); } finally { islemKilitli.current = false; if (!signal?.aborted) setBusy(false); }
   }
   if (detayTasarimi) return <Card className={styles.pane}><section aria-label="Viva kayıtları">
-    <div className={styles.paneHead}><h2>Yayın kayıtları</h2><YenileButonu yenileniyor={busy} etiket="Kayıtları güncelle" onYenile={yenile} /></div>
+    <SayfaYenileBasligi className={styles.paneHead} baslik={<h2>Yayın kayıtları</h2>} aksiyon={<YenileButonu yenileniyor={busy} etiket="Kayıtları güncelle" onYenile={yenile} />} />
     <p className={styles.sectionDescription}>Video ve sohbet kaydını yayın odasındaki <strong>Kaydı başlat / Kaydı durdur</strong> düğmesiyle yönetin. Her başlangıç ayrı bir kayıt parçası oluşturabilir.</p>
     <p className={`${styles.note} ${sureDoldu ? styles.warning : ""}`}><Clock3 aria-hidden="true" />{sureDoldu ? "7 günlük indirme süresi doldu." : indirmeBitis ? `Son indirme: ${vivaTarih(indirmeBitis)}` : "Kayıtlar yayın bittikten sonra 7 gün indirilebilir."}</p>
     {hata && <p role="alert" className={styles.error}>{hata}</p>}{bilgi && <p role="status" className={styles.help}>{bilgi}</p>}

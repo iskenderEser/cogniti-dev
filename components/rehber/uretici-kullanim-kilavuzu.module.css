@@ -19,25 +19,20 @@
 .kulakcik {
   position: absolute;
   right: 100%;
-  top: 30px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  width: 42px;
-  min-height: 168px;
-  padding: 12px 6px;
-  border: 1px solid var(--tema-cizgi);
-  border-right: 0;
-  border-radius: 12px 0 0 12px;
-  background: var(--tema-secili);
-  color: var(--tema-eylem);
+  top: 62px;
+  display: grid;
+  place-items: center;
+  width: 22.253px;
+  height: 26.18px;
+  padding: 0;
+  border: 0;
+  border-radius: 7.14px 0 0 7.14px;
+  background: #bc2d0d;
+  color: #fff;
   cursor: pointer;
 }
-.kulakcik:hover { background: var(--tema-menu-secili-zemin); }
+.kulakcik:hover { background: #991b1b; }
 .kulakcik:focus-visible, .kapat:focus-visible { outline: 2px solid var(--tema-eylem); outline-offset: 2px; }
-.etiket { writing-mode: vertical-rl; font-size: 12px; font-weight: 800; }
 .icerik { display: flex; flex-direction: column; height: 100%; overflow: hidden; border-radius: inherit; }
 .baslik { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 16px; border-bottom: 1px solid var(--tema-cizgi); }
 .baslik h2 { margin: 0; font-size: 14px; line-height: 20px; font-weight: 800; color: var(--tema-baslik); }
@@ -74,11 +69,10 @@
 .yazi li { margin-bottom: 10px; padding-left: 3px; }
 .yazi strong { font-weight: 700; color: var(--tema-baslik); }
 
-/* Viva telefon ekranında kapalı kılavuz, içerik boyunca uzanan bir kulakçık kaplamaz. */
+/* Viva telefon ekranında kapalı kulakçık alt sağda kalır. */
 @media (max-width: 639px) {
-  :global(body:has([data-viva-panel])) .panel:not(.acik) { top: auto; bottom: max(16px, env(safe-area-inset-bottom)); right: 8px; width: 44px; height: 44px; transform: none; border: 0; border-radius: 12px; background: transparent; box-shadow: none; }
-  :global(body:has([data-viva-panel])) .panel:not(.acik) .kulakcik { position: static; width: 44px; height: 44px; min-height: 44px; padding: 10px; border: 1px solid var(--tema-cizgi); border-radius: 12px; }
-  :global(body:has([data-viva-panel])) .panel:not(.acik) .kulakcik :is(span, svg:last-child),
+  :global(body:has([data-viva-panel])) .panel:not(.acik) { top: auto; bottom: max(16px, env(safe-area-inset-bottom)); right: 8px; width: 22.253px; height: 26.18px; transform: none; border: 0; border-radius: 7.14px; background: transparent; box-shadow: none; }
+  :global(body:has([data-viva-panel])) .panel:not(.acik) .kulakcik { position: static; border-radius: 7.14px; }
   :global(body:has([data-viva-panel])) .panel:not(.acik) .icerik { display: none; }
   :global(body:has([data-viva-panel])) .panel.acik { top: 84px; bottom: max(12px, env(safe-area-inset-bottom)); width: calc(100vw - 20px); }
   :global(body:has([data-viva-panel])) .panel.acik .kulakcik { display: none; }

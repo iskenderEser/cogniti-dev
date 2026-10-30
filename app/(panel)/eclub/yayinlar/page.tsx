@@ -17,8 +17,8 @@ import { UttYayinTuruToggle } from "@/components/yayin/UttYayinListeOrtaklari";
 import { yayinAlicisiUygun, yayinGonderimListeleri, type GonderimFiltresi } from "@/lib/eclub/yayinGonderimFiltreleri";
 import { ECLUB_GOREN_ROLLER } from "@/lib/utils/roller";
 import { ChevronLeft } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useMemo, useState, type CSSProperties } from "react";
 import { useEclubOneriler } from "../oneriler/_hooks/useEclubOneriler";
 import type { OneriGecmisKaydi, OneriYayin } from "../oneriler/_types";
 import BmEclubYayinlari from "./_components/BmEclubYayinlari";
@@ -45,11 +45,14 @@ export default function EclubVideolarimPage() {
   if (yukleniyor) return <div className="flex min-h-full items-center justify-center bg-[var(--tema-yerel-eclub-sayfa-zemini-02)]"><svg className="size-6 animate-spin text-[var(--tema-yerel-eclub-yardimci-metin-08)]" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg></div>;
   if ((kullanici?.rol ?? "").toLowerCase() === "bm") return <BmEclubYayinlari />;
   if ((kullanici?.rol ?? "").toLowerCase() === "tm") return <BmEclubYayinlari rol="tm" />;
-  return <UttEclubVideolarimPage />;
+  return <Suspense fallback={<p role="status">Yayınlar yükleniyor…</p>}><UttEclubVideolarimPage /></Suspense>;
 }
 
 function UttEclubVideolarimPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const yayinParametresi = searchParams.get("yayin_id") ?? "";
+  const baglantiYayinId = searchParams.get("gonderim") === "gonderilen" && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(yayinParametresi) ? yayinParametresi.toLowerCase() : null;
   const { kullanici, yukleniyor: authYukleniyor } = useAuth();
   const { mesajlar, hata, basari } = useHataMesaji();
   const rolUygun = !!kullanici && ECLUB_GOREN_ROLLER.includes((kullanici.rol ?? "").toLowerCase());
@@ -62,6 +65,9 @@ function UttEclubVideolarimPage() {
   const [seciliYayinIdleri, setSeciliYayinIdleri] = useState<string[]>([]);
   const [gonderimDurumZamani, setGonderimDurumZamani] = useState(() => Date.now());
   const [acikDetayYayinId, setAcikDetayYayinId] = useState<string | null>(null);
+  const [baglantiBulunamadi, setBaglantiBulunamadi] = useState(false);
+  const [uygulananBaglanti, setUygulananBaglanti] = useState<string | null>(null);
+  const baglantiAnahtari = baglantiYayinId ? `${kullanici?.id}:${baglantiYayinId}` : null;
 
   useEffect(() => {
     if (authYukleniyor) return;
@@ -75,6 +81,21 @@ function UttEclubVideolarimPage() {
     ortak: yayinlar.filter((video) => hedefGrubu(video) === "ortak"),
   }), [yayinlar]);
   const gonderilenYayinlar = useMemo(() => new Set(gonderilenYayinIdleri), [gonderilenYayinIdleri]);
+  // Bağlantı değiştiğinde, yetkili veriler geldikten sonra filtreleri bir kez eşleştir.
+  if (uygulananBaglanti !== baglantiAnahtari && (!baglantiAnahtari || (hazir && !loading && !yenileniyor))) {
+    setUygulananBaglanti(baglantiAnahtari);
+    const yayin = yayinlar.find((kayit) => kayit.yayin_id === baglantiYayinId && gonderilenYayinlar.has(kayit.yayin_id));
+    setBaglantiBulunamadi(!!baglantiYayinId && !yayin);
+    setAktifVideo(yayin ?? null);
+    if (baglantiYayinId) {
+      setGonderimFiltresi("gonderilen");
+      setAktifYayinTuru("tumu");
+      setSeciliYayinIdleri([]);
+      setAcikDetayYayinId(null);
+      if (yayin) setAktifHedef(hedefGrubu(yayin));
+    }
+  }
+
   useEffect(() => {
     const simdi = Date.now();
     const siradakiBitis = gonderimGecmisi
@@ -102,6 +123,7 @@ function UttEclubVideolarimPage() {
   const gorunenYayinlar = aktifYayinTuru === "tumu"
     ? durumFiltreliYayinlar
     : durumFiltreliYayinlar.filter((yayin) => yayin.arac_turu === aktifYayinTuru);
+  const siraliYayinlar = [...gorunenYayinlar].sort((a, b) => new Date(b.yayin_tarihi).getTime() - new Date(a.yayin_tarihi).getTime());
   const gonderilebilirIdler = new Set(listeler.gonderilebilir.map(y => y.yayin_id));
   const seciliYayinlar = gruplar[aktifHedef].filter(y => seciliYayinIdleri.includes(y.yayin_id) && gonderilebilirIdler.has(y.yayin_id));
   const secimSifirla = () => {
@@ -198,6 +220,7 @@ function UttEclubVideolarimPage() {
         />
 
         <section>
+          {baglantiBulunamadi && <p role="status" className="mb-3 text-sm text-[var(--tema-yerel-eclub-yardimci-metin-06)]">Bu yayın artık gönderilenler listesinde görüntülenemiyor.</p>}
           <div className="mb-3">
             <UttYayinTuruToggle<{ arac_turu?: string | null }>
               yayinlar={gonderimFiltresi === "planlanan" ? planYayinlari : durumFiltreliYayinlar}
@@ -213,12 +236,12 @@ function UttEclubVideolarimPage() {
           {gonderimFiltresi === "planlanan" ? <EclubPlanlananlar planlar={gorunenPlanlar} kisiler={kisiler} /> : gorunenYayinlar.length === 0 ? (
             <div className="rounded-2xl border border-[var(--tema-yerel-eclub-cizgi-03)] bg-[var(--tema-yerel-eclub-kart-01)] px-4 py-14 text-center text-sm font-semibold text-[var(--tema-yerel-eclub-yardimci-metin-32)]">{aktifYayinTuru !== "tumu" ? "Seçilen yayın türünde bu listede yayın bulunmuyor." : gonderimFiltresi === "gonderilebilir" ? "İncelemesini tamamladığınız yayın bulunmuyor." : gonderimFiltresi === "gonderilen" ? "Henüz gönderilmiş yayın bulunmuyor." : "Bu hedef kitle için yayında öğrenme içeriği bulunmuyor."}</div>
           ) : <MobilYayinAkisi
-            kayitlar={[...gorunenYayinlar].sort((a, b) => new Date(b.yayin_tarihi).getTime() - new Date(a.yayin_tarihi).getTime())}
+            kayitlar={siraliYayinlar}
             kayitAnahtari={(video) => video.yayin_id}
             renderKart={yayinKarti}
             sayacGoster={false}
             sifirlamaAnahtari={`${aktifHedef}-${gonderimFiltresi}-${aktifYayinTuru}`}
-            masaustuIcerik={<div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">{[...gorunenYayinlar].sort((a, b) => new Date(b.yayin_tarihi).getTime() - new Date(a.yayin_tarihi).getTime()).map((video) => <div key={video.yayin_id} className="min-w-0">{yayinKarti(video)}</div>)}</div>}
+            masaustuIcerik={<div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">{siraliYayinlar.map((video) => <div key={video.yayin_id} className="min-w-0">{yayinKarti(video)}</div>)}</div>}
           />}
         </section>
       </div>

@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { SadeKapsulFiltre, SadeSekmeler } from '@/components/kontrol/SadeKontroller';
 import { YenileButonu } from '@/components/ui/yenile-butonu';
+import { SayfaYenileBasligi } from '@/components/ui/sayfa-yenile-basligi';
 import { TR_SAAT_DILIMI } from '@/lib/zaman/turkiye';
 import { VIVA_DURUMLARI } from '@/lib/viva/sozlesme';
 import { vivaDetayYolu, vivaListeKaynagi, type VivaListeKaynagi } from '@/lib/viva/detay';
@@ -38,7 +39,7 @@ function CanliKart({ e, kaynak }: { e: VivaListeKarti; kaynak: VivaListeKaynagi 
     </div><div className={styles.roomArt} aria-hidden="true"><div className={styles.artCircle} /><div className={styles.artTile}><span className={styles.avatar}>{basHarfler(e.sahip_adi)}</span><span>Birlikte öğreniyoruz</span></div><div className={styles.artTile}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src="/marka/viva/viva-mavi-ribon-simge.svg" alt="" width={35} height={28} style={{ objectFit: 'contain' }} /><span>Viva</span></div><div className={styles.wave}><i /><i /><i /><i /></div></div></div>
-    <div className={styles.liveFooter}><div className={styles.people}><Users aria-hidden="true" /><span>{e.katilimci_sayisi === null ? 'Ekibinizle buluşmaya hazır' : `${e.katilimci_sayisi} davetli katılımcı`}</span></div>
+    <div className={styles.liveFooter}>{e.katilimci_sayisi !== null && <div className={styles.people}><Users aria-hidden="true" /><span>{e.katilimci_sayisi} davetli katılımcı</span></div>}
       <div className={styles.footerActions}><Button asChild variant="ghost"><Link href={vivaDetayYolu(e.etkinlik_id, 'katilimcilar', kaynak)}>Detayları aç</Link></Button><Button asChild><Link href={`/viva/${e.etkinlik_id}/oda`}><Video aria-hidden="true" />Yayına katıl</Link></Button></div>
     </div>
   </Card>;
@@ -136,10 +137,9 @@ export default function VivaListeEkrani() {
     </aside>
   </div>;
   return <div className={styles.screen}>
-    <header className={styles.pageHeader}>
-      <nav className={styles.breadcrumb} aria-label="İçerik konumu"><span>Cogniti</span><ChevronRight aria-hidden="true" /><Link href="/viva">Viva</Link><ChevronRight aria-hidden="true" /><span aria-current="page">Viva Yayınlar</span></nav>
-      <YenileButonu yenileniyor={yukleniyor} onYenile={() => setYenileme(n => n + 1)} />
-    </header>
+    <SayfaYenileBasligi className={styles.pageHeader}
+      baslik={<nav className={styles.breadcrumb} aria-label="İçerik konumu"><span>Cogniti</span><ChevronRight aria-hidden="true" /><Link href="/viva">Viva</Link><ChevronRight aria-hidden="true" /><span aria-current="page">Viva Yayınlar</span></nav>}
+      aksiyon={<YenileButonu yenileniyor={yukleniyor} onYenile={() => setYenileme(n => n + 1)} />} />
     <div className={styles.toolbar}>
       <SadeSekmeler etiket="Etkinlik görünümü" deger={bolum} onDegistir={setBolum} className={styles.tabs}
         secenekler={bolumler.filter(b => b.deger !== 'taslak' || veri?.olusturabilir || bolum === 'taslak').map(b => ({ ...b, icerik: b.deger === bolum ? listeIcerigi : null }))} />

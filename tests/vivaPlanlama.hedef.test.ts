@@ -4,8 +4,16 @@ import { vivaFormDogrula, vivaYerelZamaniUtc, type VivaEtkinlik } from "@/lib/vi
 import { vivaGoogleTakvim, vivaOutlookTakvim } from "@/lib/viva/takvim";
 
 const id = "00000000-0000-4000-8000-000000000001";
-const anlik = { yayin_turu: "anlik", baslik: "Toplantı", aciklama: "", durum: "planlandi", sure_dakika: 60, katilimcilar: [] };
+const anlik = { yayin_turu: "anlik", baslik: "Toplantı", aciklama: "", egitim_turu: "medikal_egitim", urun_id: null, durum: "planlandi", sure_dakika: 60, katilimcilar: [] };
 const e: VivaEtkinlik = { etkinlik_id: id, baslik: "Türkçe, başlık; \\ eğitim", aciklama: "Açıklama\nİkinci satır", baslangic: "2027-01-01T21:30:00Z", bitis: "2027-01-01T22:30:00Z", yayin_turu: "planli", durum: "planlandi", surum: 2, sahip_id: id, sahip_adi: "Sunucu", firma_adi: "Firma", yonetebilir: true, oda_acik: true };
+test('Eğitim türü zorunlu; yalnız iki ürün eğitimi ürün gerektirir',()=>{
+ for(const type of ['urun_egitimi','urun_medikal_egitim','medikal_egitim','satis_teknikleri','yonetim_egitimi','genel']){
+  assert.equal(vivaFormDogrula({...anlik,egitim_turu:type,urun_id:id}),null);
+  assert.equal(vivaFormDogrula({...anlik,egitim_turu:type,urun_id:null})===null,!type.startsWith('urun_'));
+ }
+ for(const type of [undefined,null,'','bilinmeyen','ik_egitimi'])assert.match(vivaFormDogrula({...anlik,egitim_turu:type})!,/Etkinlik türünü seçin/);
+ for(const product of ['',123,'gecersiz'])assert.match(vivaFormDogrula({...anlik,urun_id:product})!,/Geçerli bir ürün/);
+});
 test("anlık yayın sunucu zamanı kullanır; sahte tarih ve geçersiz süre reddedilir", () => {
   assert.equal(vivaFormDogrula(anlik), null);
   for (const ek of [{ sure_dakika: 0 }, { sure_dakika: 1441 }, { sure_dakika: 1.5 }, { sure_dakika: "60" }, { durum: "canli" }, { durum: "taslak" }, { baslangic: e.baslangic }, { bitis: e.bitis }, { yayin_turu: "sahte" }]) assert.ok(vivaFormDogrula({ ...anlik, ...ek }));

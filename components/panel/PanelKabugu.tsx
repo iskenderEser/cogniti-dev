@@ -29,6 +29,12 @@ interface Props {
 export default function PanelKabugu({ children, navbar, baglam, gruplar, badge, bildirimler }: Props) {
   const pathname = usePathname();
   const vivaYolu = pathname === "/viva" || pathname.startsWith("/viva/");
+  const kilavuzVar = URETICI_ROLLER.includes(baglam.rolKucu)
+    || TUKETICI_ROLLER.includes(baglam.rolKucu)
+    || baglam.rolKucu === "bm"
+    || baglam.rolKucu === "tm"
+    || YONETICI_ROLLER.includes(baglam.rolKucu)
+    || (baglam.kimlikTuru === "eclub_kisi" && ECLUB_TUKETICI_ROLLERI.includes(baglam.rolKucu));
   const [drawerAcik, setDrawerAcik] = useState(false);
   const { tema, temaDegistir } = useTema();
   const renkAnahtari = navbar.temaSeciciGoster !== false ? <TemaSecici tema={tema} onTemaDegistir={temaDegistir} yerlesim="satir" /> : undefined;
@@ -61,6 +67,7 @@ export default function PanelKabugu({ children, navbar, baglam, gruplar, badge, 
         <main className="flex-1 overflow-y-auto" style={{ minWidth: 0 }}>
           {children}
         </main>
+        {kilavuzVar && <div aria-hidden="true" className="hidden w-[20px] shrink-0 sm:block" />}
       </div>
       {URETICI_ROLLER.includes(baglam.rolKucu) && <UreticiKullanimKilavuzu />}
       {TUKETICI_ROLLER.includes(baglam.rolKucu) && <UreticiKullanimKilavuzu key={baglam.rolKucu} kilavuz={uttKilavuzu} rolBasligi={baglam.rolKucu === "kd_utt" ? "Kıdemli Ürün Tanıtım Temsilcisi" : "Ürün Tanıtım Temsilcisi"} />}

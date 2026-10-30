@@ -27,8 +27,8 @@ import * as roles from "@/lib/utils/roller";
 import * as radix from "radix-ui";
 
 const id="00000000-0000-4000-8000-000000000001";
-const e={etkinlik_id:id,baslik:"Tanıtım",aciklama:"Açıklama",baslangic:"2027-01-01T21:30:00Z",bitis:"2027-01-01T22:00:00Z",durum:"planlandi",surum:1,sahip_id:id,sahip_adi:"Örnek Kişi",firma_adi:"Firma",yonetebilir:true,oda_acik:true};
-async function ortam(handler:(url:string,init?:RequestInit)=>{status?:number;data:unknown}|Promise<{status?:number;data:unknown}>) {
+const e={etkinlik_id:id,baslik:"Tanıtım",aciklama:"Açıklama",egitim_turu:"medikal_egitim",urun_id:null,baslangic:"2027-01-01T21:30:00Z",bitis:"2027-01-01T22:00:00Z",durum:"planlandi",surum:1,sahip_id:id,sahip_adi:"Örnek Kişi",firma_adi:"Firma",yonetebilir:true,oda_acik:true};
+async function ortam(handler:(url:string,init?:RequestInit)=>{status?:number;data:unknown}|Promise<{status?:number;data:unknown}>,egitimDoldur=true) {
  const dom=new Window({url:"http://localhost/viva"});
  for(const key of ["window","document","navigator","HTMLElement","HTMLButtonElement","HTMLInputElement","HTMLTextAreaElement","HTMLSelectElement","HTMLDivElement","DocumentFragment","CustomEvent","NodeFilter","Element","Node","Event","MouseEvent","KeyboardEvent","MutationObserver","ResizeObserver","getComputedStyle"] as const) Object.defineProperty(globalThis,key,{configurable:true,value:key==='getComputedStyle'?dom.getComputedStyle.bind(dom):dom[key]});
  Object.assign(globalThis,{IS_REACT_ACT_ENVIRONMENT:true,requestAnimationFrame:dom.requestAnimationFrame.bind(dom),cancelAnimationFrame:dom.cancelAnimationFrame.bind(dom)});
@@ -56,7 +56,10 @@ async function ortam(handler:(url:string,init?:RequestInit)=>{status?:number;dat
  modules['./VivaSaatSecimi']=yukle('components/viva/VivaSaatSecimi.tsx');
  modules['./VivaSureSecimi']=yukle('components/viva/VivaSureSecimi.tsx');
  const viva=yukle('components/viva/VivaEkrani.tsx');modules['./VivaEkrani']=viva;
- return{c,doc:dom.document,paths,acilan,indirilen,dosyalar,render:async(props:Record<string,unknown>,guest=false)=>{const comp=guest?yukle('components/viva/VivaMisafir.tsx').default:viva.default;await act(async()=>{root.render(React.createElement(comp,props));});},
+ return{c,doc:dom.document,paths,acilan,indirilen,dosyalar,render:async(props:Record<string,unknown>,guest=false)=>{const comp=guest?yukle('components/viva/VivaMisafir.tsx').default:viva.default;await act(async()=>{root.render(React.createElement(comp,props));});
+  // Eğitim sınıflamasını kapsamayan senaryolara geçerli form seçimi hazırla.
+  const secim=c.querySelector<HTMLSelectElement>('#viva-egitim-turu');
+  if(egitimDoldur&&props.gorunum==='yeni'&&secim&&!secim.value)await act(async()=>{Object.getOwnPropertyDescriptor(dom.HTMLSelectElement.prototype,'value')!.set!.call(secim,'medikal_egitim');secim.dispatchEvent(new dom.Event('change',{bubbles:true}));});},
  confirm:async(text:string)=>{const b=[...dom.document.querySelectorAll('[role=alertdialog] button')].find(x=>x.textContent===text);assert.ok(b,text);await act(async()=>(b as HTMLElement).click());},
  click:async(text:string)=>{const b=[...c.querySelectorAll('button')].find(x=>x.textContent===text);assert.ok(b,text);await act(async()=>b.click());},
  input:async(selector:string,value:string)=>{const el=c.querySelector<HTMLInputElement>(selector) ?? dom.document.querySelector<HTMLInputElement>(`[role=dialog] ${selector}`);assert.ok(el,selector);if(selector==='#viva-sure'){if(el.getAttribute('aria-expanded')!=='true')await act(async()=>el.click());const option=[...dom.document.querySelectorAll('[aria-label="Yayın süreleri"] [role=option]')].find(x=>x.textContent===value);assert.ok(option,value);await act(async()=>(option as HTMLElement).click());return;}await act(async()=>{const setter=Object.getOwnPropertyDescriptor(el.tagName==='SELECT'?dom.HTMLSelectElement.prototype:el.tagName==='TEXTAREA'?dom.HTMLTextAreaElement.prototype:dom.HTMLInputElement.prototype,'value')!.set!;setter.call(el,value);el.dispatchEvent(new dom.Event(el.tagName==='SELECT'?'change':'input',{bubbles:true}));});},
@@ -243,7 +246,7 @@ test('Davetliler: iki liste kendi seçimlerini değiştirir; diğer grubun davet
 });
 test('Davetliler: boş seçimde placeholder Firmanız; E-Club adayı yoksa ikinci liste görünmez',async()=>{
  const o=await ortam(()=>({data:{olusturabilir:true,kapsam:'Firma',kisiler:[]}}));
- try{await o.render({gorunum:'yeni'});assert.equal(o.c.querySelector('button[aria-label="Firmanız"]')?.textContent,'Firmanız');assert.equal(o.c.querySelector('button[aria-label="E-Club Üyeleri"]'),null);}finally{await o.close();}
+ try{await o.render({gorunum:'yeni'});assert.equal(o.c.querySelector('button[aria-label="Firmanız"]')?.textContent,'Firmanız');assert.equal(o.c.querySelector('button[aria-label="E-Club Üyeleri"]'),null);assert.equal(o.c.querySelector('[aria-label="Seçilen davetliler"]')?.textContent,'Davetliler');}finally{await o.close();}
 });
 
 
@@ -260,7 +263,7 @@ test('E-posta alanı: virgül, noktalı virgül ve Enter pill üretir; × adresi
  try{
   await o.render({gorunum:'yeni',ilkTur:'anlik'});
   const alan=o.c.querySelector<HTMLTextAreaElement>('textarea[aria-label="E-posta ile davet"]')!;
-  assert(alan);const win=alan.ownerDocument.defaultView!;
+  assert(alan);assert.equal(alan.placeholder,'Adresleri virgül, noktalı virgül veya enter ile ayırınız');const win=alan.ownerDocument.defaultView!;
   const pilller=()=>[...o.c.querySelectorAll<HTMLButtonElement>('button[aria-label$=" adresini kaldır"]')];
   for(const [adres,key] of [['bir@example.com',','],['iki@example.com',';'],['uc@example.com','Enter']]){
    await o.input('textarea[aria-label="E-posta ile davet"]',adres);
@@ -418,7 +421,7 @@ test('Davetliler: bölge toplu seçimi, tekil UTT ve diğer davetliler sağ kutu
  const o=await ortam((url,init)=>{if(init?.method==='POST'){istekler.push(JSON.parse(String(init.body)));return{data:detay};}return{data:url.includes('baglam')?{olusturabilir:true,kapsam:'Firma',kisiler,eclub_davet_edebilir:true}:detay};});
  try{
   await o.render({gorunum:'duzenle',etkinlikId:id});await o.input('#viva-baslik','Bölge toplantısı');
-  const box=o.c.querySelector('[aria-label="Seçilen davetliler"]')!;assert(box);assert.equal(box.previousElementSibling?.className,'inviteSelectors');
+  const box=o.c.querySelector('[aria-label="Seçilen davetliler"]')!;assert(box);assert.equal(box.previousElementSibling?.className,'inviteSelectors');assert.equal(box.querySelector('.selectedPlaceholder'),null);
   await o.click('Firmanız');const menu=o.doc.querySelector('[aria-label="Firmanız seçimi"]')!;
   const ankara=menu.querySelector<HTMLInputElement>('input[aria-label="Ankara bölgesindeki UTT\'leri seç"]')!;
   const izmir=menu.querySelector<HTMLInputElement>('input[aria-label="İzmir bölgesindeki UTT\'leri seç"]')!;
@@ -452,6 +455,48 @@ test('Davetliler: bölge araması bölgenin UTTlerini gösterir; bölgesiz firma
  }finally{await o.close();}
 });
 
+
+test('Eğitim ve ürün: zorunluluk, firma ürün listesi, kayıt ve yeniden düzenleme',async()=>{
+ const product='00000000-0000-4000-8000-000000000500';
+ let detay={etkinlik:{...e,urun_id:null as string|null,urun_adi:null as string|null},katilimcilar:[],davetler:[]};
+ const istekler:Record<string,unknown>[]=[];
+ const o=await ortam((url,init)=>{
+  if(init?.method==='POST'){
+   const body=JSON.parse(String(init.body));istekler.push(body);
+   detay={...detay,etkinlik:{...detay.etkinlik,...body,surum:body.islem==='kaydet'?2:1,urun_adi:body.urun_id?'Normavas':null}};
+   return{data:detay};
+  }
+  return{data:url.includes('baglam')?{olusturabilir:true,kisiler:[],urunler:[{urun_id:product,urun_adi:'Normavas'}]}:detay};
+ },false);
+ try{
+  await o.render({gorunum:'yeni',ilkTur:'planli'});
+  assert.equal(o.c.querySelector<HTMLSelectElement>('#viva-egitim-turu')!.value,'');
+  assert.equal(o.c.querySelectorAll('#viva-egitim-turu option').length,7);
+  await o.input('#viva-baslik','Ürün eğitimi');await o.input('#viva-tarih','2027-01-02');await o.input('#viva-saat','15:00');
+  assert.match(o.c.querySelector('#viva-bilgi-baslik')!.textContent!,/Etkinlik Bilgileri/);
+  assert.equal(o.c.querySelector('label[for="viva-egitim-turu"]')!.textContent,'Etkinlik Türü *');
+  assert.match(o.c.querySelector('#viva-egitim-turu')!.textContent!,/Genel \(eğitim dışında canlı yayınlar\)/);
+  assert(!o.c.querySelector('#viva-egitim-turu')!.textContent!.includes('İK Eğitimi'));
+  await o.submit();assert.equal(istekler.length,0);assert.match(o.c.textContent!,/Etkinlik türünü seçin/);
+  await o.input('#viva-egitim-turu','urun_egitimi');assert.equal(o.c.querySelector<HTMLSelectElement>('#viva-urun')!.required,true);
+  await o.submit();assert.equal(istekler.length,0);assert.match(o.c.textContent!,/ilgili ürün seçimi zorunludur/);
+  await o.input('#viva-urun',product);await o.submit();assert.equal(istekler.length,1);assert.equal(istekler[0].egitim_turu,'urun_egitimi');assert.equal(istekler[0].urun_id,product);
+  await o.render({gorunum:'duzenle',etkinlikId:detay.etkinlik.etkinlik_id});
+  assert.equal(o.c.querySelector<HTMLSelectElement>('#viva-egitim-turu')!.value,'urun_egitimi');assert.equal(o.c.querySelector<HTMLSelectElement>('#viva-urun')!.value,product);
+  await o.input('#viva-egitim-turu','satis_teknikleri');assert.equal(o.c.querySelector<HTMLSelectElement>('#viva-urun')!.required,false);
+  await o.input('#viva-urun','');await o.submit();assert.equal(istekler[1].islem,'kaydet');assert.equal(istekler[1].egitim_turu,'satis_teknikleri');assert.equal(istekler[1].urun_id,null);
+ }finally{await o.close();}
+});
+
+test('Eski etkinliğe eğitim veya ürün atanmaz; kullanıcı düzenlerken seçer',async()=>{
+ const detay={etkinlik:{...e,egitim_turu:null,urun_id:null,urun_adi:null},katilimcilar:[],davetler:[]};
+ const o=await ortam(url=>({data:url.includes('baglam')?{olusturabilir:true,kisiler:[],urunler:[]}:detay}),false);
+ try{
+  await o.render({gorunum:'duzenle',etkinlikId:id});
+  assert.equal(o.c.querySelector<HTMLSelectElement>('#viva-egitim-turu')!.value,'');assert.equal(o.c.querySelector<HTMLSelectElement>('#viva-urun')!.value,'');
+  assert.match(o.c.querySelector('#viva-urun')!.textContent!,/Ürün bulunmuyor/);
+ }finally{await o.close();}
+});
 
 test('başlangıç saati aranabilir; özel dakika ve klavye seçimi korunur',async()=>{
  const o=await ortam(()=>({data:{olusturabilir:true,kisiler:[]}}));

@@ -1,5 +1,13 @@
 import { trZamanParcalari, trZamanUtc, TR_SAAT_DILIMI } from "@/lib/zaman/turkiye";
 import { TUM_ROLLER } from "@/lib/utils/roller";
+import { TALEP_TURU_SIRA, TALEP_TURU_KURALLARI, type TalepTuru } from "@/lib/uretici/yetenekler";
+
+export type VivaEtkinlikTuru = TalepTuru | "genel";
+export const VIVA_EGITIM_SECENEKLERI = [
+  ...TALEP_TURU_SIRA.filter(deger => deger !== "ik_egitimi").map(deger => ({ deger, etiket: TALEP_TURU_KURALLARI[deger].ad })),
+  { deger: "genel", etiket: "Genel (eğitim dışında canlı yayınlar)" },
+];
+export const vivaUrunZorunlu = (tur: string) => tur === "urun_egitimi" || tur === "urun_medikal_egitim";
 
 export const VIVA_DURUMLARI = {
   taslak: "Taslak", planlandi: "Planlandı", canli: "Canlı", sona_erdi: "Sona erdi", iptal: "İptal",
@@ -14,6 +22,9 @@ export interface VivaEtkinlik {
   yayin_turu?: "anlik" | "planli";
   yayin_basladi?: boolean;
   yayin_baslangici?: string | null;
+  egitim_turu?: VivaEtkinlikTuru | null;
+  urun_id?: string | null;
+  urun_adi?: string | null;
 }
 export interface VivaDavet { davet_id: string; ad: string; eposta: string; iptal: boolean; kurum_adi?: string | null; unvan?: string | null }
 export interface VivaDavetEpostaGirdisi { davet_epostalari: string[] }
@@ -23,7 +34,7 @@ export interface VivaEpostaDaveti {
   deneme_sayisi: number; son_deneme: string | null; gonderim_zamani: string | null; hata_kodu: string | null;
 }
 export interface VivaDetay { etkinlik: VivaEtkinlik; katilimcilar: VivaKisi[]; davetler: VivaDavet[]; eposta_davetleri?: VivaEpostaDaveti[] }
-export interface VivaBaglam { olusturabilir: boolean; kapsam: string; kisiler: VivaKisi[]; eclub_davet_edebilir?: boolean; davet_kurali_surumu?: number }
+export interface VivaBaglam { olusturabilir: boolean; kapsam: string; kisiler: VivaKisi[]; eclub_davet_edebilir?: boolean; davet_kurali_surumu?: number; urunler?: { urun_id: string; urun_adi: string }[] }
 
 export const vivaIcRolMu = (rol: string) => TUM_ROLLER.includes(rol);
 export const vivaUuidMu = (v: unknown): v is string => typeof v === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(v);
@@ -54,7 +65,7 @@ export const vivaSureGecerliMi = (dakika: unknown): dakika is number => typeof d
 export function vivaFormDogrula(v: Record<string, unknown>, simdi = Date.now()): string | null {
   if (typeof v.baslik !== "string" || !v.baslik.trim() || v.baslik.trim().length > 160) return "Başlık 1–160 karakter olmalıdır.";
   if (typeof v.aciklama !== "string" || v.aciklama.length > 4000) return "Açıklama en fazla 4000 karakter olabilir.";
-  if (v.yayin_turu !== undefined && !["anlik", "planli"].includes(String(v.yayin_turu))) return "Yayın türünü seçin.";
+  if (v.yayin_turu !== undefined && !["anlik", "planli"].includes(String(v.yayin_turu))) return "Etkinlik türünü seçin.";
   if (v.yayin_turu === "anlik") {
     if (v.durum !== "planlandi" || v.baslangic !== undefined || v.bitis !== undefined) return "Anlık yayının başlangıcı sunucuda belirlenir.";
     if (!vivaSureGecerliMi(v.sure_dakika)) return VIVA_SURE_HATASI;
@@ -69,6 +80,9 @@ export function vivaFormDogrula(v: Record<string, unknown>, simdi = Date.now()):
   if (!Array.isArray(v.katilimcilar) || v.katilimcilar.some(k => !k || typeof k !== "object" || !vivaUuidMu(k.id) || !['ic', 'eclub'].includes(k.tur))) return "Katılımcı seçimi geçersiz.";
   const anahtarlar = v.katilimcilar.map(k => `${k.tur}:${k.id}`);
   if (new Set(anahtarlar).size !== anahtarlar.length) return "Aynı katılımcı iki kez eklenemez.";
+  if (!VIVA_EGITIM_SECENEKLERI.some(tur => tur.deger === v.egitim_turu)) return "Etkinlik türünü seçin.";
+  if (v.urun_id != null && !vivaUuidMu(v.urun_id)) return "Geçerli bir ürün seçin.";
+  if (vivaUrunZorunlu(String(v.egitim_turu)) && !v.urun_id) return "Bu eğitim türünde ilgili ürün seçimi zorunludur.";
   return null;
 }
 

@@ -43,7 +43,7 @@ export default function VivaEpostaAlani({ adresler, girdi, onAdresler, onGirdi, 
       </span>)}
       <textarea ref={input} id={id} aria-label="E-posta ile davet" className={styles.girdi} rows={1}
         value={girdi} disabled={disabled} autoComplete="off" autoCapitalize="none" autoCorrect="off" spellCheck={false} inputMode="email"
-        placeholder="E-posta adreslerini yazın" aria-invalid={hatali || undefined} aria-describedby={`${id}-yardim ${id}-durum`}
+        placeholder="Adresleri virgül, noktalı virgül veya enter ile ayırınız" aria-invalid={hatali || undefined} aria-describedby={`${id}-durum`}
         onChange={event => {
           if ((event.nativeEvent as InputEvent).isComposing) { onGirdi(event.target.value); return; }
           tamamla(event.target.value);
@@ -62,7 +62,6 @@ export default function VivaEpostaAlani({ adresler, girdi, onAdresler, onGirdi, 
           tamamla(girdi.slice(0, alan.selectionStart) + metin + girdi.slice(alan.selectionEnd), true);
         }} />
     </div>
-    <p id={`${id}-yardim`} className={styles.yardim}>Adresleri virgül, noktalı virgül veya Enter ile ayırın.</p>
     <p id={`${id}-durum`} className={styles.durum} role={hatali ? "alert" : "status"}>{mesaj}</p>
   </div>;
 }

@@ -108,7 +108,7 @@ function MisafirIcerigi({ token }: { token: string }) {
     </VivaDurumAlani>}
     {bilgi && !oda && <div className={styles.guestLayout}>
       <section className={styles.welcome}>
-        <p className={styles.kicker}>BİRLİKTE ÖĞRENMEYE DAVETLİSİNİZ</p><h1>Bir buluşma,<br />yeni bir bakış açısı.</h1>
+        <p className={styles.kicker}>BİRLİKTE ÖĞRENMEYE DAVETLİSİNİZ</p><h1>Etkinliğe hoş geldiniz</h1>
         <p className={styles.summary}>Merhaba {bilgi.ad}. Viva etkinliğine izleyici olarak davet edildiniz.</p>
         <div className={styles.facts}>
           <div className={styles.fact}><Video aria-hidden="true" /><div><h2>{bilgi.baslik}</h2>{bilgi.aciklama && <p className={styles.eventDescription}>{bilgi.aciklama}</p>}</div></div>

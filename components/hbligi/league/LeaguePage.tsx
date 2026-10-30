@@ -105,6 +105,7 @@ export default function LeaguePage({
         <div className={`${styles.dashboard} ${styles.fixedDashboard}`}>
         <div className="shrink-0">
           <LeagueHeader periyotSecici={null} yenileButonu={yenileButonu} />
+          <p className="mt-1 text-xs font-semibold text-[var(--tema-yerel-lig-yardimci-metin-20)]">Daha çok yayın tamamlayın, puanınızı artırın</p>
         </div>
         <MonthlyLeaders top3={sirketTop3} ayAdi={aylikKursu?.ay_adi} />
         {filtreler}

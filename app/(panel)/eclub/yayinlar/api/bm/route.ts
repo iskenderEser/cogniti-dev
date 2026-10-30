@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient, createClient } from "@/lib/supabase/server";
-import { eclubYonetimKapsaminiGetir } from "@/lib/eclub/yonetimKapsami";
+import { eclubYonetimKapsaminiGetir, type EclubYonetimKapsami } from "@/lib/eclub/yonetimKapsami";
 import { uttEczaneFirmaBaglari } from "@/lib/eclub/uttEczane";
 import { getYayindakiVideolar } from "@/lib/video/yayindakiVideolar";
-import { ECLUB_HEDEF_ROLLER, YONLENDIRICI_ROLLER, hedefRolleriOku, type HedefRoller } from "@/lib/utils/roller";
+import { ECLUB_HEDEF_ROLLER, YONETICI_ROLLER, YONLENDIRICI_ROLLER, hedefRolleriOku, type HedefRoller } from "@/lib/utils/roller";
 import { gecerliTurBaslangiclari } from "@/lib/tclub/tur/kayit";
-import { hataYaniti, rolHatasi, sunucuHatasi, yetkiHatasi } from "@/lib/utils/hataIsle";
+import { hataYaniti, rolHatasi, sunucuHatasi, validasyonHatasi, yetkiHatasi } from "@/lib/utils/hataIsle";
 import type { BaremSatiri, SatisSartiTipi } from "@/lib/eclub/store/eclubStoreTipler";
 import type { OgrenmeAraciTuru } from "@/lib/ogrenmeAraci/tipler";
 import { eclubYayinEtkilesimSayilari } from "@/lib/eclub/yayinEtkilesimleri";
@@ -16,6 +16,10 @@ interface KisiBagi { kisi_id: string; eczane_id: string; baslangic_tarihi: strin
 interface YayinAdi { yayin_id: string; urun_adi: string | null; teknik_adi: string | null; talep_no: number | null; firma_adi: string | null; hedef_roller: unknown; }
 
 const tekil = <T,>(deger: T | T[] | null | undefined): T | null => Array.isArray(deger) ? (deger[0] ?? null) : (deger ?? null);
+async function tumunuOku<T>(oku: (ilk: number, son: number) => PromiseLike<{ data: T[] | null; error: unknown }>): Promise<T[]> {
+  const satirlar:T[]=[];
+  for(let ilk=0;;ilk+=500){const r=await oku(ilk,ilk+499);if(r.error)throw r.error;satirlar.push(...r.data??[]);if((r.data??[]).length<500)return satirlar;}
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -27,27 +31,66 @@ export async function GET(request: NextRequest) {
       .select("kullanici_id, ad, soyad, rol, firma_id, takim_id, bolge_id, aktif_mi")
       .eq("kullanici_id", user.id).single();
     if (kullaniciHatasi || !kullanici) return hataYaniti("Kullanıcı bulunamadı.", "kullanicilar SELECT — BM E-Club Yayınları", kullaniciHatasi, 404);
-    if (!kullanici.aktif_mi || !YONLENDIRICI_ROLLER.includes((kullanici.rol ?? "").toLowerCase())) return rolHatasi("Bu görünüm yalnız BM ve TM rollerine açıktır.");
+    const tokenYonetici = Boolean(request.nextUrl.searchParams.get("token_yayin_id")) && request.nextUrl.searchParams.get("token_gorunum") === "yonetici";
+    const rol = (kullanici.rol ?? "").toLowerCase();
+    if (!kullanici.aktif_mi || !(YONLENDIRICI_ROLLER.includes(rol) || (tokenYonetici && (YONETICI_ROLLER.includes(rol) || rol === "pm")))) return rolHatasi("Bu görünüme erişim yetkiniz bulunmuyor.");
 
-    const kapsam = await eclubYonetimKapsaminiGetir(admin, kullanici);
+    const kapsam: EclubYonetimKapsami = tokenYonetici && rol === "pm" ? { uttler: [] } : await eclubYonetimKapsaminiGetir(admin, kullanici);
     const istenenUttId = request.nextUrl.searchParams.get("utt_id");
-    const seciliUtt = istenenUttId
+    const tokenYayinId = request.nextUrl.searchParams.get("token_yayin_id");
+    if(tokenYayinId && !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(tokenYayinId))return validasyonHatasi("Geçersiz yayın.",["token_yayin_id"]);
+    if (tokenYayinId && (tokenYonetici || request.nextUrl.searchParams.get("token_gorunum") === "tm")) {
+      const tmId = request.nextUrl.searchParams.get("tm_id") || null;
+      const bmId = request.nextUrl.searchParams.get("bm_id") || null;
+      const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      if ((tmId && (!tokenYonetici || !uuid.test(tmId))) || (bmId && (!uuid.test(bmId) || (tokenYonetici && !tmId))) || (istenenUttId && (!bmId || !uuid.test(istenenUttId) || (tokenYonetici && !tmId)))) return validasyonHatasi("Geçersiz takım, bölge veya temsilci seçimi.", ["tm_id", "bm_id", "utt_id"]);
+      const tokenKapsami = tokenYonetici
+        ? await admin.rpc("cogniti_token_yonetici_kapsami", { p_kullanici: user.id, p_tm: tmId, p_bm: bmId, p_utt: istenenUttId || null })
+        : await admin.rpc("cogniti_token_tm_kapsami", { p_kullanici: user.id, p_bm: bmId, p_utt: istenenUttId || null });
+      if (tokenKapsami.error?.code === "42501") return rolHatasi("Seçilen bölge veya temsilci, takım kapsamında değildir.");
+      if (tokenKapsami.error) return hataYaniti("Gönderim kapsamı alınamadı.", "TM token kart kapsamı", tokenKapsami.error);
+      if (tokenYonetici && rol === "pm") {
+        const urunYetkisi = await admin.rpc("cogniti_token_urun_kapsaminda", { p_kapsam: tokenKapsami.data, p_kaynak: tokenYayinId, p_viva: false });
+        if (urunYetkisi.error) return hataYaniti("Yayın kapsamı alınamadı.", "PM token ürün kapsamı", urunYetkisi.error);
+        if (urunYetkisi.data !== true) return rolHatasi("Bu yayın ürün kapsamınızda değildir.");
+      }
+      const ids = new Set<string>(tokenKapsami.data.ids);
+      if (tokenYonetici && rol === "pm" && ids.size) {
+        const { data: uttler, error: uttHatasi } = await admin.from("kullanicilar")
+          .select("kullanici_id, ad, soyad, rol").eq("firma_id", kullanici.firma_id).eq("aktif_mi", true)
+          .in("rol", ["utt", "kd_utt"]).in("kullanici_id", [...ids]);
+        if (uttHatasi) return hataYaniti("Gönderim kapsamı alınamadı.", "PM token kart kapsamı", uttHatasi);
+        kapsam.uttler = (uttler ?? []).map(utt => ({ utt_id: utt.kullanici_id, rol: utt.rol,
+          utt_adi: `${utt.ad ?? ""} ${utt.soyad ?? ""}`.trim(), takim_adi: "", bm_id: null, bm_adi: "", bolge_adi: "" }));
+      } else kapsam.uttler = kapsam.uttler.filter(utt => ids.has(utt.utt_id));
+    }
+    let seciliUtt = istenenUttId
       ? kapsam.uttler.find((utt) => utt.utt_id === istenenUttId)
       : kapsam.uttler[0];
     if (istenenUttId && !seciliUtt) return rolHatasi("Seçilen UTT, yönetim kapsamında değildir.");
+    let kartUttIdleri = istenenUttId ? [istenenUttId] : kapsam.uttler.map(utt=>utt.utt_id);
+    if(tokenYayinId){
+      if(!kartUttIdleri.length)return rolHatasi("Bu gönderilmiş yayına erişiminiz bulunmuyor.");
+      const tuketimler=await tumunuOku<{gonderen_id:string}>( (ilk,son)=>admin.from("cogniti_token_tuketimleri").select("gonderen_id")
+        .eq("firma_id",kullanici.firma_id).eq("gonderen_turu","firma_kullanicisi").in("gonderen_id",kartUttIdleri)
+        .eq("islem_turu","eclub_oneri").eq("kaynak_id",tokenYayinId).gt("miktar",0).order("tuketim_id").range(ilk,son));
+      kartUttIdleri=[...new Set(tuketimler.map(t=>t.gonderen_id))];
+      if(!kartUttIdleri.length)return rolHatasi("Bu gönderilmiş yayına erişiminiz bulunmuyor.");
+      seciliUtt=kapsam.uttler.find(utt=>utt.utt_id===kartUttIdleri[0]);
+    }
     if (!seciliUtt) return NextResponse.json({ uttler: [], secili_utt_id: null, yayinlar: [], kisiler: [], oneriler: [], bolge_gonderilen_yayin_idleri: [] }, { headers: { "Cache-Control": "private, no-store" } });
 
     const uttIdler = kapsam.uttler.map((utt) => utt.utt_id);
     const [hamYayinlar, seciliOneriSonucu, bolgeOneriSonucu, baglar] = await Promise.all([
       getYayindakiVideolar(seciliUtt.utt_id, seciliUtt.rol, admin),
-      admin.from("eclub_oneri_kayitlari").select("oneri_id, yayin_id, arac_id, arac_turu, kisi_id, oneri_baslangic, oneri_bitis, izlendi_mi, created_at, eclub_kisiler ( ad, soyad, rol )").eq("oneren_id", seciliUtt.utt_id).order("created_at", { ascending: false }),
-      admin.from("eclub_oneri_kayitlari").select("yayin_id").in("oneren_id", uttIdler),
-      uttEczaneFirmaBaglari(admin, seciliUtt.utt_id),
+      tokenYayinId ? tumunuOku<OneriSatiri>((ilk,son)=>admin.from("eclub_oneri_kayitlari").select("oneri_id, yayin_id, arac_id, arac_turu, kisi_id, oneri_baslangic, oneri_bitis, izlendi_mi, created_at, eclub_kisiler ( ad, soyad, rol )").in("oneren_id",kartUttIdleri).eq("yayin_id",tokenYayinId).order("created_at",{ascending:false}).order("oneri_id").range(ilk,son)).then(data=>({data,error:null})) : admin.from("eclub_oneri_kayitlari").select("oneri_id, yayin_id, arac_id, arac_turu, kisi_id, oneri_baslangic, oneri_bitis, izlendi_mi, created_at, eclub_kisiler ( ad, soyad, rol )").eq("oneren_id", seciliUtt.utt_id).order("created_at", { ascending: false }),
+      tokenYayinId ? Promise.resolve({data:[{yayin_id:tokenYayinId}],error:null}) : admin.from("eclub_oneri_kayitlari").select("yayin_id").in("oneren_id", uttIdler),
+      tokenYayinId ? Promise.all(kartUttIdleri.map(uttId=>uttEczaneFirmaBaglari(admin,uttId))).then(listeler=>listeler.flat()) : uttEczaneFirmaBaglari(admin, seciliUtt.utt_id),
     ]);
     if (seciliOneriSonucu.error) return hataYaniti("Gönderim geçmişi alınamadı.", "eclub_oneri_kayitlari SELECT — BM seçili UTT", seciliOneriSonucu.error);
     if (bolgeOneriSonucu.error) return hataYaniti("Bölge gönderim toplamı alınamadı.", "eclub_oneri_kayitlari SELECT — BM bölgesi", bolgeOneriSonucu.error);
 
-    const eclubYayinlari = hamYayinlar.filter((yayin) => yayin.hedef_roller.some((rol) => ECLUB_HEDEF_ROLLER.includes(rol)));
+    const eclubYayinlari = hamYayinlar.filter((yayin) => (!tokenYayinId || yayin.yayin_id===tokenYayinId) && yayin.hedef_roller.some((rol) => ECLUB_HEDEF_ROLLER.includes(rol)));
     const yayinIdler = eclubYayinlari.map((yayin) => yayin.yayin_id);
     const soruMap = new Map<string, number>();
     const sartMap = new Map<string, SatisSartiSatiri>();
@@ -93,10 +136,11 @@ export async function GET(request: NextRequest) {
       eczaneAdiMap.set(eczane.eczane_id, master?.eczane_adi ?? "-");
     }
     const kisiBaglari = (kisiBagSonucu.data ?? []) as KisiBagi[];
-    const kisiler = kisiBaglari.filter((bag) => bag.bitis_tarihi === null).flatMap((bag) => {
+    const hamKisiler = kisiBaglari.filter((bag) => bag.bitis_tarihi === null).flatMap((bag) => {
       const kisi = tekil(bag.eclub_kisiler);
       return kisi ? [{ ...kisi, eczane_adi: eczaneAdiMap.get(bag.eczane_id) ?? null, aktif_mi: true }] : [];
     });
+    const kisiler=tokenYayinId?[...new Map(hamKisiler.map(k=>[k.kisi_id,k])).values()]:hamKisiler;
 
     const oneriSatirlari = (seciliOneriSonucu.data ?? []) as OneriSatiri[];
     const gecmisKisiIdleri = [...new Set(oneriSatirlari.map((oneri) => oneri.kisi_id))];

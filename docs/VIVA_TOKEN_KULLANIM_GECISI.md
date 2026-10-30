@@ -45,3 +45,26 @@ Bu sonuç elle başlatılan mevcut işleyicinin sonucudur; cron’un periyodik o
 Kullanıcı `cogniti_viva_yasam` görevinin aktif=false olduğunu doğruladı ve sonra aynı görevi active=true yaptı. Dakikalık iki çalıştırma succeeded döndü. İlk HTTP kontrolü eski `hapbilgi.vercel.app` hedefinde 401 ve uygulamanın Yetkisiz erişim yanıtını verdi. Kullanıcının doğruladığı yeni adres doğrultusunda Vault'taki `hapbilgi_cron_base_url` değeri kullanıcı tarafından `https://cogniti-dev.vercel.app` yapıldı. Anahtar adı/değeri değiştirilmedi. Yeni hedefteki 126925 numaralı HTTP kontrolü 200, zaman aşımı yok ve 15 iş/0 hata döndürdü. Bu yanıtta tuketim alanı yoktu; güncel tüketim kodu henüz push/deployment edilmemişti. Otomatik gerçek tüketimin üretim doğrulaması deployment sonrasına kalır. Teknik Hapbilgi adlarının toplu dönüşümü ayrı task kapsamıdır.
 
 Commit öncesi kontrol: `npm run typecheck:build` ve `git diff --check` başarılı. Dokuz hedefli test dosyasında 139 testin 138'i başarılı, biri başarısız: `tests/vivaArayuz.hedef.test.ts` içindeki takvim düğmeleri beklentisi. Bu test gövdesi baz commit'te de aynı; ilgili `VivaDetayIcerigi` bileşeni pakette değiştirilmemiş ve takvim prop'unu göstermiyor. Bu commit hazırlığında ürün davranışı veya test beklentisi değiştirilmedi. Daha önceki tüketim doğrulamasında 17 yerel PostgreSQL senaryosu ve 8 tüketim uygulama testi başarılıydı. Tam production build ve deployment sonrası otomatik kontör kabulü yapılmış sayılmaz.
+
+
+## TB-VIVA-01 — Gerçek yayında otomatik kontör tüketiminin uçtan uca doğrulanması
+
+- Durum: **BEKLİYOR — teknik borç**.
+- Kayıt tarihi: 28 Ekim 2026.
+- Kullanıcı talimatı: Bu son canlı kabul kontrolü teknik borç olarak kaydedilecek; bu kayıt testi başlatma talimatı değildir.
+
+### Doğrulananlar
+
+Güncel kod 8c0ffd91, 5b1188d6 ve 6acc3561 commitleriyle main'e push edildi; kullanıcı deployment'ın tamamlandığını bildirdi. Kullanıcı Viva cron'unun aktif=true olduğunu ve iki dakikalık çalışmasının succeeded döndüğünü doğruladı. Vault hedefi kullanıcı tarafından https://cogniti-dev.vercel.app yapıldı. Deployment sonrası kullanıcı tarafından gönderilen 126983 numaralı kontrol çağrısı HTTP 200, timed_out=false, error_msg=null döndürdü. Yanıtta güncel tüketim adımı vardı: `tuketim={islenen:0,bekleyen:0,hatali:0}`. Çağrıda tüketilecek iş bulunmadığından bu sonuç gerçek bir yayının otomatik ücretlendirilmesini kanıtlamaz.
+
+Yerelde mevcut işleyici hedefli çalıştırılarak Deneme 12/13/14 için 0/1/0 token ve toplam tek pozitif tüketim kaydı doğrulanmıştı. Bu da kendiliğinden çalışan üretim cron'u ile yeni yayın testi yerine geçmez.
+
+### Borcun kapanma koşulları
+
+1. Gerçek yeni Viva yayını tamamlanır. Manuel HTTP tetiklemesi, doğrudan tüketim RPC çağrısı veya yerel işleyici başlatması yapılmadan zamanlanmış üretim cron'u beklenir.
+2. Aynı yayının kapanış ve tüketim işlerinin otomatik olarak tamamlandığı, Daily gerçek katılımcı sürelerinin hesaba alındığı doğrulanır. En az 45 saniyelik kapanış beklemesi ve en az 30 saniye aralıklı iki aynı ölçüm kuralı korunur; sağlayıcı gecikmesi nedeniyle kesin bir sonuç süresi vaat edilmez.
+3. Hesaplanan token pozitifse ilgili yayın için tek `viva_sure` tüketim hareketi ve doğru bakiye değişimi görülür. Tutar sıfıra yuvarlanıyorsa işin tamamlandığı ve kontör düşülmediği doğrulanır; pozitif tutarlı gerçek tüketim kabulü ayrıca görülmeden tam doğrulama sayılmaz.
+4. Sonraki otomatik cron çalışmaları aynı yayını ikinci kez ücretlendirmez; ilgili hata sayıları sıfırdır.
+5. Etkinlik kimliği, otomatik çalıştırma zamanları, kişi-saniye, token miktarı, tek tüketim kaydı ve bakiye farkı kanıt olarak kaydedilir. Bu kanıt görülmeden durum TAMAMLANDI yapılmaz.
+
+Kapsam: yalnız Viva otomatik kontör tüketiminin canlı kabulü. Hapbilgi teknik adlarının toplu Cogniti dönüşümü ayrı task kapsamındadır.

@@ -32,7 +32,7 @@ export default function VivaEntegrasyonOnizleme({ etkinlikId }: { etkinlikId?: s
     {durum === "kontrol" ? <VivaDurumAlani tur="yukleniyor" baslik="Cogniti oturumu kontrol ediliyor…" aciklama="Etkinlik yetkiniz doğrulanıyor." />
       : durum === "dogrulandi" ? <>
         <div className={styles.successNote} role="status"><Check aria-hidden="true" />Cogniti oturumunuz ve etkinlik yetkiniz doğrulandı.</div>
-        <article className={styles.integrationContent}><p className={styles.kicker}>İÇERİK ALANI · ÖNİZLEME</p><h2>Öğrenme, buluşmanın bir parçası.</h2><p>Görüşme sırasında Cogniti içeriğinin açılacağı alanın tasarım örneği.</p>
+        <article className={styles.integrationContent}><p className={styles.kicker}>İÇERİK ALANI · ÖNİZLEME</p><h2>Yayın sırasında içerik paylaşımı</h2><p>Görüşme sırasında Cogniti içeriğinin açılacağı alanın tasarım örneği.</p>
           <div className={styles.documentPreview}><span className={styles.documentLine} aria-hidden="true" /><h3>Birlikte öğrenmek,<br />birlikte gelişmek.</h3><p>Örnek içerik · Gerçek öğrenme aracı, soru veya puan işlemi içermez.</p></div>
         </article>
       </> : <VivaDurumAlani tur={durum === "hata" ? "hata" : "kilit"} baslik={durum === "gecersiz" ? "Geçersiz etkinlik" : durum === "hata" ? "Cogniti bağlantısı doğrulanamadı" : "Cogniti oturumu doğrulanamadı"}

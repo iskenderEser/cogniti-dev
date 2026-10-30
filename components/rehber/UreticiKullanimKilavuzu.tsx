@@ -50,15 +50,14 @@ export default function UreticiKullanimKilavuzu({ kilavuz = URETICI_KILAVUZU, ro
     if (metin.current) metin.current.scrollTop = konumlar.current[konumAnahtari] ?? 0;
   }, [konumAnahtari, yerTutucu]);
 
+
   return <>
     <span hidden ref={setYerTutucu} />
     {yerTutucu && createPortal(<>
       <aside className={`${styles.panel} ${acik ? styles.acik : ""}`} aria-label="Cogniti Kullanım Kılavuzu">
-        <button ref={kulakcik} type="button" className={styles.kulakcik} aria-expanded={acik} aria-controls={panelId}
+        <button ref={kulakcik} type="button" className={styles.kulakcik} aria-expanded={acik} aria-controls={panelId} title="Kullanım Kılavuzu"
           aria-label={acik ? "Kullanım kılavuzunu kapat" : "Kullanım kılavuzunu aç"} onClick={() => { if (acik) paneliKapat(); else kilavuzuAc(); }}>
-          <BookOpen size={17} aria-hidden="true" />
-          <span className={styles.etiket}>Kullanım Kılavuzu</span>
-          {acik ? <ChevronRight size={16} aria-hidden="true" /> : <ChevronLeft size={16} aria-hidden="true" />}
+          <BookOpen size={14.45} strokeWidth={1} absoluteStrokeWidth aria-hidden="true" />
         </button>
         <div id={panelId} className={styles.icerik} inert={!acik} aria-hidden={!acik}>
           <header className={styles.baslik}>

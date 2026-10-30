@@ -34,6 +34,7 @@ interface SecimProps<T extends string> {
   aranabilir?: boolean;
   disabled?: boolean;
   className?: string;
+  menuClassName?: string;
   varyant?: "kisi" | "tablo";
   triggerProps?: Omit<ComponentProps<"button">, "children" | "className" | "style" | "disabled">;
   gorunenEtiket?: string;
@@ -44,7 +45,7 @@ interface SecimProps<T extends string> {
 export function SadeSecim<T extends string>({
   secenekler, deger, onDegistir, etiket, placeholder = "Seçiniz",
   aramaEtiketi = `${etiket} adıyla ara`, aranabilir = true, disabled = false,
-  className, varyant = "kisi", triggerProps, gorunenEtiket, altBilgiTetikleyicide = true,
+  className, menuClassName, varyant = "kisi", triggerProps, gorunenEtiket, altBilgiTetikleyicide = true,
 }: SecimProps<T>) {
   const [acik, setAcik] = useState(false);
   const [arama, setArama] = useState("");
@@ -58,7 +59,7 @@ export function SadeSecim<T extends string>({
         <SadeAsagiOk />
       </button>
     </Popover.Trigger>
-    <Popover.Portal><Popover.Content align="start" sideOffset={7} collisionPadding={12} aria-label={`${etiket} seçimi`} className={styles.menu}
+    <Popover.Portal><Popover.Content align="start" sideOffset={7} collisionPadding={12} aria-label={`${etiket} seçimi`} className={cn(styles.menu, menuClassName)}
       onOpenAutoFocus={(event) => {
         event.preventDefault();
         if (aranabilir) input.current?.focus();

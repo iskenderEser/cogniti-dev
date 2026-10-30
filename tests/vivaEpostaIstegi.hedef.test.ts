@@ -10,7 +10,7 @@ import * as roller from '@/lib/utils/roller';
 
 const id = '00000000-0000-4000-8000-000000000001';
 const baskaId = '00000000-0000-4000-8000-000000000002';
-const form = { etkinlik_id: id, baslik: 'Eğitim', aciklama: '', yayin_turu: 'planli', durum: 'planlandi',
+const form = { etkinlik_id: id, baslik: 'Eğitim', aciklama: '', egitim_turu:'medikal_egitim', urun_id:null, yayin_turu: 'planli', durum: 'planlandi',
   baslangic: '2027-01-01T21:30:00Z', bitis: '2027-01-01T22:00:00Z', katilimcilar: [] };
 type Ayarlar = { rol?: string; oturum?: boolean; sahip?: string; yonetebilir?: boolean;
   olusturabilir?: boolean; mevcutSahip?: string; yetkiHatasi?: { code: string }; okumaHatasi?: { code: string };

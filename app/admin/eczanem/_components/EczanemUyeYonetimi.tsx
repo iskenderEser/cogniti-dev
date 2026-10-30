@@ -1,9 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Search, Users, UserCheck, UserX, RefreshCw } from "lucide-react";
+import { Search, Users, UserCheck, UserX } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { YenileButonu } from "@/components/ui/yenile-butonu";
+import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Dialog } from "radix-ui";
@@ -83,7 +85,10 @@ export default function EczanemUyeYonetimi({ firmaId, firmaAdi }: { firmaId: str
   }
 
   return <section className="min-w-0 space-y-4" aria-label={`${firmaAdi} Eczanem üyeleri`}>
-    <div><h2 className="text-lg font-bold text-[var(--tema-yerel-yonetim-ana-metin-05)]">Üyeler</h2><p className="mt-1 text-xs text-[var(--tema-yerel-yonetim-yardimci-metin-06)]">{firmaAdi} firmasına bağlı eczanelerin üyelikleri. Her satır bir üyenin bir eczanedeki üyeliğidir.</p></div>
+    <SayfaYenileBasligi
+      baslik={<h2 className="text-lg font-bold text-[var(--tema-yerel-yonetim-ana-metin-05)]">Üyeler</h2>}
+      aciklama={<p className="mt-1 text-xs text-[var(--tema-yerel-yonetim-yardimci-metin-06)]">{firmaAdi} firmasına bağlı eczanelerin üyelikleri. Her satır bir üyenin bir eczanedeki üyeliğidir.</p>}
+      aksiyon={<YenileButonu yenileniyor={yukleniyor} disabled={kaydediyor} onYenile={() => { setMesaj(null); return yenile(); }} />} />
     {veri && <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
       {[
         { ad: "Toplam Üye", deger: veri.ozet.toplam_uye, ikon: Users },
@@ -103,7 +108,6 @@ export default function EczanemUyeYonetimi({ firmaId, firmaAdi }: { firmaId: str
           <option value="">Tüm eczaneler</option>
           {veri?.eczaneler.map((eczane) => <option key={eczane.eczane_id} value={eczane.eczane_id}>{eczane.eczane_adi} · {eczane.gln}</option>)}
         </select>
-        <Button type="button" size="sm" variant="outline" disabled={yukleniyor || kaydediyor} onClick={() => { setMesaj(null); void yenile(); }}><RefreshCw className={`size-4 ${yukleniyor ? "animate-spin" : ""}`} /> Yenile</Button>
       </div>
       <Table className="[&_th]:px-4 [&_th]:text-xs [&_th]:font-bold [&_td]:px-4 [&_td]:py-4 [&_td]:text-xs" aria-label="Eczanem üye listesi" aria-busy={yukleniyor}>
         <TableHeader className="bg-[var(--tema-yerel-yonetim-sayfa-zemini-08)]"><TableRow>

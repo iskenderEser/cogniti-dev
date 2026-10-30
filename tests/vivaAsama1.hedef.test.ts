@@ -11,7 +11,7 @@ import * as sozlesme from "@/lib/viva/sozlesme";
 import * as eposta from "@/lib/viva/eposta";
 
 const id = "00000000-0000-4000-8000-000000000001";
-const form = { baslik: "Tanıtım", aciklama: "", baslangic: "2027-01-01T21:30:00Z", bitis: "2027-01-01T22:00:00Z", durum: "planlandi", katilimcilar: [{ tur: "ic", id }] };
+const form = { baslik: "Tanıtım", aciklama: "", egitim_turu: "medikal_egitim", urun_id: null, baslangic: "2027-01-01T21:30:00Z", bitis: "2027-01-01T22:00:00Z", durum: "planlandi", katilimcilar: [{ tur: "ic", id }] };
 test("tüm iç roller Viva oluşturucu grubundadır; EClub ve müşteri değildir", () => {
   for (const rol of TUM_ROLLER) assert.equal(vivaIcRolMu(rol), true);
   for (const rol of [...ECLUB_TUKETICI_ROLLERI, "musteri", "bilinmeyen"]) assert.equal(vivaIcRolMu(rol), false);
