@@ -16,6 +16,7 @@ import { IzlemeSoruFormu, IzlemeSoruSonuclari } from "@/components/soru/IzlemeSo
 import type { IzlemeCevapSonucu, IzlemeSorusu } from "@/lib/soru/izlemeTipleri";
 
 interface OynaticiVideo {
+  eczanem_kazanim_modeli?: "indirimli" | "indirimsiz" | null;
   gonderim_id: string;
   yayin_id: string;
   urun_adi: string;
@@ -307,7 +308,7 @@ export default function EczanemVideoOynatici({ video, onKapat, onTamamlandi, hat
         )}
 
         <CardContent className="p-4 md:p-5">
-          {!izlemeBasladi && !izlemeTamamlandi && !tamamlamaHatasi && <div className="flex items-start gap-2 rounded-xl border border-[var(--tema-oynatici-eczanem-bilgi-cizgi)] bg-[var(--tema-oynatici-eczanem-bilgi-zemin)] p-3 text-xs font-semibold leading-5 text-[var(--tema-oynatici-eczanem-bilgi-metin)]"><CircleHelp className="mt-0.5 size-4 shrink-0 text-[var(--tema-oynatici-eczanem-bilgi-simge)]" /><p>Kayıt yalnız yukarıdaki başlatma düğmesine bastığınızda başlar. İçeriği tamamladığınızda puanınız otomatik eklenir.</p></div>}
+          {!izlemeBasladi && !izlemeTamamlandi && !tamamlamaHatasi && <div className="flex items-start gap-2 rounded-xl border border-[var(--tema-oynatici-eczanem-bilgi-cizgi)] bg-[var(--tema-oynatici-eczanem-bilgi-zemin)] p-3 text-xs font-semibold leading-5 text-[var(--tema-oynatici-eczanem-bilgi-metin)]"><CircleHelp className="mt-0.5 size-4 shrink-0 text-[var(--tema-oynatici-eczanem-bilgi-simge)]" /><p>Kayıt yalnız yukarıdaki başlatma düğmesine bastığınızda başlar.{video.eczanem_kazanim_modeli !== "indirimsiz" && " İçeriği tamamladığınızda puanınız otomatik eklenir."}</p></div>}
 
           {tamamlamaHatasi && <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[var(--tema-oynatici-eczanem-hata-cizgi)] bg-[var(--tema-oynatici-eczanem-hata-zemin)] p-3 text-[var(--tema-oynatici-eczanem-hata-metin)]"><div className="flex items-start gap-2"><CircleAlert className="mt-0.5 size-4 shrink-0" /><p className="text-xs font-bold leading-5">{tamamlamaHatasi}</p></div><Button type="button" size="sm" variant="outline" onClick={() => void handleBitir()} disabled={islemLoading} className="h-8 border-[var(--tema-oynatici-eczanem-hata-eylem-cizgi)] bg-[var(--tema-oynatici-yuzey)] text-xs font-extrabold text-[var(--tema-oynatici-eczanem-hata-metin)]">Tamamlamayı yeniden dene</Button></div>}
 

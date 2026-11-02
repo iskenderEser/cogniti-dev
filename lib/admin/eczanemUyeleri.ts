@@ -1,3 +1,4 @@
+import { ECZANEM_UYE_SUTUNLARI, type EczanemUyeSutunu } from "./eczanemUyeSutunlari";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 import { uuidGecerliMi } from "@/lib/uretim/rpcTemel";
@@ -20,6 +21,7 @@ export interface AdminEczanemUye {
 }
 export interface AdminEczanemUyeVerisi {
   uyeler: AdminEczanemUye[];
+  secenekler?: Record<EczanemUyeSutunu, { deger:string; etiket:string }[]>;
   eczaneler: Array<{ eczane_id: string; eczane_adi: string; gln: string }>;
   ozet: { toplam_uye: number; aktif_uyelik: number; pasif_uyelik: number };
   sayfalama: { sayfa: number; toplam_sayfa: number; toplam: number; limit: number };
@@ -54,12 +56,33 @@ export function adminEczanemUyeIsleyicileri({ kontrol, admin }: Bagimliliklar) {
           || !Number.isSafeInteger(sayfa) || sayfa < 1 || sayfa > 1000000) {
           return validasyonHatasi("Geçersiz liste filtresi veya sayfa.", ["eczane_id", "durum", "sayfa"]);
         }
+        const sutunlu = sorgu.has("sutunlar");
+        let sutunFiltreleri: Record<string, string> = {};
+        if (sutunlu) {
+          const ham = sorgu.get("sutunlar") ?? "{}";
+          if (ham.length > 5000) return validasyonHatasi("Geçersiz sütun filtreleri.", ["sutunlar"]);
+          let parsed: unknown;
+          try { parsed = JSON.parse(ham); } catch { return validasyonHatasi("Geçersiz sütun filtreleri.", ["sutunlar"]); }
+          const alanlar = new Set<string>(ECZANEM_UYE_SUTUNLARI.map(([alan]) => alan));
+          if (!parsed || typeof parsed !== "object" || Array.isArray(parsed) ||
+            Object.entries(parsed).some(([alan, deger]) => !alanlar.has(alan) || typeof deger !== "string" || deger.length > 300)) {
+            return validasyonHatasi("Geçersiz sütun filtreleri.", ["sutunlar"]);
+          }
+          sutunFiltreleri = parsed as Record<string, string>;
+        }
         const arama = (sorgu.get("q") ?? "").trim().slice(0, 80);
         const db = admin();
-        const { data, error } = await db.rpc("admin_eczanem_uyeleri_oku", {
-          p_firma_id: firma_id, p_eczane_id: eczaneId, p_durum: durum,
-          p_arama: arama, p_sayfa: sayfa, p_limit: 20,
-        });
+        const { data, error } = sutunlu
+          ? await db.rpc("admin_eczanem_uyeleri_sutun_filtreli_oku", {
+            p_firma_id: firma_id, p_arama: arama, p_sutun_filtreleri: sutunFiltreleri, p_sayfa: sayfa, p_limit: 20,
+          })
+          : await db.rpc("admin_eczanem_uyeleri_oku", {
+            p_firma_id: firma_id, p_eczane_id: eczaneId, p_durum: durum,
+            p_arama: arama, p_sayfa: sayfa, p_limit: 20,
+          });
+        if (error && sutunlu && ["PGRST202", "42883", "42P01", "PGRST205"].includes(error.code ?? "")) {
+          return hataYaniti("Sütun filtrelerinin kurulumu gerekli: scripts/sql/admin_eczanem_sutun_filtreleri.sql dosyasını çalıştırın.", "Admin Eczanem sütun filtreleri", null, 503);
+        }
         if (error) return rpcHatasi(error);
         if (!data) return hataYaniti("Üye listesi alınamadı.", "Admin Eczanem RPC");
         const veri = data as AdminEczanemUyeVerisi;

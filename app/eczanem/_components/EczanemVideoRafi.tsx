@@ -92,6 +92,7 @@ export default function EczanemVideoRafi({
 
   const renderKartIcerigi = (video: EczanemMusteriVideo) => {
     const isliyor = etkilesimIsliyor === video.yayin_id;
+    const puanGoster = video.eczanem_kazanim_modeli !== "indirimsiz";
 
     return (
       <YayinKarti
@@ -140,25 +141,25 @@ export default function EczanemVideoRafi({
                 {video.eczane_adi}
               </p>
             )}
-            <div className="grid grid-cols-3 divide-x divide-[var(--tema-hoyk-eczanem-ayirici)] rounded-lg border border-[var(--tema-hoyk-eczanem-ozet-cizgi)] bg-[var(--tema-hoyk-eczanem-ozet-zemin)] px-1 py-1 text-center">
-              <div className="px-0.5">
+            <div className={(puanGoster ? "grid-cols-3 " : "grid-cols-1 ") + "grid divide-x divide-[var(--tema-hoyk-eczanem-ayirici)] rounded-lg border border-[var(--tema-hoyk-eczanem-ozet-cizgi)] bg-[var(--tema-hoyk-eczanem-ozet-zemin)] px-1 py-1 text-center"}>
+              {puanGoster && <div className="px-0.5">
                 <span className="block text-[11px] font-extrabold uppercase tracking-wide text-[var(--tema-hoyk-eczanem-ozet-etiket)] sm:text-[7px]">Tamamlama</span>
                 <strong className="mt-0.5 block text-xs font-black tabular-nums text-[var(--tema-hoyk-eczanem-tamamlama)] sm:text-[10px]">
                   {Number(video.video_puani ?? 0).toLocaleString("tr-TR")} p
                 </strong>
-              </div>
+              </div>}
               <div className="px-0.5">
                 <span className="block text-[11px] font-extrabold uppercase tracking-wide text-[var(--tema-hoyk-eczanem-ozet-etiket)] sm:text-[7px]">Soru</span>
                 <strong className="mt-0.5 block text-xs font-black tabular-nums text-[var(--tema-hoyk-eczanem-soru)] sm:text-[10px]">
                   {Number(video.soru_sayisi ?? 0).toLocaleString("tr-TR")} adet
                 </strong>
               </div>
-              <div className="px-0.5">
+              {puanGoster && <div className="px-0.5">
                 <span className="block text-[11px] font-extrabold uppercase tracking-wide text-[var(--tema-hoyk-eczanem-ozet-etiket)] sm:text-[7px]">Her Doğru</span>
                 <strong className="mt-0.5 block text-xs font-black tabular-nums text-[var(--tema-hoyk-eczanem-dogru)] sm:text-[10px]">
                   {Number(video.soru_puani ?? 0).toLocaleString("tr-TR")} p
                 </strong>
-              </div>
+              </div>}
             </div>
           </div>
         }

@@ -1,3 +1,5 @@
+import type { EczanemKazanimModeli } from "@/lib/eczanem/kazanimModeli";
+
 export type EczanemAracTuru = "video" | "podcast" | "gorsel" | "flip_pdf";
 
 export interface EczanemSidebarArac {
@@ -41,6 +43,7 @@ export type EczanemSidebarSecim =
 export interface EczanemMusteriVideo {
   gonderim_id: string;
   yayin_id: string;
+  eczanem_kazanim_modeli?: EczanemKazanimModeli | null;
   eczane_id: string;
   eczane_adi: string;
   talep_no?: number | null;

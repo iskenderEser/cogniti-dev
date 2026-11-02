@@ -14,7 +14,7 @@ import type { useAdminPanel } from "@/app/admin/_hooks/useAdminPanel";
 
 const firma = (eclub: boolean, eczanem: boolean): Firma => ({
   firma_id: "f", firma_adi: "Sahte Firma", aktif: true, hbstore_aktif: true,
-  cc_aktif: true, eclub_aktif: eclub, eclub_store_aktif: false, eczanem_aktif: eczanem,
+  cc_aktif: true, eclub_aktif: eclub, eczanem_aktif: eczanem,
   son_export_at: null, created_at: "2026-10-21", eksik_sayisi: 0,
 });
 
@@ -27,7 +27,7 @@ test("admin firma anahtarı ve modül kartı E-Club kapalıyken Eczanem açılı
         firmalar: [firma(eclub, false)], seciliFirma: null, yeniFirmaAdi: "", loading: false,
         setYeniFirmaAdi: noop, handleFirmaEkle: noop, handleFirmaSecildi: noop,
         handleStoreToggle: noop, handleCcToggle: noop, handleEclubToggle: noop,
-        handleEclubStoreToggle: noop, handleEczanemToggle: noop, handleFirmaToggle: noop,
+        handleEczanemToggle: noop, handleFirmaToggle: noop,
         handleFirmaSil: async () => true, onVeriSil: noop, handleExport: noop,
       }));
       const anahtar = dom.document.querySelector<HTMLButtonElement>('button[title^="Eczanem"]');

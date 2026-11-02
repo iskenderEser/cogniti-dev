@@ -67,7 +67,6 @@ export default function EczanemPanelBaglantisi({ children, gruplar, gezinmeAgaci
         storeAcik: false,
         ccAcik: false,
         eclubAcik: false,
-        eclubStoreAcik: false,
         eczanemAcik: true,
       }}
       gruplar={ortakGruplar}

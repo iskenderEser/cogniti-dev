@@ -90,7 +90,7 @@ test("üye bağlantısı kimlik ve menüyü ortak kabuğa verir; firma servisler
     assert.equal(props.gruplar, o.gruplar);
     assert.equal(props.baglam.kimlikTuru, "musteri");
     assert.equal(props.baglam.eczanemAcik, true);
-    for (const flag of ["storeAcik", "ccAcik", "eclubAcik", "eclubStoreAcik"] as const) assert.equal(props.baglam[flag], false);
+    for (const flag of ["storeAcik", "ccAcik", "eclubAcik"] as const) assert.equal(props.baglam[flag], false);
     assert.equal(Object.keys(props.badge).length, 0);
     assert.match(o.container.textContent!, /Üye içeriği/);
     assert.equal(o.yonlendirmeler.length, 0);

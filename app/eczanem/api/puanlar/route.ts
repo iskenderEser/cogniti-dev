@@ -73,11 +73,11 @@ export async function GET() {
     const simdi = new Date().toISOString();
     const [urunSonucu, tarifeSonucu] = await Promise.all([
       adminSupabase.from("urunler").select("urun_id, urun_adi, barkod").in("urun_id", urunIdler),
-      adminSupabase.from("eczanem_urun_tarifeleri").select("urun_id, puan, tl, satis_fiyati, gecerlilik_baslangic")
+      adminSupabase.from("eczanem_merkezi_urun_tarifeleri").select("urun_id, puan, tl, satis_fiyati, gecerlilik_baslangic")
         .in("urun_id", urunIdler).lte("gecerlilik_baslangic", simdi).order("gecerlilik_baslangic", { ascending: false }),
     ]);
     if (urunSonucu.error) return hataYaniti("Puan ürünleri alınamadı.", "urunler SELECT — Puanlarım", urunSonucu.error);
-    if (tarifeSonucu.error) return hataYaniti("İndirim karşılıkları alınamadı.", "eczanem_urun_tarifeleri SELECT — Puanlarım", tarifeSonucu.error);
+    if (tarifeSonucu.error) return hataYaniti("İndirim karşılıkları alınamadı.", "eczanem_merkezi_urun_tarifeleri SELECT — Puanlarım", tarifeSonucu.error);
 
     const urunler = new Map<string, UrunSatiri>();
     for (const hamUrun of urunSonucu.data ?? []) { const urun = hamUrun as UrunSatiri; urunler.set(urun.urun_id, urun); }

@@ -4,7 +4,7 @@ import { eczanemUyeMenusuOlustur } from "@/app/eczanem/_components/eczanemUyeMen
 import { mobilPanelNavOlustur, type NavContext, type NavGrup, type NavOge } from "@/components/panel/panelNav.config";
 import type { EczanemSidebarAgaci, EczanemSidebarSecim } from "@/app/eczanem/_types";
 
-const uyeBaglami: NavContext = { rolKucu: "musteri", kimlikTuru: "musteri", storeAcik: false, ccAcik: false, eclubAcik: false, eclubStoreAcik: false, eczanemAcik: true };
+const uyeBaglami: NavContext = { rolKucu: "musteri", kimlikTuru: "musteri", storeAcik: false, ccAcik: false, eclubAcik: false, eczanemAcik: true };
 
 function agacOlustur(): EczanemSidebarAgaci {
   return ["eczane-a", "eczane-b"].map(eczane_id => ({

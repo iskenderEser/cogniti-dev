@@ -13,7 +13,7 @@ import * as hataIsle from "@/lib/utils/hataIsle";
 const id = "00000000-0000-4000-8000-000000000001";
 const firma = (eclub: boolean, eczanem: boolean, firma_id = id) => ({
   firma_id, firma_adi: "Sahte Firma", aktif: true,
-  eclub_aktif: eclub, eczanem_aktif: eczanem, eclub_store_aktif: false,
+  eclub_aktif: eclub, eczanem_aktif: eczanem,
 });
 
 function erisimDb(firmalar: ReturnType<typeof firma>[]) {
@@ -68,7 +68,7 @@ test("iki firmanın ayrı açık bayrakları birleştirilmez; ikinci açık firm
 test("menüler bütün rollerde E-Club kapalıyken Eczanem'i göstermez", () => {
   const gruplar = [...PANEL_NAV, ...eclubKisiNavOlustur([])].filter(g => g.baslik === "Eczanem");
   for (const rolKucu of [...TUM_ROLLER, ...ECLUB_TUKETICI_ROLLERI, "musteri"]) {
-    const ctx: NavContext = { rolKucu, storeAcik: false, ccAcik: false, eclubStoreAcik: false, eclubAcik: false, eczanemAcik: true };
+    const ctx: NavContext = { rolKucu, storeAcik: false, ccAcik: false, eclubAcik: false, eczanemAcik: true };
     for (const grup of gruplar) for (const oge of grup.oglar) assert.equal(oge.gate(ctx), false, `${rolKucu}/${oge.etiket}`);
   }
 });

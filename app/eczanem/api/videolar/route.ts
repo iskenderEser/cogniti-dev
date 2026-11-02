@@ -5,6 +5,7 @@
 // Global sayılar yalnız müşteri ana sayfasındaki keşif raflarını sıralar; firma,
 // UTT raporlarına bağlanmaz.
 
+import type { EczanemKazanimModeli } from "@/lib/eczanem/kazanimModeli";
 import { NextResponse } from "next/server";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { hataYaniti, sunucuHatasi, yetkiHatasi, rolHatasi } from "@/lib/utils/hataIsle";
@@ -23,6 +24,7 @@ import type {
 
 interface YayinDetaySatiri {
   yayin_id: string;
+  eczanem_kazanim_modeli: EczanemKazanimModeli | null;
   urun_adi: string | null;
   teknik_adi: string | null;
   video_url: string | null;
@@ -106,7 +108,7 @@ export async function GET() {
       const [{ data: yayinlar, error: yayinError }, { data: kunyeler, error: kunyeError }] = await Promise.all([
         adminSupabase
           .from("v_yayin_detay")
-          .select("yayin_id, urun_adi, teknik_adi, video_url, thumbnail_url, arac_kapak_yolu, arac_dosya_yolu, arac_metadata, video_puani, soru_puani, video_basi_soru_sayisi, durum, talep_no, firma_adi, firma_id, arac_id, arac_turu")
+          .select("yayin_id, urun_adi, teknik_adi, video_url, thumbnail_url, arac_kapak_yolu, arac_dosya_yolu, arac_metadata, video_puani, soru_puani, eczanem_kazanim_modeli, video_basi_soru_sayisi, durum, talep_no, firma_adi, firma_id, arac_id, arac_turu")
           .in("yayin_id", yayinIdler)
           .in("arac_turu", Object.entries(ogrenmeAraciBayraklari()).filter(([, acik]) => acik).map(([tur]) => tur))
           // Görünürlük kapısı (Faz 1): süresi hazır olmayan video izleyiciye gösterilmez.
@@ -243,8 +245,9 @@ export async function GET() {
         arac_id: g.arac_id,
         arac_turu: g.arac_turu,
         thumbnail_url: yayinThumbnailUrlCoz(y),
-        video_puani: y.video_puani ?? null,
-        soru_puani: y.soru_puani ?? null,
+        eczanem_kazanim_modeli: y.eczanem_kazanim_modeli,
+        video_puani: y.eczanem_kazanim_modeli === "indirimsiz" ? null : y.video_puani ?? null,
+        soru_puani: y.eczanem_kazanim_modeli === "indirimsiz" ? null : y.soru_puani ?? null,
         soru_sayisi: y.video_basi_soru_sayisi ?? null,
         gelis_tarihi: g.created_at,
         izleme_basladi: Boolean(izleme),

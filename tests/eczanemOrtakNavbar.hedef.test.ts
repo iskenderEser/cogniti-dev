@@ -69,7 +69,7 @@ async function ortam(uye = true, silmeAktif = true, rol = "utt") {
   const root = createRoot(container);
   const render = () => act(async () => root.render(uye
     ? React.createElement(Baglanti, { gruplar: eczanemUyeMenusuOlustur(), onHesapSil: silmeAktif ? () => { silmeler++; } : undefined }, React.createElement("h1", null, "Üye içeriği"))
-    : React.createElement(Kabuk, { navbar: { adSoyad: "İç Kullanıcı", onCikis: cikisYap, anaSayfaYolu: baslangic.panelBaslangici(rol).yol, bilgiPilleri: roller.URETICI_ROLLER.includes(rol) ? [] : undefined }, gruplar: [], badge: {}, baglam: { rolKucu: rol, kimlikTuru: "kullanici", storeAcik: false, ccAcik: false, eclubAcik: false, eclubStoreAcik: false, eczanemAcik: false } }, "İçerik")));
+    : React.createElement(Kabuk, { navbar: { adSoyad: "İç Kullanıcı", onCikis: cikisYap, anaSayfaYolu: baslangic.panelBaslangici(rol).yol, bilgiPilleri: roller.URETICI_ROLLER.includes(rol) ? [] : undefined }, gruplar: [], badge: {}, baglam: { rolKucu: rol, kimlikTuru: "kullanici", storeAcik: false, ccAcik: false, eclubAcik: false, eczanemAcik: false } }, "İçerik")));
   return {
     dom, container, yollar, renkler, istekler, render,
     silmeler: () => silmeler, cikislar: () => cikislar,

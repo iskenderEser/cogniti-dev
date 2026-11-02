@@ -1,0 +1,28 @@
+.row { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:18px 28px; }
+.description { margin:0; max-width:850px; color:var(--tema-kontrol-ikincil-metin); font-size:13px; line-height:1.8; }
+.note { margin:18px 0 0; }
+.error { color:var(--tema-vurgu); }
+.message { margin:0; }
+.message button { margin-left:12px; }
+.searchForm { display:flex; flex:0 1 430px; align-items:center; gap:8px; width:100%; max-width:430px; min-width:0; margin-left:auto; }
+.searchForm input { flex:1; min-width:0; }
+.searchForm button { flex-shrink:0; }
+.table { width:100%; min-width:1150px; border-collapse:collapse; text-align:left; font-size:12px; }
+.table th { padding:10px 14px; background:var(--tema-zemin); color:var(--tema-kontrol-ikincil-metin); font-size:11px; font-weight:800; text-align:left; vertical-align:middle; white-space:nowrap; }
+.table td { padding:10px 14px; border-top:1px solid var(--tema-kontrol-cizgi); vertical-align:middle; white-space:nowrap; overflow-wrap:normal; line-height:1.5; }
+.table td:last-child { width:1%; }
+.table td:last-child a { min-width:68px; white-space:nowrap; }
+.table tr[data-selected=true] { background:var(--tema-secili); }
+.table a[aria-disabled=true] { opacity:.5; cursor:not-allowed; }
+.pagination { padding:16px 22px; border-top:1px solid var(--tema-kontrol-cizgi); color:var(--tema-kontrol-ikincil-metin); font-size:12px; }
+.detail { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px 28px; margin:0; }
+.detail dt { color:var(--tema-kontrol-ikincil-metin); font-size:11px; }
+.detail dd { margin:5px 0 0; color:var(--tema-kontrol-metin); font-size:13px; font-weight:800; overflow-wrap:anywhere; }
+.confirm { margin-top:22px; padding:18px; border:1px solid var(--tema-kontrol-cizgi); border-radius:12px; background:var(--tema-zemin); }
+.confirm h3 { margin:0; font-size:14px; font-weight:800; color:var(--tema-kontrol-metin); }
+.confirm p { margin:10px 0 16px; font-size:12px; line-height:1.8; color:var(--tema-kontrol-ikincil-metin); }
+.detailActions { margin-top:22px; padding-top:18px; border-top:1px solid var(--tema-kontrol-cizgi); }
+@media(max-width:760px) { .detail { grid-template-columns:1fr; } .pagination { padding:16px; } }
+
+.table .columnSelect { height:25px; min-height:25px; width:max-content; min-width:80px; max-width:260px; padding-top:3px; padding-bottom:3px; }
+.columnMenu { width:max-content; min-width:var(--radix-popover-trigger-width); max-width:min(420px,calc(100vw - 24px)); }

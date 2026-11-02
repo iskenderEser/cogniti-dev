@@ -1,28 +1,10 @@
-// lib/eczanem/tarife.ts
-// Eczanem ürün tarifesi (Karşılık) + barkod tek kaynağı (U5, K-E3 kapalı karar).
-//
-// K-E3 (11.07.2026, İskender): "Müşteri aleyhine değişmez" kuralının teknik
-// yorumu — yeni tarife YALNIZ İLERİYE işler. eczanem_urun_tarifeleri append-only
-// bir tarihçedir: güncel tarife = gecerlilik_baslangic <= now olan en son satır.
-// Eski satırlar hiç değiştirilmez; harcama anında (U8) geçerli tarife seçilir,
-// böylece geçmiş kazanım geriye dönük değersizleşmez.
-//
-// Barkod + Karşılık'ın evi ürün seviyesidir (İP §2): bakiye ürün bazlı
-// birleştiğinden karşılık da ürün başına tek güncel değer olmak zorundadır
-// (iki yayının iki farklı karşılığı tanımsızlık üretir). Bu yüzden yazım
-// yayına-alma UX'inde toplanır ama urunler.barkod + eczanem_urun_tarifeleri'ne
-// düşer — yayın satırına değil.
-//
-// Korumalı tablo: eczanem_urun_tarifeleri KORUMALI_TABLOLAR'dadır; INSERT
-// yalnız bu tek-kaynak üzerinden yapılır (tools/eslint-rules kayit-tek-kaynak).
-
+// Puan–TL: merkezi firma tanımı. Barkod ve satış fiyatı: ürün bazında.
+// Mevcut tarife tarihçesi korunur; indirim talebi oranı snapshot olarak saklar.
 import { SupabaseClient } from "@supabase/supabase-js";
 
 export interface TarifeGiris {
   urun_id: string;
   barkod: string;
-  puan: number;
-  tl: number;
   satis_fiyati: number;
   olusturan_id: string;
 }
@@ -48,7 +30,7 @@ export async function guncelTarife(
 ): Promise<GuncelTarife | null> {
   const simdi = new Date().toISOString();
   const { data } = await adminSupabase
-    .from("eczanem_urun_tarifeleri")
+    .from("eczanem_merkezi_urun_tarifeleri")
     .select("puan, tl, satis_fiyati")
     .eq("urun_id", urun_id)
     .lte("gecerlilik_baslangic", simdi)
@@ -68,7 +50,12 @@ export async function tarifeVeBarkodYaz(
   adminSupabase: SupabaseClient,
   giris: TarifeGiris
 ): Promise<TarifeSonuc> {
-  const { urun_id, barkod, puan, tl, satis_fiyati, olusturan_id } = giris;
+  const { urun_id, barkod, satis_fiyati, olusturan_id } = giris;
+  const { data: urun, error: urunHatasi } = await adminSupabase.from("urunler").select("firma_id").eq("urun_id", urun_id).single();
+  if (urunHatasi || !urun?.firma_id) return { ok: false, hata: "Ürünün firması doğrulanamadı." };
+  const { data: oran, error: oranHatasi } = await adminSupabase.from("eczanem_firma_cek_tanimlari").select("karsilik_puan,karsilik_tl").eq("firma_id", urun.firma_id).maybeSingle();
+  if (oranHatasi || !oran) return { ok: false, hata: "Firma için Eczanem puan–TL karşılığı tanımlanmalıdır." };
+  const puan = oran.karsilik_puan, tl = Number(oran.karsilik_tl);
 
   // 1) Barkod — ürün seviyesinde tek güncel değer.
   const { error: barkodHatasi } = await adminSupabase
@@ -79,8 +66,9 @@ export async function tarifeVeBarkodYaz(
   if (barkodHatasi) return { ok: false, hata: "Barkod yazılamadı." };
 
   // 2) Karşılık — puan, tl veya satış fiyatı değişmediyse yeni satır açma.
-  const mevcut = await guncelTarife(adminSupabase, urun_id);
-  if (mevcut && mevcut.puan === puan && mevcut.tl === Number(tl) && mevcut.satis_fiyati === Number(satis_fiyati)) {
+  const { data: mevcut } = await adminSupabase.from("eczanem_urun_tarifeleri").select("puan,tl,satis_fiyati")
+    .eq("urun_id", urun_id).lte("gecerlilik_baslangic", new Date().toISOString()).order("gecerlilik_baslangic", { ascending: false }).limit(1).maybeSingle();
+  if (mevcut && mevcut.puan === puan && Number(mevcut.tl) === Number(tl) && Number(mevcut.satis_fiyati) === Number(satis_fiyati)) {
     return { ok: true, yeniTarife: false };
   }
 

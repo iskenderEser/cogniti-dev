@@ -2,22 +2,22 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { eczaneKilavuzunuSec, eczaneKilavuzFirmasiniSec, type EczaneKilavuzFirmasi } from "../lib/rehber/eczaneKilavuzu.ts";
-const a: EczaneKilavuzFirmasi = { firma_id: "a", firma_adi: "A Firması", eclub_store_aktif: true, eczanem_aktif: true };
-const b: EczaneKilavuzFirmasi = { firma_id: "b", firma_adi: "B Firması", eclub_store_aktif: false, eczanem_aktif: false };
+const a: EczaneKilavuzFirmasi = { firma_id: "a", firma_adi: "A Firması", eczanem_aktif: true };
+const b: EczaneKilavuzFirmasi = { firma_id: "b", firma_adi: "B Firması", eczanem_aktif: false };
 function metin(firma: EczaneKilavuzFirmasi | null, rol: string) {
   const k = eczaneKilavuzunuSec(firma, rol);
   return k.bolumler.flatMap(b => [b.baslik, ...b.parcalar.flatMap(p => p.tip === "liste" ? p.maddeler : [p.metin])]).join("\n");
 }
 for (const rol of ["eczaci", "ikinci_eczaci", "yardimci_eczaci", "eczane_teknisyeni"]) {
-  for (const cek of [false, true]) for (const eczanem of [false, true]) {
-    test(`Eczaneler: ${rol}, çek=${cek}, Eczanem=${eczanem}`, () => {
-      const firma = { ...a, eclub_store_aktif: cek, eczanem_aktif: eczanem };
+  for (const eczanem of [false, true]) {
+    test(`Eczaneler: ${rol}, Eczanem=${eczanem}`, () => {
+      const firma = { ...a, eczanem_aktif: eczanem };
       const k = eczaneKilavuzunuSec(firma, rol), yazi = metin(firma, rol);
       assert.equal(k.bolumler.length, 6);
       if (!eczanem) assert.doesNotMatch(yazi, /Eczanem|Üye Yayınları|İndirim Onayı|Üyeyi pasife/);
-      if (!cek) assert.doesNotMatch(yazi, /Hediye çeki işlemleri|Hediye Çeki Takibi|Hediye çeki koşulları|Kullanılmayan çekli puanlar/);
+      assert.match(yazi, /Hediye Çeki Takibi/);
       const sorular = k.bolumler[5].parcalar.filter(p => p.tip === "baslik").map(p => p.tip === "baslik" ? p.metin : "");
-      assert.equal(sorular.some(s => s.startsWith("İkinci eczacı,")), cek && rol !== "eczaci");
+      assert.equal(sorular.some(s => s.startsWith("İkinci eczacı,")), rol !== "eczaci");
       assert.doesNotMatch(yazi, /eczanenin eczacısı|E-Club’da tekrar tamamlamalar için Extra puan verilmez|10 puanlık soruyu doğru yanıtlarsanız/);
       for (const b of k.bolumler) b.parcalar.forEach((p, i) => {
         if (p.tip === "baslik") assert.ok(b.parcalar[i + 1] && b.parcalar[i + 1].tip !== "baslik", p.metin);
