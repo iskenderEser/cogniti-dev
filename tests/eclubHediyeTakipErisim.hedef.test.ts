@@ -39,7 +39,7 @@ test("sunucu kapsamı kullanıcı ve firma durumlarını güvenli kaynaktan doğ
   assert.match(kaynak, /from\("firmalar"\)/);
   assert.match(kaynak, /firma\.aktif !== true/);
   assert.match(kaynak, /firma\.eclub_aktif !== true/);
-  assert.match(kaynak, /firma\.eclub_store_aktif !== true/);
+  assert.doesNotMatch(kaynak, /eclub_store_aktif/);
 });
 
 test("UTT kapsam kimliği istemci girdisinden değil oturum kullanıcısından türetilir", () => {

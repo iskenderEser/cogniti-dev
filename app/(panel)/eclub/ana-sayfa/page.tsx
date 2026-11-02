@@ -91,7 +91,6 @@ export default function EclubPanelPage() {
     : gorunenOneriler.filter((oneri) => yayinFiltresi === "yeni" ? eclubYeniYayinMi(oneri) : oneri.izlendi_mi);
   const statOzeti = aktifFirmaOzeti
     ? {
-        eclub_store_aktif: aktifFirmaOzeti.eclub_store_aktif,
         toplam_kazanilan_puan: aktifFirmaOzeti.kazanilan_puan,
         ileri_sarma_kaybi: aktifFirmaOzeti.kaybedilen_puan,
         dogru_cevap: aktifFirmaOzeti.dogru_cevap,
@@ -155,7 +154,7 @@ export default function EclubPanelPage() {
             ustEtiket=""
             baslikClassName="text-lg md:text-xl font-extrabold text-[var(--tema-yerel-ana-sayfa-islevsel-metin-01)] m-0"
             baslik={karsilamaBasligi}
-            aksiyon={statOzeti.eclub_store_aktif ? <EclubHediyeCekiGunleriPill /> : undefined}
+            aksiyon={<EclubHediyeCekiGunleriPill />}
             altAksiyon={<TarihPill />}
             aciklama="Firmaların size ilettiği yayınları izleyin, soruları yanıtlayın ve puan kazanın."
           />

@@ -1,4 +1,5 @@
 import "server-only";
+import { cekBaglantisiGecerli } from "./teslimat";
 import { createAdminClient } from "@/lib/supabase/server";
 
 interface CekEpostaIsi {
@@ -7,6 +8,7 @@ interface CekEpostaIsi {
   alici_eposta: string;
   alici_adi?: string | null;
   cek_kodu: string;
+  kullanim_linki?: string | null;
   cek_tutari_tl: number;
 }
 
@@ -38,8 +40,8 @@ export async function eclubCekEpostaKuyrugunuTuket(maxIsSayisi = 10) {
         body: JSON.stringify({
           from,
           to: [is.alici_eposta],
-          subject: "Migros hediye çekiniz hazır",
-          html: `<p>Merhaba ${htmlKacir(is.alici_adi || "")},</p><p><strong>${htmlKacir(is.cek_tutari_tl)} TL</strong> değerindeki Migros hediye çekiniz hazırdır.</p><p>Çek kodunuz: <strong>${htmlKacir(is.cek_kodu)}</strong></p><p>Kodu Cogniti içindeki Çeklerim alanından da görebilirsiniz.</p>`,
+          subject: "Hediye çekiniz hazır",
+          html: `<p>Merhaba ${htmlKacir(is.alici_adi || "")},</p><p><strong>${htmlKacir(is.cek_tutari_tl)} TL</strong> değerindeki Hediye çekiniz hazırdır.</p><p>Çek kodunuz: <strong>${htmlKacir(is.cek_kodu)}</strong></p>${is.kullanim_linki && cekBaglantisiGecerli(is.kullanim_linki) ? `<p>Kullanım bağlantısı: <a href="${htmlKacir(is.kullanim_linki)}">Hediye çekini kullan</a></p>` : ""}<p>Kodu ve varsa kullanım bağlantısını Cogniti içindeki Hediye Çeki Takibi alanından da görebilirsiniz.</p>`,
         }),
       });
       if (!yanit.ok) throw new Error(`RESEND_${yanit.status}`);

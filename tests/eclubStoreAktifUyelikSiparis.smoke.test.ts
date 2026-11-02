@@ -8,7 +8,8 @@ const kaynakSql = readFileSync("scripts/sql/eclub_store_firma_urun_gorunurlugu.s
 
 test("E-Club hediye çeki API'si pasif kişinin yeni talebini reddeder", () => {
   assert.match(route, /eclubKisiErisimi\(adminSupabase, user\.id\)/);
-  assert.match(route, /!erisim\.eclub_aktif\s*\|\|\s*!erisim\.eclub_store_aktif/);
+  assert.match(route, /if \(!erisim\.eclub_aktif\)/);
+  assert.doesNotMatch(route, /eclub_store_aktif/);
   assert.match(route, /Aktif E-Club üyeliğiniz bulunmadığı için çek talebi oluşturamazsınız/);
 });
 
@@ -21,7 +22,8 @@ for (const [ad, sql] of [
     assert.match(sql, /ke\.aktif_mi = true/);
     assert.match(sql, /ef\.aktif_mi = true/);
     assert.match(sql, /f\.eclub_aktif = true/);
-    assert.match(sql, /f\.eclub_store_aktif = true/);
+    assert.match(sql, /f\.aktif = true/);
+    assert.doesNotMatch(sql, /\beclub_store_aktif\b/);
     assert.match(sql, /FOR UPDATE OF ke/);
     assert.match(sql, /IF NOT FOUND THEN[\s\S]*Aktif E-Club üyeliğiniz bulunmadığı için yeni sipariş oluşturamazsınız/);
     assert.ok(

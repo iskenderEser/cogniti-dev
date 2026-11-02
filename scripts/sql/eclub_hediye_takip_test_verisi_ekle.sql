@@ -64,8 +64,7 @@ BEGIN
     AND lower(k.rol) IN ('utt', 'kd_utt')
     AND k.aktif_mi = true
     AND f.aktif = true
-    AND f.eclub_aktif = true
-    AND f.eclub_store_aktif = true;
+    AND f.eclub_aktif = true;
 
   IF v_firma_id IS NULL THEN
     RAISE EXCEPTION 'Hedef UTT veya açık E-Club Hediye Çeki firması bulunamadı; hiçbir kayıt eklenmedi.';

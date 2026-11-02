@@ -378,7 +378,7 @@ AS $function$
   JOIN kazanc k ON k.firma_id = f.firma_id
   LEFT JOIN kayip ka ON ka.firma_id = f.firma_id
   LEFT JOIN harcama h ON h.firma_id = f.firma_id
-  WHERE f.eclub_store_aktif = true
+  WHERE f.aktif = true AND f.eclub_aktif = true
     AND (
       COALESCE(k.kazanilan, 0)
       - COALESCE(ka.kaybedilen, 0)

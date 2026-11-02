@@ -38,7 +38,7 @@ test("işlem, admin ve kod görünürlüğü durum kümeleri açıktır", () => 
 });
 
 test("eczane ve admin ekranları ortak sözleşmeyi tüketir", () => {
-  const eczaneStore = oku("app/(panel)/eclub/store/page.tsx");
+  const eczaneStore = oku("components/eclub/EclubHediyeCekiTalebi.tsx");
   const eczaneTalepleri = oku("app/(panel)/eclub/cek-taleplerim/page.tsx");
   const eczaneTalepKarti = oku("components/eclub/EclubCekTakipVitrinKarti.tsx");
   const adminApi = oku("app/admin/eclub-cek-teslimat/api/cek-talepleri/route.ts");

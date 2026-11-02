@@ -14,12 +14,13 @@ export interface BekleyenEczane {
 }
 
 interface UseEclubOnaylarArgs {
+  firmaId?: string;
   hazir: boolean; // admin auth doğrulandıktan sonra true
   hata: (mesaj: string, adim?: string, detay?: string) => void;
   basari: (mesaj: string) => void;
 }
 
-export function useEclubOnaylar({ hazir, hata, basari }: UseEclubOnaylarArgs) {
+export function useEclubOnaylar({ hazir, hata, basari, firmaId }: UseEclubOnaylarArgs) {
   const [bekleyenler, setBekleyenler] = useState<BekleyenEczane[]>([]);
   const [loading, setLoading] = useState(true);
   const [islemLoading, setIslemLoading] = useState(false);
@@ -27,7 +28,7 @@ export function useEclubOnaylar({ hazir, hata, basari }: UseEclubOnaylarArgs) {
   const veriCek = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch("/admin/api/eclub/onaylar");
+      const res = await fetch(`/admin/api/eclub/onaylar${firmaId ? `?firma_id=${encodeURIComponent(firmaId)}` : ""}`);
       const d = await res.json();
       if (!res.ok) hata(d.hata ?? "Onay bekleyenler yüklenemedi.", d.adim, d.detay);
       else setBekleyenler(d.bekleyenler ?? []);
@@ -36,7 +37,7 @@ export function useEclubOnaylar({ hazir, hata, basari }: UseEclubOnaylarArgs) {
     } finally {
       setLoading(false);
     }
-  }, [hata]);
+  }, [hata, firmaId]);
 
   useEffect(() => {
     if (hazir) veriCek();
@@ -48,7 +49,7 @@ export function useEclubOnaylar({ hazir, hata, basari }: UseEclubOnaylarArgs) {
       const res = await fetch("/admin/api/eclub/onaylar", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ gln, karar }),
+        body: JSON.stringify({ gln, karar, firma_id: firmaId }),
       });
       const d = await res.json();
       if (!res.ok) {
@@ -64,7 +65,7 @@ export function useEclubOnaylar({ hazir, hata, basari }: UseEclubOnaylarArgs) {
     } finally {
       setIslemLoading(false);
     }
-  }, [hata, basari, veriCek]);
+  }, [hata, basari, veriCek, firmaId]);
 
   return { bekleyenler, loading, islemLoading, veriCek, kararVer };
 }

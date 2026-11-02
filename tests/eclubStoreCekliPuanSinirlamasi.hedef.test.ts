@@ -168,14 +168,14 @@ test("Hedef Test 6: Navbar, Store sayfası ve firma bakiyesi aynı sonucu göste
     ["firma-2", true],
   ]);
 
-  // 1. Firma Bakiyesi API çıktısı (app/(panel)/eclub/store/api/route.ts -> firmaBakiye)
+  // 1. Firma Bakiyesi API çıktısı (app/(panel)/eclub/api/cek-ozeti/route.ts -> firmaBakiye)
   const firmaBakiyeleri = hesaplaStoreFirmaBakiye("kisi-1", kazanilan, [], [], firmaAktifMap);
   const firma1Bakiye = firmaBakiyeleri.find((f) => f.firma_id === "firma-1")?.bakiye ?? 0;
   const firma2Bakiye = firmaBakiyeleri.find((f) => f.firma_id === "firma-2")?.bakiye ?? 0;
   assert.equal(firma1Bakiye, 50); // 50 Çekli (20 Çeksiz eklenmedi)
   assert.equal(firma2Bakiye, 30);
 
-  // 2. Store Sayfası Toplam Bakiye (app/(panel)/eclub/store/api/route.ts -> toplamBakiye)
+  // 2. Store Sayfası Toplam Bakiye (app/(panel)/eclub/api/cek-ozeti/route.ts -> toplamBakiye)
   const storeSayfasiToplamBakiye = firmaBakiyeleri.reduce((acc, f) => acc + f.bakiye, 0);
   assert.equal(storeSayfasiToplamBakiye, 80);
 

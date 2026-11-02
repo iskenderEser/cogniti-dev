@@ -5,7 +5,7 @@ import ts from "typescript";
 import { readFileSync } from "node:fs";
 import { eclubFirmaKapsami, eclubFirmaRotasiKapsami } from "@/lib/eclub/firmaGezinme";
 
-const firma = { firma_id: "0c504d88-b9fb-40bb-beae-5bae33cb99ac", firma_adi: "İki İsimli Firma", aktif: true, eclub_aktif: true, eclub_store_aktif: true };
+const firma = { firma_id: "0c504d88-b9fb-40bb-beae-5bae33cb99ac", firma_adi: "İki İsimli Firma", aktif: true, eclub_aktif: true };
 function api(path: string) {
   let okunanFirma: unknown;
   const modules: Record<string, unknown> = {

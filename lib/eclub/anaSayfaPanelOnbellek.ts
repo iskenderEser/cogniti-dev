@@ -13,7 +13,7 @@ export interface PanelVerisi {
 }
 
 const SURE = 60_000;
-const PREFIX = "hb_eclub_ana_sayfa_v1_";
+const PREFIX = "hb_eclub_ana_sayfa_v2_";
 const kayitlar = new Map<string, { veri: PanelVerisi; zaman: number }>();
 const istekler = new Map<string, Promise<{ ok: boolean; veri: PanelVerisi }>>();
 
@@ -24,6 +24,7 @@ export function panelOnbelleginiSil(anahtar: string) {
 
 export function panelOnbelleginiOku(anahtar: string, azamiYas = SURE): PanelVerisi | null {
   try {
+    sessionStorage.removeItem("hb_eclub_ana_sayfa_v1_" + anahtar);
     const kayit = kayitlar.get(anahtar) ?? JSON.parse(sessionStorage.getItem(PREFIX + anahtar) ?? "null");
     if (kayit?.veri && typeof kayit.zaman === "number" && Date.now() - kayit.zaman >= 0 && Date.now() - kayit.zaman < azamiYas) {
       kayitlar.set(anahtar, kayit);

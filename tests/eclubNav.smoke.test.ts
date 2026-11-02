@@ -7,7 +7,6 @@ const uttBaglami: NavContext = {
   storeAcik: true,
   ccAcik: true,
   eclubAcik: true,
-  eclubStoreAcik: true,
   eczanemAcik: true,
 };
 
@@ -51,7 +50,7 @@ test("BM ve TM E-Club Takımım, Yayınları ve ligi; diğer üst roller yalnız
 
 test("eczane sidebarı firma sayısından bağımsız tek Firmalar ve Yayınları bağlantısı gösterir", async () => {
   const { eclubKisiNavOlustur } = await import("@/components/panel/panelNav.config");
-  const firmalar = Array.from({ length: 10 }, (_, i) => ({ firma_id: `f${i}`, firma_adi: `Firma ${i}`, eclub_store_aktif: i % 2 === 0 }));
+  const firmalar = Array.from({ length: 10 }, (_, i) => ({ firma_id: `f${i}`, firma_adi: `Firma ${i}` }));
   const nav = eclubKisiNavOlustur(firmalar);
   assert.deepEqual(nav.map((g) => g.baslik), ["E-Club", "Eczanem"]);
   assert.deepEqual(nav[0].oglar.map((o) => [o.etiket, o.path]), [["Firmalar ve Yayınları", "/eclub/firmalar"]]);

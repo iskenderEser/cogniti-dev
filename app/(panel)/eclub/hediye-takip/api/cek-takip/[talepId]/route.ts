@@ -1,3 +1,4 @@
+import { cekOnayHataYaniti } from "@/lib/eclub/hediyeTakip/onayHatasi";
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient, createClient } from "@/lib/supabase/server";
 import { cekTakipKapsaminiCoz, cekTakipTalepKapsami } from "@/lib/eclub/hediyeTakip/cekTakipErisim";
@@ -55,7 +56,7 @@ export async function POST(
       p_utt_id: erisim.kapsam.utt_id,
       p_talep_idler: [talepId],
     });
-    if (rpcHatasi) return hataYaniti("Çek talebi BM onayına gönderilemedi.", "eclub_store_bm_onayina_gonder RPC", rpcHatasi);
+    if (rpcHatasi) return cekOnayHataYaniti(rpcHatasi, "Çek talebi BM onayına gönderilemedi.", "eclub_store_bm_onayina_gonder RPC");
 
     const guncellenenAdet = Array.isArray(rpcSonucu)
       ? Number(rpcSonucu[0]?.guncellenen_adet ?? 0)

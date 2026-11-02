@@ -53,7 +53,6 @@ export interface PanelKisi {
 }
 
 export interface PanelFirmaOzeti {
-  eclub_store_aktif: boolean;
   firma_id: string;
   firma_adi: string;
   kazanilan_puan: number;
@@ -64,7 +63,6 @@ export interface PanelFirmaOzeti {
 }
 
 export interface PanelOzet {
-  eclub_store_aktif: boolean;
   toplam_kazanilan_puan: number;
   ileri_sarma_kaybi: number;
   harcanabilir_puan: number;
@@ -89,7 +87,7 @@ export function useEclubPanel({ hazir, hata, firmaId = null, firmaRotasi, onbell
   const [kisi, setKisi] = useState<PanelKisi | null>(() => ilkOnbellek?.kisi ?? null);
   const [oneriler, setOneriler] = useState<PanelOneri[]>(() => ilkOnbellek?.oneriler ?? []);
   const [firmaOzetleri, setFirmaOzetleri] = useState<PanelFirmaOzeti[]>(() => ilkOnbellek?.firma_ozetleri ?? []);
-  const [ozet, setOzet] = useState<PanelOzet>(() => ({ eclub_store_aktif: ilkOnbellek?.ozet?.eclub_store_aktif === true,
+  const [ozet, setOzet] = useState<PanelOzet>(() => ({
     toplam_kazanilan_puan: ilkOnbellek?.ozet?.toplam_kazanilan_puan ?? 0, ileri_sarma_kaybi: ilkOnbellek?.ozet?.ileri_sarma_kaybi ?? 0,
     harcanabilir_puan: ilkOnbellek?.ozet?.harcanabilir_puan ?? 0, dogru_cevap: ilkOnbellek?.ozet?.dogru_cevap ?? 0 }));
   const [loading, setLoading] = useState(!ilkOnbellek);
@@ -103,7 +101,6 @@ export function useEclubPanel({ hazir, hata, firmaId = null, firmaRotasi, onbell
         setOneriler(d.oneriler ?? []);
         setFirmaOzetleri(d.firma_ozetleri ?? []);
         setOzet({
-          eclub_store_aktif: d.ozet?.eclub_store_aktif === true,
           toplam_kazanilan_puan: d.ozet?.toplam_kazanilan_puan ?? 0,
           ileri_sarma_kaybi: d.ozet?.ileri_sarma_kaybi ?? 0,
           harcanabilir_puan: d.ozet?.harcanabilir_puan ?? 0,
@@ -125,7 +122,7 @@ export function useEclubPanel({ hazir, hata, firmaId = null, firmaRotasi, onbell
       if (!sonuc.ok) {
         if (onbellekAnahtari) panelOnbelleginiSil(onbellekAnahtari);
         setKisi(null); setOneriler([]); setFirmaOzetleri([]);
-        setOzet({ eclub_store_aktif: false, toplam_kazanilan_puan: 0, ileri_sarma_kaybi: 0, harcanabilir_puan: 0, dogru_cevap: 0 });
+        setOzet({ toplam_kazanilan_puan: 0, ileri_sarma_kaybi: 0, harcanabilir_puan: 0, dogru_cevap: 0 });
         hata(d.hata ?? "E-Club Panel Verileri Yüklenemedi.", d.adim, d.detay);
       } else {
         if (onbellekAnahtari && (!kayit || acilistaArkaPlandaYenile)) panelOnbellegineYaz(onbellekAnahtari, d);
@@ -135,7 +132,7 @@ export function useEclubPanel({ hazir, hata, firmaId = null, firmaRotasi, onbell
       if (istek !== istekSirasi.current) return;
       if (onbellekAnahtari) panelOnbelleginiSil(onbellekAnahtari);
       setKisi(null); setOneriler([]); setFirmaOzetleri([]);
-        setOzet({ eclub_store_aktif: false, toplam_kazanilan_puan: 0, ileri_sarma_kaybi: 0, harcanabilir_puan: 0, dogru_cevap: 0 });
+        setOzet({ toplam_kazanilan_puan: 0, ileri_sarma_kaybi: 0, harcanabilir_puan: 0, dogru_cevap: 0 });
       hata("Veri yüklenirken hata oluştu.", "useEclubPanel veriCek", err instanceof Error ? err.message : undefined);
     } finally {
       if (istek === istekSirasi.current) { setYuklenenKapsam(firmaId); setYuklenenOnbellek(onbellekAnahtari); setLoading(false); }

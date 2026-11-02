@@ -32,7 +32,7 @@ BEGIN
     JOIN public.firmalar f ON f.firma_id = k.firma_id
     WHERE k.kullanici_id = p_utt_id AND k.aktif_mi = true
       AND lower(k.rol) IN ('utt', 'kd_utt')
-      AND f.aktif = true AND f.eclub_aktif = true AND f.eclub_store_aktif = true
+      AND f.aktif = true AND f.eclub_aktif = true
   ) THEN
     RETURN QUERY SELECT false, 'UTT yetkisi doğrulanamadı.'::text, NULL::timestamptz;
     RETURN;

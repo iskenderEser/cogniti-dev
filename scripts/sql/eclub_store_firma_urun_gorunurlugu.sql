@@ -50,7 +50,6 @@ BEGIN
     ON f.firma_id = ef.firma_id
    AND f.aktif = true
    AND f.eclub_aktif = true
-   AND f.eclub_store_aktif = true
   WHERE ke.kisi_id = p_kisi_id
     AND ke.aktif_mi = true
   LIMIT 1

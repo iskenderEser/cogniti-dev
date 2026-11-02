@@ -5,8 +5,8 @@
 -- bilinerek tutulur (REDBOOK §4.5). Bu fonksiyon o ayrıştırmayı yapar.
 --
 -- ⚠ PARASAL: Çıktısı doğrudan harcanabilir bakiyedir. Değişiklik dikkatle
--- ele alınmıştır; hesap mantığına, iptal süzgecine ve firma modül bayrağına
--- dokunulmamıştır.
+-- ele alınmıştır; hesap mantığı ve iptal süzgeci korunur. Firma erişimi
+-- aktif firma ve E-Club durumu üzerinden değerlendirilir.
 --
 -- GÜNCELLEME (05.08.2026 — künye geçişi):
 --   Firma, puan defterindeki `urun_id` kopyası üzerinden çözülüyordu:
@@ -69,7 +69,7 @@ AS $function$
   JOIN kazanc k ON k.firma_id = f.firma_id
   LEFT JOIN kayip ka ON ka.firma_id = f.firma_id
   LEFT JOIN harcama h ON h.firma_id = f.firma_id
-  WHERE f.eclub_store_aktif = true
+  WHERE f.aktif = true AND f.eclub_aktif = true
     AND (
       COALESCE(k.kazanilan, 0)
       - COALESCE(ka.kaybedilen, 0)

@@ -45,7 +45,7 @@ function api({ authenticated = true, allowed = true, product = true, count = 1, 
   const modules: Record<string, unknown> = {
     "next/server": { NextResponse: Response },
     "@/lib/supabase/server": { createClient: async () => ({ auth: { getUser: async () => ({ data: { user: authenticated ? { id: "auth" } : null }, error: null }) } }), createAdminClient: () => admin },
-    "@/lib/eclub/kisiErisim": { eclubKisiErisimi: async () => ({ kisi: { kisi_id: "k1", rol: "eczaci" }, eczane_idler: ["e1"], firmalar: allowed ? [{ firma_id: f, aktif: true, eclub_aktif: true, eclub_store_aktif: false }] : [] }) },
+    "@/lib/eclub/kisiErisim": { eclubKisiErisimi: async () => ({ kisi: { kisi_id: "k1", rol: "eczaci" }, eczane_idler: ["e1"], firmalar: allowed ? [{ firma_id: f, aktif: true, eclub_aktif: true }] : [] }) },
     "@/lib/eclub/firmaGezinme": { eclubFirmaKapsami },
     "@/lib/utils/roller": { ECLUB_TUKETICI_ROLLERI: ["eczaci"] },
     "@/lib/uretim/rpc": { uuidGecerliMi: (s: string) => /^[a-f0-9-]{36}$/i.test(s) },

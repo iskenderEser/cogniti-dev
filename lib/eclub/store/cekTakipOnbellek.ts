@@ -29,4 +29,4 @@ export interface CekTakipVerisi {
   firma?: EclubGezinmeFirmasi | null;
   talepler?: CekTalebi[];
 }
-export const cekTakipOnbellegi = sayfaOkumaOnbellegiOlustur<CekTakipVerisi>("cek_takip");
+export const cekTakipOnbellegi = sayfaOkumaOnbellegiOlustur<CekTakipVerisi>("cek_takip", 60_000, 2);

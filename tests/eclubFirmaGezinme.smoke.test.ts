@@ -3,17 +3,18 @@ import assert from "node:assert/strict";
 import { eclubFirmaKapsami, eclubUrunGruplari } from "@/lib/eclub/firmaGezinme";
 import { icerikUret } from "@/lib/push/icerik";
 
-test("bir firmanın açık mağazası diğer firmanın çek erişimini açmaz", () => {
+test("firma kapsamı yalnız aktif E-Club firmalarını açar; kapalı ve yabancı firmalar erişemez", () => {
   const firmalar = [
-    { firma_id: "a", aktif: true, eclub_aktif: true, eclub_store_aktif: true },
-    { firma_id: "b", aktif: true, eclub_aktif: true, eclub_store_aktif: false },
-    { firma_id: "c", aktif: true, eclub_aktif: false, eclub_store_aktif: true },
-    { firma_id: "d", aktif: false, eclub_aktif: true, eclub_store_aktif: true },
+    { firma_id: "a", aktif: true, eclub_aktif: true },
+    { firma_id: "b", aktif: true, eclub_aktif: true },
+    { firma_id: "c", aktif: true, eclub_aktif: false },
+    { firma_id: "d", aktif: false, eclub_aktif: true },
   ];
-  assert.deepEqual(eclubFirmaKapsami(firmalar, "b", true), []);
   assert.deepEqual(eclubFirmaKapsami(firmalar, "b").map((f) => f.firma_id), ["b"]);
-  assert.deepEqual(eclubFirmaKapsami(firmalar, null, true).map((f) => f.firma_id), ["a"]);
-  assert.deepEqual(eclubFirmaKapsami(firmalar, "yabanci", true), []);
+  assert.deepEqual(eclubFirmaKapsami(firmalar, null).map((f) => f.firma_id), ["a", "b"]);
+  assert.deepEqual(eclubFirmaKapsami(firmalar, "c"), []);
+  assert.deepEqual(eclubFirmaKapsami(firmalar, "d"), []);
+  assert.deepEqual(eclubFirmaKapsami(firmalar, "yabanci"), []);
 });
 
 test("aynı ürünün yayınları korunur, farklı firmaların ürünleri birleşmez", () => {
@@ -57,10 +58,9 @@ test("firma adresi adı kullanır, Türkçe harfleri ve kelime aralarını dön�
   const { eclubFirmaAdiYolu, eclubFirmaYolu, eclubFirmaRotasiKapsami } = await import("@/lib/eclub/firmaGezinme");
   assert.equal(eclubFirmaAdiYolu("  İki İsimli Şirket  "), "iki-isimli-sirket");
   assert.equal(eclubFirmaYolu("Hepifarma", "yayinlar"), "/eclub/firma/hepifarma/yayinlar");
-  const firma = { firma_id: "0c504d88-b9fb-40bb-beae-5bae33cb99ac", firma_adi: "İki İsimli Şirket", aktif: true, eclub_aktif: true, eclub_store_aktif: false };
+  const firma = { firma_id: "0c504d88-b9fb-40bb-beae-5bae33cb99ac", firma_adi: "İki İsimli Şirket", aktif: true, eclub_aktif: true };
   assert.deepEqual(eclubFirmaRotasiKapsami([firma], "iki-isimli-sirket"), [firma]);
   assert.deepEqual(eclubFirmaRotasiKapsami([firma], firma.firma_id), [firma]);
-  assert.deepEqual(eclubFirmaRotasiKapsami([firma], "iki-isimli-sirket", true), []);
   assert.deepEqual(eclubFirmaRotasiKapsami([firma], "baska-firma"), []);
   assert.deepEqual(eclubFirmaRotasiKapsami([firma, { ...firma, firma_id: "ikinci" }], "iki-isimli-sirket"), []);
 });

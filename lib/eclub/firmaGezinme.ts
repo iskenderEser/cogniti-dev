@@ -1,7 +1,6 @@
 export interface EclubGezinmeFirmasi {
   firma_id: string;
   firma_adi: string;
-  eclub_store_aktif: boolean;
   logo_url?: string | null;
 }
 
@@ -17,11 +16,11 @@ export function eclubFirmaAdiYolu(firmaAdi: string): string {
 /** Eski UUID bağlantıları da çözülür; aynı ada sahip firmalarda belirsiz eşleşme yapılmaz. */
 export function eclubFirmaRotasiKapsami<T extends {
   firma_id: string; firma_adi: string; aktif: boolean | null;
-  eclub_aktif: boolean | null; eclub_store_aktif: boolean | null;
-}>(firmalar: T[], rota: string, cekSayfasi = false): T[] {
+  eclub_aktif: boolean | null;
+}>(firmalar: T[], rota: string): T[] {
   const kapsam = eclubFirmaKapsami(firmalar, null);
   const eslesen = kapsam.filter((firma) => firma.firma_id === rota || eclubFirmaAdiYolu(firma.firma_adi) === rota);
-  return eslesen.length === 1 && (!cekSayfasi || eslesen[0].eclub_store_aktif === true) ? eslesen : [];
+  return eslesen.length === 1 ? eslesen : [];
 }
 
 export function eclubFirmaYolu(firmaAdi: string, sayfa: EclubFirmaSayfasi): string {
@@ -38,10 +37,8 @@ export function eclubFirmaKapsami<T extends {
   firma_id: string;
   aktif: boolean | null;
   eclub_aktif: boolean | null;
-  eclub_store_aktif: boolean | null;
-}>(firmalar: T[], firmaId: string | null, cekSayfasi = false): T[] {
+}>(firmalar: T[], firmaId: string | null): T[] {
   return firmalar.filter((firma) => firma.aktif !== false && firma.eclub_aktif === true
-    && (!cekSayfasi || firma.eclub_store_aktif === true)
     && (firmaId === null || firma.firma_id === firmaId));
 }
 

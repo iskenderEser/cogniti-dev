@@ -19,7 +19,7 @@ test("fiziksel katalog, adres ve yönetim yüzeyleri kaldırıldı", () => {
 
 test("aktif E-Club hediye çeki rotaları yalnız çek sözleşmesini kullanır", () => {
   for (const yol of [
-    "app/(panel)/eclub/store/api/route.ts",
+    "app/(panel)/eclub/api/cek-ozeti/route.ts",
     "app/(panel)/eclub/api/cek-talepleri/route.ts",
     "app/admin/eclub-cek-teslimat/api/cek-talepleri/route.ts",
   ]) assert.doesNotMatch(oku(yol), fizikselSozlesme, yol);

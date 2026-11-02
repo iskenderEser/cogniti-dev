@@ -7,7 +7,6 @@ interface EclubFirmaModulSatiri {
   logo_url?: string | null;
   aktif: boolean | null;
   eclub_aktif: boolean | null;
-  eclub_store_aktif: boolean | null;
   eczanem_aktif: boolean | null;
 }
 
@@ -23,7 +22,6 @@ export interface EclubKisiErisimSonucu {
   eczane_idler: string[];
   firmalar: EclubFirmaModulSatiri[];
   eclub_aktif: boolean;
-  eclub_store_aktif: boolean;
   eczanem_aktif: boolean;
 }
 
@@ -32,7 +30,6 @@ export function eclubKisiModulDurumu(firmalar: EclubFirmaModulSatiri[]) {
   const eclubFirmalari = aktifFirmalar.filter((firma) => firma.eclub_aktif === true);
   return {
     eclub_aktif: eclubFirmalari.length > 0,
-    eclub_store_aktif: eclubFirmalari.some((firma) => firma.eclub_store_aktif === true),
     eczanem_aktif: eclubFirmalari.some((firma) => firma.eczanem_aktif === true),
   };
 }
@@ -48,7 +45,7 @@ export async function eclubKisiErisimi(
     .eq("auth_user_id", authUserId)
     .maybeSingle();
   if (kisiError) throw new Error(`eclub_kisiler SELECT: ${kisiError.message}`);
-  if (!kisi) return { kisi: null, eczane_idler: [], firmalar: [], eclub_aktif: false, eclub_store_aktif: false, eczanem_aktif: false };
+  if (!kisi) return { kisi: null, eczane_idler: [], firmalar: [], eclub_aktif: false, eczanem_aktif: false };
 
   const { data: kisiBaglari, error: bagError } = await supabase
     .from("eclub_kisi_eczane")
@@ -59,7 +56,7 @@ export async function eclubKisiErisimi(
 
   const eczaneIdler = [...new Set((kisiBaglari ?? []).map((bag) => bag.eczane_id))];
   if (eczaneIdler.length === 0) {
-    return { kisi, eczane_idler: [], firmalar: [], eclub_aktif: false, eclub_store_aktif: false, eczanem_aktif: false };
+    return { kisi, eczane_idler: [], firmalar: [], eclub_aktif: false, eczanem_aktif: false };
   }
 
   const { data: firmaBaglari, error: firmaBagError } = await supabase
@@ -71,7 +68,7 @@ export async function eclubKisiErisimi(
 
   const firmaIdler = [...new Set((firmaBaglari ?? []).map((bag) => bag.firma_id))];
   if (firmaIdler.length === 0) {
-    return { kisi, eczane_idler: eczaneIdler, firmalar: [], eclub_aktif: false, eclub_store_aktif: false, eczanem_aktif: false };
+    return { kisi, eczane_idler: eczaneIdler, firmalar: [], eclub_aktif: false, eczanem_aktif: false };
   }
 
   const { data: firmalar, error: firmaError } = await supabase

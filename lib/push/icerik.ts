@@ -57,7 +57,7 @@ export function icerikUret(olayTuru: PushOlayTuru, aliciRol: string, baglam: Pus
       if (ECLUB_TUKETICI_ROLLERI.includes(aliciRol)) {
         return {
           baslik: "Cogniti E-Club",
-          govde: "Eczanenizin Migros hediye çeki hazır.",
+          govde: "Eczanenizin hediye çeki hazır.",
           url: `${baglam.firmaId ? eclubFirmaYolu(baglam.firmaId, "cek-talepleri") : "/eclub/cek-taleplerim"}${baglam.bagId ? `?talep_id=${encodeURIComponent(baglam.bagId)}` : ""}`,
         };
       }
@@ -85,7 +85,7 @@ export function icerikUret(olayTuru: PushOlayTuru, aliciRol: string, baglam: Pus
 
     case "store_siparis":
       if (ECLUB_TUKETICI_ROLLERI.includes(aliciRol)) {
-        return { baslik: "FirmaStore", govde: "Siparişinizde gelişme var.", url: "/eclub/store" };
+        return null; // Eski fiziksel E-Club mağazası bildirimi kapalı.
       }
       return icKullaniciYuku("FirmaStore", "Siparişinizde gelişme var.", aliciRol);
   }

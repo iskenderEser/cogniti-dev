@@ -19,7 +19,7 @@ WITH hedef AS (
   FROM hedef h
   JOIN public.eclub_eczane_firma ef ON ef.eczane_id = h.eczane_id AND ef.aktif_mi = true
   JOIN public.firmalar f ON f.firma_id = ef.firma_id
-    AND f.aktif = true AND f.eclub_aktif = true AND f.eclub_store_aktif = true
+    AND f.aktif = true AND f.eclub_aktif = true
   JOIN public.v_yayin_kunye ky ON ky.firma_id = ef.firma_id
   JOIN public.urunler u ON u.urun_id = ky.urun_id
   JOIN public.yayin_yonetimi y ON y.yayin_id = ky.yayin_id

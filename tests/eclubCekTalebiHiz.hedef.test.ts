@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import * as React from "react";
 import { GlobalWindow } from "happy-dom";
-import { useEclubStore } from "@/app/(panel)/eclub/store/_hooks/useEclubStore";
+import { useEclubHediyeCekiTalebi } from "@/components/eclub/useEclubHediyeCekiTalebi";
 import { vitrinOnbellegi } from "@/lib/eclub/store/vitrinOnbellek";
 
 const win = new GlobalWindow();
@@ -19,7 +19,7 @@ test("çek vitrinine dönüş beklemez; güncellik, talep sonrası yenileme ve k
   const eskiSaat = Date.now;
   let saat = eskiSaat();
   Date.now = () => saat;
-  const payload = (ad: string) => ({ firma: { firma_id: "f", firma_adi: ad, eclub_store_aktif: true }, cek_yayinlar: [] });
+  const payload = (ad: string) => ({ firma: { firma_id: "f", firma_adi: ad }, cek_yayinlar: [] });
   await vitrinOnbellegi.iste("cek-kisi:f", async () => payload("Eski"));
   saat += 61_000;
   let tamamla!: (r: Response) => void;
@@ -32,9 +32,9 @@ test("çek vitrinine dönüş beklemez; güncellik, talep sonrası yenileme ve k
   const hatalar: string[] = [];
   const hata = (s: string) => { hatalar.push(s); };
   const basari = () => undefined;
-  let store!: ReturnType<typeof useEclubStore>;
+  let store!: ReturnType<typeof useEclubHediyeCekiTalebi>;
   function Probe({ user = "cek-kisi" }: { user?: string }) {
-    const durum = useEclubStore({ hata, basari, firmaId: "f", onbellekKullaniciId: user });
+    const durum = useEclubHediyeCekiTalebi({ hata, basari, firmaId: "f", onbellekKullaniciId: user });
     React.useEffect(() => { store = durum; });
     return React.createElement("button", { disabled: durum.yenileniyor }, durum.loading ? "Bekliyor" : durum.firma?.firma_adi ?? "Boş");
   }

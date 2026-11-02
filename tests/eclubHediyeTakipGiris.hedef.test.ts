@@ -11,8 +11,9 @@ test("E-Club Takımım sayfası Hediye Takip girişini doğru rotaya açar", () 
   assert.match(takimSayfasi, /router\.push\("\/eclub\/hediye-takip"\)/);
 });
 
-test("Hediye Takip proxy bekçisine bağlıdır ve eski takip URL'leri geri dönmez", () => {
-  assert.match(proxy, /pathname\.startsWith\("\/eclub\/hediye-takip"\)/);
+test("Hediye Takip ortak E-Club bekçisine bağlıdır ve eski takip URL'leri geri dönmez", () => {
+  assert.match(proxy, /pathname\.startsWith\("\/eclub"\)/);
+  assert.doesNotMatch(proxy, /eclub_store_aktif/);
   for (const eskiUrl of ["/eclub/cek-onay-takip", "/eclub/odul-siparis-takibi"]) {
     const desen = new RegExp(eskiUrl);
     assert.doesNotMatch(takimSayfasi, desen);

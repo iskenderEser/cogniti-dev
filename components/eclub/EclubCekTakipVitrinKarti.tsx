@@ -1,4 +1,6 @@
 "use client";
+import { useState } from "react";
+import { cekBaglantisiGecerli } from "@/lib/eclub/store/teslimat";
 
 import { ArrowRight, Coins, Gift } from "lucide-react";
 import type { CekTalebi } from "@/lib/eclub/store/cekTakipOnbellek";
@@ -9,12 +11,13 @@ import { yayin_kodu } from "@/lib/utils/yayinKodu";
 
 type Props = {
   talep: CekTalebi;
+  kodGorebilir?: boolean;
   iptalEdiliyor: boolean;
   dogrulaniyor: boolean;
   onIptal: () => void;
 };
 
-export default function EclubCekTakipVitrinKarti({ talep, iptalEdiliyor, dogrulaniyor, onIptal }: Props) {
+export default function EclubCekTakipVitrinKarti({ talep, iptalEdiliyor, dogrulaniyor, onIptal, kodGorebilir = false }: Props) {
   const durum = CEK_TALEP_DURUM_META[talep.durum];
   const yayinTuru = talep.arac_turu
     ? YAYIN_TURU_SUNUMU[talep.arac_turu as OgrenmeAraciTuru]?.etiket ?? "—"
@@ -75,6 +78,7 @@ export default function EclubCekTakipVitrinKarti({ talep, iptalEdiliyor, dogrula
           >
             {talep.durum === "iptal" ? "İptal Ettiniz" : durum.etiket}
           </span>
+          {kodGorebilir && !dogrulaniyor && !talep.gorunum_testi_mi && ["teslimat_bekliyor","cek_kodlari_gonderildi"].includes(talep.durum) && <TeslimBilgisi talepId={talep.talep_id} />}
           {talep.durum === "beklemede" && (
             <button
               type="button"
@@ -89,4 +93,13 @@ export default function EclubCekTakipVitrinKarti({ talep, iptalEdiliyor, dogrula
       </div>
     </article>
   );
+}
+
+function TeslimBilgisi({ talepId }: { talepId: string }) {
+ const [veri,setVeri]=useState<{cek_kodu:string;kullanim_linki:string|null}|null>(null),[busy,setBusy]=useState(false),[hata,setHata]=useState("");
+ async function oku(){if(busy)return;setBusy(true);setHata("");try{const r=await fetch(`/eclub/api/cek-teslimi/${encodeURIComponent(talepId)}`,{cache:"no-store"});const d=await r.json();if(!r.ok)throw new Error(d.hata||"Teslimat bilgisi alınamadı.");if(d.talep_id!==talepId)throw new Error("Talep bilgisi doğrulanamadı.");setVeri(d);}catch(e){setHata(e instanceof Error?e.message:"Teslimat bilgisi alınamadı.");}finally{setBusy(false);}}
+ return <div className="rounded-xl border border-[var(--tema-yerel-eclub-cizgi-03)] p-3 text-sm">
+  {veri?<><span className="block text-xs">Çek kodunuz</span><strong className="block break-all select-all">{veri.cek_kodu}</strong>{veri.kullanim_linki&&cekBaglantisiGecerli(veri.kullanim_linki)&&<a href={veri.kullanim_linki} target="_blank" rel="noopener noreferrer" className="mt-2 inline-block underline">Kullanım bağlantısını aç</a>}<button type="button" className="mt-2 block text-xs underline" onClick={()=>setVeri(null)}>Gizle</button></>:<button type="button" disabled={busy} className="min-h-11 font-bold" onClick={()=>void oku()}>{busy?"Yükleniyor…":"Çek kodu / bağlantısını görüntüle"}</button>}
+  {hata&&<p role="alert" className="mt-2 text-xs">{hata}</p>}
+ </div>;
 }

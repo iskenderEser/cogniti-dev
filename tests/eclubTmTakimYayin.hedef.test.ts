@@ -25,7 +25,7 @@ test("BM gruplaması farklı BM'leri ayırır, atamasız UTT'leri kaybetmez", ()
 });
 
 test("TM sekmeleri modül kapalıyken açılmaz", () => {
-  const baglam: NavContext = { rolKucu: "tm", storeAcik: true, ccAcik: true, eclubAcik: false, eclubStoreAcik: true, eczanemAcik: true };
+  const baglam: NavContext = { rolKucu: "tm", storeAcik: true, ccAcik: true, eclubAcik: false, eczanemAcik: true };
   const eclub = PANEL_NAV.find((grup) => grup.baslik === "E-Club")!;
   assert.equal(eclub.oglar.filter((oge) => oge.gate(baglam)).length, 0);
 });

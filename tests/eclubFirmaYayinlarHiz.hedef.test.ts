@@ -40,7 +40,7 @@ test("firma bilgisi beklenirken yayın ve banner başlar; süresi dolmuş önbel
     calls.push(url);
     if (url.startsWith("/eclub/firmalar/api")) {
       await bekleme;
-      return Response.json({ firma: { firma_id: "f1", firma_adi: "Firma", eclub_store_aktif: true }, urunler: [{ urun_id: "u1", urun_adi: "Ürün" }, { urun_id: "u2", urun_adi: "İkinci ürün" }] });
+      return Response.json({ firma: { firma_id: "f1", firma_adi: "Firma" }, urunler: [{ urun_id: "u1", urun_adi: "Ürün" }, { urun_id: "u2", urun_adi: "İkinci ürün" }] });
     }
     if (url.startsWith("/eclub/api/bannerlar")) return Response.json({ bannerlar: [{ sira: 1, url: "https://example.com/banner.webp" }] });
     assert.equal(url, "/eclub/panel/api?firma=firma");
@@ -54,7 +54,7 @@ test("firma bilgisi beklenirken yayın ve banner başlar; süresi dolmuş önbel
   const hata = () => undefined;
   const modules: Record<string, unknown> = {
     react: React, "react/jsx-runtime": jsxRuntime,
-    "next/dynamic": { default: (yukle: () => Promise<unknown>) => String(yukle).includes("/store/page") ? () => React.createElement("span", null, "Çekler hazır") : String(yukle).includes("/cek-taleplerim/page") ? () => React.createElement("span", null, "Takip hazır") : empty },
+    "next/dynamic": { default: (yukle: () => Promise<unknown>) => String(yukle).includes("/EclubHediyeCekiTalebi") ? () => React.createElement("span", null, "Çekler hazır") : String(yukle).includes("/cek-taleplerim/page") ? () => React.createElement("span", null, "Takip hazır") : empty },
     "next/link": { default: children },
     "next/navigation": { useParams: () => ({ firma_id: "firma" }), usePathname: () => "/eclub/firma/firma/yayinlar", useRouter: () => ({ replace: empty, push: empty }), useSearchParams: () => new URLSearchParams() },
     "lucide-react": { ArrowLeft: empty, Building2: empty, CheckCircle2: empty, Sparkles: empty, Trophy: empty },
@@ -68,7 +68,7 @@ test("firma bilgisi beklenirken yayın ve banner başlar; süresi dolmuş önbel
     "@/lib/eclub/firmaYayinSayilari": firmaSayilari,
     "@/app/(panel)/eclub/panel/_hooks/useEclubPanel": { useEclubPanel },
     "@/app/(panel)/eclub/cek-taleplerim/page": { default: empty },
-    "@/app/(panel)/eclub/store/page": { default: empty },
+    "@/components/eclub/EclubHediyeCekiTalebi": { default: empty },
     "@/app/(panel)/eclub/ana-sayfa/page": { default: () => React.createElement("span", null, "Yayınlar hazır") },
     "@/lib/panel/sayfaOkumaOnbellegi": { sayfaOkumaOnbellegiOlustur },
     "@/lib/eclub/firmaBannerOnbellek": banner,

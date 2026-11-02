@@ -256,7 +256,6 @@ export async function GET(request: Request) {
       kazanilan_puan: number;
       kaybedilen_puan: number;
       harcanabilir_puan: number;
-      eclub_store_aktif: boolean;
       dogru_cevap: number;
       video_sayisi: number;
     }>();
@@ -264,7 +263,6 @@ export async function GET(request: Request) {
       const mevcut = firmaOzetleri.get(firmaId) ?? {
         firma_id: firmaId,
         firma_adi: firmaAdi,
-        eclub_store_aktif: kisiErisimi.firmalar.some((firma) => firma.firma_id === firmaId && firma.aktif !== false && firma.eclub_aktif === true && firma.eclub_store_aktif === true),
         kazanilan_puan: 0,
         kaybedilen_puan: 0,
         harcanabilir_puan: 0,
@@ -301,7 +299,6 @@ export async function GET(request: Request) {
       oneriler: sonuc,
       firma_ozetleri: [...firmaOzetleri.values()].sort((a, b) => a.firma_adi.localeCompare(b.firma_adi, "tr")),
       ozet: {
-        eclub_store_aktif: firmaKapsami.some((firma) => firma.eclub_store_aktif === true),
         toplam_kazanilan_puan: puanlar.filter((p) => !firmaId || yayinMap.has(p.yayin_id)).reduce((toplam, puan) => toplam + Number(puan.puan ?? 0), 0),
         ileri_sarma_kaybi: (kayipSonucu.data ?? []).filter((p) => !firmaId || yayinMap.has(p.yayin_id)).reduce((toplam, kayip) => toplam + Number(kayip.kaybedilen_puan ?? 0), 0),
         harcanabilir_puan: 0,

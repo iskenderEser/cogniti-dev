@@ -15,7 +15,6 @@ const baglam: NavContext = {
   storeAcik: true,
   ccAcik: true,
   eclubAcik: true,
-  eclubStoreAcik: true,
   eczanemAcik: true,
 };
 

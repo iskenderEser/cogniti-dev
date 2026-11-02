@@ -13,8 +13,7 @@ WITH hedef_utt AS (
     k.takim_id,
     k.bolge_id,
     f.aktif AS firma_aktif,
-    f.eclub_aktif,
-    f.eclub_store_aktif
+    f.eclub_aktif
   FROM public.kullanicilar k
   LEFT JOIN public.firmalar f ON f.firma_id = k.firma_id
   WHERE k.kullanici_id = '765b6890-183f-4518-b887-07003ff5cdc7'::uuid

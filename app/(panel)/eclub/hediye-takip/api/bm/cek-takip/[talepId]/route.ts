@@ -1,3 +1,4 @@
+import { cekOnayHataYaniti } from "@/lib/eclub/hediyeTakip/onayHatasi";
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient, createClient } from "@/lib/supabase/server";
 import { bmTakipKapsaminiCoz } from "@/lib/eclub/hediyeTakip/bmTakipKapsami";
@@ -21,7 +22,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     if (!talep || talep.bm_id !== user.id || !erisim.uttler.some((utt) => utt.utt_id === talep.utt_id && utt.kapsam.firma_id === talep.firma_id)) return rolHatasi("Talep BM kapsamınızda değil.");
     if (talep.durum !== "bm_onayinda") return isKuraluHatasi("Yalnız BM onayı bekleyen talepler onaylanabilir.");
     const { data: sonuc, error: rpcError } = await admin.rpc("eclub_store_bm_onayla", { p_bm_id: user.id, p_talep_idler: [talepId] });
-    if (rpcError) return hataYaniti("Talep onaylanıp TM’ye gönderilemedi.", "eclub_store_bm_onayla", rpcError);
+    if (rpcError) return cekOnayHataYaniti(rpcError, "Talep onaylanıp TM’ye gönderilemedi.", "eclub_store_bm_onayla");
     if (Number(Array.isArray(sonuc) ? sonuc[0]?.guncellenen_adet : sonuc) !== 1) return isKuraluHatasi("Talebin durumu değişti. Listeyi yenileyin.");
     const { data: guncel, error: okumaError } = await admin.from("eclub_store_cek_talepleri")
       .select("durum, bm_onay_tarihi, tm_id, guncellenme_at").eq("talep_id", talepId).eq("bm_id", user.id).single();

@@ -64,7 +64,7 @@ BEGIN
   JOIN public.eclub_eczane_firma ef
     ON ef.firma_id = f.firma_id AND ef.eczane_id = v_eczane AND ef.aktif_mi
   WHERE y.yayin_id = v_yayin AND ky.urun_id = v_urun
-    AND f.aktif AND f.eclub_aktif AND f.eclub_store_aktif;
+    AND f.aktif AND f.eclub_aktif;
   IF v_firma IS NULL OR lower(v_urun_adi) IS DISTINCT FROM 'abilon'
     OR nullif(btrim(v_firma_adi), '') IS NULL THEN
     RAISE EXCEPTION 'Abilon kaynak yayını/firma/eczane kapsamı doğrulanamadı.';

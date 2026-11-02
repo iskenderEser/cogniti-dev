@@ -27,7 +27,7 @@ export async function GET(request: Request) {
     if (!ECLUB_TUKETICI_ROLLERI.includes(erisim.kisi.rol)) return rolHatasi("Geçersiz kişi rolü.");
     const firmaId = searchParams.get("firma_id");
     if (firmaId !== null && !uuidGecerliMi(firmaId)) return validasyonHatasi("Geçersiz firma.", ["firma_id"]);
-    const firmaKapsami = eclubFirmaKapsami(erisim.firmalar, firmaId, true);
+    const firmaKapsami = eclubFirmaKapsami(erisim.firmalar, firmaId);
     if (firmaKapsami.length === 0) return rolHatasi("Bu firmanın hediye çeki sayfasına erişiminiz bulunmuyor.");
     const firmaIdler = new Set(firmaKapsami.map((firma) => firma.firma_id));
     const [{ data: ozetData, error: ozetError }, { data: testPuanlari, error: testError }, uxTest] = await Promise.all([
@@ -87,6 +87,6 @@ export async function GET(request: Request) {
       })),
     }, { status: 200 });
   } catch (err) {
-    return sunucuHatasi(err, "GET /eclub/store/api");
+    return sunucuHatasi(err, "GET /eclub/api/cek-ozeti");
   }
 }

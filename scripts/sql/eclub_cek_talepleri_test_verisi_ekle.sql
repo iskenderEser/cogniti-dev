@@ -54,7 +54,7 @@ BEGIN
   SELECT k.firma_id,k.takim_id,k.bolge_id INTO v_firma,v_takim,v_bolge
   FROM public.kullanicilar k JOIN public.firmalar f ON f.firma_id=k.firma_id
   WHERE k.kullanici_id=v_utt AND k.aktif_mi AND lower(k.rol) IN ('utt','kd_utt')
-    AND f.aktif AND f.eclub_aktif AND f.eclub_store_aktif
+    AND f.aktif AND f.eclub_aktif
     AND EXISTS (SELECT 1 FROM public.eclub_eczane_firma ef
       JOIN public.eclub_utt_eczane ue ON ue.eczane_firma_id=ef.id
       WHERE ef.eczane_id=v_eczane AND ef.firma_id=f.firma_id

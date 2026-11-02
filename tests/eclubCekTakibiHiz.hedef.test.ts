@@ -23,7 +23,7 @@ test("takip dönüşü beklemez; doğrulama sonrası bildirim okunur, iptal iki 
   const eskiFetch = globalThis.fetch, eskiSaat = Date.now;
   let saat = eskiSaat(); Date.now = () => saat;
   const talep: takip.CekTalebi = { firma_id: "f", talep_id: "t", firma_adi: "Firma", urun_id: "u", urun_adi: "Ürün", talep_eden_kisi_id: "k", toplanan_puan: 100, talep_edilen_cek_tl: 10, siparis_verildi_mi: false, siparis_adet: 0, siparis_mal_fazlasi: 0, durum: "beklemede", cek_kodu: null, created_at: "2026-10-11T12:00:00Z" };
-  const payload = (durum: takip.CekTalebi["durum"] = "beklemede") => ({ firma: { firma_id: "f", firma_adi: "Firma", eclub_store_aktif: true }, talepler: [{ ...talep, durum }] });
+  const payload = (durum: takip.CekTalebi["durum"] = "beklemede") => ({ firma: { firma_id: "f", firma_adi: "Firma" }, talepler: [{ ...talep, durum }] });
   await takip.cekTakipOnbellegi.iste("takip-kisi:f", async () => payload());
   await vitrin.vitrinOnbellegi.iste("takip-kisi:f", async () => ({}));
   saat += 61_000;

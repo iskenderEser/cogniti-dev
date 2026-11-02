@@ -1,4 +1,5 @@
 "use client";
+import { eclubCekTalebiOlusturabilirMi } from "@/lib/eclub/store/cekTalebiYetkisi";
 
 import { panelBaslangici } from "@/lib/panel/baslangic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -146,7 +147,7 @@ export default function EclubCekTaleplerimPage() {
         ustEtiket={firma?.firma_adi ?? ""}
         baslik="Çek Talepleri"
         aciklama="Hediye çeki taleplerinizi, onay durumlarını ve teslim edilen dijital çek kodlarını takip edin."
-        aksiyon={<Link href={firmaId ? eclubFirmaYolu(firma?.firma_adi ?? firmaId, "hediye-cekleri") : "/eclub/store"} className="inline-flex items-center gap-2 rounded-xl border border-[var(--tema-yerel-eclub-cizgi-01)] bg-[var(--tema-yerel-eclub-kart-01)] px-4 py-2.5 text-xs font-extrabold text-[var(--tema-yerel-eclub-eylem-metin-01)] shadow-sm hover:bg-[var(--tema-yerel-eclub-sayfa-zemini-01)]"><Store size={15} /> Hediye Çeki Ekranına Dön</Link>}
+        aksiyon={<Link href={firmaId ? eclubFirmaYolu(firma?.firma_adi ?? firmaId, "hediye-cekleri") : "/eclub/firmalar"} className="inline-flex items-center gap-2 rounded-xl border border-[var(--tema-yerel-eclub-cizgi-01)] bg-[var(--tema-yerel-eclub-kart-01)] px-4 py-2.5 text-xs font-extrabold text-[var(--tema-yerel-eclub-eylem-metin-01)] shadow-sm hover:bg-[var(--tema-yerel-eclub-sayfa-zemini-01)]"><Store size={15} /> Hediye Çeki Ekranına Dön</Link>}
       />
 
       <section className="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -165,6 +166,7 @@ export default function EclubCekTaleplerimPage() {
             <EclubCekTakipVitrinKarti
               key={talep.talep_id}
               talep={talep}
+              kodGorebilir={eclubCekTalebiOlusturabilirMi(kullanici.rol)}
               iptalEdiliyor={islemId === talep.talep_id}
               dogrulaniyor={dogrulaniyor}
               onIptal={() => void talepIptal(talep.talep_id)}

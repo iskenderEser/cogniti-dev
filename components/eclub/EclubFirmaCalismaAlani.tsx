@@ -24,10 +24,10 @@ import EclubFirmaPerformansSkeleton from "./EclubFirmaPerformansSkeleton";
 import EclubFirmaYayinlarSkeleton from "./EclubFirmaYayinlarSkeleton";
 
 
-const HediyeCekiTalebi = dynamic(() => import("@/app/(panel)/eclub/store/page"));
+const HediyeCekiTalebi = dynamic(() => import("@/components/eclub/EclubHediyeCekiTalebi"));
 const HediyeCekiTakibi = dynamic(() => import("@/app/(panel)/eclub/cek-taleplerim/page"));
 type FirmaVerisi = { firmaId: string; firma: EclubGezinmeFirmasi; urunler: EclubFirmaUrunu[] };
-const firmaOnbellegi = sayfaOkumaOnbellegiOlustur<FirmaVerisi>("firma_yayinlar");
+const firmaOnbellegi = sayfaOkumaOnbellegiOlustur<FirmaVerisi>("firma_yayinlar", 60_000, 2);
 
 const SEKMELER: { deger: EclubFirmaSayfasi; etiket: string }[] = [
   { deger: "yayinlar", etiket: "Yayınlar" },
@@ -64,7 +64,7 @@ function FirmaCalismaAlaniIcerigi({ sekme, firmaRotasi, kullaniciId }: { sekme: 
   useEffect(() => {
     let aktif = true;
     if (sekme === "cek-talepleri") void import("@/app/(panel)/eclub/cek-taleplerim/page").catch(() => undefined);
-    if (sekme === "hediye-cekleri") void import("@/app/(panel)/eclub/store/page").catch(() => undefined);
+    if (sekme === "hediye-cekleri") void import("@/components/eclub/EclubHediyeCekiTalebi").catch(() => undefined);
     if (hizliYayinlar) void firmaBannerlariniIste(kullaniciId, firmaRotasi).catch(() => undefined);
     const yukle = async (): Promise<FirmaVerisi> => {
       const res = await fetch(`/eclub/firmalar/api?firma=${encodeURIComponent(firmaRotasi)}`, { cache: "no-store" });
@@ -108,7 +108,6 @@ function FirmaCalismaAlaniIcerigi({ sekme, firmaRotasi, kullaniciId }: { sekme: 
   const tamamlanan = panel.oneriler.filter((oneri) => oneri.izlendi_mi).length;
   const firmaYayinSayilari = eclubFirmaYayinSayilari(panel.oneriler).get(firma.firma_id) ?? { yeni: 0, toplam: 0 };
   const yeniYayinlar = firmaYayinSayilari.yeni;
-  const gorunenSekmeler = SEKMELER.filter((secenek) => ["yayinlar", "performans"].includes(secenek.deger) || firma.eclub_store_aktif);
   return <EclubKisiSayfa>
     <Link href="/eclub/firmalar" className="inline-flex w-fit items-center gap-1.5 text-xs font-bold text-[var(--tema-yerel-eclub-eylem-metin-01)]"><ArrowLeft size={14} /> Firmalara Dön</Link>
     <EclubKisiBaslik ikon={Building2} ustEtiket="" baslik={firma.firma_adi} aciklama="Ürünü seçerek yayınları, tamamlama performansını, hediye çeki talebini ve takibini görüntüleyin."
@@ -130,7 +129,7 @@ function FirmaCalismaAlaniIcerigi({ sekme, firmaRotasi, kullaniciId }: { sekme: 
           onClick={() => urunSec(urun.urun_id)}>{urun.urun_adi}</SadeKontrolButonu>)}
       </SadeKontrolGrubu>
       <SadeKontrolGrubu aria-label="İçerik türü" className="max-w-full self-start !flex-nowrap overflow-x-auto">
-        {gorunenSekmeler.map((secenek) => <SadeKontrolButonu key={secenek.deger} aria-pressed={sekme === secenek.deger}
+        {SEKMELER.map((secenek) => <SadeKontrolButonu key={secenek.deger} aria-pressed={sekme === secenek.deger}
           onClick={() => {
             if (seciliUrun) urunSec(seciliUrun.urun_id);
             router.push(eclubFirmaYolu(firma.firma_adi, secenek.deger), { scroll: false });
@@ -138,8 +137,7 @@ function FirmaCalismaAlaniIcerigi({ sekme, firmaRotasi, kullaniciId }: { sekme: 
       </SadeKontrolGrubu>
       <div id="eclub-urun-icerigi" role="tabpanel" aria-label={seciliUrun?.urun_adi}>
         <EclubFirmaSecimi.Provider value={{ firmaId: firma.firma_id, gomulu: true, urunId: seciliUrun?.urun_id ?? null, urunAdi: seciliUrun?.urun_adi ?? null, panel, aksiyonAlani }}>
-          {sekme === "yayinlar" ? <Yayinlar /> : sekme === "performans" ? <YayinPerformansi /> : firma.eclub_store_aktif ? (sekme === "hediye-cekleri" ? <HediyeCekiTalebi /> : <HediyeCekiTakibi />) :
-            <EclubKisiBosDurum ikon={Building2} baslik="Hediye çeki alanı kapalı" aciklama="Bu firma hediye çeki özelliğini kullanmıyor." />}
+          {sekme === "yayinlar" ? <Yayinlar /> : sekme === "performans" ? <YayinPerformansi /> : sekme === "hediye-cekleri" ? <HediyeCekiTalebi /> : <HediyeCekiTakibi />}
         </EclubFirmaSecimi.Provider>
       </div>
     </> : <EclubKisiBosDurum ikon={Building2} baslik="Ürün bulunmuyor" aciklama="Firmanın ürünleri eklendiğinde burada görüntülenir." />}

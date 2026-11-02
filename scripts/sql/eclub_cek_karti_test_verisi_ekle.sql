@@ -45,7 +45,7 @@ BEGIN
       JOIN public.firmalar f ON f.firma_id = ef.firma_id
       WHERE y.yayin_id = r.yayin_id AND ky.urun_id = r.urun_id
         AND ef.eczane_id = v_eczane AND ef.aktif_mi
-        AND f.aktif AND f.eclub_aktif AND f.eclub_store_aktif
+        AND f.aktif AND f.eclub_aktif
         AND y.durum = 'yayinda' AND y.cek_karsiligi_var_mi
         AND public.eclub_store_barem_gecerli(y.barem_tablosu)
     ) THEN RAISE EXCEPTION 'Test yayını doğrulanamadı: %', r.yayin_id; END IF;

@@ -28,7 +28,7 @@ BEGIN
   WHERE t.talep_id = p_talep_id
     AND lower(bm.rol) = 'bm' AND bm.aktif_mi = true
     AND lower(utt.rol) IN ('utt', 'kd_utt') AND utt.aktif_mi = true
-    AND f.aktif = true AND f.eclub_aktif = true AND f.eclub_store_aktif = true
+    AND f.aktif = true AND f.eclub_aktif = true
   FOR UPDATE OF t;
   IF NOT FOUND THEN
     RETURN QUERY SELECT false, 'Sipariş BM kapsamınızda değil.'::text, NULL::timestamptz; RETURN;

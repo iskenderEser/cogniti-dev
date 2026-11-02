@@ -7,7 +7,7 @@ const oku = (yol: string) => readFileSync(yol, "utf8");
 
 const sql = oku("scripts/sql/eclub_cek_talebi_ana_eczaci.sql");
 const route = oku("app/(panel)/eclub/api/cek-talepleri/route.ts");
-const sayfa = oku("app/(panel)/eclub/store/page.tsx");
+const sayfa = oku("components/eclub/EclubHediyeCekiTalebi.tsx");
 
 test("yalnız ana eczacı rolü çek talebi oluşturabilir", () => {
   assert.equal(eclubCekTalebiOlusturabilirMi("eczaci"), true);

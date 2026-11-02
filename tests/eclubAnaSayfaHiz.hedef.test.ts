@@ -56,7 +56,7 @@ function panelApi(failed = "", authenticated = true) {
   const modules: Record<string, unknown> = {
     "next/server": { NextResponse: Response },
     "@/lib/supabase/server": { createClient: async () => ({ auth: { getUser: async () => ({ data: { user: authenticated ? { id: "auth" } : null }, error: null }) } }), createAdminClient: () => admin },
-    "@/lib/eclub/kisiErisim": { eclubKisiErisimi: async () => ({ kisi: { kisi_id: "k1", rol: "eczaci", ad: "Adil" }, eclub_aktif: true, firmalar: [{ firma_id: "f1", firma_adi: "Firma", aktif: true, eclub_aktif: true, eclub_store_aktif: true }] }) },
+    "@/lib/eclub/kisiErisim": { eclubKisiErisimi: async () => ({ kisi: { kisi_id: "k1", rol: "eczaci", ad: "Adil" }, eclub_aktif: true, firmalar: [{ firma_id: "f1", firma_adi: "Firma", aktif: true, eclub_aktif: true }] }) },
     "@/lib/eclub/firmaGezinme": { eclubFirmaKapsami, eclubFirmaRotasiKapsami },
     "@/lib/utils/roller": { ECLUB_TUKETICI_ROLLERI: ["eczaci"], hedefRolleriOku: () => [], yayinTuketiciRoluneAcikMi: () => true },
     "@/lib/uretim/rpc": { uuidGecerliMi: () => true },

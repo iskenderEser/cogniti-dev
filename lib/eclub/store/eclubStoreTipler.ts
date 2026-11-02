@@ -1,3 +1,4 @@
+import { firmaCekDegerleriGecerli } from "./firmaCekTanimi";
 // Satış şartlı / serbest siparişli puan ve hediye çeki tipleri.
 import type { OgrenmeAraciTuru } from "@/lib/ogrenmeAraci/tipler";
 
@@ -103,8 +104,8 @@ export interface EclubEczaneStoreOzetItem {
   satis_sarti_tipi: SatisSartiTipi;
   gizli_sart_katlama_orani: number;
   barem_tablosu: BaremSatiri[];
-  karsilik_puan: number;
-  karsilik_tl: number;
+  karsilik_puan: number | null;
+  karsilik_tl: number | null;
   uygun_adet: number;
   aktif_barem_adet?: number;
   aktif_barem_min_puan?: number;
@@ -205,8 +206,8 @@ export function cekTutariHesapla(params: {
   satis_sarti_tipi: SatisSartiTipi;
   siparis_verildi: boolean;
   katlama_orani?: number;
-  karsilik_puan?: number;
-  karsilik_tl?: number;
+  karsilik_puan?: number | null;
+  karsilik_tl?: number | null;
   baremler?: BaremSatiri[];
 }): {
   kullanilan_puan: number;
@@ -219,8 +220,8 @@ export function cekTutariHesapla(params: {
     satis_sarti_tipi,
     siparis_verildi,
     katlama_orani = 20,
-    karsilik_puan = 1,
-    karsilik_tl = 1,
+    karsilik_puan,
+    karsilik_tl,
     baremler = VARSAYILAN_BAREM_TABLOSU,
   } = params;
 
@@ -252,6 +253,10 @@ export function cekTutariHesapla(params: {
   if (puan > tavanPuan) {
     donusturulecekPuan = tavanPuan;
     devir = puan - tavanPuan;
+  }
+
+  if (karsilik_puan == null || karsilik_tl == null || !firmaCekDegerleriGecerli(karsilik_puan, karsilik_tl)) {
+    throw new Error("Firma puan–TL karşılığı tanımlanmamış veya geçersiz.");
   }
 
   let cekTl = Math.round(((donusturulecekPuan * karsilik_tl) / Math.max(1, karsilik_puan)) * 100) / 100;

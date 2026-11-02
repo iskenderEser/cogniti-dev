@@ -19,8 +19,7 @@ export type CekTakipErisimHataKodu =
   | "rol_yetkisiz"
   | "firma_bulunamadi"
   | "firma_pasif"
-  | "eclub_kapali"
-  | "hediye_ceki_kapali";
+  | "eclub_kapali";
 
 export type CekTakipErisimSonucu =
   | { ok: true; kapsam: CekTakipKapsami }
@@ -89,7 +88,7 @@ export async function cekTakipKapsaminiCoz(
 
   const { data: firma, error: firmaHatasi } = await adminSupabase
     .from("firmalar")
-    .select("firma_id, aktif, eclub_aktif, eclub_store_aktif")
+    .select("firma_id, aktif, eclub_aktif")
     .eq("firma_id", kullanici.firma_id)
     .maybeSingle();
 
@@ -110,14 +109,6 @@ export async function cekTakipKapsaminiCoz(
   if (firma.eclub_aktif !== true) {
     return { ok: false, kod: "eclub_kapali", mesaj: "E-Club firmanız için kapalıdır." };
   }
-  if (firma.eclub_store_aktif !== true) {
-    return {
-      ok: false,
-      kod: "hediye_ceki_kapali",
-      mesaj: "E-Club Hediye Çeki firmanız için kapalıdır.",
-    };
-  }
-
   return {
     ok: true,
     kapsam: {

@@ -10,4 +10,4 @@ export interface VitrinVerisi {
   adim?: string;
   detay?: string;
 }
-export const vitrinOnbellegi = sayfaOkumaOnbellegiOlustur<VitrinVerisi>("cek_vitrin");
+export const vitrinOnbellegi = sayfaOkumaOnbellegiOlustur<VitrinVerisi>("cek_vitrin", 60_000, 2);

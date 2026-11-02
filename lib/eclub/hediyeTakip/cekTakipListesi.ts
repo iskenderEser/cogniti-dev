@@ -30,6 +30,7 @@ interface HamTalep {
   siparis_mal_fazlasi: number | null;
   durum: CekTalepDurumu;
   utt_id: string | null;
+  utt_onay_tarihi: string | null;
   bm_id: string | null;
   bm_onay_tarihi: string | null;
   tm_id: string | null;
@@ -122,7 +123,7 @@ export async function cekTakipTalepleriniGetir(
       talep_id, eczane_id, yayin_id, talep_eden_kisi_id,
       toplanan_puan, talep_edilen_cek_tl, siparis_tipi,
       siparis_verildi_mi, siparis_adet, siparis_mal_fazlasi,
-      durum, utt_id, bm_id, bm_onay_tarihi, tm_id, tm_onay_tarihi,
+      durum, utt_id, utt_onay_tarihi, bm_id, bm_onay_tarihi, tm_id, tm_onay_tarihi,
       devreden_puan, created_at, guncellenme_at,
       eclub_eczaneler ( gln ),
       eclub_kisiler ( ad, soyad, rol ),
@@ -261,7 +262,7 @@ export async function cekTakipTalepleriniGetir(
         tutar_tl: Number(talep.talep_edilen_cek_tl ?? 0),
       },
       onay: {
-        utt: { kullanici_id: talep.utt_id, ad_soyad: talep.utt_id ? kullaniciAdlari.get(talep.utt_id) ?? null : null, tarih: null },
+        utt: { kullanici_id: talep.utt_id, ad_soyad: talep.utt_id ? kullaniciAdlari.get(talep.utt_id) ?? null : null, tarih: talep.utt_onay_tarihi ?? null },
         bm: { kullanici_id: talep.bm_id, ad_soyad: talep.bm_id ? kullaniciAdlari.get(talep.bm_id) ?? null : null, tarih: talep.bm_onay_tarihi },
         tm: { kullanici_id: talep.tm_id, ad_soyad: talep.tm_id ? kullaniciAdlari.get(talep.tm_id) ?? null : null, tarih: talep.tm_onay_tarihi },
       },

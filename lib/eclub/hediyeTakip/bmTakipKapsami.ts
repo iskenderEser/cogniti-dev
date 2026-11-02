@@ -29,9 +29,9 @@ export async function bmTakipKapsaminiCoz(admin: SupabaseClient, authUserId: str
   if (!kullanici.firma_id) return { ok: false, mesaj: "Firma bağlantısı bulunamadı." };
 
   const { data: firma, error: firmaHatasi } = await admin.from("firmalar")
-    .select("aktif, eclub_aktif, eclub_store_aktif").eq("firma_id", kullanici.firma_id).maybeSingle();
+    .select("aktif, eclub_aktif").eq("firma_id", kullanici.firma_id).maybeSingle();
   if (firmaHatasi) return { ok: false, mesaj: "Firma kapsamı doğrulanamadı.", detay: firmaHatasi };
-  if (!firma?.aktif || !firma.eclub_aktif || !firma.eclub_store_aktif) {
+  if (!firma?.aktif || !firma.eclub_aktif) {
     return { ok: false, mesaj: "E-Club Hediye Çeki firma için aktif değildir." };
   }
 

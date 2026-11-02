@@ -69,7 +69,7 @@ BEGIN
   JOIN public.eclub_eczane_master em ON em.gln=e.gln
   CROSS JOIN public.eclub_store_aktif_donem() d
   WHERE y.yayin_id=v_yayin AND ky.urun_id=v_urun AND ef.eczane_id=v_eczane
-    AND ef.aktif_mi AND f.aktif AND f.eclub_aktif AND f.eclub_store_aktif
+    AND ef.aktif_mi AND f.aktif AND f.eclub_aktif
     AND y.durum='yayinda' AND y.cek_karsiligi_var_mi
     AND public.eclub_store_barem_gecerli(y.barem_tablosu)
     AND y.karsilik_puan>0 AND y.karsilik_tl>0;

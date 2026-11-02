@@ -9,7 +9,7 @@ const bm = oku("app/(panel)/eclub/yayinlar/_components/BmEclubYayinlari.tsx");
 const api = oku("app/(panel)/eclub/yayinlar/api/bm/route.ts");
 const kart = oku("app/(panel)/eclub/yayinlar/_components/EclubYayinGonderimKarti.tsx");
 
-const baglam: NavContext = { rolKucu: "bm", storeAcik: true, ccAcik: true, eclubAcik: true, eclubStoreAcik: true, eczanemAcik: true };
+const baglam: NavContext = { rolKucu: "bm", storeAcik: true, ccAcik: true, eclubAcik: true, eczanemAcik: true };
 
 test("BM sidebar'da E-Club Yayınları sekmesini görür", () => {
   const eclub = PANEL_NAV.find((grup) => grup.baslik === "E-Club");

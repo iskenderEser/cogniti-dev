@@ -1,113 +1,55 @@
+import { cekKoduGecerli, cekBaglantisiGecerli } from "@/lib/eclub/store/teslimat";
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/server";
 import { adminGirisKontrol } from "@/lib/utils/adminGirisKontrol";
 import { hataYaniti, isKuraluHatasi, sunucuHatasi, validasyonHatasi } from "@/lib/utils/hataIsle";
-import { CEK_TALEP_ADMIN_DURUMLARI, cekTalepDurumuMu } from "@/lib/eclub/store/eclubStoreTipler";
-
-export async function GET(request: NextRequest) {
-  try {
-    const kontrol = await adminGirisKontrol();
-    if (!kontrol.gecerli) return kontrol.yanit;
-
-    const supabase = createAdminClient();
-    const durum = request.nextUrl.searchParams.get("durum");
-    if (durum && (!cekTalepDurumuMu(durum) || !CEK_TALEP_ADMIN_DURUMLARI.includes(durum))) {
-      return validasyonHatasi("Admin yalnız TM onayından geçen talepleri görüntüleyebilir.", ["durum"]);
-    }
-    let query = supabase
-      .from("eclub_store_cek_talepleri")
-      .select(`
-        talep_id, eczane_id, firma_id, yayin_id, talep_eden_kisi_id, toplanan_puan,
-        talep_edilen_cek_tl, siparis_tipi, siparis_verildi_mi, siparis_adet,
-        siparis_mal_fazlasi, durum, utt_id, bm_id, bm_onay_tarihi,
-        tm_id, tm_onay_tarihi, cek_kodu,
-        cek_gonderim_tarihi, devreden_puan, created_at,
-        eclub_eczaneler ( gln ), firmalar ( firma_adi ),
-        eclub_kisiler ( ad, soyad, rol, telefon )
-      `)
-      .order("created_at", { ascending: false });
-    if (durum) query = query.eq("durum", durum);
-    else query = query.in("durum", [...CEK_TALEP_ADMIN_DURUMLARI]);
-
-    const { data, error } = await query;
-    if (error) return hataYaniti("Çek talepleri alınamadı.", "eclub_store_cek_talepleri SELECT", error);
-
-    const glnler = [...new Set((data ?? []).flatMap((talep) => {
-      const eczane = Array.isArray(talep.eclub_eczaneler) ? talep.eclub_eczaneler[0] : talep.eclub_eczaneler;
-      return eczane?.gln ? [eczane.gln as string] : [];
-    }))];
-    const eczaneAdlari = new Map<string, string>();
-    if (glnler.length > 0) {
-      const { data: masterlar, error: masterError } = await supabase
-        .from("eclub_eczane_master")
-        .select("gln, eczane_adi")
-        .in("gln", glnler);
-      if (masterError) return hataYaniti("Eczane bilgileri alınamadı.", "eclub_eczane_master SELECT", masterError);
-      for (const master of masterlar ?? []) eczaneAdlari.set(master.gln, master.eczane_adi);
-    }
-
-    const talepler = (data ?? []).map((talep) => {
-      const eczane = Array.isArray(talep.eclub_eczaneler) ? talep.eclub_eczaneler[0] : talep.eclub_eczaneler;
-      const firma = Array.isArray(talep.firmalar) ? talep.firmalar[0] : talep.firmalar;
-      const kisi = Array.isArray(talep.eclub_kisiler) ? talep.eclub_kisiler[0] : talep.eclub_kisiler;
-      return {
-        ...talep,
-        eclub_eczaneler: undefined,
-        firmalar: undefined,
-        eclub_kisiler: undefined,
-        eczane_adi: (eczane?.gln && eczaneAdlari.get(eczane.gln)) || "Eczane",
-        gln: eczane?.gln ?? null,
-        firma_adi: firma?.firma_adi ?? "Firma",
-        urun_adi: "Migros Hediye Çeki",
-        talep_eden_ad_soyad: kisi ? `${kisi.ad} ${kisi.soyad}` : "—",
-        talep_eden_rol: kisi?.rol ?? "eczaci",
-        talep_eden_tel: kisi?.telefon ?? null,
-      };
-    });
-    return NextResponse.json({ talepler });
-  } catch (error) {
-    return sunucuHatasi(error, "GET /admin/eclub-cek-teslimat/api/cek-talepleri");
-  }
+import { uuidGecerliMi } from "@/lib/uretim/rpcTemel";
+import { platformBannerFirmasi } from "@/lib/eclub/banner";
+import { eclubAdminFiltreleri, ECLUB_ADMIN_DURUMLARI, type EclubAdminKesit } from "@/lib/eclub/store/adminFirmaTalepleri";
+import * as XLSX from "xlsx";
+function dbHatasi(error: { code: string; message: string }) {
+ if (["42P01","42703","42883","PGRST202","PGRST204","PGRST205"].includes(error.code)) return NextResponse.json({ hata: "Firma bazında takip için eclub_admin_firma_talep_yonetimi.sql kurulumu gerekiyor." }, { status: 503 });
+ if (error.code === "42501") return NextResponse.json({ hata: error.message }, { status: 403 });
+ if (error.code === "P0002") return NextResponse.json({ hata: "Firma bulunamadı." }, { status: 404 });
+ if (error.code === "40001") return NextResponse.json({ hata: error.message }, { status: 409 });
+ if (["22023","23514"].includes(error.code)) return isKuraluHatasi(error.message);
+ return hataYaniti("Çek talebi işlemi tamamlanamadı.", "E-Club admin firma talepleri", error);
 }
-
-export async function PATCH(request: NextRequest) {
-  try {
-    const kontrol = await adminGirisKontrol();
-    if (!kontrol.gecerli) return kontrol.yanit;
-
-    const body = await request.json();
-    const supabase = createAdminClient();
-
-    if (body.action === "cek_kodu_teslim") {
-      if (!body.talep_id || !String(body.cek_kodu ?? "").trim()) {
-        return validasyonHatasi("Talep ve çek kodu zorunludur.", ["talep_id", "cek_kodu"]);
-      }
-      const { data, error } = await supabase.rpc("eclub_store_admin_kod_teslim", {
-        p_admin_id: kontrol.kullaniciId,
-        p_talep_id: body.talep_id,
-        p_cek_kodu: String(body.cek_kodu).trim(),
-      });
-      if (error) return hataYaniti("Çek kodu kaydedilemedi.", "eclub_store_admin_kod_teslim RPC", error);
-      const sonuc = Array.isArray(data) ? data[0] : data;
-      if (!sonuc?.ok) return isKuraluHatasi(sonuc?.hata ?? "Çek kodu kaydedilemedi.");
-      return NextResponse.json({ mesaj: "Çek kodu kaydedildi; e-posta ve push teslimat kuyruğuna alındı." });
-    }
-
-    if (body.action === "iptal") {
-      if (!body.talep_id) return validasyonHatasi("Talep kimliği zorunludur.", ["talep_id"]);
-      const { data, error } = await supabase.rpc("eclub_store_cek_talebi_iptal", {
-        p_talep_id: body.talep_id,
-        p_kisi_id: kontrol.kullaniciId,
-        p_admin_mi: true,
-      });
-      if (error) return hataYaniti("Çek talebi iptal edilemedi.", "eclub_store_cek_talebi_iptal RPC", error);
-      const sonuc = Array.isArray(data) ? data[0] : data;
-      if (!sonuc?.ok) return isKuraluHatasi(sonuc?.hata ?? "Çek talebi iptal edilemedi.");
-      return NextResponse.json({ mesaj: "Çek talebi iptal edildi." });
-    }
-
-    return validasyonHatasi("Geçersiz işlem.", ["action"]);
-  } catch (error) {
-    return sunucuHatasi(error, "PATCH /admin/eclub-cek-teslimat/api/cek-talepleri");
+const tarih = (v: string | null) => v ? new Date(v).toLocaleString("tr-TR", { timeZone: "Europe/Istanbul" }) : "";
+export async function GET(request: NextRequest) {
+ try {
+  const auth = await adminGirisKontrol(); if (!auth.gecerli) return auth.yanit;
+  const db = createAdminClient(), q = request.nextUrl.searchParams;
+  if (!q.has("firma")) {
+   const r = await db.rpc("eclub_admin_firma_ozetleri"); if (r.error) return dbHatasi(r.error);
+   return NextResponse.json(r.data, { headers: { "Cache-Control": "private, no-store" } });
   }
+  const filtre = eclubAdminFiltreleri(q);
+  if (!filtre || platformBannerFirmasi(filtre.p_firma)) return validasyonHatasi("Firma veya filtre bilgisi geçersiz.", ["firma", "durum", "bas", "son"]);
+  const r = await db.rpc("eclub_admin_firma_talepleri", filtre); if (r.error) return dbHatasi(r.error);
+  const data = r.data as EclubAdminKesit;
+  if (data?.firma?.firma_id !== filtre.p_firma || !Array.isArray(data.talepler) || data.talepler.some(t => t.firma_id !== filtre.p_firma)) throw new Error("Firma kapsamı doğrulanamadı.");
+  if (!filtre.p_export) return NextResponse.json(data, { headers: { "Cache-Control": "private, no-store" } });
+  const rows = data.talepler.map(t => ({ Firma: data.firma.firma_adi, "Talep No": t.talep_id, Tarih: tarih(t.created_at), Eczane: t.eczane_adi, GLN: t.gln || "", "Talep Eden": t.talep_eden, Rol: t.rol, Ürün: t.urun_adi, "Yayın No": t.talep_no ?? "", UTT: t.utt_adi, BM: t.bm_adi, TM: t.tm_adi, Puan: t.toplanan_puan, "Çek Tutarı (TL)": t.talep_edilen_cek_tl, Durum: ECLUB_ADMIN_DURUMLARI[t.durum], "Sipariş Adedi": t.siparis_verildi_mi ? t.siparis_adet : 0, "Mal Fazlası": t.siparis_verildi_mi ? t.siparis_mal_fazlasi : 0, "TM Onayı": tarih(t.tm_onay_tarihi), "Teslim Tarihi": tarih(t.cek_gonderim_tarihi) }));
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), "Çek Talepleri");
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(data.urun_ozeti.map(u => ({ Ürün: u.urun_adi, "Talep Adedi": u.adet, Puan: u.puan, "Tutar (TL)": u.tl }))), "Ürün Özeti");
+  return new NextResponse(new Uint8Array(XLSX.write(wb, { type: "buffer", bookType: "xlsx" })), { headers: { "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Content-Disposition": `attachment; filename="eclub_${filtre.p_firma}.xlsx"`, "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff" } });
+ } catch (error) { return sunucuHatasi(error, "GET E-Club admin firma talepleri"); }
+}
+export async function PATCH(request: NextRequest) {
+ try {
+  const auth = await adminGirisKontrol(); if (!auth.gecerli) return auth.yanit;
+  const b = await request.json().catch(() => null);
+  if (!b || !uuidGecerliMi(b.firma_id) || platformBannerFirmasi(b.firma_id) || !uuidGecerliMi(b.talep_id) || !["cek_kodu_teslim", "iptal"].includes(b.action)) return validasyonHatasi("Firma, talep veya işlem bilgisi geçersiz.", ["firma_id", "talep_id", "action"]);
+  if (b.action === "cek_kodu_teslim" && (!cekKoduGecerli(b.cek_kodu) || !cekBaglantisiGecerli(b.kullanim_linki ?? ""))) return validasyonHatasi("Geçerli çek kodu ve varsa HTTPS kullanım bağlantısı girin.", ["cek_kodu", "kullanim_linki"]);
+  const db = createAdminClient();
+  const r = b.action === "cek_kodu_teslim"
+   ? await db.rpc("eclub_admin_kod_baglanti_teslim", { p_admin: auth.kullaniciId, p_firma: b.firma_id.toLowerCase(), p_talep: b.talep_id.toLowerCase(), p_kod: b.cek_kodu.trim(), p_link: b.kullanim_linki || null })
+   : await db.rpc("eclub_admin_firma_talep_islem", { p_admin: auth.kullaniciId, p_firma: b.firma_id.toLowerCase(), p_talep: b.talep_id.toLowerCase(), p_islem: b.action, p_kod: null });
+  if (r.error) return dbHatasi(r.error);
+  const sonuc = Array.isArray(r.data) ? r.data[0] : r.data;
+  if (!sonuc?.ok) return isKuraluHatasi(sonuc?.hata || "Talep işlemi tamamlanamadı.");
+  return NextResponse.json({ mesaj: b.action === "iptal" ? "Talep iptal edildi; bağlı puan kullanımı kaldırıldı." : "Çek kodu kaydedildi; e-posta ve push teslimat kuyruğuna alındı." });
+ } catch (error) { return sunucuHatasi(error, "PATCH E-Club admin firma talepleri"); }
 }
