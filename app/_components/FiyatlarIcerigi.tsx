@@ -12,10 +12,10 @@ const paketler = [
   { miktar: "75.000", fiyat: "3,90", asim: "4,90" },
 ];
 const hizmetler = [
-  { ad: "Video", fiyat: "25.000 TL", Ikon: CirclePlay },
-  { ad: "Podcast", fiyat: "15.000 TL", Ikon: Mic },
-  { ad: "Dijital Broşür", fiyat: "10.000 TL", Ikon: FileText },
-  { ad: "Literatür", fiyat: "Teklif alın", Ikon: BookOpen },
+  { ad: "Video", token: "2.500 Token", fiyat: "25.000 TL", Ikon: CirclePlay },
+  { ad: "Podcast", token: "1.500 Token", fiyat: "15.000 TL", Ikon: Mic },
+  { ad: "Dijital Broşür", token: "1.000 Token", fiyat: "10.000 TL", Ikon: FileText },
+  { ad: "Literatür", token: null, fiyat: "Teklif alın", Ikon: BookOpen },
 ];
 
 export default function FiyatlarIcerigi() {
@@ -35,8 +35,9 @@ export default function FiyatlarIcerigi() {
     <section className={styles.productionSection} aria-labelledby="uretim-baslik">
       <div className={styles.production}>
         <div className={styles.productionHeading}><p className={styles.eyebrow}>İÇERİK ÜRETİM HİZMETLERİ</p><h2 id="uretim-baslik">Siz isteyin, biz üretelim.</h2></div>
-        <div className={styles.productionContent}><div className={styles.services}>{hizmetler.map(({ad, fiyat, Ikon}) => <div className={styles.service} key={ad}><Ikon aria-hidden="true"/><div><h3>{ad}</h3><strong>{fiyat}</strong></div></div>)}</div></div>
+        <div className={styles.productionContent}><div className={styles.services}>{hizmetler.map(({ad, token, fiyat, Ikon}) => <div className={styles.service} key={ad}><Ikon aria-hidden="true"/><div><h3>{ad}</h3><strong>{token ?? fiyat}</strong>{token && <span className={styles.serviceAmount}>{fiyat}</span>}</div></div>)}</div></div>
       </div>
+      <p className={styles.taxNote}>Sunulan tüm fiyatlarda %20 KDV hariçtir.</p>
       <div className={styles.productionInfo}>
         <div className={styles.productionInfoIcon}><MessageSquareMore aria-hidden="true" /></div>
         <div className={styles.productionInfoText}><h3>Tüm üretim süreci tek yerde.</h3><p>Yayın tipine göre tüm üretim taleplerinizi Cogniti içindeki özel iletişim kanalından iletebilir,<br className={styles.productionDesktopBreak} /> üretimin her aşamasını takip edebilirsiniz. E-posta, mesaj ve telefon trafiği olmadan, tüm süreç tek yerde.</p></div>

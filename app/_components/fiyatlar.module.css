@@ -87,3 +87,6 @@ button.link { border: 0; padding: 0; background: transparent; font: inherit; fon
 .packagePrice h3 { font-size: clamp(28px, 3.1vw, 42px); white-space: nowrap; }
 .packagePrice span { font-size: clamp(15px, 1.6vw, 22px); white-space: nowrap; }
 @media (max-width: 700px) { .packagePrice h3 { font-size: 36px; } .packagePrice span { font-size: 22px; } }
+
+.serviceAmount { display: block; margin-top: 5px; color: var(--tema-ikincil-metin); font-size: 12px; line-height: 1.5; white-space: nowrap; }
+.taxNote { margin: 12px 0 0; color: var(--tema-ikincil-metin); font-size: 12px; line-height: 1.6; }
