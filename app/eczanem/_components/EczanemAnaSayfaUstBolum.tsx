@@ -1,4 +1,5 @@
 "use client";
+import { useBannerTakvimYenileme } from "@/lib/eclub/useBannerTakvimYenileme";
 
 import { useEffect, useState } from "react";
 import { CheckCircle2, Coins, Sparkles } from "lucide-react";
@@ -38,6 +39,7 @@ interface Okuma<T> {
 }
 
 export default function EczanemAnaSayfaUstBolum({ kullaniciId, ad, firmaAdi, firmaId, eczaneId, eczaneAdi, yeniIcerikler, tamamlananlar, iceriklerHazir, yenileniyor, yenilemeAnahtari, onYenile }: Props) {
+  const bannerSurumu = useBannerTakvimYenileme();
   const [puan, setPuan] = useState<Okuma<number> | null>(null);
   const [banner, setBanner] = useState<Okuma<EclubBanner[]> | null>(null);
   const bannerKapsami = JSON.stringify([firmaId ?? null, firmaId ? eczaneId ?? null : null]);
@@ -75,7 +77,7 @@ export default function EczanemAnaSayfaUstBolum({ kullaniciId, ad, firmaAdi, fir
       .then(veri => { if (!controller.signal.aborted) setBanner({ ...temel, veri, hata: null }); })
       .catch(() => { if (!controller.signal.aborted) setBanner({ ...temel, veri: null, hata: "Ana sayfa görselleri yüklenemedi." }); });
     return () => controller.abort();
-  }, [kullaniciId, yenilemeAnahtari, firmaId, eczaneId, bannerKapsami]);
+  }, [kullaniciId, yenilemeAnahtari, firmaId, eczaneId, bannerKapsami, bannerSurumu]);
 
   // Yenileme sürerken aynı hesabın son sonucu görünür kalır; hesaplar arasında taşınmaz.
   const gorunenPuan = puan?.kullaniciId === kullaniciId ? puan : null;

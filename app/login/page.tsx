@@ -2,6 +2,8 @@
 
 import { vivaDonusYolu } from "@/lib/viva/sozlesme";
 import { panelBaslangici } from "@/lib/panel/baslangic";
+import { FIRMA_ADMIN_ROLU } from "@/lib/utils/roller";
+import { firmaAdminBaslangicYolu } from "@/lib/admin/firmaAdminErisimi";
 import Link from "next/link";
 import CognitiLogo from "@/components/marka/CognitiLogo";
 import { createClient } from "@/lib/supabase/client";
@@ -53,6 +55,18 @@ export default function LoginPage() {
       }
       if (kullanici.kimlik_turu === "musteri") {
         window.location.replace("/eczanem");
+        return;
+      }
+
+      if (kullanici.rol === FIRMA_ADMIN_ROLU) {
+        try {
+          const r = await fetch("/admin/api/firma-oturum", { cache: "no-store" });
+          const d = await r.json();
+          if (!r.ok) throw new Error(d.hata || "Firma yönetimine erişiminiz kapalıdır.");
+          if (!iptalEdildi && !karsilamayaDonuluyor.current) window.location.replace(firmaAdminBaslangicYolu(d.firma.firma_id));
+        } catch (error) {
+          if (!iptalEdildi) setHata(error instanceof Error ? error.message : "Firma yönetimi erişimi doğrulanamadı.");
+        }
         return;
       }
 

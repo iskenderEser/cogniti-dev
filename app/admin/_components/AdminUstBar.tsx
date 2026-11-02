@@ -1,114 +1,28 @@
-// app/admin/_components/AdminUstBar.tsx
-//
-// M2 — Yönetim kabuğunun üst barı (K-A3: login neslinden görsel dil).
-// Sol: başlık. Sağ: GLOBAL bölümler (GLOBAL_BOLUMLER tek kaynağından —
-// firma bağlamından bağımsız işler), kullanıcı + çıkış.
-// Global bölümler ileride firma adminine kapalıdır (firmaAdminGorur, K-A1).
-
 "use client";
 
 import Link from "next/link";
-import { GLOBAL_BOLUMLER, GlobalBolumId, RENK_BORDO, RENK_GRI } from "../_constants";
+import { LogOut, Menu } from "lucide-react";
+import CognitiLogo from "@/components/marka/CognitiLogo";
+import styles from "../admin.module.css";
 
-interface AdminUstBarProps {
+interface Props {
+  firmaAdmin?: boolean;
   kullaniciAd: string;
-  globalBolum: GlobalBolumId | null;
-  setGlobalBolum: (v: GlobalBolumId | null) => void;
+  onAnaSayfa: () => void;
   onCikis: () => void;
-  onSilAc: () => void;
+  menuAcik: boolean;
+  onMenu: () => void;
 }
-
-export default function AdminUstBar(p: AdminUstBarProps) {
-  return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "12px 24px",
-        background: RENK_GRI,
-        fontFamily: "'Nunito', sans-serif",
-      }}
-    >
-      <button
-        onClick={() => p.setGlobalBolum(null)}
-        title="Firma görünümüne dön"
-        style={{
-          background: "transparent",
-          border: "none",
-          padding: 0,
-          cursor: "pointer",
-          textAlign: "left",
-        }}
-      >
-        <span style={{ fontSize: "17px", fontWeight: 800, color: "white", letterSpacing: "0.2px" }}>
-          Cogniti Yönetim
-        </span>
-      </button>
-
-      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-        <Link href="/viva" style={{ color: "white", fontSize: "12px", padding: "6px 12px", border: "1px solid rgba(255,255,255,0.25)", borderRadius: "8px" }}>Viva</Link>
-        {GLOBAL_BOLUMLER.map((b) => {
-          const aktif = p.globalBolum === b.id;
-          return (
-            <button
-              key={b.id}
-              onClick={() => p.setGlobalBolum(aktif ? null : b.id)}
-              style={{
-                padding: "6px 12px",
-                background: aktif ? "white" : "rgba(255,255,255,0.10)",
-                border: "1px solid rgba(255,255,255,0.25)",
-                borderRadius: "8px",
-                fontSize: "12px",
-                fontWeight: aktif ? 700 : 600,
-                color: aktif ? RENK_BORDO : "white",
-                cursor: "pointer",
-                fontFamily: "'Nunito', sans-serif",
-              }}
-            >
-              {b.etiket}
-            </button>
-          );
-        })}
-
-        <button
-          onClick={p.onSilAc}
-          title="Toplu / Tekil test verisi silme"
-          style={{
-            padding: "6px 12px",
-            background: "rgba(255,255,255,0.10)",
-            border: "1px solid rgba(255,255,255,0.35)",
-            borderRadius: "8px",
-            fontSize: "12px",
-            fontWeight: 600,
-            color: "white",
-            cursor: "pointer",
-            fontFamily: "'Nunito', sans-serif",
-          }}
-        >
-          Toplu/Tekil Sil
-        </button>
-
-        <span style={{ fontSize: "12px", color: "rgba(255,255,255,0.85)", marginLeft: "8px" }}>
-          {p.kullaniciAd}
-        </span>
-        <button
-          onClick={p.onCikis}
-          style={{
-            padding: "6px 14px",
-            background: RENK_BORDO,
-            border: "none",
-            borderRadius: "8px",
-            fontSize: "12px",
-            fontWeight: 700,
-            color: "white",
-            cursor: "pointer",
-            fontFamily: "'Nunito', sans-serif",
-          }}
-        >
-          Çıkış
-        </button>
-      </div>
+export default function AdminUstBar(p:Props) {
+  return <header className={styles.navbar}>
+    <div className={styles.actions}>
+      <button type="button" className={`${styles.button} ${styles.mobileNav}`} aria-label="Yönetim menüsü" aria-expanded={p.menuAcik} aria-controls="admin-gezinme" onClick={p.onMenu}><Menu /></button>
+      <button type="button" className={styles.brand} onClick={p.onAnaSayfa} aria-label="Cogniti yönetimine dön"><CognitiLogo className={styles.logo} /><span className={styles.brandText}>Yönetim</span></button>
     </div>
-  );
+    <div className={styles.navbarActions}>
+      {!p.firmaAdmin && <Link href="/viva" className={styles.button}>Viva</Link>}
+
+      <div className={styles.profile}><div><span className={styles.profileName}>{p.kullaniciAd}</span><button type="button" className={styles.logout} onClick={p.onCikis}><LogOut size={11} style={{ display:"inline", marginRight:4 }} />Çıkış</button></div><span className={styles.avatar} aria-hidden="true">{p.kullaniciAd.split(/\s+/).map(n=>n[0]).slice(0,2).join("")}</span></div>
+    </div>
+  </header>;
 }

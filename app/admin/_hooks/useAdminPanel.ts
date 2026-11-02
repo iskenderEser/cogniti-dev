@@ -7,30 +7,32 @@
 "use client";
 
 import { panelBaslangici } from "@/lib/panel/baslangic";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { useHataMesaji } from "@/components/HataMesaji";
-import type { Firma, Kullanici, Takim, GirisSecimi } from "../_types";
-import { ADMIN_ROLLER } from "@/lib/utils/roller";
+import type { Firma, Kullanici, Takim, GirisSecimi, YeniFirmaBilgileri } from "../_types";
+import { ADMIN_ROLLER, FIRMA_ADMIN_ROLU } from "@/lib/utils/roller";
 
-export function useAdminPanel() {
+export function useAdminPanel(istenenFirmaId: string | null = null) {
   const { kullanici, yukleniyor, cikisYap } = useAuth();
   const router = useRouter();
   const { mesajlar, hata, basari } = useHataMesaji();
 
+  const seciliFirmaRef = useRef<string | null>(null);
+  const [firmaVerileriYukleniyor, setFirmaVerileriYukleniyor] = useState(false);
+  const [firmaVeriHatasi, setFirmaVeriHatasi] = useState(false);
   const [firmalar, setFirmalar] = useState<Firma[]>([]);
   const [seciliFirma, setSeciliFirma] = useState<Firma | null>(null);
   const [kullanicilar, setKullanicilar] = useState<Kullanici[]>([]);
   const [takimlar, setTakimlar] = useState<Takim[]>([]);
-  const [yeniFirmaAdi, setYeniFirmaAdi] = useState("");
   const [loading, setLoading] = useState(false);
   const [girisSecimi, setGirisSecimi] = useState<GirisSecimi>("tekil");
 
   useEffect(() => {
     if (yukleniyor) return;
     if (!kullanici) { router.replace("/login"); return; }
-    if (!ADMIN_ROLLER.includes((kullanici.rol ?? "").toLowerCase())) { router.replace(panelBaslangici(kullanici.rol).yol); return; } // B-33: tek kaynak
+    if (kullanici.rol !== FIRMA_ADMIN_ROLU && !ADMIN_ROLLER.includes((kullanici.rol ?? "").toLowerCase())) { router.replace(panelBaslangici(kullanici.rol).yol); return; } // B-33: tek kaynak
     firmalariCek();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [kullanici, yukleniyor]);
@@ -43,7 +45,11 @@ export function useAdminPanel() {
     const res = await fetch("/admin/api/firmalar");
     const data = await res.json();
     if (!res.ok) { hata(data.hata ?? "Firmalar yüklenemedi.", data.adim, data.detay); }
-    else { setFirmalar(data.firmalar ?? []); }
+    else {
+      const liste: Firma[] = data.firmalar ?? [];
+      setFirmalar(liste);
+      setSeciliFirma(prev => prev ? liste.find(f => f.firma_id === prev.firma_id) ?? prev : prev);
+    }
     } catch (err) {
       // B-32: ağ hatasında sessiz çökme yok — kullanıcı bilgilendirilir.
       hata("Firmalar yüklenemedi — bağlantı hatası.", "firmalariCek", String(err));
@@ -56,10 +62,13 @@ export function useAdminPanel() {
     try {
     const res = await fetch(`/admin/api/firmalar/${firma_id}/kullanicilar`);
     const data = await res.json();
-    if (!res.ok) { hata(data.hata ?? "Kullanıcılar yüklenemedi.", data.adim, data.detay); }
+    if (seciliFirmaRef.current !== firma_id) return;
+    if (!res.ok) { setFirmaVeriHatasi(true); hata(data.hata ?? "Kullanıcılar yüklenemedi.", data.adim, data.detay); }
     else { setKullanicilar(data.kullanicilar ?? []); }
     } catch (err) {
       // B-32: ağ hatasında sessiz çökme yok — kullanıcı bilgilendirilir.
+      if (seciliFirmaRef.current !== firma_id) return;
+      setFirmaVeriHatasi(true);
       hata("Kullanıcılar yüklenemedi — bağlantı hatası.", "kullanicilariCek", String(err));
     }
   };
@@ -68,44 +77,56 @@ export function useAdminPanel() {
     try {
     const res = await fetch(`/admin/api/firmalar/${firma_id}/takimlar`);
     const data = await res.json();
-    if (!res.ok) { hata(data.hata ?? "Takımlar yüklenemedi.", data.adim, data.detay); return; }
+    if (seciliFirmaRef.current !== firma_id) return;
+    if (!res.ok) { setFirmaVeriHatasi(true); hata(data.hata ?? "Takımlar yüklenemedi.", data.adim, data.detay); return; }
     const takimListesi: Takim[] = await Promise.all(
       (data.takimlar ?? []).map(async (t: { takim_id: string; takim_adi: string }) => {
         const bRes = await fetch(`/admin/api/firmalar/${firma_id}/takimlar/${t.takim_id}/bolgeler`);
         const bData = await bRes.json();
+        if (!bRes.ok) throw new Error(bData.hata ?? "Bölgeler yüklenemedi.");
         return { takim_id: t.takim_id, takim_adi: t.takim_adi, bolgeler: bData.bolgeler ?? [] };
       })
     );
-    setTakimlar(takimListesi);
+    if (seciliFirmaRef.current === firma_id) setTakimlar(takimListesi);
     } catch (err) {
       // B-32: ağ hatasında sessiz çökme yok — kullanıcı bilgilendirilir.
+      if (seciliFirmaRef.current !== firma_id) return;
+      setFirmaVeriHatasi(true);
       hata("Takımlar yüklenemedi — bağlantı hatası.", "takimlariCek", String(err));
     }
   };
 
-  const handleFirmaEkle = async (e: React.FormEvent) => {
+  const handleFirmaEkle = async (bilgiler: YeniFirmaBilgileri): Promise<boolean> => {
     try {
-    e.preventDefault();
-    if (!yeniFirmaAdi.trim()) return;
+    if (!bilgiler.firma_adi.trim()) return false;
     const res = await fetch("/admin/api/firmalar", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ firma_adi: yeniFirmaAdi.trim() }),
+      body: JSON.stringify(bilgiler),
     });
     const data = await res.json();
-    if (!res.ok) { hata(data.hata ?? "Firma eklenemedi.", data.adim, data.detay); }
-    else { basari("Ekleme başarılı."); setYeniFirmaAdi(""); firmalariCek(); }
+    if (!res.ok) { hata(data.hata ?? "Firma eklenemedi.", data.adim, data.detay); return false; }
+    basari("Firma oluşturuldu.");
+    await firmalariCek();
+    return true;
     } catch (err) {
       // B-32: ağ hatasında sessiz çökme yok — kullanıcı bilgilendirilir.
       hata("Firma eklenemedi — bağlantı hatası.", "handleFirmaEkle", String(err));
+      return false;
     }
   };
 
   const handleFirmaSecildi = (f: Firma) => {
+    seciliFirmaRef.current = f.firma_id;
     setSeciliFirma(f);
     setGirisSecimi("tekil");
-    kullanicilariCek(f.firma_id);
-    takimlariCek(f.firma_id);
+    setKullanicilar([]);
+    setTakimlar([]);
+    setFirmaVeriHatasi(false);
+    setFirmaVerileriYukleniyor(true);
+    void Promise.all([kullanicilariCek(f.firma_id), takimlariCek(f.firma_id)]).finally(() => {
+      if (seciliFirmaRef.current === f.firma_id) setFirmaVerileriYukleniyor(false);
+    });
   };
 
   // Firmanın HBStore mağazasını aç/kapat (PATCH /admin/api/firmalar/[firma_id])
@@ -188,32 +209,6 @@ export function useAdminPanel() {
     } catch (err) {
       // B-32: ağ hatasında sessiz çökme yok — kullanıcı bilgilendirilir.
       hata("E-Club durumu güncellenemedi — bağlantı hatası.", "handleEclubToggle", String(err));
-    }
-  };
-
-  const handleEclubStoreToggle = async (f: Firma) => {
-    try {
-    const yeniDurum = !f.eclub_store_aktif;
-    const res = await fetch(`/admin/api/firmalar/${f.firma_id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ eclub_store_aktif: yeniDurum }),
-    });
-    const data = await res.json();
-    if (!res.ok) {
-      hata(data.hata ?? "E-Club Store durumu güncellenemedi.", data.adim, data.detay);
-      return;
-    }
-    basari(yeniDurum ? "E-Club Store açıldı." : "E-Club Store kapatıldı.");
-    setFirmalar(prev =>
-      prev.map(x => (x.firma_id === f.firma_id ? { ...x, eclub_store_aktif: yeniDurum } : x))
-    );
-    setSeciliFirma(prev =>
-      prev && prev.firma_id === f.firma_id ? { ...prev, eclub_store_aktif: yeniDurum } : prev
-    );
-    } catch (err) {
-      // B-32: ağ hatasında sessiz çökme yok — kullanıcı bilgilendirilir.
-      hata("E-Club Store durumu güncellenemedi — bağlantı hatası.", "handleEclubStoreToggle", String(err));
     }
   };
 
@@ -352,13 +347,15 @@ export function useAdminPanel() {
   };
 
   // Firmayı sil (DELETE /admin/api/firmalar/[firma_id])
-  // API export koşulunu (son_export_at) ve bağlı takım/kullanıcı kontrolünü uygular.
+  // API dışa aktarım koşulunu doğrular; firma ve bağlı kayıtları atomik olarak siler.
   // Başarısızsa (örn. export edilmemiş) hata mesajı gösterilir; çağıran taraf
   // dönüş değerine göre modal/uyarı yönetebilir.
   const handleFirmaSil = async (f: Firma): Promise<boolean> => {
     try {
     const res = await fetch(`/admin/api/firmalar/${f.firma_id}`, {
       method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ onay_firma_adi: f.firma_adi }),
     });
     const data = await res.json();
     if (!res.ok) {
@@ -376,16 +373,15 @@ export function useAdminPanel() {
     }
   };
 
-  // YENİ: firmalar yüklenince admin'in kendi firmasını otomatik seç
+  // Yenileme ve geri/ileri gezinmede URL'deki firmayı geri yükle.
   useEffect(() => {
-    if (firmalar.length > 0 && !seciliFirma && kullanici?.firma_id) {
-      const kendiFirmasi = firmalar.find(f => f.firma_id === kullanici.firma_id);
-      if (kendiFirmasi) {
-        handleFirmaSecildi(kendiFirmasi);
-      }
+    const hedefFirmaId = istenenFirmaId ?? kullanici?.firma_id;
+    if (hedefFirmaId && seciliFirmaRef.current !== hedefFirmaId) {
+      const firma = firmalar.find(f => f.firma_id === hedefFirmaId);
+      if (firma) handleFirmaSecildi(firma);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [firmalar, kullanici?.firma_id]);
+  }, [firmalar, kullanici?.firma_id, istenenFirmaId]);
 
   const refreshKullanicilar = () => {
     if (seciliFirma) kullanicilariCek(seciliFirma.firma_id);
@@ -398,26 +394,31 @@ export function useAdminPanel() {
     if (seciliFirma) takimlariCek(seciliFirma.firma_id);
   };
 
+  const firmaBilgileriniYansit = (firma: Firma) => {
+    setFirmalar(onceki => onceki.map(f => f.firma_id === firma.firma_id ? {...f,...firma} : f));
+    setSeciliFirma(onceki => onceki?.firma_id === firma.firma_id ? {...onceki,...firma} : onceki);
+  };
+
   return {
     kullanici,
+    firmaVerileriYukleniyor,
+    firmaVeriHatasi,
     yukleniyor,
     cikisYap,
     mesajlar,
     hata,
     basari,
     firmalar,
-    yeniFirmaAdi,
-    setYeniFirmaAdi,
     handleFirmaEkle,
     seciliFirma,
     handleFirmaSecildi,
     handleStoreToggle,
     handleCcToggle,
     handleEclubToggle,
-    handleEclubStoreToggle,
     handleEczanemToggle,
     handleFirmaToggle,
     handleLogoGuncelle,
+    firmaBilgileriniYansit,
     handleFirmaSil,
     handleExport,
     loading,

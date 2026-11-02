@@ -161,7 +161,7 @@ WITH kazanc AS (
 ), beklenen AS (
   SELECT h.* FROM ham_beklenen h
   JOIN public.firmalar f USING(firma_id)
-  WHERE f.eclub_store_aktif=true AND h.bakiye>0
+  WHERE f.aktif = true AND f.eclub_aktif = true AND h.bakiye>0
 ), gercek AS (
   SELECT k.kisi_id,b.firma_id,b.bakiye
   FROM (SELECT DISTINCT kisi_id FROM anahtar) k CROSS JOIN LATERAL public.get_eclub_store_firma_bakiye(k.kisi_id) b

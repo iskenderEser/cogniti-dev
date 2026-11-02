@@ -15,8 +15,9 @@ export const YONETICI_ROLLER = [
 ];
 
 // ADMIN_ROLLER: Tüm firmalara erişim, /admin paneli ve yönetici raporları yetkisine sahip roller.
-// İleride firma bazlı admin eklenebilir: "firma_admin"
+// Firma admini bu listeye dahil değildir; tüm firma yetkisi kazanmaz.
 export const ADMIN_ROLLER = ["admin"];
+export const FIRMA_ADMIN_ROLU = "firma_admin";
 
 // YONLENDIRICI_ROLLER: TM ve BM — UTT performansını hiyerarşik olarak izleyen roller.
 // Öneri gönderme yetkisi bu gruptan türetilmez; yalnız BM'ye aittir.
@@ -37,6 +38,7 @@ export const TUM_ROLLER = [
   ...URETICI_ROLLER,
   ...YONETICI_ROLLER,
   ...ADMIN_ROLLER,
+  FIRMA_ADMIN_ROLU,
   ...YONLENDIRICI_ROLLER,
   ...TUKETICI_ROLLER,
   IU_ROLU,
@@ -305,6 +307,7 @@ export function ureticiYayinHedefGruplari(ureticiRol: string): YayinHedefGrubu[]
 // Yalnızca görüntüleme katmanında kullanılır — veritabanında hiçbir şey değişmez.
 // Kullanım: ROL_ADLARI[rol] ?? rol
 export const ROL_ADLARI: Record<string, string> = {
+  firma_admin: "Firma Admini",
   pm: "Ürün Müdürü",
   jr_pm: "Ürün Müdürü (Jr.)",
   kd_pm: "Kıdemli Ürün Müdürü",

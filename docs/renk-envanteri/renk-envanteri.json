@@ -89791,11 +89791,11 @@
       "dosya": "app/(panel)/eclub/ana-sayfa/page.tsx",
       "tur": "Adlandırılmış bileşen",
       "ad": "EclubHediyeCekiGunleriPill",
-      "satir": 158,
-      "sutun": 52,
-      "baglam": "aksiyon={statOzeti.eclub_store_aktif ? <EclubHediyeCekiGunleriPill /> : undefined}",
-      "bas": 7699,
-      "son": 7729,
+      "satir": 157,
+      "sutun": 22,
+      "baglam": "aksiyon={<EclubHediyeCekiGunleriPill />}",
+      "bas": 7607,
+      "son": 7637,
       "kayitlar": []
     },
     {

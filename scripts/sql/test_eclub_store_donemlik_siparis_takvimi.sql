@@ -173,7 +173,7 @@ BEGIN
     v_stok_once
   FROM public.eclub_kisi_eczane ke
   JOIN public.eclub_eczane_firma ef ON ef.eczane_id = ke.eczane_id AND ef.aktif_mi = true
-  JOIN public.firmalar f ON f.firma_id = ef.firma_id AND f.aktif = true AND f.eclub_aktif = true AND f.eclub_store_aktif = true
+  JOIN public.firmalar f ON f.firma_id = ef.firma_id AND f.aktif = true AND f.eclub_aktif = true
   JOIN public.eclub_store_adresler a ON a.kisi_id = ke.kisi_id
   JOIN public.eclub_store_urunler u ON u.aktif_mi = true AND u.stok > 0
   LEFT JOIN public.eclub_store_urun_firma_ayarlari fa ON fa.urun_id = u.urun_id AND fa.firma_id = f.firma_id
@@ -191,7 +191,7 @@ BEGIN
     SELECT count(DISTINCT ke.kisi_id) INTO v_sayi_firma_erisim
     FROM public.eclub_kisi_eczane ke
     JOIN public.eclub_eczane_firma ef ON ef.eczane_id = ke.eczane_id AND ef.aktif_mi = true
-    JOIN public.firmalar f ON f.firma_id = ef.firma_id AND f.aktif = true AND f.eclub_aktif = true AND f.eclub_store_aktif = true
+    JOIN public.firmalar f ON f.firma_id = ef.firma_id AND f.aktif = true AND f.eclub_aktif = true
     WHERE ke.aktif_mi = true;
 
     SELECT count(DISTINCT ke.kisi_id) INTO v_sayi_adres
@@ -205,7 +205,7 @@ BEGIN
 
     SELECT count(DISTINCT u.urun_id) INTO v_sayi_erisebilir_urun
     FROM public.eclub_store_urunler u
-    JOIN public.firmalar f ON f.aktif = true AND f.eclub_aktif = true AND f.eclub_store_aktif = true
+    JOIN public.firmalar f ON f.aktif = true AND f.eclub_aktif = true
     LEFT JOIN public.eclub_store_urun_firma_ayarlari fa ON fa.urun_id = u.urun_id AND fa.firma_id = f.firma_id
     WHERE u.aktif_mi = true AND u.stok > 0
       AND COALESCE(fa.aktif_mi, true) = true;

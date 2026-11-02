@@ -4,7 +4,7 @@ export const ECLUB_BANNER_MAX_BOYUT = 5 * 1024 * 1024;
 // Marka adı değişse de platformun mevcut firma ve banner kayıtları aynı kalır.
 export const PLATFORM_FIRMA_ID = "15853eba-a94c-4528-9a07-0ee0b8677a02";
 
-export interface EclubBanner { sira: number; url: string }
+export interface EclubBanner { sira: number; url: string; gorunur?: boolean; bitis_at?: string }
 
 export function platformBannerFirmasi(firmaId: string): boolean {
   return firmaId.toLowerCase() === PLATFORM_FIRMA_ID;
@@ -32,6 +32,10 @@ export function bannerKurulumuEksik(hata: { code?: string } | null): boolean {
   return hata?.code === "42P01" || hata?.code === "PGRST205";
 }
 
+export function bannerGorunurlukKurulumuEksik(hata: { code?: string; message?: string } | null): boolean {
+  return !!hata && (hata.code === "42703" || hata.code === "PGRST204") && /gorunur/i.test(hata.message ?? "");
+}
+
 export const ECZANEM_BANNER_TABLO = "eczanem_sayfa_bannerlari";
 export const ECZANEM_BANNER_ALANLARI = {
   "uye-ana-sayfa": "Üye Ana Sayfa Bannerları",
@@ -47,4 +51,13 @@ export function bannerAlaniGecerli(alan: string): alan is BannerAlani {
 
 export function bannerAlaniAdedi(firmaId: string, alan: BannerAlani): number {
   return alan === "firma" || alan === "uye-ana-sayfa" ? bannerAdedi(firmaId) : 3;
+}
+
+export type BannerKaynagi = "firma" | "cogniti";
+export function bannerKaynagi(firmaId: string, kaynak?: unknown): BannerKaynagi | null {
+  const deger = kaynak ?? (platformBannerFirmasi(firmaId) ? "cogniti" : "firma");
+  return (deger === "firma" || deger === "cogniti") && (!platformBannerFirmasi(firmaId) || deger === "cogniti") ? deger : null;
+}
+export function bannerKaynakKurulumuEksik(error: { code?: string; message?: string } | null) {
+  return Boolean(error && ["42703", "PGRST204"].includes(error.code ?? "") && /kaynak/i.test(error.message ?? ""));
 }

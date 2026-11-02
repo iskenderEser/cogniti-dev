@@ -1,3 +1,4 @@
+import { firmaYonetimIslemKontrol } from "@/lib/admin/firmaYonetimIslem";
 // app/kullanicilar/api/[kullanici_id]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/server";
@@ -51,10 +52,21 @@ export async function PUT(
     if (!kullanici_id) return validasyonHatasi("kullanici_id zorunludur.", ["kullanici_id"]);
 
     const adminSupabase = createAdminClient();
+    const { data: hedef, error: hedefHatasi } = await adminSupabase.from("kullanicilar").select("firma_id").eq("kullanici_id", kullanici_id).maybeSingle();
+    if (hedefHatasi || !hedef) return hataYaniti("Kullanıcı bulunamadı.", "Kullanıcı firma kapsamı", hedefHatasi, 404);
+    if (hedef.firma_id) {
+      const kapsam = await firmaYonetimIslemKontrol(hedef.firma_id);
+      if (!kapsam.gecerli) return kapsam.yanit;
+    }
+
 
     const body = await request.json();
     const { ad, soyad, kullanici_rol, firma_id, takim_id, bolge_id, aktif_mi } = body;
 
+    if (firma_id && firma_id !== hedef.firma_id) {
+      const hedefKapsam = await firmaYonetimIslemKontrol(firma_id);
+      if (!hedefKapsam.gecerli) return hedefKapsam.yanit;
+    }
     const guncellenecek: Record<string, unknown> = {};
     if (ad) guncellenecek.ad = ad.trim();
     if (soyad) guncellenecek.soyad = soyad.trim();
@@ -112,6 +124,13 @@ export async function DELETE(
     if (!kullanici_id) return validasyonHatasi("kullanici_id zorunludur.", ["kullanici_id"]);
 
     const adminSupabase = createAdminClient();
+    const { data: hedef, error: hedefHatasi } = await adminSupabase.from("kullanicilar").select("firma_id").eq("kullanici_id", kullanici_id).maybeSingle();
+    if (hedefHatasi || !hedef) return hataYaniti("Kullanıcı bulunamadı.", "Kullanıcı firma kapsamı", hedefHatasi, 404);
+    if (hedef.firma_id) {
+      const kapsam = await firmaYonetimIslemKontrol(hedef.firma_id);
+      if (!kapsam.gecerli) return kapsam.yanit;
+    }
+
 
     const { data: kullanici, error: getError } = await adminSupabase
       .from("kullanicilar")

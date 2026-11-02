@@ -1,4 +1,5 @@
 "use client";
+import { useBannerTakvimYenileme } from "@/lib/eclub/useBannerTakvimYenileme";
 
 import { useEffect, useState } from "react";
 import { useParams, usePathname } from "next/navigation";
@@ -9,6 +10,7 @@ import { anaSayfaBannerlariniIste, anaSayfaBannerOnbelleginiOku } from "@/lib/ec
 import { firmaBannerlariniIste, firmaBannerOnbelleginiOku } from "@/lib/eclub/firmaBannerOnbellek";
 
 function FirmaBannerlari({ firmaId }: { firmaId: string | null }) {
+  const bannerSurumu = useBannerTakvimYenileme();
   const { kullanici } = useAuth();
   const kullaniciId = kullanici?.id;
   const pathname = usePathname();
@@ -32,7 +34,7 @@ function FirmaBannerlari({ firmaId }: { firmaId: string | null }) {
         if (!controller.signal.aborted) { setBannerlar([]); console.error("E-Club firma bannerları:", error); }
       });
     return () => controller.abort();
-  }, [firmaId, kullaniciId, anaSayfa, firmaYayinlari]);
+  }, [firmaId, kullaniciId, anaSayfa, firmaYayinlari, bannerSurumu]);
   if (!bannerlar.length) return null;
   return <BannerRafi key={bannerlar.map((b) => b.url).join("|")} bannerlar={bannerlar} anaSayfa={anaSayfa || firmaYayinlari} />;
 }

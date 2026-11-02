@@ -1,10 +1,12 @@
 "use client";
+import { useBannerTakvimYenileme } from "@/lib/eclub/useBannerTakvimYenileme";
 
 import { useEffect, useState } from "react";
 import { BannerRafi } from "@/components/eclub/BannerRafi";
 import { ECZANEM_BANNER_ALANLARI, type EclubBanner } from "@/lib/eclub/banner";
 
 export default function EczanemSayfaBanner({ alan }: { alan: keyof typeof ECZANEM_BANNER_ALANLARI }) {
+  const bannerSurumu = useBannerTakvimYenileme();
   const [sonuc, setSonuc] = useState<{ alan: string; bannerlar: EclubBanner[] } | null>(null);
 
   useEffect(() => {
@@ -22,7 +24,7 @@ export default function EczanemSayfaBanner({ alan }: { alan: keyof typeof ECZANE
         }
       });
     return () => controller.abort();
-  }, [alan]);
+  }, [alan, bannerSurumu]);
 
   if (!sonuc || sonuc.alan !== alan || !sonuc.bannerlar.length) return null;
   return <BannerRafi key={`${alan}-${sonuc.bannerlar.map((banner) => banner.url).join("|")}`}

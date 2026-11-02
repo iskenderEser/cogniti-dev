@@ -1,16 +1,20 @@
+import { firmaAdminBaslangicYolu, firmaAdminErisiminiDogrula, firmaAdminIstegiIzinliMi } from "@/lib/admin/firmaAdminErisimi";
 import { panelBaslangici } from "@/lib/panel/baslangic";
 import { createServerClient } from "@supabase/ssr";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { NextResponse, type NextRequest } from "next/server";
-import { ADMIN_ROLLER, ECLUB_TUKETICI_ROLLERI, MUSTERI_ROLU, TUKETICI_ROLLER, URETICI_ROLLER, YAYINDAKI_VIDEO_GORENLER } from "@/lib/utils/roller";
+import { FIRMA_ADMIN_ROLU, ADMIN_ROLLER, ECLUB_TUKETICI_ROLLERI, MUSTERI_ROLU, TUKETICI_ROLLER, URETICI_ROLLER, YAYINDAKI_VIDEO_GORENLER } from "@/lib/utils/roller";
 import { rolCozucu } from "@/lib/utils/rolCozucu";
 import { eclubFirmaRotasiKapsami } from "@/lib/eclub/firmaGezinme";
 import { eclubKisiErisimi } from "@/lib/eclub/kisiErisim";
 import { ECZANEM_KAPALI_MESAJI, eczanemRolErisimi } from "@/lib/eczanem/erisim";
 
 export async function proxy(request: NextRequest) {
+  // Bu endpoint kendi CRON_SECRET kontrolünü yapar; kullanıcı oturumu gerekmez.
+  if (request.nextUrl.pathname === "/api/cron/firmastore-cek-eposta") return NextResponse.next({ request });
   // Daily başlangıç testi dahil HMAC kontrolü route içinde; oturum/DB çağrısı gerekmez.
   if (request.nextUrl.pathname === "/api/viva/daily-webhook") return NextResponse.next({ request });
+  if (["/marka/cogniti-blue.svg", "/marka/cogniti-green.svg"].includes(request.nextUrl.pathname)) return NextResponse.next({ request });
   // Karşılama adresleri herkese açıktır; oturuma göre panel içeriğine dönüşmez.
   if (["/", "/welcome", "/welcome/fiyatlar", "/api/musteri-talebi"].includes(request.nextUrl.pathname)) return NextResponse.next({ request });
   let supabaseResponse = NextResponse.next({ request });
@@ -65,13 +69,28 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/davet-bekliyor", request.url));
   }
 
-  // Token nedeniyle pasif olan firmalarda açık oturumları da sonraki istekte durdur.
-  // Login ve parola işlemleri erişilebilir; admin, firma hesabını yönetmeye devam eder.
-  if (user && !["/login", "/sifre-olustur", "/sifre-olustur/api", "/sifre-yenile"].includes(pathname) && !pathname.startsWith("/admin")) {
+  // İç kullanıcı kimliği yetkili kaynaktan okunur. Firma admini diğer rol
+  // sayfalarına veya merkezi admin API'lerine bu sınırdan geçemez.
+  if (user && !["/login", "/sifre-olustur", "/sifre-olustur/api", "/sifre-yenile"].includes(pathname)) {
     const kontrolDb = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
-    const { data: kimlik, error: kimlikHatasi } = await kontrolDb.from("kullanicilar").select("rol,firma_id").eq("kullanici_id",user.id).maybeSingle();
+    const { data: kimlik, error: kimlikHatasi } = await kontrolDb.from("kullanicilar").select("rol,firma_id,aktif_mi").eq("kullanici_id", user.id).maybeSingle();
     if (kimlikHatasi) return NextResponse.json({ error: "Firma durumu doğrulanamadı." }, { status: 503 });
-    if (kimlik?.firma_id && kimlik.rol !== "admin") {
+    if (kimlik?.rol?.toLowerCase() === FIRMA_ADMIN_ROLU) {
+      const apiYolu = pathname.startsWith("/api/") || pathname.includes("/api/") || pathname.endsWith("/api");
+      const erisim = await firmaAdminErisiminiDogrula(kontrolDb, kimlik);
+      if (!erisim.ok) {
+        if (apiYolu) return NextResponse.json({ hata: erisim.hata }, { status: erisim.status });
+        return NextResponse.redirect(new URL("/login", request.url));
+      }
+      if (!firmaAdminIstegiIzinliMi(pathname, request.method, request.nextUrl.searchParams, erisim.firma.firma_id)) {
+        if (apiYolu || !["GET", "HEAD"].includes(request.method)) return NextResponse.json({ hata: "Bu alana erişim yetkiniz bulunmuyor." }, { status: 403 });
+        return NextResponse.redirect(new URL(firmaAdminBaslangicYolu(erisim.firma.firma_id), request.url));
+      }
+      supabaseResponse.headers.set("Cache-Control", "private, no-store");
+      return supabaseResponse;
+    }
+    // Mevcut diğer iç rollerin firma-pasif kontrolü korunur.
+    if (!pathname.startsWith("/admin") && kimlik?.firma_id && kimlik.rol !== "admin") {
       const { data: firma, error: firmaHatasi } = await kontrolDb.from("firmalar").select("aktif").eq("firma_id",kimlik.firma_id).maybeSingle();
       if (firmaHatasi || !firma) return NextResponse.json({ error: "Firma durumu doğrulanamadı." }, { status: 503 });
       if (firma.aktif === false) {
@@ -297,79 +316,6 @@ export async function proxy(request: NextRequest) {
       }
     }
     // hbstore_aktif = true veya firma yok → geç
-  }
-  // -------------------------------------------------------------------------
-
-  // --- E-Club Hediye Çeki firma bekçisi -----------------------------------
-  // Hediye çeki, kişisel talep ve firma onay yüzeyleri yalnızca firması açık
-  // (firmalar.eclub_store_aktif = true) olan kullanıcıya açıktır. Bu bekçi
-  // /eclub bekçisinden ÖNCE gelir çünkü /eclub/store aynı zamanda /eclub ile
-  // başlar; store kapalı ama E-Club açık firmada yalnızca store engellenir.
-  // (E-Club de kapalıysa /eclub bekçisi zaten aşağıda tüm /eclub'ı keser.)
-  if (
-    pathname.startsWith("/eclub/store")
-    || pathname.startsWith("/eclub/cek-taleplerim")
-    || pathname.startsWith("/eclub/api/cek-talepleri")
-    || pathname.startsWith("/eclub/hediye-takip")
-    || (eclubFirmaRotasi !== null && ["hediye-ceki-talebi", "hediye-ceki-takibi", "hediye-cekleri", "cek-talepleri"].includes(eclubFirmaRotasi[2]))
-  ) {
-    const storeApiYolu = pathname.includes("/api/") || pathname.endsWith("/api");
-
-    if (!user) {
-      if (storeApiYolu) {
-        return NextResponse.json({ error: "Oturum açmanız gerekiyor." }, { status: 401 });
-      }
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
-
-    const esSupabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
-    const { data: esKullanici, error: esKullaniciError } = await esSupabase
-      .from("kullanicilar")
-      .select("firma_id")
-      .eq("kullanici_id", user.id)
-      .maybeSingle();
-
-    if (esKullaniciError) {
-      if (storeApiYolu) return NextResponse.json({ error: "E-Club Hediye Çeki erişimi doğrulanamadı." }, { status: 500 });
-      return NextResponse.redirect(new URL("/profil", request.url));
-    }
-
-    if (esKullanici?.firma_id) {
-      const { data: esFirma } = await esSupabase
-        .from("firmalar")
-        .select("eclub_store_aktif")
-        .eq("firma_id", esKullanici.firma_id)
-        .single();
-
-      if (esFirma && esFirma.eclub_store_aktif === false) {
-        if (storeApiYolu) {
-          return NextResponse.json(
-            { error: "E-Club Hediye Çeki firmanız için kapalıdır." },
-            { status: 403 }
-          );
-        }
-        return panelBaslangicinaDon(esSupabase);
-      }
-    } else {
-      // E-Club kişisinde firma doğrudan kimlikte değil; aktif eczane bağından çözülür.
-      try {
-        const kisiErisim = await eclubKisiErisimOku(esSupabase);
-        if (!kisiErisim.kisi || !kisiErisim.eclub_store_aktif
-          || (eclubFirmaRotasi !== null && eclubFirmaRotasiKapsami(kisiErisim.firmalar, eclubFirmaRotasi[1], true).length === 0)) {
-          if (storeApiYolu) {
-            return NextResponse.json({ error: "E-Club Hediye Çeki bağlı olduğunuz firmalar için kapalıdır." }, { status: 403 });
-          }
-          return NextResponse.redirect(new URL(kisiErisim.eclub_aktif ? "/eclub/panel" : "/profil", request.url));
-        }
-      } catch {
-        if (storeApiYolu) return NextResponse.json({ error: "E-Club Hediye Çeki erişimi doğrulanamadı." }, { status: 500 });
-        return NextResponse.redirect(new URL("/profil", request.url));
-      }
-    }
-    // İç kullanıcı firma kapısı veya dış müşteri çok-firmalı kapısı açık → devam.
   }
   // -------------------------------------------------------------------------
 

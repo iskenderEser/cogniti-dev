@@ -1,13 +1,27 @@
 // app/admin/_types.ts
 
+export interface YeniFirmaBilgileri {
+  firma_adi: string;
+  adres: string;
+  vergi_dairesi: string;
+  il_id: number | null;
+  ilce_id: number | null;
+  vergi_dairesi_kodu: string;
+  vergi_numarasi: string;
+  sorumlu_ad_soyad: string;
+  sorumlu_telefon: string;
+  sorumlu_eposta: string;
+  logo_url: string;
+}
+
 export interface Firma {
+  firma_admin_aktif?: boolean;
   firma_id: string;
   firma_adi: string;
   hbstore_aktif: boolean;
   aktif: boolean;
   cc_aktif: boolean;
   eclub_aktif: boolean;
-  eclub_store_aktif: boolean;
   eczanem_aktif: boolean;
   logo_url?: string | null;
   ogrenme_platformu_aktif?: boolean;

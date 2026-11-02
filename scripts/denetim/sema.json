@@ -2425,10 +2425,6 @@
           "tip": "boolean",
           "nullable": false
         },
-        "eclub_store_aktif": {
-          "tip": "boolean",
-          "nullable": false
-        },
         "eczanem_aktif": {
           "tip": "boolean",
           "nullable": false

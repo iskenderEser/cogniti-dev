@@ -175,10 +175,10 @@ BEGIN
   -- 2. TEST VERİLERİNİN OLUŞTURULMASI (ÇOKLU KAPSAM, E-CLUB > 0, 4 KAYIP > 0)
   -- --------------------------------------------------------------------------
   -- 2.1 Firmalar
-  INSERT INTO public.firmalar (firma_id, firma_adi, aktif, hbstore_aktif, cc_aktif, eclub_aktif, eclub_store_aktif, eczanem_aktif)
+  INSERT INTO public.firmalar (firma_id, firma_adi, aktif, hbstore_aktif, cc_aktif, eclub_aktif, eczanem_aktif)
   VALUES
-    (v_firma_a, 'Test Firma A', true, true, true, true, true, false),
-    (v_firma_b, 'Test Firma B', true, true, true, true, true, false);
+    (v_firma_a, 'Test Firma A', true, true, true, true, false),
+    (v_firma_b, 'Test Firma B', true, true, true, true, false);
 
   -- 2.2 Takımlar
   INSERT INTO public.takimlar (takim_id, firma_id, takim_adi)

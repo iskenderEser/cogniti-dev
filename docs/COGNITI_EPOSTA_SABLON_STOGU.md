@@ -85,11 +85,13 @@ Gönderici adresi, yanıt adresi ve destek e-posta adresi henüz seçilmedi. Ça
 >
 > **Çek kodunuz:** {{cek_kodu}}
 >
-> Kodu Cogniti içindeki Çeklerim alanından da görebilirsiniz.
+> Kullanım bağlantısı (varsa): {{kullanim_linki}}
+>
+> Kodu ve varsa kullanım bağlantısını Cogniti içindeki Hediye Çeki Takibi alanından da görebilirsiniz.
 >
 > Cogniti · bilgi taşır
 
-**Mevcut veriler:** alıcı adı, çek tutarı ve çek kodu. Doğrulanmamış son kullanım tarihi veya kullanım koşulu eklenmedi. Taslak, gerçek çek kodu içermez.
+**Mevcut veriler:** alıcı adı, çek tutarı, çek kodu ve varsa HTTPS kullanım bağlantısı. Doğrulanmamış son kullanım tarihi veya kullanım koşulu eklenmedi. Taslak, gerçek çek kodu içermez.
 
 **Alıcı kuralı:** E-posta eczacıya; çek bilgisi ayrıca ilgili eczanedeki E-Club üyelerinin hesaplarına uygulama/push bildirimi olarak gider. Şablon çalışması bu dağılımı değiştirmez.
 
@@ -268,3 +270,5 @@ Ortak gövde: varsa adla hitap, aşağıdaki metin, **“Talebi görüntüle: {{
 - 18.10.2026 yerel kontrolde `RESEND_API_KEY`, `ECLUB_DAVET_EMAIL_FROM`, `ECLUB_CEK_EMAIL_FROM`, `HAPBILGI_SITE_URL` tanımlı değildi. Hosting tarafındaki değerler görülmedi.
 - Gerçek davet → e-posta → şifre oluşturma → giriş ve şifre sıfırlama akışları henüz teslimat testiyle doğrulanmadı. Taslak hazırlığı bu testleri tamamlanmış saydırmaz.
 - Gönderim hatası, yeniden deneme veya başarılı teslimat gibi teknik durumlar için kendiliğinden yeni kullanıcı e-postası üretilmeyecek. Yeni bir bildirim gerekiyorsa olay, alıcı ve kanal ayrıca onaylanacak.
+
+**02.11.2026 — E03 entegrasyon kaydı:** Kod/isteğe bağlı bağlantı teslimatı kapsamında düz metin konu/gövde kuyrukta sabitlenir. Kod/bağlantı ortak takip API’sine eklenmez; aktif ana eczacı ve teslimat e-posta alıcısı için ayrı yetkili uç kullanılır. Genel HTML tasarım ve diğer stok bildirimlerin entegrasyonu bu çalışmanın kapsamında değildir. Gerçek e-posta/push testi henüz tamamlanmadı.

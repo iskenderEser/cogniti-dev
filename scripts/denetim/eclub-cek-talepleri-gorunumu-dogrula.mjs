@@ -13,7 +13,7 @@ const temizle=await read('scripts/sql/eclub_cek_talepleri_test_verisi_temizle.sq
 const kaynak=await read('scripts/sql/eclub_store_yeni_donem_satis_sartli_cek.sql');
 await db.exec(`
 CREATE TABLE eclub_eczaneler(eczane_id uuid PRIMARY KEY,gln text);
-CREATE TABLE firmalar(firma_id uuid PRIMARY KEY,aktif bool,eclub_aktif bool,eclub_store_aktif bool);
+CREATE TABLE firmalar(firma_id uuid PRIMARY KEY,aktif bool,eclub_aktif bool);
 CREATE TABLE yayin_yonetimi(yayin_id uuid PRIMARY KEY,satis_sarti_tipi text,cek_karsiligi_var_mi bool);
 CREATE TABLE eclub_kisiler(kisi_id uuid PRIMARY KEY,rol text);
 CREATE TABLE kullanicilar(kullanici_id uuid PRIMARY KEY,firma_id uuid,takim_id uuid,bolge_id uuid,rol text,aktif_mi bool);
@@ -42,7 +42,7 @@ await db.exec(`CREATE TRIGGER eclub_siparis_depo_kapisi_trg BEFORE INSERT
 const kisi='3b0b6c01-428e-4797-a8ad-67d5d2400b5f',eczane='0d8385df-4eed-429e-b691-81acee1ad606',utt='765b6890-183f-4518-b887-07003ff5cdc7',firma='0c504d88-b9fb-40bb-beae-5bae33cb99ac';
 const pubs=[['bc71b5d2-0c91-4a7e-aa19-1a17a7a66f50','siparissiz_cek','Laropen'],['3a6e0db1-bc42-44cf-ab16-b99630681ae9','serbest_siparis','Forma XL'],['f364c684-eadc-4ccc-8671-f333da7b555f','satis_sartli','Abilon']];
 await db.exec(`
-INSERT INTO firmalar VALUES('${firma}',true,true,true);
+INSERT INTO firmalar VALUES('${firma}',true,true);
 INSERT INTO eclub_eczaneler VALUES('${eczane}','1110000000003');
 INSERT INTO eclub_eczane_master VALUES('1110000000003','test');
 INSERT INTO eclub_kisiler VALUES('${kisi}','eczaci');

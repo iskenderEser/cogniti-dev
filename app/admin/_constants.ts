@@ -94,12 +94,14 @@ export type ModulSekmeId =
   | "kullanicilar"
   | "organizasyon"
   | "urunteknik"
+  | "puan-yonetimi"
   | "logokimlik"
   | "token"
   | "tclub"
   | "cclub"
   | "eclub"
-  | "eczanem";
+  | "eczanem"
+  | "firmastore";
 
 // Sekme grupları (İskender kararı, 17.07.2026): takım/bölge ve ürün/teknik
 // MODÜL değil, firmanın KURULUŞ TANIMLARIDIR (organizasyon şeması firmanın
@@ -117,15 +119,17 @@ export const MODUL_SEKMELERI: ModulSekme[] = [
   { id: "kullanicilar", etiket: "Kullanıcılar", grup: "firma", firmaAdminGorur: true },
   { id: "organizasyon", etiket: "Organizasyon", grup: "firma", firmaAdminGorur: true },
   { id: "urunteknik", etiket: "Ürün ve Teknik", grup: "firma", firmaAdminGorur: true },
+  { id: "puan-yonetimi", etiket: "Yayın Puan Yönetimi", grup: "firma", firmaAdminGorur: true },
   { id: "logokimlik", etiket: "Logo ve Kimlik", grup: "firma", firmaAdminGorur: true },
-  { id: "token", etiket: "Token", grup: "firma", firmaAdminGorur: false },
+  { id: "token", etiket: "Token Kullanımı", grup: "firma", firmaAdminGorur: false },
   { id: "tclub", etiket: "T-Club", grup: "modul", firmaAdminGorur: true },
   { id: "cclub", etiket: "C-Club", grup: "modul", firmaAdminGorur: true },
   { id: "eclub", etiket: "E-Club", grup: "modul", firmaAdminGorur: true },
   { id: "eczanem", etiket: "Eczanem", grup: "modul", firmaAdminGorur: true },
+  { id: "firmastore", etiket: "FirmaStore", grup: "modul", firmaAdminGorur: true },
 ];
 
-export type GlobalBolumId = "hbstore" | "eclubstore" | "uretim" | "sistem";
+export type GlobalBolumId = "hbstore" | "eclubstore" | "uretim" | "sistem" | "bannerlar" | "veri-sil";
 
 export interface GlobalBolum {
   id: GlobalBolumId;
@@ -134,8 +138,10 @@ export interface GlobalBolum {
 }
 
 export const GLOBAL_BOLUMLER: GlobalBolum[] = [
-  { id: "hbstore", etiket: "FirmaStore", firmaAdminGorur: false },
-  { id: "eclubstore", etiket: "Çek Teslimatı", firmaAdminGorur: false },
+  { id:"bannerlar", etiket:"Cogniti Bannerları", firmaAdminGorur:false },
+  { id: "hbstore", etiket: "FirmaStore Çek Yönetimi", firmaAdminGorur: false },
+  { id: "eclubstore", etiket: "E-Club Çek Teslimatı", firmaAdminGorur: false },
   { id: "uretim", etiket: "İçerik Üretimi", firmaAdminGorur: false },
   { id: "sistem", etiket: "Sistem Ayarları", firmaAdminGorur: false },
+  { id: "veri-sil", etiket: "Yayın Toplu/Tekil Silme", firmaAdminGorur: false },
 ];

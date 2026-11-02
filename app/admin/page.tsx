@@ -1,76 +1,69 @@
-// app/admin/page.tsx
-//
-// Admin paneli — orchestrator (M2 kabuğu, admin modernizasyon planı B.2).
-// Yerleşim: üst bar (global bölümler — GLOBAL_BOLUMLER) + sol FirmaSidebar
-// (firma seçimi) + firma bağlamı modül sekmeleri (MODUL_SEKMELERI).
-// Tüm business logic _hooks/ altında, UI parçaları _components/ altında.
-//
-// Firma admini hazırlığı (K-A1): sekme/bölüm görünürlüğü _constants'taki
-// tek kaynaktan gelir; rol bazlı kapatma ileride oradan yapılır.
-
 "use client";
 
-import { useState } from "react";
+import { FirmaYonetimYetkisi } from "./_components/FirmaYonetimYetkisi";
+import { Suspense, useState } from "react";
+import { useAuth } from "@/app/providers/AuthProvider";
+import { FIRMA_ADMIN_ROLU } from "@/lib/utils/roller";
+import { useSearchParams } from "next/navigation";
+import { Building2, ChevronRight, Settings2 } from "lucide-react";
+import styles from "./admin.module.css";
+import FirmaGezinme, { FIRMA_SAYFALARI, yonetimSayfasiBilgisi, type FirmaSayfasi } from "./_components/FirmaGezinme";
+import KullaniciYonetimi from "./_components/KullaniciYonetimi";
+import FirmaBilgileri from "./_components/FirmaBilgileri";
+import YeniFirmaFormu from "./_components/YeniFirmaFormu";
+import FirmaAdminYonetimi from "./_components/FirmaAdminYonetimi";
+import FirmaYonetimIslemleri from "./_components/FirmaYonetimIslemleri";
 import { HataMesajiContainer } from "@/components/HataMesaji";
 import { platformBannerFirmasi } from "@/lib/eclub/banner";
 import { useAdminPanel } from "./_hooks/useAdminPanel";
-import { useTekilForm } from "./_hooks/useTekilForm";
-import { useTopluForm } from "./_hooks/useTopluForm";
 import { useTakimBolgeForm } from "./_hooks/useTakimBolgeForm";
-import { useUrunTeknik } from "./_hooks/useUrunTeknik";
-import { useKullaniciListesi } from "./_hooks/useKullaniciListesi";
 
 import AdminUstBar from "./_components/AdminUstBar";
-import TopluTekilSilModal from "./_components/TopluTekilSilModal";
-import FirmaVeriSilModal from "./_components/FirmaVeriSilModal";
-import FirmaSidebar from "./_components/FirmaSidebar";
-import ModulSekmeBari from "./_components/ModulSekmeBari";
+import TopluTekilSilPaneli from "./_components/TopluTekilSilPaneli";
 import TokenYonetimi from "./_components/TokenYonetimi";
-import ModulDurumKarti from "./_components/ModulDurumKarti";
-import SekmeBari from "./_components/SekmeBari";
-import TekilGirisFormu from "./_components/TekilGirisFormu";
-import TopluGirisFormu from "./_components/TopluGirisFormu";
+import TClubYonetimi from "./_components/TClubYonetimi";
+import CClubYonetimi from "./_components/CClubYonetimi";
+import PuanYonetimi from "./_components/PuanYonetimi";
+import FirmaStoreErisimi from "./_components/FirmaStoreErisimi";
+import FirmaStoreCekTanimlari from "./_components/FirmaStoreCekTanimlari";
 import TakimBolgeFormu from "./_components/TakimBolgeFormu";
 import UrunTeknikYonetimi from "./_components/UrunTeknikYonetimi";
 import LogoKimlikYonetimi from "./_components/LogoKimlikYonetimi";
-import KullaniciListesi from "./_components/KullaniciListesi";
+import CognitiBannerlari from "./_components/CognitiBannerlari";
 import SistemAyarlari from "./_components/SistemAyarlari";
 import HbStorePaneli from "./_components/global/HbStorePaneli";
+import EczanemFirmaCekTanimlari from "./eczanem/_components/EczanemFirmaCekTanimlari";
+import EclubFirmaCekTanimlari from "./eclub-cek-teslimat/_components/EclubFirmaCekTanimlari";
 import EclubStorePaneli from "./_components/global/EclubStorePaneli";
 import EclubYonetimPaneli from "./eclub/_components/EclubYonetimPaneli";
+import EclubErisim from "./eclub/_components/EclubErisim";
 import EczanemUyeYonetimi from "./eczanem/_components/EczanemUyeYonetimi";
+import EczanemErisim from "./eczanem/_components/EczanemErisim";
 import EczanemBannerYonetimi from "./eczanem/_components/EczanemBannerYonetimi";
 import EclubBannerYonetimi from "./eclub/_components/EclubBannerYonetimi";
 import UretimAtamaPaneli from "./_components/global/UretimAtamaPaneli";
 
-import type { GlobalBolumId, ModulSekmeId } from "./_constants";
+import type { GlobalBolumId } from "./_constants";
 import type { Firma } from "./_types";
 
 export default function AdminPanel() {
-  const admin = useAdminPanel();
+  const { yukleniyor } = useAuth();
+  if (yukleniyor) return null;
+  return <Suspense fallback={null}><AdminPanelIcerigi /></Suspense>;
+}
 
-  // M2 kabuk state'i: firma bağlamı sekmesi + global bölüm (üst bar).
-  const [seciliSekme, setSeciliSekme] = useState<ModulSekmeId>("kullanicilar");
-  const [globalBolum, setGlobalBolum] = useState<GlobalBolumId | null>(null);
-  const [silModalAcik, setSilModalAcik] = useState(false);
-  const [veriSilFirma, setVeriSilFirma] = useState<Firma | null>(null);
-
-  const tekil = useTekilForm({
-    seciliFirma: admin.seciliFirma,
-    takimlar: admin.takimlar,
-    refreshKullanicilar: admin.refreshKullanicilar,
-    hata: admin.hata,
-    basari: admin.basari,
-  });
-
-  const toplu = useTopluForm({
-    seciliFirma: admin.seciliFirma,
-    refreshKullanicilar: admin.refreshKullanicilar,
-    // K-A8: yükleme takım/bölge oluşturabilir — organizasyon görünümü tazelenir.
-    refreshTakimlar: admin.refreshTakimlar,
-    hata: admin.hata,
-    basari: admin.basari,
-  });
+function AdminPanelIcerigi() {
+  const aramaParametreleri = useSearchParams();
+  const { kullanici: oturumKullanicisi } = useAuth();
+  const firmaAdmin = oturumKullanicisi?.rol === FIRMA_ADMIN_ROLU;
+  const firmaId = firmaAdmin ? oturumKullanicisi?.firma_id ?? null : aramaParametreleri.get("firma");
+  const sayfaParametresi = aramaParametreleri.get("sayfa") ?? "firmabilgileri";
+  const seciliSekme: FirmaSayfasi = Object.hasOwn(FIRMA_SAYFALARI, sayfaParametresi) ? sayfaParametresi as FirmaSayfasi : "firmabilgileri";
+  const bolumParametresi = aramaParametreleri.get("bolum");
+  const globalBolum = bolumParametresi && ["bannerlar", "sistem", "hbstore", "eclubstore", "veri-sil", "uretim", "yeni-firma"].includes(bolumParametresi)
+    ? bolumParametresi as GlobalBolumId | "yeni-firma" : null;
+  const admin = useAdminPanel(firmaId);
+  const [menuAcik, setMenuAcik] = useState(false);
 
   const takimBolge = useTakimBolgeForm({
     seciliFirma: admin.seciliFirma,
@@ -79,197 +72,149 @@ export default function AdminPanel() {
     basari: admin.basari,
   });
 
-  const urunTeknik = useUrunTeknik({
-    seciliFirma: admin.seciliFirma,
-    takimlar: admin.takimlar,
-    hata: admin.hata,
-    basari: admin.basari,
-  });
-
-  const kullaniciListesi = useKullaniciListesi({
-    seciliFirma: admin.seciliFirma,
-    kullanicilar: admin.kullanicilar,
-    refreshKullanicilar: admin.refreshKullanicilar,
-    hata: admin.hata,
-    basari: admin.basari,
-  });
-
-  // Firma seçilince global görünüm kapanır, firma bağlamına dönülür.
-  const handleFirmaSecildi = (...args: Parameters<typeof admin.handleFirmaSecildi>) => {
-    setGlobalBolum(null);
-    return admin.handleFirmaSecildi(...args);
+  const konumuGuncelle = (sekme: FirmaSayfasi, firma: Firma | null, bolum: GlobalBolumId | "yeni-firma" | null = null) => {
+    const params = new URLSearchParams(aramaParametreleri.toString());
+    if (firma) params.set("firma", firma.firma_id); else params.delete("firma");
+    params.set("sayfa", sekme);
+    if (bolum) params.set("bolum", bolum); else params.delete("bolum");
+    window.history.pushState(null, "", `?${params.toString()}`);
+    document.getElementById("admin-icerik")?.scrollTo({ top:0 });
+    setMenuAcik(false);
   };
-
-  // Kullanıcılar sekmesine dönüşte alt-sekme varsayılana çekilir;
-  // Organizasyon ve Ürün & Teknik alt-sekmesiz doğrudan render edilir.
-  const handleSekmeSec = (sekme: ModulSekmeId) => {
-    setSeciliSekme(sekme);
-    if (sekme === "kullanicilar") admin.setGirisSecimi("tekil");
+  const handleFirmaSecildi = (firma: Firma) => {
+    konumuGuncelle("firmabilgileri", firma);
+  };
+  const handleSekmeSec = (sekme: FirmaSayfasi, firma?: Firma) => {
+    konumuGuncelle(sekme, firma ?? admin.seciliFirma);
+  };
+  const handleGlobalSec = (bolum: GlobalBolumId | "yeni-firma") => {
+    konumuGuncelle(seciliSekme, admin.seciliFirma, bolum);
   };
 
   if (admin.yukleniyor || !admin.kullanici) return null;
 
-  const f = admin.seciliFirma;
-  const kapaliModuller: ModulSekmeId[] = f
-    ? [
-        ...(f.cc_aktif ? [] : ["cclub" as const]),
-        ...(f.eclub_aktif ? [] : ["eclub" as const]),
-        ...(f.eczanem_aktif ? [] : ["eczanem" as const]),
-      ]
-    : [];
+  // URL'deki firma yüklenirken önceki firmanın ekranını göstermeyin.
+  const f = firmaId && admin.seciliFirma?.firma_id !== firmaId ? null : admin.seciliFirma;
+  const saltOkunur = !globalBolum && seciliSekme !== "firma-admin-yonetimi" && !firmaAdmin && f?.firma_admin_aktif === true;
+  const platformSecili = !!f && platformBannerFirmasi(f.firma_id);
+  const sayfa = yonetimSayfasiBilgisi(seciliSekme, platformSecili);
+  const globalBaslik = globalBolum ? ({ bannerlar:"Cogniti Bannerları", sistem:"Sistem Ayarları", hbstore:"FirmaStore Çek Yönetimi", eclubstore:"E-Club Çek Teslimatı", "veri-sil":"Yayın Toplu/Tekil Silme", uretim:"İçerik Üretimi", "yeni-firma":"Yeni Firma Kayıt" }[globalBolum]) : null;
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--tema-yerel-yonetim-kart-03)", fontFamily: "'Nunito', sans-serif" }}>
+    <FirmaYonetimYetkisi value={saltOkunur}><div className={styles.shell}>
       <AdminUstBar
         kullaniciAd={`${admin.kullanici.ad} ${admin.kullanici.soyad}`}
-        globalBolum={globalBolum}
-        setGlobalBolum={setGlobalBolum}
-        onCikis={admin.cikisYap}
-        onSilAc={() => setSilModalAcik(true)}
-      />
-
-      <TopluTekilSilModal
-        acik={silModalAcik}
-        onKapat={() => setSilModalAcik(false)}
-        hata={admin.hata}
-        basari={admin.basari}
-      />
-
-      <FirmaVeriSilModal
-        firma={veriSilFirma}
-        onKapat={() => setVeriSilFirma(null)}
-        hata={admin.hata}
-        basari={admin.basari}
+        onAnaSayfa={() => konumuGuncelle("kullanicilar", admin.seciliFirma)}
+        menuAcik={menuAcik}
+        onMenu={() => setMenuAcik(v => !v)}
+        onCikis={admin.cikisYap} firmaAdmin={firmaAdmin}
       />
 
       <HataMesajiContainer mesajlar={admin.mesajlar} />
 
-      <div style={{ display: "flex", minHeight: "calc(100vh - 54px)" }}>
-        <FirmaSidebar
-          firmalar={admin.firmalar}
-          seciliFirma={admin.seciliFirma}
-          yeniFirmaAdi={admin.yeniFirmaAdi}
-          setYeniFirmaAdi={admin.setYeniFirmaAdi}
-          handleFirmaEkle={admin.handleFirmaEkle}
-          handleFirmaSecildi={handleFirmaSecildi}
-          handleStoreToggle={admin.handleStoreToggle}
-          handleCcToggle={admin.handleCcToggle}
-          handleEclubToggle={admin.handleEclubToggle}
-          handleEclubStoreToggle={admin.handleEclubStoreToggle}
-          handleEczanemToggle={admin.handleEczanemToggle}
-          handleFirmaToggle={admin.handleFirmaToggle}
-          handleFirmaSil={admin.handleFirmaSil}
-          onVeriSil={setVeriSilFirma}
-          handleExport={admin.handleExport}
-          loading={admin.loading}
-        />
-
-        <div style={{ flex: 1, padding: "20px 24px", overflow: "auto" }}>
-          {globalBolum === "sistem" ? (
+      <div className={styles.body}>
+        <FirmaGezinme firmalar={admin.firmalar} seciliFirma={f} seciliSayfa={seciliSekme}
+          globalBolum={globalBolum} onFirmaSec={handleFirmaSecildi} onSayfaSec={handleSekmeSec}
+          onGlobalSec={handleGlobalSec} firmaAdmin={firmaAdmin} loading={admin.loading} acik={menuAcik} />
+        <main className={styles.main} id="admin-icerik"><div className={styles.content}>
+          <div className={styles.breadcrumb} aria-label="Sayfa konumu">
+            {(globalBolum || !f) && <><span>Cogniti Yönetimi</span><ChevronRight /></>}
+            {globalBolum ? <span>{globalBaslik}</span> : f ? <><span>{platformSecili ? "Cogniti Yönetimi" : f.firma_adi}</span>{sayfa.grup && <><ChevronRight /><span>{sayfa.grup}</span></>}{(seciliSekme === "eclub-bannerlar" || seciliSekme === "eclub-uyeler" || seciliSekme === "eclub-puan-tl") && <><ChevronRight /><span>E-Club</span></>}{(seciliSekme === "eczanem-cek-yonetimi" || seciliSekme === "eczanem-bannerlar") && <><ChevronRight /><span>Eczanem</span></>}<ChevronRight /><span>{sayfa.baslik}</span></> : <span>Firmalar</span>}
+          </div>
+          <div className={styles.heading}><div><h1>{globalBaslik ?? (f ? sayfa.baslik : "Firma Yönetimi")}</h1>
+            {!globalBolum && f && <p>{f.firma_adi} · {seciliSekme === "kullanicilar" ? "Kullanıcı kayıtları, roller ve erişim yetkileri" : seciliSekme === "firma-admin-yonetimi" ? "Yönetim erişimi ve sorumluluk" : sayfa.baslik}</p>}
+            {(globalBolum === "hbstore" || globalBolum === "eclubstore") && <p>Mevcut ortak ekran · Tüm firmalar</p>}
+          </div>{!globalBolum && f && <span className={styles.badge}>{platformSecili ? <Settings2 /> : <Building2 />}{f.firma_adi}</span>}</div>
+          {!globalBolum && saltOkunur && <p role="status" className={styles.notice}>Firma admini açık · Cogniti bu firma alanında yalnız görüntüleme yapabilir.</p>}
+          {globalBolum === "yeni-firma" ? (
+            <YeniFirmaFormu onKaydet={admin.handleFirmaEkle} />
+          ) : globalBolum === "bannerlar" ? (
+            <CognitiBannerlari firmalar={admin.firmalar} />
+          ) : globalBolum === "sistem" ? (
             <SistemAyarlari hata={admin.hata} basari={admin.basari} />
           ) : globalBolum === "hbstore" ? (
             <HbStorePaneli hata={admin.hata} basari={admin.basari} />
           ) : globalBolum === "eclubstore" ? (
             <EclubStorePaneli hata={admin.hata} basari={admin.basari} />
+          ) : globalBolum === "veri-sil" ? (
+            <TopluTekilSilPaneli hata={admin.hata} basari={admin.basari} />
           ) : globalBolum === "uretim" ? (
             <UretimAtamaPaneli hata={admin.hata} basari={admin.basari} />
           ) : !f ? (
             <p style={{ fontSize: "13px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)" }}>Soldan bir firma seçin.</p>
           ) : (
             <>
-              <h2 style={{ fontSize: "16px", fontWeight: 700, color: "var(--tema-yerel-yonetim-ana-metin-01)", marginBottom: "16px" }}>
-                {f.firma_adi}
-              </h2>
+              {seciliSekme === "firmabilgileri" && <FirmaBilgileri key={f.firma_id} firmaId={f.firma_id} onGuncellendi={admin.firmaBilgileriniYansit} />}
+              {seciliSekme === "kullanicilar" && (admin.firmaVerileriYukleniyor ? <p role="status" className={styles.empty}>{f.firma_adi} kullanıcıları yükleniyor…</p> : admin.firmaVeriHatasi ? <div role="alert" className={styles.notice}>Firma bilgileri yüklenemedi. Yeniden denemek için firmayı tekrar seçin.</div> : (
+                <KullaniciYonetimi key={f.firma_id} firma={f} kullanicilar={admin.kullanicilar} takimlar={admin.takimlar}
+                  refreshKullanicilar={admin.refreshKullanicilar} refreshTakimlar={admin.refreshTakimlar} hata={admin.hata} basari={admin.basari} />
+              ))}
+              {seciliSekme === "firma-admin-yonetimi" && !firmaAdmin && !platformSecili && <FirmaAdminYonetimi key={f.firma_id} firmaId={f.firma_id} onDegisti={aktif => admin.firmaBilgileriniYansit({ ...f, firma_admin_aktif: aktif })} />}
+              {(seciliSekme === "firmaayarlar" || seciliSekme === "firmaislemler") && <FirmaYonetimIslemleri key={`${f.firma_id}-${seciliSekme}`} firma={f} admin={admin} firmaAdmin={firmaAdmin} islemler={seciliSekme === "firmaislemler"} />}
 
-              <ModulSekmeBari
-                seciliSekme={seciliSekme}
-                setSeciliSekme={handleSekmeSec}
-                kapaliModuller={kapaliModuller}
-              />
+              {(seciliSekme === "token" || seciliSekme === "abonelik-paketleri") && <TokenYonetimi key={`${f.firma_id}-${seciliSekme}`} firmaId={f.firma_id} gorunum={seciliSekme === "abonelik-paketleri" ? "paketler" : "kullanim"} />}
 
-              {seciliSekme === "kullanicilar" && (
-                <>
-                  <SekmeBari
-                    girisSecimi={admin.girisSecimi}
-                    setGirisSecimi={admin.setGirisSecimi}
-                  />
-                  {admin.girisSecimi === "tekil" && (
-                    <TekilGirisFormu takimlar={admin.takimlar} {...tekil} />
-                  )}
-                  {admin.girisSecimi === "toplu" && <TopluGirisFormu {...toplu} />}
-                  <KullaniciListesi {...kullaniciListesi} takimlar={admin.takimlar} />
-                </>
-              )}
-
-              {seciliSekme === "token" && <TokenYonetimi key={f.firma_id} firmaId={f.firma_id} />}
-
-              {seciliSekme === "organizasyon" && <TakimBolgeFormu {...takimBolge} />}
+              {seciliSekme === "organizasyon" && <TakimBolgeFormu {...takimBolge} firmaAdi={f.firma_adi} takimlar={admin.takimlar} yukleniyor={admin.firmaVerileriYukleniyor} veriHatasi={admin.firmaVeriHatasi} />}
 
               {seciliSekme === "urunteknik" && (
-                <UrunTeknikYonetimi takimlar={admin.takimlar} {...urunTeknik} />
+                <UrunTeknikYonetimi key={f.firma_id} firma={f} takimlar={admin.takimlar} organizasyonYukleniyor={admin.firmaVerileriYukleniyor} organizasyonHatasi={admin.firmaVeriHatasi} hata={admin.hata} basari={admin.basari} />
               )}
+
+              {seciliSekme === "puan-yonetimi" && <PuanYonetimi key={f.firma_id} firmaId={f.firma_id} />}
 
               {seciliSekme === "logokimlik" && (
                 <LogoKimlikYonetimi
+                  key={f.firma_id}
                   firma={f}
                   onGuncelle={admin.handleLogoGuncelle}
                 />
               )}
 
-              {seciliSekme === "tclub" && (
-                <ModulDurumKarti
-                  baslik="T-Club"
-                  acik={null}
-                  aciklama="Temsilcilerin sürekli öğrenme modülü — üretim hattı, yayınlar, izleme ve puan akışları. Ana modüldür; firma bazında kapatılmaz."
-                />
-              )}
+              {seciliSekme === "tclub" && <TClubYonetimi />}
 
-              {seciliSekme === "cclub" && (
-                <ModulDurumKarti
-                  baslik="C-Club (Challenge Club)"
-                  acik={f.cc_aktif}
-                  onToggle={() => admin.handleCcToggle(f)}
-                  aciklama="Değişim liderlerinin modülü — challenge akışları ve CC ligi. Kapalıyken bu firmanın hiçbir kullanıcısı C-Club'a erişemez."
-                />
-              )}
+              {seciliSekme === "firmastore" && <div key={f.firma_id} className={styles.stack}>
+                <FirmaStoreErisimi acik={f.hbstore_aktif} onToggle={() => admin.handleStoreToggle(f)} />
+                <FirmaStoreCekTanimlari firmaId={f.firma_id} />
+              </div>}
 
-              {seciliSekme === "eclub" && (
-                <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-                  <ModulDurumKarti
-                    baslik="E-Club"
-                    acik={f.eclub_aktif}
-                    onToggle={() => admin.handleEclubToggle(f)}
-                    aciklama="Eczanelere özel tanıtım modülü — eczane onayları, kayıtlı eczane/kişi yönetimi ve öneri akışları."
-                    m4NotuGoster={false}
-                  />
-                  <EclubBannerYonetimi key={f.firma_id} firmaId={f.firma_id} firmaAdi={f.firma_adi} />
-                  {!platformBannerFirmasi(f.firma_id) && <>
-                    <EclubBannerYonetimi key={`${f.firma_id}-uyeler`} firmaId={f.firma_id} firmaAdi={f.firma_adi} alan="uyeler" />
-                    <EclubBannerYonetimi key={`${f.firma_id}-uye-yayinlari`} firmaId={f.firma_id} firmaAdi={f.firma_adi} alan="uye-yayinlari" />
-                    <EclubBannerYonetimi key={`${f.firma_id}-indirim-onayi`} firmaId={f.firma_id} firmaAdi={f.firma_adi} alan="indirim-onayi" />
-                  </>}
-                  <EclubYonetimPaneli hata={admin.hata} basari={admin.basari} />
+              {seciliSekme === "eczanem-cek-yonetimi" && <EczanemFirmaCekTanimlari key={f.firma_id} firmaId={f.firma_id} />}
+
+              {seciliSekme === "eclub-puan-tl" && <EclubFirmaCekTanimlari key={f.firma_id} firmaId={f.firma_id} />}
+
+              {seciliSekme === "cclub" && <CClubYonetimi key={f.firma_id} acik={f.cc_aktif} onToggle={() => admin.handleCcToggle(f)} />}
+
+              {(seciliSekme === "eclub" || seciliSekme === "eclub-uyeler") && (
+                <div className={styles.stack}>
+                  <EclubErisim key={`${f.firma_id}-erisim`} acik={f.eclub_aktif} onToggle={() => admin.handleEclubToggle(f)} />
+                  <EclubYonetimPaneli key={f.firma_id} firmaId={f.firma_id} firmaAdi={f.firma_adi} hata={admin.hata} basari={admin.basari} />
                 </div>
               )}
 
-              {seciliSekme === "eczanem" && (
-                <div className="flex min-w-0 flex-col gap-5">
-                <ModulDurumKarti
-                  baslik="Eczanem"
-                  acik={f.eczanem_aktif}
-                  onToggle={() => admin.handleEczanemToggle(f)}
-                  toggleDisabled={!f.eclub_aktif && !f.eczanem_aktif}
-                  m4NotuGoster={false}
-                  aciklama="Eczanenin üyelerinin bilgilenme modülü — davetler, gönderimler, üyeler, siparişler ve tarifeler. Yalnız E-Club açıkken açılabilir. E-Club kapatılınca Eczanem de kapanır; E-Club yeniden açıldığında Eczanem ayrıca açılmalıdır."
-                />
+              {seciliSekme === "eclub-bannerlar" && (
+                <div className={styles.stack}>
+                  <EclubBannerYonetimi key={f.firma_id} firmaId={f.firma_id} firmaAdi={f.firma_adi} modern konumGoster />
+                  {!platformBannerFirmasi(f.firma_id) && <>
+                    <EclubBannerYonetimi key={`${f.firma_id}-uyeler`} firmaId={f.firma_id} firmaAdi={f.firma_adi} modern konumGoster alan="uyeler" />
+                    <EclubBannerYonetimi key={`${f.firma_id}-uye-yayinlari`} firmaId={f.firma_id} firmaAdi={f.firma_adi} modern konumGoster alan="uye-yayinlari" />
+                    <EclubBannerYonetimi key={`${f.firma_id}-indirim-onayi`} firmaId={f.firma_id} firmaAdi={f.firma_adi} modern konumGoster alan="indirim-onayi" />
+                  </>}
+                </div>
+              )}
+
+              {seciliSekme === "eczanem-bannerlar" && (
                 <EczanemBannerYonetimi key={`${f.firma_id}-uye-bannerlari`} firmaId={f.firma_id} firmaAdi={f.firma_adi} />
-                <EczanemUyeYonetimi key={f.firma_id} firmaId={f.firma_id} firmaAdi={f.firma_adi} />
+              )}
+
+              {seciliSekme === "eczanem" && (
+                <div className={styles.stack}>
+                  <EczanemErisim key={`${f.firma_id}-erisim`} acik={f.eczanem_aktif} eclubAcik={f.eclub_aktif} onToggle={() => admin.handleEczanemToggle(f)} />
+                  <EczanemUyeYonetimi key={f.firma_id} firmaId={f.firma_id} firmaAdi={f.firma_adi} />
                 </div>
               )}
             </>
           )}
-        </div>
+        </div></main>
       </div>
-    </div>
+    </div></FirmaYonetimYetkisi>
   );
 }
