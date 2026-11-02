@@ -2,7 +2,7 @@
 //
 // FirmaStore sipariş endpoint'i.
 //
-// POST   → Yeni sipariş oluştur. Body: { urun_id, adres_id, adet }
+// POST   → Yeni sipariş oluştur. Body: { urun_id, adet, beklenen_baz_puan, beklenen_birim_tl }
 // PATCH  → Mevcut sipariş üzerinde işlem:
 //          - { siparis_id, action: 'iptal', sebep? } — kullanıcı kendi siparişini iptal eder
 //          - { siparis_id, action: 'teslim_aldim' } — kullanıcı teslim aldı onayı
@@ -25,11 +25,13 @@ import {
   validasyonHatasi,
   isKuraluHatasi,
 } from "@/lib/utils/hataIsle";
+import { bazPuanGecerliMi, minimumSiparisTlGecerliMi } from "@/lib/tclub/store/katalog";
+import { cokluTalebiDogrula } from "@/lib/tclub/store/cokluTalep";
+import { uuidGecerliMi } from "@/lib/uretim/rpcTemel";
 import { STORE_ALABILEN_ROLLER } from "@/lib/utils/roller";
 import {
   siparisOlustur,
   siparisIptal,
-  teslimAldim,
 } from "@/lib/tclub/store/siparis";
 import { rolCozucu } from "@/lib/utils/rolCozucu";
 import {
@@ -57,40 +59,12 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const durum = searchParams.get("durum");
 
-    let query = adminSupabase
-      .from("store_siparisler")
-      .select(`
-        siparis_id,
-        kullanici_id,
-        urun_id,
-        adres_id,
-        adres_snapshot,
-        adet,
-        puan_birim_fiyat,
-        toplam_puan,
-        durum,
-        kargo_firmasi,
-        kargo_takip_no,
-        iptal_sebebi,
-        created_at,
-        guncellenme_at,
-        teslim_alma_at,
-        store_urunler ( ad, gorsel_url )
-      `)
-      .eq("kullanici_id", user.id)
-      .order("created_at", { ascending: false });
-
-    if (durum) {
-      query = query.eq("durum", durum);
-    }
-
-    const { data, error } = await query;
-
+    const { data, error } = await adminSupabase.rpc("store_kullanici_siparis_listesi", { p_kullanici_id: user.id, p_durum: durum });
     if (error) {
-      return hataYaniti("Siparişler çekilemedi.", "store_siparisler SELECT", error);
+      if (["PGRST202", "42883"].includes(error.code)) return NextResponse.json({ hata: "FirmaStore 12 saatlik bekleme SQL kurulumu bekleniyor." }, { status: 503 });
+      return hataYaniti("Siparişler alınamadı.", "FirmaStore kullanıcı talepleri", error);
     }
-
-    return NextResponse.json({ siparisler: data ?? [] }, { status: 200 });
+    return NextResponse.json(data, { headers: { "Cache-Control": "no-store" } });
   } catch (err) {
     return sunucuHatasi(err, "GET /store/api/siparis");
   }
@@ -119,27 +93,45 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const body = await request.json();
-    const { urun_id, adres_id, adet } = body;
+    let body;
+    try { body = await request.json(); } catch { return validasyonHatasi("Geçerli bir talep gönderin.", ["body"]); }
+    if (!body || typeof body !== "object" || Array.isArray(body)) return validasyonHatasi("Geçerli bir talep gönderin.", ["body"]);
+    if ("cekler" in body) {
+      const kontrol = cokluTalebiDogrula(body.cekler, body.talep_anahtari);
+      if (!kontrol.gecerli) return validasyonHatasi(kontrol.hata, ["cekler"]);
+      const { data, error } = await adminSupabase.rpc("store_coklu_cek_talep_olustur", {
+        p_kullanici_id: user.id, p_cekler: kontrol.cekler, p_talep_anahtari: kontrol.anahtar,
+      });
+      if (error) {
+        if (["PGRST202", "42883"].includes(error.code)) return NextResponse.json({ hata: "Çoklu çek talebi SQL kurulumu bekleniyor." }, { status: 503 });
+        return hataYaniti("Çek talepleri kaydedilemedi.", "FirmaStore çoklu talep", error);
+      }
+      const sonuc = Array.isArray(data) ? data[0] : null;
+      if (!sonuc?.ok) return isKuraluHatasi(sonuc?.hata ?? "Çek talepleri kaydedilemedi.");
+      return NextResponse.json({ mesaj: "Çek talepleri alındı.", siparis_ids: sonuc.siparis_ids }, { status: 201 });
+    }
+    const { urun_id, adet, beklenen_baz_puan, beklenen_birim_tl } = body;
 
     // Validasyon
-    if (!urun_id || typeof urun_id !== "string") {
+    if (!uuidGecerliMi(urun_id)) {
       return validasyonHatasi("urun_id zorunludur.", ["urun_id"]);
     }
-    if (!adres_id || typeof adres_id !== "string") {
-      return validasyonHatasi("adres_id zorunludur.", ["adres_id"]);
-    }
     const adetSayi = Number(adet);
-    if (!Number.isInteger(adetSayi) || adetSayi <= 0) {
+    if (!Number.isInteger(adetSayi) || adetSayi <= 0 || adetSayi > 2147483647) {
       return validasyonHatasi("adet pozitif tam sayı olmalı.", ["adet"]);
     }
 
-    // RPC çağrısı
+    if (!bazPuanGecerliMi(beklenen_baz_puan) || !minimumSiparisTlGecerliMi(beklenen_birim_tl)) {
+      return validasyonHatasi("Onaylanan çekin puan ve TL karşılığı geçersiz.", ["beklenen_baz_puan", "beklenen_birim_tl"]);
+    }
+
+    // Güncel firma fiyatı RPC içinde doğrulanır; istemcinin gönderdiği tutar fiyat belirleyemez.
     const sonuc = await siparisOlustur(adminSupabase, {
       kullanici_id: user.id,
       urun_id,
-      adres_id,
       adet: adetSayi,
+      beklenen_baz_puan,
+      beklenen_birim_tl,
     });
 
     if (!sonuc.ok) {
@@ -196,18 +188,8 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ mesaj: "Sipariş iptal edildi." }, { status: 200 });
     }
 
-    if (action === "teslim_aldim") {
-      const sonuc = await teslimAldim(adminSupabase, siparis_id, user.id);
-
-      if (!sonuc.ok) {
-        return isKuraluHatasi(sonuc.error ?? "Teslim onayı verilemedi.");
-      }
-
-      return NextResponse.json({ mesaj: "Sipariş teslim alındı olarak işaretlendi." }, { status: 200 });
-    }
-
     return validasyonHatasi(
-      `Geçersiz action: ${action} (geçerli: 'iptal', 'teslim_aldim')`,
+      `Geçersiz action: ${action} (geçerli: 'iptal')`,
       ["action"]
     );
   } catch (err) {

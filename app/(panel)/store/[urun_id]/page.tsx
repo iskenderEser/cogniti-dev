@@ -6,14 +6,13 @@
 "use client";
 
 import { panelBaslangici } from "@/lib/panel/baslangic";
-import { SadeListeSecimi } from "@/components/kontrol/SadeKontroller";
 
 import { useAuth } from "@/app/providers/AuthProvider";
 import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
 import { useHbstoreTakvim } from "@/hooks/useHbstoreTakvim";
 import { hbstoreBakiyesiDegistiBildir } from "@/lib/tclub/store/olay";
 import { STOK_AZ_ESIK } from "@/lib/tclub/store/sabitler";
-import type { Adres, Urun } from "@/lib/tclub/store/tipler";
+import type { FirmaStoreCeki } from "@/lib/tclub/store/tipler";
 import { STORE_ALABILEN_ROLLER } from "@/lib/utils/roller";
 import {
     ChevronLeft,
@@ -27,9 +26,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-interface UrunDetay extends Urun {
-  kategori_adi: string | null;
-}
+type UrunDetay = FirmaStoreCeki;
 
 export default function UrunDetayPage() {
   const router = useRouter();
@@ -40,14 +37,12 @@ export default function UrunDetayPage() {
   const [yetkiKontrolEdildi, setYetkiKontrolEdildi] = useState(false);
 
   const [urun, setUrun] = useState<UrunDetay | null>(null);
-  const [adresler, setAdresler] = useState<Adres[]>([]);
   const [bakiye, setBakiye] = useState<number>(0);
   const [yukleniyor, setYukleniyor] = useState(true);
   const { takvim, acik: storeAcik } = useHbstoreTakvim({ aktif: yetkiKontrolEdildi });
 
   // Satın alma state
   const [adet, setAdet] = useState<number>(1);
-  const [seciliAdresId, setSeciliAdresId] = useState<string>("");
   const [onayModal, setOnayModal] = useState(false);
   const [siparisVeriliyor, setSiparisVeriliyor] = useState(false);
 
@@ -73,9 +68,8 @@ export default function UrunDetayPage() {
   const verileriYukle = async () => {
     setYukleniyor(true);
     try {
-      const [urunRes, adresRes, bakRes] = await Promise.all([
+      const [urunRes, bakRes] = await Promise.all([
         fetch(`/store/api?tip=urun&urun_id=${urun_id}`),
-        fetch("/store/api/adres"),
         fetch("/store/api?tip=bakiye"),
       ]);
 
@@ -85,18 +79,6 @@ export default function UrunDetayPage() {
       } else {
         const d = await urunRes.json();
         hata(d.hata ?? "Ürün yüklenemedi.", d.adim, d.detay);
-      }
-
-      if (adresRes.ok) {
-        const d = await adresRes.json();
-        const adresListesi = d.adresler ?? [];
-        setAdresler(adresListesi);
-        const varsayilan = adresListesi.find((a: Adres) => a.varsayilan_mi);
-        if (varsayilan) {
-          setSeciliAdresId(varsayilan.adres_id);
-        } else if (adresListesi.length > 0) {
-          setSeciliAdresId(adresListesi[0].adres_id);
-        }
       }
 
       if (bakRes.ok) {
@@ -115,8 +97,7 @@ export default function UrunDetayPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [yetkiKontrolEdildi, urun_id]);
 
-  const toplamPuan = (urun?.puan_fiyati ?? 0) * adet;
-  const seciliAdres = adresler.find((a) => a.adres_id === seciliAdresId);
+  const toplamPuan = (urun?.baz_puan ?? 0) * adet;
 
   const handleSatinAl = () => {
     if (!urun) return;
@@ -125,14 +106,6 @@ export default function UrunDetayPage() {
         `FirmaStore şu an siparişe kapalıdır. Siparişler yalnızca FirmaStore Günleri'nde (${takvim?.sonrakiDonemEtiketi ?? "FirmaStore Günleri"}) verilebilir.`,
         "takvim"
       );
-      return;
-    }
-    if (adresler.length === 0) {
-      hata("Sipariş vermeden önce teslimat adresi eklemelisin.", "adres");
-      return;
-    }
-    if (!seciliAdresId) {
-      hata("Lütfen bir teslimat adresi seçin.", "adres");
       return;
     }
     if (toplamPuan > bakiye) {
@@ -147,7 +120,7 @@ export default function UrunDetayPage() {
   };
 
   const handleOnayla = async () => {
-    if (!urun || !seciliAdresId) return;
+    if (!urun) return;
     setSiparisVeriliyor(true);
 
     try {
@@ -157,7 +130,8 @@ export default function UrunDetayPage() {
         body: JSON.stringify({
           urun_id: urun.urun_id,
           adet,
-          adres_id: seciliAdresId,
+          beklenen_baz_puan: urun.baz_puan,
+          beklenen_birim_tl: urun.minimum_siparis_tl,
         }),
       });
 
@@ -284,19 +258,15 @@ export default function UrunDetayPage() {
             <div className="flex flex-col gap-4 md:col-span-6">
               {/* Ürün Tanım Kartı */}
               <div className="flex flex-col gap-3 rounded-2xl border border-[var(--tema-yerel-magaza-cizgi-01)] bg-[var(--tema-yerel-magaza-kart-01)] p-5 shadow-[0_6px_18px_var(--tema-yerel-magaza-golge-01)]">
-                {urun.kategori_adi && (
-                  <span className="w-fit rounded-lg bg-[var(--tema-yerel-magaza-secim-zemin-01)] px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider text-[var(--tema-yerel-magaza-eylem-metin-01)]">
-                    {urun.kategori_adi}
-                  </span>
-                )}
                 <h1 className="text-xl font-black text-[var(--tema-yerel-magaza-ana-metin-02)] md:text-2xl">
                   {urun.ad}
                 </h1>
                 <div className="flex items-baseline gap-2">
                   <span className="text-2xl font-black text-[var(--tema-yerel-magaza-islevsel-metin-03)]">
-                    {urun.puan_fiyati.toLocaleString("tr-TR")}
+                    {urun.baz_puan.toLocaleString("tr-TR")}
                   </span>
-                  <span className="text-sm font-extrabold text-[var(--tema-yerel-magaza-islevsel-metin-03)]">HapPuan</span>
+                  <span className="text-sm font-extrabold text-[var(--tema-yerel-magaza-islevsel-metin-03)]">Puan</span>
+                  <span className="text-sm font-bold text-[var(--tema-yerel-magaza-yardimci-metin-06)]">= {urun.minimum_siparis_tl.toLocaleString("tr-TR", { maximumFractionDigits: 2 })} TL</span>
                 </div>
 
                 {urun.aciklama && (
@@ -350,38 +320,6 @@ export default function UrunDetayPage() {
                     </div>
                   </div>
 
-                  {/* Adres Seçici */}
-                  <div>
-                    <div className="mb-1.5 flex items-center justify-between">
-                      <label className="block text-xs font-extrabold uppercase tracking-wider text-[var(--tema-yerel-magaza-yardimci-metin-01)]">
-                        Teslimat Adresi
-                      </label>
-                      <Link
-                        href="/store/adreslerim"
-                        className="text-xs font-bold text-[var(--tema-yerel-magaza-eylem-metin-01)] hover:underline"
-                      >
-                        Adresleri Yönet
-                      </Link>
-                    </div>
-
-                    {adresler.length === 0 ? (
-                      <div className="rounded-xl border border-[var(--tema-yerel-magaza-islevsel-cizgi-01)] bg-[var(--tema-yerel-magaza-sayfa-zemini-03)] p-3 text-xs font-semibold text-[var(--tema-yerel-magaza-islevsel-metin-01)]">
-                        Kayıtlı teslimat adresiniz bulunmuyor.{" "}
-                        <Link href="/store/adreslerim" className="font-extrabold underline">
-                          Adres ekleyin
-                        </Link>
-                      </div>
-                    ) : (
-                      <SadeListeSecimi value={seciliAdresId} onChange={(e) => setSeciliAdresId(e.target.value)} aria-label="Teslimat adresi" className="w-full">
-                        {adresler.map((a) => (
-                          <option key={a.adres_id} value={a.adres_id}>
-                            {a.baslik} — {a.ilce} / {a.il} {a.varsayilan_mi ? "★ (Varsayılan)" : ""}
-                          </option>
-                        ))}
-                      </SadeListeSecimi>
-                    )}
-                  </div>
-
                   {/* Özet Şerit */}
                   <div className="flex flex-col gap-2 rounded-xl bg-[var(--tema-yerel-magaza-sayfa-zemini-02)] p-3.5 text-xs">
                     <div className="flex items-center justify-between text-[var(--tema-yerel-magaza-yardimci-metin-08)]">
@@ -416,14 +354,12 @@ export default function UrunDetayPage() {
                   <button
                     type="button"
                     onClick={handleSatinAl}
-                    disabled={!storeAcik || adresler.length === 0 || !seciliAdresId || toplamPuan > bakiye}
+                    disabled={!storeAcik || toplamPuan > bakiye}
                     className={`flex w-full items-center justify-center gap-2 rounded-xl py-3 text-xs font-extrabold transition-colors ${
                       !storeAcik
                         ? "cursor-not-allowed border border-[var(--tema-yerel-magaza-cizgi-05)] bg-[var(--tema-yerel-magaza-sayfa-zemini-04)] text-[var(--tema-yerel-magaza-yardimci-metin-09)]"
                         : toplamPuan > bakiye
                         ? "cursor-not-allowed bg-[var(--tema-yerel-magaza-islevsel-zemin-05)] text-[var(--tema-yerel-magaza-islevsel-metin-04)]"
-                        : adresler.length === 0
-                        ? "cursor-not-allowed bg-[var(--tema-yerel-magaza-secim-zemin-03)] text-[var(--tema-yerel-magaza-yardimci-metin-09)]"
                         : "bg-[var(--tema-yerel-magaza-eylem-zemin-01)] text-[var(--tema-yerel-magaza-ters-metin-01)] shadow-sm hover:bg-[var(--tema-yerel-magaza-eylem-zemin-02)]"
                     }`}
                   >
@@ -432,8 +368,6 @@ export default function UrunDetayPage() {
                       ? `Siparişe Kapalı (Açılış: ${takvim?.sonrakiDonemEtiketi ?? "FirmaStore Günleri"})`
                       : toplamPuan > bakiye
                       ? "Yetersiz Bakiye"
-                      : adresler.length === 0
-                      ? "Teslimat Adresi Gerekli"
                       : "Siparişi Onayla & Satın Al"}
                   </button>
                 </div>
@@ -444,7 +378,7 @@ export default function UrunDetayPage() {
       </main>
 
       {/* Onay Modalı */}
-      {onayModal && urun && seciliAdres && (
+      {onayModal && urun && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--tema-yerel-magaza-ortu-01)]/50 p-4">
           <div className="flex w-full max-w-md flex-col gap-4 rounded-2xl border border-[var(--tema-yerel-magaza-cizgi-01)] bg-[var(--tema-yerel-magaza-kart-01)] p-6 shadow-2xl">
             <div>
@@ -457,19 +391,9 @@ export default function UrunDetayPage() {
             </div>
 
             <p className="text-xs font-semibold leading-relaxed text-[var(--tema-yerel-magaza-yardimci-metin-03)]">
-              <strong className="text-[var(--tema-yerel-magaza-ana-metin-02)]">{adet} adet {urun.ad}</strong> için toplam{" "}
+              <strong className="text-[var(--tema-yerel-magaza-ana-metin-02)]">{adet} adet {urun.ad}</strong> ({(urun.minimum_siparis_tl * adet).toLocaleString("tr-TR", { maximumFractionDigits: 2 })} TL) için toplam{" "}
               <strong className="text-[var(--tema-yerel-magaza-islevsel-metin-03)]">{toplamPuan.toLocaleString("tr-TR")} HapPuan</strong> bakiyenizden düşülecektir.
             </p>
-
-            <div className="rounded-xl border border-[var(--tema-yerel-magaza-cizgi-06)] bg-[var(--tema-yerel-magaza-sayfa-zemini-02)] p-3.5 text-xs text-[var(--tema-yerel-magaza-yardimci-metin-10)]">
-              <span className="block text-[10px] font-extrabold uppercase tracking-wider text-[var(--tema-yerel-magaza-yardimci-metin-07)]">
-                Teslimat Adresi
-              </span>
-              <strong className="mt-1 block text-sm text-[var(--tema-yerel-magaza-ana-metin-05)]">{seciliAdres.alici_adi}</strong>
-              <span className="block text-[11px] font-medium text-[var(--tema-yerel-magaza-yardimci-metin-11)]">{seciliAdres.telefon}</span>
-              <p className="mt-1 text-xs text-[var(--tema-yerel-magaza-ana-metin-03)]">{seciliAdres.adres_detay}</p>
-              <span className="mt-0.5 block text-xs font-bold text-[var(--tema-yerel-magaza-ana-metin-01)]">{seciliAdres.ilce} / {seciliAdres.il}</span>
-            </div>
 
             <p className="text-[11px] font-semibold text-[var(--tema-yerel-magaza-yardimci-metin-07)]">
               ℹ️ Siparişinizi 12 saat içinde iptal edebilirsiniz. Kargo sürecine geçtikten sonra iptal işlemi yapılamaz.

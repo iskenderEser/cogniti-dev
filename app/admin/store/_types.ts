@@ -5,14 +5,14 @@
 
 import type { Urun, Siparis } from "@/lib/tclub/store/tipler";
 
-// ─── ÜRÜN (kategori adı join'li) ─────────────────────────────────────────────
+// ─── ÜRÜN ─────────────────────────────────────────────
 
 /**
  * Admin ürün tablosunda gösterilen ürün.
- * Mevcut Urun tipine kategori adını ekler (store_kategoriler join'inden gelir).
+ * Merkezî çek bilgilerini içerir.
  */
 export interface UrunGosterim extends Urun {
-  store_kategoriler?: { ad: string } | null;
+  minimum_siparis_tl?: number | null;
 }
 
 // ─── SİPARİŞ (ürün ve kullanıcı join'li) ─────────────────────────────────────
@@ -36,10 +36,3 @@ export interface SiparisGosterim extends Siparis {
   } | null;
 }
 
-// ─── SEKME ENUM'U ────────────────────────────────────────────────────────────
-
-/**
- * Admin panelinde aktif olan sekme.
- * page.tsx ve useStoreAdminPanel hook'u arasında paylaşılır.
- */
-export type Sekme = "urunler" | "kategoriler" | "siparisler";

@@ -1,223 +1,69 @@
-// app/store/api/route.ts
-//
-// FirmaStore vitrin endpoint'i.
-//
-// GET ?tip=urunler&kategori_id=X  → Aktif ürünler (opsiyonel kategori filtresi)
-// GET ?tip=kategoriler            → Aktif kategoriler
-// GET ?tip=bakiye                 → Kullanıcının harcanabilir puanı
-// GET ?tip=urun&urun_id=X         → Tek ürün detayı (ürün detay sayfası için)
-//
-// Yetki: STORE_ALABILEN_ROLLER (utt, kd_utt, bm)
-// Vitrin sadece alıcılar içindir; diğer roller /store/ekip-magaza-siparisleri sayfasına yönlenir.
-// Firma modül erişimi proxy.ts bekçisine ek olarak burada da doğrulanır; ürün
-// listesi, kategori listesi ve detay firma bazlı ürün istisnasına uyar.
-
+// UTT/KD_UTT/BM vitrini: firma seçimi ve firmaya özel Baz Puan.
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
-import {
-  hataYaniti,
-  sunucuHatasi,
-  yetkiHatasi,
-  rolHatasi,
-  validasyonHatasi,
-} from "@/lib/utils/hataIsle";
+import { hataYaniti, sunucuHatasi, yetkiHatasi, rolHatasi, validasyonHatasi } from "@/lib/utils/hataIsle";
 import { STORE_ALABILEN_ROLLER } from "@/lib/utils/roller";
 import { harcamaBakiyesi } from "@/lib/tclub/store/bakiye";
-import {
-  firmaKapaliUrunIdleri,
-  hbstoreFirmaBaglami,
-} from "@/lib/tclub/store/firmaUrun";
+import { hbstoreFirmaBaglami } from "@/lib/tclub/store/firmaUrun";
+import { firmaMagazaCekleri } from "@/lib/tclub/store/firmaCekleri";
 import { rolCozucu } from "@/lib/utils/rolCozucu";
 import { hbstoreTakvimDurumu } from "@/lib/tclub/store/takvim";
+import { uuidGecerliMi } from "@/lib/uretim/rpcTemel";
+
+const CEVAP_BASLIKLARI = { "Cache-Control": "no-store" };
 
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient();
-
-    // 1. Auth
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) return yetkiHatasi();
-
-    // 2. Rol kontrolü
-    const adminSupabase = createAdminClient();
-    const rol = await rolCozucu(adminSupabase, user.id);
-    if (!STORE_ALABILEN_ROLLER.includes(rol)) {
-      return rolHatasi("FirmaStore'a erişim yetkiniz yok.");
-    }
-
-    const firmaBaglami = await hbstoreFirmaBaglami(adminSupabase, user.id);
-    if (firmaBaglami.hata) {
-      return hataYaniti(
-        "Firma bilgisi alınamadı.",
-        "FirmaStore firma bağlamı",
-        firmaBaglami.hata,
-      );
-    }
-    if (!firmaBaglami.firmaId || !firmaBaglami.hbstoreAktif) {
-      return rolHatasi("Firmanız için FirmaStore kullanıma açık değil.");
-    }
-
-    const { searchParams } = new URL(request.url);
-    const tip = searchParams.get("tip") || "urunler";
-
-    // ─── tip=takvim ────────────────────────────────────────────────────────
-    if (tip === "takvim") {
-      const takvim = hbstoreTakvimDurumu();
-      return NextResponse.json({ takvim }, { status: 200 });
-    }
-
-    // ─── tip=urunler ───────────────────────────────────────────────────────
-    if (tip === "urunler") {
-      const kategori_id = searchParams.get("kategori_id");
-
-      let query = adminSupabase
-        .from("store_urunler")
-        .select("urun_id, kategori_id, ad, aciklama, gorsel_url, puan_fiyati, stok, aktif_mi, created_at")
-        .eq("aktif_mi", true)
-        .order("created_at", { ascending: false });
-
-      if (kategori_id) {
-        query = query.eq("kategori_id", kategori_id);
-      }
-
-      const { data, error } = await query;
-
-      if (error) {
-        return hataYaniti("Ürünler çekilemedi.", "store_urunler SELECT", error);
-      }
-
-      const urunler = data ?? [];
-      const { kapaliUrunIdleri, hata: ayarHatasi } = await firmaKapaliUrunIdleri(
-        adminSupabase,
-        firmaBaglami.firmaId,
-        urunler.map((urun) => urun.urun_id),
-      );
-      if (ayarHatasi) {
-        return hataYaniti(
-          "Firma ürün ayarları alınamadı.",
-          "store_urun_firma_ayarlari SELECT",
-          ayarHatasi,
-        );
-      }
-
-      const takvim = hbstoreTakvimDurumu();
-
-      return NextResponse.json(
-        {
-          urunler: urunler.filter((urun) => !kapaliUrunIdleri.has(urun.urun_id)),
-          takvim,
-        },
-        { status: 200 },
-      );
-    }
-
-    // ─── tip=kategoriler ───────────────────────────────────────────────────
-    if (tip === "kategoriler") {
-      const { data: kategoriler, error } = await adminSupabase
-        .from("store_kategoriler")
-        .select("kategori_id, ad, sira, aktif_mi")
-        .eq("aktif_mi", true)
-        .order("sira", { ascending: true });
-
-      if (error) {
-        return hataYaniti("Kategoriler çekilemedi.", "store_kategoriler SELECT", error);
-      }
-
-      const { data: aktifUrunler, error: urunError } = await adminSupabase
-        .from("store_urunler")
-        .select("urun_id, kategori_id")
-        .eq("aktif_mi", true);
-
-      if (urunError) {
-        return hataYaniti("Kategori ürünleri çekilemedi.", "store_urunler SELECT — kategori görünürlüğü", urunError);
-      }
-
-      const { kapaliUrunIdleri, hata: ayarHatasi } = await firmaKapaliUrunIdleri(
-        adminSupabase,
-        firmaBaglami.firmaId,
-        (aktifUrunler ?? []).map((urun) => urun.urun_id),
-      );
-      if (ayarHatasi) {
-        return hataYaniti(
-          "Firma ürün ayarları alınamadı.",
-          "store_urun_firma_ayarlari SELECT — kategori görünürlüğü",
-          ayarHatasi,
-        );
-      }
-
-      const gorunenKategoriIdleri = new Set(
-        (aktifUrunler ?? [])
-          .filter((urun) => !kapaliUrunIdleri.has(urun.urun_id))
-          .map((urun) => urun.kategori_id),
-      );
-
-      return NextResponse.json(
-        { kategoriler: (kategoriler ?? []).filter((kategori) => gorunenKategoriIdleri.has(kategori.kategori_id)) },
-        { status: 200 },
-      );
-    }
-
-    // ─── tip=bakiye ────────────────────────────────────────────────────────
+    const db = createAdminClient();
+    const rol = await rolCozucu(db, user.id);
+    if (!STORE_ALABILEN_ROLLER.includes(rol)) return rolHatasi("FirmaStore'a erişim yetkiniz yok.");
+    const firma = await hbstoreFirmaBaglami(db, user.id);
+    if (firma.hata) return hataYaniti("Firma bilgisi alınamadı.", "FirmaStore firma bağlamı", firma.hata);
+    if (!firma.firmaId || !firma.hbstoreAktif) return rolHatasi("Firmanız için FirmaStore kullanıma açık değil.");
+    const q = new URL(request.url).searchParams;
+    const tip = q.get("tip") || "urunler";
+    if (tip === "takvim") return NextResponse.json({ takvim: hbstoreTakvimDurumu() }, { headers: CEVAP_BASLIKLARI });
     if (tip === "bakiye") {
-      const bakiye = await harcamaBakiyesi(adminSupabase, user.id);
-      const takvim = hbstoreTakvimDurumu();
-      return NextResponse.json({ bakiye, takvim }, { status: 200 });
+      const bakiye = await harcamaBakiyesi(db, user.id);
+      return NextResponse.json({ bakiye, takvim: hbstoreTakvimDurumu() }, { headers: CEVAP_BASLIKLARI });
     }
+    if (!["urunler", "urun", "istatistikler"].includes(tip)) {
+      return validasyonHatasi(`Geçersiz tip parametresi: ${tip}`, ["tip"]);
+    }
+    const urunId = tip === "urun" ? q.get("urun_id") : null;
+    if (tip === "urun" && !uuidGecerliMi(urunId)) return validasyonHatasi("Geçerli ürün kimliği zorunludur.", ["urun_id"]);
+    const { cekler, hata } = await firmaMagazaCekleri(db, firma.firmaId, urunId ?? undefined);
+    if (hata) return hataYaniti("Firma çekleri alınamadı.", "FirmaStore firma çek vitrini", hata);
 
-    // ─── tip=urun (tek ürün detayı) ────────────────────────────────────────
+    if (tip === "urunler") {
+      return NextResponse.json({
+        urunler: cekler,
+        takvim: hbstoreTakvimDurumu(),
+      }, { headers: CEVAP_BASLIKLARI });
+    }
     if (tip === "urun") {
-      const urun_id = searchParams.get("urun_id");
-      if (!urun_id) {
-        return validasyonHatasi("urun_id zorunludur.", ["urun_id"]);
-      }
-
-      const { data: urun, error } = await adminSupabase
-        .from("store_urunler")
-        .select("urun_id, kategori_id, ad, aciklama, gorsel_url, puan_fiyati, stok, aktif_mi, created_at")
-        .eq("urun_id", urun_id)
-        .eq("aktif_mi", true)
-        .maybeSingle();
-
-      if (error) {
-        return hataYaniti("Ürün çekilemedi.", "store_urunler SELECT", error);
-      }
-      if (!urun) {
-        return NextResponse.json({ hata: "Ürün bulunamadı." }, { status: 404 });
-      }
-
-      const { kapaliUrunIdleri, hata: ayarHatasi } = await firmaKapaliUrunIdleri(
-        adminSupabase,
-        firmaBaglami.firmaId,
-        [urun.urun_id],
-      );
-      if (ayarHatasi) {
-        return hataYaniti(
-          "Firma ürün ayarı alınamadı.",
-          "store_urun_firma_ayarlari SELECT — ürün detayı",
-          ayarHatasi,
-        );
-      }
-      if (kapaliUrunIdleri.has(urun.urun_id)) {
-        return NextResponse.json({ hata: "Ürün bulunamadı." }, { status: 404 });
-      }
-
-      // Kategori adını da getirelim
-      const { data: kategori } = await adminSupabase
-        .from("store_kategoriler")
-        .select("ad")
-        .eq("kategori_id", urun.kategori_id)
-        .single();
-
-      const takvim = hbstoreTakvimDurumu();
-
-      return NextResponse.json(
-        { urun: { ...urun, kategori_adi: kategori?.ad ?? null }, takvim },
-        { status: 200 }
-      );
+      const urun = cekler[0];
+      if (!urun) return NextResponse.json({ hata: "Ürün bulunamadı." }, { status: 404, headers: CEVAP_BASLIKLARI });
+      return NextResponse.json({ urun, takvim: hbstoreTakvimDurumu() }, { headers: CEVAP_BASLIKLARI });
     }
 
-    return validasyonHatasi(`Geçersiz tip parametresi: ${tip}`, ["tip"]);
-  } catch (err) {
-    return sunucuHatasi(err, "GET /store/api");
-  }
+    // Firma genelindeki sipariş adet/puan toplamı; iptaller hariç, sayfalı okuma.
+    let toplamCekAdedi = 0, toplamPuan = 0, offset = 0;
+    const sayfaBoyutu = 500;
+    while (true) {
+      const { data, count, error } = await db.from("store_siparisler")
+        .select("adet,toplam_puan,kullanicilar!inner(firma_id,rol)", { count: "exact" })
+        .eq("kullanicilar.firma_id", firma.firmaId).in("kullanicilar.rol", STORE_ALABILEN_ROLLER)
+        .neq("durum", "iptal").order("siparis_id", { ascending: true }).range(offset, offset + sayfaBoyutu - 1);
+      if (error) return hataYaniti("Sipariş toplamları alınamadı.", "FirmaStore firma siparişleri", error);
+      const siparisler = data ?? [];
+      for (const siparis of siparisler) { toplamCekAdedi += siparis.adet; toplamPuan += siparis.toplam_puan; }
+      offset += siparisler.length;
+      if (!siparisler.length || (count !== null && offset >= count)) break;
+    }
+    return NextResponse.json({ cek_sayisi: cekler.length, toplam_cek_adedi: toplamCekAdedi, toplam_puan: toplamPuan }, { headers: CEVAP_BASLIKLARI });
+  } catch (error) { return sunucuHatasi(error, "GET /store/api"); }
 }

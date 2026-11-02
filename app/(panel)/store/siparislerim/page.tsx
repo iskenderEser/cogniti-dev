@@ -6,28 +6,24 @@
 "use client";
 
 import { panelBaslangici } from "@/lib/panel/baslangic";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   CheckCircle2,
-  ChevronLeft,
-  Clock3,
-  ExternalLink,
-  MapPin,
   Package,
   ShoppingBag,
-  Truck,
+  Clock3,
   XCircle,
 } from "lucide-react";
 import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
 import { STORE_ALABILEN_ROLLER } from "@/lib/utils/roller";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { YenileButonu } from "@/components/ui/yenile-butonu";
-import { DURUM_ETIKETLERI, DURUM_RENKLERI, IPTAL_SURE_SAATI } from "@/lib/tclub/store/sabitler";
-import { kargoTakipUrl } from "@/lib/tclub/store/kargo";
-import type { SiparisGosterim, AdresSnapshot } from "@/lib/tclub/store/tipler";
+import { DURUM_ETIKETLERI, DURUM_RENKLERI } from "@/lib/tclub/store/sabitler";
+import type { SiparisGosterim } from "@/lib/tclub/store/tipler";
 import { hbstoreBakiyesiDegistiBildir } from "@/lib/tclub/store/olay";
+import { useStoreSunucuSaati } from "@/hooks/useStoreSunucuSaati";
 import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 
 function StatKarti({
@@ -76,9 +72,10 @@ export default function SiparislerimPage() {
 
   const [iptalEdilecek, setIptalEdilecek] = useState<SiparisGosterim | null>(null);
   const [iptalIslemi, setIptalIslemi] = useState(false);
+  const iptalKilidi = useRef(false);
+  const { simdi: sunucuSimdi, ayarla: sunucuSaatiniAyarla } = useStoreSunucuSaati();
 
-  const [teslimEdilecek, setTeslimEdilecek] = useState<SiparisGosterim | null>(null);
-  const [teslimIslemi, setTeslimIslemi] = useState(false);
+  const [talepFiltresi, setTalepFiltresi] = useState("tumu");
 
   const { mesajlar, hata, basari } = useHataMesaji();
 
@@ -99,33 +96,41 @@ export default function SiparislerimPage() {
     setYetkiKontrolEdildi(true);
   }, [kullanici, authYukleniyor, router]);
 
-  const siparisleriYukle = async (sessiz = false) => {
+  const siparisleriYukle = useCallback(async (sessiz = false) => {
     if (sessiz) setYenileniyor(true);
     else setYukleniyor(true);
     try {
-      const res = await fetch("/store/api/siparis");
+      const res = await fetch("/store/api/siparis", { cache: "no-store" });
       const d = await res.json();
       if (!res.ok) {
-        hata(d.hata ?? "Siparişler yüklenemedi.", d.adim, d.detay);
+        hata(d.hata ?? "Talepler yüklenemedi.", d.adim, d.detay);
         return;
       }
-      setSiparisler(d.siparisler ?? []);
+      if (!Array.isArray(d.siparisler) || !sunucuSaatiniAyarla(d.sunucu_zamani)) {
+        hata("Talep ve sunucu saati bilgileri alınamadı."); return;
+      }
+      setSiparisler(d.siparisler);
     } catch (err) {
-      hata("Siparişler yüklenirken hata oluştu.", "fetch", String(err));
+      hata("Talepler yüklenirken hata oluştu.", "fetch", String(err));
     } finally {
       if (sessiz) setYenileniyor(false);
       else setYukleniyor(false);
     }
-  };
+  }, [hata, sunucuSaatiniAyarla]);
 
   useEffect(() => {
     if (!yetkiKontrolEdildi) return;
-    siparisleriYukle();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [yetkiKontrolEdildi]);
+    void siparisleriYukle();
+    const yenile = () => { if (document.visibilityState === "visible") void siparisleriYukle(true); };
+    const timer = window.setInterval(yenile, 30_000);
+    window.addEventListener("focus", yenile);
+    return () => { window.clearInterval(timer); window.removeEventListener("focus", yenile); };
+  }, [yetkiKontrolEdildi, siparisleriYukle]);
 
   const handleIptalOnayla = async () => {
-    if (!iptalEdilecek) return;
+    if (!iptalEdilecek || iptalKilidi.current) return;
+    if (!iptalEdilebilirMi(iptalEdilecek)) { hata("12 saatlik iptal süresi doldu; talep admin işlemine aktarıldı."); setIptalEdilecek(null); return; }
+    iptalKilidi.current = true;
     setIptalIslemi(true);
 
     try {
@@ -140,13 +145,13 @@ export default function SiparislerimPage() {
       const d = await res.json();
 
       if (!res.ok) {
-        hata(d.hata ?? "Sipariş iptal edilemedi.", d.adim, d.detay);
+        hata(d.hata ?? "Talep iptal edilemedi.", d.adim, d.detay);
         setIptalIslemi(false);
         setIptalEdilecek(null);
         return;
       }
 
-      basari("Siparişiniz iptal edildi ve puanınız iade edildi.");
+      basari("Talebiniz iptal edildi ve puanınız iade edildi.");
       setIptalEdilecek(null);
       setIptalIslemi(false);
       hbstoreBakiyesiDegistiBildir();
@@ -155,49 +160,12 @@ export default function SiparislerimPage() {
       hata("İptal sırasında hata oluştu.", "fetch", String(err));
       setIptalIslemi(false);
       setIptalEdilecek(null);
-    }
+    } finally { iptalKilidi.current = false; }
   };
 
-  const handleTeslimOnayla = async () => {
-    if (!teslimEdilecek) return;
-    setTeslimIslemi(true);
-
-    try {
-      const res = await fetch("/store/api/siparis", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          siparis_id: teslimEdilecek.siparis_id,
-          action: "teslim_aldim",
-        }),
-      });
-      const d = await res.json();
-
-      if (!res.ok) {
-        hata(d.hata ?? "İşlem tamamlanamadı.", d.adim, d.detay);
-        setTeslimIslemi(false);
-        setTeslimEdilecek(null);
-        return;
-      }
-
-      basari("Sipariş teslim edildi olarak işaretlendi.");
-      setTeslimEdilecek(null);
-      setTeslimIslemi(false);
-      await siparisleriYukle(true);
-    } catch (err) {
-      hata("İşlem sırasında hata oluştu.", "fetch", String(err));
-      setTeslimIslemi(false);
-      setTeslimEdilecek(null);
-    }
-  };
-
-  const iptalEdilebilirMi = (s: SiparisGosterim) => {
-    if (s.durum !== "beklemede") return false;
-    const olusturmaZamani = new Date(s.created_at).getTime();
-    const simdi = Date.now();
-    const farkSaat = (simdi - olusturmaZamani) / (1000 * 60 * 60);
-    return farkSaat <= IPTAL_SURE_SAATI;
-  };
+  const iptalEdilebilirMi = (s: SiparisGosterim) => s.durum === "beklemede"
+    && s.iptal_edilebilir === true && !!s.iptal_son_at && sunucuSimdi !== null
+    && sunucuSimdi < Date.parse(s.iptal_son_at);
 
   const tarihFormatla = (dStr: string) => {
     return new Intl.DateTimeFormat("tr-TR", {
@@ -211,7 +179,7 @@ export default function SiparislerimPage() {
 
   const ozet = useMemo(() => {
     const bekleyen = siparisler.filter((s) => s.durum === "beklemede").length;
-    const kargoda = siparisler.filter((s) => s.durum === "kargoda").length;
+    const kargoda = siparisler.filter((s) => ["hazirlaniyor", "kargoda"].includes(s.durum)).length;
     const teslim = siparisler.filter((s) => s.durum === "teslim_edildi").length;
     return {
       toplam: siparisler.length,
@@ -242,16 +210,16 @@ export default function SiparislerimPage() {
       <main className="mx-auto flex w-full max-w-[1480px] flex-col gap-5 px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
         <SayfaYenileBasligi className="flex flex-wrap items-end justify-between gap-4"
           baslik={<h1 className="text-2xl font-extrabold tracking-[-0.025em] text-[var(--tema-yerel-magaza-ana-metin-06)] md:text-[28px]">
-            Siparişlerim
+            Taleplerim
           </h1>}
 
           aciklama={<><p className="mt-1 max-w-3xl text-xs font-semibold leading-5 text-[var(--tema-yerel-magaza-yardimci-metin-12)] md:text-sm">
-            Verdiğiniz siparişlerin durumlarını, kargo takibini ve teslimat dökümünü inceleyin.
+            İlettiğiniz çek taleplerinin durumlarını ve teslimat bilgilerini inceleyin.
           </p></>}
           aksiyon={<YenileButonu
             yenileniyor={yenileniyor}
             onYenile={() => siparisleriYukle(true)}
-            disabled={iptalIslemi || teslimIslemi}
+            disabled={iptalIslemi}
           />}
           ekKontroller={<><div className="flex flex-wrap items-center gap-2">
 
@@ -261,42 +229,37 @@ export default function SiparislerimPage() {
             >
               <ShoppingBag size={14} /> FirmaStore&apos;a Dön
             </Link>
-            <Link
-              href="/store/adreslerim"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--tema-yerel-magaza-cizgi-07)] bg-[var(--tema-yerel-magaza-kart-01)] px-3.5 py-2 text-xs font-extrabold text-[var(--tema-yerel-magaza-ana-metin-07)] shadow-sm transition-colors hover:bg-[var(--tema-yerel-magaza-sayfa-zemini-05)]"
-            >
-              <MapPin size={14} /> Adreslerim
-            </Link>
           </div></>}
         />
 
-        <section aria-label="Sipariş Özeti" className="grid grid-cols-1 gap-3 md:grid-cols-3">
+        <section aria-label="Talep Özeti" className="grid grid-cols-1 gap-3 md:grid-cols-3">
           <StatKarti
             ikon={Package}
-            etiket="Toplam Siparişim"
+            etiket="Toplam Talebim"
             deger={ozet.toplam}
-            detay="FirmaStore'dan verilen tüm siparişler"
+            detay="FirmaStore'dan iletilen tüm talepler"
             renk="var(--tema-yerel-magaza-eylem-metin-01)"
             zemin="var(--tema-yerel-magaza-secim-zemin-04)"
           />
           <StatKarti
-            ikon={Truck}
-            etiket="Aktif Siparişler"
+            ikon={Clock3}
+            etiket="Aktif Talepler"
             deger={ozet.aktif}
-            detay="Hazırlanan ve kargodaki gönderiler"
+            detay="Hazırlıkları devam eden talepler"
             renk="var(--tema-yerel-magaza-islevsel-metin-12)"
             zemin="var(--tema-yerel-magaza-islevsel-zemin-17)"
           />
           <StatKarti
             ikon={CheckCircle2}
-            etiket="Teslim Edilenler"
+            etiket="Tamamlanan Talepler"
             deger={ozet.teslim}
-            detay="Başarıyla tamamlanan siparişler"
+            detay="Başarıyla tamamlanan talepler"
             renk="var(--tema-yerel-magaza-islevsel-metin-03)"
             zemin="var(--tema-yerel-magaza-islevsel-zemin-15)"
           />
         </section>
 
+        <div role="group" aria-label="Talep durumu filtreleri" className="flex flex-wrap gap-2">{[["tumu","Tümü"],["aktif","Devam eden"],["teslim_edildi","Tamamlanan Talepler"],["iptal","İptal edilen"]].map(([k,v])=><button key={k} type="button" aria-pressed={talepFiltresi===k} onClick={()=>setTalepFiltresi(k)} className="rounded-xl border border-[var(--tema-yerel-magaza-cizgi-01)] px-3 py-2 text-xs font-bold aria-pressed:bg-[var(--tema-yerel-magaza-secim-zemin-04)]">{v}</button>)}</div>
         {yukleniyor ? (
           <div className="flex flex-col items-center justify-center rounded-2xl border border-[var(--tema-yerel-magaza-cizgi-01)] bg-[var(--tema-yerel-magaza-kart-01)] py-20 text-center shadow-[0_6px_18px_var(--tema-yerel-magaza-golge-01)]">
             <svg
@@ -307,16 +270,16 @@ export default function SiparislerimPage() {
               <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
             </svg>
-            <p className="mt-3 text-xs font-extrabold text-[var(--tema-yerel-magaza-yardimci-metin-03)]">Sipariş geçmişi yükleniyor...</p>
+            <p className="mt-3 text-xs font-extrabold text-[var(--tema-yerel-magaza-yardimci-metin-03)]">Talep geçmişi yükleniyor...</p>
           </div>
         ) : siparisler.length === 0 ? (
           <div className="flex flex-col items-center justify-center rounded-2xl border border-[var(--tema-yerel-magaza-cizgi-01)] bg-[var(--tema-yerel-magaza-kart-01)] py-16 text-center shadow-[0_6px_18px_var(--tema-yerel-magaza-golge-01)]">
             <span className="flex size-12 items-center justify-center rounded-2xl bg-[var(--tema-yerel-magaza-sayfa-zemini-06)] text-[var(--tema-yerel-magaza-yardimci-metin-01)]">
               <Package size={24} />
             </span>
-            <h3 className="mt-3 text-sm font-extrabold text-[var(--tema-yerel-magaza-ana-metin-01)]">Henüz siparişiniz yok</h3>
+            <h3 className="mt-3 text-sm font-extrabold text-[var(--tema-yerel-magaza-ana-metin-01)]">Henüz talebiniz yok</h3>
             <p className="mt-1 max-w-sm text-xs font-semibold text-[var(--tema-yerel-magaza-yardimci-metin-08)]">
-              FirmaStore&apos;dan puanlarınızla ürün seçip ilk siparişinizi hemen oluşturabilirsiniz.
+              FirmaStore&apos;dan puanlarınızla çek seçip ilk talebinizi oluşturabilirsiniz.
             </p>
             <Link
               href="/store"
@@ -327,14 +290,14 @@ export default function SiparislerimPage() {
           </div>
         ) : (
           <section className="flex flex-col gap-3">
-            {siparisler.map((s) => {
+            {!siparisler.some(s => talepFiltresi === "tumu" || (talepFiltresi === "aktif" ? ["beklemede","hazirlaniyor","kargoda"].includes(s.durum) : s.durum === talepFiltresi)) && <p className="py-8 text-center text-sm">Bu durumda talebiniz bulunmuyor.</p>}
+            {siparisler.filter(s => talepFiltresi === "tumu" || (talepFiltresi === "aktif" ? ["beklemede","hazirlaniyor","kargoda"].includes(s.durum) : s.durum === talepFiltresi)).map((s) => {
               const durumStili = DURUM_RENKLERI[s.durum];
-              const durumEtiketi = DURUM_ETIKETLERI[s.durum];
-              const adres = s.adres_snapshot as AdresSnapshot;
+
               const urunAdi = s.store_urunler?.ad ?? "Ürün";
               const urunGorsel = s.store_urunler?.gorsel_url ?? null;
               const iptalUygun = iptalEdilebilirMi(s);
-              const kargoUrl = kargoTakipUrl(s.kargo_firmasi, s.kargo_takip_no);
+              const durumEtiketi = s.durum === "beklemede" ? (iptalUygun ? "İptal süresinde" : "Admin işleminde") : DURUM_ETIKETLERI[s.durum];
 
               return (
                 <article
@@ -363,6 +326,7 @@ export default function SiparislerimPage() {
                             {s.toplam_puan.toLocaleString("tr-TR")} HapPuan
                           </strong>
                           <span>·</span>
+                          {s.toplam_tl != null && <><span>{s.toplam_tl.toLocaleString("tr-TR", { maximumFractionDigits: 2 })} TL</span><span>·</span></>}
                           <span>{tarihFormatla(s.created_at)}</span>
                         </div>
                       </div>
@@ -382,47 +346,16 @@ export default function SiparislerimPage() {
                     </div>
                   </div>
 
-                  {s.durum === "kargoda" && (
-                    <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--tema-yerel-magaza-cizgi-02)] bg-[var(--tema-yerel-magaza-sayfa-zemini-12)] px-4 py-3 md:px-5">
-                      <div className="flex items-center gap-2 text-xs font-semibold text-[var(--tema-yerel-magaza-islevsel-metin-13)]">
-                        <Truck size={16} className="text-[var(--tema-yerel-magaza-islevsel-metin-12)]" />
-                        <span>Kargo Firması: <strong>{s.kargo_firmasi}</strong></span>
-                        {s.kargo_takip_no && (
-                          <span>(Takip No: <strong>{s.kargo_takip_no}</strong>)</span>
-                        )}
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        {kargoUrl && (
-                          <a
-                            href={kargoUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-xs font-extrabold text-[var(--tema-yerel-magaza-eylem-metin-01)] hover:underline"
-                          >
-                            Kargo Takip <ExternalLink size={12} />
-                          </a>
-                        )}
-                        <button
-                          type="button"
-                          onClick={() => setTeslimEdilecek(s)}
-                          disabled={teslimIslemi}
-                          className="rounded-xl bg-[var(--tema-yerel-magaza-islevsel-zemin-18)] px-3 py-1.5 text-xs font-extrabold text-[var(--tema-yerel-magaza-ters-metin-01)] shadow-sm hover:bg-[var(--tema-yerel-magaza-islevsel-zemin-19)]"
-                        >
-                          Teslim Aldım ✓
-                        </button>
-                      </div>
-                    </div>
-                  )}
+                  {s.durum === "teslim_edildi" && s.teslimler?.length ? <div className="space-y-3 border-t border-[var(--tema-yerel-magaza-cizgi-02)] px-4 py-3">
+                    <h3 className="text-sm font-extrabold">Hediye çekleriniz</h3>
+                    {s.teslimler.map((t,i)=><div key={i} className="rounded-xl border border-[var(--tema-yerel-magaza-cizgi-02)] p-3 text-sm"><span>Çek kodu: </span><strong className="select-all break-all font-mono">{t.cek_kodu}</strong>{t.kullanim_linki&&<p className="mt-2"><a className="font-bold underline" href={t.kullanim_linki} target="_blank" rel="noopener noreferrer">Kullanım bağlantısını aç ↗</a></p>}</div>)}
+                  </div> : null}
 
                   <div className="flex flex-col gap-2 border-t border-[var(--tema-yerel-magaza-cizgi-09)] bg-[var(--tema-yerel-magaza-sayfa-zemini-02)] px-4 py-3 text-xs sm:flex-row sm:items-center sm:justify-between md:px-5">
-                    <div className="flex items-start gap-2 text-[var(--tema-yerel-magaza-yardimci-metin-23)]">
-                      <MapPin size={14} className="mt-0.5 shrink-0 text-[var(--tema-yerel-magaza-yardimci-metin-24)]" />
-                      <span>
-                        <strong className="text-[var(--tema-yerel-magaza-ana-metin-01)]">{adres.baslik}:</strong> {adres.alici_adi} · {adres.telefon} — {adres.adres_detay} ({adres.ilce} / {adres.il})
-                      </span>
-                    </div>
-
+                    {s.durum === "iptal" && s.admin_aktarildi === false && <p className="font-semibold">Talebiniz iptal edildi; admine aktarılmadı.</p>}
+                    {s.durum === "beklemede" && <p className="font-semibold">
+                      {iptalUygun ? `Talebiniz henüz admine aktarılmadı. ${s.iptal_son_at ? tarihFormatla(s.iptal_son_at) : ""} tarihine kadar iptal edebilirsiniz.` : "12 saatlik iptal süresi doldu; talebiniz admin işlemine aktarıldı."}
+                    </p>}
                     {iptalUygun && (
                       <button
                         type="button"
@@ -430,7 +363,7 @@ export default function SiparislerimPage() {
                         disabled={iptalIslemi}
                         className="shrink-0 text-xs font-extrabold text-[var(--tema-yerel-magaza-islevsel-metin-04)] hover:underline"
                       >
-                        Siparişi İptal Et
+                        Talebi İptal Et
                       </button>
                     )}
                   </div>
@@ -446,18 +379,19 @@ export default function SiparislerimPage() {
           <div className="flex w-full max-w-md flex-col gap-4 rounded-2xl border border-[var(--tema-yerel-magaza-cizgi-01)] bg-[var(--tema-yerel-magaza-kart-01)] p-6 shadow-2xl">
             <div>
               <div className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-wider text-[var(--tema-yerel-magaza-islevsel-metin-04)]">
-                <XCircle size={14} /> Sipariş İptali
+                <XCircle size={14} /> Talep İptali
               </div>
               <h2 className="mt-1 text-lg font-extrabold text-[var(--tema-yerel-magaza-ana-metin-02)]">
-                Siparişi İptal Etmek İstiyor Musunuz?
+                Talebi İptal Etmek İstiyor Musunuz?
               </h2>
             </div>
 
             <p className="text-xs font-semibold leading-relaxed text-[var(--tema-yerel-magaza-yardimci-metin-03)]">
-              <strong className="text-[var(--tema-yerel-magaza-ana-metin-02)]">{iptalEdilecek.store_urunler?.ad}</strong> siparişiniz iptal edilecek ve harcanan{" "}
+              <strong className="text-[var(--tema-yerel-magaza-ana-metin-02)]">{iptalEdilecek.store_urunler?.ad}</strong> talebiniz iptal edilecek ve harcanan{" "}
               <strong className="text-[var(--tema-yerel-magaza-islevsel-metin-03)]">{iptalEdilecek.toplam_puan.toLocaleString("tr-TR")} HapPuan</strong> bakiyenize anında iade edilecektir.
             </p>
 
+            {!iptalEdilebilirMi(iptalEdilecek) && <p role="alert" className="text-sm font-semibold">12 saatlik iptal süresi doldu; talebiniz admin işlemine aktarıldı.</p>}
             <div className="flex gap-2.5 justify-end pt-2">
               <button
                 type="button"
@@ -470,53 +404,17 @@ export default function SiparislerimPage() {
               <button
                 type="button"
                 onClick={handleIptalOnayla}
-                disabled={iptalIslemi}
+                disabled={iptalIslemi || !iptalEdilebilirMi(iptalEdilecek)}
                 className="rounded-xl bg-[var(--tema-yerel-magaza-islevsel-zemin-01)] px-5 py-2.5 text-xs font-extrabold text-[var(--tema-yerel-magaza-ters-metin-01)] shadow-sm hover:bg-[var(--tema-yerel-magaza-islevsel-zemin-10)] disabled:opacity-50"
               >
-                {iptalIslemi ? "İptal Ediliyor..." : "Siparişi İptal Et"}
+                {iptalIslemi ? "İptal Ediliyor..." : "Talebi İptal Et"}
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {teslimEdilecek && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--tema-yerel-magaza-ortu-01)]/50 p-4">
-          <div className="flex w-full max-w-md flex-col gap-4 rounded-2xl border border-[var(--tema-yerel-magaza-cizgi-01)] bg-[var(--tema-yerel-magaza-kart-01)] p-6 shadow-2xl">
-            <div>
-              <div className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-wider text-[var(--tema-yerel-magaza-islevsel-metin-03)]">
-                <CheckCircle2 size={14} /> Teslimat Onayı
-              </div>
-              <h2 className="mt-1 text-lg font-extrabold text-[var(--tema-yerel-magaza-ana-metin-02)]">
-                Ürünü Teslim Aldığınızı Onaylıyor Musunuz?
-              </h2>
-            </div>
 
-            <p className="text-xs font-semibold leading-relaxed text-[var(--tema-yerel-magaza-yardimci-metin-03)]">
-              <strong className="text-[var(--tema-yerel-magaza-ana-metin-02)]">{teslimEdilecek.store_urunler?.ad}</strong> siparişiniz teslim edildi olarak kaydedilecektir.
-            </p>
-
-            <div className="flex gap-2.5 justify-end pt-2">
-              <button
-                type="button"
-                onClick={() => setTeslimEdilecek(null)}
-                disabled={teslimIslemi}
-                className="rounded-xl border border-[var(--tema-yerel-magaza-cizgi-03)] bg-[var(--tema-yerel-magaza-kart-01)] px-4 py-2.5 text-xs font-extrabold text-[var(--tema-yerel-magaza-yardimci-metin-10)] hover:bg-[var(--tema-yerel-magaza-sayfa-zemini-02)]"
-              >
-                Vazgeç
-              </button>
-              <button
-                type="button"
-                onClick={handleTeslimOnayla}
-                disabled={teslimIslemi}
-                className="rounded-xl bg-[var(--tema-yerel-magaza-islevsel-zemin-18)] px-5 py-2.5 text-xs font-extrabold text-[var(--tema-yerel-magaza-ters-metin-01)] shadow-sm hover:bg-[var(--tema-yerel-magaza-islevsel-zemin-19)] disabled:opacity-50"
-              >
-                {teslimIslemi ? "İşleniyor..." : "Teslim Aldım"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

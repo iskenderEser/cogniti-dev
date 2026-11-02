@@ -1,14 +1,12 @@
 // HBStore ekip sipariş listesi. Masaüstünde tablo, tablet/mobilde açılır satır.
-// Tarih, ürün, alıcı, adet, puan, durum, kargo ve teslimat sözleşmesi korunur.
+// Tarih, çek, alıcı, adet, puan ve teslimat durumu gösterilir.
 
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, MapPin, Package, Truck } from "lucide-react";
+import { ChevronDown, Package } from "lucide-react";
 import type { SiparisSatiri } from "../_types";
-import type { AdresSnapshot } from "@/lib/tclub/store/tipler";
 import { DURUM_ETIKETLERI, DURUM_RENKLERI } from "@/lib/tclub/store/sabitler";
-import { kargoTakipUrl } from "@/lib/tclub/store/kargo";
 
 interface SiparisTablosuProps {
   siparisler: SiparisSatiri[];
@@ -84,23 +82,6 @@ function UrunKimligi({ siparis }: { siparis: SiparisSatiri }) {
   );
 }
 
-function KargoBilgisi({ siparis }: { siparis: SiparisSatiri }) {
-  const kargoUrl = kargoTakipUrl(siparis.kargo_firmasi, siparis.kargo_takip_no);
-  if (!siparis.kargo_firmasi) return <span className="text-[var(--tema-yerel-magaza-yardimci-metin-20)]">—</span>;
-  return (
-    <div>
-      <div className="font-semibold text-[var(--tema-yerel-magaza-ana-metin-01)]">{siparis.kargo_firmasi}</div>
-      {kargoUrl ? (
-        <a href={kargoUrl} target="_blank" rel="noopener noreferrer" className="text-[11px] font-bold text-[var(--tema-yerel-magaza-eylem-metin-03)] underline underline-offset-2">
-          {siparis.kargo_takip_no}
-        </a>
-      ) : (
-        <div className="text-[11px] text-[var(--tema-yerel-magaza-yardimci-metin-18)]">{siparis.kargo_takip_no}</div>
-      )}
-    </div>
-  );
-}
-
 export default function SiparisTablosu(p: SiparisTablosuProps) {
   const [acikSiparis, setAcikSiparis] = useState<string | null>(null);
 
@@ -136,13 +117,10 @@ export default function SiparisTablosu(p: SiparisTablosuProps) {
                   <th style={thStyle}>Alıcı</th>
                   <th style={{ ...thStyle, textAlign: "right" }}>Toplam Puan</th>
                   <th style={thStyle}>Durum</th>
-                  <th style={thStyle}>Kargo</th>
-                  <th style={thStyle}>Teslimat</th>
                 </tr>
               </thead>
               <tbody>
                 {p.siparisler.map((siparis) => {
-                  const adres = siparis.adres_snapshot as AdresSnapshot;
                   return (
                     <tr key={siparis.siparis_id} className="transition-colors hover:bg-[var(--tema-yerel-magaza-sayfa-zemini-09)]">
                       <td style={{ ...tdStyle, whiteSpace: "nowrap", color: "var(--tema-yerel-magaza-yardimci-metin-02)" }}>{tarihFormatla(siparis.created_at)}</td>
@@ -153,8 +131,6 @@ export default function SiparisTablosu(p: SiparisTablosuProps) {
                       </td>
                       <td style={{ ...tdStyle, textAlign: "right", color: "var(--tema-yerel-magaza-vurgu-metin-01)", fontWeight: 800 }}>{siparis.toplam_puan.toLocaleString("tr-TR")}</td>
                       <td style={tdStyle}><DurumRozeti durum={siparis.durum} /></td>
-                      <td style={tdStyle}><KargoBilgisi siparis={siparis} /></td>
-                      <td style={{ ...tdStyle, color: "var(--tema-yerel-magaza-yardimci-metin-02)", minWidth: 130 }}>{adres.ilce} / {adres.il}</td>
                     </tr>
                   );
                 })}
@@ -164,7 +140,6 @@ export default function SiparisTablosu(p: SiparisTablosuProps) {
 
           <div className="divide-y divide-[var(--tema-yerel-magaza-cizgi-11)] lg:hidden">
             {p.siparisler.map((siparis) => {
-              const adres = siparis.adres_snapshot as AdresSnapshot;
               const acik = acikSiparis === siparis.siparis_id;
               return (
                 <div key={siparis.siparis_id}>
@@ -194,15 +169,7 @@ export default function SiparisTablosu(p: SiparisTablosuProps) {
                         <div className="mt-1 text-xs font-bold text-[var(--tema-yerel-magaza-ana-metin-01)]">{tarihFormatla(siparis.created_at)}</div>
                         <div className="mt-1 text-[11px] text-[var(--tema-yerel-magaza-yardimci-metin-02)]">{siparis.adet} adet · birim {siparis.puan_birim_fiyat.toLocaleString("tr-TR")} puan</div>
                       </div>
-                      <div className="rounded-xl border border-[var(--tema-yerel-magaza-cizgi-11)] bg-[var(--tema-yerel-magaza-kart-01)] p-3">
-                        <div className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-wide text-[var(--tema-yerel-magaza-yardimci-metin-18)]"><Truck size={12} /> Kargo</div>
-                        <div className="mt-1 text-xs"><KargoBilgisi siparis={siparis} /></div>
-                      </div>
-                      <div className="rounded-xl border border-[var(--tema-yerel-magaza-cizgi-11)] bg-[var(--tema-yerel-magaza-kart-01)] p-3 sm:col-span-2">
-                        <div className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-wide text-[var(--tema-yerel-magaza-yardimci-metin-18)]"><MapPin size={12} /> Teslimat</div>
-                        <div className="mt-1 text-xs font-bold text-[var(--tema-yerel-magaza-ana-metin-01)]">{adres.alici_adi} · {adres.ilce} / {adres.il}</div>
-                        <div className="mt-1 text-[11px] leading-4 text-[var(--tema-yerel-magaza-yardimci-metin-02)]">{adres.adres_detay}</div>
-                      </div>
+
                     </div>
                   )}
                 </div>

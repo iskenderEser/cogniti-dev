@@ -14,11 +14,10 @@ const temelBaglam: NavContext = {
   storeAcik: true,
   ccAcik: false,
   eclubAcik: false,
-  eclubStoreAcik: false,
   eczanemAcik: false,
 };
 
-const kisiselStoreYollari = ["/store", "/store/siparislerim", "/store/adreslerim"];
+const kisiselStoreYollari = ["/store", "/store/siparislerim"];
 
 function sabitYollar(gruplar: ReturnType<typeof mobilPanelNavOlustur>) {
   return gruplar.flatMap((grup) =>

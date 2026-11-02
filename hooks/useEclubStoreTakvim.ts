@@ -22,7 +22,7 @@ export interface UseEclubStoreTakvimSonuc {
  *
  * SÖZLEŞME:
  * - Tarayıcının cihaz saatini (new Date()) açılış/kapanış kararının kaynağı olarak KULLANMAZ.
- * - Sunucunun /eclub/store/api?tip=takvim yanıtındaki simdiIso zamanı çapa (anchor) kabul edilir.
+ * - Sunucunun /eclub/api/cek-ozeti?tip=takvim yanıtındaki simdiIso zamanı çapa (anchor) kabul edilir.
  * - Çapa sonrasında geçen süre, monotonic performance.now() ile hesaplanır; cihaz saatinin
  *   yanlış olması veya kayması durumu bozmaz.
  * - Sayfa yeniden görünür olduğunda (visibilitychange) ve açılış/kapanış sınırında
@@ -44,7 +44,7 @@ export function useEclubStoreTakvim({
   const sunucudanCek = useCallback(async () => {
     if (!aktif) return;
     try {
-      const res = await fetch("/eclub/store/api?tip=takvim", { cache: "no-store" });
+      const res = await fetch("/eclub/api/cek-ozeti?tip=takvim", { cache: "no-store" });
       if (!res.ok) return;
       const data = await res.json();
       if (data?.takvim?.simdiIso) {

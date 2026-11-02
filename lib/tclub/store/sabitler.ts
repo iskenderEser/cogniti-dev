@@ -17,7 +17,8 @@ export const STOK_AZ_ESIK = 5;
 
 export const DURUM_ETIKETLERI: Record<SiparisDurum, string> = {
   beklemede: "Beklemede",
-  kargoda: "Kargoda",
+  kargoda: "Hazırlanıyor",
+  hazirlaniyor: "Hazırlanıyor",
   teslim_edildi: "Teslim Edildi",
   iptal: "İptal Edildi",
 };
@@ -28,6 +29,7 @@ export const DURUM_ETIKETLERI: Record<SiparisDurum, string> = {
  */
 export const DURUM_RENKLERI: Record<SiparisDurum, { metin: string; arka: string; kenar: string }> = {
   beklemede: { metin: "var(--tema-yerel-magaza-islevsel-metin-14)", arka: "var(--tema-yerel-magaza-islevsel-zemin-20)", kenar: "var(--tema-yerel-magaza-islevsel-cizgi-01)" },
+  hazirlaniyor: { metin: "var(--tema-yerel-magaza-islevsel-metin-15)", arka: "var(--tema-yerel-magaza-islevsel-zemin-21)", kenar: "var(--tema-yerel-magaza-islevsel-cizgi-07)" },
   kargoda: { metin: "var(--tema-yerel-magaza-islevsel-metin-15)", arka: "var(--tema-yerel-magaza-islevsel-zemin-21)", kenar: "var(--tema-yerel-magaza-islevsel-cizgi-07)" },
   teslim_edildi: { metin: "var(--tema-yerel-magaza-islevsel-metin-16)", arka: "var(--tema-yerel-magaza-islevsel-zemin-22)", kenar: "var(--tema-yerel-magaza-islevsel-cizgi-08)" },
   iptal: { metin: "var(--tema-yerel-magaza-islevsel-metin-17)", arka: "var(--tema-yerel-magaza-islevsel-zemin-23)", kenar: "var(--tema-yerel-magaza-islevsel-cizgi-09)" },

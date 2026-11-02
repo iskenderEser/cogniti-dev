@@ -6,7 +6,8 @@
 //   - BM: cc_ligi mantığı (kazanım − 3 kayıp tablosu) − mağaza harcamaları
 //   - Diğer roller: 0
 //
-// Bakiye negatif dönmez (RPC içinde kontrol edilir).
+// Dönem ve harcama/iade hesabı RPC’dedir. Negatif bakiye varsa aynen gösterilir.
+// Yayın başına TL oranı kullanılmaz; çekin TL değeri firma/çek tanımından gelir.
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 

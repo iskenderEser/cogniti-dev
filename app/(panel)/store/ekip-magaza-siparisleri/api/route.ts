@@ -90,7 +90,7 @@ export async function GET(request: NextRequest) {
     if (limit > MAKS_LIMIT) limit = MAKS_LIMIT;
 
     // Durum doğrulama
-    const GECERLI_DURUMLAR = ["beklemede", "kargoda", "teslim_edildi", "iptal"];
+    const GECERLI_DURUMLAR = ["beklemede", "hazirlaniyor", "kargoda", "teslim_edildi", "iptal"];
     if (durum && !GECERLI_DURUMLAR.includes(durum)) {
       return validasyonHatasi(
         `Geçersiz durum. Geçerli: ${GECERLI_DURUMLAR.join(", ")}`,

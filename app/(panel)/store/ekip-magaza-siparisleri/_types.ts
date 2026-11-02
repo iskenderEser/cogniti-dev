@@ -2,7 +2,7 @@
 //
 // HBStore genel sipariş listesi sayfasının ortak tipleri.
 
-import type { SiparisDurum, AdresSnapshot } from "@/lib/tclub/store/tipler";
+import type { SiparisDurum } from "@/lib/tclub/store/tipler";
 
 // ─── SİPARİŞ SATIRI ──────────────────────────────────────────────────────────
 
@@ -14,7 +14,6 @@ export interface SiparisSatiri {
   siparis_id: string;
   kullanici_id: string;
   urun_id: string;
-  adres_snapshot: AdresSnapshot;
   adet: number;
   puan_birim_fiyat: number;
   toplam_puan: number;

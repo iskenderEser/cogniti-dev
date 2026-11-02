@@ -30,16 +30,17 @@ export async function siparisOlustur(
   params: SiparisOlusturParams
 ): Promise<SiparisOlusturSonuc> {
   const { data, error } = await supabase
-    .rpc("store_siparis_olustur", {
+    .rpc("store_cek_siparis_olustur", {
       p_kullanici_id: params.kullanici_id,
       p_urun_id: params.urun_id,
-      p_adres_id: params.adres_id,
       p_adet: params.adet,
+      p_beklenen_baz_puan: params.beklenen_baz_puan,
+      p_beklenen_birim_tl: params.beklenen_birim_tl,
     });
 
   if (error) {
     console.error("[lib/store/siparis] siparisOlustur RPC hatası:", error.message);
-    return { ok: false, siparis_id: null, hata: error.message };
+    return { ok: false, siparis_id: null, hata: ["PGRST202", "42883"].includes(error.code) ? "Sipariş şu anda alınamıyor. Lütfen daha sonra tekrar deneyin." : error.message.replaceAll("HBStore", "FirmaStore") };
   }
 
   // RPC TABLE döndürür — ilk satırı al
@@ -51,7 +52,7 @@ export async function siparisOlustur(
   return {
     ok: Boolean(ilkSatir.ok),
     siparis_id: ilkSatir.siparis_id ?? null,
-    hata: ilkSatir.hata ?? null,
+    hata: ilkSatir.hata?.replaceAll("HBStore", "FirmaStore") ?? null,
   };
 }
 

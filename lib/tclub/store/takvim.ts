@@ -101,7 +101,11 @@ export function yilDonemPencereleri(yil: number): DonemPenceresi[] {
  *  - 10. Ay (Ekim):  1–7 Ekim   (1 Ekim 00:00 – 8 Ekim 00:00 hariç)
  *  - 1. Ay (Ocak):   1–7 Ocak   (1 Ocak 00:00 – 8 Ocak 00:00 hariç)
  */
+// Geçici yerel FirmaStore ekran/sipariş testi; production takvimi korunur.
+const TEST_TAKVIMI_ACIK = process.env.NODE_ENV === "development";
+
 export function hbstoreSiparisAcikMi(tarih: Date = new Date()): boolean {
+  if (TEST_TAKVIMI_ACIK) return true;
   const { ay, gun } = trZamanParcalari(tarih);
   return (
     (ay === 4 && gun >= 1 && gun <= 7) ||
@@ -176,15 +180,15 @@ export function hbstoreTakvimDurumu(tarih: Date = new Date()): TakvimDurumu {
   }
 
   return {
-    acik,
+    acik: TEST_TAKVIMI_ACIK || acik,
     simdiIso: tarih.toISOString(),
     aktifPencere,
     sonrakiPencere,
     kalanMs,
     kalanSureMetni: formatKalanSure(kalanMs),
     kisaKalanSureMetni: formatKisaKalanSure(kalanMs),
-    durumMetni,
-    navMetni,
+    durumMetni: TEST_TAKVIMI_ACIK ? "FirmaStore test için açık" : durumMetni,
+    navMetni: TEST_TAKVIMI_ACIK ? "FirmaStore test için açık" : navMetni,
     sonrakiDonemEtiketi: acik && aktifPencere ? aktifPencere.etiket : sonrakiPencere.etiket,
     kapanisMetni: aktifPencere ? formatDonemKapanis(aktifPencere) : formatDonemKapanis(sonrakiPencere),
     acilisMetni: formatDonemAcilis(sonrakiPencere),

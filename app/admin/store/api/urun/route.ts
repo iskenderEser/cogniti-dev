@@ -2,9 +2,9 @@
 //
 // Admin için ürün CRUD endpoint'i.
 //
-// GET    → Tüm ürünleri (aktif + pasif) kategori adıyla listeler
+// GET    → Tüm çekleri (aktif + pasif) listeler
 // POST   → Yeni ürün ekler.
-//          Body: { kategori_id, ad, aciklama?, gorsel_url?, puan_fiyati, stok?, aktif_mi? }
+//          Body: { ad, aciklama?, gorsel_url?, minimum_siparis_tl, stok?, aktif_mi? }
 // PATCH  → Mevcut ürünü günceller.
 //          Body: { urun_id, ...alanlar }
 //          Görsel URL değişirse eski görsel Storage'dan silinir.
@@ -15,23 +15,20 @@
 // Yetki: ADMIN_ROLLER
 
 import { NextRequest, NextResponse } from "next/server";
-import { createClient, createAdminClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/server";
 import {
   hataYaniti,
   sunucuHatasi,
-  yetkiHatasi,
-  rolHatasi,
   validasyonHatasi,
   isKuraluHatasi,
 } from "@/lib/utils/hataIsle";
-import { ADMIN_ROLLER } from "@/lib/utils/roller";
 import { gorselSil, urlDenYolCikar } from "@/lib/tclub/store/storage";
-import { rolCozucu } from "@/lib/utils/rolCozucu";
+import { minimumSiparisTlGecerliMi } from "@/lib/tclub/store/katalog";
 import { adminGirisKontrol } from "@/lib/utils/adminGirisKontrol";
 
 // ─── Yardımcı: admin yetki kontrolü ──────────────────────────────────────────
 
-async function yetkiAl(_request: NextRequest) {
+async function yetkiAl() {
   // B-26: tek bekçi — adminGirisKontrol (yerel kopya kaldırıldı).
   const kontrol = await adminGirisKontrol();
   if (!kontrol.gecerli) {
@@ -42,9 +39,9 @@ async function yetkiAl(_request: NextRequest) {
 
 // ─── GET ─────────────────────────────────────────────────────────────────────
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const yetki = await yetkiAl(request);
+    const yetki = await yetkiAl();
     if (yetki.hata) return yetki.hata;
     const { adminSupabase } = yetki;
 
@@ -52,16 +49,14 @@ export async function GET(request: NextRequest) {
       .from("store_urunler")
       .select(`
         urun_id,
-        kategori_id,
         ad,
         aciklama,
         gorsel_url,
-        puan_fiyati,
+        minimum_siparis_tl,
         stok,
         aktif_mi,
         created_at,
-        updated_at,
-        store_kategoriler ( ad )
+        updated_at
       `)
       .order("created_at", { ascending: false });
 
@@ -79,24 +74,20 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const yetki = await yetkiAl(request);
+    const yetki = await yetkiAl();
     if (yetki.hata) return yetki.hata;
     const { adminSupabase } = yetki;
 
     const body = await request.json();
-    const { kategori_id, ad, aciklama, gorsel_url, puan_fiyati, stok, aktif_mi } = body;
+    const { ad, aciklama, gorsel_url, minimum_siparis_tl, stok, aktif_mi } = body;
 
     // Zorunlu alanlar
-    if (!kategori_id || typeof kategori_id !== "string") {
-      return validasyonHatasi("kategori_id zorunludur.", ["kategori_id"]);
-    }
     if (!ad || typeof ad !== "string" || ad.trim() === "") {
       return validasyonHatasi("Ürün adı zorunludur.", ["ad"]);
     }
 
-    const fiyatSayi = Number(puan_fiyati);
-    if (!Number.isInteger(fiyatSayi) || fiyatSayi <= 0) {
-      return validasyonHatasi("puan_fiyati pozitif tam sayı olmalı.", ["puan_fiyati"]);
+    if (!minimumSiparisTlGecerliMi(minimum_siparis_tl)) {
+      return validasyonHatasi("Minimum sipariş tutarı sıfırdan büyük ve en fazla iki ondalık haneli TL tutarı olmalıdır.", ["minimum_siparis_tl"]);
     }
 
     const stokSayi = stok !== undefined ? Number(stok) : 0;
@@ -104,30 +95,19 @@ export async function POST(request: NextRequest) {
       return validasyonHatasi("stok non-negatif tam sayı olmalı.", ["stok"]);
     }
 
-    // Kategori var mı kontrol
-    const { data: kategoriVar, error: katError } = await adminSupabase
-      .from("store_kategoriler")
-      .select("kategori_id")
-      .eq("kategori_id", kategori_id)
-      .single();
-
-    if (katError || !kategoriVar) {
-      return isKuraluHatasi("Geçersiz kategori.");
-    }
-
     const { error } = await adminSupabase
       .from("store_urunler")
       .insert({
-        kategori_id,
         ad: ad.trim(),
         aciklama: aciklama?.trim() ?? null,
         gorsel_url: gorsel_url?.trim() ?? null,
-        puan_fiyati: fiyatSayi,
+        minimum_siparis_tl,
         stok: stokSayi,
         aktif_mi: aktif_mi !== undefined ? Boolean(aktif_mi) : true,
       });
 
     if (error) {
+      if (error.code === "23502") return NextResponse.json({ hata: "FirmaStore yeni yapı SQL kurulumu bekleniyor." }, { status: 503 });
       return hataYaniti("Ürün eklenemedi.", "store_urunler INSERT", error);
     }
 
@@ -141,12 +121,12 @@ export async function POST(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   try {
-    const yetki = await yetkiAl(request);
+    const yetki = await yetkiAl();
     if (yetki.hata) return yetki.hata;
     const { adminSupabase } = yetki;
 
     const body = await request.json();
-    const { urun_id, kategori_id, ad, aciklama, gorsel_url, puan_fiyati, stok, aktif_mi } = body;
+    const { urun_id, ad, aciklama, gorsel_url, minimum_siparis_tl, stok, aktif_mi } = body;
 
     if (!urun_id || typeof urun_id !== "string") {
       return validasyonHatasi("urun_id zorunludur.", ["urun_id"]);
@@ -164,7 +144,6 @@ export async function PATCH(request: NextRequest) {
     }
 
     const guncellenecek: Record<string, unknown> = {};
-    if (kategori_id !== undefined) guncellenecek.kategori_id = kategori_id;
     if (ad !== undefined) {
       if (typeof ad !== "string" || ad.trim() === "") {
         return validasyonHatasi("Ürün adı boş olamaz.", ["ad"]);
@@ -177,12 +156,11 @@ export async function PATCH(request: NextRequest) {
     if (gorsel_url !== undefined) {
       guncellenecek.gorsel_url = gorsel_url?.trim() ?? null;
     }
-    if (puan_fiyati !== undefined) {
-      const fiyatSayi = Number(puan_fiyati);
-      if (!Number.isInteger(fiyatSayi) || fiyatSayi <= 0) {
-        return validasyonHatasi("puan_fiyati pozitif tam sayı olmalı.", ["puan_fiyati"]);
+    if (minimum_siparis_tl !== undefined) {
+      if (!minimumSiparisTlGecerliMi(minimum_siparis_tl)) {
+        return validasyonHatasi("Minimum sipariş tutarı sıfırdan büyük ve en fazla iki ondalık haneli TL tutarı olmalıdır.", ["minimum_siparis_tl"]);
       }
-      guncellenecek.puan_fiyati = fiyatSayi;
+      guncellenecek.minimum_siparis_tl = minimum_siparis_tl;
     }
     if (stok !== undefined) {
       const stokSayi = Number(stok);
@@ -239,7 +217,7 @@ export async function PATCH(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const yetki = await yetkiAl(request);
+    const yetki = await yetkiAl();
     if (yetki.hata) return yetki.hata;
     const { adminSupabase } = yetki;
 
