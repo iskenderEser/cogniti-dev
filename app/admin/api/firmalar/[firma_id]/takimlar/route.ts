@@ -1,8 +1,9 @@
+import { firmaYonetimIslemKontrol } from "@/lib/admin/firmaYonetimIslem";
+import { firmaYonetimOkumaKontrol } from "@/lib/admin/firmaYonetimOkuma";
 // app/admin/api/firmalar/[firma_id]/takimlar/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/server";
 import { hataYaniti, veriKontrol, sunucuHatasi, validasyonHatasi } from "@/lib/utils/hataIsle";
-import { adminGirisKontrol } from "@/lib/utils/adminGirisKontrol";
 import { hiyerarsiAdiBicimle, tekillikIhlaliMi } from "@/lib/admin/hiyerarsiTekillik";
 
 export async function GET(
@@ -10,10 +11,11 @@ export async function GET(
   { params }: { params: Promise<{ firma_id: string }> }
 ) {
   try {
-    const kontrol = await adminGirisKontrol();
+    const { firma_id } = await params;
+    const kontrol = await firmaYonetimOkumaKontrol(firma_id);
     if (!kontrol.gecerli) return kontrol.yanit;
 
-    const { firma_id } = await params;
+
     if (!firma_id) return validasyonHatasi("firma_id zorunludur.", ["firma_id"]);
 
     const adminSupabase = createAdminClient();
@@ -48,10 +50,11 @@ export async function POST(
   { params }: { params: Promise<{ firma_id: string }> }
 ) {
   try {
-    const kontrol = await adminGirisKontrol();
+    const { firma_id } = await params;
+    const kontrol = await firmaYonetimIslemKontrol(firma_id);
     if (!kontrol.gecerli) return kontrol.yanit;
 
-    const { firma_id } = await params;
+
     if (!firma_id) return validasyonHatasi("firma_id zorunludur.", ["firma_id"]);
 
     const adminSupabase = createAdminClient();

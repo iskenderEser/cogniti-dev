@@ -1,0 +1,40 @@
+.layout { display:grid; grid-template-columns:minmax(0, 35fr) minmax(0, 65fr); gap:20px; align-items:start; }
+.layout>section { min-width:0; }
+.layout>section>div:first-child { padding:16px 18px; gap:10px; }
+.layout form { padding:16px 18px; }
+.teamList { list-style:none; padding:0; margin:0; }
+.teamRow { padding:16px 18px; }
+.teamRow + .teamRow { border-top:1px solid var(--tema-kontrol-cizgi); }
+.teamName { display:flex; align-items:baseline; justify-content:space-between; gap:16px; min-width:0; }
+.teamName h3 { margin:0; font-size:14px; font-weight:800; color:var(--tema-kontrol-metin); overflow-wrap:anywhere; }
+.unitType { flex-shrink:0; color:var(--tema-kontrol-ikincil-metin); font-size:11px; font-weight:600; }
+.regionList { padding:4px 0 0; margin:0 0 0 7px; list-style:none; }
+.regionList li { position:relative; display:flex; align-items:baseline; justify-content:space-between; gap:16px; min-width:0; padding:10px 0 10px 20px; color:var(--tema-kontrol-metin); font-size:13px; }
+.regionList li::before { content:""; position:absolute; left:0; top:0; bottom:0; border-left:1px solid var(--tema-kontrol-cizgi); }
+.regionList li:last-child::before { bottom:50%; }
+.regionList li::after { content:""; position:absolute; left:0; top:50%; width:12px; border-top:1px solid var(--tema-kontrol-cizgi); }
+.regionName { min-width:0; overflow-wrap:anywhere; }
+.fieldset { border:0; padding:0; margin:0; min-width:0; }
+.fieldset:disabled { opacity:.65; }
+.draftList { display:flex; flex-direction:column; gap:14px; }
+.draft { position:relative; display:flex; align-items:flex-start; gap:12px; min-width:0; }
+.draft+.draft { padding-top:14px; border-top:1px solid var(--tema-kontrol-cizgi); }
+.draftTitle { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+.draftFields { display:grid; flex:1; min-width:0; grid-template-columns:minmax(0,1fr) minmax(0,1fr); align-items:start; gap:14px; }
+.remove { flex-shrink:0; margin-top:21px; }
+.regions { min-width:0; }
+.fieldLabel { color:var(--tema-kontrol-metin); font-size:12px; font-weight:800; margin:0 0 7px; }
+.regionField { display:flex; flex-direction:column; align-items:stretch; gap:5px; margin-bottom:8px; font-size:12px; color:var(--tema-kontrol-ikincil-metin); }
+.regionField>span { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
+.formFooter { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-top:16px; padding-top:14px; border-top:1px solid var(--tema-kontrol-cizgi); }
+@media(max-width:1100px) { .layout { grid-template-columns:1fr; } }
+@media(max-width:600px) { .draft { flex-wrap:wrap; } .draftFields { flex-basis:100%; grid-template-columns:1fr; gap:12px; } .remove { margin-top:0; margin-left:auto; } }
+
+.teamRow { position:relative; }
+.teamHeading { min-height:30px; display:flex; align-items:center; }
+.teamHeading .teamName { width:100%; flex-wrap:wrap; gap:4px 10px; }
+.summary { display:flex; flex-wrap:wrap; align-items:center; gap:10px; width:100%; }
+.addRegionButton { min-height:30px; padding:4px 9px; font-size:11px; }
+.layout .addRegionForm { flex-basis:100%; min-width:0; display:flex; flex-direction:column; gap:12px; margin-top:12px; padding:14px 0 0; border-top:1px solid var(--tema-kontrol-cizgi); }
+
+@media(max-width:600px) { .summary { flex-direction:column; align-items:flex-start; } .layout .addRegionForm { width:100%; } }

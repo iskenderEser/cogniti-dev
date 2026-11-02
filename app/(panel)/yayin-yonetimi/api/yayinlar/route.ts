@@ -1,3 +1,5 @@
+import { puanAraligaUygunMu, puanAraligiMetni } from "@/lib/uretici/puanAraliklari";
+import { talepPuanAraliklariOku } from "@/lib/uretici/puanAraliklariSunucu";
 // app/yayin-yonetimi/api/yayinlar/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
@@ -7,15 +9,18 @@ import { URETICI_ROLLER, yalnizEclubHedefliMi } from "@/lib/utils/roller";
 import { talepBilgisiSoruSeti } from "@/lib/utils/talepZinciri";
 import { tekrarPeriyotSecenekleri } from "@/lib/tclub/tur/ayarlar";
 import { turKaydiAc } from "@/lib/tclub/tur/kayit";
+import { eczanemKazanimKosullariHatasi } from "@/lib/eczanem/kazanimModeli";
 import { tarifeVeBarkodYaz } from "@/lib/eczanem/tarife";
 import { rolCozucu } from "@/lib/utils/rolCozucu";
 import { yayinThumbnailCevabi, type YayinKapakGirdisi } from "@/lib/ogrenmeAraci/yayinThumbnail";
 import { kapakYayinKapisiDogrula } from "@/lib/ogrenmeAraci/sozlesme";
 import { yayinTokenHatasi } from "@/lib/token/yayinHatasi";
+import { sahaHedefliMi, sahaMerkeziPuanKosullariHatasi } from "@/lib/uretici/sahaPuanModeli";
+import { firmaCekDegerleriGecerli } from "@/lib/eclub/store/firmaCekTanimi";
 import { baremTablosuDogrula } from "@/lib/eclub/store/eclubStoreTipler";
 
-const YAYIN_LISTE_ALANLARI = "yayin_id, arac_id, soru_seti_durum_id, durum, yayin_tarihi, durdurma_tarihi, urun_adi, teknik_adi, video_url, thumbnail_url, video_puani, soru_puani, sorular, hedef_roller, talep_no, firma_adi, egitim_turu, arac_turu, arac_kapak_yolu, arac_dosya_yolu, arac_metadata, video_suresi_saniye, arac_metadata_dogrulandi";
-const ECLUB_KOSUL_ALANLARI = "yayin_id, cek_karsiligi_var_mi, satis_sarti_tipi, gizli_sart_katlama_orani, barem_tablosu";
+const YAYIN_LISTE_ALANLARI = "yayin_id, arac_id, soru_seti_durum_id, durum, yayin_tarihi, durdurma_tarihi, urun_adi, teknik_adi, video_url, thumbnail_url, video_puani, soru_puani, sorular, hedef_roller, eczanem_kazanim_modeli, talep_no, firma_adi, egitim_turu, arac_turu, arac_kapak_yolu, arac_dosya_yolu, arac_metadata, video_suresi_saniye, arac_metadata_dogrulandi";
+const ECLUB_KOSUL_ALANLARI = "yayin_id, karsilik_puan, karsilik_tl, cek_karsiligi_var_mi, saha_puan_modeli, satis_sarti_tipi, gizli_sart_katlama_orani, barem_tablosu";
 
 export async function GET() {
   try {
@@ -37,7 +42,7 @@ export async function GET() {
     if (error) return hataYaniti("Yayınlar yüklenemedi.", "v_yayin_detay SELECT — üretici filtresi", error);
 
     const eclubYayinIdleri = (yayinlar ?? [])
-      .filter((y) => yalnizEclubHedefliMi(Array.isArray(y.hedef_roller) ? y.hedef_roller : []))
+      .filter((y) => { const hedefler = Array.isArray(y.hedef_roller) ? y.hedef_roller : []; return yalnizEclubHedefliMi(hedefler) || sahaHedefliMi(hedefler); })
       .map((y) => y.yayin_id);
     const eclubKosullari = new Map<string, Record<string, unknown>>();
     if (eclubYayinIdleri.length > 0) {
@@ -45,7 +50,7 @@ export async function GET() {
         .from("yayin_yonetimi")
         .select(ECLUB_KOSUL_ALANLARI)
         .in("yayin_id", eclubYayinIdleri);
-      if (kosulHatasi) return hataYaniti("E-Club yayın koşulları yüklenemedi.", "yayin_yonetimi SELECT — üretici yayın koşulları", kosulHatasi);
+      if (kosulHatasi) return hataYaniti("Yayın puan koşulları yüklenemedi.", "yayin_yonetimi SELECT — üretici yayın koşulları", kosulHatasi);
       for (const kosul of kosullar ?? []) eclubKosullari.set(kosul.yayin_id, kosul);
     }
 
@@ -85,6 +90,7 @@ export async function POST(request: NextRequest) {
       ileri_sarma_acik,
       extra_puan,
       tekrar_periyot_gun,
+      eczanem_kazanim_modeli,
       barkod,
       karsilik_puan,
       karsilik_tl,
@@ -136,10 +142,23 @@ export async function POST(request: NextRequest) {
       return isKuraluHatasi("Taslak talep yayına alınamaz.");
     }
     const hedefRoller = talepBilgisi.hedef_roller;
+    const puanAraliklari = await talepPuanAraliklariOku(adminSupabase, talepBilgisi.talep_id, user.id);
 
     // Eczanem yayını mı? Hedef rol talepten türer — forma güvenmez (sunucu tarafı).
     const eczanemHedefi = hedefRoller.includes("eczanem");
+    const eczanemIndirimsiz = eczanemHedefi && eczanem_kazanim_modeli === "indirimsiz";
+    if (!eczanemHedefi && eczanem_kazanim_modeli != null) {
+      return validasyonHatasi("Eczanem kazanım modeli bu hedefte kullanılamaz.", ["eczanem_kazanim_modeli"]);
+    }
     const eclubHedefi = yalnizEclubHedefliMi(hedefRoller);
+    const sahaHedefi = sahaHedefliMi(hedefRoller);
+    if (sahaHedefi) {
+      const kosulHatasi = sahaMerkeziPuanKosullariHatasi(cek_karsiligi_var_mi, karsilik_puan, karsilik_tl);
+      if (kosulHatasi) return validasyonHatasi(kosulHatasi, ["cek_karsiligi_var_mi", "karsilik_puan", "karsilik_tl"]);
+      if (satis_sarti_tipi != null || gizli_sart_katlama_orani != null || barem_tablosu != null) {
+        return validasyonHatasi("UTT/BM yayınında E-Club sipariş veya barem koşulları bulunamaz.", ["satis_sarti_tipi", "barem_tablosu"]);
+      }
+    }
 
     if (eclubHedefi) {
       if (typeof cek_karsiligi_var_mi !== "boolean") {
@@ -158,8 +177,15 @@ export async function POST(request: NextRequest) {
         if (satis_sarti_tipi !== "siparissiz_cek" && barem_tablosu.some((barem: { adet: number }) => barem.adet <= 0)) {
           return validasyonHatasi("Sipariş sunulan yayınlarda her baremin sipariş adedi pozitif olmalıdır.", ["barem_tablosu"]);
         }
-        if (!Number.isInteger(karsilik_puan) || karsilik_puan <= 0 || !Number.isFinite(karsilik_tl) || karsilik_tl <= 0) {
-          return validasyonHatasi("Puan ve TL karşılığı pozitif olmalıdır.", ["karsilik_puan", "karsilik_tl"]);
+        if (karsilik_puan != null || karsilik_tl != null) {
+          return validasyonHatasi("E-Club puan–TL karşılığı admin firma tanımından alınır.", ["karsilik_puan", "karsilik_tl"]);
+        }
+        const { data: kaynakTalep, error: firmaHatasi } = await adminSupabase.from("talepler").select("firma_id").eq("talep_id", talepBilgisi.talep_id).single();
+        if (firmaHatasi) return hataYaniti("Yayının firması doğrulanamadı.", "E-Club firma kimliği", firmaHatasi);
+        const { data: firmaTanimi, error: tanimHatasi } = await adminSupabase.from("eclub_firma_cek_tanimlari").select("karsilik_puan,karsilik_tl").eq("firma_id", kaynakTalep.firma_id).maybeSingle();
+        if (tanimHatasi) return hataYaniti("Firma puan–TL tanımı alınamadı.", "E-Club firma tanımı", tanimHatasi);
+        if (!firmaTanimi || !firmaCekDegerleriGecerli(firmaTanimi.karsilik_puan, firmaTanimi.karsilik_tl)) {
+          return isKuraluHatasi("Bu firma için admin tarafından puan–TL karşılığı tanımlanmalıdır.");
         }
         if (satis_sarti_tipi === "serbest_siparis" && (!Number.isInteger(gizli_sart_katlama_orani) || gizli_sart_katlama_orani <= 0 || gizli_sart_katlama_orani > 200)) {
           return validasyonHatasi("Siparişle çek artış oranı 1-200 arasında tam sayı olmalıdır.", ["gizli_sart_katlama_orani"]);
@@ -172,18 +198,10 @@ export async function POST(request: NextRequest) {
 
     let eczanemUrunId: string | null = null;
     if (eczanemHedefi) {
-      // Eczanem yayınında extra puan / ileri sarma / tekrar periyodu YOKTUR
-      // (İP §4.4 — E-Club deseni); barkod + Karşılık zorunludur ve ürün
-      // seviyesine yazılır (K-E3). Karşılık = puan ↔ TL dönüşüm oranı.
-      if (!barkod || typeof barkod !== "string" || !barkod.trim()) {
-        return validasyonHatasi("Eczanem yayınında barkod zorunludur.", ["barkod"]);
-      }
-      if (!karsilik_puan || karsilik_puan <= 0 || !karsilik_tl || karsilik_tl <= 0) {
-        return validasyonHatasi("Eczanem yayınında Karşılık (puan ve TL) zorunludur.", ["karsilik_puan", "karsilik_tl"]);
-      }
-      if (!satis_fiyati || satis_fiyati <= 0) {
-        return validasyonHatasi("Eczanem yayınında satış fiyatı zorunludur.", ["satis_fiyati"]);
-      }
+      const kosulHatasi = eczanemKazanimKosullariHatasi(eczanem_kazanim_modeli, {
+        barkod, puan: karsilik_puan, tl: karsilik_tl, satisFiyati: satis_fiyati,
+      });
+      if (kosulHatasi) return validasyonHatasi(kosulHatasi, ["eczanem_kazanim_modeli", "karsilik_puan", "karsilik_tl", "satis_fiyati"]);
       if (tekrar_periyot_gun !== undefined && tekrar_periyot_gun !== null) {
         return validasyonHatasi("Eczanem yayınında tekrar periyodu bulunmaz.", ["tekrar_periyot_gun"]);
       }
@@ -194,7 +212,14 @@ export async function POST(request: NextRequest) {
         .eq("talep_id", talepBilgisi.talep_id)
         .single();
       eczanemUrunId = talepUrun?.urun_id ?? null;
-      if (!eczanemUrunId) return isKuraluHatasi("Eczanem yayınının ürünü bulunamadı — tarife yazılamaz.");
+      if (!eczanemUrunId) return isKuraluHatasi("Eczanem yayınının ürünü bulunamadı.");
+      if (!eczanemIndirimsiz) {
+        const { data: urunFirma, error: urunFirmaHatasi } = await adminSupabase.from("urunler").select("firma_id").eq("urun_id", eczanemUrunId).single();
+        if (urunFirmaHatasi) return hataYaniti("Ürünün firması alınamadı.", "Eczanem ürün firması", urunFirmaHatasi);
+        const { data: oran, error: oranHatasi } = await adminSupabase.from("eczanem_firma_cek_tanimlari").select("karsilik_puan,karsilik_tl").eq("firma_id", urunFirma.firma_id).maybeSingle();
+        if (oranHatasi) return hataYaniti("Firma puan–TL tanımı alınamadı.", "Eczanem firma tanımı", oranHatasi);
+        if (!oran || !firmaCekDegerleriGecerli(oran.karsilik_puan, oran.karsilik_tl)) return isKuraluHatasi("Bu firma için Eczanem Çek Yönetimi bölümünde puan–TL karşılığı tanımlanmalıdır.");
+      }
     } else {
       // E-Club kişileri yalnız tam izleme + doğru cevap puanı kazanır; bu hedefte
       // extra puan sözleşmenin parçası değildir. Saha yayınlarında ise zorunludur.
@@ -202,8 +227,8 @@ export async function POST(request: NextRequest) {
         if (extra_puan !== undefined && extra_puan !== null) {
           return validasyonHatasi("Eczacı/Eczane Teknisyeni yayınında Extra puan bulunmaz.", ["extra_puan"]);
         }
-      } else if (!extra_puan || extra_puan < 5 || extra_puan > 10) {
-        return validasyonHatasi("Extra puan 5-10 arasında olmalıdır.", ["extra_puan"]);
+      } else if (!puanAraligaUygunMu(extra_puan, puanAraliklari.extra)) {
+        return validasyonHatasi(`Extra puan firma aralığına uygun değil. ${puanAraligiMetni(puanAraliklari.extra)}`, ["extra_puan"]);
       }
       if (tekrar_periyot_gun !== undefined && tekrar_periyot_gun !== null) {
         const secenekler = await tekrarPeriyotSecenekleri(adminSupabase);
@@ -217,33 +242,38 @@ export async function POST(request: NextRequest) {
     }
 
     if (!soruSeti.arac_durum_id) return isKuraluHatasi("Soru setinin öğrenme aracı bağlantısı eksik.");
-    const { data: videoPuan, error: vpError } = await adminSupabase.from("ogrenme_araci_puanlari")
-      .select("arac_puani").eq("arac_durum_id", soruSeti.arac_durum_id).maybeSingle();
-
-    if (vpError && vpError.code !== "PGRST116") {
-      return hataYaniti("Öğrenme aracı puanı sorgulanırken hata oluştu.", "öğrenme aracı puanı SELECT", vpError);
-    }
-    const aracPuani = videoPuan?.arac_puani;
-    if (aracPuani === null || aracPuani === undefined) {
-      return isKuraluHatasi("Öğrenme aracı puanı tanımlanmadan yayına alınamaz.");
-    }
-
     const soruSayisi = soruSeti.sorular?.length ?? 0;
     if (soruSayisi === 0) return isKuraluHatasi("Soru seti boş. Yayına alınamaz.");
 
-    const { data: soruPuanlari, error: spError } = await adminSupabase
-      .from("soru_seti_puanlari")
-      .select("soru_index, soru_puani")
-      .eq("soru_seti_durum_id", soru_seti_durum_id);
+    if (!eczanemIndirimsiz) {
+      const { data: videoPuan, error: vpError } = await adminSupabase.from("ogrenme_araci_puanlari")
+        .select("arac_puani").eq("arac_durum_id", soruSeti.arac_durum_id).maybeSingle();
 
-    if (spError) return hataYaniti("Soru puanları sorgulanırken hata oluştu.", "soru_seti_puanlari tablosu SELECT — soru_seti_durum_id kontrolü", spError);
+      if (vpError && vpError.code !== "PGRST116") {
+        return hataYaniti("Öğrenme aracı puanı sorgulanırken hata oluştu.", "öğrenme aracı puanı SELECT", vpError);
+      }
+      const aracPuani = videoPuan?.arac_puani;
+      if (aracPuani === null || aracPuani === undefined) {
+        return isKuraluHatasi("Öğrenme aracı puanı tanımlanmadan yayına alınamaz.");
+      }
 
-    if (!soruPuanlari || soruPuanlari.length < soruSayisi) {
-      return isKuraluHatasi(`Tüm sorulara puan atanmadan yayına alınamaz. ${soruPuanlari?.length ?? 0}/${soruSayisi} soru puanlandı.`);
+      if (!puanAraligaUygunMu(aracPuani, puanAraliklari.yayin)) return validasyonHatasi(`Kayıtlı yayın puanı güncel firma aralığına uygun değil. ${puanAraligiMetni(puanAraliklari.yayin)}`, ["video_puani"]);
+
+      const { data: soruPuanlari, error: spError } = await adminSupabase
+        .from("soru_seti_puanlari")
+        .select("soru_index, soru_puani")
+        .eq("soru_seti_durum_id", soru_seti_durum_id);
+
+      if (spError) return hataYaniti("Soru puanları sorgulanırken hata oluştu.", "soru_seti_puanlari tablosu SELECT — soru_seti_durum_id kontrolü", spError);
+
+      if (!soruPuanlari || soruPuanlari.length < soruSayisi) {
+        return isKuraluHatasi(`Tüm sorulara puan atanmadan yayına alınamaz. ${soruPuanlari?.length ?? 0}/${soruSayisi} soru puanlandı.`);
+      }
+
+      if (soruPuanlari.some(p => !puanAraligaUygunMu(p.soru_puani, puanAraliklari.cevap))) return validasyonHatasi(`Kayıtlı doğru cevap puanları güncel firma aralığına uygun değil. ${puanAraligiMetni(puanAraliklari.cevap)}`, ["soru_puani"]);
+      const puansizSoru = soruPuanlari.find(p => !p.soru_puani);
+      if (puansizSoru) return isKuraluHatasi(`${puansizSoru.soru_index + 1}. sorunun puanı eksik. Tüm sorulara puan atanmalıdır.`);
     }
-
-    const puansizSoru = soruPuanlari.find(p => !p.soru_puani);
-    if (puansizSoru) return isKuraluHatasi(`${puansizSoru.soru_index + 1}. sorunun puanı eksik. Tüm sorulara puan atanmalıdır.`);
 
     const { data: mevcutYayin, error: myError } = await adminSupabase
       .from("yayin_yonetimi")
@@ -301,12 +331,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Eczanem: barkod + Karşılık öğrenme aracı kaydı doğrulandıktan sonra yazılır.
-    if (eczanemHedefi && eczanemUrunId) {
+    if (eczanemHedefi && !eczanemIndirimsiz && eczanemUrunId) {
       const tarifeSonuc = await tarifeVeBarkodYaz(adminSupabase, {
         urun_id: eczanemUrunId,
         barkod: (barkod as string).trim(),
-        puan: karsilik_puan,
-        tl: karsilik_tl,
         satis_fiyati,
         olusturan_id: user.id,
       });
@@ -320,6 +348,7 @@ export async function POST(request: NextRequest) {
         soru_seti_durum_id,
         arac_durum_id: soruSeti.arac_durum_id ?? null,
         uretici_id: user.id,
+        eczanem_kazanim_modeli: eczanemHedefi ? eczanem_kazanim_modeli : null,
         durum: planliTarih ? "planlandi" : "yayinda",
         yayin_tarihi: planliTarih ? planliTarih.toISOString() : simdi,
         // E-Club'da ileri sarma puan kayıplı olarak açıktır; Extra puan yoktur.
@@ -331,9 +360,10 @@ export async function POST(request: NextRequest) {
         satis_sarti_tipi: eclubHedefi && cek_karsiligi_var_mi ? (satis_sarti_tipi ?? "satis_sartli") : null,
         gizli_sart_katlama_orani: eclubHedefi && cek_karsiligi_var_mi && satis_sarti_tipi === "serbest_siparis" ? (gizli_sart_katlama_orani ?? 20) : null,
         barem_tablosu: eclubHedefi && cek_karsiligi_var_mi ? barem_tablosu : null,
-        karsilik_puan: eclubHedefi && cek_karsiligi_var_mi ? (karsilik_puan ?? 1) : null,
-        karsilik_tl: eclubHedefi && cek_karsiligi_var_mi ? (karsilik_tl ?? 1) : null,
-        cek_karsiligi_var_mi: eclubHedefi ? cek_karsiligi_var_mi : true,
+        karsilik_puan: null,
+        karsilik_tl: null,
+        cek_karsiligi_var_mi: eclubHedefi || sahaHedefi ? cek_karsiligi_var_mi : true,
+        saha_puan_modeli: sahaHedefi ? (cek_karsiligi_var_mi ? "tl_karsilikli" : "tlsiz") : null,
       })
       .select("yayin_id, durum, yayin_tarihi")
       .single();

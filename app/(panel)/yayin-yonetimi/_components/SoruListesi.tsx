@@ -12,12 +12,14 @@ import { SadeFormSecimi } from "@/components/kontrol/SadeKontroller";
 
 import type { Soru } from "@/app/(panel)/talepler/_types";
 import type { Bekleyen } from "../_types";
-import { SORU_PUAN_SECENEKLERI, SORU_PUAN_SECENEKLERI_ECZANEM } from "../_types";
+import { etkinPuanAraliklari, puanSecenekleri, type PuanAraliklari } from "@/lib/uretici/puanAraliklari";
 
 interface SoruListesiProps {
   sorular: Soru[];
+  puanAraliklari?: PuanAraliklari | null;
   soru_seti_durum_id: string;
   bekleyen?: Bekleyen | false;
+  puanGoster?: boolean;
   getSoruPuani: (soru_seti_durum_id: string, soru_index: number) => number | "";
   setSoruPuani: (soru_seti_durum_id: string, soru_index: number, puan: number) => void;
   hepsineAyniPuanAta: (soru_seti_durum_id: string, sorular: Soru[], puan: number) => void;
@@ -27,14 +29,14 @@ export function SoruListesi({
   sorular,
   soru_seti_durum_id,
   bekleyen,
+  puanGoster = true,
+  puanAraliklari,
   getSoruPuani,
   setSoruPuani,
   hepsineAyniPuanAta,
 }: SoruListesiProps) {
-  // Eczanem yayınlarında soru puanı skalası farklıdır; diğer hedeflerde mevcut liste.
-  const soruPuanSecenekleri = bekleyen && bekleyen.hedef_roller.includes("eczanem")
-    ? SORU_PUAN_SECENEKLERI_ECZANEM
-    : SORU_PUAN_SECENEKLERI;
+  const cevapAraligi = etkinPuanAraliklari(puanAraliklari ?? null, !!bekleyen && bekleyen.hedef_roller.includes("eczanem")).cevap;
+  const soruPuanSecenekleri = puanAraliklari === undefined ? [] : puanSecenekleri(cevapAraligi);
 
   return (
     <div className="border-t border-[var(--tema-yerel-uretim-cizgi-43)] bg-[var(--tema-yerel-uretim-sayfa-zemini-16)] px-3.5 py-3.5 md:px-4">
@@ -43,7 +45,7 @@ export function SoruListesi({
           <p className="text-xs font-extrabold text-[var(--tema-yerel-uretim-ana-metin-23)]">Soru Seti</p>
           <p className="mt-0.5 text-[10px] text-[var(--tema-yerel-uretim-yardimci-metin-33)]">{sorular.length} soru · doğru seçenekler mavi ile işaretlidir</p>
         </div>
-      {bekleyen && (
+      {bekleyen && puanGoster && (
         <div className="flex items-center justify-end gap-2 rounded-xl border border-[var(--tema-yerel-uretim-cizgi-07)] bg-[var(--tema-yerel-uretim-secim-zemin-03)] px-3 py-2">
           <span className="text-xs font-bold text-[var(--tema-yerel-uretim-eylem-metin-07)]">Tümüne aynı puan</span>
           <SadeFormSecimi value="" onChange={(e) => { if (e.target.value) hepsineAyniPuanAta(soru_seti_durum_id, sorular, Number(e.target.value)); }} aria-label="Tüm sorulara aynı puanı ata" className="w-full">
@@ -56,7 +58,7 @@ export function SoruListesi({
       <div className="flex max-h-[520px] flex-col gap-2 overflow-y-auto pr-1">
         {sorular.map((soru: Soru, i: number) => {
           const sp = getSoruPuani(soru_seti_durum_id, i);
-          const puanDolu = typeof sp === "number" && sp > 0;
+          const puanDolu = puanGoster && typeof sp === "number" && sp > 0;
           return (
             <div key={i} className={`flex items-start gap-2.5 rounded-xl border px-3 py-3 transition ${
               puanDolu ? "border-[var(--tema-yerel-uretim-cizgi-06)] bg-[var(--tema-yerel-uretim-sayfa-zemini-22)] shadow-sm" : "border-[var(--tema-yerel-uretim-cizgi-44)] bg-[var(--tema-yerel-uretim-kart-01)]"
@@ -75,7 +77,7 @@ export function SoruListesi({
                   ))}
                 </div>
               </div>
-              {bekleyen ? (
+              {puanGoster && (bekleyen ? (
                 <div className="flex-shrink-0 flex flex-col items-end gap-1">
                   <span className={`text-[10px] font-extrabold ${puanDolu ? "text-[var(--tema-yerel-uretim-eylem-metin-02)]" : "text-[var(--tema-yerel-uretim-yardimci-metin-34)]"}`}>
                     {puanDolu ? "✓ Puan" : "Puan"}
@@ -90,7 +92,7 @@ export function SoruListesi({
                   <span className="text-[9px] font-bold uppercase text-[var(--tema-yerel-uretim-yardimci-metin-35)]">Puan</span>
                   <span className="text-xs font-extrabold text-[var(--tema-yerel-uretim-eylem-metin-15)]">{sp || "—"}</span>
                 </div>
-              )}
+              ))}
             </div>
           );
         })}

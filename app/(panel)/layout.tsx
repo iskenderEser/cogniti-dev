@@ -35,6 +35,7 @@ import {
   setPanelCache,
   VARSAYILAN_FLAGS,
   type PanelFlags,
+  type PanelNavbarOzet,
 } from "@/lib/panel/panelCache";
 
 export default function PanelLayout({ children }: { children: React.ReactNode }) {
@@ -48,9 +49,9 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
   // güvenli varsayılanlarla başlatılır. Kullanıcı doğrulandığında sessionStorage'dan okunur.
   const [flags, setFlags] = useState<PanelFlags>(VARSAYILAN_FLAGS);
   const [badge, setBadge] = useState<Record<string, number>>({});
-  const [ozet, setOzet] = useState<{ takimSirasi: number | null; siparisPuani: number } | null>(null);
+  const [ozet, setOzet] = useState<PanelNavbarOzet | null>(null);
   const [eclubStorePuani, setEclubStorePuani] = useState<number | null>(null);
-  const [eclubFirmalar, setEclubFirmalar] = useState<Array<{ firma_id: string; firma_adi: string; eclub_store_aktif: boolean }>>([]);
+  const [eclubFirmalar, setEclubFirmalar] = useState<Array<{ firma_id: string; firma_adi: string }>>([]);
   const [firmaAdi, setFirmaAdi] = useState<string | null>(null);
 
   const rolKucu = kullanici?.rol?.trim().toLowerCase() ?? "";
@@ -97,7 +98,6 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
           storeAcik: data.profil.hbstore_aktif === true,
           ccAcik: data.profil.cc_aktif === true,
           eclubAcik: data.profil.eclub_aktif === true,
-          eclubStoreAcik: data.profil.eclub_store_aktif === true,
           eczanemAcik: data.profil.eczanem_aktif === true,
           firmaLogoUrl: data.profil.logo_url ?? null,
           ogrenmePlatformuAktif: data.profil.ogrenme_platformu_aktif === true,
@@ -109,6 +109,7 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
       }
       const guncelOzet = data.navbar_ozet ? {
         takimSirasi: data.navbar_ozet.takim_sirasi ?? null,
+        ligPuani: data.navbar_ozet.lig_puani ?? null,
         siparisPuani: data.navbar_ozet.siparis_puani ?? 0,
       } : null;
       setOzet(guncelOzet);
@@ -228,7 +229,6 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
     storeAcik: flags.storeAcik || (userCache?.flags.storeAcik ?? false),
     ccAcik: flags.ccAcik || (userCache?.flags.ccAcik ?? false),
     eclubAcik: flags.eclubAcik || (userCache?.flags.eclubAcik ?? false),
-    eclubStoreAcik: flags.eclubStoreAcik || (userCache?.flags.eclubStoreAcik ?? false),
     eczanemAcik: flags.eczanemAcik || (userCache?.flags.eczanemAcik ?? false),
     firmaLogoUrl: flags.firmaLogoUrl ?? userCache?.flags.firmaLogoUrl ?? null,
     ogrenmePlatformuAktif: flags.ogrenmePlatformuAktif || (userCache?.flags.ogrenmePlatformuAktif ?? false),
@@ -244,7 +244,6 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
     storeAcik: etkinFlags.storeAcik,
     ccAcik: etkinFlags.ccAcik,
     eclubAcik: etkinFlags.eclubAcik,
-    eclubStoreAcik: etkinFlags.eclubStoreAcik,
     eczanemAcik: etkinFlags.eczanemAcik,
   };
   // eclub_kisi (KARAR-4) dar gezinme; diğer herkes tam ağaç.
@@ -262,7 +261,7 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
         vivaGoster: isEclubKisi ? etkinFlags.eclubAcik && etkinFirmalar.length > 0 : TUM_ROLLER.includes(rolKucu),
         anaSayfaYolu,
         bilgiPilleri: !isEclubKisi && URETICI_ROLLER.includes(rolKucu) ? [] : undefined,
-        eclubStorePuani: isEclubKisi && etkinFlags.eclubStoreAcik ? etkinEclubStorePuani : null,
+        eclubStorePuani: isEclubKisi && etkinFlags.eclubAcik ? etkinEclubStorePuani : null,
         firmaLogoUrl: !isEclubKisi ? etkinFlags.firmaLogoUrl : null,
         ogrenmePlatformuAktif: !isEclubKisi && Boolean(etkinFlags.ogrenmePlatformuAktif),
         firmaAdi,

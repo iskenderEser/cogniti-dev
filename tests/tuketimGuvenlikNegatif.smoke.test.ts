@@ -83,7 +83,7 @@ test("E-Club etkileşimi aktif firma, doğru unvan hedefi ve kişiye ait öneriy
     eclub_kisiler: [{ kisi_id: "kisi-1", auth_user_id: "auth-1", rol: "eczaci", ad: "E", soyad: "K", eposta: "e@test", telefon: "1" }],
     eclub_kisi_eczane: [{ kisi_id: "kisi-1", eczane_id: "eczane-1", aktif_mi: true }],
     eclub_eczane_firma: [{ eczane_id: "eczane-1", firma_id: "firma-1", aktif_mi: true }],
-    firmalar: [{ firma_id: "firma-1", firma_adi: "Firma", aktif: true, eclub_aktif: true, eclub_store_aktif: true, eczanem_aktif: true }],
+    firmalar: [{ firma_id: "firma-1", firma_adi: "Firma", aktif: true, eclub_aktif: true, eczanem_aktif: true }],
     eclub_oneri_kayitlari: [{ oneri_id: "oneri-1", kisi_id: "kisi-1", yayin_id: "yayin-1" }],
   };
   const girdi = { userId: "auth-1", rol: "eczaci", yayinId: "yayin-1", eclubKisi: { kisi_id: "kisi-1", rol: "eczaci" } };

@@ -2,8 +2,8 @@
 import { eclubFirmaAdiYolu } from "../eclub/firmaGezinme";
 import type { KilavuzParcasi } from "./ureticiKilavuzu";
 import { eclubCekTalebiOlusturabilirMi } from "../eclub/store/cekTalebiYetkisi";
-export interface EczaneKilavuzFirmasi { firma_id: string; firma_adi: string; eclub_store_aktif: boolean; eczanem_aktif: boolean }
-type KosulluParca = KilavuzParcasi & { modul?: "cek" | "cek_diger" | "eczanem"; cekKapaliMetin?: string };
+export interface EczaneKilavuzFirmasi { firma_id: string; firma_adi: string; eczanem_aktif: boolean }
+type KosulluParca = KilavuzParcasi & { modul?: "cek" | "cek_diger" | "eczanem"; firmaSecilmediMetin?: string };
 const ECZANE_KILAVUZU: { giris: string[]; bolumler: { baslik: string; parcalar: KosulluParca[] }[] } = {
   "giris": [],
   "bolumler": [
@@ -423,7 +423,7 @@ const ECZANE_KILAVUZU: { giris: string[]; bolumler: { baslik: string; parcalar: 
         {
           "tip": "paragraf",
           "metin": "**Firmalar ve Yayınları** menüsünden incelemek istediğiniz firmayı ve firmanın ürünlerini seçebilirsiniz. Yayın, performans ve hediye çeki bilgileri bu seçime göre gösterilir.",
-          "cekKapaliMetin": "**Firmalar ve Yayınları** menüsünden incelemek istediğiniz firmayı ve firmanın ürünlerini seçebilirsiniz. Yayın ve performans bilgileri bu seçime göre gösterilir."
+          "firmaSecilmediMetin": "**Firmalar ve Yayınları** menüsünden incelemek istediğiniz firmayı ve firmanın ürünlerini seçebilirsiniz. Yayın ve performans bilgileri bu seçime göre gösterilir."
         },
         {
           "tip": "baslik",
@@ -660,8 +660,8 @@ const ECZANE_KILAVUZU: { giris: string[]; bolumler: { baslik: string; parcalar: 
 
 /** Bayraklar yalnız seçili, erişilebilir firmadan alınır; başka firmanın açık modülü kullanılmaz. */
 export function eczaneKilavuzunuSec(firma: EczaneKilavuzFirmasi | null, rol: string) {
-  const cek = firma?.eclub_store_aktif === true;
-  const acik = { cek, cek_diger: cek && !eclubCekTalebiOlusturabilirMi(rol), eczanem: firma?.eczanem_aktif === true };
+  const firmaSecili = firma !== null;
+  const acik = { cek: firmaSecili, cek_diger: firmaSecili && !eclubCekTalebiOlusturabilirMi(rol), eczanem: firma?.eczanem_aktif === true };
   return { giris: [...ECZANE_KILAVUZU.giris], bolumler: ECZANE_KILAVUZU.bolumler.map(bolum => {
     const parcalar: KilavuzParcasi[] = [];
     for (const parca of bolum.parcalar) {
@@ -670,7 +670,7 @@ export function eczaneKilavuzunuSec(firma: EczaneKilavuzFirmasi | null, rol: str
         const onceki = parcalar.at(-1);
         if (onceki?.tip === "liste" && onceki.sirali === parca.sirali) onceki.maddeler.push(...parca.maddeler);
         else parcalar.push({ tip: "liste", sirali: parca.sirali, maddeler: [...parca.maddeler] });
-      } else parcalar.push({ tip: parca.tip, metin: !cek && parca.cekKapaliMetin ? parca.cekKapaliMetin : parca.metin });
+      } else parcalar.push({ tip: parca.tip, metin: !firmaSecili && parca.firmaSecilmediMetin ? parca.firmaSecilmediMetin : parca.metin });
     }
     return { baslik: bolum.baslik, parcalar };
   }) };

@@ -134,7 +134,7 @@ export async function getYayindakiVideolar(
       .eq("gercek_oynatma_mi", true),
     adminSupabase
       .from("yayin_yonetimi")
-      .select("yayin_id, extra_puan")
+      .select("yayin_id, extra_puan, cek_karsiligi_var_mi, saha_puan_modeli, karsilik_puan, karsilik_tl")
       .in("yayin_id", yayinIdler),
     ureticiIdler.length > 0
       ? adminSupabase
@@ -148,6 +148,7 @@ export async function getYayindakiVideolar(
     (ureticiRes.data as UreticiSatiri[]).forEach((u) => ureticiHarita.set(u.kullanici_id, u));
   }
 
+  const cekBilgiMap = new Map((yayinYonetimiRes.data ?? []).map((y) => [y.yayin_id, y]));
   const extraPuanMap = new Map<string, number>();
   (yayinYonetimiRes?.data ?? []).forEach((r: { yayin_id: string; extra_puan?: number | null }) => {
     if (r.extra_puan != null) {
@@ -178,6 +179,10 @@ export async function getYayindakiVideolar(
       thumbnail_url: yayinThumbnailUrlCoz(v),
       video_puani: v.video_puani ?? null,
       extra_puan: extraPuanMap.get(v.yayin_id) ?? null,
+      cek_karsiligi_var_mi: cekBilgiMap.get(v.yayin_id)?.cek_karsiligi_var_mi ?? null,
+      saha_puan_modeli: cekBilgiMap.get(v.yayin_id)?.saha_puan_modeli ?? null,
+      karsilik_puan: cekBilgiMap.get(v.yayin_id)?.karsilik_puan ?? null,
+      karsilik_tl: cekBilgiMap.get(v.yayin_id)?.karsilik_tl ?? null,
       yayin_tarihi: v.yayin_tarihi,
       icerik_turu: v.icerik_turu ?? null,
       hedef_roller: hedefRolleriOku(v),

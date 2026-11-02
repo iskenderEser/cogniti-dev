@@ -34,7 +34,6 @@ export interface NavContext {
   storeAcik: boolean;
   ccAcik: boolean;
   eclubAcik: boolean;
-  eclubStoreAcik: boolean;
   eczanemAcik: boolean;
 }
 
@@ -200,7 +199,6 @@ export const PANEL_NAV: NavGrup[] = [
 const MOBIL_KISISEL_HBSTORE_YOLLARI = new Set([
   "/store",
   "/store/siparislerim",
-  "/store/adreslerim",
 ]);
 
 const mobilKisiselHbstoreGorunur = (ctx: NavContext) =>
@@ -225,8 +223,7 @@ export function mobilPanelNavOlustur(gruplar: NavGrup[], ctx: NavContext): NavGr
     baslik: "FirmaStore",
     oglar: [
       { etiket: "FirmaStore", path: "/store", tamEslesme: true, gate: mobilKisiselHbstoreGorunur },
-      { etiket: "Siparişlerim", path: "/store/siparislerim", gate: mobilKisiselHbstoreGorunur },
-      { etiket: "Adreslerim", path: "/store/adreslerim", gate: mobilKisiselHbstoreGorunur },
+      { etiket: "Taleplerim", path: "/store/siparislerim", gate: mobilKisiselHbstoreGorunur },
     ],
   };
   const eczanemIndex = temizGruplar.findIndex((grup) => grup.baslik === "Eczanem");

@@ -8,6 +8,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import EclubTestEczaneleri from "../eclub/_components/EclubTestEczaneleri";
 import type { SistemAyari } from "../_types";
 import { RENK_BORDO, RENK_BORDO_KENAR, RENK_BORDO_ZEMIN } from "../_constants";
 import {
@@ -137,6 +138,10 @@ export default function SistemAyarlari({ hata, basari }: SistemAyarlariProps) {
         Değerler tüm firmalara aynı uygulanır. Yeni ayar eklemek migration işidir; buradan yalnızca mevcut değerler güncellenir.
       </p>
 
+      <div style={{ maxWidth: 980, marginBottom: 24 }}>
+        <EclubTestEczaneleri hata={hata} basari={basari} />
+      </div>
+
       {/* Test aracı — Mesai bypass düğmesi (production'da dinlenmez) */}
       <section
         style={{
@@ -151,7 +156,7 @@ export default function SistemAyarlari({ hata, basari }: SistemAyarlariProps) {
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px", flexWrap: "wrap" }}>
           <div style={{ minWidth: 0 }}>
             <h3 style={{ margin: 0, fontSize: "15px", fontWeight: 800, color: "var(--tema-yerel-yonetim-ana-metin-01)" }}>
-              Test: Mesai kuralını atla
+              Test: Mesai Kuralını Atla
             </h3>
             <p style={{ margin: "4px 0 0", fontSize: "12px", lineHeight: 1.5, color: "var(--tema-yerel-yonetim-yardimci-metin-01)" }}>
               Açıkken mesai günü/saati kuralı atlanır — izleme her zaman kayıt olur, puan ve sorular çalışır.

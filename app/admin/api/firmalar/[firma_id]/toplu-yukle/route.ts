@@ -1,9 +1,11 @@
+import { firmaYonetimIslemKontrol } from "@/lib/admin/firmaYonetimIslem";
 // app/admin/api/firmalar/[firma_id]/toplu-yukle/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/server";
 import { hataYaniti, sunucuHatasi, validasyonHatasi } from "@/lib/utils/hataIsle";
 import {
   adKatla,
+  rolCoz,
   firmaYapisiYukle,
   kullaniciSatirDogrula,
   kullaniciEksikMi,
@@ -13,7 +15,6 @@ import {
   type GuncellemeAlanlari,
   type MevcutKullanici,
 } from "@/lib/admin/kullaniciDogrulama";
-import { adminGirisKontrol } from "@/lib/utils/adminGirisKontrol";
 import { hiyerarsiAdiBicimle, tekillikIhlaliMi } from "@/lib/admin/hiyerarsiTekillik";
 import { topluPaketHatalari } from "@/lib/admin/topluPaketButunlugu";
 import * as XLSX from "xlsx";
@@ -23,10 +24,11 @@ export async function POST(
   { params }: { params: Promise<{ firma_id: string }> }
 ) {
   try {
-    const kontrol = await adminGirisKontrol();
+    const { firma_id } = await params;
+    const kontrol = await firmaYonetimIslemKontrol(firma_id);
     if (!kontrol.gecerli) return kontrol.yanit;
 
-    const { firma_id } = await params;
+
     if (!firma_id) return validasyonHatasi("firma_id zorunludur.", ["firma_id"]);
 
     const adminSupabase = createAdminClient();
@@ -141,6 +143,9 @@ export async function POST(
       .eq("firma_id", firma_id);
     if (mevcutError) return hataYaniti("Mevcut kullanıcılar çekilemedi.", "kullanicilar tablosu SELECT — upsert eşleştirme", mevcutError);
     const mevcutlar = (mevcutData ?? []) as MevcutKullanici[];
+    if (kontrol.firmaAdmin && rows.some(r => rolCoz(String(r["rol"] ?? "")) === "admin" || mevcutlar.some(m => m.rol === "admin" && (m.eposta.toLowerCase() === String(r["eposta"] ?? "").trim().toLowerCase() || (m.telefon && m.telefon.replace(/\D/g, "") === String(r["telefon"] ?? "").replace(/\D/g, "")))))) {
+      return validasyonHatasi("Dosya Cogniti admin hesabı veya rolü içeremez.", ["dosya"]);
+    }
     const mevcutMap = new Map(mevcutlar.map((m) => [m.kullanici_id, m]));
 
     // K-A6 — eksik kabul: kimlik çekirdeği tam ama takım/bölge çözülememiş

@@ -123,6 +123,13 @@ export default function SayfaRehberi({
 
   // Açıklama, özet veya ipucundaki link kelimeleri ve markdown linklerini ([Metin](/yol)) tıklanabilir hale getiren yardımcı
   const metinFormatla = (metin: string, linkKelime?: string, altModal?: AltModalBilgisi): ReactNode => {
+    const kalinParcalar = metin.split(/(\*\*[^*]+\*\*)/g);
+    if (kalinParcalar.length > 1) {
+      return <>{kalinParcalar.map((parca, index) => parca.startsWith("**")
+        ? <strong key={index}>{parca.slice(2, -2)}</strong>
+        : <span key={index}>{metinFormatla(parca, linkKelime, altModal)}</span>)}</>;
+    }
+
     // 1) Markdown link kontrolü: [Metin](/yol)
     const markdownRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
     if (markdownRegex.test(metin)) {

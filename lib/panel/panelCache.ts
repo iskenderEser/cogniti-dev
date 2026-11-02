@@ -3,7 +3,7 @@
 // Panel kabuğu ve sol menü için kullanıcıya ve oturuma özel (session-isolated) hızlı önbellek.
 // Mahremiyet Güvencesi:
 // 1. Anonim veya kimliği çözülmemiş durumlarda asla önbellek okunmaz (userId zorunludur).
-// 2. Her kullanıcının verisi ayrı bir sessionStorage anahtarında saklanır (hb_panel_cache_${userId}).
+// 2. Her kullanıcının verisi ayrı bir sessionStorage anahtarında saklanır (hb_panel_cache_v2_${userId}).
 // 3. Farklı kullanıcı aynı tarayıcıda oturum açtığında diğerinin kişisel verilerini, puanlarını
 //    veya menü bayraklarını asla göremez.
 // 4. Hard refresh (F5) yapıldığında sessionStorage korunduğu için aynı kullanıcının sekmeleri
@@ -15,7 +15,6 @@ export interface PanelFlags {
   storeAcik: boolean;
   ccAcik: boolean;
   eclubAcik: boolean;
-  eclubStoreAcik: boolean;
   eczanemAcik: boolean;
   firmaLogoUrl?: string | null;
   ogrenmePlatformuAktif?: boolean;
@@ -23,13 +22,13 @@ export interface PanelFlags {
 
 export interface PanelNavbarOzet {
   takimSirasi: number | null;
+  ligPuani: number | null;
   siparisPuani: number;
 }
 
 export interface PanelFirmaOge {
   firma_id: string;
   firma_adi: string;
-  eclub_store_aktif: boolean;
 }
 
 export interface PanelCacheData {
@@ -41,7 +40,7 @@ export interface PanelCacheData {
   kayitZamani: number;
 }
 
-const CACHE_PREFIX = "hb_panel_cache_";
+const CACHE_PREFIX = "hb_panel_cache_v2_";
 const AUTH_CACHE_KEY = "hb_auth_identity_cache";
 const AUTH_CACHE_SURESI = 12 * 60 * 60 * 1000;
 
@@ -49,7 +48,6 @@ export const VARSAYILAN_FLAGS: PanelFlags = {
   storeAcik: false,
   ccAcik: false,
   eclubAcik: false,
-  eclubStoreAcik: false,
   eczanemAcik: false,
   firmaLogoUrl: null,
   ogrenmePlatformuAktif: false,
@@ -92,11 +90,16 @@ export function clearAuthKullaniciCache(): void {
 export function getPanelCache(userId?: string | null): PanelCacheData | null {
   if (typeof window === "undefined" || !userId || typeof userId !== "string") return null;
   try {
+    sessionStorage.removeItem(`hb_panel_cache_${userId}`);
     const raw = sessionStorage.getItem(`${CACHE_PREFIX}${userId}`);
     if (!raw) return null;
     const data: PanelCacheData = JSON.parse(raw);
     if (!data || typeof data !== "object" || data.userId !== userId || !data.flags) {
       return null;
+    }
+    // Eski iki alanlı özeti yeni üçlü puan gösteriminde kullanma.
+    if (data.ozet && !Object.prototype.hasOwnProperty.call(data.ozet, "ligPuani")) {
+      data.ozet = null;
     }
     return data;
   } catch {
@@ -128,7 +131,7 @@ export function clearPanelCache(): void {
     const silinecekSession: string[] = [];
     for (let i = 0; i < sessionStorage.length; i++) {
       const key = sessionStorage.key(i);
-      if (key && (key.startsWith(CACHE_PREFIX) || key.startsWith("hb_panel_profil_cache") || key.startsWith("hb_rapor_cache_"))) {
+      if (key && (key.startsWith("hb_panel_cache_") || key.startsWith("hb_panel_profil_cache") || key.startsWith("hb_rapor_cache_"))) {
         silinecekSession.push(key);
       }
     }
@@ -138,7 +141,7 @@ export function clearPanelCache(): void {
     const silinecekLocal: string[] = [];
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
-      if (key && (key.startsWith(CACHE_PREFIX) || key.startsWith("hb_panel_profil_cache"))) {
+      if (key && (key.startsWith("hb_panel_cache_") || key.startsWith("hb_panel_profil_cache"))) {
         silinecekLocal.push(key);
       }
     }

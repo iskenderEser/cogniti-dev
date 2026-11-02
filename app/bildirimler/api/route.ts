@@ -180,7 +180,7 @@ export async function PUT(request: NextRequest) {
       let eclubQuery = adminSupabase.from("eclub_bildirimler").update({ goruldu_mu: true }).eq("alici_kisi_id", kisi.kisi_id).eq("goruldu_mu", false).eq("kayit_turu", kayit_turu);
       if (firma_id !== undefined) {
         const erisim = await eclubKisiErisimi(adminSupabase, user.id);
-        if (eclubFirmaKapsami(erisim.firmalar, firma_id, true).length === 0) return yetkiHatasi();
+        if (eclubFirmaKapsami(erisim.firmalar, firma_id).length === 0) return yetkiHatasi();
         const { data: cekler, error: cekError } = await adminSupabase.from("eclub_store_cek_talepleri")
           .select("talep_id").eq("firma_id", firma_id).in("eczane_id", erisim.eczane_idler);
         if (cekError) return hataYaniti("Firma çek kapsamı alınamadı.", "Çek bildirimi kapsamı", cekError);

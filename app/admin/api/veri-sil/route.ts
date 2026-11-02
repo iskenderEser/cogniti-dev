@@ -1,3 +1,4 @@
+import { firmaYonetimIslemKontrol } from "@/lib/admin/firmaYonetimIslem";
 // app/admin/api/veri-sil/route.ts
 //
 // Toplu/Tekil Silme — Aşama 3 (docs/toplu_tekil_silme_is_plani.md).
@@ -21,8 +22,6 @@ const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 export async function POST(request: NextRequest) {
   try {
     // 1) Yetki — yalnız admin
-    const kontrol = await adminGirisKontrol();
-    if (!kontrol.gecerli) return kontrol.yanit;
 
     // 2) Gövde + doğrulama
     const body = await request.json().catch(() => null);
@@ -31,6 +30,9 @@ export async function POST(request: NextRequest) {
     const { islem, mod, firma_id, yayin_kodu } = body as {
       islem?: string; mod?: string; firma_id?: string; yayin_kodu?: string;
     };
+
+    const kontrol = mod === "firma" ? await firmaYonetimIslemKontrol(firma_id) : await adminGirisKontrol();
+    if (!kontrol.gecerli) return kontrol.yanit;
 
     if (islem !== "sayim" && islem !== "sil")
       return validasyonHatasi("islem 'sayim' veya 'sil' olmalıdır.", ["islem"]);

@@ -1,18 +1,20 @@
+import { firmaYonetimIslemKontrol } from "@/lib/admin/firmaYonetimIslem";
+import { firmaYonetimOkumaKontrol } from "@/lib/admin/firmaYonetimOkuma";
 // app/admin/api/firmalar/[firma_id]/urunler/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/server";
 import { hataYaniti, veriKontrol, sunucuHatasi, validasyonHatasi } from "@/lib/utils/hataIsle";
-import { adminGirisKontrol } from "@/lib/utils/adminGirisKontrol";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ firma_id: string }> }
 ) {
   try {
-    const girisKontrolu = await adminGirisKontrol();
+    const { firma_id } = await params;
+    const girisKontrolu = await firmaYonetimOkumaKontrol(firma_id);
     if (!girisKontrolu.gecerli) return girisKontrolu.yanit;
 
-    const { firma_id } = await params;
+
     if (!firma_id) return validasyonHatasi("firma_id zorunludur.", ["firma_id"]);
 
     const { searchParams } = new URL(request.url);
@@ -43,10 +45,11 @@ export async function POST(
   { params }: { params: Promise<{ firma_id: string }> }
 ) {
   try {
-    const girisKontrolu = await adminGirisKontrol();
+    const { firma_id } = await params;
+    const girisKontrolu = await firmaYonetimIslemKontrol(firma_id);
     if (!girisKontrolu.gecerli) return girisKontrolu.yanit;
 
-    const { firma_id } = await params;
+
     if (!firma_id) return validasyonHatasi("firma_id zorunludur.", ["firma_id"]);
 
     const adminSupabase = createAdminClient();
@@ -104,10 +107,11 @@ export async function DELETE(
   { params }: { params: Promise<{ firma_id: string }> }
 ) {
   try {
-    const girisKontrolu = await adminGirisKontrol();
+    const { firma_id } = await params;
+    const girisKontrolu = await firmaYonetimIslemKontrol(firma_id);
     if (!girisKontrolu.gecerli) return girisKontrolu.yanit;
 
-    const { firma_id } = await params;
+
     if (!firma_id) return validasyonHatasi("firma_id zorunludur.", ["firma_id"]);
 
     const adminSupabase = createAdminClient();

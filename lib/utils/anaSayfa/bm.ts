@@ -265,12 +265,12 @@ export async function getBmAnaSayfaVeri(userId: string, adminSupabase: SupabaseC
     adminSupabase.from("kullanicilar").select("kullanici_id")
       .eq("firma_id", bmKullanici.firma_id).eq("takim_id", bmKullanici.takim_id)
       .eq("bolge_id", bmKullanici.bolge_id).in("rol", TUKETICI_ROLLER).eq("aktif_mi", true),
-    adminSupabase.from("firmalar").select("aktif, cc_aktif, eclub_aktif, eclub_store_aktif")
+    adminSupabase.from("firmalar").select("aktif, cc_aktif, eclub_aktif")
       .eq("firma_id", bmKullanici.firma_id).single(),
   ]);
   if (uttError || firmaError || !firma) throw new Error("BM modül kapsamı alınamadı.");
   const uttIdler = (uttler ?? []).map(u => u.kullanici_id);
-  const eclubAcik = firma.aktif && firma.eclub_aktif && firma.eclub_store_aktif;
+  const eclubAcik = firma.aktif && firma.eclub_aktif;
   const cclubAcik = firma.aktif && firma.cc_aktif;
   const simdi = new Date();
   const bitisEsigi = new Date(simdi.getTime() + YAKLASAN_BITIS_SAATI * 60 * 60 * 1000);

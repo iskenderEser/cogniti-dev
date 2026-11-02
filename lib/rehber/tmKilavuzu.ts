@@ -2,11 +2,10 @@
 // Metin değişikliklerinde iki dosya birlikte güncellenir.
 import type { KilavuzParcasi } from "./ureticiKilavuzu";
 
-type Modul = "cc" | "eclub" | "eclubStore" | "eczanem" | "kulup";
+type Modul = "cc" | "eclub" | "eczanem" | "kulup";
 export interface TmKilavuzModulleri {
   ccAcik: boolean;
   eclubAcik: boolean;
-  eclubStoreAcik: boolean;
   eczanemAcik: boolean;
 }
 type KosulluParca = KilavuzParcasi & { modul?: Modul; ccKapaliMetin?: string; yalnizCcMetin?: string };
@@ -203,17 +202,17 @@ const TM_KILAVUZU: {
         {
           "tip": "baslik",
           "metin": "Hediye çeki taleplerinin son onayını verme",
-          "modul": "eclubStore"
+          "modul": "eclub"
         },
         {
           "tip": "paragraf",
           "metin": "Temsilci ve bölge müdürü onayından geçerek size ulaşan E-Club hediye çeki taleplerini inceleyebilir, son onayınızı verebilirsiniz.",
-          "modul": "eclubStore"
+          "modul": "eclub"
         },
         {
           "tip": "paragraf",
           "metin": "Onayınızdan sonra talep, çek kodlarının tanımlanacağı aşamaya geçer.",
-          "modul": "eclubStore"
+          "modul": "eclub"
         },
         {
           "tip": "baslik",
@@ -679,12 +678,12 @@ const TM_KILAVUZU: {
         {
           "tip": "baslik",
           "metin": "Hediye çeki talebini onayladım. Çek hemen hazır olur mu?",
-          "modul": "eclubStore"
+          "modul": "eclub"
         },
         {
           "tip": "paragraf",
           "metin": "Onayınız, talebin son yönetici onayını tamamlar. Ardından çek kodlarının tanımlanması aşamasına geçilir. Bu nedenle talebin onaylanması ile çekin hazırlanması aynı işlem değildir.",
-          "modul": "eclubStore"
+          "modul": "eclub"
         },
         {
           "tip": "baslik",
@@ -708,7 +707,6 @@ export function tmKilavuzunuSec(moduller: TmKilavuzModulleri) {
   const acik: Record<Modul, boolean> = {
     cc: moduller.ccAcik,
     eclub: moduller.eclubAcik,
-    eclubStore: moduller.eclubAcik && moduller.eclubStoreAcik,
     eczanem: moduller.eclubAcik && moduller.eczanemAcik,
     kulup: moduller.ccAcik || moduller.eclubAcik,
   };

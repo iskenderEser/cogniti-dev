@@ -1,0 +1,19 @@
+.card { container-type:inline-size; }
+.header,.row { display:grid; grid-template-columns:minmax(210px,1fr) repeat(3,minmax(100px,150px)); align-items:center; gap:16px; padding:18px 22px; }
+.header { text-align:center; background:var(--tema-zemin); color:var(--tema-kontrol-ikincil-metin); font-size:12px; font-weight:800; }
+.row { border-top:1px solid var(--tema-kontrol-cizgi); }
+.row h2 { margin:0; font-size:14px; font-weight:800; color:var(--tema-kontrol-metin); }
+.info p { margin:5px 0 0; font-size:12px; line-height:1.5; color:var(--tema-kontrol-ikincil-metin); }
+.note { margin:0; padding:10px 0 0; font-size:11px; font-style:italic; color:var(--tema-kontrol-ikincil-metin); }
+.field { min-width:0; }
+.field span { display:none; }
+@container (max-width:680px) {
+  .header { display:none; }
+  .row { grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; padding:18px; }
+  .row:first-of-type { border-top:0; }
+  .info { grid-column:1 / -1; }
+  .field span { display:block; text-align:center; margin-bottom:7px; color:var(--tema-kontrol-ikincil-metin); font-size:11px; font-weight:800; }
+}
+
+.actions { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:14px; font-size:12px; color:var(--tema-kontrol-ikincil-metin); }
+.actions [role="alert"] { color:var(--tema-kontrol-metin); }

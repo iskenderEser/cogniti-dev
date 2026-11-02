@@ -255,7 +255,7 @@ export const SAYFA_REHBERLERI: Record<string, SayfaRehberBilgisi> = {
   "store-magaza": {
     anahtar: "store-magaza",
     baslik: "FirmaStore",
-    ozet: "Her dönem sonu; takip eden ilk ayın sadece ilk 7 günü açılan FirmaStore'da, kazandığınız puanlarla tercih ettiğiniz ürünlerin siparişlerini hiçbir ödeme yapmadan verebilir ve dilediğiniz adrese kargolanmasını isteyebilirsiniz.",
+    ozet: "Her dönem sonu dönem içi kazandığınız puanlarla, takip eden **ayın sadece ilk 7 günü açılan** FirmaStore'da, tercih ettiğiniz markanın hediye çekinin siparişini hiçbir ödeme yapmadan verebilirsiniz. Talep ettiğiniz markanın hediye çeki, kurumsal eposta adresinize gönderilecektir.",
     maddeler: [
       {
         baslik: "FirmaStore Günleri",
@@ -268,8 +268,8 @@ export const SAYFA_REHBERLERI: Record<string, SayfaRehberBilgisi> = {
         ikon: "🪙",
       },
       {
-        baslik: "Sipariş ve Teslimat",
-        aciklama: "Siparişlerim bölümünden sipariş ve teslimat durumlarını, Adreslerim bölümünden teslimat adreslerinizi yönetebilirsiniz.",
+        baslik: "Hediye Kart Taleplerim",
+        aciklama: "Taleplerim bölümünden hediye kartı taleplerinizin durumunu takip edebilirsiniz.",
         ikon: "📍",
       },
     ],

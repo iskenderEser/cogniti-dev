@@ -1,3 +1,4 @@
+import { firmaYonetimIslemKontrol } from "@/lib/admin/firmaYonetimIslem";
 // app/admin/api/eclub/kayitli/route.ts
 //
 // Admin — kayıtlı firma/eczane/kişi görünümü + kişi pasife alma (taşıma müdahalesi).
@@ -147,14 +148,15 @@ export async function GET(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
-    const supabase = await createClient();
     const adminSupabase = createAdminClient();
 
-    const guard = await adminKontrol(supabase, adminSupabase);
-    if (guard) return guard;
 
     const body = await request.json();
-    const { kisi_id, eczane_id } = body;
+    const { kisi_id, eczane_id, firma_id } = body;
+    const yetki = await firmaYonetimIslemKontrol(firma_id);
+    if (!yetki.gecerli) return yetki.yanit;
+    const { data: bag, error: bagHatasi } = await adminSupabase.from("eclub_eczane_firma").select("id").eq("firma_id", firma_id).eq("eczane_id", eczane_id).eq("aktif_mi", true).maybeSingle();
+    if (bagHatasi || !bag) return validasyonHatasi("Eczane firma kapsamında bulunamadı.", ["eczane_id"]);
 
     if (!kisi_id || typeof kisi_id !== "string") return validasyonHatasi("kisi_id zorunludur.", ["kisi_id"]);
     if (!eczane_id || typeof eczane_id !== "string") return validasyonHatasi("eczane_id zorunludur.", ["eczane_id"]);

@@ -1,23 +1,24 @@
 // components/panel/PanelNavbar.tsx
 //
 // Panel üst barı. Sol: logo. Orta: bilgi pill'leri + (UTT/KD_UTT'de) dikey çizgi
-// ardından kişisel özet pill'leri (Takım Sırası · Sipariş Puanı) ve FirmaStore kısayolu.
+// ardından kişisel özet pill'leri (Haftalık Takım Sıran · Dönemlik Sipariş Puanın) ve FirmaStore kısayolu.
 // Sağ: Viva kısayolu + ad-soyad + avatar; Çıkış adın altında.
 
 "use client";
 
+import type { PanelNavbarOzet } from "@/lib/panel/panelCache";
 import CognitiLogo from "@/components/marka/CognitiLogo";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
 const BORDO = "var(--tema-vurgu)";
 
-// UTT Kişisel Özet Kapsülü — tek şık rozet: Takım: 1 | Sipariş: 1.386
+// UTT kişisel özeti: Haftalık Takım Sıran | Dönemlik Sipariş Puanın.
 function OzetKapsul({
   ozet,
   siparisPuaniGoster,
 }: {
-  ozet: { takimSirasi: number | null; siparisPuani: number };
+  ozet: PanelNavbarOzet;
   siparisPuaniGoster?: boolean;
 }) {
   return (
@@ -32,7 +33,7 @@ function OzetKapsul({
       {/* Takım Sırası */}
       <div className="flex items-center gap-1 whitespace-nowrap">
         <span style={{ fontSize: 11, fontWeight: 600, color: "var(--tema-ikincil-metin)" }}>
-          Takım Sırası:
+          Haftalık Takım Sıran:
         </span>
         <span style={{ fontSize: 12, fontWeight: 700, color: "var(--tema-baslik)" }}>
           {ozet.takimSirasi ? `${ozet.takimSirasi}` : "-"}
@@ -46,7 +47,7 @@ function OzetKapsul({
           {/* Sipariş Puanı */}
           <div className="flex items-center gap-1 whitespace-nowrap">
             <span style={{ fontSize: 11, fontWeight: 600, color: "var(--tema-ikincil-metin)" }}>
-              Sipariş:
+              Dönemlik Sipariş Puanın:
             </span>
             <span style={{ fontSize: 12, fontWeight: 700, color: "var(--tema-baslik)" }}>
               {ozet.siparisPuani.toLocaleString("tr-TR")} p
@@ -58,28 +59,11 @@ function OzetKapsul({
   );
 }
 
-// Tekil özet pill'i (E-Club Store puanı vb.)
-function OzetPill({ etiket, deger }: { etiket: string; deger: string }) {
-  return (
-    <div
-      className="inline-flex items-center gap-1.5 rounded-full leading-tight select-none py-1.5 px-3.5"
-      style={{
-        background: "var(--tema-ust-menu-pill-zemin)",
-        boxShadow: "inset 0 0 0 0.5px var(--tema-ust-menu-pill-cizgi)",
-        fontFamily: "'Nunito', sans-serif",
-      }}
-    >
-      <span style={{ fontSize: 11.5, fontWeight: 600, color: "var(--tema-ikincil-metin)" }}>{etiket}</span>
-      <span style={{ fontSize: 12.5, fontWeight: 700, color: "var(--tema-metin)" }}>{deger}</span>
-    </div>
-  );
-}
-
 export interface PanelNavbarProps {
   adSoyad?: string;
   email?: string;
   // Kişisel özet — yalnız UTT/KD_UTT (BM sonraya). Verilmezse özet pill'leri çizilmez.
-  ozet?: { takimSirasi: number | null; siparisPuani: number } | null;
+  ozet?: PanelNavbarOzet | null;
   // Sipariş Puanı pill'i yalnız kullanıcının firmasında FirmaStore aktifse görünür.
   siparisPuaniGoster?: boolean;
   // FirmaStore giriş pill'i yalnız mağazadan kişisel sipariş verebilen rollerde görünür.
@@ -172,7 +156,6 @@ export default function PanelNavbar({
   anaSayfaYolu = "/ana-sayfa",
   onAnaSayfa,
   anaSayfaSecili,
-  eclubStorePuani,
   firmaLogoUrl,
   ogrenmePlatformuAktif,
   firmaAdi,
@@ -304,9 +287,7 @@ export default function PanelNavbar({
           {ozet && (
             <OzetKapsul ozet={ozet} siparisPuaniGoster={siparisPuaniGoster} />
           )}
-          {eclubStorePuani !== null && eclubStorePuani !== undefined && (
-            <OzetPill etiket="Store Puanı" deger={eclubStorePuani.toLocaleString("tr-TR")} />
-          )}
+
 
           {hbStoreGoster && (
             <button

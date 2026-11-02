@@ -93,7 +93,7 @@ export default function MobilDrawer(props: MobilDrawerProps) {
       return degisti ? yeni : onceki;
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname, props.storeAcik, props.ccAcik, props.eclubAcik, props.eclubStoreAcik, props.eczanemAcik, secimIzi]);
+  }, [pathname, props.storeAcik, props.ccAcik, props.eclubAcik, props.eczanemAcik, secimIzi]);
 
   useEffect(() => {
     if (!props.acik || !URETICI_ROLLER.includes(props.rolKucu)) return;

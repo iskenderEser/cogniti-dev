@@ -1,21 +1,10 @@
-// app/admin/_components/TopluTekilSilModal.tsx
-//
-// Toplu/Tekil Silme — Aşama 4 (docs/toplu_tekil_silme_is_plani.md).
-// Navbar "Toplu/Tekil Sil" butonunun modalı. İki mod:
-//   Toplu → Tüm Veriler (tüm firmalar)   → mod='tum'
-//   Tekil → yayın kodu ile   → mod='tekil'
-// (Firma silme burada DEĞİL — o firma kartında, Aşama 5.)
-// Akış: tip seç → görünen numara → Önizle (sayım) → son onay → Sil.
-// API gerçek talep UUID'sini sunucuda çözer.
-
 "use client";
 
 import { useState } from "react";
 import { RENK_BORDO } from "../_constants";
+import styles from "../admin.module.css";
 
 interface Props {
-  acik: boolean;
-  onKapat: () => void;
   hata: (mesaj: string, adim?: string, detay?: string) => void;
   basari: (mesaj: string) => void;
 }
@@ -41,17 +30,14 @@ const SATIRLAR: [keyof Onizleme, string][] = [
   ["siparis_silinecek", "Silinecek sipariş"],
 ];
 
-export default function TopluTekilSilModal({ acik, onKapat, hata, basari }: Props) {
+export default function TopluTekilSilPaneli({ hata, basari }: Props) {
   const [tip, setTip] = useState<Tip | null>(null);
   const [yayin_kodu, setYayinKodu] = useState("");
   const [onizleme, setOnizleme] = useState<Onizleme | null>(null);
   const [onayMetni, setOnayMetni] = useState("");
   const [loading, setLoading] = useState(false);
 
-  if (!acik) return null;
-
   const sifirla = () => { setTip(null); setYayinKodu(""); setOnizleme(null); setOnayMetni(""); };
-  const kapat = () => { sifirla(); onKapat(); };
 
   const govde = (islem: "sayim" | "sil") =>
     tip === "tum"
@@ -84,7 +70,7 @@ export default function TopluTekilSilModal({ acik, onKapat, hata, basari }: Prop
     try {
       const d = await cagir("sil");
       basari(`Silme tamamlandı — yayın: ${d.yayin_sayisi ?? 0}, sipariş: ${d.silinen_siparis ?? 0}.`);
-      kapat();
+      sifirla();
     } catch (e) {
       const d = (e as { d?: { hata?: string; adim?: string; detay?: string } }).d;
       hata(d?.hata ?? "Silme başarısız.", d?.adim, d?.detay);
@@ -102,26 +88,8 @@ export default function TopluTekilSilModal({ acik, onKapat, hata, basari }: Prop
   });
 
   return (
-    <div
-      onClick={kapat}
-      style={{
-        position: "fixed", inset: 0, background: "var(--tema-yerel-yonetim-ortu-01)", zIndex: 1000,
-        display: "flex", alignItems: "center", justifyContent: "center", padding: "16px",
-      }}
-    >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        style={{
-          width: "100%", maxWidth: "460px", maxHeight: "90vh", overflow: "auto",
-          background: "var(--tema-yerel-yonetim-kart-01)", borderRadius: "12px", padding: "20px",
-          fontFamily: "'Nunito', sans-serif", boxShadow: "0 10px 40px var(--tema-yerel-yonetim-golge-01)",
-        }}
-      >
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
-          <span style={{ fontSize: "15px", fontWeight: 800, color: "var(--tema-yerel-yonetim-ana-metin-01)" }}>Toplu / Tekil Sil</span>
-          <button onClick={kapat} style={{ background: "transparent", border: "none", fontSize: "18px", cursor: "pointer", color: "var(--tema-yerel-yonetim-yardimci-metin-01)" }}>×</button>
-        </div>
-
+    <section className={styles.card}>
+      <div className={styles.cardBody} style={{ maxWidth: "640px" }}>
         <div style={{ background: "var(--tema-yerel-yonetim-islevsel-zemin-01)", border: "1px solid var(--tema-yerel-yonetim-islevsel-cizgi-02)", borderRadius: "8px", padding: "8px 12px", marginBottom: "14px" }}>
           <span style={{ fontSize: "12px", color: RENK_BORDO }}>
             Yalnız test ortamı. Üretilen veri silinir; kimlik, ürün içeriği ve bitmiş siparişler korunur. <b>Geri alınamaz.</b>
@@ -188,6 +156,6 @@ export default function TopluTekilSilModal({ acik, onKapat, hata, basari }: Prop
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 }

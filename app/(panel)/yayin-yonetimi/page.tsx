@@ -276,6 +276,9 @@ function YayinYonetimiIcerik() {
           </div>
         ) : (
           <>
+        {aktifSekme === "bekleyen" && yy.puanAralikHatasi && <div role="alert" className="mb-3 text-sm">
+          {yy.puanAralikHatasi} <button type="button" onClick={() => void yy.puanAraliklariCek()}>Tekrar Dene</button>
+        </div>}
         {aktifSekme === "bekleyen" && (
           <ListeBasligi baslik="Yayına Hazır İçerikler" sayi={bekleyenListe.toplam} />
         )}
@@ -285,18 +288,17 @@ function YayinYonetimiIcerik() {
             : bekleyenListe.gorunen.map(b => (
               <BekleyenSatir key={b.soru_seti_durum_id} b={b}
                 islemLoading={yy.islemLoading}
+                puanAraliklari={yy.puanAraliklari}
                 acikAkordiyon={acikAkordiyon} setAcikAkordiyon={setAcikAkordiyon}
                 videoPuanlari={yy.videoPuanlari} setVideoPuanlari={yy.setVideoPuanlari}
                 extraPuanlar={yy.extraPuanlar} setExtraPuanlar={yy.setExtraPuanlar}
+                eczanemKazanimModelleri={yy.eczanemKazanimModelleri} setEczanemKazanimModelleri={yy.setEczanemKazanimModelleri}
                 barkodlar={yy.barkodlar} setBarkodlar={yy.setBarkodlar}
-                karsilikPuanlar={yy.karsilikPuanlar} setKarsilikPuanlar={yy.setKarsilikPuanlar}
-                karsilikTllar={yy.karsilikTllar} setKarsilikTllar={yy.setKarsilikTllar}
                 satisFiyatlar={yy.satisFiyatlar} setSatisFiyatlar={yy.setSatisFiyatlar}
+                sahaPuanModelleri={yy.sahaPuanModelleri} setSahaPuanModelleri={yy.setSahaPuanModelleri}
                 kazanimModelleri={yy.kazanimModelleri} setKazanimModelleri={yy.setKazanimModelleri}
                 katlamaOranlari={yy.katlamaOranlari} setKatlamaOranlari={yy.setKatlamaOranlari}
                 baremTablolari={yy.baremTablolari} setBaremTablolari={yy.setBaremTablolari}
-                eclubKarsilikPuanlar={yy.eclubKarsilikPuanlar} setEclubKarsilikPuanlar={yy.setEclubKarsilikPuanlar}
-                eclubKarsilikTllar={yy.eclubKarsilikTllar} setEclubKarsilikTllar={yy.setEclubKarsilikTllar}
                 tekrarPeriyotlari={yy.tekrarPeriyotlari} setTekrarPeriyotlari={yy.setTekrarPeriyotlari}
                 tekrarSecenekleri={yy.tekrarSecenekleri}
                 yayinGunleri={yy.yayinGunleri} setYayinGunleri={yy.setYayinGunleri}

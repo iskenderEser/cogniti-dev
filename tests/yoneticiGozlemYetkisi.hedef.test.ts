@@ -73,7 +73,6 @@ function gorunenYollar(rolKucu: string): string[] {
     storeAcik: true,
     ccAcik: true,
     eclubAcik: true,
-    eclubStoreAcik: true,
     eczanemAcik: true,
   };
   const yollar: string[] = [];
@@ -285,7 +284,7 @@ for (const yoneticiRolu of YONETICI_ROLLER) {
     const yollar = gorunenYollar(yoneticiRolu);
     for (const yasakli of [
       "/talepler", "/yayin-yonetimi", "/sizin-yayinlariniz", "/tum-yayinlar",
-      "/challenge-club", "/store", "/store/siparislerim", "/store/adreslerim",
+      "/challenge-club", "/store", "/store/siparislerim",
       "/eclub/eczaneler-takimim", "/eclub/yayinlar", "/eczanem/yayinlar",
     ]) {
       assert.ok(!yollar.includes(yasakli), `${yoneticiRolu} yasaklı yolu görüyor: ${yasakli}`);

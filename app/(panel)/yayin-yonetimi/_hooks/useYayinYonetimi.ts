@@ -1,3 +1,6 @@
+"use client";
+
+import { etkinPuanAraliklari, puanAraligaUygunMu, puanAraliklariGecerliMi, type PuanAraliklari } from "@/lib/uretici/puanAraliklari";
 // app/yayin-yonetimi/_hooks/useYayinYonetimi.ts
 //
 // Yayın yönetimi sayfasının tüm veri ve iş mantığı.
@@ -11,7 +14,6 @@
 //
 // Davranış page.tsx'teki orijinaliyle birebir aynıdır — sadece taşındı.
 
-"use client";
 
 import { createClient } from "@/lib/supabase/client";
 import { useCallback, useEffect, useState } from "react";
@@ -20,6 +22,9 @@ import type { Bekleyen, BekleyenHedefSayilari, Yayin } from "../_types";
 import { gecerliTurBaslangiclari, type HesaplananTur } from "@/lib/tclub/tur/kayit";
 import { TALEP_TURU_KURALLARI, type TalepTuru } from "@/lib/uretici/yetenekler";
 import { baremTablosuDogrula, eclubKazanimKosullari, type EclubKazanimModeli, type BaremSatiri } from "@/lib/eclub/store/eclubStoreTipler";
+
+import { eczanemKazanimKosullariHatasi, type EczanemKazanimModeli } from "@/lib/eczanem/kazanimModeli";
+import { sahaHedefliMi, sahaMerkeziPuanKosullariHatasi, type SahaPuanModeli } from "@/lib/uretici/sahaPuanModeli";
 
 import { getOzetOnbellek, setOzetOnbellek, type OzetVerisi } from "./ozetOnbellek";
 
@@ -58,20 +63,43 @@ export function useYayinYonetimi({ kullaniciId, aktifAnaSekme, onOzetYuklendi, h
   const [videoPuanlari, setVideoPuanlari] = useState<Record<string, number>>({});
   const [soruPuanlari, setSoruPuanlari] = useState<Record<string, Record<number, number>>>({});
   const [extraPuanlar, setExtraPuanlar] = useState<Record<string, number>>({});
+  const [puanAraliklari, setPuanAraliklari] = useState<PuanAraliklari | null | undefined>(undefined);
+  const [puanAralikHatasi, setPuanAralikHatasi] = useState("");
+  const puanAraliklariCek = useCallback(async (signal?: AbortSignal) => {
+    if (!kullaniciId) return;
+    try {
+      const res = await fetch("/yayin-yonetimi/api/puan-araliklari", { cache: "no-store", signal });
+      const d = await res.json();
+      if (!res.ok || (d.ayar !== null && !puanAraliklariGecerliMi(d.ayar))) throw new Error(d.hata ?? "Puan aralıkları alınamadı.");
+      if (!signal?.aborted) { setPuanAraliklari(d.ayar); setPuanAralikHatasi(""); }
+    } catch (error) {
+      if (!signal?.aborted) { setPuanAraliklari(undefined); setPuanAralikHatasi(error instanceof Error ? error.message : "Puan aralıkları alınamadı."); }
+    }
+  }, [kullaniciId]);
+  useEffect(() => {
+    const controller = new AbortController();
+    const yenile = () => { if (document.visibilityState === "visible") void puanAraliklariCek(controller.signal); };
+    void puanAraliklariCek(controller.signal);
+    window.addEventListener("focus", yenile);
+    document.addEventListener("visibilitychange", yenile);
+    const timer = window.setInterval(yenile, 30000);
+    return () => { controller.abort(); window.clearInterval(timer); window.removeEventListener("focus", yenile); document.removeEventListener("visibilitychange", yenile); };
+  }, [puanAraliklariCek]);
+
 
   // Eczanem yayını: barkod + Karşılık (puan ↔ TL) ürün seviyesine yazılır (U5, K-E3).
-  // Her eczanem yayınında boş gelir, zorunludur; değer aynıysa server yeni tarife açmaz.
+  // Kazanım modeli açıkça seçilir; yalnız indirimli yayında ürün tarifesi yazılır.
+  const [eczanemKazanimModelleri, setEczanemKazanimModelleri] = useState<Record<string, EczanemKazanimModeli>>({});
   const [barkodlar, setBarkodlar] = useState<Record<string, string>>({});
-  const [karsilikPuanlar, setKarsilikPuanlar] = useState<Record<string, number>>({});
-  const [karsilikTllar, setKarsilikTllar] = useState<Record<string, number>>({});
   const [satisFiyatlar, setSatisFiyatlar] = useState<Record<string, number>>({});
+
+  // Her UTT/BM yayını için seçim açıkça yapılır; varsayılan model yoktur.
+  const [sahaPuanModelleri, setSahaPuanModelleri] = useState<Record<string, SahaPuanModeli>>({});
 
   // E-Club yayını: dört kazanım hâlinden biri açıkça seçilir.
   const [kazanimModelleri, setKazanimModelleri] = useState<Record<string, EclubKazanimModeli>>({});
   const [katlamaOranlari, setKatlamaOranlari] = useState<Record<string, number>>({});
   const [baremTablolari, setBaremTablolari] = useState<Record<string, BaremSatiri[]>>({});
-  const [eclubKarsilikPuanlar, setEclubKarsilikPuanlar] = useState<Record<string, number>>({});
-  const [eclubKarsilikTllar, setEclubKarsilikTllar] = useState<Record<string, number>>({});
 
   // Tekrar gönderim periyodu — soru_seti_durum_id → seçilen gün (seçilmediyse tekrar yok).
   // Seçenek listesi sistem_ayarlari'ndan gelir (tek kaynak): api/tekrar-secenekleri.
@@ -280,15 +308,22 @@ export function useYayinYonetimi({ kullaniciId, aktifAnaSekme, onOzetYuklendi, h
   };
 
   const tumPuanlarAtandiMi = (b: Bekleyen): boolean => {
-    const vp = videoPuanlari[b.soru_seti_durum_id] ?? b.video_puani;
-    if (!vp) return false;
+    if (puanAraliklari === undefined) return false;
+    const araliklar = etkinPuanAraliklari(puanAraliklari, b.hedef_roller.includes("eczanem"));
+    const id = b.soru_seti_durum_id;
+    const eczanem = b.hedef_roller.includes("eczanem");
+    if (eczanem) {
+      const model = eczanemKazanimModelleri[id];
+      if (!model || b.sorular.length === 0) return false;
+      if (model === "indirimsiz") return true;
+      if (eczanemKazanimKosullariHatasi(model, {
+        barkod: barkodlar[id], satisFiyati: satisFiyatlar[id],
+      })) return false;
+    }
+    const vp = videoPuanlari[id] ?? b.video_puani;
+    if (!puanAraligaUygunMu(vp, araliklar.yayin)) return false;
     const eclub = yalnizEclubHedefliMi(b.hedef_roller);
-    if (b.hedef_roller.includes("eczanem")) {
-      // Eczanem: extra puan yok; barkod + Karşılık (puan ve TL) zorunlu.
-      if (!barkodlar[b.soru_seti_durum_id]?.trim()) return false;
-      if (!karsilikPuanlar[b.soru_seti_durum_id] || !karsilikTllar[b.soru_seti_durum_id]) return false;
-      if (!satisFiyatlar[b.soru_seti_durum_id]) return false;
-    } else if (!eclub && !extraPuanlar[b.soru_seti_durum_id]) {
+    if (!eczanem && !eclub && !puanAraligaUygunMu(extraPuanlar[b.soru_seti_durum_id], araliklar.extra)) {
       return false;
     }
     if (eclub) {
@@ -296,7 +331,6 @@ export function useYayinYonetimi({ kullaniciId, aktifAnaSekme, onOzetYuklendi, h
       const model = kazanimModelleri[id];
       if (!model) return false;
       if (model !== "yalniz_puan") {
-        if (!Number.isInteger(eclubKarsilikPuanlar[id]) || eclubKarsilikPuanlar[id] <= 0 || !Number.isFinite(eclubKarsilikTllar[id]) || eclubKarsilikTllar[id] <= 0) return false;
         const baremler = baremTablolari[id] ?? [];
         if (baremTablosuDogrula(baremler)) return false;
         if (baremler[0].min_puan <= 0) return false;
@@ -304,8 +338,14 @@ export function useYayinYonetimi({ kullaniciId, aktifAnaSekme, onOzetYuklendi, h
         if (model === "siparisle_artan_cek" && (!Number.isInteger(katlamaOranlari[id]) || katlamaOranlari[id] <= 0 || katlamaOranlari[id] > 200)) return false;
       }
     }
+    if (sahaHedefliMi(b.hedef_roller)) {
+      const id = b.soru_seti_durum_id;
+      const model = sahaPuanModelleri[id];
+      if (!model) return false;
+      if (sahaMerkeziPuanKosullariHatasi(model === "tl_karsilikli", null, null)) return false;
+    }
     for (let i = 0; i < b.sorular.length; i++) {
-      if (!soruPuanlari[b.soru_seti_durum_id]?.[i]) return false;
+      if (!puanAraligaUygunMu(soruPuanlari[b.soru_seti_durum_id]?.[i], araliklar.cevap)) return false;
     }
     return true;
   };
@@ -314,13 +354,14 @@ export function useYayinYonetimi({ kullaniciId, aktifAnaSekme, onOzetYuklendi, h
 
   const handleYayinla = async (b: Bekleyen) => {
     if (!tumPuanlarAtandiMi(b)) {
-      hata("Yayın puanlarını ve E-Club kazanım koşullarını tamamlayın.");
+      hata("Yayın puanlarını ve kazanım koşullarını tamamlayın.");
       return;
     }
     setIslemLoading(b.soru_seti_durum_id);
 
+    const indirimsiz = b.hedef_roller.includes("eczanem") && eczanemKazanimModelleri[b.soru_seti_durum_id] === "indirimsiz";
     const vp = videoPuanlari[b.soru_seti_durum_id] ?? b.video_puani;
-    if (vp) {
+    if (!indirimsiz && vp) {
       const res = await fetch("/yayin-yonetimi/api/puan/video", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ arac_durum_id: b.arac_durum_id, video_puani: vp }),
@@ -329,7 +370,7 @@ export function useYayinYonetimi({ kullaniciId, aktifAnaSekme, onOzetYuklendi, h
     }
 
     const puanlar = b.sorular.map((_, i) => ({ soru_index: i, soru_puani: soruPuanlari[b.soru_seti_durum_id]?.[i] })).filter(p => p.soru_puani);
-    if (puanlar.length > 0) {
+    if (!indirimsiz && puanlar.length > 0) {
       const res = await fetch("/yayin-yonetimi/api/puan/sorular", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ soru_seti_durum_id: b.soru_seti_durum_id, puanlar }),
@@ -349,10 +390,11 @@ export function useYayinYonetimi({ kullaniciId, aktifAnaSekme, onOzetYuklendi, h
         ...(yayinGunleri[b.soru_seti_durum_id] ? { yayin_gunu: yayinGunleri[b.soru_seti_durum_id] } : {}),
         ...(eczanem
           ? {
-              barkod: barkodlar[b.soru_seti_durum_id] ?? "",
-              karsilik_puan: karsilikPuanlar[b.soru_seti_durum_id] ?? null,
-              karsilik_tl: karsilikTllar[b.soru_seti_durum_id] ?? null,
-              satis_fiyati: satisFiyatlar[b.soru_seti_durum_id] ?? null,
+              eczanem_kazanim_modeli: eczanemKazanimModelleri[b.soru_seti_durum_id],
+              ...(!indirimsiz ? {
+                barkod: barkodlar[b.soru_seti_durum_id] ?? "",
+                satis_fiyati: satisFiyatlar[b.soru_seti_durum_id] ?? null,
+              } : {}),
             }
           : eclub
             ? (() => {
@@ -365,11 +407,14 @@ export function useYayinYonetimi({ kullaniciId, aktifAnaSekme, onOzetYuklendi, h
                   satis_sarti_tipi: kosullar.satis_sarti_tipi,
                   gizli_sart_katlama_orani: model === "siparisle_artan_cek" ? katlamaOranlari[b.soru_seti_durum_id] : null,
                   barem_tablosu: kosullar.cek_karsiligi_var_mi ? (baremTablolari[b.soru_seti_durum_id] ?? []).map((barem) => kosullar.siparis_secimi_var_mi ? barem : { ...barem, adet: 0, mal_fazlasi: 0 }) : null,
-                  karsilik_puan: kosullar.cek_karsiligi_var_mi ? eclubKarsilikPuanlar[b.soru_seti_durum_id] : null,
-                  karsilik_tl: kosullar.cek_karsiligi_var_mi ? eclubKarsilikTllar[b.soru_seti_durum_id] : null,
                 };
               })()
             : {
+                ...(sahaHedefliMi(b.hedef_roller) ? {
+                  cek_karsiligi_var_mi: sahaPuanModelleri[b.soru_seti_durum_id] === "tl_karsilikli",
+                  karsilik_puan: null,
+                  karsilik_tl: null,
+                } : {}),
                 extra_puan: extraPuanlar[b.soru_seti_durum_id] ?? null,
                 tekrar_periyot_gun: (tekrarPeriyotlari[b.soru_seti_durum_id] && tekrarPeriyotlari[b.soru_seti_durum_id] > 0) ? tekrarPeriyotlari[b.soru_seti_durum_id] : null,
               }),
@@ -434,18 +479,17 @@ export function useYayinYonetimi({ kullaniciId, aktifAnaSekme, onOzetYuklendi, h
   return {
     // state
     bekleyenler, bekleyenHedefSayilari, yayinlar, loading, yenileniyor, islemLoading,
+    puanAraliklari, puanAralikHatasi, puanAraliklariCek,
     videoPuanlari, setVideoPuanlari,
     soruPuanlari,
     extraPuanlar, setExtraPuanlar,
+    eczanemKazanimModelleri, setEczanemKazanimModelleri,
     barkodlar, setBarkodlar,
-    karsilikPuanlar, setKarsilikPuanlar,
-    karsilikTllar, setKarsilikTllar,
     satisFiyatlar, setSatisFiyatlar,
+    sahaPuanModelleri, setSahaPuanModelleri,
     kazanimModelleri, setKazanimModelleri,
     katlamaOranlari, setKatlamaOranlari,
     baremTablolari, setBaremTablolari,
-    eclubKarsilikPuanlar, setEclubKarsilikPuanlar,
-    eclubKarsilikTllar, setEclubKarsilikTllar,
     tekrarPeriyotlari, setTekrarPeriyotlari,
     tekrarSecenekleri,
     tekrarBilgi,

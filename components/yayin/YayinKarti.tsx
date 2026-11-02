@@ -1,6 +1,8 @@
 "use client";
 
 import React, { type MouseEvent, type ReactNode } from "react";
+import { CekPuaniBilgisi } from "./CekPuaniBilgisi";
+import { sahaCekPuaniVarMi } from "@/lib/uretici/sahaPuanModeli";
 import { Heart, Star, RotateCcw } from "lucide-react";
 import { yayinThumbnailIstemciCoz } from "@/lib/ogrenmeAraci/thumbnailIstemci";
 import { type IcerikTuru } from "@/lib/video/icerikTuru";
@@ -27,6 +29,11 @@ export interface YayinKartiVerisi {
   izlenme_sayisi?: number | null;
   video_puani?: number | null;
   extra_puan?: number | null;
+  cek_karsiligi_var_mi?: boolean | null;
+  saha_puan_modeli?: string | null;
+  karsilik_puan?: number | null;
+  karsilik_tl?: number | null;
+  hedef_roller?: string[] | null;
   firma_adi?: string | null;
   talep_no?: number | null;
   begeni_sayisi?: number;
@@ -205,6 +212,11 @@ export function YayinKarti({
         {formatIcerikTuruKisa(yayin.icerik_turu)}
       </span>
     );
+  }
+
+  // Yalnız üreticinin açık saha puan modeli seçimi ikon oluşturur.
+  if (sahaCekPuaniVarMi(yayin)) {
+    kapsulSegmentleri.push(<CekPuaniBilgisi key={`cek-${yayin.yayin_id}`} />);
   }
 
   const kapsulIcerigi = kapsulSegmentleri.map((seg, idx) => (

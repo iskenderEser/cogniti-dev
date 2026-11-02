@@ -11,15 +11,16 @@ function oku(dosya: string) {
   return fs.readFileSync(path.join(kok, dosya), "utf8");
 }
 
-test("UTT navbar özeti yalnızca takım sırası ve sipariş puanını taşır", () => {
+test("UTT navbar özeti haftalık takım sırası ve dönemlik sipariş puanını gösterir", () => {
   const navbar = oku("components/panel/PanelNavbar.tsx");
   const layout = oku("app/(panel)/layout.tsx");
   const cache = oku("lib/panel/panelCache.ts");
   const profilApi = oku("app/(panel)/profil/api/route.ts");
   const storeSayfasi = oku("app/(panel)/store/page.tsx");
 
-  assert.match(navbar, /Takım Sırası:/);
-  assert.match(navbar, /Sipariş:/);
+  assert.match(navbar, /Haftalık Takım Sıran:/);
+  assert.doesNotMatch(navbar, /Lig Puanın:/);
+  assert.match(navbar, /Dönemlik Sipariş Puanın:/);
   assert.match(navbar, /router\.push\("\/store"\)/);
   assert.match(navbar, />\s*FirmaStore\s*<\/button>/);
   assert.match(navbar, /\{hbStoreGoster && \(/);
@@ -34,6 +35,7 @@ test("UTT navbar özeti yalnızca takım sırası ve sipariş puanını taşır"
   assert.doesNotMatch(profilApi, /haftalik_puan/);
   assert.match(profilApi, /takim_sirasi/);
   assert.match(profilApi, /siparis_puani/);
+  assert.match(profilApi, /lig_puani: benimHaftalik\?\.toplam_puan/);
 });
 
 test("FirmaStore navbar girişi yalnız kişisel sipariş verebilen rollere açılır", () => {
@@ -47,7 +49,6 @@ test("FirmaStore adı rehber ve BM menüsünde tutarlı kalır", () => {
   const rehber = oku("lib/rehber/sayfaRehberi.ts");
   const storeSayfasi = oku("app/(panel)/store/page.tsx");
   const siparislerimSayfasi = oku("app/(panel)/store/siparislerim/page.tsx");
-  const adreslerimSayfasi = oku("app/(panel)/store/adreslerim/page.tsx");
   const urunDetaySayfasi = oku("app/(panel)/store/[urun_id]/page.tsx");
   const siparisApi = oku("app/(panel)/store/api/siparis/route.ts");
   const hbstoreTakvimi = oku("lib/tclub/store/takvim.ts");
@@ -60,7 +61,6 @@ test("FirmaStore adı rehber ve BM menüsünde tutarlı kalır", () => {
     storeAcik: true,
     ccAcik: true,
     eclubAcik: false,
-    eclubStoreAcik: false,
     eczanemAcik: false,
   };
   const storeGrubu = mobilPanelNavOlustur(PANEL_NAV, bmBaglami).find((grup) => grup.baslik === "FirmaStore");
@@ -83,8 +83,6 @@ test("FirmaStore adı rehber ve BM menüsünde tutarlı kalır", () => {
   assert.match(siparislerimSayfasi, /FirmaStore&apos;a Dön/);
   assert.match(siparislerimSayfasi, /FirmaStore&apos;dan/);
   assert.doesNotMatch(siparislerimSayfasi, /Mağaza/);
-  assert.match(adreslerimSayfasi, /FirmaStore&apos;dan/);
-  assert.doesNotMatch(adreslerimSayfasi, /Mağaza/);
   assert.match(urunDetaySayfasi, /FirmaStore Günleri Kapalı/);
   assert.match(urunDetaySayfasi, /FirmaStore&apos;a Dön/);
   assert.doesNotMatch(urunDetaySayfasi, /Mağaza|(?<!Firma)Store Günleri/);
@@ -103,7 +101,6 @@ test("UTT mağaza bağlantıları sidebar yerine navbar ve mağaza içinde kalı
     storeAcik: true,
     ccAcik: false,
     eclubAcik: false,
-    eclubStoreAcik: false,
     eczanemAcik: false,
   };
   const tclub = PANEL_NAV.find((grup) => grup.baslik === "T-Club");

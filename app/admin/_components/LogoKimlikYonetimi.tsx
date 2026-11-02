@@ -1,387 +1,177 @@
-// app/admin/_components/LogoKimlikYonetimi.tsx
-//
-// FİRMA sekme grubundaki "Logo ve Kimlik" sekmesi:
-// Bu firmanın çalışanlarına özel iç panelinde Cogniti logosunun yanında
-// yer alan firma logosunu ve "resmi öğrenme platformu" ortaklığını yönetir.
-//
-// 3 Aksiyon Butonu:
-// 1. Ekle / Güncelle (Logoyu kaydeder / günceller)
-// 2. Durdur / Yayına Al (ogrenme_platformu_aktif durumunu açar/kapatır)
-// 3. Kaldır (Logoyu tamamen siler ve yayını kapatır)
-
 "use client";
+import { saltOkunurAlan } from "@/app/admin/_components/FirmaYonetimYetkisi";
 
+import { useEffect, useRef, useState } from "react";
+import { Eye, ImageIcon, Pause, Play, RotateCcw, Save, Trash2, Upload } from "lucide-react";
 import CognitiLogo from "@/components/marka/CognitiLogo";
-import { useState, useEffect, useRef } from "react";
-import type { Firma } from "../_types";
-import { RENK_BORDO, RENK_CIZGI, btnBase } from "../_constants";
 import { logoGorseliniOptimizeEt } from "@/lib/firma/logoOptimizasyonIstemci";
+import type { Firma } from "../_types";
+import styles from "../admin.module.css";
+import local from "./logo-kimlik.module.css";
 
 interface LogoKimlikYonetimiProps {
   firma: Firma;
-  onGuncelle: (
-    f: Firma,
-    logoUrl: string | null,
-    ogrenmePlatformuAktif: boolean
-  ) => Promise<boolean>;
+  onGuncelle: (firma: Firma, logoUrl: string | null, ogrenmePlatformuAktif: boolean) => Promise<boolean>;
 }
 
-export default function LogoKimlikYonetimi({ firma, onGuncelle }: LogoKimlikYonetimiProps) {
+type Islem = "kaydet" | "durum" | "kaldir";
+type Mesaj = { tur: "hata" | "basari"; metin: string };
+
+function LogoKimlikYonetimi({ firma, onGuncelle }: LogoKimlikYonetimiProps) {
   const [logoUrl, setLogoUrl] = useState(firma.logo_url ?? "");
-  const [ogrenmeAktif, setOgrenmeAktif] = useState(firma.ogrenme_platformu_aktif ?? false);
-  const [yukleniyor, setYukleniyor] = useState(false);
+  const [islem, setIslem] = useState<Islem | null>(null);
   const [dosyaYukleniyor, setDosyaYukleniyor] = useState(false);
-  const dosyaInputRef = useRef<HTMLInputElement | null>(null);
+  const [silOnay, setSilOnay] = useState(false);
+  const [mesaj, setMesaj] = useState<Mesaj | null>(null);
+  const [gorselHatasiUrl, setGorselHatasiUrl] = useState<string | null>(null);
+  const dosyaInputRef = useRef<HTMLInputElement>(null);
+  const aktif = useRef(true);
+  const islemKilidi = useRef(false);
+  const yuklemeIptal = useRef<AbortController | null>(null);
+
+  useEffect(() => {
+    aktif.current = true;
+    return () => {
+      aktif.current = false;
+      yuklemeIptal.current?.abort();
+    };
+  }, []);
 
   useEffect(() => {
     setLogoUrl(firma.logo_url ?? "");
-    setOgrenmeAktif(firma.ogrenme_platformu_aktif ?? false);
-  }, [firma.firma_id, firma.logo_url, firma.ogrenme_platformu_aktif]);
+  }, [firma.logo_url]);
 
-  // Görsel yükleme (Store upload endpoint'i üzerinden)
-  const handleDosyaSec = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const kayitliUrl = firma.logo_url?.trim() ?? "";
+  const onizlemeUrl = logoUrl.trim();
+  const degisiklikVar = onizlemeUrl !== kayitliUrl;
+  const yayinda = Boolean(kayitliUrl) && Boolean(firma.ogrenme_platformu_aktif);
+  const mesgul = Boolean(islem) || dosyaYukleniyor;
+
+  async function handleDosyaSec(e: React.ChangeEvent<HTMLInputElement>) {
     const dosya = e.target.files?.[0];
-    if (!dosya) return;
-
+    if (!dosya || islemKilidi.current) return;
+    islemKilidi.current = true;
+    setDosyaYukleniyor(true);
+    setMesaj(null);
     try {
-      setDosyaYukleniyor(true);
-      // İstemci tarafında akıllı optimizasyon:
-      // - SVG vektörel olduğu için olduğu gibi bırakılır.
-      // - PNG, WebP ve JPEG dosyaları şeffaflığı korunarak Retina netliğinde (maks 800x240 px) ölçeklenir ve sıkıştırılır.
       const yuklenecekDosya = await logoGorseliniOptimizeEt(dosya);
-
+      if (!aktif.current) return;
+      const kontrol = new AbortController();
+      yuklemeIptal.current = kontrol;
       const formData = new FormData();
+      formData.append("firma_id", firma.firma_id);
       formData.append("dosya", yuklenecekDosya);
-
-      const res = await fetch("/admin/api/firmalar/upload", {
-        method: "POST",
-        body: formData,
-      });
+      const res = await fetch("/admin/api/firmalar/upload", { method: "POST", body: formData, signal: kontrol.signal });
       const data = await res.json();
-      if (!res.ok) {
-        alert(data.hata ?? "Görsel yüklenemedi.");
+      if (!aktif.current) return;
+      if (!res.ok || typeof data.url !== "string" || !data.url.trim()) {
+        setMesaj({ tur: "hata", metin: data.hata ?? "Logo yüklenemedi. Tekrar deneyin." });
         return;
       }
-      if (data.url) {
-        setLogoUrl(data.url);
-      }
+      setLogoUrl(data.url);
+      setSilOnay(false);
+      setMesaj({ tur: "basari", metin: "Dosya yüklendi. Logoyu kullanıma açmak için kaydedin." });
     } catch {
-      alert("Dosya yüklenirken bir bağlantı hatası oluştu.");
+      if (aktif.current) setMesaj({ tur: "hata", metin: "Dosya yüklenemedi. Bağlantınızı kontrol ederek tekrar deneyin." });
     } finally {
-      setDosyaYukleniyor(false);
-      if (dosyaInputRef.current) dosyaInputRef.current.value = "";
+      islemKilidi.current = false;
+      yuklemeIptal.current = null;
+      if (aktif.current) {
+        setDosyaYukleniyor(false);
+        if (dosyaInputRef.current) dosyaInputRef.current.value = "";
+      }
     }
-  };
+  }
 
-  // 1. Ekle / Güncelle
-  const handleKaydet = async () => {
-    const temizUrl = logoUrl.trim();
-    if (!temizUrl) {
-      alert("Lütfen bir logo URL'si girin veya dosya yükleyin.");
-      return;
+  async function guncelle(url: string | null, yeniDurum: boolean, tur: Islem) {
+    if (islemKilidi.current) return;
+    islemKilidi.current = true;
+    setIslem(tur);
+    setMesaj(null);
+    try {
+      const ok = await onGuncelle(firma, url, yeniDurum);
+      if (!aktif.current) return;
+      if (!ok) {
+        setMesaj({ tur: "hata", metin: "Değişiklik kaydedilemedi. Tekrar deneyin." });
+        return;
+      }
+      if (tur === "kaldir") setLogoUrl("");
+      if (tur === "kaydet") setLogoUrl(url ?? "");
+      setSilOnay(false);
+      setMesaj({ tur: "basari", metin: tur === "kaldir" ? "Firma logosu ve resmi öğrenme platformu rozeti kaldırıldı." : yeniDurum ? "Firma logosu ve resmi öğrenme platformu rozeti yayında." : "Logo yayını durduruldu." });
+    } catch {
+      if (aktif.current) setMesaj({ tur: "hata", metin: "Değişiklik kaydedilemedi. Bağlantınızı kontrol ederek tekrar deneyin." });
+    } finally {
+      islemKilidi.current = false;
+      if (aktif.current) setIslem(null);
     }
-    setYukleniyor(true);
-    // Yeni logo eklenirken otomatik olarak yayın durumunu açık yapar (veya mevcut durumu korur)
-    const yeniAktif = true;
-    const ok = await onGuncelle(firma, temizUrl, yeniAktif);
-    if (ok) {
-      setOgrenmeAktif(yeniAktif);
-    }
-    setYukleniyor(false);
-  };
+  }
 
-  // 2. Durdur / Yayına Al
-  const handleDurdurToggle = async () => {
-    if (!logoUrl.trim()) {
-      alert("Yayın durumunu değiştirmeden önce bir logo eklemelisiniz.");
-      return;
-    }
-    setYukleniyor(true);
-    const yeniDurum = !ogrenmeAktif;
-    const ok = await onGuncelle(firma, logoUrl.trim(), yeniDurum);
-    if (ok) {
-      setOgrenmeAktif(yeniDurum);
-    }
-    setYukleniyor(false);
-  };
-
-  // 3. Kaldır
-  const handleKaldir = async () => {
-    const onay = window.confirm(
-      `"${firma.firma_adi}" firmasının kurumsal logosu ve resmi öğrenme platformu rozeti tamamen kaldırılsın mı?`
-    );
-    if (!onay) return;
-
-    setYukleniyor(true);
-    const ok = await onGuncelle(firma, null, false);
-    if (ok) {
-      setLogoUrl("");
-      setOgrenmeAktif(false);
-    }
-    setYukleniyor(false);
-  };
-
-  const yayindaMi = ogrenmeAktif && Boolean(logoUrl.trim());
-  const durdurulduMu = !ogrenmeAktif && Boolean(logoUrl.trim());
-
-  return (
-    <div
-      style={{
-        border: `0.5px solid ${RENK_CIZGI}`,
-        borderRadius: "14px",
-        padding: "24px",
-        maxWidth: "760px",
-        background: "var(--tema-yerel-yonetim-kart-01)",
-        fontFamily: "'Nunito', sans-serif",
-      }}
-    >
-      {/* Üst Başlık & Durum Rozeti */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "16px" }}>
-        <div>
-          <h2 style={{ fontSize: "16px", fontWeight: 700, color: "var(--tema-yerel-yonetim-ana-metin-04)", margin: 0 }}>
-            {firma.firma_adi} · Logo ve Kimlik Yönetimi
-          </h2>
-          <p style={{ fontSize: "12.5px", color: "var(--tema-yerel-yonetim-yardimci-metin-02)", marginTop: "3px", margin: 0 }}>
-            İç müşteri panelinde (UTT, üretici vb.) Cogniti logosu yanında görünecek kurumsal logo ve resmi öğrenme ortaklığı.
-          </p>
-        </div>
-
-        {/* Durum Rozeti */}
-        <div>
-          {yayindaMi && (
-            <span
-              style={{
-                fontSize: "11.5px",
-                fontWeight: 700,
-                padding: "3px 12px",
-                borderRadius: "999px",
-                background: "var(--tema-yerel-yonetim-islevsel-zemin-07)",
-                color: "var(--tema-yerel-yonetim-islevsel-metin-10)",
-                border: "1px solid var(--tema-yerel-yonetim-islevsel-cizgi-04)",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "5px",
-              }}
-            >
-              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--tema-yerel-yonetim-islevsel-zemin-08)" }} />
-              Yayında
-            </span>
-          )}
-          {durdurulduMu && (
-            <span
-              style={{
-                fontSize: "11.5px",
-                fontWeight: 700,
-                padding: "3px 12px",
-                borderRadius: "999px",
-                background: "var(--tema-yerel-yonetim-sayfa-zemini-03)",
-                color: "var(--tema-yerel-yonetim-islevsel-metin-11)",
-                border: "1px solid var(--tema-yerel-yonetim-islevsel-cizgi-05)",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "5px",
-              }}
-            >
-              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--tema-yerel-yonetim-islevsel-zemin-09)" }} />
-              Durduruldu
-            </span>
-          )}
-          {!logoUrl.trim() && (
-            <span
-              style={{
-                fontSize: "11.5px",
-                fontWeight: 600,
-                padding: "3px 12px",
-                borderRadius: "999px",
-                background: "var(--tema-yerel-yonetim-sayfa-zemini-04)",
-                color: "var(--tema-yerel-yonetim-yardimci-metin-02)",
-                border: "1px solid var(--tema-yerel-yonetim-cizgi-01)",
-                whiteSpace: "nowrap",
-              }}
-            >
-              Logo Yok
-            </span>
-          )}
-        </div>
+  return <div className={styles.stack}>
+    <section className={styles.card} aria-labelledby="admin-logo-onizleme-baslik">
+      <div className={styles.cardHeader}>
+        <div><h2 id="admin-logo-onizleme-baslik"><Eye />Görünüm Önizlemesi</h2><p>Kullanıcıların üst menüsündeki kurumsal kimlik alanı</p></div>
+        <span className={`${styles.status} ${yayinda ? styles.statusActive : ""}`}>{kayitliUrl ? yayinda ? "Yayında" : "Durduruldu" : "Logo yok"}</span>
       </div>
-
-      {/* Canlı Simülasyon / Önizleme Kutusu */}
-      <div style={{ marginBottom: "24px" }}>
-        <div style={{ fontSize: "11.5px", fontWeight: 700, textTransform: "uppercase", color: "var(--tema-yerel-yonetim-yardimci-metin-02)", letterSpacing: "0.5px", marginBottom: "8px" }}>
-          Header Görünüm Önizlemesi
-        </div>
-        <div
-          style={{
-            background: "var(--tema-yerel-yonetim-kart-02)",
-            border: "1px solid var(--tema-yerel-yonetim-cizgi-01)",
-            borderRadius: "10px",
-            padding: "12px 20px",
-            display: "flex",
-            alignItems: "center",
-            boxShadow: "0 2px 8px var(--tema-yerel-yonetim-golge-02)",
-            minHeight: "68px",
-          }}
-        >
-          {/* Cogniti Logo */}
-          <CognitiLogo
-            style={{ height: "42px", width: "74.725px", display: "block", objectFit: "contain" }}
-          />
-
-          <div style={{ height: "28px", width: "1.5px", background: "var(--tema-yerel-yonetim-secim-zemin-01)", margin: "0 16px" }} />
-
-          {/* Firma Logo & Metin */}
-          {logoUrl.trim() ? (
-            <div style={{ display: "flex", alignItems: "center", gap: "10px", opacity: ogrenmeAktif ? 1 : 0.45 }}>
-              <div style={{ width: "115px", height: "36px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <img
-                  src={logoUrl.trim()}
-                  alt={firma.firma_adi}
-                  style={{ maxHeight: "100%", maxWidth: "100%", objectFit: "contain", display: "block" }}
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = "none";
-                  }}
-                />
-              </div>
-              <span style={{ fontSize: "11px", fontWeight: 400, color: "var(--tema-yerel-yonetim-yardimci-metin-03)", whiteSpace: "nowrap" }}>
-                resmi öğrenme platformu
-              </span>
+      <div className={styles.cardBody}>
+        <div className={local.preview}>
+          <CognitiLogo className={local.cognitiLogo} />
+          <div className={local.company}>
+            <div className={local.companyLogo}>
+              {onizlemeUrl && gorselHatasiUrl !== onizlemeUrl
+                // Kullanıcının yüklediği kurumsal logo, özgün oranıyla gösterilir.
+                // eslint-disable-next-line @next/next/no-img-element
+                ? <img key={onizlemeUrl} src={onizlemeUrl} alt={`${firma.firma_adi} logosu`} onError={() => setGorselHatasiUrl(onizlemeUrl)} />
+                : <span className={local.placeholder}><ImageIcon />{onizlemeUrl ? "Görsel yüklenemedi" : "Firma logosu"}</span>}
             </div>
-          ) : (
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--tema-yerel-yonetim-yardimci-metin-04)", fontSize: "12px", fontStyle: "italic" }}>
-              <div
-                style={{
-                  width: "115px",
-                  height: "32px",
-                  border: "1px dashed var(--tema-yerel-yonetim-cizgi-02)",
-                  borderRadius: "6px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "11px",
-                  color: "var(--tema-yerel-yonetim-yardimci-metin-04)",
-                }}
-              >
-                Firma Logosu
-              </div>
-              <span>resmi öğrenme platformu</span>
+            <span className={local.partnership}>resmi öğrenme platformu</span>
+          </div>
+        </div>
+        <p className={local.caption}>{degisiklikVar ? "Kaydedilmemiş önizleme. Değişikliği uygulamak için logoyu kaydedin." : yayinda ? "Kayıtlı logo ve rozet kullanıcılara gösteriliyor." : kayitliUrl ? "Kayıtlı logo ve rozetin yayını durduruldu; kullanıcılara gösterilmiyor." : "Bir logo yükleyerek veya görsel adresi girerek önizleyebilirsiniz."}</p>
+      </div>
+    </section>
+
+    <section className={styles.card} aria-labelledby="admin-logo-yonetim-baslik">
+      <div className={styles.cardHeader}><div><h2 id="admin-logo-yonetim-baslik"><ImageIcon />Logo Yönetimi</h2><p>{firma.firma_adi} logosu ve resmi öğrenme platformu rozeti</p></div></div>
+      <div className={styles.cardBody}>
+        {mesaj && <p className={`${styles.notice} ${local.message}`} role={mesaj.tur === "hata" ? "alert" : "status"} data-error={mesaj.tur === "hata"}>{mesaj.metin}</p>}
+        <div className={local.management}>
+          <form className={local.form} onSubmit={e => {
+            e.preventDefault();
+            if (!onizlemeUrl) { setMesaj({ tur: "hata", metin: "Bir logo adresi girin veya dosya yükleyin." }); return; }
+            void guncelle(onizlemeUrl, true, "kaydet");
+          }}>
+            <h3 className={local.sectionHeading}>Logo Ekleme ve Güncelleme</h3>
+            <label className={styles.field} htmlFor="admin-logo-url">Logo adresi
+              <input id="admin-logo-url" className={styles.input} value={logoUrl} disabled={mesgul} onChange={e => { setLogoUrl(e.target.value); setMesaj(null); setSilOnay(false); }} placeholder="https://… veya /firma-logo.png" aria-describedby="admin-logo-yardim" />
+            </label>
+            <input ref={dosyaInputRef} type="file" accept="image/png,image/jpeg,image/svg+xml,image/webp" onChange={handleDosyaSec} hidden disabled={mesgul} aria-label="Firma logosu dosyası" />
+            <div className={styles.actions}><button type="button" className={styles.button} disabled={mesgul} onClick={() => dosyaInputRef.current?.click()}><Upload />{dosyaYukleniyor ? "Yükleniyor…" : "Dosya yükle"}</button><span className={local.fileHint}>PNG, JPEG, SVG veya WebP · En fazla 5 MB</span></div>
+            <p id="admin-logo-yardim" className={local.caption}>Şeffaf zeminli bir logo kullanabilirsiniz. Görsel, oranı korunarak yükleme sırasında optimize edilir.</p>
+            <div className={styles.formActions}>
+              <button type="submit" className={`${styles.button} ${styles.primary}`} disabled={mesgul || !onizlemeUrl}><Save />{islem === "kaydet" ? "Kaydediliyor…" : "Kaydet ve yayına al"}</button>
+              {degisiklikVar && <button type="button" className={styles.button} disabled={mesgul} onClick={() => { setLogoUrl(kayitliUrl); setMesaj(null); setSilOnay(false); }}><RotateCcw />Değişikliği geri al</button>}
             </div>
-          )}
+          </form>
 
-          {!ogrenmeAktif && logoUrl.trim() && (
-            <span style={{ marginLeft: "auto", fontSize: "11px", color: "var(--tema-yerel-yonetim-yardimci-metin-04)", fontStyle: "italic" }}>
-              (Yayın durdurulduğu için kullanıcılara gizlidir)
-            </span>
-          )}
+          <div className={local.publication}>
+            <h3 className={local.sectionHeading}>Yayın Durumu</h3>
+            <p className={local.caption}>{kayitliUrl ? "Kayıtlı logonun ve resmi öğrenme platformu rozetinin görünürlüğünü yönetin." : "Yayın durumunu yönetmek için önce bir logo kaydedin."}</p>
+            {kayitliUrl && <>
+              <div className={styles.actions}>
+                <button type="button" className={styles.button} disabled={mesgul} onClick={() => void guncelle(kayitliUrl, !yayinda, "durum")}>{yayinda ? <Pause /> : <Play />}{islem === "durum" ? "Güncelleniyor…" : yayinda ? "Yayını durdur" : "Yayına al"}</button>
+                {!silOnay && <button type="button" className={`${styles.button} ${styles.danger}`} disabled={mesgul} onClick={() => { setSilOnay(true); setMesaj(null); }}><Trash2 />Logoyu kaldır</button>}
+              </div>
+              {silOnay && <div className={local.confirm} role="group" aria-label="Firma logosunu kaldırma onayı">
+                <p><strong>{firma.firma_adi}</strong> logosu ve resmi öğrenme platformu rozeti kaldırılsın mı?</p>
+                <div className={styles.actions}><button type="button" className={`${styles.button} ${styles.danger}`} disabled={mesgul} onClick={() => void guncelle(null, false, "kaldir")}><Trash2 />{islem === "kaldir" ? "Kaldırılıyor…" : "Onayla, kaldır"}</button><button type="button" className={styles.button} disabled={mesgul} onClick={() => setSilOnay(false)}>Vazgeç</button></div>
+              </div>}
+            </>}
+          </div>
         </div>
       </div>
-
-      {/* Logo Ekleme / Düzenleme Alanı */}
-      <div style={{ background: "var(--tema-yerel-yonetim-sayfa-zemini-02)", padding: "16px", borderRadius: "10px", border: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)", marginBottom: "20px" }}>
-        <label style={{ display: "block", fontSize: "12.5px", fontWeight: 700, color: "var(--tema-yerel-yonetim-ana-metin-03)", marginBottom: "6px" }}>
-          Logo URL veya Dosya Yükleme
-        </label>
-        
-        <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-          <input
-            type="text"
-            value={logoUrl}
-            onChange={(e) => setLogoUrl(e.target.value)}
-            placeholder="Örn: /hepifarma_logo_dark.png veya https://..."
-            style={{
-              flex: 1,
-              padding: "9px 12px",
-              fontSize: "13px",
-              border: "1px solid var(--tema-yerel-yonetim-cizgi-02)",
-              borderRadius: "8px",
-              background: "var(--tema-yerel-yonetim-kart-01)",
-              outline: "none",
-              fontFamily: "'Nunito', sans-serif",
-            }}
-          />
-
-          <input
-            ref={dosyaInputRef}
-            type="file"
-            accept="image/png,image/jpeg,image/svg+xml,image/webp"
-            onChange={handleDosyaSec}
-            style={{ display: "none" }}
-          />
-
-          <button
-            type="button"
-            onClick={() => dosyaInputRef.current?.click()}
-            disabled={dosyaYukleniyor || yukleniyor}
-            style={{
-              ...btnBase,
-              background: "var(--tema-yerel-yonetim-kart-02)",
-              color: "var(--tema-yerel-yonetim-ana-metin-03)",
-              borderColor: "var(--tema-yerel-yonetim-cizgi-02)",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {dosyaYukleniyor ? "Yükleniyor..." : "Dosya Seç"}
-          </button>
-        </div>
-        <p style={{ fontSize: "11.5px", color: "var(--tema-yerel-yonetim-yardimci-metin-02)", marginTop: "6px", margin: 0 }}>
-          💡 Tavsiye: Beyaz/açık header zemininde net görünmesi için şeffaf zeminli (PNG veya SVG) koyu renkli logo kullanınız (Maks. 5 MB - yüklenirken Retina netliğinde otomatik optimize edilir).
-        </p>
-      </div>
-
-      {/* Alt Buton Grubu: Ekle, Durdur, Kaldır */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: "12px", borderTop: "1px solid var(--tema-yerel-yonetim-cizgi-05)" }}>
-        {/* Sol Grup: Ekle / Güncelle ve Durdur / Yayına Al */}
-        <div style={{ display: "flex", gap: "10px" }}>
-          <button
-            type="button"
-            onClick={handleKaydet}
-            disabled={yukleniyor || dosyaYukleniyor}
-            style={{
-              ...btnBase,
-              background: RENK_BORDO,
-              color: "var(--tema-yerel-yonetim-ters-metin-01)",
-              border: "none",
-              opacity: yukleniyor ? 0.7 : 1,
-            }}
-          >
-            {yayindaMi ? "Logoyu Güncelle" : "Ekle ve Yayına Al"}
-          </button>
-
-          {Boolean(firma.logo_url) && (
-            <button
-              type="button"
-              onClick={handleDurdurToggle}
-              disabled={yukleniyor || dosyaYukleniyor}
-              style={{
-                ...btnBase,
-                background: ogrenmeAktif ? "var(--tema-yerel-yonetim-islevsel-zemin-10)" : "var(--tema-yerel-yonetim-islevsel-zemin-05)",
-                color: ogrenmeAktif ? "var(--tema-yerel-yonetim-islevsel-metin-01)" : "var(--tema-yerel-yonetim-islevsel-metin-10)",
-                borderColor: ogrenmeAktif ? "var(--tema-yerel-yonetim-islevsel-cizgi-06)" : "var(--tema-yerel-yonetim-islevsel-cizgi-04)",
-                opacity: yukleniyor ? 0.7 : 1,
-              }}
-            >
-              {ogrenmeAktif ? "Yayını Durdur" : "Tekrar Yayına Al"}
-            </button>
-          )}
-        </div>
-
-        {/* Sağ Grup: Kaldır */}
-        {Boolean(firma.logo_url) && (
-          <button
-            type="button"
-            onClick={handleKaldir}
-            disabled={yukleniyor || dosyaYukleniyor}
-            style={{
-              ...btnBase,
-              background: "var(--tema-yerel-yonetim-islevsel-zemin-06)",
-              color: "var(--tema-yerel-yonetim-islevsel-metin-12)",
-              borderColor: "var(--tema-yerel-yonetim-islevsel-cizgi-02)",
-              opacity: yukleniyor ? 0.7 : 1,
-            }}
-          >
-            Logoyu Kaldır
-          </button>
-        )}
-      </div>
-    </div>
-  );
+    </section>
+  </div>;
 }
+
+export default saltOkunurAlan(LogoKimlikYonetimi);

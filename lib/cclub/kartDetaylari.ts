@@ -9,6 +9,11 @@ import type { SupabaseClient } from "@supabase/supabase-js";
  */
 export interface CcKartMetrik {
   extra_puan: number;
+  cek_karsiligi_var_mi?: boolean | null;
+  saha_puan_modeli?: string | null;
+  karsilik_puan?: number | null;
+  karsilik_tl?: number | null;
+  hedef_roller?: string[] | null;
   izlenme_sayisi: number;
   begeni_sayisi: number;
   favori_sayisi: number;
@@ -36,7 +41,7 @@ export async function ccKartMetrikleri(
   if (yayinIdler.length === 0) return {};
 
   const [yayinBilgi, begeniler, favoriler, kullaniciBegeni, kullaniciFavori, ccIzlemeler] = await Promise.all([
-    supabase.from("yayin_yonetimi").select("yayin_id, extra_puan").in("yayin_id", yayinIdler),
+    supabase.from("yayin_yonetimi").select("yayin_id, extra_puan, cek_karsiligi_var_mi, saha_puan_modeli, karsilik_puan, karsilik_tl, hedef_roller").in("yayin_id", yayinIdler),
     supabase.from("video_begeniler").select("yayin_id").in("yayin_id", yayinIdler),
     supabase.from("video_favoriler").select("yayin_id").in("yayin_id", yayinIdler),
     supabase.from("video_begeniler").select("yayin_id").in("yayin_id", yayinIdler).eq("kullanici_id", bmId),
@@ -44,6 +49,7 @@ export async function ccKartMetrikleri(
     supabase.from("cc_izleme_kayitlari").select("yayin_id, bm_id").in("yayin_id", yayinIdler).eq("tamamlandi_mi", true),
   ]);
 
+  const cekBilgiMap = new Map((yayinBilgi.data ?? []).map((y) => [y.yayin_id, y]));
   const extraMap: Record<string, number> = {};
   for (const y of yayinBilgi.data ?? []) extraMap[y.yayin_id] = y.extra_puan ?? 0;
 
@@ -69,6 +75,11 @@ export async function ccKartMetrikleri(
     sonuc[yid] = {
       ...bosMetrik(),
       extra_puan: extraMap[yid] ?? 0,
+      cek_karsiligi_var_mi: cekBilgiMap.get(yid)?.cek_karsiligi_var_mi ?? null,
+      saha_puan_modeli: cekBilgiMap.get(yid)?.saha_puan_modeli ?? null,
+      karsilik_puan: cekBilgiMap.get(yid)?.karsilik_puan ?? null,
+      karsilik_tl: cekBilgiMap.get(yid)?.karsilik_tl ?? null,
+      hedef_roller: cekBilgiMap.get(yid)?.hedef_roller ?? null,
       izlenme_sayisi: izlenmeSay[yid] ?? 0,
       begeni_sayisi: begeniSay[yid] ?? 0,
       favori_sayisi: favoriSay[yid] ?? 0,

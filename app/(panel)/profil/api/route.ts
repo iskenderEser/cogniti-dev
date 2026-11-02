@@ -44,7 +44,7 @@ export async function GET() {
         .map((firma) => firma.firma_adi);
       const aktifFirmalar = eclubErisim.firmalar
         .filter((firma) => firma.aktif !== false && firma.eclub_aktif === true)
-        .map((firma) => ({ firma_id: firma.firma_id, firma_adi: firma.firma_adi, eclub_store_aktif: firma.eclub_store_aktif === true }));
+        .map((firma) => ({ firma_id: firma.firma_id, firma_adi: firma.firma_adi }));
       return NextResponse.json({
         profil: {
           kullanici_id: kisi.kisi_id,
@@ -64,7 +64,6 @@ export async function GET() {
           hbstore_aktif: false,
           cc_aktif: false,
           eclub_aktif: eclubErisim.eclub_aktif,
-          eclub_store_aktif: eclubErisim.eclub_store_aktif,
           eczanem_aktif: eclubErisim.eczanem_aktif,
         },
         eclub_firmalar: aktifFirmalar,
@@ -83,11 +82,10 @@ export async function GET() {
 
     if (kullaniciError || !kullanici) return hataYaniti("Kullanıcı bilgisi alınamadı.", "v_kullanici_detay SELECT", kullaniciError);
 
-    // Firmanın HBStore, Challenge Club, E-Club ve E-Club Store açık/kapalı durumu — Navbar ve ilgili yüzeyler bunu okur
+    // Firmanın HBStore, Challenge Club, E-Club ve Eczanem açık/kapalı durumu — Navbar ve ilgili yüzeyler bunu okur
     let hbstore_aktif = false;
     let cc_aktif = false;
     let eclub_aktif = false;
-    let eclub_store_aktif = false;
     let eczanem_aktif = false;
     let logo_url: string | null = null;
     let ogrenme_platformu_aktif = false;
@@ -100,13 +98,12 @@ export async function GET() {
       hbstore_aktif = firma?.hbstore_aktif ?? false;
       cc_aktif = firma?.cc_aktif ?? false;
       eclub_aktif = firma?.eclub_aktif ?? false;
-      eclub_store_aktif = firma?.eclub_store_aktif ?? false;
       eczanem_aktif = eclub_aktif && firma?.eczanem_aktif === true;
       logo_url = firma?.logo_url ?? null;
       ogrenme_platformu_aktif = firma?.ogrenme_platformu_aktif ?? false;
     }
 
-    const profilTemel = { ...kullanici, hbstore_aktif, cc_aktif, eclub_aktif, eclub_store_aktif, eczanem_aktif, logo_url, ogrenme_platformu_aktif };
+    const profilTemel = { ...kullanici, hbstore_aktif, cc_aktif, eclub_aktif, eczanem_aktif, logo_url, ogrenme_platformu_aktif };
 
     if (!TUKETICI_ROLLER.includes(rol)) {
       return NextResponse.json({ profil: profilTemel }, { status: 200 });
@@ -174,10 +171,11 @@ export async function GET() {
     // ── Navbar özeti (yalnız UTT/KD_UTT — bu blok TUKETICI_ROLLER içinde) ──────
     // Haftalık takım sırası: bu haftanın lig RPC'sinden kullanıcının satırı.
     const { yil, hafta } = aktifPeriyot();
-    const { data: haftalikLig } = await adminSupabase.rpc("get_hb_ligi_haftalik_v2", {
+    const { data: haftalikLig, error: haftalikLigHatasi } = await adminSupabase.rpc("get_hb_ligi_haftalik_v2", {
       p_yil: yil,
       p_hafta: hafta,
     });
+    if (haftalikLigHatasi) return hataYaniti("Lig bilgileri alınamadı.", "get_hb_ligi_haftalik_v2 — navbar özeti", haftalikLigHatasi);
     const benimHaftalik = Array.isArray(haftalikLig)
       ? haftalikLig.find((r: { kullanici_id: string }) => r.kullanici_id === user.id)
       : null;
@@ -205,6 +203,7 @@ export async function GET() {
       },
       navbar_ozet: {
         takim_sirasi: benimHaftalik?.takim_sirasi ?? null,
+        lig_puani: benimHaftalik?.toplam_puan ?? 0,
         siparis_puani: siparisPuani,
       },
     }, { status: 200 });

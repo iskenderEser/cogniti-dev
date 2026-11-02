@@ -36,7 +36,7 @@ test("tüm rollerin masaüstü ve mobil sidebar hedefleri mevcut sayfalara karş
   tara("app");
   assert.ok(!routes.includes("/hakkinda"), "Kaldırılan Hakkında adresi sayfa veya yönlendirme sunmamalı");
   for (const rolKucu of [...roller.TUM_ROLLER, ...roller.ECLUB_TUKETICI_ROLLERI]) {
-    const ctx = { rolKucu, storeAcik: true, ccAcik: true, eclubAcik: true, eclubStoreAcik: true, eczanemAcik: true };
+    const ctx = { rolKucu, storeAcik: true, ccAcik: true, eclubAcik: true, eczanemAcik: true };
     function kontrol(oge: NavOge) {
       if (!oge.gate(ctx)) return;
       const path = typeof oge.path === "function" ? oge.path(ctx) : oge.path;

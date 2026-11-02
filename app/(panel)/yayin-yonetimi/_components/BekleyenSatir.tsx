@@ -13,16 +13,19 @@ import { SadeFormSecimi } from "@/components/kontrol/SadeKontroller";
 import type { Soru } from "@/app/(panel)/talepler/_types";
 import { DurumPill, HedefRolPilleri, NOTR_RENK, Pill, TeknikPill } from "@/components/pill";
 import { ECLUB_KAZANIM_SECENEKLERI, type BaremSatiri, type EclubKazanimModeli } from "@/lib/eclub/store/eclubStoreTipler";
+import type { EczanemKazanimModeli } from "@/lib/eczanem/kazanimModeli";
+import { sahaHedefliMi, type SahaPuanModeli } from "@/lib/uretici/sahaPuanModeli";
 import { yalnizEclubHedefliMi } from "@/lib/utils/roller";
 import { yayin_kodu } from "@/lib/utils/yayinKodu";
 import { AlertCircle, CheckCircle2 } from "lucide-react";
 import type { Bekleyen, OnizlemeHedefi } from "../_types";
-import { EXTRA_PUAN_SECENEKLERI, VIDEO_PUAN_SECENEKLERI, VIDEO_PUAN_SECENEKLERI_ECZANEM } from "../_types";
+import { etkinPuanAraliklari, puanSecenekleri, type PuanAraliklari } from "@/lib/uretici/puanAraliklari";
 import { SoruListesi } from "./SoruListesi";
 import { VideoThumb } from "./Yardimcilar";
 
 interface BekleyenSatirProps {
   b: Bekleyen;
+  puanAraliklari: PuanAraliklari | null | undefined;
   islemLoading: string | null;
   acikAkordiyon: string | null;
   setAcikAkordiyon: (v: string | null) => void;
@@ -30,17 +33,17 @@ interface BekleyenSatirProps {
   setVideoPuanlari: React.Dispatch<React.SetStateAction<Record<string, number>>>;
   extraPuanlar: Record<string, number>;
   setExtraPuanlar: React.Dispatch<React.SetStateAction<Record<string, number>>>;
+  eczanemKazanimModelleri?: Record<string, EczanemKazanimModeli>;
+  setEczanemKazanimModelleri?: React.Dispatch<React.SetStateAction<Record<string, EczanemKazanimModeli>>>;
   barkodlar: Record<string, string>;
   setBarkodlar: React.Dispatch<React.SetStateAction<Record<string, string>>>;
-  karsilikPuanlar: Record<string, number>;
-  setKarsilikPuanlar: React.Dispatch<React.SetStateAction<Record<string, number>>>;
-  karsilikTllar: Record<string, number>;
-  setKarsilikTllar: React.Dispatch<React.SetStateAction<Record<string, number>>>;
   satisFiyatlar: Record<string, number>;
   setSatisFiyatlar: React.Dispatch<React.SetStateAction<Record<string, number>>>;
   tekrarPeriyotlari: Record<string, number>;
   setTekrarPeriyotlari: React.Dispatch<React.SetStateAction<Record<string, number>>>;
   tekrarSecenekleri: number[];
+  sahaPuanModelleri?: Record<string, SahaPuanModeli>;
+  setSahaPuanModelleri?: React.Dispatch<React.SetStateAction<Record<string, SahaPuanModeli>>>;
   // E-Club ayarları
   kazanimModelleri?: Record<string, EclubKazanimModeli>;
   setKazanimModelleri?: React.Dispatch<React.SetStateAction<Record<string, EclubKazanimModeli>>>;
@@ -48,10 +51,6 @@ interface BekleyenSatirProps {
   setKatlamaOranlari?: React.Dispatch<React.SetStateAction<Record<string, number>>>;
   baremTablolari?: Record<string, BaremSatiri[]>;
   setBaremTablolari?: React.Dispatch<React.SetStateAction<Record<string, BaremSatiri[]>>>;
-  eclubKarsilikPuanlar?: Record<string, number>;
-  setEclubKarsilikPuanlar?: React.Dispatch<React.SetStateAction<Record<string, number>>>;
-  eclubKarsilikTllar?: Record<string, number>;
-  setEclubKarsilikTllar?: React.Dispatch<React.SetStateAction<Record<string, number>>>;
   // Opsiyonel yayın günü (İş 2): boş = hemen yayın; doluysa o gün 07:00'de (TR) açılır.
   yayinGunleri: Record<string, string>;
   setYayinGunleri: React.Dispatch<React.SetStateAction<Record<string, string>>>;
@@ -66,14 +65,14 @@ interface BekleyenSatirProps {
 }
 
 export function BekleyenSatir({
-  b, islemLoading, acikAkordiyon, setAcikAkordiyon,
+  b, puanAraliklari, islemLoading, acikAkordiyon, setAcikAkordiyon,
   videoPuanlari, setVideoPuanlari, extraPuanlar, setExtraPuanlar,
-  barkodlar, setBarkodlar, karsilikPuanlar, setKarsilikPuanlar, karsilikTllar, setKarsilikTllar, satisFiyatlar, setSatisFiyatlar,
+  eczanemKazanimModelleri, setEczanemKazanimModelleri,
+  barkodlar, setBarkodlar, satisFiyatlar, setSatisFiyatlar,
+  sahaPuanModelleri, setSahaPuanModelleri,
   kazanimModelleri, setKazanimModelleri,
   katlamaOranlari, setKatlamaOranlari,
   baremTablolari, setBaremTablolari,
-  eclubKarsilikPuanlar, setEclubKarsilikPuanlar,
-  eclubKarsilikTllar, setEclubKarsilikTllar,
   tekrarPeriyotlari, setTekrarPeriyotlari, tekrarSecenekleri,
   yayinGunleri, setYayinGunleri,
   tumPuanlarAtandiMi,
@@ -90,6 +89,10 @@ export function BekleyenSatir({
   // Eczanem yayınında extra puan / tekrar periyodu / ileri sarma YOKTUR (İP §4.4);
   // yerine barkod + Karşılık (puan ↔ TL) alanları girilir (U5, K-E3).
   const eczanem = b.hedef_roller.includes("eczanem");
+  const eczanemModeli = eczanemKazanimModelleri?.[b.soru_seti_durum_id];
+  const eczanemIndirimsiz = eczanem && eczanemModeli === "indirimsiz";
+  const eczanemIndirimli = eczanem && eczanemModeli === "indirimli";
+  const puanGoster = !eczanem || eczanemIndirimli;
   const eclub = yalnizEclubHedefliMi(b.hedef_roller);
   const aracEtiketi = b.arac_turu === "podcast" ? "Podcast"
     : b.arac_turu === "gorsel" ? "Görsel"
@@ -110,7 +113,9 @@ export function BekleyenSatir({
   const kismiSoruPuanlandi = atananSoruSayisi > 0 && atananSoruSayisi < toplamSoru;
 
   // Öğrenme aracı puanı durumu
-  const videoPuanSecenekleri = eczanem ? VIDEO_PUAN_SECENEKLERI_ECZANEM : VIDEO_PUAN_SECENEKLERI;
+  const araliklar = etkinPuanAraliklari(puanAraliklari ?? null, eczanem);
+  const videoPuanSecenekleri = puanAraliklari === undefined ? [] : puanSecenekleri(araliklar.yayin);
+  const extraPuanSecenekleri = puanAraliklari === undefined ? [] : puanSecenekleri(araliklar.extra);
   const seciliVideoPuani = videoPuanlari[b.soru_seti_durum_id] ?? b.video_puani ?? "";
   
 
@@ -124,9 +129,15 @@ export function BekleyenSatir({
 
   // Eczanem durumları
   const seciliBarkod = barkodlar[b.soru_seti_durum_id]?.trim();
-  const seciliKarsilikPuan = karsilikPuanlar[b.soru_seti_durum_id];
-  const seciliKarsilikTl = karsilikTllar[b.soru_seti_durum_id];
   const seciliSatisFiyati = satisFiyatlar[b.soru_seti_durum_id];
+
+  // Tarih alanı yalnız bu bölümdeki girişleri izler; alttaki kazanım modeli
+  // ve dönüşüm koşulları Yayınla butonunun ayrı kontrolüdür.
+  const yayinTarihiHazir = !silmeBaslatilmis && (eczanemIndirimsiz
+    ? toplamSoru > 0
+    : tumSorularPuanlandi && Number(seciliVideoPuani) > 0 && (eczanem
+      ? eczanemIndirimli && Boolean(seciliBarkod && seciliSatisFiyati)
+      : (eclub || Number(seciliExtra) > 0) && seciliTekrar !== undefined));
 
   return (
     <article className="mb-3 overflow-hidden rounded-2xl border border-[var(--tema-yerel-uretim-cizgi-36)] bg-[var(--tema-yerel-uretim-kart-01)] shadow-[0_8px_22px_var(--tema-yerel-uretim-golge-01)]">
@@ -177,11 +188,13 @@ export function BekleyenSatir({
                     ? "border-[var(--tema-yerel-uretim-cizgi-37)] bg-[var(--tema-yerel-uretim-secim-zemin-02)] font-extrabold text-[var(--tema-yerel-uretim-ana-metin-20)] shadow-sm"
                     : kismiSoruPuanlandi
                       ? "border-[var(--tema-yerel-uretim-islevsel-cizgi-01)] bg-[var(--tema-yerel-uretim-islevsel-zemin-01)] font-bold text-[var(--tema-yerel-uretim-islevsel-metin-27)]"
-                      : "border-[var(--tema-yerel-uretim-cizgi-01)] bg-[var(--tema-yerel-uretim-kart-01)] font-medium text-[var(--tema-yerel-uretim-yardimci-metin-27)] hover:border-[var(--tema-yerel-uretim-cizgi-21)]"
+                      : "border-[var(--tema-yerel-uretim-cizgi-01)] bg-[var(--tema-yerel-uretim-kart-01)] font-extrabold text-[var(--tema-kontrol-metin)] hover:border-[var(--tema-yerel-uretim-cizgi-21)]"
                 }`}
                 style={{ fontFamily: "'Nunito', sans-serif" }}>
                 <span className="flex items-center gap-1 truncate">
-                  {tumSorularPuanlandi ? (
+                  {!puanGoster ? (
+                    <span className="truncate">Soru Seti ({toplamSoru})</span>
+                  ) : tumSorularPuanlandi ? (
                     <>
                       <CheckCircle2 size={12} className="text-[var(--tema-yerel-uretim-eylem-metin-11)] shrink-0" />
                       <span className="truncate">{toplamSoru} Soru ({toplamSoruPuani} p)</span>
@@ -220,7 +233,9 @@ export function BekleyenSatir({
                 : "border-[var(--tema-yerel-uretim-cizgi-01)] bg-[var(--tema-yerel-uretim-kart-01)] hover:border-[var(--tema-yerel-uretim-cizgi-21)] focus-within:border-[var(--tema-yerel-uretim-cizgi-04)]"
             }`}>
               <span className={`pointer-events-none absolute inset-y-0 left-2 flex items-center text-[11px] ${
-                secilenGun ? "font-extrabold text-[var(--tema-yerel-uretim-islevsel-metin-29)]" : "font-medium text-[var(--tema-yerel-uretim-yardimci-metin-28)]"
+                secilenGun ? "font-extrabold text-[var(--tema-yerel-uretim-islevsel-metin-29)]"
+                  : yayinTarihiHazir ? "font-extrabold text-[var(--tema-kontrol-metin)]"
+                    : "font-medium text-[var(--tema-yerel-uretim-yardimci-metin-28)]"
               }`}>
                 {secilenGun ? `📅 ${new Date(`${secilenGun}T00:00:00`).toLocaleDateString("tr-TR")}` : "Yayın Tarihi"}
               </span>
@@ -242,7 +257,7 @@ export function BekleyenSatir({
                 </button>
               ) : (
                 <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"
-                  className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--tema-yerel-uretim-yardimci-metin-29)]">
+                  className={`pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 ${yayinTarihiHazir ? "text-[var(--tema-kontrol-metin)]" : "text-[var(--tema-yerel-uretim-yardimci-metin-29)]"}`}>
                   <path d="M6 3v3M18 3v3M4 8h16M5 5h14a1 1 0 0 1 1 1v14H4V6a1 1 0 0 1 1-1Z" />
                 </svg>
               )}
@@ -299,12 +314,25 @@ export function BekleyenSatir({
           if (eczanem) {
             return (
               <div className="flex flex-col gap-3">
+                <fieldset className="flex flex-wrap gap-2" aria-label="Eczanem kazanım modeli">
+                  {(["indirimli", "indirimsiz"] as const).map((model) => (
+                    <label key={model} className={"flex min-h-10 cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-xs font-bold " + (eczanemModeli === model
+                      ? "border-[var(--tema-yerel-uretim-cizgi-39)] bg-[var(--tema-yerel-uretim-secim-zemin-12)] text-[var(--tema-yerel-uretim-ana-metin-21)]"
+                      : "border-[var(--tema-yerel-uretim-cizgi-01)] bg-[var(--tema-yerel-uretim-kart-01)] text-[var(--tema-yerel-uretim-ana-metin-21)]")}>
+                      <input type="radio" name={"eczanem_kazanim_modeli_" + b.soru_seti_durum_id} value={model}
+                        checked={eczanemModeli === model}
+                        onChange={() => setEczanemKazanimModelleri?.((prev) => ({ ...prev, [b.soru_seti_durum_id]: model }))}
+                        className="size-4 accent-[var(--tema-yerel-uretim-eylem-metin-12)]" />
+                      {model === "indirimli" ? "İndirimli" : "İndirimsiz"}
+                    </label>
+                  ))}
+                </fieldset>
                 <div className="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center">
                   {soruBtn}
-                  {videoPuaniAlani}
+                  {eczanemIndirimli && videoPuaniAlani}
                   {yayinGunuAlani}
                 </div>
-                <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
+                {eczanemIndirimli && <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
                   <div className="w-[180px]">
                     <input type="text" inputMode="numeric" value={barkodlar[b.soru_seti_durum_id] ?? ""}
                       onChange={(e) => setBarkodlar(prev => ({ ...prev, [b.soru_seti_durum_id]: e.target.value }))}
@@ -317,47 +345,7 @@ export function BekleyenSatir({
                       }`}
                       style={{ fontFamily: "'Nunito', sans-serif" }} />
                   </div>
-                  <div>
-                    <div className="flex h-9 items-center gap-1">
-                      <input type="number" min={1} value={karsilikPuanlar[b.soru_seti_durum_id] ?? ""}
-                        onChange={(e) => {
-                          const deger = e.target.value;
-                          setKarsilikPuanlar(prev => {
-                            const yeni = { ...prev };
-                            if (deger === "") delete yeni[b.soru_seti_durum_id];
-                            else yeni[b.soru_seti_durum_id] = Number(deger);
-                            return yeni;
-                          });
-                        }}
-                        placeholder="Puan"
-                        aria-label="Karşılık puanı"
-                        className={`h-9 min-h-9 max-h-9 w-[180px] flex-none box-border rounded-lg border px-2 text-xs [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none transition outline-none ${
-                          seciliKarsilikPuan
-                            ? "border-[var(--tema-yerel-uretim-cizgi-37)] bg-[var(--tema-yerel-uretim-secim-zemin-02)] font-extrabold text-[var(--tema-yerel-uretim-ana-metin-20)] shadow-sm"
-                            : "border-[var(--tema-yerel-uretim-cizgi-01)] bg-[var(--tema-yerel-uretim-kart-01)] font-medium text-[var(--tema-yerel-uretim-ana-metin-01)] hover:border-[var(--tema-yerel-uretim-cizgi-21)]"
-                        }`}
-                        style={{ fontFamily: "'Nunito', sans-serif" }} />
-                      <span className="text-xs text-[var(--tema-yerel-uretim-yardimci-metin-02)]">=</span>
-                      <input type="number" min={0} step="0.01" value={karsilikTllar[b.soru_seti_durum_id] ?? ""}
-                        onChange={(e) => {
-                          const deger = e.target.value;
-                          setKarsilikTllar(prev => {
-                            const yeni = { ...prev };
-                            if (deger === "") delete yeni[b.soru_seti_durum_id];
-                            else yeni[b.soru_seti_durum_id] = Number(deger);
-                            return yeni;
-                          });
-                        }}
-                        placeholder="TL"
-                        aria-label="Türk lirası karşılığı"
-                        className={`h-9 min-h-9 max-h-9 w-[180px] flex-none box-border rounded-lg border px-2 text-xs transition outline-none ${
-                          seciliKarsilikTl
-                            ? "border-[var(--tema-yerel-uretim-cizgi-37)] bg-[var(--tema-yerel-uretim-secim-zemin-02)] font-extrabold text-[var(--tema-yerel-uretim-ana-metin-20)] shadow-sm"
-                            : "border-[var(--tema-yerel-uretim-cizgi-01)] bg-[var(--tema-yerel-uretim-kart-01)] font-medium text-[var(--tema-yerel-uretim-ana-metin-01)] hover:border-[var(--tema-yerel-uretim-cizgi-21)]"
-                        }`}
-                        style={{ fontFamily: "'Nunito', sans-serif" }} />
-                    </div>
-                  </div>
+                  <p className="text-xs text-[var(--tema-yerel-uretim-yardimci-metin-02)]">Puan–TL karşılığı merkezi firma tanımından alınır.</p>
                   <div>
                     <div className="flex h-9 items-center gap-1">
                       <input type="number" min={0} step="0.01" value={satisFiyatlar[b.soru_seti_durum_id] ?? ""}
@@ -380,7 +368,7 @@ export function BekleyenSatir({
                         style={{ fontFamily: "'Nunito', sans-serif" }} />
                     </div>
                   </div>
-                </div>
+                </div>}
                 <div className="flex items-center justify-between gap-3">
                   {silButonu}
                   {yayinlaButonu}
@@ -395,8 +383,6 @@ export function BekleyenSatir({
             const siparisliModel = aktifModel === "siparisle_artan_cek" || aktifModel === "siparis_zorunlu_cek";
             const aktifKatlamaOrani = katlamaOranlari?.[b.soru_seti_durum_id];
             const aktifBaremTablosu: BaremSatiri[] = baremTablolari?.[b.soru_seti_durum_id] ?? [];
-            const aktifKarsilikPuan = eclubKarsilikPuanlar?.[b.soru_seti_durum_id] ?? "";
-            const aktifKarsilikTl = eclubKarsilikTllar?.[b.soru_seti_durum_id] ?? "";
 
             return (
               <div className="flex flex-col gap-3">
@@ -446,27 +432,7 @@ export function BekleyenSatir({
                         <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--tema-yerel-uretim-eylem-zemin-10)] text-xs text-[var(--tema-yerel-uretim-ters-metin-01)]">🎁</span>
                         <span className="text-xs font-bold text-[var(--tema-yerel-uretim-ana-metin-21)]">Hediye çeki koşulları</span>
                       </div>
-                      {/* Karşılık Oranı (Puan = TL) */}
-                      <div className="flex items-center gap-1 text-xs">
-                        <span className="text-[var(--tema-yerel-uretim-yardimci-metin-30)]">Dönüşüm:</span>
-                        <input
-                          type="number"
-                          min={1}
-                          value={aktifKarsilikPuan}
-                          onChange={(e) => setEclubKarsilikPuanlar?.((prev) => { const yeni = { ...prev }; if (e.target.value) yeni[b.soru_seti_durum_id] = Number(e.target.value); else delete yeni[b.soru_seti_durum_id]; return yeni; })}
-                          className="h-7 w-12 rounded border border-[var(--tema-yerel-uretim-islevsel-cizgi-11)] bg-[var(--tema-yerel-uretim-islevsel-zemin-07)] text-center text-xs font-bold text-[var(--tema-yerel-uretim-islevsel-metin-30)] outline-none"
-                        />
-                        <span className="text-[var(--tema-yerel-uretim-yardimci-metin-31)]">Puan =</span>
-                        <input
-                          type="number"
-                          min={0.1}
-                          step="0.1"
-                          value={aktifKarsilikTl}
-                          onChange={(e) => setEclubKarsilikTllar?.((prev) => { const yeni = { ...prev }; if (e.target.value) yeni[b.soru_seti_durum_id] = Number(e.target.value); else delete yeni[b.soru_seti_durum_id]; return yeni; })}
-                          className="h-7 w-12 rounded border border-[var(--tema-yerel-uretim-islevsel-cizgi-11)] bg-[var(--tema-yerel-uretim-islevsel-zemin-07)] text-center text-xs font-bold text-[var(--tema-yerel-uretim-islevsel-metin-30)] outline-none"
-                        />
-                        <span className="font-semibold text-[var(--tema-yerel-uretim-ana-metin-10)]">TL</span>
-                      </div>
+                      <span className="text-xs text-[var(--tema-yerel-uretim-yardimci-metin-30)]">Puan–TL karşılığı firma tanımından alınır.</span>
                     </div>
 
                     {aktifModel === "siparisle_artan_cek" && (
@@ -587,7 +553,7 @@ export function BekleyenSatir({
                 <div className="w-[145px] shrink-0">
                   <SadeFormSecimi value={seciliExtra ?? ""} onChange={(e) => setExtraPuanlar(prev => ({ ...prev, [b.soru_seti_durum_id]: Number(e.target.value) }))} aria-label={`${b.urun_adi} extra puanı`} className="w-full">
                     <option value="">Extra Bitirme Puanı</option>
-                    {EXTRA_PUAN_SECENEKLERI.map(p => <option key={p} value={p}>+{p} extra puan</option>)}
+                    {extraPuanSecenekleri.map(p => <option key={p} value={p}>+{p} extra puan</option>)}
                   </SadeFormSecimi>
                 </div>
                 <div className="w-[110px] shrink-0">
@@ -607,6 +573,29 @@ export function BekleyenSatir({
                 </div>
                 {yayinGunuAlani}
               </div>
+              {sahaHedefliMi(b.hedef_roller) && (
+                <fieldset className="rounded-xl border border-[var(--tema-yerel-uretim-cizgi-38)] bg-[var(--tema-yerel-uretim-sayfa-zemini-18)] p-3">
+                  <legend className="px-1 text-xs font-bold text-[var(--tema-yerel-uretim-ana-metin-21)]">Puan modeli</legend>
+                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                    {([
+                      { model: "tl_karsilikli", baslik: "Çek karşılıklı puan", aciklama: "Puanlar performans ve lig hesabına eklenir; FirmaStore’da kullanılabilir." },
+                      { model: "tlsiz", baslik: "Çeksiz puan", aciklama: "Puanlar yalnız performans ve lig hesabına eklenir." },
+                    ] as const).map((secenek) => (
+                      <label key={secenek.model} className={`flex min-h-12 cursor-pointer items-start gap-2 rounded-lg border px-2.5 py-2 ${sahaPuanModelleri?.[b.soru_seti_durum_id] === secenek.model ? "border-[var(--tema-yerel-uretim-cizgi-39)] bg-[var(--tema-yerel-uretim-secim-zemin-12)]" : "border-[var(--tema-yerel-uretim-cizgi-01)] bg-[var(--tema-yerel-uretim-kart-01)]"}`}>
+                        <input type="radio" name={`saha_puan_modeli_${b.soru_seti_durum_id}`} value={secenek.model}
+                          checked={sahaPuanModelleri?.[b.soru_seti_durum_id] === secenek.model}
+                          onChange={() => setSahaPuanModelleri?.((prev) => ({ ...prev, [b.soru_seti_durum_id]: secenek.model }))}
+                          className="mt-0.5 size-4 shrink-0 accent-[var(--tema-yerel-uretim-eylem-metin-12)]" />
+                        <span className="flex min-w-0 flex-col gap-0.5">
+                          <span className="text-xs font-bold text-[var(--tema-yerel-uretim-ana-metin-21)]">{secenek.baslik}</span>
+                          <span className="text-[11px] leading-tight text-[var(--tema-yerel-uretim-yardimci-metin-30)]">{secenek.aciklama}</span>
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                  <p className="mt-3 text-xs text-[var(--tema-yerel-uretim-yardimci-metin-30)]">Hediye çeki karşılığı, firmanın FirmaStore çekleri için belirlediği Baz Puan üzerinden hesaplanır.</p>
+                </fieldset>
+              )}
               <div className="flex items-center justify-between gap-3">
                 {silButonu}
                 {yayinlaButonu}
@@ -617,7 +606,7 @@ export function BekleyenSatir({
       </div>
       </div>
       {acikAkordiyon === b.soru_seti_durum_id && b.sorular?.length > 0 && (
-        <SoruListesi sorular={b.sorular} soru_seti_durum_id={b.soru_seti_durum_id} bekleyen={b}
+        <SoruListesi sorular={b.sorular} soru_seti_durum_id={b.soru_seti_durum_id} bekleyen={b} puanGoster={puanGoster} puanAraliklari={puanAraliklari}
           getSoruPuani={getSoruPuani} setSoruPuani={setSoruPuani} hepsineAyniPuanAta={hepsineAyniPuanAta} />
       )}
     </article>

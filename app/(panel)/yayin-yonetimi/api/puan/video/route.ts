@@ -1,3 +1,5 @@
+import { puanAraligaUygunMu, puanAraligiMetni } from "@/lib/uretici/puanAraliklari";
+import { talepPuanAraliklariOku } from "@/lib/uretici/puanAraliklariSunucu";
 // app/yayin-yonetimi/api/puan/video/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
@@ -29,15 +31,9 @@ export async function POST(request: NextRequest) {
     if (!talepBilgisi) return hataYaniti("Talep bilgisi bulunamadı.", "arac_durum_id → talep sahipliği", null, 404);
     if (talepBilgisi.uretici_id !== user.id) return rolHatasi("Yalnız kendi içeriğinizin öğrenme aracı puanını değiştirebilirsiniz.");
 
-    // Eczanem yayınları farklı video puanı skalası kullanır (50–500, 25'in katı);
-    // diğer hedefler mevcut kuralda kalır (40–70, 5'in katı).
-    const eczanem = talepBilgisi.hedef_roller.includes("eczanem");
-    if (eczanem) {
-      if (video_puani < 50 || video_puani > 500 || video_puani % 25 !== 0) {
-        return validasyonHatasi(`Öğrenme aracı puanı 50-500 arasında ve 25'in katı olmalıdır. Girilen değer: ${video_puani}`, ["video_puani"]);
-      }
-    } else if (video_puani < 40 || video_puani > 70 || video_puani % 5 !== 0) {
-      return validasyonHatasi(`Öğrenme aracı puanı 40-70 arasında ve 5'in katı olmalıdır. Girilen değer: ${video_puani}`, ["video_puani"]);
+    const araliklar = await talepPuanAraliklariOku(adminSupabase, arac!.talep_id, user.id);
+    if (!puanAraligaUygunMu(video_puani, araliklar.yayin)) {
+      return validasyonHatasi(`Yayın tamamlama puanı firma aralığına uygun değil. ${puanAraligiMetni(araliklar.yayin)}`, ["video_puani"]);
     }
 
     // İlk yayından sonra puan kilitlenir; yayını durdurmak bu kilidi kaldırmaz.

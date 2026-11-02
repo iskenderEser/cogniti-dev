@@ -172,7 +172,7 @@ export async function getUttAnaSayfaVeri(userId: string, adminSupabase: Supabase
     { data: izlemeSayilari },
   ] = await Promise.all([
     yayinIdler.length > 0
-      ? adminSupabase.from("yayin_yonetimi").select("yayin_id, extra_puan").in("yayin_id", yayinIdler)
+      ? adminSupabase.from("yayin_yonetimi").select("yayin_id, extra_puan, cek_karsiligi_var_mi, saha_puan_modeli, karsilik_puan, karsilik_tl, hedef_roller").in("yayin_id", yayinIdler)
       : { data: [] },
     yayinIdler.length > 0
       ? adminSupabase.from("video_begeniler").select("yayin_id").in("yayin_id", yayinIdler)
@@ -191,6 +191,7 @@ export async function getUttAnaSayfaVeri(userId: string, adminSupabase: Supabase
       : { data: [] },
   ]);
 
+  const cekBilgiMap = new Map((yayinBilgileri ?? []).map((y) => [y.yayin_id, y]));
   const extraPuanMap: Record<string, number> = {};
   for (const yb of yayinBilgileri ?? []) {
     extraPuanMap[yb.yayin_id] = yb.extra_puan ?? 0;
@@ -230,6 +231,11 @@ export async function getUttAnaSayfaVeri(userId: string, adminSupabase: Supabase
     arac_id: y.arac_id ?? null,
     arac_turu: y.arac_turu ?? "video",
     extra_puan: extraPuanMap[y.yayin_id] ?? 0,
+    cek_karsiligi_var_mi: cekBilgiMap.get(y.yayin_id)?.cek_karsiligi_var_mi ?? null,
+    saha_puan_modeli: cekBilgiMap.get(y.yayin_id)?.saha_puan_modeli ?? null,
+    karsilik_puan: cekBilgiMap.get(y.yayin_id)?.karsilik_puan ?? null,
+    karsilik_tl: cekBilgiMap.get(y.yayin_id)?.karsilik_tl ?? null,
+    hedef_roller: cekBilgiMap.get(y.yayin_id)?.hedef_roller ?? null,
     ileri_sarma_acik: false,
     begeni_sayisi: begeniSayiMap[y.yayin_id] ?? 0,
     favori_sayisi: favoriSayiMap[y.yayin_id] ?? 0,

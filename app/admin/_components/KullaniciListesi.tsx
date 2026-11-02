@@ -1,36 +1,24 @@
-// app/admin/_components/KullaniciListesi.tsx
-//
-// Kullanıcı listesi: arama bar + toplu işlem bar + tablo. Filtreler artık
-// sütun başlıklarında dropdown olarak gösterilir (rol/takım/bölge/durum).
-// useKullaniciListesi hook'unun return değerlerini prop alır.
-
 "use client";
+import { useFirmaSaltOkunur } from "@/app/admin/_components/FirmaYonetimYetkisi";
 
-import { SadeFormSecimi, SadeListeSecimi } from "@/components/kontrol/SadeKontroller";
-
+import { Users, UserPlus, Upload, Pencil, Trash2, Search } from "lucide-react";
 import { kullaniciEksikMi } from "@/lib/admin/kullaniciDogrulama";
 import { telefonBicimle } from "@/lib/admin/telefonBicim";
 import { ROL_ADLARI } from "@/lib/utils/roller";
-import { filterSelectStyle, RENK_BORDO, RENK_BORDO_ZEMIN, ROLLER } from "../_constants";
+import { SadeTabloSecimi } from "@/components/kontrol/SadeKontroller";
+import { KULLANICI_SUTUNLARI, type KullaniciSutunu } from "../_hooks/useKullaniciListesi";
+import { ROLLER } from "../_constants";
 import type { Kullanici, Takim } from "../_types";
-import KullaniciDuzenleModal from "./KullaniciDuzenleModal";
+import styles from "../admin.module.css";
 
 interface KullaniciListesiProps {
+  toplam: number;
   aramaMetni: string;
   setAramaMetni: (v: string) => void;
-  filtrRol: string;
-  setFiltrRol: (v: string) => void;
-  filtrTakim: string;
-  setFiltrTakim: (v: string) => void;
-  filtrBolge: string;
-  setFiltrBolge: (v: string) => void;
-  filtrDurum: string;
-  setFiltrDurum: (v: string) => void;
-  sifirlaFiltreler: () => void;
-
-  benzersizTakimlar: string[];
-  benzersizBolgeler: string[];
-  benzersizRoller: string[];
+  handleAra: () => void;
+  sutunFiltreleri: Record<KullaniciSutunu, string>;
+  sutunSecenekleri: Record<KullaniciSutunu, { deger:string; etiket:string }[]>;
+  handleSutunFiltrele: (sutun: KullaniciSutunu, deger: string) => void;
   filtrelenmisKullanicilar: Kullanici[];
   tumSeciliMi: boolean;
 
@@ -68,318 +56,42 @@ interface KullaniciListesiProps {
   toggleTumSecim: (secildi: boolean) => void;
 }
 
-const thStyle: React.CSSProperties = {
-  padding: "8px 10px", textAlign: "left",
-  borderBottom: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)", fontWeight: 700,
-  color: "var(--tema-yerel-yonetim-ana-metin-03)", fontSize: "11px", whiteSpace: "nowrap",
-  background: "var(--tema-yerel-yonetim-sayfa-zemini-02)", fontFamily: "'Nunito', sans-serif",
-};
-
-const tdStyle: React.CSSProperties = {
-  padding: "8px 10px", borderBottom: "0.5px solid var(--tema-yerel-yonetim-cizgi-05)",
-  color: "var(--tema-yerel-yonetim-ana-metin-01)", fontSize: "12px", fontFamily: "'Nunito', sans-serif",
-};
-
-const topluBtnStyle = (renk: string, loading: boolean): React.CSSProperties => ({
-  padding: "4px 10px",
-  background: loading ? "var(--tema-yerel-yonetim-sayfa-zemini-01)" : renk,
-  color: "var(--tema-yerel-yonetim-ters-metin-01)", border: "none", borderRadius: "4px",
-  fontSize: "11px", fontWeight: 600,
-  cursor: loading ? "not-allowed" : "pointer",
-  fontFamily: "'Nunito', sans-serif",
-});
-
-const silBtnStyle = (renk: string, loading: boolean): React.CSSProperties => ({
-  padding: "3px 8px",
-  background: loading ? "var(--tema-yerel-yonetim-sayfa-zemini-01)" : renk,
-  color: "var(--tema-yerel-yonetim-ters-metin-01)", border: "none", borderRadius: "4px",
-  fontSize: "10px", fontWeight: 600,
-  cursor: loading ? "not-allowed" : "pointer",
-  fontFamily: "'Nunito', sans-serif",
-});
-
-const yetkiLabelStyle: React.CSSProperties = {
-  display: "inline-flex", alignItems: "center", gap: "3px",
-  fontSize: "10px", color: "var(--tema-yerel-yonetim-ana-metin-01)",
-  fontFamily: "'Nunito', sans-serif", cursor: "pointer",
-};
-
-// Header'da inline kullanılan filtre select stili — başlık görünümünde
-const headerSelectStyle: React.CSSProperties = {
-  border: "none", background: "transparent",
-  color: "var(--tema-yerel-yonetim-ana-metin-03)", fontSize: "11px", fontWeight: 700,
-  fontFamily: "'Nunito', sans-serif",
-  cursor: "pointer", outline: "none", padding: "0",
-};
-
-
-
 export default function KullaniciListesi(p: KullaniciListesiProps) {
-  return (
-    <div style={{ marginTop: "20px" }}>
-      <h3 style={{ fontSize: "14px", fontWeight: 700, color: "var(--tema-yerel-yonetim-ana-metin-01)", marginBottom: "12px", fontFamily: "'Nunito', sans-serif" }}>
-        Kullanıcı Listesi ({p.filtrelenmisKullanicilar.length})
-      </h3>
-
-      {/* Arama bar (filtreler sütun başlıklarına taşındı) */}
-      <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center", marginBottom: "12px" }}>
-        <input
-          type="text"
-          value={p.aramaMetni}
-          onChange={(e) => p.setAramaMetni(e.target.value)}
-          placeholder="Ara: ad, soyad, e-posta, takım..."
-          style={{ ...filterSelectStyle, minWidth: "240px", flex: 1, maxWidth: "320px" }}
-        />
-        {(p.aramaMetni || p.filtrRol || p.filtrTakim || p.filtrBolge || p.filtrDurum) && (
-          <button
-            onClick={p.sifirlaFiltreler}
-            style={{
-              padding: "4px 10px", background: "var(--tema-yerel-yonetim-kart-01)",
-              border: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)", borderRadius: "6px",
-              fontSize: "11px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)", cursor: "pointer",
-              fontFamily: "'Nunito', sans-serif",
-            }}
-          >
-            Filtreyi Temizle
-          </button>
-        )}
-      </div>
-
-      {/* Toplu işlem bar */}
-      {p.seciliKullanicilar.size > 0 && (
-        <div style={{ display: "flex", gap: "8px", alignItems: "center", padding: "8px 12px", background: RENK_BORDO_ZEMIN, borderRadius: "6px", marginBottom: "8px" }}>
-          <span style={{ fontSize: "12px", fontWeight: 600, color: RENK_BORDO, fontFamily: "'Nunito', sans-serif" }}>
-            {p.seciliKullanicilar.size} seçili
-          </span>
-          <button onClick={p.handleTopluPasif} disabled={p.topluIslemLoading} style={topluBtnStyle("var(--tema-yerel-yonetim-islevsel-zemin-03)", p.topluIslemLoading)}>
-            {p.topluIslemLoading ? "..." : "Toplu Pasife Al"}
-          </button>
-          {p.topluSilOnay ? (
-            <>
-              <button onClick={p.handleTopluSil} disabled={p.topluIslemLoading} style={topluBtnStyle("var(--tema-yerel-yonetim-islevsel-zemin-04)", p.topluIslemLoading)}>
-                {p.topluIslemLoading ? "Siliniyor..." : "Eminim, Sil"}
-              </button>
-              <button onClick={() => p.setTopluSilOnay(false)} style={topluBtnStyle("var(--tema-yerel-yonetim-eylem-zemin-01)", false)}>
-                İptal
-              </button>
-            </>
-          ) : (
-            <button onClick={() => p.setTopluSilOnay(true)} style={topluBtnStyle("var(--tema-yerel-yonetim-islevsel-zemin-04)", false)}>
-              Toplu Sil
-            </button>
-          )}
-        </div>
-      )}
-
-      {/* Tablo */}
-      {p.filtrelenmisKullanicilar.length === 0 ? (
-        <p style={{ fontSize: "13px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)", padding: "20px", textAlign: "center", fontFamily: "'Nunito', sans-serif" }}>
-          Gösterilecek kullanıcı yok.
-        </p>
-      ) : (
-        <div style={{ overflow: "auto", border: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)", borderRadius: "8px" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
-            <thead>
-              <tr>
-                <th style={thStyle}>
-                  <input type="checkbox" checked={p.tumSeciliMi}
-                    onChange={(e) => p.toggleTumSecim(e.target.checked)} />
-                </th>
-                <th style={thStyle}>Ad</th>
-                <th style={thStyle}>Soyad</th>
-                <th style={thStyle}>
-                  <SadeListeSecimi value={p.filtrRol} onChange={(e) => p.setFiltrRol(e.target.value)} aria-label="Rol" varyant="tablo" className="w-full">
-                    <option value="">Rol ▾</option>
-                    {p.benzersizRoller.map(r => <option key={r} value={r}>{ROL_ADLARI[r] ?? r}</option>)}
-                  </SadeListeSecimi>
-                </th>
-                <th style={thStyle}>E-posta</th>
-                <th style={thStyle}>Telefon</th>
-                <th style={thStyle}>
-                  <SadeListeSecimi value={p.filtrTakim} onChange={(e) => p.setFiltrTakim(e.target.value)} aria-label="Takım" varyant="tablo" className="w-full">
-                    <option value="">Takım ▾</option>
-                    {p.benzersizTakimlar.map(t => <option key={t} value={t}>{t}</option>)}
-                  </SadeListeSecimi>
-                </th>
-                <th style={thStyle}>
-                  <SadeListeSecimi value={p.filtrBolge} onChange={(e) => p.setFiltrBolge(e.target.value)} aria-label="Bölge" varyant="tablo" className="w-full">
-                    <option value="">Bölge ▾</option>
-                    {p.benzersizBolgeler.map(b => <option key={b} value={b}>{b}</option>)}
-                  </SadeListeSecimi>
-                </th>
-                <th style={thStyle}>
-                  <SadeListeSecimi value={p.filtrDurum} onChange={(e) => p.setFiltrDurum(e.target.value)} aria-label="Durum" varyant="tablo" className="w-full">
-                    <option value="">Durum ▾</option>
-                    <option value="aktif">Aktif</option>
-                    <option value="pasif">Pasif</option>
-                    <option value="eksik">Eksik bilgili</option>
-                  </SadeListeSecimi>
-                </th>
-                <th style={thStyle}>Yetkiler</th>
-                <th style={thStyle}></th>
-              </tr>
-            </thead>
-            <tbody>
-              {p.filtrelenmisKullanicilar.map(k => {
-                // K-A6/T-7: eksik tanımı tek kaynaktan; eksik satır amber
-                // arka planla "kızarır" — göze sokulur (görsel vurgu kararı).
-                const eksik = kullaniciEksikMi(k.rol, k.takim_id ?? null, k.bolge_id ?? null, k.telefon ?? null);
-                return (
-                <tr key={k.kullanici_id} style={{ background: p.seciliKullanicilar.has(k.kullanici_id) ? RENK_BORDO_ZEMIN : eksik.eksik ? "var(--tema-yerel-yonetim-islevsel-zemin-02)" : "var(--tema-yerel-yonetim-kart-01)" }}>
-                  <td style={tdStyle}>
-                    <input type="checkbox" checked={p.seciliKullanicilar.has(k.kullanici_id)}
-                      onChange={(e) => p.toggleSecim(k.kullanici_id, e.target.checked)} />
-                  </td>
-                  <td style={tdStyle}>{k.ad}</td>
-                  <td style={tdStyle}>{k.soyad}</td>
-                  <td style={tdStyle}>
-                    {p.acikRolId === k.kullanici_id ? (
-                      <SadeFormSecimi autoFocus value={k.rol} onChange={(e) => p.handleRolDegistir(k.kullanici_id, e.target.value)} onBlur={() => p.setAcikRolId(null)} aria-label="Rol" className="w-full">
-                        {/* B-31: insan adı gösterilir, değer kod kalır */}
-                        {ROLLER.map(r => <option key={r} value={r}>{ROL_ADLARI[r] ?? r}</option>)}
-                      </SadeFormSecimi>
-                    ) : (
-                      <span onClick={() => p.setAcikRolId(k.kullanici_id)}
-                        style={{ cursor: "pointer", color: RENK_BORDO, fontWeight: 600 }}>
-                        {p.rolDegistirLoading === k.kullanici_id ? "..." : (ROL_ADLARI[k.rol] ?? k.rol)}
-                      </span>
-                    )}
-                  </td>
-                  <td style={tdStyle}>{k.eposta}</td>
-                  {/* Telefon kimlik çekirdeğinde: yeni kayıtta hep dolu; kolon
-                      öncesi eski kayıtta boşsa hücre içinden eklenir (Enter). */}
-                  <td style={tdStyle}>
-                    {k.telefon ?? (
-                      p.telefonEkleLoading === k.kullanici_id ? "..." : (
-                        <input
-                          type="tel"
-                          placeholder="⚠ 542 000 0000"
-                          title="Enter ile kaydet"
-                          maxLength={12}
-                          style={{
-                            ...filterSelectStyle, padding: "2px 6px", width: "130px",
-                            background: "var(--tema-yerel-yonetim-islevsel-zemin-02)", border: "0.5px solid var(--tema-yerel-yonetim-islevsel-cizgi-01)", color: "var(--tema-yerel-yonetim-islevsel-metin-01)",
-                          }}
-                          onInput={(e) => {
-                            // Telefon kuralı (İskender, 23.07): 10 hane, ilk hane 5 zorunlu
-                            // (0 dahil başka rakamla başlayamaz), gösterim 3-3-4 boşluklu.
-                            const el = e.currentTarget;
-                            el.value = telefonBicimle(el.value);
-                          }}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                              const deger = (e.target as HTMLInputElement).value.trim();
-                              if (deger) p.handleTelefonEkle(k.kullanici_id, deger);
-                            }
-                          }}
-                        />
-                      )
-                    )}
-                  </td>
-                  {/* K-A6: takım/bölge eksikse rozet + hücre içi atama seçicisi. */}
-                  {(() => {
-                    const yukleniyor = p.eksikTamamlaLoading === k.kullanici_id;
-                    
-                    return (
-                      <>
-                        <td style={tdStyle}>
-                          {eksik.eksikAlanlar.includes("takim") ? (
-                            yukleniyor ? "..." : (
-                              <SadeListeSecimi value="" onChange={(e) => e.target.value && p.handleEksikTamamla(k.kullanici_id, { takim_id: e.target.value })} aria-label="Takım" varyant="tablo" className="w-full">
-                                <option value="">⚠ Takım ata ▾</option>
-                                {p.takimlar.map(t => <option key={t.takim_id} value={t.takim_id}>{t.takim_adi}</option>)}
-                              </SadeListeSecimi>
-                            )
-                          ) : (k.takim_adi ?? "-")}
-                        </td>
-                        <td style={tdStyle}>
-                          {eksik.eksikAlanlar.includes("bolge") ? (
-                            yukleniyor ? "..." : (
-                              <SadeListeSecimi value="" onChange={(e) => e.target.value && p.handleEksikTamamla(k.kullanici_id, { bolge_id: e.target.value })} aria-label="Bölge" varyant="tablo" className="w-full">
-                                <option value="">⚠ Bölge ata ▾</option>
-                                {p.takimlar.flatMap(t => t.bolgeler.map(b => (
-                                  <option key={b.bolge_id} value={b.bolge_id}>{t.takim_adi} — {b.bolge_adi}</option>
-                                )))}
-                              </SadeListeSecimi>
-                            )
-                          ) : (k.bolge_adi ?? "-")}
-                        </td>
-                      </>
-                    );
-                  })()}
-                  <td style={tdStyle}>
-                    <button onClick={() => p.handleAktifToggle(k.kullanici_id, k.aktif_mi)}
-                      disabled={p.aktifToggleLoading === k.kullanici_id}
-                      style={{
-                        padding: "2px 8px",
-                        background: k.aktif_mi ? "var(--tema-yerel-yonetim-islevsel-zemin-05)" : "var(--tema-yerel-yonetim-islevsel-zemin-06)",
-                        color: k.aktif_mi ? "var(--tema-yerel-yonetim-islevsel-metin-07)" : "var(--tema-yerel-yonetim-islevsel-metin-09)",
-                        border: "none", borderRadius: "4px",
-                        fontSize: "11px", fontWeight: 600, cursor: "pointer",
-                        fontFamily: "'Nunito', sans-serif",
-                      }}>
-                      {p.aktifToggleLoading === k.kullanici_id ? "..." : (k.aktif_mi ? "Aktif" : "Pasif")}
-                    </button>
-                  </td>
-                  <td style={tdStyle}>
-                    <label style={yetkiLabelStyle}>
-                      <input type="checkbox" checked={k.yetki_kullanici_yonetim}
-                        onChange={() => p.handleYetkiDegistir(k.kullanici_id, "yetki_kullanici_yonetim", k.yetki_kullanici_yonetim)}
-                        disabled={p.yetkiLoading === k.kullanici_id + "yetki_kullanici_yonetim"} />
-                      <span>Yön.</span>
-                    </label>
-                    <label style={{ ...yetkiLabelStyle, marginLeft: "8px" }}>
-                      <input type="checkbox" checked={k.yetki_aktif_pasif}
-                        onChange={() => p.handleYetkiDegistir(k.kullanici_id, "yetki_aktif_pasif", k.yetki_aktif_pasif)}
-                        disabled={p.yetkiLoading === k.kullanici_id + "yetki_aktif_pasif"} />
-                      <span>A/P</span>
-                    </label>
-                  </td>
-                  <td style={{ ...tdStyle, whiteSpace: "nowrap" }}>
-                    <button onClick={() => p.setDuzenlenenId(k.kullanici_id)}
-                      style={{ ...silBtnStyle(RENK_BORDO, false), marginRight: "4px" }}>
-                      Düzenle
-                    </button>
-                    {p.silOnayId === k.kullanici_id ? (
-                      <>
-                        <button onClick={() => p.handleSil(k.kullanici_id)}
-                          disabled={p.silLoading === k.kullanici_id}
-                          style={silBtnStyle("var(--tema-yerel-yonetim-islevsel-zemin-04)", p.silLoading === k.kullanici_id)}>
-                          {p.silLoading === k.kullanici_id ? "..." : "Eminim"}
-                        </button>
-                        <button onClick={() => p.setSilOnayId(null)}
-                          style={{ ...silBtnStyle("var(--tema-yerel-yonetim-eylem-zemin-01)", false), marginLeft: "4px" }}>
-                          İptal
-                        </button>
-                      </>
-                    ) : (
-                      <button onClick={() => p.setSilOnayId(k.kullanici_id)} style={silBtnStyle("var(--tema-yerel-yonetim-islevsel-zemin-04)", false)}>
-                        Sil
-                      </button>
-                    )}
-                  </td>
-                </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {/* Düzenleme modalı — tekil giriş kartıyla aynı alanlar, dolu gelir. */}
-      {(() => {
-        const duzenlenen = p.filtrelenmisKullanicilar.find(k => k.kullanici_id === p.duzenlenenId);
-        if (!duzenlenen) return null;
-        return (
-          <KullaniciDuzenleModal
-            kullanici={duzenlenen}
-            takimlar={p.takimlar}
-            loading={p.duzenleLoading}
-            onKapat={() => p.setDuzenlenenId(null)}
-            onKaydet={(veri) => p.handleKullaniciGuncelle(duzenlenen.kullanici_id, { ...veri })}
-          />
-        );
-      })()}
+  const saltOkunur = useFirmaSaltOkunur();
+  const islemVar = p.topluIslemLoading || p.duzenleLoading;
+  return <section className={styles.card} aria-label="Kullanıcı listesi">
+    <div className={styles.cardHeader}><div><h2><Users />Kullanıcı Listesi <span className={styles.count}>{p.toplam}</span></h2><p>{p.filtrelenmisKullanicilar.length} kayıt gösteriliyor</p></div><div className={styles.actions}>
+      <a className={`${styles.button} ${styles.primary}`} href="#admin-kullanici-ekle"><UserPlus />Kullanıcı ekle</a>
+      <a className={styles.button} href="#admin-toplu-yukle"><Upload />Toplu yükle</a>
     </div>
-  );
+      <form className={styles.userSearch} role="search" onSubmit={e => { e.preventDefault(); p.handleAra(); }}>
+        <input type="search" className={styles.input} aria-label="Kullanıcı ara" placeholder="Kullanıcı ara…" value={p.aramaMetni} onChange={e => p.setAramaMetni(e.target.value)} />
+        <button type="submit" className={`${styles.button} ${styles.primary}`}><Search />Ara</button>
+      </form>
+    </div>
+    {p.seciliKullanicilar.size > 0 && <div className={styles.toolbar} role="group" aria-label="Toplu kullanıcı işlemleri">
+      <strong>{p.seciliKullanicilar.size} kullanıcı seçili</strong>
+      <button type="button" className={styles.button} disabled={saltOkunur || islemVar} onClick={p.handleTopluPasif}>Toplu pasife al</button>
+      {p.topluSilOnay ? <><span>Seçili kullanıcılar silinsin mi?</span><button type="button" className={`${styles.button} ${styles.danger}`} disabled={saltOkunur || islemVar} onClick={p.handleTopluSil}>Onayla, sil</button><button type="button" className={styles.button} disabled={saltOkunur || islemVar} onClick={() => p.setTopluSilOnay(false)}>Vazgeç</button></> : <button type="button" className={`${styles.button} ${styles.danger}`} disabled={saltOkunur || islemVar} onClick={() => p.setTopluSilOnay(true)}>Toplu sil</button>}
+    </div>}
+    <div className={styles.tableWrap}><table className={styles.table}>
+      <thead><tr>{KULLANICI_SUTUNLARI.map(([sutun, baslik]) => <th key={sutun}><SadeTabloSecimi etiket={`${baslik} filtresi`} aramaEtiketi={`${baslik} ara…`} className={styles.userColumnSelect} menuClassName={styles.userColumnMenu} deger={p.sutunFiltreleri[sutun]} disabled={islemVar} secenekler={[{ deger:"", etiket:baslik }, ...p.sutunSecenekleri[sutun]]} onDegistir={deger => p.handleSutunFiltrele(sutun, deger)} /></th>)}<th>İşlemler</th></tr></thead>
+      <tbody>{!p.filtrelenmisKullanicilar.length ? <tr><td colSpan={8} className={styles.empty}>Arama ve filtrelerle eşleşen kullanıcı bulunamadı.</td></tr> : p.filtrelenmisKullanicilar.map(k => {
+        const adSoyad = `${k.ad} ${k.soyad}`;
+        const eksik = kullaniciEksikMi(k.rol, k.takim_id ?? null, k.bolge_id ?? null, k.telefon ?? null);
+        return <tr key={k.kullanici_id} data-selected={p.seciliKullanicilar.has(k.kullanici_id)}>
+          <td><span className={styles.name}>{adSoyad}</span>{eksik.eksik && <span className={styles.subtext}>Eksik bilgi</span>}</td>
+          <td>{p.acikRolId === k.kullanici_id ? <select className={styles.input} aria-label={`${adSoyad} rolü`} value={k.rol} onChange={e => p.handleRolDegistir(k.kullanici_id,e.target.value)} onBlur={() => p.setAcikRolId(null)}>{!ROLLER.includes(k.rol) && <option value={k.rol}>{ROL_ADLARI[k.rol] ?? k.rol}</option>}{ROLLER.map(r => <option key={r} value={r}>{ROL_ADLARI[r] ?? r}</option>)}</select> : <button type="button" className={styles.roleButton} disabled={saltOkunur || islemVar || !!p.rolDegistirLoading} onClick={() => p.setAcikRolId(k.kullanici_id)} aria-label={`${adSoyad} rolünü değiştir`}>{p.rolDegistirLoading === k.kullanici_id ? "Kaydediliyor…" : ROL_ADLARI[k.rol] ?? k.rol}</button>}</td>
+          <td>{k.eposta}</td>
+          <td>{k.telefon ? telefonBicimle(k.telefon) : "Telefon eksik"}</td>
+          <td>{k.takim_adi ?? "—"}</td>
+          <td>{k.bolge_adi ?? "—"}</td>
+          <td><button type="button" aria-label={`${adSoyad} durumunu değiştir: ${k.aktif_mi ? "Aktif" : "Pasif"}`} className={`${styles.status} ${k.aktif_mi ? styles.statusActive : ""}`} disabled={saltOkunur || islemVar || p.aktifToggleLoading === k.kullanici_id} onClick={() => p.handleAktifToggle(k.kullanici_id,k.aktif_mi)}>{p.aktifToggleLoading === k.kullanici_id ? "…" : k.aktif_mi ? "Aktif" : "Pasif"}</button></td>
+          <td><div className={styles.rowActions}><button type="button" className={styles.button} disabled={saltOkunur || islemVar} onClick={() => p.setDuzenlenenId(k.kullanici_id)} aria-label={`${adSoyad} düzenle`}><Pencil />Düzenle</button>
+          {p.silOnayId === k.kullanici_id ? <><button type="button" className={`${styles.button} ${styles.danger}`} disabled={saltOkunur || islemVar || p.silLoading === k.kullanici_id} onClick={() => p.handleSil(k.kullanici_id)}>Onayla, sil</button><button type="button" className={styles.button} disabled={saltOkunur || islemVar} onClick={() => p.setSilOnayId(null)}>Vazgeç</button></> : <button type="button" className={`${styles.button} ${styles.danger}`} disabled={saltOkunur || islemVar || p.silLoading === k.kullanici_id} onClick={() => p.setSilOnayId(k.kullanici_id)} aria-label={`${adSoyad} sil`}><Trash2 /></button>}
+          </div></td>
+        </tr>;
+      })}</tbody>
+    </table></div>
+  </section>;
 }

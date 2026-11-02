@@ -1,0 +1,23 @@
+.preview { display:flex; align-items:center; flex-wrap:wrap; gap:22px; min-height:104px; padding:24px; border:1px solid var(--tema-kontrol-cizgi); border-radius:14px; background:var(--tema-ust-menu-zemin); }
+.cognitiLogo { width:154px; height:auto; flex-shrink:0; }
+.company { display:flex; align-items:center; flex-wrap:wrap; gap:16px; padding-left:22px; border-left:1px solid var(--tema-kontrol-cizgi); min-width:0; }
+.companyLogo { display:flex; align-items:center; justify-content:center; width:150px; min-height:44px; }
+.companyLogo img { display:block; width:auto; height:auto; max-width:150px; max-height:44px; object-fit:contain; }
+.placeholder { display:flex; align-items:center; justify-content:center; gap:7px; width:100%; min-height:44px; padding:8px; border:1px dashed var(--tema-kontrol-cizgi); border-radius:9px; color:var(--tema-kontrol-ikincil-metin); font-size:11px; text-align:center; }
+.placeholder svg { width:17px; height:17px; flex-shrink:0; }
+.partnership { color:var(--tema-kontrol-ikincil-metin); font-size:12px; }
+.caption { margin:12px 0 0; color:var(--tema-kontrol-ikincil-metin); font-size:12px; line-height:1.65; overflow-wrap:anywhere; }
+.management { display:grid; grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); gap:28px; }
+.form { display:flex; flex-direction:column; align-items:flex-start; gap:16px; min-width:0; }
+.form>label { width:100%; }
+.form .caption { margin:0; }
+.sectionHeading { margin:0; color:var(--tema-kontrol-metin); font-size:14px; font-weight:800; }
+.fileHint { font-size:11px; color:var(--tema-kontrol-ikincil-metin); }
+.publication { display:flex; flex-direction:column; align-items:flex-start; gap:16px; border-left:1px solid var(--tema-kontrol-cizgi); padding-left:28px; min-width:0; }
+.publication .caption { margin:0; }
+.confirm { width:100%; padding:16px; border:1px solid var(--tema-kontrol-cizgi); border-radius:12px; background:var(--tema-zemin); }
+.confirm p { margin:0 0 14px; font-size:12px; line-height:1.65; color:var(--tema-kontrol-metin); overflow-wrap:anywhere; }
+.message { margin:0 0 20px; }
+.message[data-error=true] { color:var(--tema-vurgu); }
+@media(max-width:1100px) { .management { grid-template-columns:1fr; gap:24px; } .publication { border-left:0; border-top:1px solid var(--tema-kontrol-cizgi); padding:24px 0 0; } }
+@media(max-width:600px) { .preview { padding:18px; gap:18px; } .company { border-left:0; border-top:1px solid var(--tema-kontrol-cizgi); padding:18px 0 0; width:100%; } }

@@ -4,6 +4,7 @@
 // useTopluForm hook'unun return değerlerini prop alır.
 
 "use client";
+import { saltOkunurAlan } from "@/app/admin/_components/FirmaYonetimYetkisi";
 
 import { btnBase, RENK_BORDO } from "../_constants";
 import { ROL_ADLARI } from "@/lib/utils/roller";
@@ -54,7 +55,7 @@ async function sablonIndir() {
   XLSX.writeFile(kitap, "kullanici_yukleme_sablonu.xlsx");
 }
 
-export default function TopluGirisFormu(p: TopluGirisFormuProps) {
+function TopluGirisFormu(p: TopluGirisFormuProps) {
   return (
     <div style={{ maxWidth: "1000px" }}>
       {/* Dosya seçme */}
@@ -245,3 +246,5 @@ export default function TopluGirisFormu(p: TopluGirisFormuProps) {
     </div>
   );
 }
+
+export default saltOkunurAlan(TopluGirisFormu);

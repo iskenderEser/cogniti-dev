@@ -33,6 +33,11 @@ export interface AnaSayfaVideo {
   thumbnail_url: string | null;
   video_puani: number | null;
   extra_puan?: number | null;
+  cek_karsiligi_var_mi?: boolean | null;
+  saha_puan_modeli?: string | null;
+  karsilik_puan?: number | null;
+  karsilik_tl?: number | null;
+  hedef_roller?: string[] | null;
   yayin_tarihi: string;
   icerik_turu: IcerikTuru | null;
   ileri_sarma_acik: boolean; // yalnız-izleme modunda kullanılmaz; oynatıcı tipiyle uyum için
@@ -146,14 +151,16 @@ export async function getAnaSayfaVideolari(
   const yayinIdler = yayinListesi.map((v) => v.yayin_id);
   const gorunenUrunIdleri = await yayinGorunenUrunIdHaritasi(adminSupabase, yayinIdler);
   const extraPuanMap = new Map<string, number>();
+  const cekBilgiMap = new Map<string, { cek_karsiligi_var_mi: boolean | null; saha_puan_modeli: string | null; karsilik_puan: number | null; karsilik_tl: number | null; hedef_roller: string[] | null }>();
 
   if (yayinIdler.length > 0) {
     const { data: extraPuanlar } = await adminSupabase
       .from("yayin_yonetimi")
-      .select("yayin_id, extra_puan")
+      .select("yayin_id, extra_puan, cek_karsiligi_var_mi, saha_puan_modeli, karsilik_puan, karsilik_tl, hedef_roller")
       .in("yayin_id", yayinIdler);
 
     for (const item of extraPuanlar ?? []) {
+      cekBilgiMap.set(item.yayin_id, { cek_karsiligi_var_mi: item.cek_karsiligi_var_mi ?? null, saha_puan_modeli: item.saha_puan_modeli ?? null, karsilik_puan: item.karsilik_puan ?? null, karsilik_tl: item.karsilik_tl ?? null, hedef_roller: item.hedef_roller ?? null });
       if (item.extra_puan != null) {
         extraPuanMap.set(item.yayin_id, item.extra_puan);
       }
@@ -171,6 +178,11 @@ export async function getAnaSayfaVideolari(
     thumbnail_url: yayinThumbnailUrlCoz(v),
     video_puani: v.video_puani ?? null,
     extra_puan: extraPuanMap.get(v.yayin_id) ?? null,
+    cek_karsiligi_var_mi: cekBilgiMap.get(v.yayin_id)?.cek_karsiligi_var_mi ?? null,
+    saha_puan_modeli: cekBilgiMap.get(v.yayin_id)?.saha_puan_modeli ?? null,
+    karsilik_puan: cekBilgiMap.get(v.yayin_id)?.karsilik_puan ?? null,
+    karsilik_tl: cekBilgiMap.get(v.yayin_id)?.karsilik_tl ?? null,
+    hedef_roller: cekBilgiMap.get(v.yayin_id)?.hedef_roller ?? null,
     yayin_tarihi: v.yayin_tarihi,
     icerik_turu: (v.icerik_turu as IcerikTuru) ?? null,
     arac_id: v.arac_id ?? null,

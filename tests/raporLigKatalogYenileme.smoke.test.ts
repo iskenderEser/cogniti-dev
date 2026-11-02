@@ -21,7 +21,7 @@ const canliYuzeyler = [
   oku("components/yayin/BmEgitimYayinlari.tsx"),
   oku("components/yayin/katalog/UreticiYayinKatalogu.tsx"),
   oku("app/(panel)/store/page.tsx"),
-  oku("app/(panel)/eclub/store/page.tsx"),
+  oku("components/eclub/EclubHediyeCekiTalebi.tsx"),
 ];
 
 test("mutlu: rapor, lig ve katalog yüzeyleri ortak yenileme sözleşmesini kullanır", () => {
@@ -38,7 +38,7 @@ test("mutlu: rapor, lig ve katalog yüzeyleri ortak yenileme sözleşmesini kull
 test("red: üçüncü paket tarayıcıyı yenilemez; aktif düzenleme ve çek işlemini korur", () => {
   assert.doesNotMatch(canliYuzeyler.join("\n"), /window\.location\.reload|location\.reload|router\.refresh/);
   assert.match(oku("app/(panel)/e-club-ligi/page.tsx"), /disabled=\{yenileniyor \|\| takimDuzenleniyor \|\| takimKaydediliyor\}/);
-  assert.match(oku("app/(panel)/eclub/store/page.tsx"), /disabled=\{islemLoading\}/);
+  assert.match(oku("components/eclub/EclubHediyeCekiTalebi.tsx"), /disabled=\{islemLoading\}/);
   assert.match(oku("components/yayin/BmEgitimYayinlari.tsx"), /onYenile=\{\(\) => setYenileTetik/);
 });
 

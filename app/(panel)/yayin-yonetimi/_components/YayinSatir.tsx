@@ -13,6 +13,7 @@ import type { Yayin, OnizlemeHedefi } from "../_types";
 import type { Soru } from "@/app/(panel)/talepler/_types";
 import type { HesaplananTur } from "@/lib/tclub/tur/kayit";
 import { HedefRolPilleri } from "@/components/pill";
+import { sahaHedefliMi } from "@/lib/uretici/sahaPuanModeli";
 import { yalnizEclubHedefliMi } from "@/lib/utils/roller";
 import { yayin_kodu } from "@/lib/utils/yayinKodu";
 import { ureticiDurumMesaji, yayinDurumKodu } from "@/lib/utils/durum/mesaj";
@@ -54,6 +55,7 @@ export function YayinSatir({
   onVideoAc, onOnizle, onDurumDegistir, kartGorunumu = false, onPlanIslem,
 }: YayinSatirProps) {
   const yayinda = y.durum === "yayinda";
+  const eczanemIndirimsiz = y.hedef_roller.includes("eczanem") && y.eczanem_kazanim_modeli === "indirimsiz";
   const planlandi = y.durum === "planlandi";
   const durum = ureticiDurumMesaji(yayinDurumKodu(y.durum), y.yayin_tarihi);
   const tekrarli = !!tekrarBilgi?.tekrar_periyot_gun && !!tekrarBilgi?.sonraki_tur_tarihi;
@@ -162,11 +164,11 @@ export function YayinSatir({
             <span className="shrink-0">{formatTarih(y.yayin_tarihi)}</span>
           </div>
 
-          <div className="grid grid-cols-2 gap-1 rounded-lg bg-[var(--tema-yerel-uretim-sayfa-zemini-12)] px-2 py-1.5">
-            <span className="flex items-center justify-center gap-1 text-[10px] text-[var(--tema-yerel-uretim-yardimci-metin-37)]">
+          <div className={"grid gap-1 rounded-lg bg-[var(--tema-yerel-uretim-sayfa-zemini-12)] px-2 py-1.5 " + (eczanemIndirimsiz ? "grid-cols-1" : "grid-cols-2")}>
+            {!eczanemIndirimsiz && <span className="flex items-center justify-center gap-1 text-[10px] text-[var(--tema-yerel-uretim-yardimci-metin-37)]">
               Öğrenme aracı puanı <b className="text-[var(--tema-yerel-uretim-ana-metin-26)]">{y.video_puani ?? "—"}</b>
-            </span>
-            <span className="flex items-center justify-center gap-1 border-l border-[var(--tema-yerel-uretim-cizgi-49)] text-[10px] text-[var(--tema-yerel-uretim-yardimci-metin-37)]">
+            </span>}
+            <span className={"flex items-center justify-center gap-1 text-[10px] text-[var(--tema-yerel-uretim-yardimci-metin-37)] " + (!eczanemIndirimsiz ? "border-l border-[var(--tema-yerel-uretim-cizgi-49)]" : "")}>
               Soru <b className="text-[var(--tema-yerel-uretim-ana-metin-26)]">{y.sorular?.length ?? 0}</b>
             </span>
           </div>
@@ -175,6 +177,17 @@ export function YayinSatir({
             <div className="rounded-lg border border-[var(--tema-yerel-uretim-cizgi-50)] bg-[var(--tema-yerel-uretim-secim-zemin-16)] px-2.5 py-1.5 text-[10px] leading-4 text-[var(--tema-yerel-uretim-eylem-metin-18)]">
               <strong>{tekrarBilgi!.tekrar_periyot_gun} günlük tur</strong>
               <span className="ml-1">· Yeni tur {kalanGun(tekrarBilgi!.sonraki_tur_tarihi!)} gün sonra</span>
+            </div>
+          )}
+
+          {y.hedef_roller.includes("eczanem") && <span className={eclubBilgiPili}>{eczanemIndirimsiz ? "İndirimsiz" : "İndirimli"}</span>}
+          {sahaHedefliMi(y.hedef_roller) && (
+            <div className="border-t border-[var(--tema-yerel-uretim-cizgi-10)] pt-2" aria-label="Yayın puan modeli">
+              <span className={eclubBilgiPili}>
+                {y.cek_karsiligi_var_mi === false ? "TL’siz puan" : y.karsilik_puan && y.karsilik_tl
+                  ? `TL karşılıklı puan · ${y.karsilik_puan.toLocaleString("tr-TR")} Puan = ${y.karsilik_tl.toLocaleString("tr-TR")} TL`
+                  : y.cek_karsiligi_var_mi === true ? "TL karşılıklı puan · FirmaStore karşılığı" : "Önceki puan modeli"}
+              </span>
             </div>
           )}
 
@@ -252,7 +265,7 @@ export function YayinSatir({
         )}
 
         {akordiyonAcik && y.sorular?.length > 0 && (
-          <SoruListesi sorular={y.sorular} soru_seti_durum_id={y.soru_seti_durum_id}
+          <SoruListesi sorular={y.sorular} soru_seti_durum_id={y.soru_seti_durum_id} puanGoster={!eczanemIndirimsiz}
             getSoruPuani={getSoruPuani} setSoruPuani={setSoruPuani} hepsineAyniPuanAta={hepsineAyniPuanAta} />
         )}
       </article>
@@ -304,6 +317,14 @@ export function YayinSatir({
             {y.turu_adi && <span className="font-bold">{y.turu_adi}</span>}
             {y.teknik_adi && y.teknik_adi !== "-" && <><span className="text-[var(--tema-yerel-uretim-yardimci-metin-39)]">•</span><span>{y.teknik_adi}</span></>}
           </div>
+          {y.hedef_roller.includes("eczanem") && <span className={eclubBilgiPili}>{eczanemIndirimsiz ? "İndirimsiz" : "İndirimli"}</span>}
+          {sahaHedefliMi(y.hedef_roller) && (
+            <p className="mt-1.5 text-[11px] text-[var(--tema-yerel-uretim-yardimci-metin-33)]">
+              {y.cek_karsiligi_var_mi === false ? "TL’siz puan" : y.karsilik_puan && y.karsilik_tl
+                ? `TL karşılıklı puan · ${y.karsilik_puan.toLocaleString("tr-TR")} Puan = ${y.karsilik_tl.toLocaleString("tr-TR")} TL`
+                : y.cek_karsiligi_var_mi === true ? "TL karşılıklı puan · FirmaStore karşılığı" : "Önceki puan modeli"}
+            </p>
+          )}
           <span className="mt-1.5 block text-[11px] text-[var(--tema-yerel-uretim-yardimci-metin-33)]">
             {yayinda ? `Yayın: ${formatTarih(y.yayin_tarihi)}`
               : planlandi ? `Planlanan yayın: ${formatTarih(y.yayin_tarihi)}`
@@ -313,9 +334,11 @@ export function YayinSatir({
 
         <div className="order-3 flex flex-col gap-2 sm:col-span-2 sm:grid sm:grid-cols-[1fr_auto] sm:items-center lg:col-span-1 lg:flex lg:items-stretch">
           <div className="flex flex-wrap items-center gap-2 rounded-xl bg-[var(--tema-yerel-uretim-sayfa-zemini-23)] px-3 py-2">
+            {!eczanemIndirimsiz && <>
             <span className="text-[10px] font-bold text-[var(--tema-yerel-uretim-yardimci-metin-40)]">Öğrenme aracı puanı</span>
             <strong className="text-sm text-[var(--tema-yerel-uretim-ana-metin-16)]">{y.video_puani ?? "—"}</strong>
             <span className="h-4 w-px bg-[var(--tema-yerel-uretim-secim-zemin-17)]" />
+            </>}
             <span className="text-[10px] font-bold text-[var(--tema-yerel-uretim-yardimci-metin-40)]">Soru</span>
             <strong className="text-sm text-[var(--tema-yerel-uretim-ana-metin-16)]">{y.sorular?.length ?? 0}</strong>
           </div>
@@ -394,7 +417,7 @@ export function YayinSatir({
         </div>
       )}
       {acikAkordiyon === y.yayin_id && y.sorular?.length > 0 && (
-        <SoruListesi sorular={y.sorular} soru_seti_durum_id={y.soru_seti_durum_id}
+        <SoruListesi sorular={y.sorular} soru_seti_durum_id={y.soru_seti_durum_id} puanGoster={!eczanemIndirimsiz}
           getSoruPuani={getSoruPuani} setSoruPuani={setSoruPuani} hepsineAyniPuanAta={hepsineAyniPuanAta} />
       )}
     </article>

@@ -1,3 +1,4 @@
+import { firmaYonetimIslemKontrol } from "@/lib/admin/firmaYonetimIslem";
 // app/admin/api/firmalar/upload/route.ts
 //
 // Firma kurumsal logo upload endpoint'i (5 MB limit + SVG desteği).
@@ -10,12 +11,13 @@ import { firmaLogoYukle } from "@/lib/firma/logoStorage";
 
 export async function POST(request: NextRequest) {
   try {
-    const kontrol = await adminGirisKontrol();
+    const formData = await request.formData();
+    const firmaId = formData.get("firma_id");
+    const kontrol = typeof firmaId === "string" && firmaId ? await firmaYonetimIslemKontrol(firmaId) : await adminGirisKontrol();
     if (!kontrol.gecerli) return kontrol.yanit;
 
     const adminSupabase = createAdminClient();
 
-    const formData = await request.formData();
     const dosya = formData.get("dosya");
 
     if (!dosya || !(dosya instanceof File)) {

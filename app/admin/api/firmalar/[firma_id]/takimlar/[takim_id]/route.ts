@@ -1,3 +1,4 @@
+import { firmaYonetimIslemKontrol } from "@/lib/admin/firmaYonetimIslem";
 // app/admin/api/firmalar/[firma_id]/takimlar/[takim_id]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/server";
@@ -42,10 +43,11 @@ export async function PUT(
   { params }: { params: Promise<{ firma_id: string; takim_id: string }> }
 ) {
   try {
-    const kontrol = await adminGirisKontrol();
+    const { firma_id, takim_id } = await params;
+    const kontrol = await firmaYonetimIslemKontrol(firma_id);
     if (!kontrol.gecerli) return kontrol.yanit;
 
-    const { firma_id, takim_id } = await params;
+
     if (!firma_id) return validasyonHatasi("firma_id zorunludur.", ["firma_id"]);
     if (!takim_id) return validasyonHatasi("takim_id zorunludur.", ["takim_id"]);
 
@@ -100,10 +102,11 @@ export async function DELETE(
   { params }: { params: Promise<{ firma_id: string; takim_id: string }> }
 ) {
   try {
-    const kontrol = await adminGirisKontrol();
+    const { firma_id, takim_id } = await params;
+    const kontrol = await firmaYonetimIslemKontrol(firma_id);
     if (!kontrol.gecerli) return kontrol.yanit;
 
-    const { firma_id, takim_id } = await params;
+
     if (!firma_id) return validasyonHatasi("firma_id zorunludur.", ["firma_id"]);
     if (!takim_id) return validasyonHatasi("takim_id zorunludur.", ["takim_id"]);
 

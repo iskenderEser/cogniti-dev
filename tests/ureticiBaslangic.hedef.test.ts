@@ -107,7 +107,7 @@ test("Ana Sayfa API'si üreticilerde sorgusuz 403; mevcut rol dalları doğru ve
 test("kapalı modül ve yanlış rol sayfaları üreticiyi yeni hedefe, API'leri 403'e yollar", async () => {
   let rol = "pm";
   const q = { select: () => q, eq: () => q,
-    single: async () => ({ data: { firma_id: "sahte", cc_aktif: false, hbstore_aktif: false, eclub_store_aktif: false, eclub_aktif: false } }),
+    single: async () => ({ data: { firma_id: "sahte", cc_aktif: false, hbstore_aktif: false, eclub_aktif: false } }),
     maybeSingle: async () => ({ data: { firma_id: "sahte" }, error: null }),
   };
   const modules = {

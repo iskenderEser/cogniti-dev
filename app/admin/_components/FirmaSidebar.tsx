@@ -1,7 +1,7 @@
 // app/admin/_components/FirmaSidebar.tsx
 //
 // Admin panel sol paneli: firma listesi + yeni firma ekleme formu.
-// Her firma bir kart: ad + (Firma aktif/pasif · Mağaza · CC · E-Club · E-Club Store · Sil) +
+// Her firma bir kart: ad + (Firma aktif/pasif · Mağaza · CC · E-Club · Eczanem · Sil) +
 // (Dışa aktar). Pasif firma soluk + "Pasif" rozeti; eksik bilgili kullanıcısı
 // olan firmada amber "⚠ N eksik bilgili" rozeti (T-2 — aktivasyon kilidinin
 // sebepli göstergesi).
@@ -21,7 +21,6 @@ interface FirmaSidebarProps {
   handleStoreToggle: (f: Firma) => void | Promise<void>;
   handleCcToggle: (f: Firma) => void | Promise<void>;
   handleEclubToggle: (f: Firma) => void | Promise<void>;
-  handleEclubStoreToggle: (f: Firma) => void | Promise<void>;
   handleEczanemToggle: (f: Firma) => void | Promise<void>;
   handleFirmaToggle: (f: Firma) => void | Promise<void>;
   handleFirmaSil: (f: Firma) => Promise<boolean>;
@@ -89,7 +88,6 @@ export default function FirmaSidebar({
   handleStoreToggle,
   handleCcToggle,
   handleEclubToggle,
-  handleEclubStoreToggle,
   handleEczanemToggle,
   handleFirmaToggle,
   handleFirmaSil,
@@ -234,7 +232,7 @@ export default function FirmaSidebar({
                   )}
                 </div>
 
-                {/* Aksiyon satırı: Firma · Mağaza · CC · E-Club · E-Club Store · Sil */}
+                {/* Aksiyon satırı: Firma · Mağaza · CC · E-Club · Eczanem · Sil */}
                 <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "10px", flexWrap: "wrap" }}>
                   <span style={{ display: "inline-flex", alignItems: "center", gap: "5px", fontSize: "12px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)", fontFamily: "'Nunito', sans-serif" }}>
                     <Switch
@@ -274,16 +272,6 @@ export default function FirmaSidebar({
                       baslik={f.eclub_aktif ? "E-Club açık — kapatmak için tıkla" : "E-Club kapalı — açmak için tıkla"}
                     />
                     E-Club
-                  </span>
-
-                  <span style={{ display: "inline-flex", alignItems: "center", gap: "5px", fontSize: "12px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)", fontFamily: "'Nunito', sans-serif" }}>
-                    <Switch
-                      acik={f.eclub_store_aktif}
-                      renk="var(--tema-yerel-yonetim-islevsel-metin-04)"
-                      onClick={() => handleEclubStoreToggle(f)}
-                      baslik={f.eclub_store_aktif ? "E-Club Store açık — kapatmak için tıkla" : "E-Club Store kapalı — açmak için tıkla"}
-                    />
-                    E-Club Store
                   </span>
 
                   <span style={{ display: "inline-flex", alignItems: "center", gap: "5px", fontSize: "12px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)", fontFamily: "'Nunito', sans-serif" }}>

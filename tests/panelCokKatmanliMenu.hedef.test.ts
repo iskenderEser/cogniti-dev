@@ -11,7 +11,7 @@ import * as roller from "@/lib/utils/roller";
 import { eczanemUyeMenusuOlustur } from "@/app/eczanem/_components/eczanemUyeMenusu";
 import type { EczanemSidebarAgaci, EczanemSidebarSecim } from "@/app/eczanem/_types";
 
-const baglam: nav.NavContext = { rolKucu: "musteri", kimlikTuru: "musteri", storeAcik: false, ccAcik: false, eclubAcik: false, eclubStoreAcik: false, eczanemAcik: true };
+const baglam: nav.NavContext = { rolKucu: "musteri", kimlikTuru: "musteri", storeAcik: false, ccAcik: false, eclubAcik: false, eczanemAcik: true };
 const agac: EczanemSidebarAgaci = ["a", "b"].map(eczane_id => ({
   eczane_id, eczane_adi: "Aynı Eczane", firmalar: [{ firma_id: "f", firma_adi: "Firma", urunler: [{
     urun_id: "u", urun_adi: "Ürün", yayinlar: [{ yayin_id: "y", yayin_basligi: "Yayın", araclar: [{ arac_id: "v", arac_turu: "video" }, { arac_id: "p", arac_turu: "flip_pdf" }] }],

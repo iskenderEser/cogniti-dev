@@ -2,11 +2,10 @@
 // Metin değişikliklerinde iki dosya birlikte güncellenir.
 import type { KilavuzParcasi } from "./ureticiKilavuzu";
 
-type Modul = "cc" | "eclub" | "eclubStore" | "eczanem";
+type Modul = "cc" | "eclub" | "eczanem";
 export interface BmKilavuzModulleri {
   ccAcik: boolean;
   eclubAcik: boolean;
-  eclubStoreAcik: boolean;
   eczanemAcik: boolean;
 }
 type KosulluParca = KilavuzParcasi & { modul?: Modul; ccKapaliMetin?: string };
@@ -191,12 +190,12 @@ const BM_KILAVUZU: {
         {
           "tip": "baslik",
           "metin": "Hediye çeki taleplerini değerlendirme",
-          "modul": "eclubStore"
+          "modul": "eclub"
         },
         {
           "tip": "paragraf",
           "metin": "E-Club kapsamında, temsilcilerinizin onayından geçerek size ulaşan hediye çeki taleplerini inceleyebilirsiniz. Onayladığınız talepler, takım müdürünüzün onayına iletilir.",
-          "modul": "eclubStore"
+          "modul": "eclub"
         },
         {
           "tip": "baslik",
@@ -794,7 +793,6 @@ export function bmKilavuzunuSec(moduller: BmKilavuzModulleri) {
   const acik: Record<Modul, boolean> = {
     cc: moduller.ccAcik,
     eclub: moduller.eclubAcik,
-    eclubStore: moduller.eclubAcik && moduller.eclubStoreAcik,
     eczanem: moduller.eclubAcik && moduller.eczanemAcik,
   };
   return {

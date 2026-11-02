@@ -1,0 +1,5167 @@
+{
+  "kaynak": "https://cdn.gib.gov.tr/api/gibportal-file/file/getFileResources?objectKey=arsiv/yardim-kaynaklar/yararli-bilgiler/Defterdarl%C4%B1kveVergiDaireleriListesi.pdf",
+  "belge_tarihi": "2026-06-18",
+  "kaynak_sha256": "793e8866543811f5f8ab7982a3d322dece4406a3f01437f59cff56330720408b",
+  "vergi_daireleri": [
+    {
+      "vergi_dairesi_kodu": "01250",
+      "vergi_dairesi_adi": "Adana İhtisas Vergi Dairesi Müdürlüğü",
+      "il_id": 1,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "01251",
+      "vergi_dairesi_adi": "5 Ocak Vergi Dairesi Müdürlüğü",
+      "il_id": 1,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "01252",
+      "vergi_dairesi_adi": "Yüreğir Vergi Dairesi Müdürlüğü",
+      "il_id": 1,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "01253",
+      "vergi_dairesi_adi": "Seyhan Vergi Dairesi Müdürlüğü",
+      "il_id": 1,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "01254",
+      "vergi_dairesi_adi": "Ziyapaşa Vergi Dairesi Müdürlüğü",
+      "il_id": 1,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "01255",
+      "vergi_dairesi_adi": "Çukurova Vergi Dairesi Müdürlüğü",
+      "il_id": 1,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "01201",
+      "vergi_dairesi_adi": "Ceyhan Vergi Dairesi Müdürlüğü",
+      "il_id": 1,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "01203",
+      "vergi_dairesi_adi": "Kozan Vergi Dairesi Müdürlüğü",
+      "il_id": 1,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "01205",
+      "vergi_dairesi_adi": "Karataş Vergi Dairesi Müdürlüğü",
+      "il_id": 1,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "01256",
+      "vergi_dairesi_adi": "Pozantı Vergi Dairesi Müdürlüğü",
+      "il_id": 1,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "01257",
+      "vergi_dairesi_adi": "İmamoğlu Vergi Dairesi Müdürlüğü",
+      "il_id": 1,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "01258",
+      "vergi_dairesi_adi": "Karaisalı Vergi Dairesi Müdürlüğü",
+      "il_id": 1,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "01259",
+      "vergi_dairesi_adi": "Yumurtalık Vergi Dairesi Müdürlüğü",
+      "il_id": 1,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "01260",
+      "vergi_dairesi_adi": "Tufanbeyli Vergi Dairesi Müdürlüğü",
+      "il_id": 1,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "01261",
+      "vergi_dairesi_adi": "Feke Vergi Dairesi Müdürlüğü",
+      "il_id": 1,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "01262",
+      "vergi_dairesi_adi": "Saimbeyli Vergi Dairesi Müdürlüğü",
+      "il_id": 1,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "01263",
+      "vergi_dairesi_adi": "Aladağ Vergi Dairesi Müdürlüğü",
+      "il_id": 1,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "02260",
+      "vergi_dairesi_adi": "Adıyaman Vergi Dairesi Müdürlüğü",
+      "il_id": 2,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "02266",
+      "vergi_dairesi_adi": "Karakuş Vergi Dairesi Müdürlüğü",
+      "il_id": 2,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "02261",
+      "vergi_dairesi_adi": "Kahta Vergi Dairesi Müdürlüğü",
+      "il_id": 2,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "02262",
+      "vergi_dairesi_adi": "Besni Vergi Dairesi Müdürlüğü",
+      "il_id": 2,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "02263",
+      "vergi_dairesi_adi": "Gölbaşı Vergi Dairesi Müdürlüğü",
+      "il_id": 2,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "02264",
+      "vergi_dairesi_adi": "Çelikhan Vergi Dairesi Müdürlüğü",
+      "il_id": 2,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "02265",
+      "vergi_dairesi_adi": "Sincik Vergi Dairesi Müdürlüğü",
+      "il_id": 2,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "03201",
+      "vergi_dairesi_adi": "Tınaztepe Vergi Dairesi Müdürlüğü",
+      "il_id": 3,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "03280",
+      "vergi_dairesi_adi": "Kocatepe Vergi Dairesi Müdürlüğü",
+      "il_id": 3,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "03273",
+      "vergi_dairesi_adi": "Çiğiltepe Vergi Dairesi Müdürlüğü",
+      "il_id": 3,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "03260",
+      "vergi_dairesi_adi": "Dinar Vergi Dairesi Müdürlüğü",
+      "il_id": 3,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "03261",
+      "vergi_dairesi_adi": "Bolvadin Vergi Dairesi Müdürlüğü",
+      "il_id": 3,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "03262",
+      "vergi_dairesi_adi": "Emirdağ Vergi Dairesi Müdürlüğü",
+      "il_id": 3,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "03263",
+      "vergi_dairesi_adi": "Sandıklı Vergi Dairesi Müdürlüğü",
+      "il_id": 3,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "03264",
+      "vergi_dairesi_adi": "İscehisar Vergi Dairesi Müdürlüğü",
+      "il_id": 3,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "03202",
+      "vergi_dairesi_adi": "Çay Vergi Dairesi Müdürlüğü",
+      "il_id": 3,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "03265",
+      "vergi_dairesi_adi": "Sinanpaşa Vergi Dairesi Müdürlüğü",
+      "il_id": 3,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "03266",
+      "vergi_dairesi_adi": "Şuhut Vergi Dairesi Müdürlüğü",
+      "il_id": 3,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "03267",
+      "vergi_dairesi_adi": "İhsaniye Vergi Dairesi Müdürlüğü",
+      "il_id": 3,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "03268",
+      "vergi_dairesi_adi": "Sultandağı Vergi Dairesi Müdürlüğü",
+      "il_id": 3,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "03269",
+      "vergi_dairesi_adi": "Çobanlar Vergi Dairesi Müdürlüğü",
+      "il_id": 3,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "03270",
+      "vergi_dairesi_adi": "Dazkırı Vergi Dairesi Müdürlüğü",
+      "il_id": 3,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "03271",
+      "vergi_dairesi_adi": "Başmakçı Vergi Dairesi Müdürlüğü",
+      "il_id": 3,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "03272",
+      "vergi_dairesi_adi": "Evciler Vergi Dairesi Müdürlüğü",
+      "il_id": 3,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "04260",
+      "vergi_dairesi_adi": "Ağrı Vergi Dairesi Müdürlüğü",
+      "il_id": 4,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "04266",
+      "vergi_dairesi_adi": "İshakpaşa Vergi Dairesi Müdürlüğü",
+      "il_id": 4,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "04261",
+      "vergi_dairesi_adi": "Doğubeyazıt Vergi Dairesi Müdürlüğü",
+      "il_id": 4,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "04262",
+      "vergi_dairesi_adi": "Patnos Vergi Dairesi Müdürlüğü",
+      "il_id": 4,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "04263",
+      "vergi_dairesi_adi": "Diyadin Vergi Dairesi Müdürlüğü",
+      "il_id": 4,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "04264",
+      "vergi_dairesi_adi": "Eleşkirt Vergi Dairesi Müdürlüğü",
+      "il_id": 4,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "04265",
+      "vergi_dairesi_adi": "Tutak Vergi Dairesi Müdürlüğü",
+      "il_id": 4,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "05260",
+      "vergi_dairesi_adi": "Amasya Vergi Dairesi Müdürlüğü",
+      "il_id": 5,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "05261",
+      "vergi_dairesi_adi": "Merzifon Vergi Dairesi Müdürlüğü",
+      "il_id": 5,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "05262",
+      "vergi_dairesi_adi": "Gümüşhacıköy Vergi Dairesi Müdürlüğü",
+      "il_id": 5,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "05263",
+      "vergi_dairesi_adi": "Taşova Vergi Dairesi Müdürlüğü",
+      "il_id": 5,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "05264",
+      "vergi_dairesi_adi": "Suluova Vergi Dairesi Müdürlüğü",
+      "il_id": 5,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "05265",
+      "vergi_dairesi_adi": "Göynücek Vergi Dairesi Müdürlüğü",
+      "il_id": 5,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06280",
+      "vergi_dairesi_adi": "Anadolu İhtisas Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06281",
+      "vergi_dairesi_adi": "Ankara İhtisas Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06282",
+      "vergi_dairesi_adi": "Harçlar Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06283",
+      "vergi_dairesi_adi": "Ankara Kurumlar Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06284",
+      "vergi_dairesi_adi": "İvedik Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06285",
+      "vergi_dairesi_adi": "100. Yıl İhtisas Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06252",
+      "vergi_dairesi_adi": "Veraset ve İntikal Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06253",
+      "vergi_dairesi_adi": "Kavaklıdere Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06254",
+      "vergi_dairesi_adi": "Maltepe Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06255",
+      "vergi_dairesi_adi": "Yenimahalle Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06257",
+      "vergi_dairesi_adi": "Çankaya Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06258",
+      "vergi_dairesi_adi": "Kızılbey Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06259",
+      "vergi_dairesi_adi": "Mithatpaşa Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06260",
+      "vergi_dairesi_adi": "Ulus Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06261",
+      "vergi_dairesi_adi": "Yıldırım Beyazıt Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06262",
+      "vergi_dairesi_adi": "Seğmenler Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06264",
+      "vergi_dairesi_adi": "Dikimevi Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06265",
+      "vergi_dairesi_adi": "Doğanbey Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06266",
+      "vergi_dairesi_adi": "Yeğenbey Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06268",
+      "vergi_dairesi_adi": "Hitit Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06269",
+      "vergi_dairesi_adi": "Yahya Galip Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06270",
+      "vergi_dairesi_adi": "Muhammet Karagüzel Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06271",
+      "vergi_dairesi_adi": "Ostim Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06272",
+      "vergi_dairesi_adi": "Gölbaşı Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06273",
+      "vergi_dairesi_adi": "Sincan Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06274",
+      "vergi_dairesi_adi": "Dışkapı Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06275",
+      "vergi_dairesi_adi": "Etimesgut Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06276",
+      "vergi_dairesi_adi": "Başkent Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06277",
+      "vergi_dairesi_adi": "Cumhuriyet Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06278",
+      "vergi_dairesi_adi": "Keçiören Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06292",
+      "vergi_dairesi_adi": "Beytepe Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06279",
+      "vergi_dairesi_adi": "Kahramankazan Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06205",
+      "vergi_dairesi_adi": "Polatlı Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06207",
+      "vergi_dairesi_adi": "Şereflikoçhisar Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06209",
+      "vergi_dairesi_adi": "Beypazarı Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06211",
+      "vergi_dairesi_adi": "Çubuk Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06213",
+      "vergi_dairesi_adi": "Haymana Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06215",
+      "vergi_dairesi_adi": "Elmadağ Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06286",
+      "vergi_dairesi_adi": "Akyurt Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06287",
+      "vergi_dairesi_adi": "Kızılcahamam Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06288",
+      "vergi_dairesi_adi": "Nallıhan Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06289",
+      "vergi_dairesi_adi": "Ayaş Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06290",
+      "vergi_dairesi_adi": "Bala Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "06291",
+      "vergi_dairesi_adi": "Kalecik Vergi Dairesi Müdürlüğü",
+      "il_id": 6,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "07251",
+      "vergi_dairesi_adi": "Üçkapılar Vergi Dairesi Müdürlüğü",
+      "il_id": 7,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "07252",
+      "vergi_dairesi_adi": "Kalekapı Vergi Dairesi Müdürlüğü",
+      "il_id": 7,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "07253",
+      "vergi_dairesi_adi": "Muratpaşa Vergi Dairesi Müdürlüğü",
+      "il_id": 7,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "07254",
+      "vergi_dairesi_adi": "Düden Vergi Dairesi Müdürlüğü",
+      "il_id": 7,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "07255",
+      "vergi_dairesi_adi": "Antalya Kurumlar Vergi Dairesi Müdürlüğü",
+      "il_id": 7,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "07256",
+      "vergi_dairesi_adi": "Antalya İhtisas Vergi Dairesi Müdürlüğü",
+      "il_id": 7,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "07263",
+      "vergi_dairesi_adi": "Falez Vergi Dairesi Müdürlüğü",
+      "il_id": 7,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "07257",
+      "vergi_dairesi_adi": "Korkuteli Vergi Dairesi Müdürlüğü",
+      "il_id": 7,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "07201",
+      "vergi_dairesi_adi": "Alanya Vergi Dairesi Müdürlüğü",
+      "il_id": 7,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "07202",
+      "vergi_dairesi_adi": "Serik Vergi Dairesi Müdürlüğü",
+      "il_id": 7,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "07203",
+      "vergi_dairesi_adi": "Manavgat Vergi Dairesi Müdürlüğü",
+      "il_id": 7,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "07204",
+      "vergi_dairesi_adi": "Elmalı Vergi Dairesi Müdürlüğü",
+      "il_id": 7,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "07205",
+      "vergi_dairesi_adi": "Kemer Vergi Dairesi Müdürlüğü",
+      "il_id": 7,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "07206",
+      "vergi_dairesi_adi": "Kumluca Vergi Dairesi Müdürlüğü",
+      "il_id": 7,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "07259",
+      "vergi_dairesi_adi": "Finike Vergi Dairesi Müdürlüğü",
+      "il_id": 7,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "07260",
+      "vergi_dairesi_adi": "Gazipaşa Vergi Dairesi Müdürlüğü",
+      "il_id": 7,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "07258",
+      "vergi_dairesi_adi": "Kaş Vergi Dairesi Müdürlüğü",
+      "il_id": 7,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "07261",
+      "vergi_dairesi_adi": "Demre Vergi Dairesi Müdürlüğü",
+      "il_id": 7,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "07262",
+      "vergi_dairesi_adi": "Akseki Vergi Dairesi Müdürlüğü",
+      "il_id": 7,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "08260",
+      "vergi_dairesi_adi": "Artvin Vergi Dairesi Müdürlüğü",
+      "il_id": 8,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "08261",
+      "vergi_dairesi_adi": "Hopa Vergi Dairesi Müdürlüğü",
+      "il_id": 8,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "08262",
+      "vergi_dairesi_adi": "Arhavi Vergi Dairesi Müdürlüğü",
+      "il_id": 8,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "08263",
+      "vergi_dairesi_adi": "Borçka Vergi Dairesi Müdürlüğü",
+      "il_id": 8,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "08264",
+      "vergi_dairesi_adi": "Yusufeli Vergi Dairesi Müdürlüğü",
+      "il_id": 8,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "08265",
+      "vergi_dairesi_adi": "Şavşat Vergi Dairesi Müdürlüğü",
+      "il_id": 8,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "08266",
+      "vergi_dairesi_adi": "Ardanuç Vergi Dairesi Müdürlüğü",
+      "il_id": 8,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "09201",
+      "vergi_dairesi_adi": "Efeler Vergi Dairesi Müdürlüğü",
+      "il_id": 9,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "09280",
+      "vergi_dairesi_adi": "Güzelhisar Vergi Dairesi Müdürlüğü",
+      "il_id": 9,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "09260",
+      "vergi_dairesi_adi": "Nazilli Vergi Dairesi Müdürlüğü",
+      "il_id": 9,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "09261",
+      "vergi_dairesi_adi": "Söke Vergi Dairesi Müdürlüğü",
+      "il_id": 9,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "09262",
+      "vergi_dairesi_adi": "Çine Vergi Dairesi Müdürlüğü",
+      "il_id": 9,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "09263",
+      "vergi_dairesi_adi": "Germencik Vergi Dairesi Müdürlüğü",
+      "il_id": 9,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "09265",
+      "vergi_dairesi_adi": "Kuşadası Vergi Dairesi Müdürlüğü",
+      "il_id": 9,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "09281",
+      "vergi_dairesi_adi": "Didim Vergi Dairesi Müdürlüğü",
+      "il_id": 9,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "09282",
+      "vergi_dairesi_adi": "İncirliova Vergi Dairesi Müdürlüğü",
+      "il_id": 9,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "09283",
+      "vergi_dairesi_adi": "Kuyucak Vergi Dairesi Müdürlüğü",
+      "il_id": 9,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "09284",
+      "vergi_dairesi_adi": "Bozdoğan Vergi Dairesi Müdürlüğü",
+      "il_id": 9,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "09285",
+      "vergi_dairesi_adi": "Sultanhisar Vergi Dairesi Müdürlüğü",
+      "il_id": 9,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "09286",
+      "vergi_dairesi_adi": "Karacasu Vergi Dairesi Müdürlüğü",
+      "il_id": 9,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "09287",
+      "vergi_dairesi_adi": "Koçarlı Vergi Dairesi Müdürlüğü",
+      "il_id": 9,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "09288",
+      "vergi_dairesi_adi": "Buharkent Vergi Dairesi Müdürlüğü",
+      "il_id": 9,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "09289",
+      "vergi_dairesi_adi": "Köşk Vergi Dairesi Müdürlüğü",
+      "il_id": 9,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "09290",
+      "vergi_dairesi_adi": "Yenipazar Vergi Dairesi Müdürlüğü",
+      "il_id": 9,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "09291",
+      "vergi_dairesi_adi": "Karpuzlu Vergi Dairesi Müdürlüğü",
+      "il_id": 9,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "10201",
+      "vergi_dairesi_adi": "Karesi Vergi Dairesi Müdürlüğü",
+      "il_id": 10,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "10280",
+      "vergi_dairesi_adi": "Kurtdereli Vergi Dairesi Müdürlüğü",
+      "il_id": 10,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "10277",
+      "vergi_dairesi_adi": "Koca Seyit Vergi Dairesi Müdürlüğü",
+      "il_id": 10,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "10260",
+      "vergi_dairesi_adi": "Ayvalık Vergi Dairesi Müdürlüğü",
+      "il_id": 10,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "10261",
+      "vergi_dairesi_adi": "Bandırma Vergi Dairesi Müdürlüğü",
+      "il_id": 10,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "10262",
+      "vergi_dairesi_adi": "Burhaniye Vergi Dairesi Müdürlüğü",
+      "il_id": 10,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "10263",
+      "vergi_dairesi_adi": "Edremit Vergi Dairesi Müdürlüğü",
+      "il_id": 10,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "10264",
+      "vergi_dairesi_adi": "Gönen Vergi Dairesi Müdürlüğü",
+      "il_id": 10,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "10265",
+      "vergi_dairesi_adi": "Susurluk Vergi Dairesi Müdürlüğü",
+      "il_id": 10,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "10266",
+      "vergi_dairesi_adi": "Erdek Vergi Dairesi Müdürlüğü",
+      "il_id": 10,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "10267",
+      "vergi_dairesi_adi": "Bigadiç Vergi Dairesi Müdürlüğü",
+      "il_id": 10,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "10268",
+      "vergi_dairesi_adi": "Sındırgı Vergi Dairesi Müdürlüğü",
+      "il_id": 10,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "10269",
+      "vergi_dairesi_adi": "Dursunbey Vergi Dairesi Müdürlüğü",
+      "il_id": 10,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "10270",
+      "vergi_dairesi_adi": "Gömeç Vergi Dairesi Müdürlüğü",
+      "il_id": 10,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "10271",
+      "vergi_dairesi_adi": "Havran Vergi Dairesi Müdürlüğü",
+      "il_id": 10,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "10272",
+      "vergi_dairesi_adi": "İvrindi Vergi Dairesi Müdürlüğü",
+      "il_id": 10,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "10273",
+      "vergi_dairesi_adi": "Manyas Vergi Dairesi Müdürlüğü",
+      "il_id": 10,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "10274",
+      "vergi_dairesi_adi": "Kepsut Vergi Dairesi Müdürlüğü",
+      "il_id": 10,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "10275",
+      "vergi_dairesi_adi": "Marmara Vergi Dairesi Müdürlüğü",
+      "il_id": 10,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "10276",
+      "vergi_dairesi_adi": "Savaştepe Vergi Dairesi Müdürlüğü",
+      "il_id": 10,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "11260",
+      "vergi_dairesi_adi": "Bilecik Vergi Dairesi Müdürlüğü",
+      "il_id": 11,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "11265",
+      "vergi_dairesi_adi": "Kayı Vergi Dairesi Müdürlüğü",
+      "il_id": 11,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "11261",
+      "vergi_dairesi_adi": "Bozüyük Vergi Dairesi Müdürlüğü",
+      "il_id": 11,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "11262",
+      "vergi_dairesi_adi": "Osmaneli Vergi Dairesi Müdürlüğü",
+      "il_id": 11,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "11263",
+      "vergi_dairesi_adi": "Söğüt Vergi Dairesi Müdürlüğü",
+      "il_id": 11,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "11264",
+      "vergi_dairesi_adi": "Gölpazarı Vergi Dairesi Müdürlüğü",
+      "il_id": 11,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "12260",
+      "vergi_dairesi_adi": "Bingöl Vergi Dairesi Müdürlüğü",
+      "il_id": 12,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "12264",
+      "vergi_dairesi_adi": "Yüzen Ada Vergi Dairesi Müdürlüğü",
+      "il_id": 12,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "12261",
+      "vergi_dairesi_adi": "Solhan Vergi Dairesi Müdürlüğü",
+      "il_id": 12,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "12262",
+      "vergi_dairesi_adi": "Genç Vergi Dairesi Müdürlüğü",
+      "il_id": 12,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "12263",
+      "vergi_dairesi_adi": "Karlıova Vergi Dairesi Müdürlüğü",
+      "il_id": 12,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "13260",
+      "vergi_dairesi_adi": "Bitlis Vergi Dairesi Müdürlüğü",
+      "il_id": 13,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "13261",
+      "vergi_dairesi_adi": "Tatvan Vergi Dairesi Müdürlüğü",
+      "il_id": 13,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "13262",
+      "vergi_dairesi_adi": "Ahlat Vergi Dairesi Müdürlüğü",
+      "il_id": 13,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "13263",
+      "vergi_dairesi_adi": "Güroymak Vergi Dairesi Müdürlüğü",
+      "il_id": 13,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "13264",
+      "vergi_dairesi_adi": "Hizan Vergi Dairesi Müdürlüğü",
+      "il_id": 13,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "13265",
+      "vergi_dairesi_adi": "Adilcevaz Vergi Dairesi Müdürlüğü",
+      "il_id": 13,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "14260",
+      "vergi_dairesi_adi": "Bolu Vergi Dairesi Müdürlüğü",
+      "il_id": 14,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "14267",
+      "vergi_dairesi_adi": "Köroğlu Vergi Dairesi Müdürlüğü",
+      "il_id": 14,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "14262",
+      "vergi_dairesi_adi": "Gerede Vergi Dairesi Müdürlüğü",
+      "il_id": 14,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "14263",
+      "vergi_dairesi_adi": "Göynük Vergi Dairesi Müdürlüğü",
+      "il_id": 14,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "14264",
+      "vergi_dairesi_adi": "Mudurnu Vergi Dairesi Müdürlüğü",
+      "il_id": 14,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "14265",
+      "vergi_dairesi_adi": "Mengen Vergi Dairesi Müdürlüğü",
+      "il_id": 14,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "14266",
+      "vergi_dairesi_adi": "Yeniçağa Vergi Dairesi Müdürlüğü",
+      "il_id": 14,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "15260",
+      "vergi_dairesi_adi": "Burdur Vergi Dairesi Müdürlüğü",
+      "il_id": 15,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "15267",
+      "vergi_dairesi_adi": "Salda Vergi Dairesi Müdürlüğü",
+      "il_id": 15,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "15261",
+      "vergi_dairesi_adi": "Bucak Vergi Dairesi Müdürlüğü",
+      "il_id": 15,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "15262",
+      "vergi_dairesi_adi": "Gölhisar Vergi Dairesi Müdürlüğü",
+      "il_id": 15,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "15263",
+      "vergi_dairesi_adi": "Çavdır Vergi Dairesi Müdürlüğü",
+      "il_id": 15,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "15264",
+      "vergi_dairesi_adi": "Yeşilova Vergi Dairesi Müdürlüğü",
+      "il_id": 15,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "15265",
+      "vergi_dairesi_adi": "Tefenni Vergi Dairesi Müdürlüğü",
+      "il_id": 15,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "15266",
+      "vergi_dairesi_adi": "Karamanlı Vergi Dairesi Müdürlüğü",
+      "il_id": 15,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "16250",
+      "vergi_dairesi_adi": "Bursa İhtisas Vergi Dairesi Müdürlüğü",
+      "il_id": 16,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "16251",
+      "vergi_dairesi_adi": "Osmangazi Vergi Dairesi Müdürlüğü",
+      "il_id": 16,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "16252",
+      "vergi_dairesi_adi": "Yıldırım Vergi Dairesi Müdürlüğü",
+      "il_id": 16,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "16253",
+      "vergi_dairesi_adi": "Çekirge Vergi Dairesi Müdürlüğü",
+      "il_id": 16,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "16254",
+      "vergi_dairesi_adi": "Setbaşı Vergi Dairesi Müdürlüğü",
+      "il_id": 16,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "16255",
+      "vergi_dairesi_adi": "Uludağ Vergi Dairesi Müdürlüğü",
+      "il_id": 16,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "16256",
+      "vergi_dairesi_adi": "Yeşil Vergi Dairesi Müdürlüğü",
+      "il_id": 16,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "16257",
+      "vergi_dairesi_adi": "Nilüfer Vergi Dairesi Müdürlüğü",
+      "il_id": 16,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "16258",
+      "vergi_dairesi_adi": "Ertuğrulgazi Vergi Dairesi Müdürlüğü",
+      "il_id": 16,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "16259",
+      "vergi_dairesi_adi": "Gökdere Vergi Dairesi Müdürlüğü",
+      "il_id": 16,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "16260",
+      "vergi_dairesi_adi": "Bursa Veraset ve Harçlar Vergi Dairesi Müdürlüğü",
+      "il_id": 16,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "16262",
+      "vergi_dairesi_adi": "Kozahan Vergi Dairesi Müdürlüğü",
+      "il_id": 16,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "16201",
+      "vergi_dairesi_adi": "Gemlik Vergi Dairesi Müdürlüğü",
+      "il_id": 16,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "16202",
+      "vergi_dairesi_adi": "İnegöl Vergi Dairesi Müdürlüğü",
+      "il_id": 16,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "16203",
+      "vergi_dairesi_adi": "Karacabey Vergi Dairesi Müdürlüğü",
+      "il_id": 16,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "16204",
+      "vergi_dairesi_adi": "Mustafakemalpaşa Vergi Dairesi Müdürlüğü",
+      "il_id": 16,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "16205",
+      "vergi_dairesi_adi": "Mudanya Vergi Dairesi Müdürlüğü",
+      "il_id": 16,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "16206",
+      "vergi_dairesi_adi": "Orhangazi Vergi Dairesi Müdürlüğü",
+      "il_id": 16,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "16207",
+      "vergi_dairesi_adi": "İznik Vergi Dairesi Müdürlüğü",
+      "il_id": 16,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "16208",
+      "vergi_dairesi_adi": "Yenişehir Vergi Dairesi Müdürlüğü",
+      "il_id": 16,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "16261",
+      "vergi_dairesi_adi": "Orhaneli Vergi Dairesi Müdürlüğü",
+      "il_id": 16,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "17260",
+      "vergi_dairesi_adi": "Çanakkale Vergi Dairesi Müdürlüğü",
+      "il_id": 17,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "17261",
+      "vergi_dairesi_adi": "Biga Vergi Dairesi Müdürlüğü",
+      "il_id": 17,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "17262",
+      "vergi_dairesi_adi": "Çan Vergi Dairesi Müdürlüğü",
+      "il_id": 17,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "17263",
+      "vergi_dairesi_adi": "Gelibolu Vergi Dairesi Müdürlüğü",
+      "il_id": 17,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "17265",
+      "vergi_dairesi_adi": "Ezine Vergi Dairesi Müdürlüğü",
+      "il_id": 17,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "17264",
+      "vergi_dairesi_adi": "Ayvacık Vergi Dairesi Müdürlüğü",
+      "il_id": 17,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "17266",
+      "vergi_dairesi_adi": "Lapseki Vergi Dairesi Müdürlüğü",
+      "il_id": 17,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "17267",
+      "vergi_dairesi_adi": "Gökçeada Vergi Dairesi Müdürlüğü",
+      "il_id": 17,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "17268",
+      "vergi_dairesi_adi": "Bayramiç Vergi Dairesi Müdürlüğü",
+      "il_id": 17,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "17269",
+      "vergi_dairesi_adi": "Yenice Vergi Dairesi Müdürlüğü",
+      "il_id": 17,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "17270",
+      "vergi_dairesi_adi": "Eceabat Vergi Dairesi Müdürlüğü",
+      "il_id": 17,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "17271",
+      "vergi_dairesi_adi": "Bozcaada Vergi Dairesi Müdürlüğü",
+      "il_id": 17,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "18260",
+      "vergi_dairesi_adi": "Çankırı Vergi Dairesi Müdürlüğü",
+      "il_id": 18,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "18265",
+      "vergi_dairesi_adi": "Karatekin Vergi Dairesi Müdürlüğü",
+      "il_id": 18,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "18261",
+      "vergi_dairesi_adi": "Çerkeş Vergi Dairesi Müdürlüğü",
+      "il_id": 18,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "18262",
+      "vergi_dairesi_adi": "Ilgaz Vergi Dairesi Müdürlüğü",
+      "il_id": 18,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "18263",
+      "vergi_dairesi_adi": "Orta Vergi Dairesi Müdürlüğü",
+      "il_id": 18,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "18264",
+      "vergi_dairesi_adi": "Şabanözü Vergi Dairesi Müdürlüğü",
+      "il_id": 18,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "19260",
+      "vergi_dairesi_adi": "Çorum Vergi Dairesi Müdürlüğü",
+      "il_id": 19,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "19262",
+      "vergi_dairesi_adi": "Hasanpaşa Vergi Dairesi Müdürlüğü",
+      "il_id": 19,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "19269",
+      "vergi_dairesi_adi": "Akşemseddin Vergi Dairesi Müdürlüğü",
+      "il_id": 19,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "19261",
+      "vergi_dairesi_adi": "Sungurlu Vergi Dairesi Müdürlüğü",
+      "il_id": 19,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "19263",
+      "vergi_dairesi_adi": "Osmancık Vergi Dairesi Müdürlüğü",
+      "il_id": 19,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "19264",
+      "vergi_dairesi_adi": "İskilip Vergi Dairesi Müdürlüğü",
+      "il_id": 19,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "19265",
+      "vergi_dairesi_adi": "Alaca Vergi Dairesi Müdürlüğü",
+      "il_id": 19,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "19266",
+      "vergi_dairesi_adi": "Kargı Vergi Dairesi Müdürlüğü",
+      "il_id": 19,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "19267",
+      "vergi_dairesi_adi": "Mecitözü Vergi Dairesi Müdürlüğü",
+      "il_id": 19,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "19268",
+      "vergi_dairesi_adi": "Bayat Vergi Dairesi Müdürlüğü",
+      "il_id": 19,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "20201",
+      "vergi_dairesi_adi": "Saraylar Vergi Dairesi Müdürlüğü",
+      "il_id": 20,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "20202",
+      "vergi_dairesi_adi": "Çınar Vergi Dairesi Müdürlüğü",
+      "il_id": 20,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "20203",
+      "vergi_dairesi_adi": "Gökpınar Vergi Dairesi Müdürlüğü",
+      "il_id": 20,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "20250",
+      "vergi_dairesi_adi": "Denizli İhtisas Vergi Dairesi Müdürlüğü",
+      "il_id": 20,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "20280",
+      "vergi_dairesi_adi": "Pamukkale Vergi Dairesi Müdürlüğü",
+      "il_id": 20,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "20275",
+      "vergi_dairesi_adi": "Bayramyeri Vergi Dairesi Müdürlüğü",
+      "il_id": 20,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "20260",
+      "vergi_dairesi_adi": "Sarayköy Vergi Dairesi Müdürlüğü",
+      "il_id": 20,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "20261",
+      "vergi_dairesi_adi": "Acıpayam Vergi Dairesi Müdürlüğü",
+      "il_id": 20,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "20262",
+      "vergi_dairesi_adi": "Tavas Vergi Dairesi Müdürlüğü",
+      "il_id": 20,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "20263",
+      "vergi_dairesi_adi": "Buldan Vergi Dairesi Müdürlüğü",
+      "il_id": 20,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "20264",
+      "vergi_dairesi_adi": "Çal Vergi Dairesi Müdürlüğü",
+      "il_id": 20,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "20265",
+      "vergi_dairesi_adi": "Çivril Vergi Dairesi Müdürlüğü",
+      "il_id": 20,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "20266",
+      "vergi_dairesi_adi": "Honaz Vergi Dairesi Müdürlüğü",
+      "il_id": 20,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "20267",
+      "vergi_dairesi_adi": "Kale Vergi Dairesi Müdürlüğü",
+      "il_id": 20,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "20268",
+      "vergi_dairesi_adi": "Serinhisar Vergi Dairesi Müdürlüğü",
+      "il_id": 20,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "20269",
+      "vergi_dairesi_adi": "Çameli Vergi Dairesi Müdürlüğü",
+      "il_id": 20,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "20270",
+      "vergi_dairesi_adi": "Babadağ Vergi Dairesi Müdürlüğü",
+      "il_id": 20,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "20271",
+      "vergi_dairesi_adi": "Bozkurt Vergi Dairesi Müdürlüğü",
+      "il_id": 20,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "20272",
+      "vergi_dairesi_adi": "Çardak Vergi Dairesi Müdürlüğü",
+      "il_id": 20,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "20273",
+      "vergi_dairesi_adi": "Güney Vergi Dairesi Müdürlüğü",
+      "il_id": 20,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "20274",
+      "vergi_dairesi_adi": "Bekilli Vergi Dairesi Müdürlüğü",
+      "il_id": 20,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "21251",
+      "vergi_dairesi_adi": "Gökalp Vergi Dairesi Müdürlüğü",
+      "il_id": 21,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "21281",
+      "vergi_dairesi_adi": "Süleyman Nazif Vergi Dairesi Müdürlüğü",
+      "il_id": 21,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "21282",
+      "vergi_dairesi_adi": "Cahit Sıtkı Tarancı Vergi Dairesi Müdürlüğü",
+      "il_id": 21,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "21290",
+      "vergi_dairesi_adi": "Kayapınar Vergi Dairesi Müdürlüğü",
+      "il_id": 21,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "21283",
+      "vergi_dairesi_adi": "Ergani Vergi Dairesi Müdürlüğü",
+      "il_id": 21,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "21284",
+      "vergi_dairesi_adi": "Bismil Vergi Dairesi Müdürlüğü",
+      "il_id": 21,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "21285",
+      "vergi_dairesi_adi": "Silvan Vergi Dairesi Müdürlüğü",
+      "il_id": 21,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "21286",
+      "vergi_dairesi_adi": "Çınar Vergi Dairesi Müdürlüğü",
+      "il_id": 21,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "21287",
+      "vergi_dairesi_adi": "Çermik Vergi Dairesi Müdürlüğü",
+      "il_id": 21,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "21288",
+      "vergi_dairesi_adi": "Hani Vergi Dairesi Müdürlüğü",
+      "il_id": 21,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "21289",
+      "vergi_dairesi_adi": "Lice Vergi Dairesi Müdürlüğü",
+      "il_id": 21,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "22201",
+      "vergi_dairesi_adi": "Arda Vergi Dairesi Müdürlüğü",
+      "il_id": 22,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "22260",
+      "vergi_dairesi_adi": "Kırkpınar Vergi Dairesi Müdürlüğü",
+      "il_id": 22,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "22267",
+      "vergi_dairesi_adi": "Tunca Vergi Dairesi Müdürlüğü",
+      "il_id": 22,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "22261",
+      "vergi_dairesi_adi": "Keşan Vergi Dairesi Müdürlüğü",
+      "il_id": 22,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "22262",
+      "vergi_dairesi_adi": "Uzunköprü Vergi Dairesi Müdürlüğü",
+      "il_id": 22,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "22263",
+      "vergi_dairesi_adi": "Havsa Vergi Dairesi Müdürlüğü",
+      "il_id": 22,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "22264",
+      "vergi_dairesi_adi": "İpsala Vergi Dairesi Müdürlüğü",
+      "il_id": 22,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "22265",
+      "vergi_dairesi_adi": "Enez Vergi Dairesi Müdürlüğü",
+      "il_id": 22,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "22266",
+      "vergi_dairesi_adi": "Meriç Vergi Dairesi Müdürlüğü",
+      "il_id": 22,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "23201",
+      "vergi_dairesi_adi": "Harput Vergi Dairesi Müdürlüğü",
+      "il_id": 23,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "23280",
+      "vergi_dairesi_adi": "Hazar Vergi Dairesi Müdürlüğü",
+      "il_id": 23,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "23284",
+      "vergi_dairesi_adi": "Elazığ Vergi Dairesi Müdürlüğü",
+      "il_id": 23,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "23281",
+      "vergi_dairesi_adi": "Karakoçan Vergi Dairesi Müdürlüğü",
+      "il_id": 23,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "23282",
+      "vergi_dairesi_adi": "Kovancılar Vergi Dairesi Müdürlüğü",
+      "il_id": 23,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "23283",
+      "vergi_dairesi_adi": "Palu Vergi Dairesi Müdürlüğü",
+      "il_id": 23,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "24260",
+      "vergi_dairesi_adi": "Fevzipaşa Vergi Dairesi Müdürlüğü",
+      "il_id": 24,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "24262",
+      "vergi_dairesi_adi": "Ergan Vergi Dairesi Müdürlüğü",
+      "il_id": 24,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "24261",
+      "vergi_dairesi_adi": "Tercan Vergi Dairesi Müdürlüğü",
+      "il_id": 24,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "25251",
+      "vergi_dairesi_adi": "Aziziye Vergi Dairesi Müdürlüğü",
+      "il_id": 25,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "25280",
+      "vergi_dairesi_adi": "Kazımkarabekir Vergi Dairesi Müdürlüğü",
+      "il_id": 25,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "25287",
+      "vergi_dairesi_adi": "Palandöken Vergi Dairesi Müdürlüğü",
+      "il_id": 25,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "25281",
+      "vergi_dairesi_adi": "Horasan Vergi Dairesi Müdürlüğü",
+      "il_id": 25,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "25252",
+      "vergi_dairesi_adi": "Oltu Vergi Dairesi Müdürlüğü",
+      "il_id": 25,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "25282",
+      "vergi_dairesi_adi": "Pasinler Vergi Dairesi Müdürlüğü",
+      "il_id": 25,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "25283",
+      "vergi_dairesi_adi": "Aşkale Vergi Dairesi Müdürlüğü",
+      "il_id": 25,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "25284",
+      "vergi_dairesi_adi": "Hınıs Vergi Dairesi Müdürlüğü",
+      "il_id": 25,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "25285",
+      "vergi_dairesi_adi": "İspir Vergi Dairesi Müdürlüğü",
+      "il_id": 25,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "25286",
+      "vergi_dairesi_adi": "Karayazı Vergi Dairesi Müdürlüğü",
+      "il_id": 25,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "26250",
+      "vergi_dairesi_adi": "Eskişehir Defterdarlığı (*)",
+      "il_id": 26,
+      "tur": "defterdarlik"
+    },
+    {
+      "vergi_dairesi_kodu": "27250",
+      "vergi_dairesi_adi": "Gaziantep İhtisas Vergi Dairesi Müdürlüğü",
+      "il_id": 27,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "27252",
+      "vergi_dairesi_adi": "Şehitkamil Vergi Dairesi Müdürlüğü",
+      "il_id": 27,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "27253",
+      "vergi_dairesi_adi": "Şahinbey Vergi Dairesi Müdürlüğü",
+      "il_id": 27,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "27254",
+      "vergi_dairesi_adi": "Gazikent Vergi Dairesi Müdürlüğü",
+      "il_id": 27,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "27255",
+      "vergi_dairesi_adi": "Kozanlı Vergi Dairesi Müdürlüğü",
+      "il_id": 27,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "27251",
+      "vergi_dairesi_adi": "Suburcu Vergi Dairesi Müdürlüğü",
+      "il_id": 27,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "27202",
+      "vergi_dairesi_adi": "Nizip Vergi Dairesi Müdürlüğü",
+      "il_id": 27,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "27203",
+      "vergi_dairesi_adi": "İslahiye Vergi Dairesi Müdürlüğü",
+      "il_id": 27,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "27256",
+      "vergi_dairesi_adi": "Oğuzeli Vergi Dairesi Müdürlüğü",
+      "il_id": 27,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "27257",
+      "vergi_dairesi_adi": "Nurdağı Vergi Dairesi Müdürlüğü",
+      "il_id": 27,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "27258",
+      "vergi_dairesi_adi": "Araban Vergi Dairesi Müdürlüğü",
+      "il_id": 27,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "27259",
+      "vergi_dairesi_adi": "Yavuzeli Vergi Dairesi Müdürlüğü",
+      "il_id": 27,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "28260",
+      "vergi_dairesi_adi": "Giresun Vergi Dairesi Müdürlüğü",
+      "il_id": 28,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "28271",
+      "vergi_dairesi_adi": "Ada Vergi Dairesi Müdürlüğü",
+      "il_id": 28,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "28261",
+      "vergi_dairesi_adi": "Bulancak Vergi Dairesi Müdürlüğü",
+      "il_id": 28,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "28262",
+      "vergi_dairesi_adi": "Tirebolu Vergi Dairesi Müdürlüğü",
+      "il_id": 28,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "28264",
+      "vergi_dairesi_adi": "Espiye Vergi Dairesi Müdürlüğü",
+      "il_id": 28,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "28263",
+      "vergi_dairesi_adi": "Görele Vergi Dairesi Müdürlüğü",
+      "il_id": 28,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "28265",
+      "vergi_dairesi_adi": "Dereli Vergi Dairesi Müdürlüğü",
+      "il_id": 28,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "28266",
+      "vergi_dairesi_adi": "Keşap Vergi Dairesi Müdürlüğü",
+      "il_id": 28,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "28267",
+      "vergi_dairesi_adi": "Şebinkarahisar Vergi Dairesi Müdürlüğü",
+      "il_id": 28,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "28268",
+      "vergi_dairesi_adi": "Eynesil Vergi Dairesi Müdürlüğü",
+      "il_id": 28,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "28269",
+      "vergi_dairesi_adi": "Piraziz Vergi Dairesi Müdürlüğü",
+      "il_id": 28,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "28270",
+      "vergi_dairesi_adi": "Yağlıdere Vergi Dairesi Müdürlüğü",
+      "il_id": 28,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "29260",
+      "vergi_dairesi_adi": "Gümüşhane Vergi Dairesi Müdürlüğü",
+      "il_id": 29,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "29261",
+      "vergi_dairesi_adi": "Kelkit Vergi Dairesi Müdürlüğü",
+      "il_id": 29,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "29262",
+      "vergi_dairesi_adi": "Şiran Vergi Dairesi Müdürlüğü",
+      "il_id": 29,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "29263",
+      "vergi_dairesi_adi": "Torul Vergi Dairesi Müdürlüğü",
+      "il_id": 29,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "29264",
+      "vergi_dairesi_adi": "Kürtün Vergi Dairesi Müdürlüğü",
+      "il_id": 29,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "30260",
+      "vergi_dairesi_adi": "Hakkari Vergi Dairesi Müdürlüğü",
+      "il_id": 30,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "30261",
+      "vergi_dairesi_adi": "Yüksekova Vergi Dairesi Müdürlüğü",
+      "il_id": 30,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "30262",
+      "vergi_dairesi_adi": "Şemdinli Vergi Dairesi Müdürlüğü",
+      "il_id": 30,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "31201",
+      "vergi_dairesi_adi": "23 Temmuz Vergi Dairesi Müdürlüğü",
+      "il_id": 31,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "31203",
+      "vergi_dairesi_adi": "Antakya Vergi Dairesi Müdürlüğü",
+      "il_id": 31,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "31280",
+      "vergi_dairesi_adi": "Şükrükanatlı Vergi Dairesi Müdürlüğü",
+      "il_id": 31,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "31202",
+      "vergi_dairesi_adi": "Sahil Vergi Dairesi Müdürlüğü",
+      "il_id": 31,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "31281",
+      "vergi_dairesi_adi": "Akdeniz Vergi Dairesi Müdürlüğü",
+      "il_id": 31,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "31290",
+      "vergi_dairesi_adi": "Asım Gündüz Vergi Dairesi Müdürlüğü",
+      "il_id": 31,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "31260",
+      "vergi_dairesi_adi": "Dörtyol Vergi Dairesi Müdürlüğü",
+      "il_id": 31,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "31261",
+      "vergi_dairesi_adi": "Kırıkhan Vergi Dairesi Müdürlüğü",
+      "il_id": 31,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "31262",
+      "vergi_dairesi_adi": "Reyhanlı Vergi Dairesi Müdürlüğü",
+      "il_id": 31,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "31263",
+      "vergi_dairesi_adi": "Samandağ Vergi Dairesi Müdürlüğü",
+      "il_id": 31,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "31264",
+      "vergi_dairesi_adi": "Hassa Vergi Dairesi Müdürlüğü",
+      "il_id": 31,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "31282",
+      "vergi_dairesi_adi": "Erzin Vergi Dairesi Müdürlüğü",
+      "il_id": 31,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "31265",
+      "vergi_dairesi_adi": "Yayladağı Vergi Dairesi Müdürlüğü",
+      "il_id": 31,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "31267",
+      "vergi_dairesi_adi": "Altınözü Vergi Dairesi Müdürlüğü",
+      "il_id": 31,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "31268",
+      "vergi_dairesi_adi": "Belen Vergi Dairesi Müdürlüğü",
+      "il_id": 31,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "31283",
+      "vergi_dairesi_adi": "Kumlu Vergi Dairesi Müdürlüğü",
+      "il_id": 31,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "32201",
+      "vergi_dairesi_adi": "Davraz Vergi Dairesi Müdürlüğü",
+      "il_id": 32,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "32260",
+      "vergi_dairesi_adi": "Kaymakkapı Vergi Dairesi Müdürlüğü",
+      "il_id": 32,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "32267",
+      "vergi_dairesi_adi": "Gülkent Vergi Dairesi Müdürlüğü",
+      "il_id": 32,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "32261",
+      "vergi_dairesi_adi": "Eğirdir Vergi Dairesi Müdürlüğü",
+      "il_id": 32,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "32262",
+      "vergi_dairesi_adi": "Yalvaç Vergi Dairesi Müdürlüğü",
+      "il_id": 32,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "32263",
+      "vergi_dairesi_adi": "Şarkikaraağaç Vergi Dairesi Müdürlüğü",
+      "il_id": 32,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "32264",
+      "vergi_dairesi_adi": "Keçiborlu Vergi Dairesi Müdürlüğü",
+      "il_id": 32,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "32265",
+      "vergi_dairesi_adi": "Senirkent Vergi Dairesi Müdürlüğü",
+      "il_id": 32,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "32266",
+      "vergi_dairesi_adi": "Gelendost Vergi Dairesi Müdürlüğü",
+      "il_id": 32,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "33250",
+      "vergi_dairesi_adi": "İstiklal Vergi Dairesi Müdürlüğü",
+      "il_id": 33,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "33252",
+      "vergi_dairesi_adi": "Uray Vergi Dairesi Müdürlüğü",
+      "il_id": 33,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "33254",
+      "vergi_dairesi_adi": "Liman Vergi Dairesi Müdürlüğü",
+      "il_id": 33,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "33255",
+      "vergi_dairesi_adi": "Toros Vergi Dairesi Müdürlüğü",
+      "il_id": 33,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "33256",
+      "vergi_dairesi_adi": "Mersin İhtisas Vergi Dairesi Müdürlüğü",
+      "il_id": 33,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "33201",
+      "vergi_dairesi_adi": "Erdemli Vergi Dairesi Müdürlüğü",
+      "il_id": 33,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "33202",
+      "vergi_dairesi_adi": "Silifke Vergi Dairesi Müdürlüğü",
+      "il_id": 33,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "33203",
+      "vergi_dairesi_adi": "Anamur Vergi Dairesi Müdürlüğü",
+      "il_id": 33,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "33204",
+      "vergi_dairesi_adi": "Kızılmurat Vergi Dairesi Müdürlüğü",
+      "il_id": 33,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "33205",
+      "vergi_dairesi_adi": "Şehitkerim Vergi Dairesi Müdürlüğü",
+      "il_id": 33,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "33257",
+      "vergi_dairesi_adi": "Mut Vergi Dairesi Müdürlüğü",
+      "il_id": 33,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "33258",
+      "vergi_dairesi_adi": "Bozyazı Vergi Dairesi Müdürlüğü",
+      "il_id": 33,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "33259",
+      "vergi_dairesi_adi": "Gülnar Vergi Dairesi Müdürlüğü",
+      "il_id": 33,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "33260",
+      "vergi_dairesi_adi": "Aydıncık Vergi Dairesi Müdürlüğü",
+      "il_id": 33,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34220",
+      "vergi_dairesi_adi": "Haliç İhtisas Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34221",
+      "vergi_dairesi_adi": "Vatan İhtisas Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34222",
+      "vergi_dairesi_adi": "Çamlıca İhtisas Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34223",
+      "vergi_dairesi_adi": "Alemdağ Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34224",
+      "vergi_dairesi_adi": "Yenikapı Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34207",
+      "vergi_dairesi_adi": "Büyük Mükellefler Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34231",
+      "vergi_dairesi_adi": "Boğaziçi Kurumlar Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34232",
+      "vergi_dairesi_adi": "Marmara Kurumlar Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34234",
+      "vergi_dairesi_adi": "Davutpaşa Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34235",
+      "vergi_dairesi_adi": "Esenler Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34236",
+      "vergi_dairesi_adi": "Fatih Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34237",
+      "vergi_dairesi_adi": "Küçükköy Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34239",
+      "vergi_dairesi_adi": "Merter Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34242",
+      "vergi_dairesi_adi": "Sultanbeyli Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34244",
+      "vergi_dairesi_adi": "Anadolu Kurumlar Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34245",
+      "vergi_dairesi_adi": "Tuzla Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34246",
+      "vergi_dairesi_adi": "Kozyatağı Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34247",
+      "vergi_dairesi_adi": "Maslak Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34248",
+      "vergi_dairesi_adi": "Zincirlikuyu Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34249",
+      "vergi_dairesi_adi": "İkitelli Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34251",
+      "vergi_dairesi_adi": "Beşiktaş Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34252",
+      "vergi_dairesi_adi": "Ümraniye Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34253",
+      "vergi_dairesi_adi": "Yeditepe Veraset ve Harçlar Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34254",
+      "vergi_dairesi_adi": "Kasımpaşa Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34255",
+      "vergi_dairesi_adi": "Erenköy Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34256",
+      "vergi_dairesi_adi": "Hisar Veraset ve Harçlar Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34257",
+      "vergi_dairesi_adi": "Tuna Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34258",
+      "vergi_dairesi_adi": "Rıhtım Veraset ve Harçlar Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34259",
+      "vergi_dairesi_adi": "Güngören Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34260",
+      "vergi_dairesi_adi": "Kocasinan Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34261",
+      "vergi_dairesi_adi": "Güneşli Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34262",
+      "vergi_dairesi_adi": "Küçükyalı Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34263",
+      "vergi_dairesi_adi": "Pendik Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34264",
+      "vergi_dairesi_adi": "Bayrampaşa Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34265",
+      "vergi_dairesi_adi": "Beyazıt Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34266",
+      "vergi_dairesi_adi": "Beyoğlu Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34269",
+      "vergi_dairesi_adi": "Gaziosmanpaşa Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34270",
+      "vergi_dairesi_adi": "Göztepe Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34271",
+      "vergi_dairesi_adi": "Hocapaşa Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34272",
+      "vergi_dairesi_adi": "Kadıköy Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34273",
+      "vergi_dairesi_adi": "Kocamustafapaşa Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34274",
+      "vergi_dairesi_adi": "Mecidiyeköy Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34276",
+      "vergi_dairesi_adi": "Şişli Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34277",
+      "vergi_dairesi_adi": "Üsküdar Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34278",
+      "vergi_dairesi_adi": "Halkalı Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34279",
+      "vergi_dairesi_adi": "Kağıthane Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34280",
+      "vergi_dairesi_adi": "Zeytinburnu Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34281",
+      "vergi_dairesi_adi": "Beykoz Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34283",
+      "vergi_dairesi_adi": "Sarıyer Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34284",
+      "vergi_dairesi_adi": "Bakırköy Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34285",
+      "vergi_dairesi_adi": "Kartal Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34287",
+      "vergi_dairesi_adi": "Nakil Vasıtaları Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34288",
+      "vergi_dairesi_adi": "Sarıgazi Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34291",
+      "vergi_dairesi_adi": "Atışalanı Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34292",
+      "vergi_dairesi_adi": "Yakacık Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34293",
+      "vergi_dairesi_adi": "Yenibosna Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34294",
+      "vergi_dairesi_adi": "Avcılar Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34295",
+      "vergi_dairesi_adi": "Adalar Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34296",
+      "vergi_dairesi_adi": "Küçükçekmece Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34297",
+      "vergi_dairesi_adi": "Beylikdüzü Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34298",
+      "vergi_dairesi_adi": "Esenyurt Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34299",
+      "vergi_dairesi_adi": "Başakşehir Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34203",
+      "vergi_dairesi_adi": "Silivri Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34204",
+      "vergi_dairesi_adi": "Büyükçekmece Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "34205",
+      "vergi_dairesi_adi": "Şile Vergi Dairesi Müdürlüğü",
+      "il_id": 34,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35250",
+      "vergi_dairesi_adi": "İzmir İhtisas Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35251",
+      "vergi_dairesi_adi": "9 Eylül Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35252",
+      "vergi_dairesi_adi": "Yamanlar Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35254",
+      "vergi_dairesi_adi": "Belkahve Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35256",
+      "vergi_dairesi_adi": "Karşıyaka Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35257",
+      "vergi_dairesi_adi": "Kemeraltı Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35258",
+      "vergi_dairesi_adi": "Konak Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35259",
+      "vergi_dairesi_adi": "Kordon Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35260",
+      "vergi_dairesi_adi": "Şirinyer Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35261",
+      "vergi_dairesi_adi": "Kadifekale Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35262",
+      "vergi_dairesi_adi": "Taşıtlar Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35263",
+      "vergi_dairesi_adi": "Hasan Tahsin Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35264",
+      "vergi_dairesi_adi": "Bornova Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35266",
+      "vergi_dairesi_adi": "Balçova Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35267",
+      "vergi_dairesi_adi": "Gaziemir Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35268",
+      "vergi_dairesi_adi": "Ege Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35269",
+      "vergi_dairesi_adi": "Çiğli Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35270",
+      "vergi_dairesi_adi": "Çakabey İhtisas Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35201",
+      "vergi_dairesi_adi": "Bayındır Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35202",
+      "vergi_dairesi_adi": "Bergama Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35203",
+      "vergi_dairesi_adi": "Menemen Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35204",
+      "vergi_dairesi_adi": "Ödemiş Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35205",
+      "vergi_dairesi_adi": "Tire Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35206",
+      "vergi_dairesi_adi": "Torbalı Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35207",
+      "vergi_dairesi_adi": "Kemalpaşa Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35208",
+      "vergi_dairesi_adi": "Urla Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35209",
+      "vergi_dairesi_adi": "Selçuk Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35210",
+      "vergi_dairesi_adi": "Kınık Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35211",
+      "vergi_dairesi_adi": "Kiraz Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35212",
+      "vergi_dairesi_adi": "Çeşme Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35213",
+      "vergi_dairesi_adi": "Aliağa Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35215",
+      "vergi_dairesi_adi": "Menderes Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35271",
+      "vergi_dairesi_adi": "Dikili Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35272",
+      "vergi_dairesi_adi": "Seferihisar Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35273",
+      "vergi_dairesi_adi": "Foça Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35274",
+      "vergi_dairesi_adi": "Karaburun Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "35275",
+      "vergi_dairesi_adi": "Beydağ Vergi Dairesi Müdürlüğü",
+      "il_id": 35,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "36260",
+      "vergi_dairesi_adi": "Kars Vergi Dairesi Müdürlüğü",
+      "il_id": 36,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "36264",
+      "vergi_dairesi_adi": "Kafkas Vergi Dairesi Müdürlüğü",
+      "il_id": 36,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "36261",
+      "vergi_dairesi_adi": "Sarıkamış Vergi Dairesi Müdürlüğü",
+      "il_id": 36,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "36262",
+      "vergi_dairesi_adi": "Kağızman Vergi Dairesi Müdürlüğü",
+      "il_id": 36,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "36263",
+      "vergi_dairesi_adi": "Selim Vergi Dairesi Müdürlüğü",
+      "il_id": 36,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "37260",
+      "vergi_dairesi_adi": "Kastamonu Vergi Dairesi Müdürlüğü",
+      "il_id": 37,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "37270",
+      "vergi_dairesi_adi": "Atabey Vergi Dairesi Müdürlüğü",
+      "il_id": 37,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "37261",
+      "vergi_dairesi_adi": "Tosya Vergi Dairesi Müdürlüğü",
+      "il_id": 37,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "37262",
+      "vergi_dairesi_adi": "Taşköprü Vergi Dairesi Müdürlüğü",
+      "il_id": 37,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "37263",
+      "vergi_dairesi_adi": "Cide Vergi Dairesi Müdürlüğü",
+      "il_id": 37,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "37264",
+      "vergi_dairesi_adi": "İnebolu Vergi Dairesi Müdürlüğü",
+      "il_id": 37,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "37265",
+      "vergi_dairesi_adi": "Araç Vergi Dairesi Müdürlüğü",
+      "il_id": 37,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "37266",
+      "vergi_dairesi_adi": "Devrekani Vergi Dairesi Müdürlüğü",
+      "il_id": 37,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "37267",
+      "vergi_dairesi_adi": "Azdavay Vergi Dairesi Müdürlüğü",
+      "il_id": 37,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "37268",
+      "vergi_dairesi_adi": "Bozkurt Vergi Dairesi Müdürlüğü",
+      "il_id": 37,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "37269",
+      "vergi_dairesi_adi": "Daday Vergi Dairesi Müdürlüğü",
+      "il_id": 37,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "38250",
+      "vergi_dairesi_adi": "Kayseri İhtisas Vergi Dairesi Müdürlüğü",
+      "il_id": 38,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "38251",
+      "vergi_dairesi_adi": "Mimar Sinan Vergi Dairesi Müdürlüğü",
+      "il_id": 38,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "38252",
+      "vergi_dairesi_adi": "Erciyes Vergi Dairesi Müdürlüğü",
+      "il_id": 38,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "38253",
+      "vergi_dairesi_adi": "Kaleönü Vergi Dairesi Müdürlüğü",
+      "il_id": 38,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "38254",
+      "vergi_dairesi_adi": "Gevher Nesibe Vergi Dairesi Müdürlüğü",
+      "il_id": 38,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "38260",
+      "vergi_dairesi_adi": "Kültepe Vergi Dairesi Müdürlüğü",
+      "il_id": 38,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "38201",
+      "vergi_dairesi_adi": "Develi Vergi Dairesi Müdürlüğü",
+      "il_id": 38,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "38202",
+      "vergi_dairesi_adi": "Pınarbaşı Vergi Dairesi Müdürlüğü",
+      "il_id": 38,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "38203",
+      "vergi_dairesi_adi": "Bünyan Vergi Dairesi Müdürlüğü",
+      "il_id": 38,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "38255",
+      "vergi_dairesi_adi": "Yahyalı Vergi Dairesi Müdürlüğü",
+      "il_id": 38,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "38256",
+      "vergi_dairesi_adi": "İncesu Vergi Dairesi Müdürlüğü",
+      "il_id": 38,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "38257",
+      "vergi_dairesi_adi": "Tomarza Vergi Dairesi Müdürlüğü",
+      "il_id": 38,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "38258",
+      "vergi_dairesi_adi": "Yeşilhisar Vergi Dairesi Müdürlüğü",
+      "il_id": 38,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "38259",
+      "vergi_dairesi_adi": "Sarız Vergi Dairesi Müdürlüğü",
+      "il_id": 38,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "39260",
+      "vergi_dairesi_adi": "Kırklareli Vergi Dairesi Müdürlüğü",
+      "il_id": 39,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "39266",
+      "vergi_dairesi_adi": "Kırk Şehitler Vergi Dairesi Müdürlüğü",
+      "il_id": 39,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "39261",
+      "vergi_dairesi_adi": "Lüleburgaz Vergi Dairesi Müdürlüğü",
+      "il_id": 39,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "39262",
+      "vergi_dairesi_adi": "Babaeski Vergi Dairesi Müdürlüğü",
+      "il_id": 39,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "39263",
+      "vergi_dairesi_adi": "Pınarhisar Vergi Dairesi Müdürlüğü",
+      "il_id": 39,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "39264",
+      "vergi_dairesi_adi": "Vize Vergi Dairesi Müdürlüğü",
+      "il_id": 39,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "39265",
+      "vergi_dairesi_adi": "Demirköy Vergi Dairesi Müdürlüğü",
+      "il_id": 39,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "40260",
+      "vergi_dairesi_adi": "Kırşehir Vergi Dairesi Müdürlüğü",
+      "il_id": 40,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "40264",
+      "vergi_dairesi_adi": "Cacabey Vergi Dairesi Müdürlüğü",
+      "il_id": 40,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "40261",
+      "vergi_dairesi_adi": "Kaman Vergi Dairesi Müdürlüğü",
+      "il_id": 40,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "40262",
+      "vergi_dairesi_adi": "Mucur Vergi Dairesi Müdürlüğü",
+      "il_id": 40,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "40263",
+      "vergi_dairesi_adi": "Çiçekdağı Vergi Dairesi Müdürlüğü",
+      "il_id": 40,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "41250",
+      "vergi_dairesi_adi": "Kocaeli İhtisas Vergi Dairesi Müdürlüğü",
+      "il_id": 41,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "41252",
+      "vergi_dairesi_adi": "Tepecik Vergi Dairesi Müdürlüğü",
+      "il_id": 41,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "41253",
+      "vergi_dairesi_adi": "Alemdar Vergi Dairesi Müdürlüğü",
+      "il_id": 41,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "41290",
+      "vergi_dairesi_adi": "Acısu Vergi Dairesi Müdürlüğü",
+      "il_id": 41,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "41254",
+      "vergi_dairesi_adi": "Gebze İhtisas Vergi Dairesi Müdürlüğü",
+      "il_id": 41,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "41202",
+      "vergi_dairesi_adi": "Uluçınar Vergi Dairesi Müdürlüğü",
+      "il_id": 41,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "41203",
+      "vergi_dairesi_adi": "İlyasbey Vergi Dairesi Müdürlüğü",
+      "il_id": 41,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "41204",
+      "vergi_dairesi_adi": "Gölcük Vergi Dairesi Müdürlüğü",
+      "il_id": 41,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "41205",
+      "vergi_dairesi_adi": "Karamürsel Vergi Dairesi Müdürlüğü",
+      "il_id": 41,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "41206",
+      "vergi_dairesi_adi": "Körfez Vergi Dairesi Müdürlüğü",
+      "il_id": 41,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "41207",
+      "vergi_dairesi_adi": "Derince Vergi Dairesi Müdürlüğü",
+      "il_id": 41,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "41255",
+      "vergi_dairesi_adi": "Kandıra Vergi Dairesi Müdürlüğü",
+      "il_id": 41,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "42250",
+      "vergi_dairesi_adi": "Konya İhtisas Vergi Dairesi Müdürlüğü",
+      "il_id": 42,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "42251",
+      "vergi_dairesi_adi": "Selçuk Vergi Dairesi Müdürlüğü",
+      "il_id": 42,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "42252",
+      "vergi_dairesi_adi": "Mevlana Vergi Dairesi Müdürlüğü",
+      "il_id": 42,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "42253",
+      "vergi_dairesi_adi": "Meram Vergi Dairesi Müdürlüğü",
+      "il_id": 42,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "42254",
+      "vergi_dairesi_adi": "Alaaddin Vergi Dairesi Müdürlüğü",
+      "il_id": 42,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "42262",
+      "vergi_dairesi_adi": "Karatay Vergi Dairesi Müdürlüğü",
+      "il_id": 42,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "42201",
+      "vergi_dairesi_adi": "Akşehir Vergi Dairesi Müdürlüğü",
+      "il_id": 42,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "42202",
+      "vergi_dairesi_adi": "Ereğli Vergi Dairesi Müdürlüğü",
+      "il_id": 42,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "42204",
+      "vergi_dairesi_adi": "Beyşehir Vergi Dairesi Müdürlüğü",
+      "il_id": 42,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "42205",
+      "vergi_dairesi_adi": "Cihanbeyli Vergi Dairesi Müdürlüğü",
+      "il_id": 42,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "42206",
+      "vergi_dairesi_adi": "Çumra Vergi Dairesi Müdürlüğü",
+      "il_id": 42,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "42207",
+      "vergi_dairesi_adi": "Seydişehir Vergi Dairesi Müdürlüğü",
+      "il_id": 42,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "42208",
+      "vergi_dairesi_adi": "Ilgın Vergi Dairesi Müdürlüğü",
+      "il_id": 42,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "42209",
+      "vergi_dairesi_adi": "Kulu Vergi Dairesi Müdürlüğü",
+      "il_id": 42,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "42210",
+      "vergi_dairesi_adi": "Karapınar Vergi Dairesi Müdürlüğü",
+      "il_id": 42,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "42211",
+      "vergi_dairesi_adi": "Kadınhanı Vergi Dairesi Müdürlüğü",
+      "il_id": 42,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "42255",
+      "vergi_dairesi_adi": "Sarayönü Vergi Dairesi Müdürlüğü",
+      "il_id": 42,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "42256",
+      "vergi_dairesi_adi": "Bozkır Vergi Dairesi Müdürlüğü",
+      "il_id": 42,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "42257",
+      "vergi_dairesi_adi": "Yunak Vergi Dairesi Müdürlüğü",
+      "il_id": 42,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "42258",
+      "vergi_dairesi_adi": "Hüyük Vergi Dairesi Müdürlüğü",
+      "il_id": 42,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "42259",
+      "vergi_dairesi_adi": "Altınekin Vergi Dairesi Müdürlüğü",
+      "il_id": 42,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "42260",
+      "vergi_dairesi_adi": "Emirgazi Vergi Dairesi Müdürlüğü",
+      "il_id": 42,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "42261",
+      "vergi_dairesi_adi": "Doğanhisar Vergi Dairesi Müdürlüğü",
+      "il_id": 42,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "43201",
+      "vergi_dairesi_adi": "30 Ağustos Vergi Dairesi Müdürlüğü",
+      "il_id": 43,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "43280",
+      "vergi_dairesi_adi": "Çinili Vergi Dairesi Müdürlüğü",
+      "il_id": 43,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "43267",
+      "vergi_dairesi_adi": "Çaltepe Vergi Dairesi Müdürlüğü",
+      "il_id": 43,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "43260",
+      "vergi_dairesi_adi": "Gediz Vergi Dairesi Müdürlüğü",
+      "il_id": 43,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "43261",
+      "vergi_dairesi_adi": "Simav Vergi Dairesi Müdürlüğü",
+      "il_id": 43,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "43262",
+      "vergi_dairesi_adi": "Tavşanlı Vergi Dairesi Müdürlüğü",
+      "il_id": 43,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "43263",
+      "vergi_dairesi_adi": "Emet Vergi Dairesi Müdürlüğü",
+      "il_id": 43,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "43264",
+      "vergi_dairesi_adi": "Altıntaş Vergi Dairesi Müdürlüğü",
+      "il_id": 43,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "43265",
+      "vergi_dairesi_adi": "Domaniç Vergi Dairesi Müdürlüğü",
+      "il_id": 43,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "43266",
+      "vergi_dairesi_adi": "Hisarcık Vergi Dairesi Müdürlüğü",
+      "il_id": 43,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "44251",
+      "vergi_dairesi_adi": "Fırat Vergi Dairesi Müdürlüğü",
+      "il_id": 44,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "44252",
+      "vergi_dairesi_adi": "Beydağı Vergi Dairesi Müdürlüğü",
+      "il_id": 44,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "44258",
+      "vergi_dairesi_adi": "Battalgazi Vergi Dairesi Müdürlüğü",
+      "il_id": 44,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "44253",
+      "vergi_dairesi_adi": "Doğanşehir Vergi Dairesi Müdürlüğü",
+      "il_id": 44,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "44254",
+      "vergi_dairesi_adi": "Darende Vergi Dairesi Müdürlüğü",
+      "il_id": 44,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "44255",
+      "vergi_dairesi_adi": "Akçadağ Vergi Dairesi Müdürlüğü",
+      "il_id": 44,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "44256",
+      "vergi_dairesi_adi": "Arapgir Vergi Dairesi Müdürlüğü",
+      "il_id": 44,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "44257",
+      "vergi_dairesi_adi": "Hekimhan Vergi Dairesi Müdürlüğü",
+      "il_id": 44,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "45250",
+      "vergi_dairesi_adi": "Manisa İhtisas Vergi Dairesi Müdürlüğü",
+      "il_id": 45,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "45251",
+      "vergi_dairesi_adi": "Şehit Cihan Güneş Vergi Dairesi Müdürlüğü",
+      "il_id": 45,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "45252",
+      "vergi_dairesi_adi": "Mesir Vergi Dairesi Müdürlüğü",
+      "il_id": 45,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "45201",
+      "vergi_dairesi_adi": "Akhisar Vergi Dairesi Müdürlüğü",
+      "il_id": 45,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "45202",
+      "vergi_dairesi_adi": "Alaşehir Vergi Dairesi Müdürlüğü",
+      "il_id": 45,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "45203",
+      "vergi_dairesi_adi": "Demirci Vergi Dairesi Müdürlüğü",
+      "il_id": 45,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "45204",
+      "vergi_dairesi_adi": "Kırkağaç Vergi Dairesi Müdürlüğü",
+      "il_id": 45,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "45205",
+      "vergi_dairesi_adi": "Salihli Adil Oral Vergi Dairesi Müdürlüğü",
+      "il_id": 45,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "45206",
+      "vergi_dairesi_adi": "Sarıgöl Vergi Dairesi Müdürlüğü",
+      "il_id": 45,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "45207",
+      "vergi_dairesi_adi": "Saruhanlı Vergi Dairesi Müdürlüğü",
+      "il_id": 45,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "45208",
+      "vergi_dairesi_adi": "Soma Vergi Dairesi Müdürlüğü",
+      "il_id": 45,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "45209",
+      "vergi_dairesi_adi": "Turgutlu Vergi Dairesi Müdürlüğü",
+      "il_id": 45,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "45210",
+      "vergi_dairesi_adi": "Gördes Vergi Dairesi Müdürlüğü",
+      "il_id": 45,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "45211",
+      "vergi_dairesi_adi": "Kula Vergi Dairesi Müdürlüğü",
+      "il_id": 45,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "45253",
+      "vergi_dairesi_adi": "Ahmetli Vergi Dairesi Müdürlüğü",
+      "il_id": 45,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "45254",
+      "vergi_dairesi_adi": "Gölmarmara Vergi Dairesi Müdürlüğü",
+      "il_id": 45,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "45255",
+      "vergi_dairesi_adi": "Selendi Vergi Dairesi Müdürlüğü",
+      "il_id": 45,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "45256",
+      "vergi_dairesi_adi": "Köprübaşı Vergi Dairesi Müdürlüğü",
+      "il_id": 45,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "46280",
+      "vergi_dairesi_adi": "Aksu Vergi Dairesi Müdürlüğü",
+      "il_id": 46,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "46201",
+      "vergi_dairesi_adi": "Aslanbey Vergi Dairesi Müdürlüğü",
+      "il_id": 46,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "46260",
+      "vergi_dairesi_adi": "Elbistan Vergi Dairesi Müdürlüğü",
+      "il_id": 46,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "46261",
+      "vergi_dairesi_adi": "Afşin Vergi Dairesi Müdürlüğü",
+      "il_id": 46,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "46262",
+      "vergi_dairesi_adi": "Pazarcık Vergi Dairesi Müdürlüğü",
+      "il_id": 46,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "46264",
+      "vergi_dairesi_adi": "Göksun Vergi Dairesi Müdürlüğü",
+      "il_id": 46,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "46263",
+      "vergi_dairesi_adi": "Andırın Vergi Dairesi Müdürlüğü",
+      "il_id": 46,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "46265",
+      "vergi_dairesi_adi": "Türkoğlu Vergi Dairesi Müdürlüğü",
+      "il_id": 46,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "46266",
+      "vergi_dairesi_adi": "Çağlayancerit Vergi Dairesi Müdürlüğü",
+      "il_id": 46,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "46267",
+      "vergi_dairesi_adi": "Nurhak Vergi Dairesi Müdürlüğü",
+      "il_id": 46,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "47260",
+      "vergi_dairesi_adi": "Mardin Vergi Dairesi Müdürlüğü",
+      "il_id": 47,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "47261",
+      "vergi_dairesi_adi": "Kızıltepe Vergi Dairesi Müdürlüğü",
+      "il_id": 47,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "47262",
+      "vergi_dairesi_adi": "Nusaybin Vergi Dairesi Müdürlüğü",
+      "il_id": 47,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "47263",
+      "vergi_dairesi_adi": "Midyat Vergi Dairesi Müdürlüğü",
+      "il_id": 47,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "47264",
+      "vergi_dairesi_adi": "Derik Vergi Dairesi Müdürlüğü",
+      "il_id": 47,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "47265",
+      "vergi_dairesi_adi": "Mazıdağı Vergi Dairesi Müdürlüğü",
+      "il_id": 47,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "47266",
+      "vergi_dairesi_adi": "Ömerli Vergi Dairesi Müdürlüğü",
+      "il_id": 47,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "47268",
+      "vergi_dairesi_adi": "Savur Vergi Dairesi Müdürlüğü",
+      "il_id": 47,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "47269",
+      "vergi_dairesi_adi": "Dargeçit Vergi Dairesi Müdürlüğü",
+      "il_id": 47,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "48260",
+      "vergi_dairesi_adi": "Muğla Vergi Dairesi Müdürlüğü",
+      "il_id": 48,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "48261",
+      "vergi_dairesi_adi": "Bodrum Vergi Dairesi Müdürlüğü",
+      "il_id": 48,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "48262",
+      "vergi_dairesi_adi": "Fethiye Vergi Dairesi Müdürlüğü",
+      "il_id": 48,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "48263",
+      "vergi_dairesi_adi": "Köyceğiz Vergi Dairesi Müdürlüğü",
+      "il_id": 48,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "48264",
+      "vergi_dairesi_adi": "Milas Vergi Dairesi Müdürlüğü",
+      "il_id": 48,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "48265",
+      "vergi_dairesi_adi": "Marmaris Vergi Dairesi Müdürlüğü",
+      "il_id": 48,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "48266",
+      "vergi_dairesi_adi": "Yatağan Vergi Dairesi Müdürlüğü",
+      "il_id": 48,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "48267",
+      "vergi_dairesi_adi": "Ortaca Vergi Dairesi Müdürlüğü",
+      "il_id": 48,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "48268",
+      "vergi_dairesi_adi": "Datça Vergi Dairesi Müdürlüğü",
+      "il_id": 48,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "48269",
+      "vergi_dairesi_adi": "Dalaman Vergi Dairesi Müdürlüğü",
+      "il_id": 48,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "48270",
+      "vergi_dairesi_adi": "Seydikemer Vergi Dairesi Müdürlüğü",
+      "il_id": 48,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "48271",
+      "vergi_dairesi_adi": "Ula Vergi Dairesi Müdürlüğü",
+      "il_id": 48,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "48272",
+      "vergi_dairesi_adi": "Kavaklıdere Vergi Dairesi Müdürlüğü",
+      "il_id": 48,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "49260",
+      "vergi_dairesi_adi": "Muş Vergi Dairesi Müdürlüğü",
+      "il_id": 49,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "49261",
+      "vergi_dairesi_adi": "Bulanık Vergi Dairesi Müdürlüğü",
+      "il_id": 49,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "49262",
+      "vergi_dairesi_adi": "Malazgirt Vergi Dairesi Müdürlüğü",
+      "il_id": 49,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "49263",
+      "vergi_dairesi_adi": "Varto Vergi Dairesi Müdürlüğü",
+      "il_id": 49,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "49264",
+      "vergi_dairesi_adi": "Hasköy Vergi Dairesi Müdürlüğü",
+      "il_id": 49,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "49265",
+      "vergi_dairesi_adi": "Korkut Vergi Dairesi Müdürlüğü",
+      "il_id": 49,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "50260",
+      "vergi_dairesi_adi": "Nevşehir Vergi Dairesi Müdürlüğü",
+      "il_id": 50,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "50261",
+      "vergi_dairesi_adi": "Ürgüp Vergi Dairesi Müdürlüğü",
+      "il_id": 50,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "50262",
+      "vergi_dairesi_adi": "Derinkuyu Vergi Dairesi Müdürlüğü",
+      "il_id": 50,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "50263",
+      "vergi_dairesi_adi": "Avanos Vergi Dairesi Müdürlüğü",
+      "il_id": 50,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "50264",
+      "vergi_dairesi_adi": "Gülşehir Vergi Dairesi Müdürlüğü",
+      "il_id": 50,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "50265",
+      "vergi_dairesi_adi": "Hacıbektaş Vergi Dairesi Müdürlüğü",
+      "il_id": 50,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "50266",
+      "vergi_dairesi_adi": "Acıgöl Vergi Dairesi Müdürlüğü",
+      "il_id": 50,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "50267",
+      "vergi_dairesi_adi": "Kozaklı Vergi Dairesi Müdürlüğü",
+      "il_id": 50,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "51260",
+      "vergi_dairesi_adi": "Niğde Vergi Dairesi Müdürlüğü",
+      "il_id": 51,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "51262",
+      "vergi_dairesi_adi": "Bor Vergi Dairesi Müdürlüğü",
+      "il_id": 51,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "51263",
+      "vergi_dairesi_adi": "Ulukışla Vergi Dairesi Müdürlüğü",
+      "il_id": 51,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "51264",
+      "vergi_dairesi_adi": "Çiftlik Vergi Dairesi Müdürlüğü",
+      "il_id": 51,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "51265",
+      "vergi_dairesi_adi": "Altunhisar Vergi Dairesi Müdürlüğü",
+      "il_id": 51,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "51266",
+      "vergi_dairesi_adi": "Çamardı Vergi Dairesi Müdürlüğü",
+      "il_id": 51,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "52201",
+      "vergi_dairesi_adi": "Boztepe Vergi Dairesi Müdürlüğü",
+      "il_id": 52,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "52260",
+      "vergi_dairesi_adi": "Köprübaşı Vergi Dairesi Müdürlüğü",
+      "il_id": 52,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "52274",
+      "vergi_dairesi_adi": "Altınordu Vergi Dairesi Müdürlüğü",
+      "il_id": 52,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "52261",
+      "vergi_dairesi_adi": "Fatsa Vergi Dairesi Müdürlüğü",
+      "il_id": 52,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "52262",
+      "vergi_dairesi_adi": "Ünye Vergi Dairesi Müdürlüğü",
+      "il_id": 52,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "52264",
+      "vergi_dairesi_adi": "Aybastı Vergi Dairesi Müdürlüğü",
+      "il_id": 52,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "52263",
+      "vergi_dairesi_adi": "Gölköy Vergi Dairesi Müdürlüğü",
+      "il_id": 52,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "52265",
+      "vergi_dairesi_adi": "Korgan Vergi Dairesi Müdürlüğü",
+      "il_id": 52,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "52266",
+      "vergi_dairesi_adi": "Kumru Vergi Dairesi Müdürlüğü",
+      "il_id": 52,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "52267",
+      "vergi_dairesi_adi": "Perşembe Vergi Dairesi Müdürlüğü",
+      "il_id": 52,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "52268",
+      "vergi_dairesi_adi": "Akkuş Vergi Dairesi Müdürlüğü",
+      "il_id": 52,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "52269",
+      "vergi_dairesi_adi": "Çatalpınar Vergi Dairesi Müdürlüğü",
+      "il_id": 52,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "52270",
+      "vergi_dairesi_adi": "Ulubey Vergi Dairesi Müdürlüğü",
+      "il_id": 52,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "52271",
+      "vergi_dairesi_adi": "Gürgentepe Vergi Dairesi Müdürlüğü",
+      "il_id": 52,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "52272",
+      "vergi_dairesi_adi": "Çaybaşı Vergi Dairesi Müdürlüğü",
+      "il_id": 52,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "52273",
+      "vergi_dairesi_adi": "Kabataş Vergi Dairesi Müdürlüğü",
+      "il_id": 52,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "53201",
+      "vergi_dairesi_adi": "Kaçkar Vergi Dairesi Müdürlüğü",
+      "il_id": 53,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "53260",
+      "vergi_dairesi_adi": "Yeşilçay Vergi Dairesi Müdürlüğü",
+      "il_id": 53,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "53266",
+      "vergi_dairesi_adi": "Rize Vergi Dairesi Müdürlüğü",
+      "il_id": 53,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "53261",
+      "vergi_dairesi_adi": "Çayeli Vergi Dairesi Müdürlüğü",
+      "il_id": 53,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "53262",
+      "vergi_dairesi_adi": "Pazar Vergi Dairesi Müdürlüğü",
+      "il_id": 53,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "53263",
+      "vergi_dairesi_adi": "Ardeşen Vergi Dairesi Müdürlüğü",
+      "il_id": 53,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "53264",
+      "vergi_dairesi_adi": "Fındıklı Vergi Dairesi Müdürlüğü",
+      "il_id": 53,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "53265",
+      "vergi_dairesi_adi": "Çamlıhemşin Vergi Dairesi Müdürlüğü",
+      "il_id": 53,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "54250",
+      "vergi_dairesi_adi": "Sakarya İhtisas Vergi Dairesi Müdürlüğü",
+      "il_id": 54,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "54252",
+      "vergi_dairesi_adi": "Ali Fuat Cebesoy Vergi Dairesi Müdürlüğü",
+      "il_id": 54,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "54251",
+      "vergi_dairesi_adi": "Gümrükönü Vergi Dairesi Müdürlüğü",
+      "il_id": 54,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "54253",
+      "vergi_dairesi_adi": "Sapanca Vergi Dairesi Müdürlüğü",
+      "il_id": 54,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "54201",
+      "vergi_dairesi_adi": "Akyazı Vergi Dairesi Müdürlüğü",
+      "il_id": 54,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "54202",
+      "vergi_dairesi_adi": "Geyve Vergi Dairesi Müdürlüğü",
+      "il_id": 54,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "54203",
+      "vergi_dairesi_adi": "Hendek Vergi Dairesi Müdürlüğü",
+      "il_id": 54,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "54204",
+      "vergi_dairesi_adi": "Karasu Vergi Dairesi Müdürlüğü",
+      "il_id": 54,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "54254",
+      "vergi_dairesi_adi": "Pamukova Vergi Dairesi Müdürlüğü",
+      "il_id": 54,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "54255",
+      "vergi_dairesi_adi": "Kaynarca Vergi Dairesi Müdürlüğü",
+      "il_id": 54,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "54256",
+      "vergi_dairesi_adi": "Kocaali Vergi Dairesi Müdürlüğü",
+      "il_id": 54,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "54257",
+      "vergi_dairesi_adi": "Karapürçek Vergi Dairesi Müdürlüğü",
+      "il_id": 54,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "55251",
+      "vergi_dairesi_adi": "19 Mayıs Vergi Dairesi Müdürlüğü",
+      "il_id": 55,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "55290",
+      "vergi_dairesi_adi": "Zafer Vergi Dairesi Müdürlüğü",
+      "il_id": 55,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "55252",
+      "vergi_dairesi_adi": "Gaziler Vergi Dairesi Müdürlüğü",
+      "il_id": 55,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "55202",
+      "vergi_dairesi_adi": "Bafra Vergi Dairesi Müdürlüğü",
+      "il_id": 55,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "55203",
+      "vergi_dairesi_adi": "Çarşamba Vergi Dairesi Müdürlüğü",
+      "il_id": 55,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "55204",
+      "vergi_dairesi_adi": "Terme Vergi Dairesi Müdürlüğü",
+      "il_id": 55,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "55205",
+      "vergi_dairesi_adi": "Havza Vergi Dairesi Müdürlüğü",
+      "il_id": 55,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "55291",
+      "vergi_dairesi_adi": "Vezirköprü Vergi Dairesi Müdürlüğü",
+      "il_id": 55,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "55254",
+      "vergi_dairesi_adi": "19 Mayıs Ballıca Vergi Dairesi Müdürlüğü",
+      "il_id": 55,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "55253",
+      "vergi_dairesi_adi": "Kavak Vergi Dairesi Müdürlüğü",
+      "il_id": 55,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "55255",
+      "vergi_dairesi_adi": "Salıpazarı Vergi Dairesi Müdürlüğü",
+      "il_id": 55,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "55256",
+      "vergi_dairesi_adi": "Alaçam Vergi Dairesi Müdürlüğü",
+      "il_id": 55,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "55257",
+      "vergi_dairesi_adi": "Ladik Vergi Dairesi Müdürlüğü",
+      "il_id": 55,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "55258",
+      "vergi_dairesi_adi": "Asarcık Vergi Dairesi Müdürlüğü",
+      "il_id": 55,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "55259",
+      "vergi_dairesi_adi": "Yakakent Vergi Dairesi Müdürlüğü",
+      "il_id": 55,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "56260",
+      "vergi_dairesi_adi": "Siirt Vergi Dairesi Müdürlüğü",
+      "il_id": 56,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "56263",
+      "vergi_dairesi_adi": "Deliklitaş Vergi Dairesi Müdürlüğü",
+      "il_id": 56,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "56261",
+      "vergi_dairesi_adi": "Kurtalan Vergi Dairesi Müdürlüğü",
+      "il_id": 56,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "56262",
+      "vergi_dairesi_adi": "Baykan Vergi Dairesi Müdürlüğü",
+      "il_id": 56,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "57260",
+      "vergi_dairesi_adi": "Sinop Vergi Dairesi Müdürlüğü",
+      "il_id": 57,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "57261",
+      "vergi_dairesi_adi": "Boyabat Vergi Dairesi Müdürlüğü",
+      "il_id": 57,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "57263",
+      "vergi_dairesi_adi": "Ayancık Vergi Dairesi Müdürlüğü",
+      "il_id": 57,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "57262",
+      "vergi_dairesi_adi": "Gerze Vergi Dairesi Müdürlüğü",
+      "il_id": 57,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "57264",
+      "vergi_dairesi_adi": "Türkeli Vergi Dairesi Müdürlüğü",
+      "il_id": 57,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "57265",
+      "vergi_dairesi_adi": "Durağan Vergi Dairesi Müdürlüğü",
+      "il_id": 57,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "57266",
+      "vergi_dairesi_adi": "Erfelek Vergi Dairesi Müdürlüğü",
+      "il_id": 57,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "58201",
+      "vergi_dairesi_adi": "Kale Vergi Dairesi Müdürlüğü",
+      "il_id": 58,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "58280",
+      "vergi_dairesi_adi": "Site Vergi Dairesi Müdürlüğü",
+      "il_id": 58,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "58268",
+      "vergi_dairesi_adi": "4 Eylül Vergi Dairesi Müdürlüğü",
+      "il_id": 58,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "58260",
+      "vergi_dairesi_adi": "Şarkışla Vergi Dairesi Müdürlüğü",
+      "il_id": 58,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "58261",
+      "vergi_dairesi_adi": "Suşehri Vergi Dairesi Müdürlüğü",
+      "il_id": 58,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "58262",
+      "vergi_dairesi_adi": "Yıldızeli Vergi Dairesi Müdürlüğü",
+      "il_id": 58,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "58263",
+      "vergi_dairesi_adi": "Kangal Vergi Dairesi Müdürlüğü",
+      "il_id": 58,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "58264",
+      "vergi_dairesi_adi": "Zara Vergi Dairesi Müdürlüğü",
+      "il_id": 58,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "58265",
+      "vergi_dairesi_adi": "Gemerek Vergi Dairesi Müdürlüğü",
+      "il_id": 58,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "58266",
+      "vergi_dairesi_adi": "Gürün Vergi Dairesi Müdürlüğü",
+      "il_id": 58,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "58267",
+      "vergi_dairesi_adi": "Divriği Vergi Dairesi Müdürlüğü",
+      "il_id": 58,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "59201",
+      "vergi_dairesi_adi": "Süleymanpaşa Vergi Dairesi Müdürlüğü",
+      "il_id": 59,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "59260",
+      "vergi_dairesi_adi": "Namık Kemal Vergi Dairesi Müdürlüğü",
+      "il_id": 59,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "59250",
+      "vergi_dairesi_adi": "Çorlu İhtisas Vergi Dairesi Müdürlüğü",
+      "il_id": 59,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "59261",
+      "vergi_dairesi_adi": "Çerkezköy Vergi Dairesi Müdürlüğü",
+      "il_id": 59,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "59262",
+      "vergi_dairesi_adi": "Çorlu Vergi Dairesi Müdürlüğü",
+      "il_id": 59,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "59263",
+      "vergi_dairesi_adi": "Hayrabolu Vergi Dairesi Müdürlüğü",
+      "il_id": 59,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "59264",
+      "vergi_dairesi_adi": "Malkara Vergi Dairesi Müdürlüğü",
+      "il_id": 59,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "59265",
+      "vergi_dairesi_adi": "Muratlı Vergi Dairesi Müdürlüğü",
+      "il_id": 59,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "59266",
+      "vergi_dairesi_adi": "Şarköy Vergi Dairesi Müdürlüğü",
+      "il_id": 59,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "59267",
+      "vergi_dairesi_adi": "Kapaklı Vergi Dairesi Müdürlüğü",
+      "il_id": 59,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "59268",
+      "vergi_dairesi_adi": "Saray Vergi Dairesi Müdürlüğü",
+      "il_id": 59,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "59269",
+      "vergi_dairesi_adi": "Marmaraereğlisi Vergi Dairesi Müdürlüğü",
+      "il_id": 59,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "60260",
+      "vergi_dairesi_adi": "Tokat Vergi Dairesi Müdürlüğü",
+      "il_id": 60,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "60268",
+      "vergi_dairesi_adi": "Topçam Vergi Dairesi Müdürlüğü",
+      "il_id": 60,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "60261",
+      "vergi_dairesi_adi": "Erbaa Vergi Dairesi Müdürlüğü",
+      "il_id": 60,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "60262",
+      "vergi_dairesi_adi": "Niksar Vergi Dairesi Müdürlüğü",
+      "il_id": 60,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "60263",
+      "vergi_dairesi_adi": "Turhal Vergi Dairesi Müdürlüğü",
+      "il_id": 60,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "60264",
+      "vergi_dairesi_adi": "Zile Vergi Dairesi Müdürlüğü",
+      "il_id": 60,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "60265",
+      "vergi_dairesi_adi": "Reşadiye Vergi Dairesi Müdürlüğü",
+      "il_id": 60,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "60266",
+      "vergi_dairesi_adi": "Almus Vergi Dairesi Müdürlüğü",
+      "il_id": 60,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "60267",
+      "vergi_dairesi_adi": "Pazar Vergi Dairesi Müdürlüğü",
+      "il_id": 60,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "61201",
+      "vergi_dairesi_adi": "Hızırbey Vergi Dairesi Müdürlüğü",
+      "il_id": 61,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "61280",
+      "vergi_dairesi_adi": "Karadeniz Vergi Dairesi Müdürlüğü",
+      "il_id": 61,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "61292",
+      "vergi_dairesi_adi": "Ortahisar Vergi Dairesi Müdürlüğü",
+      "il_id": 61,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "61260",
+      "vergi_dairesi_adi": "Akçaabat Vergi Dairesi Müdürlüğü",
+      "il_id": 61,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "61261",
+      "vergi_dairesi_adi": "Of Vergi Dairesi Müdürlüğü",
+      "il_id": 61,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "61262",
+      "vergi_dairesi_adi": "Vakfıkebir Vergi Dairesi Müdürlüğü",
+      "il_id": 61,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "61281",
+      "vergi_dairesi_adi": "Araklı Vergi Dairesi Müdürlüğü",
+      "il_id": 61,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "61282",
+      "vergi_dairesi_adi": "Yomra Vergi Dairesi Müdürlüğü",
+      "il_id": 61,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "61283",
+      "vergi_dairesi_adi": "Sürmene Vergi Dairesi Müdürlüğü",
+      "il_id": 61,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "61284",
+      "vergi_dairesi_adi": "Arsin Vergi Dairesi Müdürlüğü",
+      "il_id": 61,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "61285",
+      "vergi_dairesi_adi": "Çaykara Vergi Dairesi Müdürlüğü",
+      "il_id": 61,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "61286",
+      "vergi_dairesi_adi": "Maçka Vergi Dairesi Müdürlüğü",
+      "il_id": 61,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "61287",
+      "vergi_dairesi_adi": "Beşikdüzü Vergi Dairesi Müdürlüğü",
+      "il_id": 61,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "61288",
+      "vergi_dairesi_adi": "Çarşıbaşı Vergi Dairesi Müdürlüğü",
+      "il_id": 61,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "61289",
+      "vergi_dairesi_adi": "Tonya Vergi Dairesi Müdürlüğü",
+      "il_id": 61,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "61290",
+      "vergi_dairesi_adi": "Şalpazarı Vergi Dairesi Müdürlüğü",
+      "il_id": 61,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "61291",
+      "vergi_dairesi_adi": "Düzköy Vergi Dairesi Müdürlüğü",
+      "il_id": 61,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "62260",
+      "vergi_dairesi_adi": "Tunceli Vergi Dairesi Müdürlüğü",
+      "il_id": 62,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "62261",
+      "vergi_dairesi_adi": "Munzur Vergi Dairesi Müdürlüğü",
+      "il_id": 62,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "63201",
+      "vergi_dairesi_adi": "Şehitlik Vergi Dairesi Müdürlüğü",
+      "il_id": 63,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "63280",
+      "vergi_dairesi_adi": "Topçu Meydanı Vergi Dairesi Müdürlüğü",
+      "il_id": 63,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "63281",
+      "vergi_dairesi_adi": "Göbeklitepe Vergi Dairesi Müdürlüğü",
+      "il_id": 63,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "63260",
+      "vergi_dairesi_adi": "Siverek Vergi Dairesi Müdürlüğü",
+      "il_id": 63,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "63261",
+      "vergi_dairesi_adi": "Viranşehir Vergi Dairesi Müdürlüğü",
+      "il_id": 63,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "63262",
+      "vergi_dairesi_adi": "Birecik Vergi Dairesi Müdürlüğü",
+      "il_id": 63,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "63263",
+      "vergi_dairesi_adi": "Suruç Vergi Dairesi Müdürlüğü",
+      "il_id": 63,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "63282",
+      "vergi_dairesi_adi": "Ceylanpınar Vergi Dairesi Müdürlüğü",
+      "il_id": 63,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "63283",
+      "vergi_dairesi_adi": "Akçakale Vergi Dairesi Müdürlüğü",
+      "il_id": 63,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "63284",
+      "vergi_dairesi_adi": "Hilvan Vergi Dairesi Müdürlüğü",
+      "il_id": 63,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "63285",
+      "vergi_dairesi_adi": "Bozova Vergi Dairesi Müdürlüğü",
+      "il_id": 63,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "63286",
+      "vergi_dairesi_adi": "Halfeti Vergi Dairesi Müdürlüğü",
+      "il_id": 63,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "63287",
+      "vergi_dairesi_adi": "Harran Vergi Dairesi Müdürlüğü",
+      "il_id": 63,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "64260",
+      "vergi_dairesi_adi": "Uşak Vergi Dairesi Müdürlüğü",
+      "il_id": 64,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "64261",
+      "vergi_dairesi_adi": "Banaz Vergi Dairesi Müdürlüğü",
+      "il_id": 64,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "64262",
+      "vergi_dairesi_adi": "Eşme Vergi Dairesi Müdürlüğü",
+      "il_id": 64,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "64263",
+      "vergi_dairesi_adi": "Sivaslı Vergi Dairesi Müdürlüğü",
+      "il_id": 64,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "64264",
+      "vergi_dairesi_adi": "Ulubey Vergi Dairesi Müdürlüğü",
+      "il_id": 64,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "64265",
+      "vergi_dairesi_adi": "Karahallı Vergi Dairesi Müdürlüğü",
+      "il_id": 64,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "65260",
+      "vergi_dairesi_adi": "Van Vergi Dairesi Müdürlüğü",
+      "il_id": 65,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "65267",
+      "vergi_dairesi_adi": "Akdamar Vergi Dairesi Müdürlüğü",
+      "il_id": 65,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "65201",
+      "vergi_dairesi_adi": "Erciş Vergi Dairesi Müdürlüğü",
+      "il_id": 65,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "65261",
+      "vergi_dairesi_adi": "Özalp Vergi Dairesi Müdürlüğü",
+      "il_id": 65,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "65262",
+      "vergi_dairesi_adi": "Çaldıran Vergi Dairesi Müdürlüğü",
+      "il_id": 65,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "65202",
+      "vergi_dairesi_adi": "Edremit Vergi Dairesi Müdürlüğü",
+      "il_id": 65,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "65263",
+      "vergi_dairesi_adi": "Muradiye Vergi Dairesi Müdürlüğü",
+      "il_id": 65,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "65264",
+      "vergi_dairesi_adi": "Gevaş Vergi Dairesi Müdürlüğü",
+      "il_id": 65,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "65265",
+      "vergi_dairesi_adi": "Gürpınar Vergi Dairesi Müdürlüğü",
+      "il_id": 65,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "65266",
+      "vergi_dairesi_adi": "Başkale Vergi Dairesi Müdürlüğü",
+      "il_id": 65,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "66260",
+      "vergi_dairesi_adi": "Yozgat Vergi Dairesi Müdürlüğü",
+      "il_id": 66,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "66271",
+      "vergi_dairesi_adi": "Çamlık Vergi Dairesi Müdürlüğü",
+      "il_id": 66,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "66261",
+      "vergi_dairesi_adi": "Boğazlıyan Vergi Dairesi Müdürlüğü",
+      "il_id": 66,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "66262",
+      "vergi_dairesi_adi": "Sorgun Vergi Dairesi Müdürlüğü",
+      "il_id": 66,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "66263",
+      "vergi_dairesi_adi": "Yerköy Vergi Dairesi Müdürlüğü",
+      "il_id": 66,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "66264",
+      "vergi_dairesi_adi": "Akdağmadeni Vergi Dairesi Müdürlüğü",
+      "il_id": 66,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "66265",
+      "vergi_dairesi_adi": "Şefaatli Vergi Dairesi Müdürlüğü",
+      "il_id": 66,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "66266",
+      "vergi_dairesi_adi": "Sarıkaya Vergi Dairesi Müdürlüğü",
+      "il_id": 66,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "66267",
+      "vergi_dairesi_adi": "Çekerek Vergi Dairesi Müdürlüğü",
+      "il_id": 66,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "66268",
+      "vergi_dairesi_adi": "Çayıralan Vergi Dairesi Müdürlüğü",
+      "il_id": 66,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "66269",
+      "vergi_dairesi_adi": "Aydıncık Vergi Dairesi Müdürlüğü",
+      "il_id": 66,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "66270",
+      "vergi_dairesi_adi": "Saraykent Vergi Dairesi Müdürlüğü",
+      "il_id": 66,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "67201",
+      "vergi_dairesi_adi": "Uzunmehmet Vergi Dairesi Müdürlüğü",
+      "il_id": 67,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "67280",
+      "vergi_dairesi_adi": "Kara Elmas Vergi Dairesi Müdürlüğü",
+      "il_id": 67,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "67261",
+      "vergi_dairesi_adi": "Ereğli Vergi Dairesi Müdürlüğü",
+      "il_id": 67,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "67263",
+      "vergi_dairesi_adi": "Çaycuma Vergi Dairesi Müdürlüğü",
+      "il_id": 67,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "67264",
+      "vergi_dairesi_adi": "Devrek Vergi Dairesi Müdürlüğü",
+      "il_id": 67,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "67265",
+      "vergi_dairesi_adi": "Alaplı Vergi Dairesi Müdürlüğü",
+      "il_id": 67,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "67266",
+      "vergi_dairesi_adi": "Gökçebey Vergi Dairesi Müdürlüğü",
+      "il_id": 67,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "68201",
+      "vergi_dairesi_adi": "Aksaray Vergi Dairesi Müdürlüğü",
+      "il_id": 68,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "68202",
+      "vergi_dairesi_adi": "Ortaköy Vergi Dairesi Müdürlüğü",
+      "il_id": 68,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "68203",
+      "vergi_dairesi_adi": "Eskil Vergi Dairesi Müdürlüğü",
+      "il_id": 68,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "68204",
+      "vergi_dairesi_adi": "Gülağaç Vergi Dairesi Müdürlüğü",
+      "il_id": 68,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "68205",
+      "vergi_dairesi_adi": "Ağaçören Vergi Dairesi Müdürlüğü",
+      "il_id": 68,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "68206",
+      "vergi_dairesi_adi": "Güzelyurt Vergi Dairesi Müdürlüğü",
+      "il_id": 68,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "68207",
+      "vergi_dairesi_adi": "Sultanhanı Vergi Dairesi Müdürlüğü",
+      "il_id": 68,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "69201",
+      "vergi_dairesi_adi": "Bayburt Vergi Dairesi Müdürlüğü",
+      "il_id": 69,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "70201",
+      "vergi_dairesi_adi": "Karaman Vergi Dairesi Müdürlüğü",
+      "il_id": 70,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "70204",
+      "vergi_dairesi_adi": "Larende Vergi Dairesi Müdürlüğü",
+      "il_id": 70,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "70202",
+      "vergi_dairesi_adi": "Ermenek Vergi Dairesi Müdürlüğü",
+      "il_id": 70,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "70203",
+      "vergi_dairesi_adi": "Sarıveliler Vergi Dairesi Müdürlüğü",
+      "il_id": 70,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "71201",
+      "vergi_dairesi_adi": "Irmak Vergi Dairesi Müdürlüğü",
+      "il_id": 71,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "71202",
+      "vergi_dairesi_adi": "Kaletepe Vergi Dairesi Müdürlüğü",
+      "il_id": 71,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "71205",
+      "vergi_dairesi_adi": "Kırıkkale Vergi Dairesi Müdürlüğü",
+      "il_id": 71,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "71203",
+      "vergi_dairesi_adi": "Keskin Vergi Dairesi Müdürlüğü",
+      "il_id": 71,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "71204",
+      "vergi_dairesi_adi": "Delice Vergi Dairesi Müdürlüğü",
+      "il_id": 71,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "72260",
+      "vergi_dairesi_adi": "Batman Vergi Dairesi Müdürlüğü",
+      "il_id": 72,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "72262",
+      "vergi_dairesi_adi": "Raman Vergi Dairesi Müdürlüğü",
+      "il_id": 72,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "72261",
+      "vergi_dairesi_adi": "Kozluk Vergi Dairesi Müdürlüğü",
+      "il_id": 72,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "73260",
+      "vergi_dairesi_adi": "Şırnak Vergi Dairesi Müdürlüğü",
+      "il_id": 73,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "73261",
+      "vergi_dairesi_adi": "Cizre Vergi Dairesi Müdürlüğü",
+      "il_id": 73,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "73262",
+      "vergi_dairesi_adi": "Silopi Vergi Dairesi Müdürlüğü",
+      "il_id": 73,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "73263",
+      "vergi_dairesi_adi": "Uludere Vergi Dairesi Müdürlüğü",
+      "il_id": 73,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "73264",
+      "vergi_dairesi_adi": "İdil Vergi Dairesi Müdürlüğü",
+      "il_id": 73,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "74260",
+      "vergi_dairesi_adi": "Bartın Vergi Dairesi Müdürlüğü",
+      "il_id": 74,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "74261",
+      "vergi_dairesi_adi": "Ulus Vergi Dairesi Müdürlüğü",
+      "il_id": 74,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "74262",
+      "vergi_dairesi_adi": "Amasra Vergi Dairesi Müdürlüğü",
+      "il_id": 74,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "75201",
+      "vergi_dairesi_adi": "Ardahan Vergi Dairesi Müdürlüğü",
+      "il_id": 75,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "75202",
+      "vergi_dairesi_adi": "Göle Vergi Dairesi Müdürlüğü",
+      "il_id": 75,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "76201",
+      "vergi_dairesi_adi": "Iğdır Vergi Dairesi Müdürlüğü",
+      "il_id": 76,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "76203",
+      "vergi_dairesi_adi": "Aras Vergi Dairesi Müdürlüğü",
+      "il_id": 76,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "76202",
+      "vergi_dairesi_adi": "Tuzluca Vergi Dairesi Müdürlüğü",
+      "il_id": 76,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "77201",
+      "vergi_dairesi_adi": "Yalova Vergi Dairesi Müdürlüğü",
+      "il_id": 77,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "77202",
+      "vergi_dairesi_adi": "Çınarcık Vergi Dairesi Müdürlüğü",
+      "il_id": 77,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "77203",
+      "vergi_dairesi_adi": "Altınova Vergi Dairesi Müdürlüğü",
+      "il_id": 77,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "77204",
+      "vergi_dairesi_adi": "Armutlu Vergi Dairesi Müdürlüğü",
+      "il_id": 77,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "78201",
+      "vergi_dairesi_adi": "Karabük Vergi Dairesi Müdürlüğü",
+      "il_id": 78,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "78261",
+      "vergi_dairesi_adi": "Demirkent Vergi Dairesi Müdürlüğü",
+      "il_id": 78,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "78260",
+      "vergi_dairesi_adi": "Safranbolu Vergi Dairesi Müdürlüğü",
+      "il_id": 78,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "78202",
+      "vergi_dairesi_adi": "Yenice Vergi Dairesi Müdürlüğü",
+      "il_id": 78,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "78203",
+      "vergi_dairesi_adi": "Eskipazar Vergi Dairesi Müdürlüğü",
+      "il_id": 78,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "79201",
+      "vergi_dairesi_adi": "Kilis Vergi Dairesi Müdürlüğü",
+      "il_id": 79,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "80201",
+      "vergi_dairesi_adi": "Osmaniye Vergi Dairesi Müdürlüğü",
+      "il_id": 80,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "80205",
+      "vergi_dairesi_adi": "Amanos Vergi Dairesi Müdürlüğü",
+      "il_id": 80,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "80260",
+      "vergi_dairesi_adi": "Kadirli Vergi Dairesi Müdürlüğü",
+      "il_id": 80,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "80202",
+      "vergi_dairesi_adi": "Düziçi Vergi Dairesi Müdürlüğü",
+      "il_id": 80,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "80203",
+      "vergi_dairesi_adi": "Bahçe Vergi Dairesi Müdürlüğü",
+      "il_id": 80,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "80204",
+      "vergi_dairesi_adi": "Toprakkale Vergi Dairesi Müdürlüğü",
+      "il_id": 80,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "81260",
+      "vergi_dairesi_adi": "Düzce Vergi Dairesi Müdürlüğü",
+      "il_id": 81,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "81261",
+      "vergi_dairesi_adi": "Akçakoca Vergi Dairesi Müdürlüğü",
+      "il_id": 81,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "81262",
+      "vergi_dairesi_adi": "Gölyaka Vergi Dairesi Müdürlüğü",
+      "il_id": 81,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "81263",
+      "vergi_dairesi_adi": "Kaynaşlı Vergi Dairesi Müdürlüğü",
+      "il_id": 81,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "81264",
+      "vergi_dairesi_adi": "Gümüşova Vergi Dairesi Müdürlüğü",
+      "il_id": 81,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "81265",
+      "vergi_dairesi_adi": "Cumayeri Vergi Dairesi Müdürlüğü",
+      "il_id": 81,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "81266",
+      "vergi_dairesi_adi": "Çilimli Vergi Dairesi Müdürlüğü",
+      "il_id": 81,
+      "tur": "vergi_dairesi_mudurlugu"
+    },
+    {
+      "vergi_dairesi_kodu": "81267",
+      "vergi_dairesi_adi": "Yığılca Vergi Dairesi Müdürlüğü",
+      "il_id": 81,
+      "tur": "vergi_dairesi_mudurlugu"
+    }
+  ]
+}

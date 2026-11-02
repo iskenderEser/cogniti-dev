@@ -1,0 +1,4 @@
+.row { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:18px 28px; }
+.description { margin:0; max-width:850px; color:var(--tema-kontrol-ikincil-metin); font-size:13px; line-height:1.8; }
+.note { margin:18px 0 0; }
+.error { color:var(--tema-vurgu); }

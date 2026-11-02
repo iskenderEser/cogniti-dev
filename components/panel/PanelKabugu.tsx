@@ -40,9 +40,9 @@ export default function PanelKabugu({ children, navbar, baglam, gruplar, badge, 
   const renkAnahtari = navbar.temaSeciciGoster !== false ? <TemaSecici tema={tema} onTemaDegistir={temaDegistir} yerlesim="satir" /> : undefined;
   const uttKilavuzu = useMemo(() => uttKilavuzunuSec(baglam.eclubAcik, baglam.eczanemAcik), [baglam.eclubAcik, baglam.eczanemAcik]);
 
-  const bmKilavuzu = useMemo(() => bmKilavuzunuSec({ ccAcik: baglam.ccAcik, eclubAcik: baglam.eclubAcik, eclubStoreAcik: baglam.eclubStoreAcik, eczanemAcik: baglam.eczanemAcik }), [baglam.ccAcik, baglam.eclubAcik, baglam.eclubStoreAcik, baglam.eczanemAcik]);
+  const bmKilavuzu = useMemo(() => bmKilavuzunuSec({ ccAcik: baglam.ccAcik, eclubAcik: baglam.eclubAcik, eczanemAcik: baglam.eczanemAcik }), [baglam.ccAcik, baglam.eclubAcik, baglam.eczanemAcik]);
 
-  const tmKilavuzu = useMemo(() => tmKilavuzunuSec({ ccAcik: baglam.ccAcik, eclubAcik: baglam.eclubAcik, eclubStoreAcik: baglam.eclubStoreAcik, eczanemAcik: baglam.eczanemAcik }), [baglam.ccAcik, baglam.eclubAcik, baglam.eclubStoreAcik, baglam.eczanemAcik]);
+  const tmKilavuzu = useMemo(() => tmKilavuzunuSec({ ccAcik: baglam.ccAcik, eclubAcik: baglam.eclubAcik, eczanemAcik: baglam.eczanemAcik }), [baglam.ccAcik, baglam.eclubAcik, baglam.eczanemAcik]);
 
   const yoneticiKilavuzu = useMemo(() => yoneticiKilavuzunuSec(baglam.ccAcik, baglam.eclubAcik), [baglam.ccAcik, baglam.eclubAcik]);
 

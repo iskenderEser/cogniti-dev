@@ -65,7 +65,7 @@ const Navbar = bilesen("components/panel/PanelNavbar.tsx");
 const Sidebar = bilesen("components/panel/SolListe.tsx");
 const Drawer = bilesen("components/panel/MobilDrawer.tsx");
 const rolListesi = [...new Set([...roller.TUM_ROLLER, ...Object.keys(roller.ROL_ADLARI)])];
-const temelBaglam: nav.NavContext = { rolKucu: "utt", storeAcik: true, ccAcik: true, eclubAcik: true, eclubStoreAcik: true, eczanemAcik: true };
+const temelBaglam: nav.NavContext = { rolKucu: "utt", storeAcik: true, ccAcik: true, eclubAcik: true, eczanemAcik: true };
 
 function ortam(markup: string) {
   const window = new Window();

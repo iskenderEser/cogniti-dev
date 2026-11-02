@@ -1,15 +1,35 @@
 // app/admin/_hooks/useKullaniciListesi.ts
 //
-// Kullanıcı listesi sekmesinin state + handler'ları: arama, filtre, rol/aktif/yetki
+// Kullanıcı listesi sekmesinin state + handler'ları: arama, rol/aktif/yetki
 // toggle'ları, silme onayı, toplu seçim/silme/pasife alma. useAdminPanel shell'den
 // seciliFirma, kullanicilar, refreshKullanicilar, hata, basari prop'larını alır.
-// seciliFirma değişince filtre + işlem state'leri sıfırlanır.
+// seciliFirma değişince arama + işlem state'leri sıfırlanır.
 
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
 import type { Firma, Kullanici } from "../_types";
-import { kullaniciEksikMi } from "@/lib/admin/kullaniciDogrulama";
+import { ROL_ADLARI } from "@/lib/utils/roller";
+import { telefonBicimle } from "@/lib/admin/telefonBicim";
+
+export const KULLANICI_SUTUNLARI = [
+  ["kullanici", "Kullanıcı"], ["rol", "Rol"], ["eposta", "E-posta"],
+  ["telefon", "Cep Telefonu"], ["takim", "Takım"], ["bolge", "Bölge"], ["durum", "Durum"],
+] as const;
+export type KullaniciSutunu = (typeof KULLANICI_SUTUNLARI)[number][0];
+type SutunFiltreleri = Record<KullaniciSutunu, string>;
+const BOS_SUTUN_FILTRELERI: SutunFiltreleri = { kullanici:"", rol:"", eposta:"", telefon:"", takim:"", bolge:"", durum:"" };
+function sutunSecenegi(k: Kullanici, sutun: KullaniciSutunu): { deger: string; etiket: string } {
+  switch (sutun) {
+    case "kullanici": return { deger:k.kullanici_id, etiket:`${k.ad} ${k.soyad}` };
+    case "rol": return { deger:k.rol, etiket:ROL_ADLARI[k.rol] ?? k.rol };
+    case "eposta": return { deger:k.eposta || "__bos__", etiket:k.eposta || "—" };
+    case "telefon": return { deger:k.telefon ? telefonBicimle(k.telefon) : "__bos__", etiket:k.telefon ? telefonBicimle(k.telefon) : "Telefon eksik" };
+    case "takim": return { deger:k.takim_id || "__bos__", etiket:k.takim_adi || "—" };
+    case "bolge": return { deger:k.bolge_id || "__bos__", etiket:k.bolge_adi || "—" };
+    case "durum": return { deger:k.aktif_mi ? "aktif" : "pasif", etiket:k.aktif_mi ? "Aktif" : "Pasif" };
+  }
+}
 
 interface UseKullaniciListesiProps {
   seciliFirma: Firma | null;
@@ -20,12 +40,10 @@ interface UseKullaniciListesiProps {
 }
 
 export function useKullaniciListesi({ seciliFirma, kullanicilar, refreshKullanicilar, hata, basari }: UseKullaniciListesiProps) {
-  // Filtre ve arama
+  // Arama
   const [aramaMetni, setAramaMetni] = useState("");
-  const [filtrRol, setFiltrRol] = useState("");
-  const [filtrTakim, setFiltrTakim] = useState("");
-  const [filtrBolge, setFiltrBolge] = useState("");
-  const [filtrDurum, setFiltrDurum] = useState("");
+  const [arananMetin, setArananMetin] = useState("");
+  const [sutunFiltreleri, setSutunFiltreleri] = useState<SutunFiltreleri>(BOS_SUTUN_FILTRELERI);
 
   // İşlem state'leri
   const [acikRolId, setAcikRolId] = useState<string | null>(null);
@@ -38,42 +56,24 @@ export function useKullaniciListesi({ seciliFirma, kullanicilar, refreshKullanic
   const [topluIslemLoading, setTopluIslemLoading] = useState(false);
   const [yetkiLoading, setYetkiLoading] = useState<string | null>(null);
 
-  // Türetilmiş listeler (filtre dropdown'larında kullanılır)
-  const benzersizTakimlar = useMemo(
-    () => Array.from(new Set(kullanicilar.map(k => k.takim_adi).filter(Boolean))) as string[],
-    [kullanicilar]
-  );
-  const benzersizBolgeler = useMemo(
-    () => Array.from(new Set(kullanicilar.map(k => k.bolge_adi).filter(Boolean))) as string[],
-    [kullanicilar]
-  );
-  const benzersizRoller = useMemo(
-    () => Array.from(new Set(kullanicilar.map(k => k.rol).filter(Boolean))) as string[],
-    [kullanicilar]
-  );
+  const sutunSecenekleri = useMemo(() => Object.fromEntries(KULLANICI_SUTUNLARI.map(([sutun]) => {
+    const tekil = new Map(kullanicilar.map(k => { const s = sutunSecenegi(k, sutun); return [s.deger, s] as const; }));
+    return [sutun, [...tekil.values()].sort((a,b) => a.etiket.localeCompare(b.etiket, "tr-TR"))];
+  })) as Record<KullaniciSutunu, { deger:string; etiket:string }[]>, [kullanicilar]);
 
-  // Filtrelenmiş liste
   const filtrelenmisKullanicilar = useMemo(() => {
-    return kullanicilar.filter(k => {
-      const aramaUyumu = aramaMetni === "" || [k.ad, k.soyad, k.eposta, k.rol, k.takim_adi, k.bolge_adi]
-        .filter(Boolean).some(v => v!.toLowerCase().includes(aramaMetni.toLowerCase()));
-      const rolUyumu = filtrRol === "" || k.rol === filtrRol;
-      const takimUyumu = filtrTakim === "" || k.takim_adi === filtrTakim;
-      const bolgeUyumu = filtrBolge === "" || k.bolge_adi === filtrBolge;
-      const durumUyumu = filtrDurum === "" ||
-        (filtrDurum === "eksik"
-          ? kullaniciEksikMi(k.rol, k.takim_id ?? null, k.bolge_id ?? null, k.telefon ?? null).eksik
-          : filtrDurum === "aktif" ? k.aktif_mi : !k.aktif_mi);
-      return aramaUyumu && rolUyumu && takimUyumu && bolgeUyumu && durumUyumu;
-    });
-  }, [kullanicilar, aramaMetni, filtrRol, filtrTakim, filtrBolge, filtrDurum]);
+    const arama = arananMetin.toLocaleLowerCase("tr-TR");
+    return kullanicilar.filter(k => (arama === "" || [k.ad, k.soyad, k.eposta, k.rol, k.takim_adi, k.bolge_adi]
+      .some(v => v?.toLocaleLowerCase("tr-TR").includes(arama))) &&
+      KULLANICI_SUTUNLARI.every(([sutun]) => !sutunFiltreleri[sutun] || sutunSecenegi(k, sutun).deger === sutunFiltreleri[sutun]));
+  }, [kullanicilar, arananMetin, sutunFiltreleri]);
+
+  const handleSutunFiltrele = (sutun: KullaniciSutunu, deger: string) => setSutunFiltreleri(prev => ({ ...prev, [sutun]:deger }));
+
+  const handleAra = () => setArananMetin(aramaMetni.trim());
 
   const tumSeciliMi = filtrelenmisKullanicilar.length > 0 &&
     filtrelenmisKullanicilar.every(k => seciliKullanicilar.has(k.kullanici_id));
-
-  const sifirlaFiltreler = () => {
-    setAramaMetni(""); setFiltrRol(""); setFiltrTakim(""); setFiltrBolge(""); setFiltrDurum("");
-  };
 
   const sifirlaIslemler = () => {
     setAcikRolId(null);
@@ -82,9 +82,11 @@ export function useKullaniciListesi({ seciliFirma, kullanicilar, refreshKullanic
     setTopluSilOnay(false);
   };
 
-  // seciliFirma değişince filtre + işlem state'leri sıfırla
+  // seciliFirma değişince arama + işlem state'leri sıfırla
   useEffect(() => {
-    sifirlaFiltreler();
+    setAramaMetni("");
+    setArananMetin("");
+    setSutunFiltreleri(BOS_SUTUN_FILTRELERI);
     sifirlaIslemler();
   }, [seciliFirma?.firma_id]);
 
@@ -314,18 +316,12 @@ export function useKullaniciListesi({ seciliFirma, kullanicilar, refreshKullanic
   };
 
   return {
-    // Filtre/arama
-    aramaMetni, setAramaMetni,
-    filtrRol, setFiltrRol,
-    filtrTakim, setFiltrTakim,
-    filtrBolge, setFiltrBolge,
-    filtrDurum, setFiltrDurum,
-    sifirlaFiltreler,
+    // Arama
+    aramaMetni, setAramaMetni, handleAra,
 
-    // Türetilmiş
-    benzersizTakimlar,
-    benzersizBolgeler,
-    benzersizRoller,
+    sutunFiltreleri, sutunSecenekleri, handleSutunFiltrele,
+
+    // Görünen kayıtlar
     filtrelenmisKullanicilar,
     tumSeciliMi,
 

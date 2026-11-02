@@ -9,6 +9,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useHataMesaji } from "@/components/HataMesaji";
 import VideoOynatici from "@/components/izle/VideoOynatici";
 import VideoBolumu from "@/components/ana-sayfa/VideoBolumu";
+import { UttYayinKartIskeletleri } from "@/components/yayin/UttYayinListeOrtaklari";
 import HayaletTanburSecici, { type TanburBolum } from "@/components/navigasyon/HayaletTanburSecici";
 import { AnaSayfaVideo } from "@/lib/video/anaSayfaVideolari";
 import { haftaBaslangici } from "@/lib/zaman/kontrol";
@@ -24,6 +25,8 @@ interface HaftaninEni {
 }
 
 interface YoneticiVeri {
+  kullaniciId: string;
+  rol: string;
   haftanin_enleri: HaftaninEni[];
   istatistikler: {
     yayinda_toplam_video: number;
@@ -42,9 +45,55 @@ interface Props {
   adSoyad: string;
 }
 
+function YoneticiAnaSayfaIskeleti() {
+  return (
+    <div className="mx-auto max-w-6xl animate-pulse px-3 py-4 pb-20 md:px-6 md:py-5 md:pb-5 lg:px-8 lg:py-7">
+      <div className="mb-6 flex items-end justify-between gap-3">
+        <div className="space-y-2">
+          <div className="h-7 w-44 rounded-lg bg-[var(--tema-yerel-ana-sayfa-sayfa-zemini-03)]" />
+          <div className="h-4 w-28 rounded bg-[var(--tema-yerel-ana-sayfa-sayfa-zemini-03)]" />
+        </div>
+        <div className="h-7 w-36 rounded-full bg-[var(--tema-yerel-ana-sayfa-sayfa-zemini-03)]" />
+      </div>
+      <div className="mb-5 grid grid-cols-2 gap-2 md:grid-cols-3">
+        {[0, 1, 2, 3, 4, 5].map((kart) => (
+          <div key={kart} className="h-28 rounded-xl border border-[var(--tema-yerel-ana-sayfa-cizgi-04)] bg-[var(--tema-yerel-ana-sayfa-kart-01)]" />
+        ))}
+      </div>
+      <div className="mb-3 h-4 w-36 rounded bg-[var(--tema-yerel-ana-sayfa-sayfa-zemini-03)]" />
+      <div className="mb-5 space-y-3 rounded-xl border border-[var(--tema-yerel-ana-sayfa-cizgi-04)] bg-[var(--tema-yerel-ana-sayfa-kart-01)] p-4">
+        {[0, 1, 2, 3, 4].map((satir) => (
+          <div key={satir} className="flex items-center gap-3">
+            <div className="h-8 w-8 rounded-full bg-[var(--tema-yerel-ana-sayfa-sayfa-zemini-03)]" />
+            <div className="h-4 w-40 max-w-full rounded bg-[var(--tema-yerel-ana-sayfa-sayfa-zemini-03)]" />
+          </div>
+        ))}
+      </div>
+      <UttYayinKartIskeletleri izgaraClassName="grid grid-cols-1 gap-2.5 md:grid-cols-2 lg:grid-cols-3" />
+    </div>
+  );
+}
+
 export default function YoneticiAnaSayfa({ user, rol, adSoyad }: Props) {
-  const [veri, setVeri] = useState<YoneticiVeri | null>(null);
-  const [loading, setLoading] = useState(true);
+  return <YoneticiAnaSayfaIcerigi key={`${user.id}_${rol}`} user={user} rol={rol} adSoyad={adSoyad} />;
+}
+
+function YoneticiAnaSayfaIcerigi({ user, rol, adSoyad }: Props) {
+  const onbellekAnahtari = `yonetici_anasayfa_veri_${user.id}_${rol}`;
+  const [veri, setVeri] = useState<YoneticiVeri | null>(() => {
+    if (typeof window === "undefined") return null;
+    try {
+      const kayit = sessionStorage.getItem(onbellekAnahtari);
+      if (kayit) {
+        const data: YoneticiVeri = JSON.parse(kayit);
+        if (data.kullaniciId === user.id && data.rol === rol && data.istatistikler
+          && Array.isArray(data.haftanin_enleri) && Array.isArray(data.videolar)) return data;
+      }
+    } catch {}
+    return null;
+  });
+  const [loading, setLoading] = useState(() => !veri);
+  const [veriHatasi, setVeriHatasi] = useState<string | null>(null);
   const [aktifVideo, setAktifVideo] = useState<AnaSayfaVideo | null>(null);
   const [aktifTanburBolumu, setAktifTanburBolumu] = useState<string>("tumu");
   const { hata } = useHataMesaji();
@@ -67,16 +116,41 @@ export default function YoneticiAnaSayfa({ user, rol, adSoyad }: Props) {
     videolar.length === 0 && aktifTanburBolumu === "yayinlar" ? "tumu" : aktifTanburBolumu;
 
   useEffect(() => {
+    const controller = new AbortController();
+    let aktif = true;
     const veriCek = async () => {
       setLoading(true);
-      const res = await fetch("/ana-sayfa/api");
-      const data = await res.json();
-      if (!res.ok) { hata(data.hata ?? "Veriler yüklenemedi.", data.adim, data.detay); }
-      else { setVeri(data); }
-      setLoading(false);
+      setVeriHatasi(null);
+      try {
+        const res = await fetch("/ana-sayfa/api", { signal: controller.signal });
+        const data = await res.json();
+        if (!aktif) return;
+        if (!res.ok) {
+          const mesaj = data.hata ?? "Veriler yüklenemedi.";
+          setVeriHatasi(mesaj);
+          hata(mesaj, data.adim, data.detay);
+          return;
+        }
+        if (!data.istatistikler || !Array.isArray(data.haftanin_enleri) || !Array.isArray(data.videolar)) {
+          throw new Error("Yönetici ana sayfa verileri alınamadı.");
+        }
+        const guncelVeri: YoneticiVeri = { ...data, kullaniciId: user.id, rol };
+        setVeri(guncelVeri);
+        try {
+          sessionStorage.setItem(onbellekAnahtari, JSON.stringify(guncelVeri));
+        } catch {}
+      } catch (err) {
+        if (!aktif || controller.signal.aborted) return;
+        const mesaj = err instanceof Error ? err.message : "Veriler yüklenemedi.";
+        setVeriHatasi(mesaj);
+        hata(mesaj);
+      } finally {
+        if (aktif) setLoading(false);
+      }
     };
-    veriCek();
-  }, [user]);
+    void veriCek();
+    return () => { aktif = false; controller.abort(); };
+  }, [user.id, rol, hata, onbellekAnahtari]);
 
 
   const haftaTarihi = () => {
@@ -85,13 +159,12 @@ export default function YoneticiAnaSayfa({ user, rol, adSoyad }: Props) {
     return `${baslangic.toLocaleDateString("tr-TR", { timeZone: "Europe/Istanbul", day: "2-digit", month: "2-digit", year: "numeric" })} — ${bitis.toLocaleDateString("tr-TR", { timeZone: "Europe/Istanbul", day: "2-digit", month: "2-digit", year: "numeric" })}`;
   };
 
-  if (loading) {
+  // Önbellek yoksa ilk yanıtı iskeletle bekle; başarısızlığı sıfır veri gibi gösterme.
+  if (!veri) {
+    if (loading) return <YoneticiAnaSayfaIskeleti />;
     return (
-      <div className="flex items-center justify-center p-20">
-        <svg className="animate-spin w-6 h-6 text-[var(--tema-yerel-ana-sayfa-yardimci-metin-03)]" fill="none" viewBox="0 0 24 24">
-          <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-          <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-        </svg>
+      <div role="alert" className="mx-auto max-w-6xl px-3 py-4 text-sm text-[var(--tema-yerel-ana-sayfa-yardimci-metin-03)] md:px-6 lg:px-8">
+        {veriHatasi ?? "Ana sayfa verileri yüklenemedi."}
       </div>
     );
   }
@@ -114,14 +187,7 @@ export default function YoneticiAnaSayfa({ user, rol, adSoyad }: Props) {
     );
   }
 
-    const istat = veri?.istatistikler ?? {
-    yayinda_toplam_video: 0,
-    toplam_izleme_sayisi: 0,
-    en_cok_izlenen_video: null,
-    en_cok_izleyen_takim: null,
-    en_cok_izleyen_bolge: null,
-    en_cok_izleyen_utt: null,
-  };
+  const istat = veri.istatistikler;
   const ad = adSoyad.split(" ")[0] || "Yönetici";
 
   return (
@@ -135,6 +201,10 @@ export default function YoneticiAnaSayfa({ user, rol, adSoyad }: Props) {
         </div>
         <TarihPill />
       </div>
+
+      {veriHatasi && (
+        <p role="alert" className="mb-4 text-sm text-[var(--tema-yerel-ana-sayfa-yardimci-metin-03)]">{veriHatasi}</p>
+      )}
 
       {/* Mobilde Odak Bilgi Alanı */}
       {seciliTanburBolumu !== "tumu" && (

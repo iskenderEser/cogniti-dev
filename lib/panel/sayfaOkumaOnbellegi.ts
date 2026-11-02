@@ -1,10 +1,10 @@
 "use client";
 
 /** Sayfa bazlı, kullanıcı ve kapsam anahtarıyla ayrılan salt okunur oturum önbelleği. */
-export function sayfaOkumaOnbellegiOlustur<T>(alan: string, sureMs = 60_000) {
+export function sayfaOkumaOnbellegiOlustur<T>(alan: string, sureMs = 60_000, surum = 1) {
   const bellek = new Map<string, { veri: T; zaman: number }>();
   const istekler = new Map<string, Promise<T>>();
-  const prefix = `hb_sayfa_${alan}_v1_`;
+  const prefix = `hb_sayfa_${alan}_v${surum}_`;
 
   function sil(anahtar: string, bekleyeniGecersizKil = true) {
     bellek.delete(anahtar);

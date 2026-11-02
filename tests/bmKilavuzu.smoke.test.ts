@@ -3,14 +3,14 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { bmKilavuzunuSec, type BmKilavuzModulleri } from "../lib/rehber/bmKilavuzu.ts";
 
-const hepsi: BmKilavuzModulleri = { ccAcik: true, eclubAcik: true, eclubStoreAcik: true, eczanemAcik: true };
+const hepsi: BmKilavuzModulleri = { ccAcik: true, eclubAcik: true, eczanemAcik: true };
 function metin(moduller: BmKilavuzModulleri) {
   const kilavuz = bmKilavuzunuSec(moduller);
   return [...kilavuz.giris, ...kilavuz.bolumler.flatMap(b => [b.baslik, ...b.parcalar.flatMap(p => p.tip === "liste" ? p.maddeler : [p.metin])])].join("\n");
 }
 
-for (let secim = 0; secim < 16; secim++) {
-  const moduller: BmKilavuzModulleri = { ccAcik: !!(secim & 1), eclubAcik: !!(secim & 2), eclubStoreAcik: !!(secim & 4), eczanemAcik: !!(secim & 8) };
+for (let secim = 0; secim < 8; secim++) {
+  const moduller: BmKilavuzModulleri = { ccAcik: !!(secim & 1), eclubAcik: !!(secim & 2), eczanemAcik: !!(secim & 4) };
   test(`BM kılavuzu modül birleşimi ${secim}: bağlı içerikler ve başlıkları birlikte gösterilir`, () => {
     const kilavuz = bmKilavuzunuSec(moduller);
     const yazi = metin(moduller);
@@ -23,7 +23,7 @@ for (let secim = 0; secim < 16; secim++) {
     else assert.doesNotMatch(yazi, /E-Club|Eczanem|Mutabakat|Hediye çeki/);
     if (moduller.eclubAcik && moduller.eczanemAcik) assert.match(yazi, /Mutabakat Takip/);
     else assert.doesNotMatch(yazi, /Eczanem|Mutabakat|mutabakat/);
-    if (moduller.eclubAcik && moduller.eclubStoreAcik) assert.match(yazi, /Hediye çeki taleplerini değerlendirme/);
+    if (moduller.eclubAcik) assert.match(yazi, /Hediye çeki taleplerini değerlendirme/);
     else assert.doesNotMatch(yazi, /Hediye çeki taleplerini değerlendirme/);
     for (const bolum of kilavuz.bolumler) {
       assert.ok(bolum.parcalar.length);
@@ -42,7 +42,7 @@ test("BM tam metni onaylı belgeyle aynı sırada gösterilir", () => {
 
 test("BM modül seçimleri kaynak metni değiştirmez ve menü maddelerini çoğaltmaz", () => {
   const ilk = metin(hepsi);
-  metin({ ccAcik: false, eclubAcik: false, eclubStoreAcik: false, eczanemAcik: false });
+  metin({ ccAcik: false, eclubAcik: false, eczanemAcik: false });
   metin({ ...hepsi, ccAcik: false, eczanemAcik: false });
   assert.equal(metin(hepsi), ilk);
 });

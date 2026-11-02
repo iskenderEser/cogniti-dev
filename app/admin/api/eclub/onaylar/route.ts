@@ -1,3 +1,5 @@
+import { firmaYonetimIslemKontrol } from "@/lib/admin/firmaYonetimIslem";
+import { firmaYonetimOkumaKontrol } from "@/lib/admin/firmaYonetimOkuma";
 // app/admin/api/eclub/onaylar/route.ts
 //
 // Admin — elle eklenen eczanelerin onay/reddi.
@@ -7,31 +9,32 @@
 //         reddet → master'dan hard delete (henüz havuza bağlı değil, güvenli)
 
 import { NextRequest, NextResponse } from "next/server";
-import { createClient, createAdminClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/server";
 import { hataYaniti, veriKontrol, sunucuHatasi, validasyonHatasi, yetkiHatasi, rolHatasi } from "@/lib/utils/hataIsle";
-import type { SupabaseClient } from "@supabase/supabase-js";
-import { adminGirisKontrol } from "@/lib/utils/adminGirisKontrol";
 
 // Admin auth guard — getUser + rol==='admin'.
-async function adminKontrol(_supabase: SupabaseClient, _adminSupabase: SupabaseClient): Promise<NextResponse | null> {
-  // B-26: tek bekçi — adminGirisKontrol (yerel kopya kaldırıldı).
-  const kontrol = await adminGirisKontrol();
-  return kontrol.gecerli ? null : kontrol.yanit;
-}
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const supabase = await createClient();
     const adminSupabase = createAdminClient();
 
-    const guard = await adminKontrol(supabase, adminSupabase);
-    if (guard) return guard;
+    const firmaId = new URL(request.url).searchParams.get("firma_id");
+    const kontrol = await firmaYonetimOkumaKontrol(firmaId);
+    if (!kontrol.gecerli) return kontrol.yanit;
+    const kapsamFirma = kontrol.firmaId ?? firmaId;
 
-    const { data: bekleyenler, error } = await adminSupabase
+    let bekleyenSorgu = adminSupabase
       .from("eclub_eczane_master")
       .select("gln, eczane_adi, il, ilce, ekleyen_utt_id, created_at")
       .eq("onay_durumu", "bekliyor")
       .order("created_at", { ascending: true });
+    if (kapsamFirma) {
+      const { data: temsilciler, error: temsilciHatasi } = await adminSupabase.from("kullanicilar").select("kullanici_id").eq("firma_id", kapsamFirma);
+      if (temsilciHatasi) return hataYaniti("Onay kapsamı alınamadı.", "E-Club firma onay kapsamı", temsilciHatasi);
+      if (!temsilciler?.length) return NextResponse.json({ bekleyenler: [] });
+      bekleyenSorgu = bekleyenSorgu.in("ekleyen_utt_id", temsilciler.map(k => k.kullanici_id));
+    }
+    const { data: bekleyenler, error } = await bekleyenSorgu;
 
     if (error) return hataYaniti("Onay bekleyenler çekilemedi.", "eclub_eczane_master SELECT — bekliyor", error);
 
@@ -71,14 +74,13 @@ export async function GET() {
 
 export async function PUT(request: NextRequest) {
   try {
-    const supabase = await createClient();
     const adminSupabase = createAdminClient();
 
-    const guard = await adminKontrol(supabase, adminSupabase);
-    if (guard) return guard;
 
     const body = await request.json();
-    const { gln, karar } = body;
+    const { gln, karar, firma_id } = body;
+    const yetki = await firmaYonetimIslemKontrol(firma_id);
+    if (!yetki.gecerli) return yetki.yanit;
 
     if (!gln || typeof gln !== "string") return validasyonHatasi("gln zorunludur.", ["gln"]);
     if (karar !== "onayla" && karar !== "reddet") return validasyonHatasi("Geçersiz karar.", ["karar"]);
@@ -86,7 +88,7 @@ export async function PUT(request: NextRequest) {
     // Kayıt gerçekten bekliyor mu?
     const { data: master, error: masterError } = await adminSupabase
       .from("eclub_eczane_master")
-      .select("gln, onay_durumu, kaynak")
+      .select("gln, onay_durumu, kaynak, ekleyen_utt_id")
       .eq("gln", gln.trim())
       .maybeSingle();
 
@@ -94,6 +96,9 @@ export async function PUT(request: NextRequest) {
     if (!masterKontrol.gecerli) return masterKontrol.yanit;
     if (masterError) return hataYaniti("Eczane sorgulanamadı.", "eclub_eczane_master SELECT", masterError, 404);
     if (!master) return hataYaniti("Eczane kaydı bulunamadı.", "eclub_eczane_master SELECT", null, 404);
+
+    const { data: ekleyen, error: ekleyenHatasi } = await adminSupabase.from("kullanicilar").select("firma_id").eq("kullanici_id", master.ekleyen_utt_id).eq("firma_id", firma_id).maybeSingle();
+    if (ekleyenHatasi || !ekleyen) return validasyonHatasi("Onay kaydı firma kapsamında bulunamadı.", ["gln"]);
 
     if (master.onay_durumu !== "bekliyor")
       return validasyonHatasi("Bu kayıt onay beklemiyor.", ["gln"]);

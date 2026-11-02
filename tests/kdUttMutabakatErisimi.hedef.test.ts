@@ -60,7 +60,7 @@ function api(dal: "utt" | "bm" | "tm", rol: string, { oturum = true, modul = tru
 test("Mutabakat menüsü UTT ve KD_UTT için aynı; diğer rollere ve kapalı modüle açılmaz", () => {
   const oge = PANEL_NAV.find(g => g.baslik === "Eczanem")!.oglar.find(o => o.etiket === "Mutabakat")!;
   for (const rolKucu of tumRoller) {
-    const ctx: NavContext = { rolKucu, storeAcik: true, ccAcik: true, eclubAcik: true, eclubStoreAcik: true, eczanemAcik: true };
+    const ctx: NavContext = { rolKucu, storeAcik: true, ccAcik: true, eclubAcik: true, eczanemAcik: true };
     assert.equal(oge.gate(ctx), ["utt", "kd_utt"].includes(rolKucu), rolKucu);
     assert.equal(oge.gate({ ...ctx, eczanemAcik: false }), false);
   }

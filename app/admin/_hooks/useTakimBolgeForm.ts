@@ -18,7 +18,6 @@ interface UseTakimBolgeFormProps {
 
 const BASLANGIC_BLOKLAR: TakimBlok[] = [
   { id: 1, takim_adi: "", bolgeler: [""] },
-  { id: 2, takim_adi: "", bolgeler: [""] },
 ];
 
 export function useTakimBolgeForm({ seciliFirma, refreshTakimlar, hata, basari }: UseTakimBolgeFormProps) {
@@ -88,7 +87,26 @@ export function useTakimBolgeForm({ seciliFirma, refreshTakimlar, hata, basari }
     setKaydetLoading(false);
   };
 
+  const handleMevcutTakimaBolgeEkle = async (takimId: string, bolgeAdi: string): Promise<boolean> => {
+    if (!seciliFirma || !bolgeAdi.trim()) return false;
+    try {
+      const res = await fetch(`/admin/api/firmalar/${seciliFirma.firma_id}/takimlar/${takimId}/bolgeler`, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bolge_adi: bolgeAdi.trim() }),
+      });
+      const data = await res.json();
+      if (!res.ok) { hata(data.hata ?? "Bölge eklenemedi.", data.adim, data.detay); return false; }
+      basari("Bölge eklendi.");
+      refreshTakimlar();
+      return true;
+    } catch {
+      hata("Bölge eklenemedi. Bağlantınızı kontrol edip tekrar deneyin.");
+      return false;
+    }
+  };
+
   return {
+    handleMevcutTakimaBolgeEkle,
     bloklar,
     kaydetLoading,
     handleTakimAdiDegis,

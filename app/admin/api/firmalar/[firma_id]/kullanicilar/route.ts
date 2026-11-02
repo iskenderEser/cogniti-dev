@@ -1,10 +1,11 @@
+import { firmaYonetimIslemKontrol } from "@/lib/admin/firmaYonetimIslem";
+import { firmaYonetimOkumaKontrol } from "@/lib/admin/firmaYonetimOkuma";
 // app/admin/api/firmalar/[firma_id]/kullanicilar/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/server";
 import { hataYaniti, veriKontrol, sunucuHatasi, validasyonHatasi } from "@/lib/utils/hataIsle";
 import { TUM_ROLLER } from "@/lib/utils/roller";
 import { firmaYapisiYukle, kullaniciEksikMi, kullaniciSatirDogrula, rolCoz, rolGecisiCoz, telefonNormalize } from "@/lib/admin/kullaniciDogrulama";
-import { adminGirisKontrol } from "@/lib/utils/adminGirisKontrol";
 import { adSoyadBicimle } from "@/lib/utils/adSoyadBicimle";
 
 export async function GET(
@@ -12,10 +13,11 @@ export async function GET(
   { params }: { params: Promise<{ firma_id: string }> }
 ) {
   try {
-    const kontrol = await adminGirisKontrol();
+    const { firma_id } = await params;
+    const kontrol = await firmaYonetimOkumaKontrol(firma_id);
     if (!kontrol.gecerli) return kontrol.yanit;
 
-    const { firma_id } = await params;
+
     if (!firma_id) return validasyonHatasi("firma_id zorunludur.", ["firma_id"]);
 
     const adminSupabase = createAdminClient();
@@ -95,10 +97,11 @@ export async function POST(
   { params }: { params: Promise<{ firma_id: string }> }
 ) {
   try {
-    const kontrol = await adminGirisKontrol();
+    const { firma_id } = await params;
+    const kontrol = await firmaYonetimIslemKontrol(firma_id);
     if (!kontrol.gecerli) return kontrol.yanit;
 
-    const { firma_id } = await params;
+
     if (!firma_id) return validasyonHatasi("firma_id zorunludur.", ["firma_id"]);
 
     const adminSupabase = createAdminClient();
@@ -124,6 +127,7 @@ export async function POST(
     const dogrulama = kullaniciSatirDogrula(yapiSonuc.yapi, body);
     if (!dogrulama.ok) return validasyonHatasi(dogrulama.hata, dogrulama.alanlar);
     const kayit = dogrulama.kayit;
+    if (kontrol.firmaAdmin && kayit.rol === "admin") return validasyonHatasi("Cogniti admin rolü atanamaz.", ["rol"]);
     // K-A6 — eksik kabul: takım/bölge çözülememişse kayıt yine açılır,
     // eksiklik yanıtta görünür şekilde raporlanır.
     const eksikMi = dogrulama.eksikAlanlar.length > 0;
@@ -182,10 +186,11 @@ export async function PUT(
   { params }: { params: Promise<{ firma_id: string }> }
 ) {
   try {
-    const kontrol = await adminGirisKontrol();
+    const { firma_id } = await params;
+    const kontrol = await firmaYonetimIslemKontrol(firma_id);
     if (!kontrol.gecerli) return kontrol.yanit;
 
-    const { firma_id } = await params;
+
     if (!firma_id) return validasyonHatasi("firma_id zorunludur.", ["firma_id"]);
 
     const adminSupabase = createAdminClient();
@@ -210,6 +215,7 @@ export async function PUT(
       .eq("firma_id", firma_id)
       .single();
 
+    if (kontrol.firmaAdmin && (kullanici?.rol === "admin" || (rol !== undefined && rolCoz(String(rol)) === "admin"))) return validasyonHatasi("Cogniti admin hesabı veya rolü değiştirilemez.", ["rol"]);
     const kullaniciKontrol = veriKontrol(kullanici, "kullanicilar tablosu SELECT — kullanici_id kontrolü", "Kullanıcı bulunamadı.");
     if (!kullaniciKontrol.gecerli) return kullaniciKontrol.yanit;
     if (kullaniciError) return hataYaniti("Kullanıcı sorgulanırken hata oluştu.", "kullanicilar tablosu SELECT", kullaniciError, 404);
@@ -375,10 +381,11 @@ export async function DELETE(
   { params }: { params: Promise<{ firma_id: string }> }
 ) {
   try {
-    const kontrol = await adminGirisKontrol();
+    const { firma_id } = await params;
+    const kontrol = await firmaYonetimIslemKontrol(firma_id);
     if (!kontrol.gecerli) return kontrol.yanit;
 
-    const { firma_id } = await params;
+
     if (!firma_id) return validasyonHatasi("firma_id zorunludur.", ["firma_id"]);
 
     const adminSupabase = createAdminClient();
@@ -405,6 +412,8 @@ export async function DELETE(
 
     // 1) Arşivle
     const silinmeTarihi = new Date().toISOString();
+    if (kontrol.firmaAdmin && kullanici?.rol === "admin") return validasyonHatasi("Cogniti admin hesabı silinemez.", ["kullanici_id"]);
+
     const { error: arsivError } = await adminSupabase
       .from("silinmis_kullanicilar")
       .insert({

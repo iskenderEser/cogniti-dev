@@ -1,175 +1,75 @@
-// app/admin/_components/UrunTeknikYonetimi.tsx
-//
-// Ürün & Teknik yönetimi: iki kolonlu UI. Solda ürünler (ad + takım select),
-// sağda teknikler (ad). useUrunTeknik hook'unun return değerlerini prop alır.
-
 "use client";
+import { saltOkunurAlan } from "@/app/admin/_components/FirmaYonetimYetkisi";
 
-import { SadeFormSecimi } from "@/components/kontrol/SadeKontroller";
+import { useState } from "react";
+import { Package, Plus, RefreshCw, Save, Tags, Trash2 } from "lucide-react";
+import type { Firma, Takim } from "../_types";
+import { useUrunTeknik } from "../_hooks/useUrunTeknik";
+import styles from "../admin.module.css";
+import local from "./urun-teknik.module.css";
 
-import { btnBase, inputStyle, labelStyle, RENK_BORDO, rowStyle } from "../_constants";
-import type { Takim, Teknik, Urun } from "../_types";
-
-interface UrunTeknikYonetimiProps {
-  takimlar: Takim[];
-  urunler: Urun[];
-  teknikler: Teknik[];
-  yeniUrunAdi: string;
-  setYeniUrunAdi: (v: string) => void;
-  yeniUrunTakimId: string;
-  setYeniUrunTakimId: (v: string) => void;
-  yeniTeknikAdi: string;
-  setYeniTeknikAdi: (v: string) => void;
-  urunEkleLoading: boolean;
-  teknikEkleLoading: boolean;
-  urunSilLoading: string | null;
-  teknikSilLoading: string | null;
-  handleUrunEkle: (e: React.FormEvent) => void;
-  handleTeknikEkle: (e: React.FormEvent) => void;
-  handleUrunSil: (urun_id: string) => void;
-  handleTeknikSil: (teknik_id: string) => void;
-  takimAdi: (takim_id: string) => string;
+interface Props {
+  firma:Firma;
+  takimlar:Takim[];
+  organizasyonYukleniyor:boolean;
+  organizasyonHatasi:boolean;
+  hata:(mesaj:string,adim?:string,detay?:string)=>void;
+  basari:(mesaj:string)=>void;
 }
 
-const baslikStyle: React.CSSProperties = {
-  fontSize: "14px", fontWeight: 700, color: "var(--tema-yerel-yonetim-ana-metin-01)",
-  marginBottom: "12px", fontFamily: "'Nunito', sans-serif",
-};
+function UrunTeknikYonetimi(props:Props) {
+  const p=useUrunTeknik({...props,seciliFirma:props.firma});
+  const [urunSilOnay,setUrunSilOnay]=useState<string|null>(null);
+  const [teknikSilOnay,setTeknikSilOnay]=useState<string|null>(null);
+  const islemVar=p.urunEkleLoading || p.teknikEkleLoading || !!p.urunSilLoading || !!p.teknikSilLoading;
+  const urunFormKapali=islemVar || p.urunYukleniyor || p.urunHatasi || props.organizasyonYukleniyor || props.organizasyonHatasi || !props.takimlar.length;
+  const teknikFormKapali=islemVar || p.teknikYukleniyor || p.teknikHatasi;
 
-const bosListeStyle: React.CSSProperties = {
-  fontSize: "13px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)", fontFamily: "'Nunito', sans-serif",
-};
+  return <div className={local.columns}>
+    <section className={styles.card} aria-labelledby="admin-urunler-baslik">
+      <div className={styles.cardHeader}><div><h2 id="admin-urunler-baslik"><Package />Ürünler {!p.urunYukleniyor && !p.urunHatasi && <span className={styles.count}>{p.urunler.length}</span>}</h2><p>{props.firma.firma_adi} ürünleri ve bağlı oldukları takımlar</p></div><a className={styles.button} href="#admin-urun-ekleme"><Plus />Ürün ekle</a></div>
+      {p.urunYukleniyor ? <p role="status" className={styles.empty}>Ürünler yükleniyor…</p>
+        : p.urunHatasi ? <div role="alert" className={styles.empty}><p>Ürün listesi alınamadı.</p><button type="button" className={styles.button} onClick={()=>void p.urunleriCek()}><RefreshCw />Tekrar dene</button></div>
+        : !p.urunler.length ? <p className={styles.empty}>Bu firmada henüz ürün tanımlanmamış.</p>
+        : <div className={styles.tableWrap}><table className={local.table} aria-label={`${props.firma.firma_adi} ürün listesi`}>
+          <thead><tr><th>Ürün adı</th><th>Takım</th><th className={local.actionHeading}>İşlem</th></tr></thead>
+          <tbody>{p.urunler.map(u=><tr key={u.urun_id}><td><span className={styles.name}>{u.urun_adi}</span></td><td>{props.organizasyonYukleniyor ? "Yükleniyor…" : props.organizasyonHatasi ? "Takım bilgisi alınamadı" : p.takimAdi(u.takim_id)}</td><td className={local.actionCell}>
+            {urunSilOnay===u.urun_id ? <div className={local.confirm} role="group" aria-label={`${u.urun_adi} silme onayı`}><span>{u.urun_adi} silinsin mi?</span><div className={styles.actions}><button type="button" className={`${styles.button} ${styles.danger}`} disabled={islemVar} onClick={async()=>{if(await p.handleUrunSil(u.urun_id))setUrunSilOnay(null);}}>{p.urunSilLoading===u.urun_id ? "Siliniyor…" : "Onayla, sil"}</button><button type="button" className={styles.button} disabled={islemVar} onClick={()=>setUrunSilOnay(null)}>Vazgeç</button></div></div>
+            : <button type="button" className={`${styles.button} ${styles.danger}`} aria-label={`${u.urun_adi} ürününü sil`} disabled={islemVar} onClick={()=>setUrunSilOnay(u.urun_id)}><Trash2 />Sil</button>}
+          </td></tr>)}</tbody>
+        </table></div>}
+      <form className={`${styles.cardBody} ${local.form}`} id="admin-urun-ekleme" onSubmit={p.handleUrunEkle}>
+        <h3 className={local.formHeading}>Ürün Ekleme</h3>
+        <fieldset className={local.fieldset} disabled={urunFormKapali}>
+          <label className={styles.field} htmlFor="admin-yeni-urun">Ürün adı<input id="admin-yeni-urun" className={styles.input} value={p.yeniUrunAdi} onChange={e=>p.setYeniUrunAdi(e.target.value)} required minLength={2} placeholder="Ürün adı" /></label>
+          <label className={styles.field} htmlFor="admin-urun-takim">Bağlı takım<select id="admin-urun-takim" className={styles.input} value={p.yeniUrunTakimId} onChange={e=>p.setYeniUrunTakimId(e.target.value)} required><option value="">Takım seçin</option>{props.takimlar.map(t=><option key={t.takim_id} value={t.takim_id}>{t.takim_adi}</option>)}</select></label>
+          <div className={styles.formActions}><button type="submit" className={`${styles.button} ${styles.primary}`} disabled={urunFormKapali || p.yeniUrunAdi.trim().length<2 || !p.yeniUrunTakimId}><Save />{p.urunEkleLoading ? "Ekleniyor…" : "Ürünü kaydet"}</button></div>
+        </fieldset>
+        {!props.organizasyonYukleniyor && !props.organizasyonHatasi && !props.takimlar.length && <p className={styles.subtext}>Ürün eklemek için önce Organizasyon bölümünde bir takım tanımlayın.</p>}
+      </form>
+    </section>
 
-const listeSatirStyle: React.CSSProperties = {
-  display: "flex", alignItems: "center", gap: "8px",
-  padding: "8px 10px", background: "var(--tema-yerel-yonetim-sayfa-zemini-07)",
-  border: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)", borderRadius: "6px",
-};
-
-const silButonStyle = (loading: boolean): React.CSSProperties => ({
-  padding: "4px 10px",
-  background: loading ? "var(--tema-yerel-yonetim-sayfa-zemini-01)" : "var(--tema-yerel-yonetim-islevsel-zemin-06)",
-  color: "var(--tema-yerel-yonetim-islevsel-metin-09)", border: "none", borderRadius: "4px",
-  fontSize: "12px", fontWeight: 600,
-  cursor: loading ? "not-allowed" : "pointer",
-  fontFamily: "'Nunito', sans-serif",
-});
-
-export default function UrunTeknikYonetimi(p: UrunTeknikYonetimiProps) {
-  return (
-    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px", maxWidth: "1000px" }}>
-      {/* Sol: Ürünler */}
-      <div>
-        <h3 style={baslikStyle}>Ürünler</h3>
-
-        <form onSubmit={p.handleUrunEkle} style={{ marginBottom: "16px" }}>
-          <div style={rowStyle}>
-            <span style={labelStyle}>Ürün Adı</span>
-            <input
-              type="text" value={p.yeniUrunAdi}
-              onChange={(e) => p.setYeniUrunAdi(e.target.value)}
-              placeholder="Ürün adı..." style={inputStyle} required minLength={2}
-            />
-          </div>
-
-          <div style={rowStyle}>
-            <span style={labelStyle}>Takım</span>
-            <SadeFormSecimi value={p.yeniUrunTakimId} onChange={(e) => p.setYeniUrunTakimId(e.target.value)} required aria-label="Takım" className="w-full">
-              <option value="">Takım seçin...</option>
-              {p.takimlar.map(t => <option key={t.takim_id} value={t.takim_id}>{t.takim_adi}</option>)}
-            </SadeFormSecimi>
-          </div>
-
-          <button
-            type="submit"
-            disabled={!p.yeniUrunAdi.trim() || !p.yeniUrunTakimId || p.urunEkleLoading}
-            style={{
-              ...btnBase,
-              background: !p.yeniUrunAdi.trim() || !p.yeniUrunTakimId || p.urunEkleLoading ? "var(--tema-yerel-yonetim-sayfa-zemini-01)" : RENK_BORDO,
-              color: "var(--tema-yerel-yonetim-ters-metin-01)", border: "none", marginTop: "8px",
-            }}
-          >
-            {p.urunEkleLoading ? "Ekleniyor..." : "Ürün Ekle"}
-          </button>
-        </form>
-
-        {p.urunler.length === 0 ? (
-          <p style={bosListeStyle}>Henüz ürün yok.</p>
-        ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-            {p.urunler.map(u => (
-              <div key={u.urun_id} style={listeSatirStyle}>
-                <div style={{ flex: 1 }}>
-                  <span style={{ fontSize: "13px", fontWeight: 600, color: "var(--tema-yerel-yonetim-ana-metin-01)", fontFamily: "'Nunito', sans-serif" }}>
-                    {u.urun_adi}
-                  </span>
-                  <span style={{ fontSize: "11px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)", marginLeft: "8px", fontFamily: "'Nunito', sans-serif" }}>
-                    ({p.takimAdi(u.takim_id)})
-                  </span>
-                </div>
-                <button
-                  onClick={() => p.handleUrunSil(u.urun_id)}
-                  disabled={p.urunSilLoading === u.urun_id}
-                  style={silButonStyle(p.urunSilLoading === u.urun_id)}
-                >
-                  {p.urunSilLoading === u.urun_id ? "..." : "Sil"}
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Sağ: Teknikler */}
-      <div>
-        <h3 style={baslikStyle}>Teknikler</h3>
-
-        <form onSubmit={p.handleTeknikEkle} style={{ marginBottom: "16px" }}>
-          <div style={rowStyle}>
-            <span style={labelStyle}>Teknik Adı</span>
-            <input
-              type="text" value={p.yeniTeknikAdi}
-              onChange={(e) => p.setYeniTeknikAdi(e.target.value)}
-              placeholder="Teknik adı..." style={inputStyle} required minLength={2}
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={!p.yeniTeknikAdi.trim() || p.teknikEkleLoading}
-            style={{
-              ...btnBase,
-              background: !p.yeniTeknikAdi.trim() || p.teknikEkleLoading ? "var(--tema-yerel-yonetim-sayfa-zemini-01)" : RENK_BORDO,
-              color: "var(--tema-yerel-yonetim-ters-metin-01)", border: "none", marginTop: "8px",
-            }}
-          >
-            {p.teknikEkleLoading ? "Ekleniyor..." : "Teknik Ekle"}
-          </button>
-        </form>
-
-        {p.teknikler.length === 0 ? (
-          <p style={bosListeStyle}>Henüz teknik yok.</p>
-        ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-            {p.teknikler.map(t => (
-              <div key={t.teknik_id} style={listeSatirStyle}>
-                <div style={{ flex: 1 }}>
-                  <span style={{ fontSize: "13px", fontWeight: 600, color: "var(--tema-yerel-yonetim-ana-metin-01)", fontFamily: "'Nunito', sans-serif" }}>
-                    {t.teknik_adi}
-                  </span>
-                </div>
-                <button
-                  onClick={() => p.handleTeknikSil(t.teknik_id)}
-                  disabled={p.teknikSilLoading === t.teknik_id}
-                  style={silButonStyle(p.teknikSilLoading === t.teknik_id)}
-                >
-                  {p.teknikSilLoading === t.teknik_id ? "..." : "Sil"}
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
+    <section className={styles.card} aria-labelledby="admin-teknikler-baslik">
+      <div className={styles.cardHeader}><div><h2 id="admin-teknikler-baslik"><Tags />Teknikler {!p.teknikYukleniyor && !p.teknikHatasi && <span className={styles.count}>{p.teknikler.length}</span>}</h2><p>{props.firma.firma_adi} için tanımlanmış teknikler</p></div><a className={styles.button} href="#admin-teknik-ekleme"><Plus />Teknik ekle</a></div>
+      {p.teknikYukleniyor ? <p role="status" className={styles.empty}>Teknikler yükleniyor…</p>
+        : p.teknikHatasi ? <div role="alert" className={styles.empty}><p>Teknik listesi alınamadı.</p><button type="button" className={styles.button} onClick={()=>void p.teknikleriCek()}><RefreshCw />Tekrar dene</button></div>
+        : !p.teknikler.length ? <p className={styles.empty}>Bu firmada henüz teknik tanımlanmamış.</p>
+        : <div className={styles.tableWrap}><table className={local.table} aria-label={`${props.firma.firma_adi} teknik listesi`}>
+          <thead><tr><th>Teknik adı</th><th className={local.actionHeading}>İşlem</th></tr></thead>
+          <tbody>{p.teknikler.map(t=><tr key={t.teknik_id}><td><span className={styles.name}>{t.teknik_adi}</span></td><td className={local.actionCell}>
+            {teknikSilOnay===t.teknik_id ? <div className={local.confirm} role="group" aria-label={`${t.teknik_adi} silme onayı`}><span>{t.teknik_adi} silinsin mi?</span><div className={styles.actions}><button type="button" className={`${styles.button} ${styles.danger}`} disabled={islemVar} onClick={async()=>{if(await p.handleTeknikSil(t.teknik_id))setTeknikSilOnay(null);}}>{p.teknikSilLoading===t.teknik_id ? "Siliniyor…" : "Onayla, sil"}</button><button type="button" className={styles.button} disabled={islemVar} onClick={()=>setTeknikSilOnay(null)}>Vazgeç</button></div></div>
+            : <button type="button" className={`${styles.button} ${styles.danger}`} aria-label={`${t.teknik_adi} tekniğini sil`} disabled={islemVar} onClick={()=>setTeknikSilOnay(t.teknik_id)}><Trash2 />Sil</button>}
+          </td></tr>)}</tbody>
+        </table></div>}
+      <form className={`${styles.cardBody} ${local.form}`} id="admin-teknik-ekleme" onSubmit={p.handleTeknikEkle}>
+        <h3 className={local.formHeading}>Teknik Ekleme</h3>
+        <fieldset className={local.fieldset} disabled={teknikFormKapali}>
+          <label className={styles.field} htmlFor="admin-yeni-teknik">Teknik adı<input id="admin-yeni-teknik" className={styles.input} value={p.yeniTeknikAdi} onChange={e=>p.setYeniTeknikAdi(e.target.value)} required minLength={2} placeholder="Teknik adı" /></label>
+          <div className={styles.formActions}><button type="submit" className={`${styles.button} ${styles.primary}`} disabled={teknikFormKapali || p.yeniTeknikAdi.trim().length<2}><Save />{p.teknikEkleLoading ? "Ekleniyor…" : "Tekniği kaydet"}</button></div>
+        </fieldset>
+      </form>
+    </section>
+  </div>;
 }
+
+export default saltOkunurAlan(UrunTeknikYonetimi);

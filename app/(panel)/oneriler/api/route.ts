@@ -111,7 +111,7 @@ export async function GET(request: NextRequest) {
           yayinIdleri.length > 0
             ? adminSupabase
                 .from("yayin_yonetimi")
-                .select("yayin_id, extra_puan")
+                .select("yayin_id, extra_puan, cek_karsiligi_var_mi, saha_puan_modeli, karsilik_puan, karsilik_tl, hedef_roller")
                 .in("yayin_id", yayinIdleri)
             : Promise.resolve({ data: [], error: null }),
         ]);
@@ -122,6 +122,7 @@ export async function GET(request: NextRequest) {
 
         const yayinlar = yayinlarSonucu.data;
         const extraPuanHaritasi = new Map((yayinYonetimiSonucu.data ?? []).map((y) => [y.yayin_id, y.extra_puan ?? 0]));
+        const cekBilgiHaritasi = new Map((yayinYonetimiSonucu.data ?? []).map((y) => [y.yayin_id, y]));
         const yayinHaritasi = new Map((yayinlar ?? []).map((yayin) => [yayin.yayin_id, yayinThumbnailCevabi(yayin)]));
         const tmOneriler = tmTakipKayitlari.map((kayit) => {
           const yayin = yayinHaritasi.get(kayit.yayin_id);
@@ -137,6 +138,11 @@ export async function GET(request: NextRequest) {
                 ? TALEP_TURU_KURALLARI[yayin.egitim_turu].icerikTuru
                 : null,
             extra_puan: extraPuanHaritasi.get(kayit.yayin_id) ?? 0,
+            cek_karsiligi_var_mi: cekBilgiHaritasi.get(kayit.yayin_id)?.cek_karsiligi_var_mi ?? null,
+            saha_puan_modeli: cekBilgiHaritasi.get(kayit.yayin_id)?.saha_puan_modeli ?? null,
+            karsilik_puan: cekBilgiHaritasi.get(kayit.yayin_id)?.karsilik_puan ?? null,
+            karsilik_tl: cekBilgiHaritasi.get(kayit.yayin_id)?.karsilik_tl ?? null,
+            hedef_roller: cekBilgiHaritasi.get(kayit.yayin_id)?.hedef_roller ?? null,
           };
         });
 
@@ -207,7 +213,7 @@ export async function GET(request: NextRequest) {
         yayinIdleri.length > 0
           ? adminSupabase
               .from("yayin_yonetimi")
-              .select("yayin_id, extra_puan")
+              .select("yayin_id, extra_puan, cek_karsiligi_var_mi, saha_puan_modeli, karsilik_puan, karsilik_tl, hedef_roller")
               .in("yayin_id", yayinIdleri)
           : Promise.resolve({ data: [], error: null }),
       ]);
@@ -219,6 +225,7 @@ export async function GET(request: NextRequest) {
       const yayinlar = yayinlarSonucu.data;
       const gorunenUrunIdleri = await yayinGorunenUrunIdHaritasi(adminSupabase, yayinIdleri);
       const extraPuanHaritasi = new Map((yayinYonetimiSonucu.data ?? []).map((y) => [y.yayin_id, y.extra_puan ?? 0]));
+      const cekBilgiHaritasi = new Map((yayinYonetimiSonucu.data ?? []).map((y) => [y.yayin_id, y]));
       const yayinHaritasi = new Map((yayinlar ?? []).map((yayin) => [yayin.yayin_id, yayinThumbnailCevabi(yayin)]));
       const oneriler = bmTakipKayitlari.map((kayit) => {
         const yayin = yayinHaritasi.get(kayit.yayin_id);
@@ -245,6 +252,11 @@ export async function GET(request: NextRequest) {
           kullanici_adi: `${kayit.utt_ad} ${kayit.utt_soyad}`.trim(),
           video_puani: yayin?.video_puani ?? null,
           extra_puan: extraPuanHaritasi.get(kayit.yayin_id) ?? 0,
+          cek_karsiligi_var_mi: cekBilgiHaritasi.get(kayit.yayin_id)?.cek_karsiligi_var_mi ?? null,
+          saha_puan_modeli: cekBilgiHaritasi.get(kayit.yayin_id)?.saha_puan_modeli ?? null,
+          karsilik_puan: cekBilgiHaritasi.get(kayit.yayin_id)?.karsilik_puan ?? null,
+          karsilik_tl: cekBilgiHaritasi.get(kayit.yayin_id)?.karsilik_tl ?? null,
+          hedef_roller: cekBilgiHaritasi.get(kayit.yayin_id)?.hedef_roller ?? null,
           begeni_sayisi: 0,
           favori_sayisi: 0,
           begeni_mi: false,
@@ -284,7 +296,7 @@ export async function GET(request: NextRequest) {
       yayinIdleri.length > 0
         ? adminSupabase
             .from("yayin_yonetimi")
-            .select("yayin_id, extra_puan")
+            .select("yayin_id, extra_puan, cek_karsiligi_var_mi, saha_puan_modeli, karsilik_puan, karsilik_tl, hedef_roller")
             .in("yayin_id", yayinIdleri)
         : Promise.resolve({ data: [], error: null }),
     ]);
@@ -296,6 +308,7 @@ export async function GET(request: NextRequest) {
     const yayinlar = yayinlarSonucu.data;
     const gorunenUrunIdleri = await yayinGorunenUrunIdHaritasi(adminSupabase, yayinIdleri);
     const extraPuanHaritasi = new Map((yayinYonetimiSonucu.data ?? []).map((y) => [y.yayin_id, y.extra_puan ?? 0]));
+    const cekBilgiHaritasi = new Map((yayinYonetimiSonucu.data ?? []).map((y) => [y.yayin_id, y]));
     const izlemeSayilari = new Map<string, number>();
     for (const izleme of (izlemelerSonucu.data ?? [])) {
       izlemeSayilari.set(izleme.yayin_id, (izlemeSayilari.get(izleme.yayin_id) ?? 0) + 1);
@@ -329,6 +342,11 @@ export async function GET(request: NextRequest) {
         icerik_turu: ek?.icerik_turu ?? null,
         izlenme_sayisi: izlemeSayilari.get(o.yayin_id) ?? 0,
         extra_puan: extraPuanHaritasi.get(o.yayin_id) ?? 0,
+        cek_karsiligi_var_mi: cekBilgiHaritasi.get(o.yayin_id)?.cek_karsiligi_var_mi ?? null,
+        saha_puan_modeli: cekBilgiHaritasi.get(o.yayin_id)?.saha_puan_modeli ?? null,
+        karsilik_puan: cekBilgiHaritasi.get(o.yayin_id)?.karsilik_puan ?? null,
+        karsilik_tl: cekBilgiHaritasi.get(o.yayin_id)?.karsilik_tl ?? null,
+        hedef_roller: cekBilgiHaritasi.get(o.yayin_id)?.hedef_roller ?? null,
       };
     });
 

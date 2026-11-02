@@ -10,7 +10,7 @@ import VideoOynatici from "@/components/izle/VideoOynatici";
 import HayaletTanburSecici from "@/components/navigasyon/HayaletTanburSecici";
 import { PeriyotButonlari } from "@/components/ui/periyot-butonlari";
 import MobilYayinAkisi from "@/components/yayin/MobilYayinAkisi";
-import { UttYayinTuruToggle } from "@/components/yayin/UttYayinListeOrtaklari";
+import { UttYayinKartIskeletleri, UttYayinTuruToggle } from "@/components/yayin/UttYayinListeOrtaklari";
 import { YayinKarti } from "@/components/yayin/YayinKarti";
 import type { TmStatIstatistikleri, TmStatSecimi } from "@/lib/utils/anaSayfa/tm";
 import { PERIYOTLAR, type Periyot } from "@/lib/utils/raporUtils";
@@ -109,16 +109,50 @@ function TemsilciYayinAlani({ videolar, aracTuru, onVideoSec }: {
   );
 }
 
+function TmAnaSayfaIskeleti() {
+  return (
+    <div className="mx-auto max-w-6xl animate-pulse px-3 py-4 pb-20 md:px-6 md:py-5 md:pb-5 lg:px-8 lg:py-7">
+      <div className="mb-6 flex items-end justify-between gap-3">
+        <div className="space-y-2">
+          <div className="h-7 w-44 rounded-lg bg-[var(--tema-yerel-ana-sayfa-sayfa-zemini-03)]" />
+          <div className="h-4 w-28 rounded bg-[var(--tema-yerel-ana-sayfa-sayfa-zemini-03)]" />
+        </div>
+        <div className="h-7 w-36 rounded-full bg-[var(--tema-yerel-ana-sayfa-sayfa-zemini-03)]" />
+      </div>
+      <div className="mb-5 grid grid-cols-2 gap-2 md:grid-cols-4">
+        {[0, 1, 2, 3].map((kart) => (
+          <div key={kart} className="h-28 rounded-xl border border-[var(--tema-yerel-ana-sayfa-cizgi-04)] bg-[var(--tema-yerel-ana-sayfa-kart-01)]" />
+        ))}
+      </div>
+      <div className="mb-5 h-10 max-w-full rounded-[14px] bg-[var(--tema-yerel-ana-sayfa-kart-01)] shadow-sm sm:w-[32rem]" />
+      <UttYayinKartIskeletleri izgaraClassName="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5" />
+    </div>
+  );
+}
+
 export default function TmAnaSayfa({ user, adSoyad }: Props) {
   return <TmAnaSayfaIcerigi key={user.id} user={user} adSoyad={adSoyad} />;
 }
 
 function TmAnaSayfaIcerigi({ user, adSoyad }: Props) {
   const router = useRouter();
-  const [tmVeri, setTmVeri] = useState<TmVeri | null>(null);
-  const [loading, setLoading] = useState(true);
   const [periyot, setPeriyot] = useState<Periyot>("bu_hafta");
   const [aracTuru, setAracTuru] = useState<TmStatSecimi["aracTuru"]>("tumu");
+  const onbellekAnahtari = `tm_anasayfa_veri_${user.id}_${periyot}_${aracTuru}`;
+  const [tmVeri, setTmVeri] = useState<TmVeri | null>(() => {
+    if (typeof window === "undefined") return null;
+    try {
+      const kayit = sessionStorage.getItem(onbellekAnahtari);
+      if (kayit) {
+        const veri: TmVeri = JSON.parse(kayit);
+        if (veri.kullaniciId === user.id && veri.secim?.periyot === periyot
+          && veri.secim?.aracTuru === aracTuru && veri.istatistikler
+          && Array.isArray(veri.yayinlar?.temsilciler) && Array.isArray(veri.yayinlar?.bolgeMudurleri)) return veri;
+      }
+    } catch {}
+    return null;
+  });
+  const [loading, setLoading] = useState(() => !tmVeri);
   const [aktifYayinSekmesi, setAktifYayinSekmesi] = useState<(typeof TM_YAYIN_SEKMELERI)[number]["key"]>("temsilciler");
   const [veriHatasi, setVeriHatasi] = useState<string | null>(null);
   const [aktifVideo, setAktifVideo] = useState<{ kullaniciId: string; yayin: SahaAnaSayfaVideo } | null>(null);
@@ -148,12 +182,12 @@ function TmAnaSayfaIcerigi({ user, adSoyad }: Props) {
         if (!Array.isArray(data.yayinlar?.temsilciler) || !Array.isArray(data.yayinlar?.bolgeMudurleri)) {
           throw new Error("Rol yayınları alınamadı.");
         }
-        setTmVeri((onceki) => ({
-          ...data,
-          kullaniciId: user.id,
-          // Zaman ve tür seçimi mevcut yayın kataloğunu değiştirmez.
-          yayinlar: onceki?.kullaniciId === user.id ? onceki.yayinlar : data.yayinlar,
-        }));
+        // UTT/BM gibi güncel yanıtın tamamını uygula; iki rolün listesini de yenile.
+        const guncelVeri: TmVeri = { ...data, kullaniciId: user.id };
+        setTmVeri(guncelVeri);
+        try {
+          sessionStorage.setItem(onbellekAnahtari, JSON.stringify(guncelVeri));
+        } catch {}
       } catch (err) {
         if (!aktif || controller.signal.aborted) return;
         const mesaj = err instanceof Error ? err.message : "Veriler yüklenemedi.";
@@ -165,7 +199,7 @@ function TmAnaSayfaIcerigi({ user, adSoyad }: Props) {
     };
     void veriCek();
     return () => { aktif = false; controller.abort(); };
-  }, [user.id, periyot, aracTuru, hata]);
+  }, [user.id, periyot, aracTuru, hata, onbellekAnahtari]);
 
 
   if (aktifVideo?.kullaniciId === user.id) {
@@ -186,15 +220,22 @@ function TmAnaSayfaIcerigi({ user, adSoyad }: Props) {
   }
 
   const gecerliVeri = tmVeri?.kullaniciId === user.id ? tmVeri : null;
-  const seciliYayinlar = gecerliVeri?.yayinlar[aktifYayinSekmesi] ?? [];
+  // İlk veriden önce boş sayaçları gösterme; önbellek varsa ekranı koru.
+  if (!gecerliVeri) {
+    if (loading) return <TmAnaSayfaIskeleti />;
+    return (
+      <div role="alert" className="mx-auto max-w-6xl px-3 py-4 text-sm text-[var(--tema-yerel-ana-sayfa-yardimci-metin-03)] md:px-6 lg:px-8">
+        {veriHatasi ?? "Ana sayfa verileri yüklenemedi."}
+      </div>
+    );
+  }
+  const seciliYayinlar = gecerliVeri.yayinlar[aktifYayinSekmesi];
   const seciliTurdeYayinVar = seciliYayinlar.some((yayin) => aracTuru === "tumu" || yayin.arac_turu === aracTuru);
-  const yayinDurumu = !gecerliVeri
-    ? loading ? "Yayınlar yükleniyor…" : "Yayınlar alınamadı."
-    : !seciliTurdeYayinVar
-      ? aracTuru === "tumu" ? "Bu rol için gösterilecek yayın bulunmuyor." : "Bu rol için seçili türde yayın bulunmuyor."
-      : null;
+  const yayinDurumu = !seciliTurdeYayinVar
+    ? aracTuru === "tumu" ? "Bu rol için gösterilecek yayın bulunmuyor." : "Bu rol için seçili türde yayın bulunmuyor."
+    : null;
   // Yeni seçim yüklenirken son başarılı değerler ekranda kalır.
-  const istat = gecerliVeri?.istatistikler ?? null;
+  const istat = gecerliVeri.istatistikler;
   const sayi = (deger: number) => deger.toLocaleString("tr-TR");
   const kartlar = [
     { label: "Öğrenmeye Katılım", value: istat ? `${sayi(istat.ogrenmeye_katilan_utt)} / ${sayi(istat.toplam_utt)}` : "—", sub: istat ? `${istat.katilim_yuzdesi === null ? "Katılım oranı hesaplanamıyor" : `%${sayi(istat.katilim_yuzdesi)} katılım`} · Aktif UTT` : "", renk: "var(--tema-yerel-ana-sayfa-islevsel-metin-05)", href: "/raporlar/tm" },
