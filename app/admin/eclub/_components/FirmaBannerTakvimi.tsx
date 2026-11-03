@@ -70,7 +70,7 @@ export default function FirmaBannerTakvimi({ firmaId, firmaAdi, alan }: { firmaI
       {veri && <>
         <p role="status">{veri.uygun ? `${tarih(bas)} – ${tarih(gunEkle(bas, hafta * 7 - 1))} uygun.` : veri.manuel_engel ? "Bu alan mevcut bir bannerla dolu. Banner kaldırılmadan rezervasyon yapılamaz." : "Seçilen hafta dolu veya ardışık iki hafta sınırına takılıyor."}</p>
         {!veri.uygun && veri.onerilen && <button type="button" className={styles.button} disabled={busy} onClick={() => { setBas(veri.onerilen!); setOnay(null); }}>En yakın uygun hafta: {tarih(veri.onerilen)}</button>}
-        {!saltOkunur && <fieldset disabled={busy || loading || !veri.uygun} style={{ border: 0, padding: 0, margin: 0 }}>
+        {!saltOkunur && <fieldset disabled={busy || loading || !veri.uygun} style={{ border: 0, padding: 0, margin: 0, minWidth: 0 }}>
           <div className={styles.formGrid}>{Array.from({ length: hafta }, (_, i) => <label className={styles.field} key={i}>{tarih(gunEkle(bas, i * 7))} haftasının görseli{dosyalar[i] && <span>{dosyalar[i].name}</span>}<input type="file" accept="image/png,image/jpeg,image/webp" onChange={e => setDosyalar(d => ({ ...d, [i]: e.target.files?.[0] as File }))} /></label>)}</div>
           <p>Toplam {hafta * 200} token ilk hafta başladığında birlikte işlenir. Bakiye yetmezse eksik kısım firmanın borcuna yazılır.</p>
           <p>Başlangıca en az 24 saat varsa iptal ücretsizdir. Son 24 saatte iptalde bedelin tamamı kesilir. Yayın başladıktan sonra iade yapılmaz.</p>

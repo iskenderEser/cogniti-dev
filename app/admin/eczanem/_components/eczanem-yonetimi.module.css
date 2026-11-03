@@ -26,3 +26,6 @@
 
 .table .columnSelect { height:25px; min-height:25px; width:max-content; min-width:80px; max-width:260px; padding-top:3px; padding-bottom:3px; }
 .columnMenu { width:max-content; min-width:var(--radix-popover-trigger-width); max-width:min(420px,calc(100vw - 24px)); }
+
+@media(pointer:coarse) { .table .columnSelect { height:auto; min-height:44px; font-size:16px; } }
+@media(max-width:767px) { .searchForm { flex-basis:100%; max-width:none; } }

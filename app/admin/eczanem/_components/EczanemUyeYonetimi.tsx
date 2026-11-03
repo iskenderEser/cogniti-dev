@@ -1,4 +1,5 @@
 "use client";
+import MobilUyumluTablo from "../../_components/MobilUyumluTablo";
 import { useFirmaSaltOkunur } from "@/app/admin/_components/FirmaYonetimYetkisi";
 
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -82,12 +83,12 @@ export default function EczanemUyeYonetimi({ firmaId, firmaAdi }: { firmaId: str
           <button type="submit" className={`${styles.button} ${styles.primary}`} disabled={kaydediyor}><Search />Ara</button>
         </form>
       </div>
-      <div className={styles.tableWrap}><table className={local.table} aria-label="Eczanem üye listesi" aria-busy={yukleniyor}>
+      <div className={styles.tableWrap}><MobilUyumluTablo basliklar={["Üye", "Telefon", "E-posta", "Eczane", "GLN", "İl", "İlçe", "Durum", "Kayıt Tarihi", "İşlem"]} filtreli className={local.table} aria-label="Eczanem üye listesi" aria-busy={yukleniyor}>
         <thead><tr>{ECZANEM_UYE_SUTUNLARI.map(([alan, baslik]) => <th key={alan}><SadeTabloSecimi etiket={`${baslik} filtresi`} aramaEtiketi={`${baslik} ara…`} className={local.columnSelect} menuClassName={local.columnMenu} deger={filtre.sutunlar[alan]} disabled={kaydediyor || yukleniyor} secenekler={[{ deger:"", etiket:baslik }, ...(veri?.secenekler?.[alan] ?? [])]} onDegistir={deger => filtreDegistir({ sutunlar: { ...filtre.sutunlar, [alan]:deger }, sayfa:1 })} /></th>)}<th>İşlem</th></tr></thead>
         <tbody>{yukleniyor ? <tr><td colSpan={10} className={styles.empty}>Üyeler yükleniyor…</td></tr> : hata ? <tr><td colSpan={10} className={styles.empty}>Güncel liste alınamadı.</td></tr> : !veri?.uyeler.length ? <tr><td colSpan={10} className={styles.empty}>Bu kapsamda üye bulunamadı.</td></tr> : veri.uyeler.map(uye => <tr key={`${uye.musteri_id}:${uye.eczane_id}`} data-selected={secili?.musteri_id === uye.musteri_id && secili?.eczane_id === uye.eczane_id}>
           <td className={styles.name}>{uye.ad_soyad}</td><td>{uye.telefon}</td><td>{uye.eposta ?? "—"}</td><td>{uye.eczane_adi}</td><td>{uye.gln}</td><td>{uye.il ?? "—"}</td><td>{uye.ilce ?? "—"}</td><td><span className={`${styles.status} ${uye.aktif_mi ? styles.statusActive : ""}`}>{uye.aktif_mi ? "Aktif" : "Pasif"}</span></td><td>{tarihYaz(uye.created_at)}</td><td><a className={styles.button} href="#admin-eczanem-uye-detay" aria-disabled={kaydediyor} aria-label={`${uye.ad_soyad} · ${uye.eczane_adi} üyelik detayı`} onClick={e => { if (kaydediyor) { e.preventDefault(); return; } setSecili(uye); setOnayAcik(false); }}>Detay</a></td>
         </tr>)}</tbody>
-      </table></div>
+      </MobilUyumluTablo></div>
       {veri && !hata && <div className={`${local.row} ${local.pagination}`}><span>{veri.sayfalama.toplam} üyelik · Sayfa {veri.sayfalama.sayfa} / {veri.sayfalama.toplam_sayfa}</span><div className={styles.actions}><button type="button" className={styles.button} disabled={yukleniyor || kaydediyor || veri.sayfalama.sayfa <= 1} onClick={() => filtreDegistir({ sayfa: veri.sayfalama.sayfa - 1 })}>Önceki</button><button type="button" className={styles.button} disabled={yukleniyor || kaydediyor || veri.sayfalama.sayfa >= veri.sayfalama.toplam_sayfa} onClick={() => filtreDegistir({ sayfa: veri.sayfalama.sayfa + 1 })}>Sonraki</button></div></div>}
     </section>
 

@@ -1,4 +1,5 @@
 "use client";
+import MobilUyumluTablo from "./MobilUyumluTablo";
 import { saltOkunurAlan } from "@/app/admin/_components/FirmaYonetimYetkisi";
 
 import { useState } from "react";
@@ -31,13 +32,13 @@ function UrunTeknikYonetimi(props:Props) {
       {p.urunYukleniyor ? <p role="status" className={styles.empty}>Ürünler yükleniyor…</p>
         : p.urunHatasi ? <div role="alert" className={styles.empty}><p>Ürün listesi alınamadı.</p><button type="button" className={styles.button} onClick={()=>void p.urunleriCek()}><RefreshCw />Tekrar dene</button></div>
         : !p.urunler.length ? <p className={styles.empty}>Bu firmada henüz ürün tanımlanmamış.</p>
-        : <div className={styles.tableWrap}><table className={local.table} aria-label={`${props.firma.firma_adi} ürün listesi`}>
+        : <div className={styles.tableWrap}><MobilUyumluTablo basliklar={["Ürün adı", "Takım", "İşlem"]} className={local.table} aria-label={`${props.firma.firma_adi} ürün listesi`}>
           <thead><tr><th>Ürün adı</th><th>Takım</th><th className={local.actionHeading}>İşlem</th></tr></thead>
           <tbody>{p.urunler.map(u=><tr key={u.urun_id}><td><span className={styles.name}>{u.urun_adi}</span></td><td>{props.organizasyonYukleniyor ? "Yükleniyor…" : props.organizasyonHatasi ? "Takım bilgisi alınamadı" : p.takimAdi(u.takim_id)}</td><td className={local.actionCell}>
             {urunSilOnay===u.urun_id ? <div className={local.confirm} role="group" aria-label={`${u.urun_adi} silme onayı`}><span>{u.urun_adi} silinsin mi?</span><div className={styles.actions}><button type="button" className={`${styles.button} ${styles.danger}`} disabled={islemVar} onClick={async()=>{if(await p.handleUrunSil(u.urun_id))setUrunSilOnay(null);}}>{p.urunSilLoading===u.urun_id ? "Siliniyor…" : "Onayla, sil"}</button><button type="button" className={styles.button} disabled={islemVar} onClick={()=>setUrunSilOnay(null)}>Vazgeç</button></div></div>
             : <button type="button" className={`${styles.button} ${styles.danger}`} aria-label={`${u.urun_adi} ürününü sil`} disabled={islemVar} onClick={()=>setUrunSilOnay(u.urun_id)}><Trash2 />Sil</button>}
           </td></tr>)}</tbody>
-        </table></div>}
+        </MobilUyumluTablo></div>}
       <form className={`${styles.cardBody} ${local.form}`} id="admin-urun-ekleme" onSubmit={p.handleUrunEkle}>
         <h3 className={local.formHeading}>Ürün Ekleme</h3>
         <fieldset className={local.fieldset} disabled={urunFormKapali}>
@@ -54,13 +55,13 @@ function UrunTeknikYonetimi(props:Props) {
       {p.teknikYukleniyor ? <p role="status" className={styles.empty}>Teknikler yükleniyor…</p>
         : p.teknikHatasi ? <div role="alert" className={styles.empty}><p>Teknik listesi alınamadı.</p><button type="button" className={styles.button} onClick={()=>void p.teknikleriCek()}><RefreshCw />Tekrar dene</button></div>
         : !p.teknikler.length ? <p className={styles.empty}>Bu firmada henüz teknik tanımlanmamış.</p>
-        : <div className={styles.tableWrap}><table className={local.table} aria-label={`${props.firma.firma_adi} teknik listesi`}>
+        : <div className={styles.tableWrap}><MobilUyumluTablo basliklar={["Teknik adı", "İşlem"]} className={local.table} aria-label={`${props.firma.firma_adi} teknik listesi`}>
           <thead><tr><th>Teknik adı</th><th className={local.actionHeading}>İşlem</th></tr></thead>
           <tbody>{p.teknikler.map(t=><tr key={t.teknik_id}><td><span className={styles.name}>{t.teknik_adi}</span></td><td className={local.actionCell}>
             {teknikSilOnay===t.teknik_id ? <div className={local.confirm} role="group" aria-label={`${t.teknik_adi} silme onayı`}><span>{t.teknik_adi} silinsin mi?</span><div className={styles.actions}><button type="button" className={`${styles.button} ${styles.danger}`} disabled={islemVar} onClick={async()=>{if(await p.handleTeknikSil(t.teknik_id))setTeknikSilOnay(null);}}>{p.teknikSilLoading===t.teknik_id ? "Siliniyor…" : "Onayla, sil"}</button><button type="button" className={styles.button} disabled={islemVar} onClick={()=>setTeknikSilOnay(null)}>Vazgeç</button></div></div>
             : <button type="button" className={`${styles.button} ${styles.danger}`} aria-label={`${t.teknik_adi} tekniğini sil`} disabled={islemVar} onClick={()=>setTeknikSilOnay(t.teknik_id)}><Trash2 />Sil</button>}
           </td></tr>)}</tbody>
-        </table></div>}
+        </MobilUyumluTablo></div>}
       <form className={`${styles.cardBody} ${local.form}`} id="admin-teknik-ekleme" onSubmit={p.handleTeknikEkle}>
         <h3 className={local.formHeading}>Teknik Ekleme</h3>
         <fieldset className={local.fieldset} disabled={teknikFormKapali}>

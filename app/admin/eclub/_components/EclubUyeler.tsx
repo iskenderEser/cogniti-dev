@@ -1,4 +1,5 @@
 "use client";
+import MobilUyumluTablo from "../../_components/MobilUyumluTablo";
 import { useFirmaSaltOkunur } from "@/app/admin/_components/FirmaYonetimYetkisi";
 
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -86,13 +87,13 @@ export default function EclubUyeler({ firmaId, firmaAdi, hata, basari }: Props) 
           <Button type="submit" disabled={kaydediyor}><Search />Ara</Button>
         </form>
       </div>
-      <div className={styles.tableWrap}><table className={`${local.table} ${local.memberTable}`} aria-label="E-Club üye listesi" aria-busy={yukleniyor}>
+      <div className={styles.tableWrap}><MobilUyumluTablo basliklar={["Takım", "Bölge", "Temsilci", "İl", "İlçe", "GLN", "Eczane", "Unvan", "Ad Soyad", "Telefon", "E-posta", "Durum", "İşlem"]} filtreli className={`${local.table} ${local.memberTable}`} aria-label="E-Club üye listesi" aria-busy={yukleniyor}>
         <thead><tr>{ECLUB_UYE_SUTUNLARI.map(s => <th key={s.anahtar}><div className={local.columnHeading}><SadeTabloSecimi etiket={`${s.baslik} filtresi`} className={local.columnSelect} menuClassName={local.columnMenu} deger={filtre[s.anahtar]} disabled={kaydediyor || yukleniyor} secenekler={[{ deger: "", etiket: s.tumu }, ...(veri?.secenekler?.[s.anahtar] ?? []).map(o => ({ ...o, etiket: s.anahtar === "rol" && o.deger !== "__bos__" ? eclubKisiRolEtiketi(o.deger) : o.etiket }))]} onDegistir={deger => filtreDegistir({ [s.anahtar]: deger, sayfa: 1 })} /></div></th>)}<th>İşlem</th></tr></thead>
         <tbody>{yukleniyor ? <tr><td colSpan={13} className={styles.empty}>Üyeler yükleniyor…</td></tr> : listeHatasi ? <tr><td colSpan={13} className={styles.empty}>Güncel liste alınamadı.</td></tr> : !veri?.uyeler.length ? <tr><td colSpan={13} className={styles.empty}>Bu kapsamda üye bulunamadı.</td></tr> : veri.uyeler.map(u => <tr key={u.uyelik_id} data-selected={secili?.uyelik_id === u.uyelik_id}>
           <td><SorumluHucresi uye={u} alan="takim_adi" /></td><td><SorumluHucresi uye={u} alan="bolge_adi" /></td><td><SorumluHucresi uye={u} alan="temsilci_adi" /></td>
           <td>{u.il || "—"}</td><td>{u.ilce || "—"}</td><td>{u.gln}</td><td>{u.eczane_adi}</td><td>{eclubKisiRolEtiketi(u.rol)}</td><td className={styles.name}>{u.ad} {u.soyad}</td><td>{u.telefon || "—"}</td><td>{u.eposta || "—"}</td><td><span className={`${styles.status} ${u.aktif_mi ? styles.statusActive : ""}`}>{u.aktif_mi ? "Aktif" : "Pasif"}</span></td><td><a className={styles.button} href="#admin-eclub-uye-detay" aria-disabled={kaydediyor} onClick={e => { if (kilit.current) { e.preventDefault(); return; } setSecili(u); setOnay(false); }}>Detay</a></td>
         </tr>)}</tbody>
-      </table></div>
+      </MobilUyumluTablo></div>
       {veri && !listeHatasi && <div className={local.memberPagination}><span>{veri.sayfalama.toplam} üyelik · Sayfa {veri.sayfalama.sayfa} / {veri.sayfalama.toplam_sayfa}</span><div className={styles.actions}><button type="button" className={styles.button} disabled={yukleniyor || kaydediyor || veri.sayfalama.sayfa <= 1} onClick={() => filtreDegistir({ sayfa: veri.sayfalama.sayfa - 1 })}>Önceki</button><button type="button" className={styles.button} disabled={yukleniyor || kaydediyor || veri.sayfalama.sayfa >= veri.sayfalama.toplam_sayfa} onClick={() => filtreDegistir({ sayfa: veri.sayfalama.sayfa + 1 })}>Sonraki</button></div></div>}
     </section>
 

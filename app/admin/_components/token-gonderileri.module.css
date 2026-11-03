@@ -34,3 +34,13 @@
 .message { color:var(--tema-vurgu); }
 @media(max-width:900px) { .daily { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media(max-width:600px) { .controls { width:100%; } .controls .sender { flex:1; min-width:160px; } .detail { padding:14px; } .daily { grid-template-columns:1fr; } .pagination { padding:14px; } }
+
+@media(max-width:767px) {
+  .controls { width:100%; }
+  .pagination { flex-wrap:wrap; gap:12px; }
+  .detailHeading { flex-wrap:wrap; gap:10px; }
+  .detail { padding:12px; }
+}
+@media(pointer:coarse) { .controls .control,.controls .year,.controls .sender { min-height:44px; font-size:16px; } }
+
+@media(pointer:coarse) { .role,.detailButton { min-height:44px; } }

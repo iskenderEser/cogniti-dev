@@ -1,11 +1,17 @@
 "use client";
 
-import { useState } from "react";
-import { Building2, ChevronDown, ChevronRight, Factory, ImageIcon, Plus, Settings2, Store, Ticket, Trash2 } from "lucide-react";
+import { useEffect, useState, useSyncExternalStore } from "react";
+import { Building2, ChevronDown, ChevronRight, Factory, ImageIcon, Plus, Settings2, Store, Ticket, Trash2, X, LogOut } from "lucide-react";
 import type { Firma } from "../_types";
 import type { GlobalBolumId, ModulSekmeId } from "../_constants";
 import { platformBannerFirmasi } from "@/lib/eclub/banner";
 import styles from "../admin.module.css";
+import { Dialog } from "radix-ui";
+
+const mobilSorgu = "(max-width: 767px)";
+const mobilDinle = (bildir: () => void) => { const sorgu = window.matchMedia(mobilSorgu); sorgu.addEventListener("change", bildir); return () => sorgu.removeEventListener("change", bildir); };
+const mobilOku = () => window.matchMedia(mobilSorgu).matches;
+const sunucuMobilOku = () => false;
 
 export type FirmaSayfasi = ModulSekmeId | "abonelik-paketleri" | "firmabilgileri" | "firmaayarlar" | "firma-admin-yonetimi" | "firmaislemler" | "eclub-bannerlar" | "eclub-uyeler" | "eclub-puan-tl" | "eczanem-cek-yonetimi" | "eczanem-bannerlar";
 export const FIRMA_SAYFALARI: Record<FirmaSayfasi, { baslik: string; etiket?: string; grup?: string }> = {
@@ -53,15 +59,31 @@ interface Props {
   onGlobalSec: (bolum: GlobalBolumId | "yeni-firma") => void;
   loading: boolean;
   acik: boolean;
+  onKapat: () => void;
+  onCikis: () => void;
+  hedefGrup?: string | null;
 }
 
 export default function FirmaGezinme(p: Props) {
+  const mobil = useSyncExternalStore(mobilDinle, mobilOku, sunucuMobilOku);
   const [arama, setArama] = useState("");
   const [kapaliFirmaId, setKapaliFirmaId] = useState<string | null>(null);
+  useEffect(() => {
+    if (!p.acik || !p.hedefGrup) return;
+    const id = requestAnimationFrame(() => {
+      const hedef = Array.from(document.querySelectorAll<HTMLElement>('#admin-gezinme [data-nav-grup]')).find(el => el.dataset.navGrup === p.hedefGrup);
+      if (!hedef) return;
+      let ata = hedef.parentElement;
+      while (ata && ata.id !== "admin-gezinme") { if (ata instanceof HTMLDetailsElement) ata.open = true; ata = ata.parentElement; }
+      hedef.focus(); hedef.scrollIntoView({ block: "nearest" });
+    });
+    return () => cancelAnimationFrame(id);
+  }, [p.acik, p.hedefGrup, mobil]);
+
   const musteriFirmalari = p.firmalar.filter(f => !platformBannerFirmasi(f.firma_id));
   const firmalar = musteriFirmalari.filter(f => f.firma_adi.toLocaleLowerCase("tr-TR").includes(arama.toLocaleLowerCase("tr-TR")));
   function sayfaButonu(sayfa: FirmaSayfasi, firma: Firma) {
-    return <button type="button" key={`${firma.firma_id}-${sayfa}`} className={styles.navButton} aria-current={!p.globalBolum && p.seciliFirma?.firma_id === firma.firma_id && p.seciliSayfa === sayfa ? "page" : undefined} onClick={() => p.onSayfaSec(sayfa, firma)}>{FIRMA_SAYFALARI[sayfa].etiket ?? yonetimSayfasiBilgisi(sayfa, platformBannerFirmasi(firma.firma_id)).baslik}</button>;
+    return <button type="button" key={`${firma.firma_id}-${sayfa}`} className={styles.navButton} aria-current={!p.globalBolum && p.seciliFirma?.firma_id === firma.firma_id && p.seciliSayfa === sayfa ? "page" : undefined} onClick={() => { p.onKapat(); p.onSayfaSec(sayfa, firma); }}>{FIRMA_SAYFALARI[sayfa].etiket ?? yonetimSayfasiBilgisi(sayfa, platformBannerFirmasi(firma.firma_id)).baslik}</button>;
   }
   function yonetimSayfalari(firma: Firma) {
     const platformSayfalari = platformBannerFirmasi(firma.firma_id);
@@ -70,17 +92,17 @@ export default function FirmaGezinme(p: Props) {
     return <>
       {buton("firmabilgileri")}
       <details className={styles.group} open={secili && FIRMA_SAYFALARI[p.seciliSayfa].grup === "Abonelik Yönetimi"}>
-        <summary className={styles.groupSummary}>Abonelik Yönetimi</summary>
+        <summary data-nav-grup="Abonelik Yönetimi" className={styles.groupSummary}>Abonelik Yönetimi</summary>
         <div className={styles.leaves}>
           {buton("abonelik-paketleri")}
           {buton("token")}
         </div>
       </details>
-      <details className={styles.group} open={!platformSayfalari || secili}><summary className={styles.groupSummary}>{platformSayfalari ? "Platform Yönetimi" : "Firma Yönetimi"}</summary><div className={styles.leaves}>
+      <details className={styles.group} open={!platformSayfalari || secili}><summary data-nav-grup={platformSayfalari ? "Platform Yönetimi" : "Firma Yönetimi"} className={styles.groupSummary}>{platformSayfalari ? "Platform Yönetimi" : "Firma Yönetimi"}</summary><div className={styles.leaves}>
         {(["organizasyon", "kullanicilar", "urunteknik", "puan-yonetimi", "firmaislemler", "logokimlik", "firmaayarlar"] as const).map(buton)}
         {!p.firmaAdmin && !platformSayfalari && buton("firma-admin-yonetimi")}
       </div></details>
-      <details className={styles.group} open={secili && FIRMA_SAYFALARI[p.seciliSayfa].grup === "Modüller"}><summary className={styles.groupSummary}>Modüller</summary><div className={styles.leaves}>
+      <details className={styles.group} open={secili && FIRMA_SAYFALARI[p.seciliSayfa].grup === "Modüller"}><summary data-nav-grup="Modüller" className={styles.groupSummary}>Modüller</summary><div className={styles.leaves}>
         {(["tclub", "cclub"] as const).map(buton)}
         {buton("firmastore")}
         <details className={styles.group} open={secili && (p.seciliSayfa === "eclub" || p.seciliSayfa === "eclub-bannerlar" || p.seciliSayfa === "eclub-uyeler" || p.seciliSayfa === "eclub-puan-tl")}>
@@ -102,18 +124,20 @@ export default function FirmaGezinme(p: Props) {
       </div></details>
     </>;
   }
-  return <aside className={styles.sidebar} data-open={p.acik} aria-label="Admin gezinmesi" id="admin-gezinme">
+  const gezinme = <aside className={styles.sidebar} data-open={p.acik} aria-label="Admin gezinmesi" id="admin-gezinme">
+    {mobil && <div className={styles.drawerHeader}><Dialog.Title>Yönetim Menüsü</Dialog.Title><Dialog.Close asChild><button type="button" className={styles.button} aria-label="Yönetim menüsünü kapat"><X /></button></Dialog.Close></div>}
+    <div className={styles.navScroll}>
     {!p.firmaAdmin && <div className={styles.navSection}>
-      <p className={styles.navTitle}>Cogniti Yönetimi</p>
+      <p className={styles.navTitle} data-nav-grup="Cogniti Yönetimi" tabIndex={-1}>Cogniti Yönetimi</p>
       <div className={styles.navList}>
-        <button type="button" className={styles.navButton} aria-current={p.globalBolum === "yeni-firma" ? "page" : undefined} onClick={() => p.onGlobalSec("yeni-firma")}><Plus />Yeni Firma Kaydı</button>
+        <button type="button" className={styles.navButton} aria-current={p.globalBolum === "yeni-firma" ? "page" : undefined} onClick={() => { p.onKapat(); p.onGlobalSec("yeni-firma"); }}><Plus />Yeni Firma Kaydı</button>
         <div role="separator" style={{ borderTop: "1px solid var(--tema-kontrol-cizgi)", margin: "6px 0" }} />
-        <button type="button" className={styles.navButton} aria-current={p.globalBolum === "uretim" ? "page" : undefined} onClick={() => p.onGlobalSec("uretim")}><Factory />İçerik Üretimi</button>
-        <button type="button" className={styles.navButton} aria-current={p.globalBolum === "sistem" ? "page" : undefined} onClick={() => p.onGlobalSec("sistem")}><Settings2 />Sistem Ayarları</button>
-        <button type="button" className={styles.navButton} aria-current={p.globalBolum === "hbstore" ? "page" : undefined} onClick={() => p.onGlobalSec("hbstore")}><Store />FirmaStore Çek Yönetimi</button>
-        <button type="button" className={styles.navButton} aria-current={p.globalBolum === "eclubstore" ? "page" : undefined} onClick={() => p.onGlobalSec("eclubstore")}><Ticket />E-Club Çek Teslimatı</button>
-        <button type="button" className={styles.navButton} aria-current={p.globalBolum === "veri-sil" ? "page" : undefined} onClick={() => p.onGlobalSec("veri-sil")}><Trash2 />Yayın Toplu/Tekil Silme</button>
-        <button type="button" className={styles.navButton} aria-current={p.globalBolum === "bannerlar" ? "page" : undefined} onClick={() => p.onGlobalSec("bannerlar")}><ImageIcon />Cogniti Bannerları</button>
+        <button type="button" className={styles.navButton} aria-current={p.globalBolum === "uretim" ? "page" : undefined} onClick={() => { p.onKapat(); p.onGlobalSec("uretim"); }}><Factory />İçerik Üretimi</button>
+        <button type="button" className={styles.navButton} aria-current={p.globalBolum === "sistem" ? "page" : undefined} onClick={() => { p.onKapat(); p.onGlobalSec("sistem"); }}><Settings2 />Sistem Ayarları</button>
+        <button type="button" className={styles.navButton} aria-current={p.globalBolum === "hbstore" ? "page" : undefined} onClick={() => { p.onKapat(); p.onGlobalSec("hbstore"); }}><Store />FirmaStore Çek Yönetimi</button>
+        <button type="button" className={styles.navButton} aria-current={p.globalBolum === "eclubstore" ? "page" : undefined} onClick={() => { p.onKapat(); p.onGlobalSec("eclubstore"); }}><Ticket />E-Club Çek Teslimatı</button>
+        <button type="button" className={styles.navButton} aria-current={p.globalBolum === "veri-sil" ? "page" : undefined} onClick={() => { p.onKapat(); p.onGlobalSec("veri-sil"); }}><Trash2 />Yayın Toplu/Tekil Silme</button>
+        <button type="button" className={styles.navButton} aria-current={p.globalBolum === "bannerlar" ? "page" : undefined} onClick={() => { p.onKapat(); p.onGlobalSec("bannerlar"); }}><ImageIcon />Cogniti Bannerları</button>
       </div>
     </div>
     }
@@ -124,9 +148,9 @@ export default function FirmaGezinme(p: Props) {
     {!p.loading && !firmalar.length && <p className={styles.empty}>Firma bulunamadı.</p>}
     {firmalar.map(f => {
       const secili = p.seciliFirma?.firma_id === f.firma_id;
-      const acik = secili && kapaliFirmaId !== f.firma_id;
+      const acik = secili && (kapaliFirmaId !== f.firma_id || Boolean(p.acik && p.hedefGrup));
       return <div key={f.firma_id}>
-        <button type="button" className={styles.companyButton} aria-expanded={acik} aria-controls={`firma-nav-${f.firma_id}`} onClick={() => {
+        <button type="button" className={styles.companyButton} aria-expanded={acik} aria-controls={`firma-nav-${f.firma_id}`} data-nav-grup={platformBannerFirmasi(f.firma_id) ? "Cogniti Yönetimi" : undefined} onClick={() => {
           if (secili && acik) { setKapaliFirmaId(f.firma_id); return; }
           setKapaliFirmaId(null);
           p.onFirmaSec(f);
@@ -136,5 +160,14 @@ export default function FirmaGezinme(p: Props) {
         </div>}
       </div>;
     })}
+    </div>
+    {mobil && <div className={styles.drawerFooter}><button type="button" onClick={() => { p.onKapat(); p.onCikis(); }}><LogOut size={15} aria-hidden="true" />Çıkış</button></div>}
   </aside>;
+  if (!mobil) return gezinme;
+  return <Dialog.Root open={p.acik} onOpenChange={acik => { if (!acik) p.onKapat(); }}>
+    <Dialog.Portal>
+      <Dialog.Overlay className={styles.drawerOverlay} />
+      <Dialog.Content asChild aria-describedby={undefined} onCloseAutoFocus={event => { event.preventDefault(); document.querySelector<HTMLButtonElement>('[aria-controls="admin-gezinme"]')?.focus(); }}>{gezinme}</Dialog.Content>
+    </Dialog.Portal>
+  </Dialog.Root>;
 }

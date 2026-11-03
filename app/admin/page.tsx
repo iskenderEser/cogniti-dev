@@ -5,7 +5,7 @@ import { Suspense, useState } from "react";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { FIRMA_ADMIN_ROLU } from "@/lib/utils/roller";
 import { useSearchParams } from "next/navigation";
-import { Building2, ChevronRight, Settings2 } from "lucide-react";
+import { Building2, Settings2 } from "lucide-react";
 import styles from "./admin.module.css";
 import FirmaGezinme, { FIRMA_SAYFALARI, yonetimSayfasiBilgisi, type FirmaSayfasi } from "./_components/FirmaGezinme";
 import KullaniciYonetimi from "./_components/KullaniciYonetimi";
@@ -19,6 +19,7 @@ import { useAdminPanel } from "./_hooks/useAdminPanel";
 import { useTakimBolgeForm } from "./_hooks/useTakimBolgeForm";
 
 import AdminUstBar from "./_components/AdminUstBar";
+import AdminBreadcrumb from "./_components/AdminBreadcrumb";
 import TopluTekilSilPaneli from "./_components/TopluTekilSilPaneli";
 import TokenYonetimi from "./_components/TokenYonetimi";
 import TClubYonetimi from "./_components/TClubYonetimi";
@@ -64,6 +65,7 @@ function AdminPanelIcerigi() {
     ? bolumParametresi as GlobalBolumId | "yeni-firma" : null;
   const admin = useAdminPanel(firmaId);
   const [menuAcik, setMenuAcik] = useState(false);
+  const [menuHedefi, setMenuHedefi] = useState<string | null>(null);
 
   const takimBolge = useTakimBolgeForm({
     seciliFirma: admin.seciliFirma,
@@ -106,7 +108,7 @@ function AdminPanelIcerigi() {
         kullaniciAd={`${admin.kullanici.ad} ${admin.kullanici.soyad}`}
         onAnaSayfa={() => konumuGuncelle("kullanicilar", admin.seciliFirma)}
         menuAcik={menuAcik}
-        onMenu={() => setMenuAcik(v => !v)}
+        onMenu={() => { setMenuHedefi(null); setMenuAcik(v => !v); }}
         onCikis={admin.cikisYap} firmaAdmin={firmaAdmin}
       />
 
@@ -115,12 +117,10 @@ function AdminPanelIcerigi() {
       <div className={styles.body}>
         <FirmaGezinme firmalar={admin.firmalar} seciliFirma={f} seciliSayfa={seciliSekme}
           globalBolum={globalBolum} onFirmaSec={handleFirmaSecildi} onSayfaSec={handleSekmeSec}
-          onGlobalSec={handleGlobalSec} firmaAdmin={firmaAdmin} loading={admin.loading} acik={menuAcik} />
+          onGlobalSec={handleGlobalSec} firmaAdmin={firmaAdmin} loading={admin.loading} acik={menuAcik} hedefGrup={menuHedefi} onCikis={admin.cikisYap} onKapat={() => setMenuAcik(false)} />
         <main className={styles.main} id="admin-icerik"><div className={styles.content}>
-          <div className={styles.breadcrumb} aria-label="Sayfa konumu">
-            {(globalBolum || !f) && <><span>Cogniti Yönetimi</span><ChevronRight /></>}
-            {globalBolum ? <span>{globalBaslik}</span> : f ? <><span>{platformSecili ? "Cogniti Yönetimi" : f.firma_adi}</span>{sayfa.grup && <><ChevronRight /><span>{sayfa.grup}</span></>}{(seciliSekme === "eclub-bannerlar" || seciliSekme === "eclub-uyeler" || seciliSekme === "eclub-puan-tl") && <><ChevronRight /><span>E-Club</span></>}{(seciliSekme === "eczanem-cek-yonetimi" || seciliSekme === "eczanem-bannerlar") && <><ChevronRight /><span>Eczanem</span></>}<ChevronRight /><span>{sayfa.baslik}</span></> : <span>Firmalar</span>}
-          </div>
+          <AdminBreadcrumb firma={f} sayfa={seciliSekme} platform={platformSecili} globalBaslik={globalBaslik}
+            onSayfaSec={handleSekmeSec} onGrupAc={grup => { setMenuHedefi(grup); setMenuAcik(true); }} />
           <div className={styles.heading}><div><h1>{globalBaslik ?? (f ? sayfa.baslik : "Firma Yönetimi")}</h1>
             {!globalBolum && f && <p>{f.firma_adi} · {seciliSekme === "kullanicilar" ? "Kullanıcı kayıtları, roller ve erişim yetkileri" : seciliSekme === "firma-admin-yonetimi" ? "Yönetim erişimi ve sorumluluk" : sayfa.baslik}</p>}
             {(globalBolum === "hbstore" || globalBolum === "eclubstore") && <p>Mevcut ortak ekran · Tüm firmalar</p>}

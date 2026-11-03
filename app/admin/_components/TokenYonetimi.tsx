@@ -1,4 +1,5 @@
 "use client";
+import MobilUyumluTablo from "./MobilUyumluTablo";
 import { useFirmaSaltOkunur } from "@/app/admin/_components/FirmaYonetimYetkisi";
 
 import { useAuth } from "@/app/providers/AuthProvider";
@@ -132,7 +133,7 @@ export default function TokenYonetimi({ firmaId, gorunum = "paketler" }: { firma
 
       {paketSayfasi && <section className={styles.card} aria-labelledby="admin-token-yuklemeler-baslik">
         <div className={styles.cardHeader}><div><h2 id="admin-token-yuklemeler-baslik"><ArrowDownToLine />Son Yüklemeler <span className={styles.count}>{data.yuklemeler.length}</span></h2><p>En fazla son 50 yükleme kaydı</p></div></div>
-        {!data.yuklemeler.length ? <p className={styles.empty}>Yükleme kaydı yok.</p> : <div className={styles.tableWrap}><table className={`${local.table} ${local.loads}`} aria-label="Son token yüklemeleri"><thead><tr><th>Tarih</th><th>Yükleme türü</th><th>Açıklama</th><th className={local.number}>Token</th></tr></thead><tbody>{data.yuklemeler.map(y => <tr key={y.yukleme_id}><td className={local.date}>{date(y.created_at)}</td><td>{YUKLEME_ADLARI[y.yukleme_turu] ?? y.yukleme_turu}</td><td>{y.aciklama || "—"}</td><td className={local.number}>{num(y.miktar)}</td></tr>)}</tbody></table></div>}
+        {!data.yuklemeler.length ? <p className={styles.empty}>Yükleme kaydı yok.</p> : <div className={styles.tableWrap}><MobilUyumluTablo basliklar={["Tarih", "Yükleme türü", "Açıklama", "Token"]} className={`${local.table} ${local.loads}`} aria-label="Son token yüklemeleri"><thead><tr><th>Tarih</th><th>Yükleme türü</th><th>Açıklama</th><th className={local.number}>Token</th></tr></thead><tbody>{data.yuklemeler.map(y => <tr key={y.yukleme_id}><td className={local.date}>{date(y.created_at)}</td><td>{YUKLEME_ADLARI[y.yukleme_turu] ?? y.yukleme_turu}</td><td>{y.aciklama || "—"}</td><td className={local.number}>{num(y.miktar)}</td></tr>)}</tbody></MobilUyumluTablo></div>}
       </section>}
 
       {!paketSayfasi && <TokenGonderileri key={firmaId} firmaId={firmaId} yenileme={yenileme} />}

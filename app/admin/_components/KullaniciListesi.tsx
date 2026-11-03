@@ -1,4 +1,5 @@
 "use client";
+import MobilUyumluTablo from "./MobilUyumluTablo";
 import { useFirmaSaltOkunur } from "@/app/admin/_components/FirmaYonetimYetkisi";
 
 import { Users, UserPlus, Upload, Pencil, Trash2, Search } from "lucide-react";
@@ -74,7 +75,7 @@ export default function KullaniciListesi(p: KullaniciListesiProps) {
       <button type="button" className={styles.button} disabled={saltOkunur || islemVar} onClick={p.handleTopluPasif}>Toplu pasife al</button>
       {p.topluSilOnay ? <><span>Seçili kullanıcılar silinsin mi?</span><button type="button" className={`${styles.button} ${styles.danger}`} disabled={saltOkunur || islemVar} onClick={p.handleTopluSil}>Onayla, sil</button><button type="button" className={styles.button} disabled={saltOkunur || islemVar} onClick={() => p.setTopluSilOnay(false)}>Vazgeç</button></> : <button type="button" className={`${styles.button} ${styles.danger}`} disabled={saltOkunur || islemVar} onClick={() => p.setTopluSilOnay(true)}>Toplu sil</button>}
     </div>}
-    <div className={styles.tableWrap}><table className={styles.table}>
+    <div className={styles.tableWrap}><MobilUyumluTablo basliklar={["Ad Soyad", "Rol", "E-posta", "Telefon", "Takım", "Bölge", "Durum", "İşlemler"]} filtreli className={styles.table}>
       <thead><tr>{KULLANICI_SUTUNLARI.map(([sutun, baslik]) => <th key={sutun}><SadeTabloSecimi etiket={`${baslik} filtresi`} aramaEtiketi={`${baslik} ara…`} className={styles.userColumnSelect} menuClassName={styles.userColumnMenu} deger={p.sutunFiltreleri[sutun]} disabled={islemVar} secenekler={[{ deger:"", etiket:baslik }, ...p.sutunSecenekleri[sutun]]} onDegistir={deger => p.handleSutunFiltrele(sutun, deger)} /></th>)}<th>İşlemler</th></tr></thead>
       <tbody>{!p.filtrelenmisKullanicilar.length ? <tr><td colSpan={8} className={styles.empty}>Arama ve filtrelerle eşleşen kullanıcı bulunamadı.</td></tr> : p.filtrelenmisKullanicilar.map(k => {
         const adSoyad = `${k.ad} ${k.soyad}`;
@@ -92,6 +93,6 @@ export default function KullaniciListesi(p: KullaniciListesiProps) {
           </div></td>
         </tr>;
       })}</tbody>
-    </table></div>
+    </MobilUyumluTablo></div>
   </section>;
 }
