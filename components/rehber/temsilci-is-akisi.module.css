@@ -60,3 +60,12 @@
 
 .haritaSecimi { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-content: start; align-items: start; gap: 20px; padding: 20px; overflow-y: auto; min-height: 0; }
 @media (max-width: 767px) { .haritaSecimi { grid-template-columns: minmax(0, 1fr); padding: 14px; } }
+
+/* TİAK1: telefonlarda ayrı görsel, tablet ve masaüstünde mevcut SVG. */
+.onizleme picture, .gorselTuvali picture { display: contents; }
+@media (max-width: 600px) {
+  .mobilHarita { display: block; height: auto; min-height: 100%; padding: 0; }
+  .mobilHarita img { width: 100%; height: auto; max-height: none; }
+  .mobilHarita.buyuk { width: 1024px; min-width: 100%; }
+  .mobilHarita.buyuk img { width: 1024px; max-width: none; }
+}

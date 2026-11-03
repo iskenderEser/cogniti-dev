@@ -69,12 +69,16 @@ const HARITALAR = {
 export default function TemsilciIsAkisiKarti({ kompakt = false, tetikleyici, harita = "genel" }: { kompakt?: boolean; tetikleyici?: ReactNode; harita?: keyof typeof HARITALAR }) {
   const { baslik, gorsel, aciklama, genislik, yukseklik, alt } = HARITALAR[harita];
   const [buyuk, setBuyuk] = useState(false);
+  const mobilGorsel = harita === "genel" ? "/rehber/temsilci/merkez-yayinlari-mobil.webp" : undefined;
 
   return <Dialog.Root onOpenChange={() => setBuyuk(false)}>
     {tetikleyici ? <Dialog.Trigger asChild>{tetikleyici}</Dialog.Trigger> : <section className={`${styles.kart} ${kompakt ? styles.kompakt : ""}`} aria-label={baslik}>
       <Dialog.Trigger asChild>
         <button type="button" className={styles.onizleme} aria-label={`${baslik} iş akışını aç`}>
-          <Image src={gorsel} alt={alt} width={genislik} height={yukseklik} unoptimized />
+          <picture>
+            {mobilGorsel && <source media="(max-width: 600px)" srcSet={mobilGorsel} width={1024} height={1536} />}
+            <Image src={gorsel} alt={alt} width={genislik} height={yukseklik} unoptimized />
+          </picture>
           <span className={styles.buyutIsareti}><Maximize2 size={16} aria-hidden="true" /></span>
         </button>
       </Dialog.Trigger>
@@ -97,8 +101,11 @@ export default function TemsilciIsAkisiKarti({ kompakt = false, tetikleyici, har
           </button>
         </div>
         <div className={styles.gorselAlani} tabIndex={0} role="region" aria-label="İş akışı şeması; büyütüldüğünde kaydırılabilir">
-          <div className={`${styles.gorselTuvali} ${buyuk ? styles.buyuk : ""}`}>
+          <div className={`${styles.gorselTuvali} ${mobilGorsel ? styles.mobilHarita : ""} ${buyuk ? styles.buyuk : ""}`}>
+            <picture>
+            {mobilGorsel && <source media="(max-width: 600px)" srcSet={mobilGorsel} width={1024} height={1536} />}
             <Image src={gorsel} alt={alt} width={genislik} height={yukseklik} unoptimized draggable={false} />
+          </picture>
           </div>
         </div>
       </Dialog.Content>
