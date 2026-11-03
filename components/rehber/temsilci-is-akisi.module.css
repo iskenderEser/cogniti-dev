@@ -1,0 +1,62 @@
+.kart { display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--tema-cizgi); border-radius: 18px; background: var(--tema-yuzey); color: var(--tema-metin); }
+.onizleme { position: relative; display: block; flex-shrink: 0; overflow: hidden; width: 100%; height: 300px; padding: 0; background: #fdfdfc; border: 0; border-bottom: 1px solid var(--tema-cizgi); cursor: zoom-in; }
+.onizleme img { position: absolute; inset: 0; box-sizing: border-box; width: 100%; height: 100%; max-width: 100%; padding: 14px; object-fit: contain; }
+.buyutIsareti { position: absolute; right: 12px; bottom: 12px; display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid var(--tema-cizgi); border-radius: 8px; background: var(--tema-yuzey); color: var(--tema-eylem); }
+.kartMetni { padding: 20px; }
+.etiket { color: var(--tema-eylem); font-size: 12px; font-weight: 800; }
+.kartMetni h2 { margin: 6px 0; color: var(--tema-baslik); font-size: 19px; font-weight: 800; }
+.kartMetni p { margin: 0; font-size: 14px; }
+.eylemler { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; margin-top: 16px; }
+.anaButon, .rehberLinki, .araclar button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; font-size: 13px; font-weight: 800; cursor: pointer; }
+.anaButon { padding: 9px 13px; border: 1px solid var(--tema-eylem); border-radius: 9px; background: var(--tema-eylem); color: var(--tema-ters-metin, #fff); }
+.rehberLinki { color: var(--tema-eylem); text-decoration: none; }
+.kompakt { flex-direction: row; align-items: stretch; margin-bottom: 20px; }
+.kompakt .onizleme { flex: 0 0 116px; width: 116px; height: auto; min-height: 148px; border-bottom: 0; border-right: 1px solid var(--tema-cizgi); }
+.kompakt .onizleme img { width: 85px; height: auto; }
+.kompakt .kartMetni { padding: 14px 18px; }
+.kompakt .kartMetni h2 { font-size: 16px; }
+.kompakt .eylemler { margin-top: 10px; }
+.perde { position: fixed; inset: 0; z-index: 100; background: rgb(0 0 0 / 55%); }
+.pencere { position: fixed; inset: 16px; z-index: 101; display: flex; flex-direction: column; min-width: 0; overflow: hidden; border: 1px solid var(--tema-cizgi); border-radius: 18px; background: var(--tema-yuzey); color: var(--tema-metin); box-shadow: 0 20px 80px rgb(0 0 0 / 25%); }
+.pencereBasligi { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 16px; }
+.pencereBasligi h2 { margin: 0; font-size: 16px; font-weight: 800; color: var(--tema-baslik); }
+.pencereBasligi p { margin: 4px 0 0; font-size: 13px; }
+.simgeButon { display: grid; place-items: center; flex-shrink: 0; width: 40px; height: 40px; border: 1px solid var(--tema-cizgi); border-radius: 10px; background: var(--tema-yuzey); color: var(--tema-metin); cursor: pointer; }
+.araclar { display: flex; justify-content: flex-end; align-items: center; flex-wrap: wrap; gap: 8px; padding: 0 20px 12px; border-bottom: 1px solid var(--tema-cizgi); }
+.araclar button { min-height: 36px; padding: 6px 10px; border: 1px solid var(--tema-cizgi); border-radius: 8px; background: var(--tema-yuzey); color: var(--tema-metin); }
+.araclar button[aria-pressed="true"] { border-color: var(--tema-eylem); color: var(--tema-eylem); }
+.araclar > span { font-size: 12px; margin-left: 8px; }
+.gorselAlani { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; background: #fdfdfc; }
+.gorselTuvali { display: flex; align-items: center; justify-content: center; height: 100%; min-height: 0; padding: 16px; }
+.gorselTuvali img { display: block; width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; }
+.buyuk { width: max-content; min-width: 100%; height: auto; min-height: 100%; }
+.buyuk img { width: 1536px; height: auto; max-width: none; max-height: none; flex-shrink: 0; }
+.kart button:focus-visible, .kart a:focus-visible, .pencere button:focus-visible, .gorselAlani:focus-visible { outline: 2px solid var(--tema-eylem); outline-offset: 3px; }
+@media (max-width: 600px) {
+  .pencere { inset: 0; border-radius: 0; }
+  .pencereBasligi { padding: 6px 12px; }
+  .araclar { padding: 0 14px 10px; }
+  .araclar > span { width: 100%; margin-left: 0; }
+  .kompakt .onizleme { flex-basis: 82px; width: 82px; padding: 8px; }
+  .kompakt .onizleme img { width: 66px; }
+  .kompakt .kartMetni { padding: 12px; }
+  .kompakt .kartMetni h2 { font-size: 15px; }
+  .kompakt .kartMetni p { font-size: 12px; }
+  .kompakt .eylemler { gap: 10px; }
+}
+
+.haritaButonu { position: relative; display: grid; place-items: center; width: 100%; height: 100%; padding: 0; border: 0; border-radius: 7.14px 0 0 7.14px; background: var(--tema-harita-zemini); color: var(--tema-eylem-metin); cursor: pointer; text-decoration: none; }
+.haritaButonu:hover { filter: brightness(.9); }
+.haritaButonu:focus-visible { outline: 2px solid var(--tema-eylem); outline-offset: 2px; }
+.tumAkislar { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 36px; padding: 6px 10px; margin-right: auto; border: 1px solid var(--tema-cizgi); border-radius: 8px; color: var(--tema-eylem); font-size: 13px; font-weight: 800; white-space: nowrap; text-decoration: none; }
+.tumAkislar:focus-visible { outline: 2px solid var(--tema-eylem); outline-offset: 3px; }
+@media (max-width: 639px) {
+  :global(body:has([data-viva-panel])) .haritaButonu { border-radius: 7.14px; }
+}
+
+.haritaButonu::after { content: attr(data-ipucu); position: absolute; right: calc(100% + 8px); top: 50%; transform: translateY(-50%); padding: 6px 10px; border: 1px solid var(--tema-cizgi); border-radius: 7px; background: var(--tema-yuzey); color: var(--tema-baslik); font-family: inherit; font-size: 12px; font-weight: 700; line-height: 18px; white-space: nowrap; pointer-events: none; opacity: 0; visibility: hidden; }
+.haritaButonu:hover::after, .haritaButonu:focus-visible::after { opacity: 1; visibility: visible; }
+
+
+.haritaSecimi { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-content: start; align-items: start; gap: 20px; padding: 20px; overflow-y: auto; min-height: 0; }
+@media (max-width: 767px) { .haritaSecimi { grid-template-columns: minmax(0, 1fr); padding: 14px; } }

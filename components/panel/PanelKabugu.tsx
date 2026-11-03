@@ -4,6 +4,7 @@ import { useMemo, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import EczaneKullanimKilavuzu from "@/components/rehber/EczaneKullanimKilavuzu";
 import UreticiKullanimKilavuzu from "@/components/rehber/UreticiKullanimKilavuzu";
+import TemsilciIsAkisiHaritasi from "@/components/rehber/TemsilciIsAkisiHaritasi";
 import { yoneticiKilavuzunuSec } from "@/lib/rehber/yoneticiKilavuzu";
 import { tmKilavuzunuSec } from "@/lib/rehber/tmKilavuzu";
 import { bmKilavuzunuSec } from "@/lib/rehber/bmKilavuzu";
@@ -70,7 +71,7 @@ export default function PanelKabugu({ children, navbar, baglam, gruplar, badge, 
         {kilavuzVar && <div aria-hidden="true" className="hidden w-[20px] shrink-0 sm:block" />}
       </div>
       {URETICI_ROLLER.includes(baglam.rolKucu) && <UreticiKullanimKilavuzu />}
-      {TUKETICI_ROLLER.includes(baglam.rolKucu) && <UreticiKullanimKilavuzu key={baglam.rolKucu} kilavuz={uttKilavuzu} rolBasligi={baglam.rolKucu === "kd_utt" ? "Kıdemli Ürün Tanıtım Temsilcisi" : "Ürün Tanıtım Temsilcisi"} />}
+      {TUKETICI_ROLLER.includes(baglam.rolKucu) && <UreticiKullanimKilavuzu key={baglam.rolKucu} kilavuz={uttKilavuzu} akisHaritasi={<TemsilciIsAkisiHaritasi />} rolBasligi={baglam.rolKucu === "kd_utt" ? "Kıdemli Ürün Tanıtım Temsilcisi" : "Ürün Tanıtım Temsilcisi"} />}
       {baglam.rolKucu === "bm" && <UreticiKullanimKilavuzu key="bm" kilavuz={bmKilavuzu} rolBasligi="Bölge Müdürü" />}
       {baglam.rolKucu === "tm" && <UreticiKullanimKilavuzu key="tm" kilavuz={tmKilavuzu} rolBasligi="Takım Müdürü" />}
       {YONETICI_ROLLER.includes(baglam.rolKucu) && <UreticiKullanimKilavuzu key="yonetici" kilavuz={yoneticiKilavuzu} rolBasligi="Yönetici Roller" />}

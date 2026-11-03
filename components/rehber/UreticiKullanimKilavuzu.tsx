@@ -19,7 +19,7 @@ function MetinParcasi({ parca }: { parca: KilavuzParcasi }) {
   return parca.tip === "baslik" ? <h4>{parca.metin}</h4> : <p><VurguluMetin metin={parca.metin} /></p>;
 }
 
-export default function UreticiKullanimKilavuzu({ kilavuz = URETICI_KILAVUZU, rolBasligi = "Üretici Roller", ekKontroller }: { kilavuz?: typeof URETICI_KILAVUZU; rolBasligi?: string; ekKontroller?: ReactNode }) {
+export default function UreticiKullanimKilavuzu({ kilavuz = URETICI_KILAVUZU, rolBasligi = "Üretici Roller", ekKontroller, akisHaritasi }: { kilavuz?: typeof URETICI_KILAVUZU; rolBasligi?: string; ekKontroller?: ReactNode; akisHaritasi?: ReactNode }) {
   const [yerTutucu, setYerTutucu] = useState<HTMLSpanElement | null>(null);
   const [acik, setAcik] = useState(false);
   const [seciliBolum, setSeciliBolum] = useState<number | null>(null);
@@ -54,11 +54,12 @@ export default function UreticiKullanimKilavuzu({ kilavuz = URETICI_KILAVUZU, ro
   return <>
     <span hidden ref={setYerTutucu} />
     {yerTutucu && createPortal(<>
-      <aside className={`${styles.panel} ${acik ? styles.acik : ""}`} aria-label="Cogniti Kullanım Kılavuzu">
-        <button ref={kulakcik} type="button" className={styles.kulakcik} aria-expanded={acik} aria-controls={panelId} title="Kullanım Kılavuzu"
+      <aside data-harita={Boolean(akisHaritasi) || undefined} className={`${styles.panel} ${acik ? styles.acik : ""}`} aria-label="Cogniti Kullanım Kılavuzu">
+        <button ref={kulakcik} type="button" className={styles.kulakcik} aria-expanded={acik} aria-controls={panelId} data-ipucu="Kılavuz"
           aria-label={acik ? "Kullanım kılavuzunu kapat" : "Kullanım kılavuzunu aç"} onClick={() => { if (acik) paneliKapat(); else kilavuzuAc(); }}>
           <BookOpen size={14.45} strokeWidth={1} absoluteStrokeWidth aria-hidden="true" />
         </button>
+        {akisHaritasi && <div className={styles.haritaKulakcigi}>{akisHaritasi}</div>}
         <div id={panelId} className={styles.icerik} inert={!acik} aria-hidden={!acik}>
           <header className={styles.baslik}>
             <div><h2>Cogniti Kullanım Kılavuzu</h2><p>{rolBasligi}</p></div>

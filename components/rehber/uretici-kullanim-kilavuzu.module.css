@@ -78,3 +78,16 @@
   :global(body:has([data-viva-panel])) .panel.acik .kulakcik { display: none; }
   :global(body:has([data-viva-panel])) .kapat { width: 44px; height: 44px; }
 }
+
+.haritaKulakcigi { position: absolute; right: 100%; top: 96px; width: 22.253px; height: 26.18px; }
+@media (max-width: 639px) {
+  :global(body:has([data-viva-panel])) .panel[data-harita]:not(.acik) { height: 60.18px; }
+  :global(body:has([data-viva-panel])) .panel:not(.acik) .haritaKulakcigi { right: 0; top: 34px; }
+  :global(body:has([data-viva-panel])) .panel.acik .haritaKulakcigi { display: none; }
+}
+
+.kulakcik::after { content: attr(data-ipucu); position: absolute; right: calc(100% + 8px); top: 50%; transform: translateY(-50%); padding: 6px 10px; border: 1px solid var(--tema-cizgi); border-radius: 7px; background: var(--tema-yuzey); color: var(--tema-baslik); font-family: inherit; font-size: 12px; font-weight: 700; line-height: 18px; white-space: nowrap; pointer-events: none; opacity: 0; visibility: hidden; }
+.kulakcik:hover::after, .kulakcik:focus-visible::after { opacity: 1; visibility: visible; }
+@media (max-width: 639px) {
+  :global(body:has([data-viva-panel])) .panel:not(.acik) .kulakcik { position: relative; }
+}

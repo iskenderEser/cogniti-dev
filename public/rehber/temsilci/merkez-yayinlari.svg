@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1536" height="1120" viewBox="0 0 1536 1120">
+<defs>
+ <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#fcfdff"/><stop offset=".5" stop-color="#f6faff"/><stop offset="1" stop-color="#fff"/></linearGradient>
+ <linearGradient id="card" x2="0.3" y2="1"><stop stop-color="#fff"/><stop offset="1" stop-color="#f0f7ff"/></linearGradient>
+ <linearGradient id="decision" x2="0" y2="1"><stop stop-color="#f5faff"/><stop offset="1" stop-color="#deefff"/></linearGradient>
+ <linearGradient id="warm" x2="0" y2="1"><stop stop-color="#fffdfb"/><stop offset="1" stop-color="#fff1eb"/></linearGradient>
+ <filter id="shadow" x="-20%" y="-30%" width="140%" height="170%"><feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#a0bce0" flood-opacity=".10"/></filter>
+
+<marker id="blue" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L7 4.5 L1 8" fill="none" stroke="#6b9fe0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="green" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L7 4.5 L1 8" fill="none" stroke="#4c9c16" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="red" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L7 4.5 L1 8" fill="none" stroke="#ff6548" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs><rect width="1536" height="1120" fill="url(#bg)"/>
+<path d="M-40 35 C270 40 430 220 780 220 S1260 40 1580 115" fill="none" stroke="#b8d9ff" stroke-width="1" opacity=".6"/>
+<path d="M-40 95 C280 90 460 295 820 280 S1260 130 1580 215" fill="none" stroke="#b8d9ff" stroke-width="1" opacity=".6"/>
+<path d="M-30 710 C290 755 380 950 770 940 S1220 805 1570 820" fill="none" stroke="#b8d9ff" stroke-width="1" opacity=".6"/>
+<path d="M-30 935 C230 920 300 825 600 875 S1200 1000 1570 880" fill="none" stroke="#b8d9ff" stroke-width="1" opacity=".6"/>
+<path d="M768 102 V142" fill="none" stroke="#6b9fe0" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#blue)"/>
+<path d="M768 266 V311" fill="none" stroke="#6b9fe0" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#blue)"/>
+<path d="M609 349 H424 Q410 349 410 363 V432" fill="none" stroke="#4c9c16" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#green)"/>
+<path d="M927 349 H1137 Q1152 349 1152 364 V432" fill="none" stroke="#6b9fe0" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#blue)"/>
+<path d="M252 470 H184 Q170 470 170 456 V220 Q170 206 184 206 H566" fill="none" stroke="#4c9c16" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#green)"/>
+<path d="M410 508 V590" fill="none" stroke="#ff6548" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#red)"/>
+<path d="M994 470 H796 Q782 470 782 484 V795" fill="none" stroke="#ff6548" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#red)"/>
+<path d="M1152 508 V590" fill="none" stroke="#6b9fe0" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#blue)"/>
+<path d="M410 746 V832 Q410 846 424 846 H556" fill="none" stroke="#ff6548" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#red)"/>
+<path d="M1152 746 V832 Q1152 846 1138 846 H980" fill="none" stroke="#6b9fe0" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#blue)"/>
+<path d="M768 888 V936" fill="none" stroke="#6b9fe0" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#blue)"/>
+<rect x="568" y="30" width="400" height="72" rx="22" fill="url(#card)" stroke="#8dbaff" stroke-width="1" filter="url(#shadow)"/>
+<g transform="translate(602,41)"><rect width="50" height="50" rx="16" fill="#e7f2ff"/><g transform="translate(9,9)" fill="none" stroke="#0086ff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+<path d="M12 27h8M16 17v10"/>
+<path d="M9 22a11 11 0 1 1 14 0"/>
+<path d="M12 18a6 6 0 1 1 8 0"/>
+<path d="M16 12h.01"/>
+</g></g>
+<text x="675" y="67" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="600" fill="#091947" text-anchor="start" dominant-baseline="middle">Merkez yayın paylaşır</text>
+<rect x="568" y="146" width="400" height="120" rx="22" fill="url(#card)" stroke="#8dbaff" stroke-width="1" filter="url(#shadow)"/>
+<g transform="translate(602,165)"><rect width="50" height="50" rx="16" fill="#e7f2ff"/><g transform="translate(9,9)" fill="none" stroke="#0086ff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+<path d="M16 6C11 2 5 2 2 4v23c5-3 10-3 14 0 4-3 9-3 14 0V4c-3-2-9-2-14 2v21"/>
+</g></g>
+<text x="692" y="176" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="600" fill="#091947" text-anchor="start" dominant-baseline="middle">İzle / dinle / oku</text>
+<text x="692" y="213" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="500" fill="#cb440c" text-anchor="start" dominant-baseline="middle">İleri sararsan: Puan kaybedersin</text>
+<text x="692" y="240" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="500" fill="#cb440c" text-anchor="start" dominant-baseline="middle">Soru hakkın kapanır</text>
+<rect x="609" y="315" width="318" height="68" rx="34" fill="url(#decision)" stroke="#8dbaff" stroke-width="1" filter="url(#shadow)"/>
+<g transform="translate(625,324)"><rect width="50" height="50" rx="16" fill="#e7f2ff"/><g transform="translate(9,9)" fill="none" stroke="#0086ff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+<path d="M8 3v26l21-13Z"/>
+</g></g>
+<text x="688" y="349" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="600" fill="#091947" text-anchor="start" dominant-baseline="middle">Yayını tamamladın mı?</text>
+<text x="514" y="326" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="500" fill="#455b7b" text-anchor="middle" dominant-baseline="middle">Hayır</text>
+<text x="1040" y="326" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="500" fill="#455b7b" text-anchor="middle" dominant-baseline="middle">Evet</text>
+<text x="1040" y="375" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="600" fill="#408a13" text-anchor="middle" dominant-baseline="middle">Puan kazanırsın*</text>
+<rect x="252" y="436" width="338" height="72" rx="22" fill="url(#decision)" stroke="#8dbaff" stroke-width="1" filter="url(#shadow)"/>
+<g transform="translate(271,447)"><rect width="50" height="50" rx="16" fill="#e7f2ff"/><g transform="translate(9,9)" fill="none" stroke="#0086ff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+<path d="M27 11A12 12 0 0 0 6 7L2 11"/>
+<path d="M2 4v7h7"/>
+<path d="M5 21a12 12 0 0 0 21 4l4-4"/>
+<path d="M23 21h7v7"/>
+</g></g>
+<text x="333" y="473" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="600" fill="#091947" text-anchor="start" dominant-baseline="middle">Nasıl devam edeceksin?</text>
+<text x="199" y="233" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="500" fill="#455b7b" text-anchor="start" dominant-baseline="middle">Durdurup devam edersen</text>
+<text x="434" y="553" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="500" fill="#455b7b" text-anchor="start" dominant-baseline="middle">Sayfadan çıkıp girersen</text>
+<rect x="994" y="436" width="338" height="72" rx="22" fill="url(#decision)" stroke="#8dbaff" stroke-width="1" filter="url(#shadow)"/>
+<g transform="translate(1015,447)"><rect width="50" height="50" rx="16" fill="#e7f2ff"/><g transform="translate(9,9)" fill="none" stroke="#0086ff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="16" cy="16" r="14"/>
+<path d="M12 11a4.2 4.2 0 1 1 7 3c-3 2-3 3-3 6"/>
+<path d="M16 25h.01"/>
+</g></g>
+<text x="1078" y="473" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="600" fill="#091947" text-anchor="start" dominant-baseline="middle">Soru hakkın var mı?</text>
+<text x="893" y="449" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="500" fill="#455b7b" text-anchor="middle" dominant-baseline="middle">Hayır</text>
+<text x="1182" y="553" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="500" fill="#455b7b" text-anchor="start" dominant-baseline="middle">Evet</text>
+<rect x="224" y="594" width="372" height="152" rx="22" fill="url(#warm)" stroke="#ffa17c" stroke-width="1" filter="url(#shadow)"/>
+<g transform="translate(249,615)"><rect width="50" height="50" rx="16" fill="#fff0e7"/><g transform="translate(9,9)" fill="none" stroke="#eb5d21" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+<path d="M6 5h20v22H6Z"/>
+</g></g>
+<text x="321" y="628" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="600" fill="#091947" text-anchor="start" dominant-baseline="middle">Yayını tamamlarsan</text>
+<text x="321" y="668" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="600" fill="#408a13" text-anchor="start" dominant-baseline="middle">puan kazanırsın*</text>
+<text x="321" y="709" font-family="Arial, Helvetica, sans-serif" font-size="23" font-weight="500" fill="#cb440c" text-anchor="start" dominant-baseline="middle">ama sorular görünmez</text>
+<rect x="971" y="594" width="386" height="152" rx="22" fill="url(#card)" stroke="#8dbaff" stroke-width="1" filter="url(#shadow)"/>
+<g transform="translate(995,612)"><rect width="50" height="50" rx="16" fill="#e7f2ff"/><g transform="translate(9,9)" fill="none" stroke="#0086ff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+<path d="M3 8l3 3 5-6M16 8h14M3 24l3 3 5-6M16 24h14M16 16h14"/>
+</g></g>
+<text x="1064" y="628" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="600" fill="#091947" text-anchor="start" dominant-baseline="middle">Soruları cevapla</text>
+<text x="1000" y="676" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="500" fill="#408a13" text-anchor="start" dominant-baseline="middle">Doğru cevap: Puan kazanırsın</text>
+<text x="1000" y="715" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="500" fill="#cb440c" text-anchor="start" dominant-baseline="middle">Yanlış cevap: Puan kaybedersin</text>
+<rect x="560" y="804" width="416" height="84" rx="22" fill="url(#card)" stroke="#8dbaff" stroke-width="1" filter="url(#shadow)"/>
+<g transform="translate(580,821)"><rect width="50" height="50" rx="16" fill="#e7f2ff"/><g transform="translate(9,9)" fill="none" stroke="#0086ff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+<path d="M3 21h5v9H3ZM13 13h5v17h-5ZM23 3h5v27h-5Z"/>
+</g></g>
+<text x="648" y="848" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="600" fill="#091947" text-anchor="start" dominant-baseline="middle">Sonucunu ve puanlarını gör</text>
+<rect x="529" y="940" width="478" height="78" rx="22" fill="url(#card)" stroke="#8dbaff" stroke-width="1" filter="url(#shadow)"/>
+<g transform="translate(551,954)"><rect width="50" height="50" rx="16" fill="#e7f2ff"/><g transform="translate(9,9)" fill="none" stroke="#0086ff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+<path d="M2 26l9-11 7 6L30 5"/>
+</g></g>
+<text x="617" y="979" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="600" fill="#091947" text-anchor="start" dominant-baseline="middle">Gelişimini raporlardan takip et</text>
+<path d="M65 1054 V1101" stroke="#5e9cff" stroke-width="2"/>
+<text x="85" y="1065" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="500" fill="#455b7b" text-anchor="start" dominant-baseline="middle">* Tamamlama puanını ilgili yayın döneminde bir kez kazanırsın; tekrar izlemek tek başına yeni tamamlama puanı kazandırmaz.</text>
+<text x="85" y="1093" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="500" fill="#455b7b" text-anchor="start" dominant-baseline="middle">Puan kazanımı ve kaybı, hafta içi 07.00–20.30 arasında başlattığın öğrenmelerde uygulanır.</text>
+</svg>
