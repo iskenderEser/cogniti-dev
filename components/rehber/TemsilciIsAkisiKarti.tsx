@@ -69,7 +69,11 @@ const HARITALAR = {
 export default function TemsilciIsAkisiKarti({ kompakt = false, tetikleyici, harita = "genel" }: { kompakt?: boolean; tetikleyici?: ReactNode; harita?: keyof typeof HARITALAR }) {
   const { baslik, gorsel, aciklama, genislik, yukseklik, alt } = HARITALAR[harita];
   const [buyuk, setBuyuk] = useState(false);
-  const mobilGorsel = harita === "genel" ? "/rehber/temsilci/merkez-yayinlari-mobil.webp" : undefined;
+  const mobilGorsel = harita === "genel"
+    ? "/rehber/temsilci/merkez-yayinlari-mobil.webp"
+    : harita === "extra"
+      ? "/rehber/temsilci/extra-yayin-tamamlama-mobil.webp"
+      : undefined;
 
   return <Dialog.Root onOpenChange={() => setBuyuk(false)}>
     {tetikleyici ? <Dialog.Trigger asChild>{tetikleyici}</Dialog.Trigger> : <section className={`${styles.kart} ${kompakt ? styles.kompakt : ""}`} aria-label={baslik}>
