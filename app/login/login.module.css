@@ -93,7 +93,7 @@
 }
 
 .welcomeActions { display: flex; align-items: center; gap: 28px; flex-shrink: 0; }
-.pricingNav { color: var(--tema-baslik); font-size: 13px; font-weight: 800; text-decoration: none; }
-.pricingNav:hover, .pricingNav[aria-current="page"] { color: var(--tema-kontrol-eylem); }
+.pricingNav { color: var(--tema-hakkinda-vurgu); font-size: 11px; font-weight: 500; line-height: 1.5; letter-spacing: 1.8px; text-transform: uppercase; text-decoration: none; }
+.pricingNav:hover { text-decoration: underline; text-underline-offset: 4px; }
 @media (max-width: 560px) { .welcomeActions { gap: 12px; } .pricingNav { font-size: 12px; } }
 @media (max-width: 350px) { .welcomePage .header { padding-inline: 12px; gap: 6px; } .welcomePage .brand img { width: 125px; } .welcomeActions { gap: 8px; } .welcomePage .action { padding-inline: 10px; } }

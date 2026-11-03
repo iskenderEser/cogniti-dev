@@ -82,6 +82,9 @@ export default function GirisAltBilgileri({ gorunum }: { gorunum?: ReactNode }) 
             <a href="mailto:info@mill.tr" className={BAGLANTI_SINIFI}>
               info@mill.tr
             </a>
+            <a href="tel:+905324333145" className={`${BAGLANTI_SINIFI} whitespace-nowrap`}>
+              0532 433 3145
+            </a>
           </address>
       </section>
 

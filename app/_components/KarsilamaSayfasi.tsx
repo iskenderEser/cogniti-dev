@@ -20,7 +20,7 @@ export default function KarsilamaSayfasi({ fiyatlar = false }: { fiyatlar?: bool
           <CognitiLogo width={220} height={73} />
         </Link>
         <nav className={styles.welcomeActions} aria-label="Karşılama gezinmesi">
-          <Link className={styles.pricingNav} href="/welcome/fiyatlar" aria-current={fiyatlar ? "page" : undefined}>Paketler ve Fiyatları</Link>
+          <Link className={styles.pricingNav} href={fiyatlar ? "/welcome" : "/welcome/fiyatlar"}>{fiyatlar ? "GİRİŞ SAYFASI" : "PAKETLER VE FİYATLAR"}</Link>
           <Link className={styles.action} href="/login">
             <LogIn size={16} aria-hidden="true" />Giriş Yap
           </Link>

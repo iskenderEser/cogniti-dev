@@ -73,7 +73,7 @@ export default function CognitiHakkinda() {
           <p className={styles.bolumEtiketi}>COGNITI NEDİR?</p>
           <h1 className={`${styles.bolumBasligi} ${styles.anaBaslik}`}>
             İlaç ve eczacılık sektörüne odaklı{" "}
-            <span className={styles.anaBaslikAltSatir}>e-öğrenme ve e-tanıtım platformudur</span>
+            <span className={styles.anaBaslikAltSatir}>e-öğrenme ve e-tanıtım platformu</span>
           </h1>
           <p className={styles.vurguCumlesi}>Her tanıtım, karşılıklı öğrenmedir.</p>
           <div className={styles.yaklasimlar}>
@@ -84,17 +84,17 @@ export default function CognitiHakkinda() {
               </div>
               <div className={styles.yaklasim}>
                 <MessageSquareText className={styles.yaklasimIkon} aria-hidden="true" />
-                <p>Bölge Müdürleri ikili çalışmalar sonrasında gözlemledikleri gelişim alanları için <strong className={styles.celAdi}>Cogniti E-Learning (CEL)</strong> üzerinden öneriler iletirken, sonuçlarını ölçebilirsiniz</p>
+                <p>Bölge Müdürleri ikili çalışmalar sonrası temsilcilere <strong className={styles.celAdi}>Cogniti E-Learning (CEL)</strong> üzerinden öneriler iletebilir, gelişim için öğrenmenin sonuçlarını ölçebilirsiniz</p>
               </div>
             </div>
             <div className={styles.yaklasimBlok}>
               <div className={styles.yaklasim}>
                 <UsersRound className={styles.yaklasimIkon} aria-hidden="true" />
-                <p>Saha ekibiniz, <strong>Cogniti E-Promotion (CEP)</strong> uygulamasıyla eczacı ve eczane teknisyenlerinden oluşan takımlar kurup, yapacakları e-tanıtımlarla şirket içinde diğer takımlarla rekabet ederken, eczanelerin tanıtıma olan ilgisini analiz edebilirsiniz.</p>
+                <p>Saha ekibiniz, <strong>Cogniti E-Promotion (CEP)</strong> uygulamasıyla eczacılara ve eczane teknisyenlerine e-tanıtımlar yaparken, her tanıtımın etkisini ölçebilirsiniz</p>
               </div>
               <div className={styles.yaklasim}>
                 <BadgeCheck className={styles.yaklasimIkon} aria-hidden="true" />
-                <p>Eczaneler saha ekibiniz sayesinde <strong>Cogniti E-Promotion (CEP)</strong> ile danışanlara ürünleriniz hakkında kanıta dayalı bilgiye iletip, marka sadakatini güçlendirirken, ürünlerinizin eczanelerden alınmasını teşvik edebilirsiniz.</p>
+                <p>Eczaneler <strong>Cogniti E-Promotion (CEP)</strong> ile danışanlara ürünleriniz hakkında kanıta dayalı bilgiler iletirken, ürünlerinizin eczanelerden alınmasını teşvik edebilirsiniz.</p>
               </div>
             </div>
           </div>
@@ -105,9 +105,9 @@ export default function CognitiHakkinda() {
 
 
         <section className={styles.bolum} aria-labelledby={`${id}-araclar`}>
-          <p className={styles.bolumEtiketi}>Tanıtım ve Öğrenme Araçları</p>
+          <p className={styles.bolumEtiketi}>Cogniti Tanıtım ve Öğrenme Araçları</p>
           <h2 className={styles.bolumBasligi} id={`${id}-araclar`}>İzleyin, dinleyin, okuyun</h2>
-          <p className={styles.bolumAciklamasi}>
+          <p className={`${styles.bolumAciklamasi} ${styles.vurguCumlesi}`}>
             Herkes farklı öğrenir. Farklı tanıtım ve öğrenme araçları sayesinde verimlilik artar.
           </p>
           <div className={styles.araclar}>
@@ -134,9 +134,9 @@ export default function CognitiHakkinda() {
         </section>
 
         <section className={styles.bolum} aria-labelledby={`${id}-ogrenme`}>
-          <p className={styles.bolumEtiketi}>Tanıtım ve Öğrenme Süreci</p>
+          <p className={styles.bolumEtiketi}>Cogniti Tanıtım ve Öğrenme Süreci</p>
           <h2 className={styles.bolumBasligi} id={`${id}-ogrenme`}>Tamamlayın, cevaplayın, kazanın</h2>
-          <p className={styles.bolumAciklamasi}>Öğrenme motive edildiğinde, tanıtım kalıcı olur.</p>
+          <p className={`${styles.bolumAciklamasi} ${styles.vurguCumlesi}`}>Öğrenme motive edildiğinde, tanıtım kalıcı olur.</p>
           <ol className={styles.adimlar} aria-label="Öğrenme adımları">
             {ADIMLAR.map((adim, index) => (
               <li className={styles.adim} key={adim.baslik}>
