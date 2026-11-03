@@ -69,11 +69,16 @@ const HARITALAR = {
 export default function TemsilciIsAkisiKarti({ kompakt = false, tetikleyici, harita = "genel" }: { kompakt?: boolean; tetikleyici?: ReactNode; harita?: keyof typeof HARITALAR }) {
   const { baslik, gorsel, aciklama, genislik, yukseklik, alt } = HARITALAR[harita];
   const [buyuk, setBuyuk] = useState(false);
-  const mobilGorsel = harita === "genel"
-    ? "/rehber/temsilci/merkez-yayinlari-mobil.webp"
-    : harita === "extra"
-      ? "/rehber/temsilci/extra-yayin-tamamlama-mobil.webp"
-      : undefined;
+  const mobilGorseller: Record<keyof typeof HARITALAR, string> = {
+    genel: "/rehber/temsilci/merkez-yayinlari-mobil.webp",
+    extra: "/rehber/temsilci/extra-yayin-tamamlama-mobil.webp",
+    oneri: "/rehber/temsilci/onerilen-yayinlar-mobil.webp",
+    eclubTakim: "/rehber/temsilci/eclub-takim-yayin-gonderme-mobil.webp",
+    eclubPuan: "/rehber/temsilci/eclub-puan-kazanma-mobil.webp",
+    eczanemGonderim: "/rehber/temsilci/eczanem-yayin-gonderme-mobil.webp",
+    eczanemMutabakat: "/rehber/temsilci/eczanem-indirim-mutabakati-mobil.webp",
+  };
+  const mobilGorsel = mobilGorseller[harita];
 
   return <Dialog.Root onOpenChange={() => setBuyuk(false)}>
     {tetikleyici ? <Dialog.Trigger asChild>{tetikleyici}</Dialog.Trigger> : <section className={`${styles.kart} ${kompakt ? styles.kompakt : ""}`} aria-label={baslik}>
