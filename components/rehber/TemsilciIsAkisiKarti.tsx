@@ -8,6 +8,30 @@ import { Map, Maximize2, X, ZoomIn, ZoomOut } from "lucide-react";
 import styles from "./temsilci-is-akisi.module.css";
 
 const HARITALAR = {
+  bmGenel: {
+    baslik: "Genel Yayın Tamamlama Yol Haritası",
+    gorsel: "/rehber/bm/genel-yayin-tamamlama.svg?v=2",
+    aciklama: "Yayınları tamamla, soruları cevapla ve puan kazan.",
+    genislik: 1536,
+    yukseklik: 1520,
+    alt: "Bölge Müdürünün C-Club yayınlarını tamamlama, soru cevaplama ve puan kazanma yol haritası",
+  },
+  bmExtra: {
+    baslik: "Extra Yayın Tamamlama Yol Haritası",
+    gorsel: "/rehber/bm/extra-yayin-tamamlama.svg?v=2",
+    aciklama: "Tamamladığın yayınları yeniden izle, Extra puan kazan.",
+    genislik: 1536,
+    yukseklik: 1480,
+    alt: "Bölge Müdürünün yayın tekrarı, ileri sarma ve Extra puan kazanma yol haritası",
+  },
+  bmOneri: {
+    baslik: "Temsilciye Yayın Önerme ve Takip Etme Yol Haritası",
+    gorsel: "/rehber/bm/temsilciye-yayin-onerme.svg",
+    aciklama: "Temsilciyi ve yayınları seç, önerilerini gönder ve tamamlanma durumlarını takip et.",
+    genislik: 1536,
+    yukseklik: 1120,
+    alt: "Bölge Müdürünün temsilci ve yayın seçimi, öneri tarihleri, gönderim uygunluğu ve öneri takibi yol haritası",
+  },
   eczanemGonderim: {
     baslik: "Eczanem Yayın Gönderme Yol Haritası",
     gorsel: "/rehber/temsilci/eczanem-yayin-gonderme.svg",
@@ -70,6 +94,9 @@ export default function TemsilciIsAkisiKarti({ kompakt = false, tetikleyici, har
   const { baslik, gorsel, aciklama, genislik, yukseklik, alt } = HARITALAR[harita];
   const [buyuk, setBuyuk] = useState(false);
   const mobilGorseller: Record<keyof typeof HARITALAR, string> = {
+    bmGenel: "/rehber/bm/genel-yayin-tamamlama-mobil.webp",
+    bmExtra: "/rehber/bm/extra-yayin-tamamlama-mobil.webp",
+    bmOneri: "/rehber/bm/temsilciye-yayin-onerme-mobil.webp",
     genel: "/rehber/temsilci/merkez-yayinlari-mobil.webp",
     extra: "/rehber/temsilci/extra-yayin-tamamlama-mobil.webp",
     oneri: "/rehber/temsilci/onerilen-yayinlar-mobil.webp",
@@ -104,7 +131,7 @@ export default function TemsilciIsAkisiKarti({ kompakt = false, tetikleyici, har
           <Dialog.Close asChild><button type="button" className={styles.simgeButon} aria-label="İş akışını kapat"><X size={22} aria-hidden="true" /></button></Dialog.Close>
         </header>
         <div className={styles.araclar} aria-label="Görsel boyutu">
-          {tetikleyici && <Dialog.Close asChild><Link href="/rehber/temsilci" className={styles.tumAkislar} aria-label="Tüm Haritalar"><Map size={18} aria-hidden="true" /><span>Tüm Haritalar</span></Link></Dialog.Close>}
+          {(tetikleyici || harita.startsWith("bm")) && <Dialog.Close asChild><Link href={harita.startsWith("bm") ? "/rehber/bm" : "/rehber/temsilci"} className={styles.tumAkislar} aria-label="Tüm Haritalar"><Map size={18} aria-hidden="true" /><span>Tüm Haritalar</span></Link></Dialog.Close>}
           <button type="button" aria-label={buyuk ? "Görseli küçült" : "Görseli büyüt"} title={buyuk ? "Küçült" : "Büyüt"} aria-pressed={buyuk} onClick={() => setBuyuk(!buyuk)}>
             {buyuk ? <ZoomOut size={18} aria-hidden="true" /> : <ZoomIn size={18} aria-hidden="true" />}
           </button>
