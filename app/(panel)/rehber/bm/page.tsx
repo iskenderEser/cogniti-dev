@@ -21,6 +21,10 @@ export default async function BmRehberiSayfasi() {
       <TemsilciIsAkisiKarti harita="bmOneri" />
       <TemsilciIsAkisiKarti harita="bmGenel" />
       <TemsilciIsAkisiKarti harita="bmExtra" />
+      <TemsilciIsAkisiKarti harita="bmChallengeGonder" />
+      <TemsilciIsAkisiKarti harita="bmChallengeTamamla" />
+      <TemsilciIsAkisiKarti harita="bmCekOnay" />
+      <TemsilciIsAkisiKarti harita="bmMutabakat" />
     </div>
   </div>;
 }

@@ -8,6 +8,102 @@ import { Map, Maximize2, X, ZoomIn, ZoomOut } from "lucide-react";
 import styles from "./temsilci-is-akisi.module.css";
 
 const HARITALAR = {
+  ureticiYayinFull: {
+    baslik: "Yayına Açma Yol Haritası", gorsel: "/rehber/uretici/yayina-acma-full.svg",
+    aciklama: "Yayın ayarlarını tamamlayın ve yayına açın.", genislik: 1800, yukseklik: 1620,
+    alt: "Üretici rolüne uygun yayın ayarları ve yayına açma akışı",
+  },
+  ureticiYayinEgitim: {
+    baslik: "Yayına Açma Yol Haritası", gorsel: "/rehber/uretici/yayina-acma-egitim.svg",
+    aciklama: "Yayın ayarlarını tamamlayın ve yayına açın.", genislik: 1800, yukseklik: 1620,
+    alt: "Üretici rolüne uygun yayın ayarları ve yayına açma akışı",
+  },
+  ureticiYayinIk: {
+    baslik: "Yayına Açma Yol Haritası", gorsel: "/rehber/uretici/yayina-acma-ik.svg",
+    aciklama: "Yayın ayarlarını tamamlayın ve yayına açın.", genislik: 1800, yukseklik: 1620,
+    alt: "Üretici rolüne uygun yayın ayarları ve yayına açma akışı",
+  },
+
+  ureticiPm: {
+    baslik: "Yayın Oluşturma Yol Haritası",
+    gorsel: "/rehber/uretici/yayin-olusturma-pm.svg",
+    aciklama: "Yayın konusunu ve üretim yöntemini belirleyin, içeriğinizi yayına hazır hâle getirin.",
+    genislik: 1800,
+    yukseklik: 1590,
+    alt: "Üretici rolüne uygun konu seçimi, yayın oluşturma, inceleme ve onay akışı",
+  },
+  ureticiMedikal: {
+    baslik: "Yayın Oluşturma Yol Haritası",
+    gorsel: "/rehber/uretici/yayin-olusturma-medikal.svg",
+    aciklama: "Yayın konusunu ve üretim yöntemini belirleyin, içeriğinizi yayına hazır hâle getirin.",
+    genislik: 1800,
+    yukseklik: 1590,
+    alt: "Üretici rolüne uygun konu seçimi, yayın oluşturma, inceleme ve onay akışı",
+  },
+  ureticiEgitim: {
+    baslik: "Yayın Oluşturma Yol Haritası",
+    gorsel: "/rehber/uretici/yayin-olusturma-egitim.svg",
+    aciklama: "Yayın konusunu ve üretim yöntemini belirleyin, içeriğinizi yayına hazır hâle getirin.",
+    genislik: 1800,
+    yukseklik: 1590,
+    alt: "Üretici rolüne uygun konu seçimi, yayın oluşturma, inceleme ve onay akışı",
+  },
+  ureticiIk: {
+    baslik: "Yayın Oluşturma Yol Haritası",
+    gorsel: "/rehber/uretici/yayin-olusturma-ik.svg",
+    aciklama: "Yayın konusunu ve üretim yöntemini belirleyin, içeriğinizi yayına hazır hâle getirin.",
+    genislik: 1800,
+    yukseklik: 1590,
+    alt: "Üretici rolüne uygun konu seçimi, yayın oluşturma, inceleme ve onay akışı",
+  },
+  tmMutabakat: {
+    baslik: "Eczanem İndirim Mutabakatı Yol Haritası",
+    gorsel: "/rehber/tm/eczanem-mutabakat-son-karar.svg",
+    aciklama: "Mutabakatları inceleyin, onay, bekletme veya ret kararınızı verin ve sonucu takip edin.",
+    genislik: 1536,
+    yukseklik: 1250,
+    alt: "Tanıtım Müdürünün Eczanem mutabakatlarını inceleme, nihai onay, bekletme veya ret kararı verme akışı",
+  },
+  tmCekOnay: {
+    baslik: "E-Club Çek Taleplerini İnceleme ve Onaylama Yol Haritası",
+    gorsel: "/rehber/tm/eclub-cek-son-onay.svg",
+    aciklama: "Çek taleplerini inceleyin, son onayınızı verin ve teslimatı takip edin.",
+    genislik: 1536,
+    yukseklik: 1570,
+    alt: "Tanıtım Müdürünün E-Club çek taleplerine ulaşma, inceleme, son onay ve teslimat takibi akışı",
+  },
+  bmMutabakat: {
+    baslik: "Eczanem İndirim Mutabakatı Yol Haritası",
+    gorsel: "/rehber/bm/eczanem-indirim-mutabakati.svg",
+    aciklama: "İndirim mutabakatlarını inceleyin, kararınızı verin ve TM onayına iletin.",
+    genislik: 1536,
+    yukseklik: 1560,
+    alt: "Bölge Müdürünün Eczanem mutabakatını inceleme, onaylama, bekletme veya reddetme ve TM onayına iletme akışı",
+  },
+  bmCekOnay: {
+    baslik: "E-Club Çek Taleplerini İnceleme ve Onaylama Yol Haritası",
+    gorsel: "/rehber/bm/eclub-cek-talebi-onaylama.svg",
+    aciklama: "Hediye Takip alanına ulaş, çek taleplerini incele ve TM onayına ilet.",
+    genislik: 1536,
+    yukseklik: 1680,
+    alt: "Bölge Müdürünün E-Club Takımım üzerinden çek takibine ulaşma, talebi inceleme ve TM onayına iletme akışı",
+  },
+  bmChallengeGonder: {
+    baslik: "Challenge Gönderme ve Takip Etme Yol Haritası",
+    gorsel: "/rehber/bm/challenge-gonderme-takip.svg",
+    aciklama: "Challenge gönder, gönderimlerini ve kazanımlarını takip et.",
+    genislik: 1536,
+    yukseklik: 1490,
+    alt: "Bölge Müdürünün challenge gönderme, uygunluk ve puan takibi akışı",
+  },
+  bmChallengeTamamla: {
+    baslik: "Gelen Challenge Tamamlama Yol Haritası",
+    gorsel: "/rehber/bm/gelen-challenge-tamamlama.svg",
+    aciklama: "Gelen challenge yayınlarını tamamla, soruları cevapla ve puan kazan.",
+    genislik: 1536,
+    yukseklik: 1440,
+    alt: "Bölge Müdürünün gelen challenge tamamlama ve soru cevaplama akışı",
+  },
   bmGenel: {
     baslik: "Genel Yayın Tamamlama Yol Haritası",
     gorsel: "/rehber/bm/genel-yayin-tamamlama.svg?v=2",
@@ -94,6 +190,20 @@ export default function TemsilciIsAkisiKarti({ kompakt = false, tetikleyici, har
   const { baslik, gorsel, aciklama, genislik, yukseklik, alt } = HARITALAR[harita];
   const [buyuk, setBuyuk] = useState(false);
   const mobilGorseller: Record<keyof typeof HARITALAR, string> = {
+    ureticiYayinFull: "/rehber/uretici/yayina-acma-full-mobil.webp",
+    ureticiYayinEgitim: "/rehber/uretici/yayina-acma-egitim-mobil.webp",
+    ureticiYayinIk: "/rehber/uretici/yayina-acma-ik-mobil.webp",
+
+    ureticiPm: "/rehber/uretici/yayin-olusturma-pm-mobil.webp",
+    ureticiMedikal: "/rehber/uretici/yayin-olusturma-medikal-mobil.webp",
+    ureticiEgitim: "/rehber/uretici/yayin-olusturma-egitim-mobil.webp",
+    ureticiIk: "/rehber/uretici/yayin-olusturma-ik-mobil.webp",
+    tmMutabakat: "/rehber/tm/eczanem-mutabakat-son-karar-mobil.webp",
+    tmCekOnay: "/rehber/tm/eclub-cek-son-onay-mobil.webp",
+    bmMutabakat: "/rehber/bm/eczanem-indirim-mutabakati-mobil.webp",
+    bmCekOnay: "/rehber/bm/eclub-cek-talebi-onaylama-mobil.webp",
+    bmChallengeGonder: "/rehber/bm/challenge-gonderme-takip-mobil.webp",
+    bmChallengeTamamla: "/rehber/bm/gelen-challenge-tamamlama-mobil.webp",
     bmGenel: "/rehber/bm/genel-yayin-tamamlama-mobil.webp",
     bmExtra: "/rehber/bm/extra-yayin-tamamlama-mobil.webp",
     bmOneri: "/rehber/bm/temsilciye-yayin-onerme-mobil.webp",
@@ -106,13 +216,14 @@ export default function TemsilciIsAkisiKarti({ kompakt = false, tetikleyici, har
     eczanemMutabakat: "/rehber/temsilci/eczanem-indirim-mutabakati-mobil.webp",
   };
   const mobilGorsel = mobilGorseller[harita];
+  const mobilYukseklik = harita === "ureticiYayinEgitim" ? 1286 : harita === "ureticiYayinIk" ? 1032 : harita === "ureticiYayinFull" ? 1536 : harita.startsWith("uretici") ? 1940 : 1536;
 
   return <Dialog.Root onOpenChange={() => setBuyuk(false)}>
     {tetikleyici ? <Dialog.Trigger asChild>{tetikleyici}</Dialog.Trigger> : <section className={`${styles.kart} ${kompakt ? styles.kompakt : ""}`} aria-label={baslik}>
       <Dialog.Trigger asChild>
         <button type="button" className={styles.onizleme} aria-label={`${baslik} iş akışını aç`}>
           <picture>
-            {mobilGorsel && <source media="(max-width: 600px)" srcSet={mobilGorsel} width={1024} height={1536} />}
+            {mobilGorsel && <source media="(max-width: 600px)" srcSet={mobilGorsel} width={1024} height={mobilYukseklik} />}
             <Image src={gorsel} alt={alt} width={genislik} height={yukseklik} unoptimized />
           </picture>
           <span className={styles.buyutIsareti}><Maximize2 size={16} aria-hidden="true" /></span>
@@ -131,7 +242,7 @@ export default function TemsilciIsAkisiKarti({ kompakt = false, tetikleyici, har
           <Dialog.Close asChild><button type="button" className={styles.simgeButon} aria-label="İş akışını kapat"><X size={22} aria-hidden="true" /></button></Dialog.Close>
         </header>
         <div className={styles.araclar} aria-label="Görsel boyutu">
-          {(tetikleyici || harita.startsWith("bm")) && <Dialog.Close asChild><Link href={harita.startsWith("bm") ? "/rehber/bm" : "/rehber/temsilci"} className={styles.tumAkislar} aria-label="Tüm Haritalar"><Map size={18} aria-hidden="true" /><span>Tüm Haritalar</span></Link></Dialog.Close>}
+          {(tetikleyici || harita.startsWith("bm") || harita.startsWith("tm") || harita.startsWith("uretici")) && <Dialog.Close asChild><Link href={harita.startsWith("uretici") ? "/rehber/uretici" : harita.startsWith("tm") ? "/rehber/tm" : harita.startsWith("bm") ? "/rehber/bm" : "/rehber/temsilci"} className={styles.tumAkislar} aria-label="Tüm Haritalar"><Map size={18} aria-hidden="true" /><span>Tüm Haritalar</span></Link></Dialog.Close>}
           <button type="button" aria-label={buyuk ? "Görseli küçült" : "Görseli büyüt"} title={buyuk ? "Küçült" : "Büyüt"} aria-pressed={buyuk} onClick={() => setBuyuk(!buyuk)}>
             {buyuk ? <ZoomOut size={18} aria-hidden="true" /> : <ZoomIn size={18} aria-hidden="true" />}
           </button>
@@ -139,7 +250,7 @@ export default function TemsilciIsAkisiKarti({ kompakt = false, tetikleyici, har
         <div className={styles.gorselAlani} tabIndex={0} role="region" aria-label="İş akışı şeması; büyütüldüğünde kaydırılabilir">
           <div className={`${styles.gorselTuvali} ${mobilGorsel ? styles.mobilHarita : ""} ${buyuk ? styles.buyuk : ""}`}>
             <picture>
-            {mobilGorsel && <source media="(max-width: 600px)" srcSet={mobilGorsel} width={1024} height={1536} />}
+            {mobilGorsel && <source media="(max-width: 600px)" srcSet={mobilGorsel} width={1024} height={mobilYukseklik} />}
             <Image src={gorsel} alt={alt} width={genislik} height={yukseklik} unoptimized draggable={false} />
           </picture>
           </div>

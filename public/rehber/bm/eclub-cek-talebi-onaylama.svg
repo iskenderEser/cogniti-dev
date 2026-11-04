@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1536" height="1680" viewBox="0 0 1536 1680" role="img" aria-labelledby="title desc">
+<title id="title">E-Club Çek Taleplerini İnceleme ve Onaylama Yol Haritası</title>
+<desc id="desc">E-Club Takımım üzerinden Hediye Takip ve Çek Takibi alanını bulma, talepleri inceleme ve TM onayına gönderme akışı.</desc>
+<defs>
+ <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#fcfdff"/><stop offset=".5" stop-color="#f6faff"/><stop offset="1" stop-color="#fff"/></linearGradient>
+ <linearGradient id="card" x2="0.3" y2="1"><stop stop-color="#fff"/><stop offset="1" stop-color="#f0f7ff"/></linearGradient>
+ <linearGradient id="decision" x2="0" y2="1"><stop stop-color="#f5faff"/><stop offset="1" stop-color="#deefff"/></linearGradient>
+ <linearGradient id="warm" x2="0" y2="1"><stop stop-color="#fffdfb"/><stop offset="1" stop-color="#fff1eb"/></linearGradient>
+ <filter id="shadow" x="-20%" y="-30%" width="140%" height="170%"><feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#a0bce0" flood-opacity=".10"/></filter>
+
+<marker id="blue" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L7 4.5 L1 8" fill="none" stroke="#6b9fe0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="green" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L7 4.5 L1 8" fill="none" stroke="#4c9c16" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="red" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L7 4.5 L1 8" fill="none" stroke="#ff6548" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+<rect width="1536" height="1680" fill="url(#bg)"/>
+<path d="M-40 25 C270 -10 430 195 780 175 S1260 25 1580 105" fill="none" stroke="#b8d9ff" stroke-width="1" opacity=".6"/>
+<path d="M-40 100 C270 65 430 270 780 250 S1260 100 1580 180" fill="none" stroke="#b8d9ff" stroke-width="1" opacity=".6"/>
+<path d="M-40 650 C270 615 430 820 780 800 S1260 650 1580 730" fill="none" stroke="#b8d9ff" stroke-width="1" opacity=".6"/>
+<path d="M-40 1100 C270 1065 430 1270 780 1250 S1260 1100 1580 1180" fill="none" stroke="#b8d9ff" stroke-width="1" opacity=".6"/>
+<path d="M-40 1480 C270 1445 430 1650 780 1630 S1260 1480 1580 1560" fill="none" stroke="#b8d9ff" stroke-width="1" opacity=".6"/>
+<path d="M768 119 V171" fill="none" stroke="#6b9fe0" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#blue)"/>
+<path d="M768 259 V311" fill="none" stroke="#6b9fe0" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#blue)"/>
+<path d="M768 399 V451" fill="none" stroke="#6b9fe0" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#blue)"/>
+<path d="M768 589 V641" fill="none" stroke="#6b9fe0" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#blue)"/>
+<path d="M768 799 V861" fill="none" stroke="#6b9fe0" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#blue)"/>
+<path d="M508 903 H264 Q250 903 250 917 V981" fill="none" stroke="#ff6548" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#red)"/>
+<path d="M70 1027 H49 Q35 1027 35 1013 V734 Q35 720 49 720 H424" fill="none" stroke="#4c9c16" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#green)"/>
+<path d="M768 945 V997" fill="none" stroke="#4c9c16" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#green)"/>
+<path d="M768 1085 V1137" fill="none" stroke="#4c9c16" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#green)"/>
+<path d="M768 1225 V1277" fill="none" stroke="#6b9fe0" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#blue)"/>
+<path d="M768 1411 V1463" fill="none" stroke="#6b9fe0" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#blue)"/>
+<rect x="428" y="35" width="680" height="84" rx="22" fill="url(#card)" stroke="#8dbaff" stroke-width="1" filter="url(#shadow)"/>
+<g transform="translate(451,52)"><rect width="50" height="50" rx="16" fill="#e7f2ff"/><g transform="translate(9,9)" fill="none" stroke="#0086ff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="6"/><path d="M1 29v-4a11 11 0 0 1 22 0v4M23 4a6 6 0 0 1 0 12M26 19a9 9 0 0 1 5 8"/></g></g>
+<text x="523" y="77" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="600" fill="#091947" text-anchor="start" dominant-baseline="middle">E-Club menüsünden E-Club Takımım’ı aç</text>
+<rect x="488" y="175" width="560" height="84" rx="22" fill="url(#card)" stroke="#8dbaff" stroke-width="1" filter="url(#shadow)"/>
+<g transform="translate(511,192)"><rect width="50" height="50" rx="16" fill="#e7f2ff"/><g transform="translate(9,9)" fill="none" stroke="#0086ff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h26v7H3ZM6 19v12h20V19M16 12v19M16 12C4 12 4 1 10 3c4 1 6 9 6 9Zm0 0C28 12 28 1 22 3c-4 1-6 9-6 9Z"/></g></g>
+<text x="583" y="217" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="600" fill="#091947" text-anchor="start" dominant-baseline="middle">Hediye Takip butonuna bas</text>
+<rect x="488" y="315" width="560" height="84" rx="22" fill="url(#card)" stroke="#8dbaff" stroke-width="1" filter="url(#shadow)"/>
+<g transform="translate(511,332)"><rect width="50" height="50" rx="16" fill="#e7f2ff"/><g transform="translate(9,9)" fill="none" stroke="#0086ff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h26v7H3ZM6 19v12h20V19M16 12v19M16 12C4 12 4 1 10 3c4 1 6 9 6 9Zm0 0C28 12 28 1 22 3c-4 1-6 9-6 9Z"/></g></g>
+<text x="583" y="357" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="600" fill="#091947" text-anchor="start" dominant-baseline="middle">Çek Takibi’ni seç</text>
+<rect x="428" y="455" width="680" height="134" rx="22" fill="url(#card)" stroke="#8dbaff" stroke-width="1" filter="url(#shadow)"/>
+<g transform="translate(451,475)"><rect width="50" height="50" rx="16" fill="#e7f2ff"/><g transform="translate(9,9)" fill="none" stroke="#0086ff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4h28L20 16v12l-8-4v-8Z"/></g></g>
+<text x="523" y="500" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="600" fill="#091947" text-anchor="start" dominant-baseline="middle">BM onayını bekleyen talepleri listele</text>
+<path d="M453 537 V563" stroke="#8dbaff" stroke-width="2"/>
+<text x="468" y="550" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="500" fill="#455b7b" text-anchor="start" dominant-baseline="middle">Durum: BM Onayında · İstersen UTT’ye göre filtrele.</text>
+<rect x="428" y="645" width="680" height="154" rx="22" fill="url(#card)" stroke="#8dbaff" stroke-width="1" filter="url(#shadow)"/>
+<g transform="translate(451,665)"><rect width="50" height="50" rx="16" fill="#e7f2ff"/><g transform="translate(9,9)" fill="none" stroke="#0086ff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M16 6C11 2 5 2 2 4v23c5-3 10-3 14 0 4-3 9-3 14 0V4c-3-2-9-2-14 2v21"/></g></g>
+<text x="523" y="690" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="600" fill="#091947" text-anchor="start" dominant-baseline="middle">Talep bilgilerini incele</text>
+<path d="M453 728 V785" stroke="#8dbaff" stroke-width="2"/>
+<text x="468" y="741" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="500" fill="#455b7b" text-anchor="start" dominant-baseline="middle">UTT, eczane, ürün, yayın ve satış koşulu;</text>
+<text x="468" y="772" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="500" fill="#455b7b" text-anchor="start" dominant-baseline="middle">kullanılan puan ve çek tutarı.</text>
+<rect x="508" y="865" width="520" height="80" rx="22" fill="url(#decision)" stroke="#8dbaff" stroke-width="1" filter="url(#shadow)"/>
+<g transform="translate(530,880)"><rect width="50" height="50" rx="16" fill="#e7f2ff"/><g transform="translate(9,9)" fill="none" stroke="#0086ff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="16" cy="16" r="14"/><path d="M12 11a4.2 4.2 0 1 1 7 3c-3 2-3 3-3 6M16 25h.01"/></g></g>
+<text x="602" y="905" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="600" fill="#091947" text-anchor="start" dominant-baseline="middle">Talebi onaylıyor musun?</text>
+<text x="385" y="878" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="500" fill="#455b7b" text-anchor="middle" dominant-baseline="middle">Hayır</text>
+<text x="810" y="976" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="500" fill="#455b7b" text-anchor="start" dominant-baseline="middle">Evet</text>
+<rect x="70" y="985" width="335" height="84" rx="22" fill="url(#warm)" stroke="#ffa17c" stroke-width="1" filter="url(#shadow)"/>
+<g transform="translate(90,1002)"><rect width="50" height="50" rx="16" fill="#fff0e7"/><g transform="translate(9,9)" fill="none" stroke="#eb5d21" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 26l9-11 7 6L30 5"/></g></g>
+<text x="158" y="1027" font-family="Arial, Helvetica, sans-serif" font-size="23" font-weight="600" fill="#cb440c" text-anchor="start" dominant-baseline="middle">Onaylamadan takip et</text>
+<rect x="428" y="1001" width="680" height="84" rx="22" fill="url(#card)" stroke="#8dbaff" stroke-width="1" filter="url(#shadow)"/>
+<g transform="translate(451,1018)"><rect width="50" height="50" rx="16" fill="#e7f2ff"/><g transform="translate(9,9)" fill="none" stroke="#0086ff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16l8 8L29 6"/></g></g>
+<text x="523" y="1043" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="600" fill="#091947" text-anchor="start" dominant-baseline="middle">Onayla ve TM’ye Gönder butonuna bas</text>
+<rect x="458" y="1141" width="620" height="84" rx="22" fill="url(#card)" stroke="#8dbaff" stroke-width="1" filter="url(#shadow)"/>
+<g transform="translate(481,1158)"><rect width="50" height="50" rx="16" fill="#e7f2ff"/><g transform="translate(9,9)" fill="none" stroke="#0086ff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 14 30 2 18 30 13 19 2 14ZM13 19 30 2"/></g></g>
+<text x="553" y="1183" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="600" fill="#408a13" text-anchor="start" dominant-baseline="middle">Talep TM onayına iletilir</text>
+<rect x="428" y="1281" width="680" height="130" rx="22" fill="url(#card)" stroke="#8dbaff" stroke-width="1" filter="url(#shadow)"/>
+<g transform="translate(451,1301)"><rect width="50" height="50" rx="16" fill="#e7f2ff"/><g transform="translate(9,9)" fill="none" stroke="#0086ff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 26l9-11 7 6L30 5"/></g></g>
+<text x="523" y="1326" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="600" fill="#091947" text-anchor="start" dominant-baseline="middle">Talep durumunu takip et</text>
+<path d="M453 1363 V1389" stroke="#8dbaff" stroke-width="2"/>
+<text x="468" y="1376" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="500" fill="#455b7b" text-anchor="start" dominant-baseline="middle">TM Onayı Bekliyor → TM Onayladı → Çek Kodu Gönderildi</text>
+<rect x="428" y="1467" width="680" height="148" rx="22" fill="url(#card)" stroke="#8dbaff" stroke-width="1" filter="url(#shadow)"/>
+<g transform="translate(451,1487)"><rect width="50" height="50" rx="16" fill="#e7f2ff"/><g transform="translate(9,9)" fill="none" stroke="#0086ff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h26v7H3ZM6 19v12h20V19M16 12v19M16 12C4 12 4 1 10 3c4 1 6 9 6 9Zm0 0C28 12 28 1 22 3c-4 1-6 9-6 9Z"/></g></g>
+<text x="523" y="1512" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="600" fill="#091947" text-anchor="start" dominant-baseline="middle">Çek teslimatını takip et</text>
+<path d="M453 1550 V1576" stroke="#8dbaff" stroke-width="2"/>
+<text x="468" y="1563" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="500" fill="#455b7b" text-anchor="start" dominant-baseline="middle">Çek Teslimatı · Teslim Tarihi · Teslim Edilen</text>
+</svg>
