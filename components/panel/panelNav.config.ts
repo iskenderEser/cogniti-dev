@@ -155,7 +155,7 @@ export const PANEL_NAV: NavGrup[] = [
         gate: (c) => c.rolKucu !== "iu",
       },
       // BM / TM / Yönetici (Ekip Takibi — Üretici hariç)
-      { etiket: "Ekip Mağaza Siparişleri", path: "/store/ekip-magaza-siparisleri",               gate: (c) => c.storeAcik && STORE_GENEL_GOREN_ROLLER.includes(c.rolKucu) && !URETICI_ROLLER.includes(c.rolKucu) },
+      { etiket: "Ekip FirmaStore Siparişleri", path: "/store/ekip-magaza-siparisleri",               gate: (c) => c.storeAcik && STORE_GENEL_GOREN_ROLLER.includes(c.rolKucu) && !URETICI_ROLLER.includes(c.rolKucu) },
     ],
   },
 
