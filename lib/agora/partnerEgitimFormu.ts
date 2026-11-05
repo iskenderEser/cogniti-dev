@@ -14,6 +14,15 @@ export const bosPartnerEgitimFormu = (): PartnerEgitimFormVerisi => ({
   soru_seti_buyuklugu: 10, secenek_sayisi: 2, yayin_basi_soru: 2, soru_taslaklari: [],
 });
 export const partnerKelimeSayisi = (metin: string) => metin.trim().split(/\s+/u).filter(Boolean).length;
+/** Yazma ve yapıştırmada ilk 500 kelimeyi, mevcut satır düzenini koruyarak alır. */
+export function partnerAciklamaSinirla(metin: string): string {
+  let sayi = 0;
+  for (const kelime of metin.matchAll(/\S+/gu)) {
+    // Sınırdaki boşluk korunur; sonraki tuş 500. kelimeye eklenemez.
+    if (++sayi > 500) return metin.slice(0, kelime.index);
+  }
+  return metin;
+}
 export function partnerEgitimFormDogrula(body: Record<string, unknown>) {
   const ad = egitimAdiDogrula(body.egitim_adi);
   if (!ad) return { ok: false as const, hata: "Eğitim Adı 3–200 karakter olmalıdır." };

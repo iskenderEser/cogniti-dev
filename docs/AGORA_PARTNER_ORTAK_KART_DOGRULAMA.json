@@ -1,0 +1,26 @@
+{
+  "passed": 17,
+  "tests": [
+    "taslak/video: Partner ve admin gerçek HOYK bilgileri/görünümü aynıdır",
+    "taslak/video: İki kartta aynı PE kodu vardır",
+    "taslak/podcast: Partner ve admin gerçek HOYK bilgileri/görünümü aynıdır",
+    "taslak/podcast: İki kartta aynı PE kodu vardır",
+    "yayinda/video: Partner ve admin gerçek HOYK bilgileri/görünümü aynıdır",
+    "yayinda/video: İki kartta aynı PE kodu vardır",
+    "yayinda/podcast: Partner ve admin gerçek HOYK bilgileri/görünümü aynıdır",
+    "yayinda/podcast: İki kartta aynı PE kodu vardır",
+    "pasif/video: Partner ve admin gerçek HOYK bilgileri/görünümü aynıdır",
+    "pasif/video: İki kartta aynı PE kodu vardır",
+    "pasif/podcast: Partner ve admin gerçek HOYK bilgileri/görünümü aynıdır",
+    "pasif/podcast: İki kartta aynı PE kodu vardır",
+    "Ortak kart içinde beğeni/favori görünümü kendiliğinden açılmadı",
+    "Partner düzenleme/silme ve admin moderasyon eylemleri korunur",
+    "Partner silme eylemi kendi Cogniti modalını açar",
+    "Admin moderasyon eylemi kendi Cogniti modalını açar",
+    "Eksik kod/fiyat/araç iki ekranda aynı gösterilir; sahte PE kodu üretilmez"
+  ],
+  "scope": "Gerçek partner/admin ekranları ve ortak PartnerEgitimKarti + gerçek YayinKarti DOM karşılaştırması; fetch ve logo dosyası sahte, canlı tarayıcı kabulü değildir.",
+  "typecheck": "başarılı",
+  "eslint": "0 hata / 0 uyarı",
+  "diff_check": "başarılı"
+}

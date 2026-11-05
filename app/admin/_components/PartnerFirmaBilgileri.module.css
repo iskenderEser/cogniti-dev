@@ -1,0 +1,15 @@
+.duzen { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; align-items:start; }
+.baslik { min-height:78px; box-sizing:border-box; padding:14px 20px; flex-wrap:nowrap; }
+.baslik h2 { min-width:0; }
+.logo { width:130px; height:44px; max-width:40%; object-fit:contain; object-position:right center; }
+.govde { padding:20px; }
+.alanlar { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px 18px; }
+.alan { display:flex; min-width:0; flex-direction:column; gap:7px; color:var(--tema-kontrol-metin); font-size:12px; font-weight:800; }
+.tamSatir { grid-column:1/-1; }
+.deger { box-sizing:border-box; display:block; width:100%; min-width:0; max-width:100%; min-height:40px; padding:9px 12px; border:1px solid var(--tema-kontrol-cizgi); border-radius:8px; background:var(--tema-yuzey); color:var(--tema-metin); font:inherit; font-size:13px; line-height:20px; font-weight:400; }
+textarea.deger { resize:none; overflow:hidden; overflow-wrap:anywhere; }
+.deger:focus-visible { outline:2px solid var(--tema-kontrol-odak); outline-offset:2px; }
+@media(max-width:1050px) { .alanlar { grid-template-columns:minmax(0,1fr); } }
+@media(max-width:760px) { .duzen { grid-template-columns:minmax(0,1fr); } .alanlar { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:480px) { .alanlar { grid-template-columns:minmax(0,1fr); } .govde { padding:16px; } }
+@media(pointer:coarse) { .deger { min-height:44px; font-size:16px; } }

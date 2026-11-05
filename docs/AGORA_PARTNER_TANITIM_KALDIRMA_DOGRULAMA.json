@@ -1,0 +1,22 @@
+{
+  "sql_api": {
+    "checks": 26,
+    "status": "passed",
+    "scope": "Tanıtımsız video/podcast yayımlama, katalog ve yeniden aktife alma; gerçek SQL/API, yerel PGlite, sahte dış hizmetler."
+  },
+  "react": {
+    "passed": 6,
+    "tests": [
+      "Video formunda tek eğitim dosyası alanı vardır; tanıtım alanı yoktur",
+      "Eğitim videosu TUS ve partner tamamlanma ucuyla yüklenir",
+      "Video yükleme rolü yalnız egitimdir",
+      "Podcast formunda tek ses dosyası alanı vardır",
+      "Podcast makbuzla tamamlanır",
+      "Mevcut eğitim videosu görünür; eski tanıtım kaydı formda gösterilmez"
+    ],
+    "scope": "Gerçek React medya alanı; fetch/TUS/XHR sahte, gerçek tarayıcı kontrolü değildir."
+  },
+  "typecheck": "başarılı",
+  "eslint": "0 hata, şema snapshotı nedeniyle 7 RPC uyarısı",
+  "canli_sql": "Kullanıcı uygulayacak; uygulanmadı."
+}

@@ -22,8 +22,9 @@ import AdminUstBar from "./_components/AdminUstBar";
 import AdminBreadcrumb from "./_components/AdminBreadcrumb";
 import { usePartnerFirmalari } from "./_hooks/usePartnerFirmalari";
 import { PARTNER_SAYFALARI, type PartnerSayfasi } from "@/lib/agora/partnerFirmaYonetimi";
+import PartnerRaporlari from "./_components/PartnerRaporlari";
+import PartnerHakEdisleri from "./_components/PartnerHakEdisleri";
 import PartnerYayinlari from "./_components/PartnerYayinlari";
-import PartnerUyelikYetkiler from "./_components/PartnerUyelikYetkiler";
 import PartnerFirmaBilgileri from "./_components/PartnerFirmaBilgileri";
 import PartnerYonetimi from "./_components/PartnerYonetimi";
 import TopluTekilSilPaneli from "./_components/TopluTekilSilPaneli";
@@ -148,8 +149,8 @@ function AdminPanelIcerigi() {
           </div>{!globalBolum && f && <span className={styles.badge}>{platformSecili ? <Settings2 /> : <Building2 />}{f.firma_adi}</span>}</div>
           {!globalBolum && saltOkunur && <p role="status" className={styles.notice}>Firma admini açık · Cogniti bu firma alanında yalnız görüntüleme yapabilir.</p>}
           {globalBolum === "partnerler" ? (
-            !firmaAdmin && (partnerId && partnerSayfasi === "firma-bilgileri" ? <PartnerFirmaBilgileri key={partnerId} partnerId={partnerId} /> : partnerId && partnerSayfasi === "uyelik-yetkiler" ? <PartnerUyelikYetkiler key={partnerId} partnerId={partnerId} /> : partnerId && partnerSayfasi === "yayinlar" ? <PartnerYayinlari key={partnerId} partnerId={partnerId} /> : partnerId ? <section className={styles.card} aria-label={PARTNER_SAYFALARI[partnerSayfasi]}>
-              <div className={styles.cardBody}>{partnerler.yukleniyor ? <p role="status">Partner bilgisi yükleniyor…</p> : partnerler.hata ? <p role="alert">{partnerler.hata}</p> : !seciliPartner ? <p role="alert">Partner firma bulunamadı.</p> : <p className={styles.empty}>Bu bölüm henüz kullanıma açılmadı.</p>}</div>
+            !firmaAdmin && (partnerId && partnerSayfasi === "firma-bilgileri" ? <PartnerFirmaBilgileri key={partnerId} partnerId={partnerId} /> : partnerId && partnerSayfasi === "yayinlar" ? <PartnerYayinlari key={partnerId} partnerId={partnerId} /> : partnerId ? <section className={styles.card} aria-label={PARTNER_SAYFALARI[partnerSayfasi]}>
+              <div className={styles.cardBody}>{partnerler.yukleniyor ? <p role="status">Partner bilgisi yükleniyor…</p> : partnerler.hata ? <p role="alert">{partnerler.hata}</p> : !seciliPartner ? <p role="alert">Partner firma bulunamadı.</p> : partnerSayfasi === "hak-edisleri" ? <PartnerHakEdisleri key={partnerId} /> : partnerSayfasi === "raporlar" ? <PartnerRaporlari key={partnerId} /> : <p className={styles.empty}>Bu bölüm henüz kullanıma açılmadı.</p>}</div>
             </section> : <PartnerYonetimi />)
           ) : globalBolum === "yeni-firma" ? (
             <YeniFirmaFormu onKaydet={admin.handleFirmaEkle} />

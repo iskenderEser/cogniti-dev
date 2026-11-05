@@ -1,7 +1,9 @@
 "use client";
 import { useEffect,useLayoutEffect,useRef,useState } from "react";
 import Image from "next/image";
-import { Input } from "@/components/ui/input";
+import PartnerUyelikYetkiler from "./PartnerUyelikYetkiler";
+import { Building2, UserRound } from "lucide-react";
+import local from "./PartnerFirmaBilgileri.module.css";
 import { ilSecenekleri,ilinIlceleri } from "@/lib/firma/konumReferansi";
 import { partnerUyelikListesiGecerli,type PartnerUyelikBasvurusu } from "@/lib/agora/partnerUyelikTipleri";
 import styles from "../admin.module.css";
@@ -26,7 +28,7 @@ function AdresAlani({deger}:{deger:string}) {
     void document.fonts?.ready.then(boyutlandir);
     return()=>{etkin=false;gozlemci?.disconnect();window.removeEventListener("resize",boyutlandir);};
   },[deger]);
-  return <textarea ref={ref} readOnly value={deger} rows={1} className="font-normal box-border min-h-9 w-full min-w-0 max-w-full resize-none overflow-hidden rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 [overflow-wrap:anywhere]" />;
+  return <textarea ref={ref} readOnly value={deger} rows={1} className={local.deger} />;
 }
 
 export default function PartnerFirmaBilgileri({partnerId}:{partnerId:string}) {
@@ -54,16 +56,16 @@ export default function PartnerFirmaBilgileri({partnerId}:{partnerId:string}) {
     ["IBAN",f.iban.replace(/^(TR\d{2})(\d{4})(\d{4})(\d{4})(\d{4})(\d{4})(\d{2})$/,"$1 $2 $3 $4 $5 $6 $7")],
   ];
   function alanlar(veriler:string[][]) {
-    return <div className={styles.formGrid}>{veriler.map(([etiket,deger])=><label key={etiket} className={etiket==="IBAN" ? `${styles.field} col-span-full` : styles.field}>{etiket}{etiket==="Adres"?<AdresAlani deger={deger} />:<Input readOnly value={deger} className="font-normal" style={etiket==="IBAN" ? { width: `${deger.length + 2}ch`, maxWidth: "100%" } : undefined} />}</label>)}</div>;
+    return <div className={local.alanlar}>{veriler.map(([etiket,deger])=><label key={etiket} className={etiket==="IBAN" ? `${local.alan} ${local.tamSatir}` : local.alan}>{etiket}{etiket==="Adres"?<AdresAlani deger={deger} />:<input readOnly value={deger} className={local.deger} style={etiket==="IBAN" ? { width: `${deger.length + 2}ch`, maxWidth: "100%" } : undefined} />}</label>)}</div>;
   }
-  return <div className={styles.twoColumns}>
+  return <div className={styles.stack}><PartnerUyelikYetkiler key={partnerId} partnerId={partnerId}/><div className={local.duzen}>
     <section className={styles.card} aria-label="Şirket Bilgileri">
-      <header className={styles.cardHeader}><h2>Şirket Bilgileri</h2></header>
-      <div className={styles.cardBody}><div className={styles.partnerBilgiLogoAlani}><Image unoptimized src={`/admin/api/partnerler/${partnerId}/logo?v=${f.surum}`} alt={`${f.sirket_adi} Logosu`} width={300} height={100} className={styles.partnerUyelikLogo} /></div><div className={styles.stack}>{alanlar(konum)}</div></div>
+      <header className={`${styles.cardHeader} ${local.baslik}`}><h2><Building2 aria-hidden="true"/>Şirket Bilgileri</h2><Image unoptimized src={`/admin/api/partnerler/${partnerId}/logo?v=${f.surum}`} alt={`${f.sirket_adi} Logosu`} width={150} height={50} className={local.logo}/></header>
+      <div className={`${styles.cardBody} ${local.govde}`}>{alanlar(konum)}</div>
     </section>
     <section className={styles.card} aria-label="Yetkili Bilgileri">
-      <header className={styles.cardHeader}><h2>Yetkili Bilgileri</h2></header>
-      <div className={`${styles.cardBody} ${styles.partnerYetkiliGovde}`}>{alanlar([["Ad Soyad",firma.ad_soyad],["E-Posta",firma.eposta],["Cep Telefonu",firma.cep_telefonu]])}</div>
+      <header className={`${styles.cardHeader} ${local.baslik}`}><h2><UserRound aria-hidden="true"/>Yetkili Bilgileri</h2></header>
+      <div className={`${styles.cardBody} ${local.govde}`}>{alanlar([["Ad Soyad",firma.ad_soyad],["E-Posta",firma.eposta],["Cep Telefonu",firma.cep_telefonu]])}</div>
     </section>
-  </div>;
+  </div></div>;
 }

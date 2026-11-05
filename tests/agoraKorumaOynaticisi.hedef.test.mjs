@@ -1,0 +1,71 @@
+import { createRequire } from 'node:module';
+import { readFileSync, existsSync, writeFileSync } from 'node:fs';
+import path from 'node:path';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+const repo=new URL('../',import.meta.url).pathname.replace(/\/$/,'');
+const require=createRequire(repo+'/package.json');
+const {Window}=require('happy-dom');
+const win=new Window({url:'http://localhost/partner/egitimler'});
+for(const k of ['window','document','navigator','HTMLElement','HTMLInputElement','HTMLTextAreaElement','HTMLSelectElement','Event','MouseEvent','Node'])Object.defineProperty(globalThis,k,{value:k==='window'?win:k==='document'?win.document:win[k],configurable:true});
+globalThis.IS_REACT_ACT_ENVIRONMENT=true;
+const React=require('react'),{act}=React,{createRoot}=require('react-dom/client'),ts=require('typescript');
+const cache=new Map();
+function load(file){
+ if(cache.has(file))return cache.get(file).exports;
+ const mod={exports:{}};cache.set(file,mod);
+ const localRequire=id=>{
+  if(id==='@/components/ui/button')return {Button:({children,variant,...props})=>React.createElement('button',props,children)};
+  if(id.endsWith('.css'))return {__esModule:true,default:new Proxy({},{get:(_,key)=>String(key)})};
+  if(!id.startsWith('@/')&&!id.startsWith('.'))return require(id);
+  const base=id.startsWith('@/')?path.join(repo,id.slice(2)):path.resolve(path.dirname(file),id);
+  const full=[base,base+'.ts',base+'.tsx',base+'/index.ts'].find(p=>existsSync(p)&&!require('node:fs').statSync(p).isDirectory());
+  if(!full)throw new Error('Missing '+id);
+  return load(full);
+ };
+ const js=ts.transpileModule(readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,jsx:ts.JsxEmit.ReactJSX,esModuleInterop:true}}).outputText;
+ vm.runInThisContext('(function(require,module,exports){'+js.replaceAll('import.meta.url',JSON.stringify('file://'+file))+'\n})',{filename:file})(localRequire,mod,mod.exports);
+ return mod.exports;
+}
+
+const {AgoraDenemeOynaticisi}=load(repo+'/components/agora/AgoraDenemeOynaticisi.tsx');
+const container=document.createElement('div');document.body.append(container);const root=createRoot(container);
+let plays=[],pauses=[];
+win.HTMLMediaElement.prototype.play=function(){plays.push(this.getAttribute('src'));return Promise.resolve();};
+win.HTMLMediaElement.prototype.pause=function(){pauses.push(this.getAttribute('src'));};
+const results=[];const check=(name,c)=>{assert.ok(c,name);results.push(name);};
+const settle=async(fn=()=>{})=>{await act(async()=>{await fn();await new Promise(r=>setTimeout(r,5));});};
+const render=async(kaynak)=>settle(()=>root.render(React.createElement(AgoraDenemeOynaticisi,{kaynak})));
+const click=()=>container.querySelector('button').click();
+const event=(el,type)=>el.dispatchEvent(new win.Event(type,{bubbles:true}));
+const source={tur:'podcast',url:'/partner/api/koruma/test?akis=1',korumaSurumu:1};
+try {
+ await render(source);
+ const [audio,voice]=container.querySelectorAll('audio');
+ check('İndirme sunan yerel audio kontrolleri ve dosya bağlantısı yoktur',!audio.controls&&!voice.controls&&!container.querySelector('a[download]')&&audio.getAttribute('controlslist').includes('nodownload'));
+ await settle(click);
+ check('İlk Dinle yalnız sesli Cogniti uyarısını başlatır',plays.length===1&&plays[0]==='/agora/kogniti-deneme-yayini.wav');
+ await settle(()=>event(voice,'ended'));
+ check('Uyarı bitince asıl podcast başlar',plays.at(-1)===source.url);
+ await settle(()=>{audio.currentTime=31;event(audio,'timeupdate');});
+ check('30 saniye sınırında podcast durur ve sesli uyarı tekrarlanır',plays.at(-1)==='/agora/kogniti-deneme-yayini.wav'&&pauses.includes(source.url));
+ await settle(()=>event(voice,'ended'));check('İkinci uyarı sonrası kaldığı yerden devam eder',plays.at(-1)===source.url);
+ await settle(()=>{audio.currentTime=95;event(audio,'seeking');});check('İleri sarma yeni aralıktaki uyarıyı atlatamaz',plays.at(-1)==='/agora/kogniti-deneme-yayini.wav');
+ await settle(click);let before=plays.length;
+ await settle(()=>event(voice,'ended'));check('Uyarı sırasında Duraklat ardından eski ended içeriği başlatmaz',plays.length===before);
+ await settle(click);await settle(()=>event(voice,'error'));
+ check('Sesli koruma hatası içeriği durdurur ve hata gösterir',!!container.querySelector('[role="alert"]')&&container.querySelector('button').textContent==='Dinle');
+ await render({...source,url:'/partner/api/koruma/new?akis=1'});check('Kaynak değişiminde önceki oynatma durumu taşınmaz',container.querySelector('button').textContent==='Dinle');
+ await render({tur:'video',url:'https://test.invalid/secure-embed',korumaSurumu:1});
+ check('Video Cogniti logosu ve Ön İzleme filigranını gösterir',!!container.querySelector('img[alt="Cogniti"]')&&container.textContent.includes('Ön İzleme'));
+ const frame=container.querySelector('iframe');
+ check('Tam ekran filigran sarmalayıcısına aittir, iframe tek başına tam ekrana çıkamaz',!frame.hasAttribute('allowfullscreen')&&frame.getAttribute('allow').includes("fullscreen 'none'")&&container.querySelector('button').textContent==='Tam Ekran');
+ const context=new win.Event('contextmenu',{bubbles:true,cancelable:true});container.firstChild.dispatchEvent(context);check('Sağ tık menüsü deneme alanında engellenir',context.defaultPrevented);
+ await render({...source,korumaSurumu:99});check('Bilinmeyen koruma sürümü oynatılamaz',!!container.querySelector('[role="alert"]')&&!container.querySelector('audio,iframe'));
+ await render({...source,korumaSurumu:0});plays=[];
+ check('Taslak aynı oynatıcıda tek içerik kaynağı kullanır, sesli uyarı eklenmez',container.querySelectorAll('audio').length===1&&!container.textContent.includes('Deneme Yayını'));
+ await settle(click);check('Taslak Dinle doğrudan yüklenen orijinali başlatır',plays.length===1&&plays[0]===source.url);
+ await render(source);plays=[];await settle(click);check('Yayımlanmış aynı kaynak önce koruma uyarısını başlatır',container.querySelectorAll('audio').length===2&&plays[0]==='/agora/kogniti-deneme-yayini.wav');
+ const report={passed:results.length,tests:results,scope:'Gerçek React deneme oynatıcısı, sahte HTMLMediaElement oynatma olayları. Gerçek ses/tarayıcı kabul testi değildir.'};
+ console.log(JSON.stringify(report));
+} finally {await settle(()=>root.unmount());win.happyDOM.abort();}

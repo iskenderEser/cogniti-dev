@@ -212,7 +212,6 @@
 @media(max-width:760px) { .partnerYetkiliGovde::before { display:none; } }
 
 .partnerYayinKartlar { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px; }
-.partnerYayinKartlar [data-hoyk-kapak] img { object-fit:contain; padding:20px; }
 .partnerYayinVideo { width:100%; aspect-ratio:16/9; border:0; }
 .partnerYayinSes { width:100%; max-width:100%; }
 .partnerYayinSorular { padding-left:22px; display:flex; flex-direction:column; gap:14px; }

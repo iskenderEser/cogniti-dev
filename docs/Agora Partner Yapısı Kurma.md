@@ -397,3 +397,88 @@ Bu teslim gelecekteki satın alınmış yayın ve tekrar periyodu haklarının t
 - [ ] Form/yükleme açıklamaları, partner yayımlama kontrolü ve SQL işlevi, Agora katalog görünümü ve admin yeniden aktife alma kontrolleri birlikte uyarlanacak. Tanıtım videosu olmayan eğitim yayımlanabilecek/listelenebilecek; yüklenmiş tanıtımın süre ve hazır olma kontrolleri korunacak.
 
 Bu kayıt bir sonraki iş içindir; uygulama kodu ve SQL henüz değiştirilmedi.
+
+
+### Adım 9.4 — Hak Edişleri tablo başlıkları
+
+- [x] Kullanıcı talimatıyla seçili partnerin Hak Edişleri sayfasında tablo oluşturuldu. Sütunlar sırasıyla Eğitim Adı, Sipariş Tarihi, Satın Alma Bedeli, Cogniti Hizmet Bedeli (%15), Ödenecek Tutar, KDV, KDV’li Ödenecek Tutar.
+- [x] Mevcut admin tablo tasarımı kullanılır; dar alanda tablo yatay kaydırılır. Satış/ödeme kaydı uydurulmaz; veri yokken boş durum gösterilir.
+- [ ] Hesaplama, KDV oranı ve satış/ödeme veri bağlantısı için kullanıcı talimatı bekleniyor. Bu teslim yalnız tablo görünümüdür; ana 9.4 tamamlandı sayılmaz. Yeni SQL yoktur.
+
+- [x] Kullanıcı isteğiyle Hak Edişleri tablosunun sonuna Ödeme Günü sütunu eklendi.
+
+
+### Adım 9.5 — Raporlar tablo başlıkları
+
+- [x] Kullanıcı talimatıyla seçili partnerin Raporlar sayfasına Eğitim Adı, Satış Fiyatı, Satılan Adet, Toplam Satış Fiyatı, Beğeni Sayısı ve Favori Sayısı sütunları eklendi.
+- [x] Mevcut admin tablo düzeni kullanılır; dar alanda yatay kaydırma vardır. Örnek satış veya etkileşim sayısı üretilmez.
+- [ ] Satış verileri satın alma kayıtlarından; beğeni/favoriler satın alınan eğitimden oluşturulan firma yayınlarının izleyici etkileşimlerinden beslenecek. Bu bağlantılar henüz kurulmadı; bu teslim tablo görünümüdür. Ana 9.5 tamamlandı sayılmaz. Yeni SQL yoktur.
+
+- [x] Kullanıcı onayıyla Hak Edişleri ve Raporlar tablolarının ilk sütun başlığı ID olarak eklendi. Veri bağlantısında aynı eğitimin PE-000001 biçimindeki kısa kodu kullanılacak; partner_egitim_id sistem alan adıdır. Kod üretimi ve veri bağlantısı henüz uygulanmadı.
+
+
+### Partner eğitim kısa kimliği — kullanıcı kararı
+
+- [x] SQL hazırlandı: partner_egitim_id kısa kodu PE-10001 biçimindedir. Firma numarası 10, 20, 30 şeklinde artar; firma başına eğitim sırası 001–999. Mevcut hapbilgi ilk firma olarak, mevcut yayındaki ilk eğitim 001 olarak kodlanır. Kodlar değişmez, silinen kod yeniden kullanılmaz. Mevcut UUID ilişkileri korunur.
+- [x] 19 yerel PGlite kontrolü başarılı: tekrar kurulum, numaralama, mükerrer istek, silinen kodun korunması, 999 sınırı, değişmezlik ve yetkiler.
+- [x] Kullanıcı SQL sonucuyla hapbilgi / SPIN / PE-10001 / yayinda kaydını doğruladı. SQL kullanıcı tarafından uygulandı; sonraki kayıtların numaralanması ve 999 sınırı yerel testlerle doğrulanmış durumdadır.
+- [ ] Kısa kodun HOYK ve tablo satırlarında gösterilmesi için API/arayüz bağlantısı ayrı uygulanacak. Bu SQL tek başına HOYK görünümünü değiştirmez.
+
+- [x] Partner kartı kayıtlı partner_egitim_id kodunu HOYK tarih satırının sağında gösterir. Liste doğrulayıcısı kod alanını kabul eder; sahte veya sabit kod yazılmaz.
+- [ ] scripts/sql/agora_partner_kart_id.sql liste RPC’sine mevcut kod alanını ekler. Kullanıcı uygulaması beklenir; SQL uygulanmadan görünür olduğu iddia edilmez.
+
+- [x] Kullanıcı ID’nin admin Yayınlar kartında görünmediğini ve önceki partner kart SQL’ini uyguladığını bildirdi. Admin HOYK tarih satırı kod alanına bağlandı.
+- [ ] scripts/sql/agora_partner_admin_kart_id.sql admin yayın listesine partner_egitim_id alanını ekler. Kullanıcı uygulaması/ekran kontrolü bekleniyor. Mevcut PE kodu değiştirilmez.
+
+
+### Partner ve admin için tek ortak partner HOYK tanımı
+
+- [x] PartnerEgitimKarti ortak bileşeni, mevcut Cogniti YayinKarti (HOYK) üzerinde eğitim alanları, PE kodu, durum, fiyat, tarih, kapak ve görünürlük ayarlarını tek yerde tanımlar. Partner Eğitimlerim ve admin Yayınlar bu bileşeni kullanır; ayrı kart alan eşlemeleri kaldırıldı.
+- [x] Ortak kart stilleri tek dosyadadır; farklı kapak boşluğu ve fiyat yazı biçimleri kaldırıldı. Yönetim eylemleri mevcut yetkileriyle ekranlardan verilir; ortak karttan ayrı bilgi/görünüm tanımı geçilemez.
+- [ ] Kullanıcı iki ekranda aynı eğitim kartının bilgi/görünümünü doğrular. Gerçek tarayıcıya girilmedi. Yeni SQL yoktur; önceki ID liste SQL kurulumları hâlâ gereklidir.
+
+- [x] Ortak kart yerel doğrulaması: gerçek iki ekran + ortak PartnerEgitimKarti + gerçek YayinKarti ile 17 kontrol geçti. Altı durum/araç birleşiminde yönetim eylemleri ve logo uç adresi hariç kart DOM’u eşleşti; PE kodu, eksik veri davranışı, ayrı yönetim eylemleri ve gerçek teyit modalları doğrulandı. Fetch/logo sahte; canlı tarayıcı veya görsel piksel kontrolü değildir. Tekrar çalıştırılabilir test: tests/agoraPartnerOrtakKart.hedef.test.mjs. Sonuçlar docs/AGORA_PARTNER_ORTAK_KART_DOGRULAMA.json içinde. TypeScript/lint/diff başarılı.
+
+- [x] Kullanıcı isteğiyle admin Yayınlar kartının İncele, Pasife Al/Aktife Al ve Sil düğmeleri tek satırda yan yana, eşit genişlikte yerleştirildi. Ortak kartın bilgi/görünüm tanımı ve partner tarafındaki işlem düzeni korundu.
+
+- [x] Admin kartındaki yatay işlem düğmelerinin yüksekliği kullanıcı isteğiyle 38 px’den 30,4 px’e (%20) indirildi.
+
+- [x] Admin kartındaki yatay işlem düğmelerinin yazı boyutu kullanıcı isteğiyle 12 px’den 10,2 px’e (%15) indirildi.
+
+- [x] Admin kartındaki üç yatay işlem düğmesinin genişliği kullanıcı isteğiyle %25 azaltıldı; 8 px aralık, yükseklik ve yazı boyutu korundu.
+
+- [x] Admin kartındaki yatay işlem düğmeleri grup olarak kart içinde yatay ortalandı.
+
+
+### Ortak partner kartında eğitim thumbnail’i
+
+- [x] Ortak PartnerEgitimKarti kapak verisi için partner logosunu almaktan çıkarıldı. Eğitim videosunun kapak_video_guid alanı mevcut HOYK thumbnail çözümleyicisine verilir. İki ekranda da aynı ortak kapak davranışı kullanılır; logo için eklenen contain/padding stili kaldırıldı.
+- [x] Tek SQL helper eğitim videosu GUID’ini her iki listeye taşır. Yayımlanmış eğitimde yayına bağlanan eğitim videosu; taslakta en son eğitim videosu hazırsa seçilir. Tanıtım veya başka partner videosu kullanılmaz. Podcastte video kapağı uydurulmaz; kapak verisi yoksa ortak HOYK’un varsayılan araç görseli görünür.
+- [ ] scripts/sql/agora_partner_thumbnail.sql kullanıcı tarafından çalıştırılacak. Canlı SQL uygulanmadı. Sonrasında admin/partner sayfaları yenilenerek gerçek thumbnail kontrol edilecek.
+
+- [x] Thumbnail düzeltmesi yerel kontrolleri: SQL/API 57, gerçek ortak HOYK ekran karşılaştırması 23 kontrol başarılı. Yayımlanmış kaydın bağlı videosu, iki listenin aynı GUID’i döndürmesi ve varsayılan podcast kapağı sınandı. Dış hizmetler/fetch sahte; gerçek thumbnail dosyasına ağ isteği veya tarayıcı kontrolü yapılmadı. TypeScript/lint/diff başarılı.
+
+
+### Kullanıcı kararı — Tanıtım videosunu eğitim formundan kaldırmak
+
+- [x] Önceki tercihli tanıtım videosu işi bu kararla güncellendi: Yeni Eğitim Ekle/düzenleme formunda Tanıtım Videosu alanı kaldırıldı. Seçilen türe göre yalnız Eğitim Videosu veya Podcast Dosyası yüklenir.
+- [x] Partner yayımlama, katalog listelenme ve admin aktife alma akışlarında tanıtım videosu aranmaz. Mevcut eğitim dosyasının hazır olma ve soru seti/bilgi kontrolleri korunur. Eski tanıtım dosyaları fiziksel olarak silinmez.
+- [ ] scripts/sql/agora_partner_tanitim_kaldir.sql kullanıcı tarafından uygulanacak. Canlı SQL çalıştırılmadı; SQL tarafındaki eski zorunluluk uygulama yapılana kadar sürer.
+
+- [x] Tanıtım kaldırma doğrulaması: 26 SQL/API ve 6 React kontrolü başarılı; TypeScript/diff başarılı. Tanıtımsız video/podcast yayımlama, katalog ve admin yeniden aktife alma sınandı. Canlı veri değişmedi; SQL kullanıcı uygulaması bekleniyor.
+
+
+### 5 Kasım — Satın alma öncesi koruma paketi
+
+- [x] Tek yayın / tek oynatıcı: taslakta normal, Yayımla sonrasında aynı yayında koruma etkin. İkinci önizleme ve test düğmesi kaldırıldı.
+- [x] Sesli Cogniti — Deneme Yayını uyarısı, 30 saniyelik aralıklar; orijinal dosya korunur.
+- [x] Oturum ve sahiplik kontrollü podcast akışı; denemede indirme bağlantısı/yerel indirme kontrolü yok.
+- [x] Yayımla API ve SQL kapısı: hazır koruma tam eğitim sürümüne ve medya kaydına bağlı.
+- [x] `agora_partner_koruma_paketi.sql`: kullanıcı `agora_partner_koruma_paketi_hazir=true` sonucunu iletti.
+- [ ] Taslaktaki podcastte gerçek ses/ileri sarma/duraklatma kabulü.
+- [ ] Video Bunny güvenlik ayarları ve ortak kütüphane erişim geçişi doğrulanacak; bu olmadan video korumalı kabul edilmez/yayımlanmaz.
+- [ ] Alıcı vitrini/satın alma: firmaya sınırsız süre, hedef kitle ve tekrar hakkı; temiz orijinal firma havuzuna aktarılacak. Tek yayınlama sınırı kaldırıldı. Firma bazında tekrar satın alma kapanacak; vitrin diğer firmalara açık kalacak.
+
+Kapsam, sınırlamalar ve uygulanma sırası: `docs/AGORA_KORUMA_PAKETI.md`. Kullanıcının taslağı yayımlanmadı.
+
+Tek oynatıcı düzeltmesi: yeni SQL yok. Sesli marka telaffuzu “Kogniti” olarak düzeltildi; orijinal podcast değişmedi. Kullanıcı ilk sesli uyarıyı 15 saniyelik kayıtta duyduğunu doğruladı. Yeni telaffuz ve düzeltilmiş tek oynatıcıda yayımlama sonrası kabul henüz yapılmadı.

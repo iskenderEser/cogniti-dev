@@ -1,0 +1,7 @@
+.icerik { max-width:1200px; margin:auto; padding:24px 32px 40px; }
+.icerik h1 { margin:0 0 20px; color:var(--tema-baslik); font-size:24px; font-weight:800; }
+.tabloAlani { max-width:100%; overflow-x:auto; border:1px solid var(--tema-cizgi); border-radius:12px; background:var(--tema-yuzey); }
+.tabloAlani table { width:100%; border-collapse:collapse; font-size:12px; color:var(--tema-metin); }
+.tabloAlani th { text-align:left; padding:12px; background:var(--tema-zemin); border-bottom:1px solid var(--tema-cizgi); font-weight:700; white-space:nowrap; }
+.tabloAlani td { padding:20px 12px; color:var(--tema-ikincil-metin); }
+@media(max-width:639px) { .icerik { padding:20px 16px 40px; } }

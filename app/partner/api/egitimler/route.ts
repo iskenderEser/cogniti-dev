@@ -1,3 +1,4 @@
+import { partnerAramaFiyati } from "@/lib/agora/yayinArama";
 import { onayliPartnerBaglami } from "@/lib/agora/partnerProfilSunucu";
 import { partnerJsonOku, partnerYanit } from "@/lib/agora/partnerHttp";
 import { partnerEgitimFormDogrula } from "@/lib/agora/partnerEgitimFormu";
@@ -17,7 +18,18 @@ export async function GET(request: Request) {
     }
     const durum = params.get("durum") ?? "tumu", sayfa = Number(params.get("sayfa") ?? 1);
     if (!["tumu", "taslak", "yayinda", "pasif"].includes(durum) || !Number.isSafeInteger(sayfa) || sayfa < 1 || sayfa > 100000) return partnerYanit({ hata: "Geçersiz liste seçimi." }, 400);
-    const { data, error } = await b.db.rpc("agora_partner_egitimleri_oku", { p_token_ozeti: b.tokenOzeti, p_durum: durum, p_sayfa: sayfa });
+    const arama=(params.get("arama")??"").trim(),baslangic=params.get("baslangic")??"",bitis=params.get("bitis")??"";
+    const tarihGecerli=(v:string)=>{
+      if(!v)return true;
+      if(!/^\d{4}-\d{2}-\d{2}$/.test(v))return false;
+      const [yil,ay,gun]=v.split("-").map(Number),tarih=new Date(Date.UTC(yil,ay-1,gun));
+      return yil>=1900&&yil<=9998&&tarih.getUTCFullYear()===yil&&tarih.getUTCMonth()===ay-1&&tarih.getUTCDate()===gun;
+    };
+    if(arama.length>200)return partnerYanit({hata:"Arama en fazla 200 karakter olabilir."},400);
+    if(!tarihGecerli(baslangic)||!tarihGecerli(bitis)||(baslangic&&bitis&&baslangic>bitis))return partnerYanit({hata:"Geçerli bir yayın tarihi aralığı seçin."},400);
+    const { data, error } = arama||baslangic||bitis
+      ? await b.db.rpc("agora_partner_egitimleri_filtrele",{p_token_ozeti:b.tokenOzeti,p_durum:durum,p_sayfa:sayfa,p_arama:arama,p_fiyat:partnerAramaFiyati(arama),p_baslangic:baslangic||null,p_bitis:bitis||null})
+      : await b.db.rpc("agora_partner_egitimleri_oku", { p_token_ozeti: b.tokenOzeti, p_durum: durum, p_sayfa: sayfa });
     if (error) return partnerYanit({ hata: "Eğitimler okunamadı. Yeniden deneyin." }, 503);
     if (!data) return partnerYanit({ hata: "Üyelik onayınızı ve oturumunuzu kontrol edin." }, 401);
     if (!partnerEgitimListesiGecerli(data)) return partnerYanit({ hata: "Eğitimler okunamadı." }, 503);

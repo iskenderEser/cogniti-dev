@@ -1,0 +1,30 @@
+.sayfa { display:flex; min-width:0; flex-direction:column; gap:20px; }
+.kontroller { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:16px; }
+.durumAlani { display:flex; min-width:0; max-width:100%; flex-wrap:wrap; align-items:center; gap:12px; }
+.sayac { font-size:12px; color:var(--tema-kontrol-ikincil-metin); white-space:nowrap; }
+.eylemler { display:flex; min-width:0; max-width:100%; align-items:center; flex-wrap:wrap; gap:10px; }
+.arama { display:flex; min-width:0; align-items:center; gap:8px; }
+.arama input { width:260px; min-width:0; height:40px; border:1px solid var(--tema-kontrol-cizgi); border-radius:var(--radius-md); padding:0 12px; background:var(--tema-yuzey); color:var(--tema-metin); font:inherit; font-size:12px; }
+.arama input:focus-visible { outline:2px solid var(--tema-kontrol-odak); outline-offset:2px; }
+.arama button { flex-shrink:0; }
+.kartlar { display:flex; flex-wrap:wrap; align-items:stretch; gap:16px; }
+.kart { width:208px; min-width:0; }
+.bos { border:1px solid var(--tema-kontrol-cizgi); border-radius:16px; padding:48px 20px; text-align:center; color:var(--tema-kontrol-ikincil-metin); font-size:14px; background:var(--tema-yuzey); }
+.sayfalama { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:12px; font-size:12px; color:var(--tema-kontrol-ikincil-metin); }
+@media(max-width:639px) {
+  .kontroller { align-items:stretch; }
+  .eylemler { width:100%; flex-wrap:nowrap; }
+  .arama { flex:1; }
+  .arama input { width:0; flex:1; }
+}
+@media(pointer:coarse) { .arama input { min-height:44px; font-size:16px; } }
+
+.sayfa .kartIslemleri[data-islem-duzeni="yatay"] { gap:6px; }
+.sayfa .kartIslemleri[data-islem-duzeni="yatay"] button { flex:1 1 0; width:auto; min-width:0; white-space:nowrap; font-size:10px; padding:0 3px; }
+
+.tarihler { display:flex; flex-wrap:wrap; align-items:flex-end; gap:12px; }
+.tarihler label { display:flex; flex-direction:column; gap:6px; font-size:12px; font-weight:700; color:var(--tema-kontrol-ikincil-metin); }
+.tarihler input { box-sizing:border-box; min-width:0; min-height:40px; border:1px solid var(--tema-kontrol-cizgi); border-radius:var(--radius-md); padding:8px 10px; background:var(--tema-yuzey); color:var(--tema-metin); font:inherit; font-weight:400; }
+@media(max-width:639px) { .tarihler label { flex:1 1 140px; } .tarihler input { width:100%; } }
+
+.sayfa .arama button[type="submit"] { background:var(--tema-kontrol-eylem); border-color:var(--tema-kontrol-eylem); color:#fff; }

@@ -1,6 +1,5 @@
 export const PARTNER_SAYFALARI = {
   "firma-bilgileri": "Firma Bilgileri",
-  "uyelik-yetkiler": "Üyelik ve Yetkiler",
   yayinlar: "Yayınlar",
   "hak-edisleri": "Hak Edişleri",
   raporlar: "Raporlar",

@@ -10,7 +10,7 @@
 
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { type SoruTaslagi, bosSoruTaslagi, harfBul } from "@/lib/soru/taslak";
 
 interface SoruSetiFormuProps {
@@ -18,9 +18,19 @@ interface SoruSetiFormuProps {
   onDegis: (taslaklar: SoruTaslagi[]) => void;
   buyukluk: number;
   secenekSayisi: number;
+  gezinmeGoster?: boolean;
+  sayacSagIcerik?: ReactNode;
+  ilkSoruSayisi?: number;
+  enAzGorunenSoruSayisi?: number;
 }
 
-export function SoruSetiFormu({ taslaklar, onDegis, buyukluk, secenekSayisi }: SoruSetiFormuProps) {
+export function SoruSetiFormu({ taslaklar, onDegis, buyukluk, secenekSayisi, gezinmeGoster = true, sayacSagIcerik, ilkSoruSayisi, enAzGorunenSoruSayisi = 0 }: SoruSetiFormuProps) {
+  const [acilanSoruSayisi, setAcilanSoruSayisi] = useState(0);
+  const gosterilebilirSoruSayisi = Math.min(taslaklar.length, buyukluk);
+  const gorunenTaslaklar = ilkSoruSayisi === undefined
+    ? taslaklar
+    : taslaklar.slice(0, Math.min(Math.max(ilkSoruSayisi, acilanSoruSayisi, enAzGorunenSoruSayisi), gosterilebilirSoruSayisi));
+  const gizliSoruVar = ilkSoruSayisi !== undefined && gorunenTaslaklar.length < gosterilebilirSoruSayisi;
   const kartRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const guncelle = (i: number, alan: Partial<SoruTaslagi>) => {
@@ -34,6 +44,7 @@ export function SoruSetiFormu({ taslaklar, onDegis, buyukluk, secenekSayisi }: S
   const sil = (i: number) => onDegis(taslaklar.filter((_, j) => j !== i));
 
   const ekle = () => {
+    if (ilkSoruSayisi !== undefined) setAcilanSoruSayisi(taslaklar.length + 1);
     onDegis([...taslaklar, bosSoruTaslagi(secenekSayisi)]);
     // Yeni kart render edildikten sonra görünür alana getirilir.
     setTimeout(() => kartRefs.current[taslaklar.length]?.scrollIntoView({ behavior: "smooth", block: "center" }), 50);
@@ -51,7 +62,8 @@ export function SoruSetiFormu({ taslaklar, onDegis, buyukluk, secenekSayisi }: S
         <span className="text-xs font-semibold" style={{ color: tamamSayisi === buyukluk && taslaklar.length === buyukluk ? "var(--tema-yerel-uretim-islevsel-metin-01)" : "var(--tema-yerel-uretim-yardimci-metin-04)" }}>
           {tamamSayisi}/{buyukluk} soru tamam
         </span>
-        <div className="flex flex-wrap gap-1">
+        {sayacSagIcerik}
+        {gezinmeGoster && <div className="flex flex-wrap gap-1">
           {taslaklar.map((t, i) => (
             <button
               key={i}
@@ -67,12 +79,12 @@ export function SoruSetiFormu({ taslaklar, onDegis, buyukluk, secenekSayisi }: S
               {i + 1}
             </button>
           ))}
-        </div>
+        </div>}
       </div>
 
       {/* Soru kartları */}
       <div className="flex flex-col gap-2.5">
-        {taslaklar.map((t, i) => (
+        {gorunenTaslaklar.map((t, i) => (
           <div key={i} ref={el => { kartRefs.current[i] = el; }}
             className="border border-[var(--tema-yerel-uretim-cizgi-01)] rounded-lg p-3 bg-[var(--tema-yerel-uretim-kart-01)]">
             <div className="flex items-start justify-between gap-2 mb-1.5">
@@ -125,8 +137,10 @@ export function SoruSetiFormu({ taslaklar, onDegis, buyukluk, secenekSayisi }: S
         ))}
       </div>
 
+      {gizliSoruVar&&<button type="button" onClick={() => setAcilanSoruSayisi(gorunenTaslaklar.length + 1)} className="mt-2 w-full rounded-lg border border-[var(--tema-kontrol-cizgi)] bg-[var(--tema-yuzey)] py-1 text-xs font-semibold text-[var(--tema-kontrol-eylem)] cursor-pointer">Soru Alanı Aç</button>}
+
       {/* Soru ekle — tavan: talep büyüklüğü */}
-      {taslaklar.length < buyukluk && (
+      {!gizliSoruVar && taslaklar.length < buyukluk && (
         <button type="button" onClick={ekle}
           className="mt-2.5 w-full border border-dashed border-[var(--tema-yerel-uretim-cizgi-21)] rounded-lg py-2 text-xs font-semibold text-[var(--tema-yerel-uretim-yardimci-metin-01)] bg-transparent cursor-pointer"
           style={{ fontFamily: "'Nunito', sans-serif" }}>

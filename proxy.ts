@@ -13,7 +13,7 @@ export async function proxy(request: NextRequest) {
   // Agora iş partnerlerinin açık giriş/kayıt sayfası; alt yollar bu muafiyete dahil değildir.
   if (request.nextUrl.pathname === "/partner") return NextResponse.next({ request });
   // Bu yolların partner kimliği kendi sunucu kapısında doğrulanır; iç kullanıcı oturumuna bağlanmaz.
-  if (["/partner/profil", "/partner/egitimler"].includes(request.nextUrl.pathname) && ["GET", "HEAD"].includes(request.method)) return NextResponse.next({ request });
+  if (["/partner/profil", "/partner/egitimler", "/partner/egitimler/yeni", "/partner/hak-edisleri", "/partner/raporlar"].includes(request.nextUrl.pathname) && ["GET", "HEAD"].includes(request.method)) return NextResponse.next({ request });
   if (["/partner/api/giris", "/partner/api/cikis"].includes(request.nextUrl.pathname) && request.method === "POST") return NextResponse.next({ request });
   // Profil ve logo yollarında ayrı partner oturumu endpoint içinde zorunludur.
   if (request.nextUrl.pathname === "/partner/api/profil" && ["GET", "POST"].includes(request.method)) return NextResponse.next({ request });
@@ -22,6 +22,10 @@ export async function proxy(request: NextRequest) {
   // Medya uçları partner üyeliğini ve eğitim sahipliğini kendi sunucu kapısında doğrular.
   if (request.nextUrl.pathname === "/partner/api/medya/video" && ["GET", "POST", "PUT"].includes(request.method)) return NextResponse.next({ request });
   if (request.nextUrl.pathname === "/partner/api/medya/podcast" && ["GET", "POST", "PATCH", "PUT"].includes(request.method)) return NextResponse.next({ request });
+  // Deneme uyarısı kişisel veri veya eğitim içeriği içermez; partner çerezi bu yola gönderilmez.
+  if (request.nextUrl.pathname === "/agora/kogniti-deneme-yayini.wav" && ["GET", "HEAD"].includes(request.method)) return NextResponse.next({ request });
+  // Koruma önizlemesi ve ses akışı kendi partner oturumunu her istekte doğrular.
+  if (/^\/partner\/api\/koruma\/[a-f0-9-]{36}$/i.test(request.nextUrl.pathname) && request.method === "GET") return NextResponse.next({ request });
   if (request.nextUrl.pathname === "/partner/api/yayinla" && request.method === "POST") return NextResponse.next({ request });
   // Yalnız üyelik kaydı POST isteği açık; endpoint origin/girdi/DB kapılarını denetler.
   if (request.nextUrl.pathname === "/partner/api/kayit" && request.method === "POST") return NextResponse.next({ request });

@@ -51,7 +51,6 @@ BEGIN
  IF p_islem IN ('aktif','pasif') AND (e.durum='taslak' OR e.yayinlandi_at IS NULL) THEN RETURN 'taslak'; END IF;
  IF p_islem='aktif' THEN
   IF p.ilk_giris_durumu<>'onaylandi' OR p.uyelik_durumu<>'onaylandi' THEN RETURN 'onay_eksik'; END IF;
-  IF NOT EXISTS(SELECT 1 FROM public.agora_partner_videolari WHERE yukleme_id=e.yayin_tanitim_video_id AND egitim_id=e.egitim_id AND rol='tanitim' AND durum='hazir' AND sure_saniye<=120) THEN RETURN 'dosya_eksik'; END IF;
   IF (e.yayin_araci='video' AND NOT EXISTS(SELECT 1 FROM public.agora_partner_videolari WHERE yukleme_id=e.yayin_egitim_video_id AND egitim_id=e.egitim_id AND rol='egitim' AND durum='hazir' AND sure_saniye>0))
    OR (e.yayin_araci='podcast' AND NOT EXISTS(SELECT 1 FROM public.agora_partner_podcastleri WHERE yukleme_id=e.yayin_podcast_id AND egitim_id=e.egitim_id AND durum='hazir')) THEN RETURN 'dosya_eksik'; END IF;
  END IF;

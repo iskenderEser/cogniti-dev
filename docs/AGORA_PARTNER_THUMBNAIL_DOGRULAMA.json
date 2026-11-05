@@ -1,0 +1,5 @@
+{
+  "checks": 57,
+  "status": "passed",
+  "scope": "Gerçek SQL/API ve katalog etkisi; ayrı yerel PGlite, sahte Bunny/Storage/admin. Canlı yayına işlem yapılmadı."
+}
