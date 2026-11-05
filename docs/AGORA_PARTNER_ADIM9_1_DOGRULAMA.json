@@ -1,0 +1,24 @@
+{
+  "sql_api": {
+    "checks": 19,
+    "status": "passed",
+    "scope": "Gerçek yeni SQL ve API, ayrı yerel PGlite; sahte admin oturumu/Storage. Canlı veriler okunmadı."
+  },
+  "react": {
+    "passed": 7,
+    "tests": [
+      "Şirket ve yetkili bilgileri kayıtlı verilerle görünür",
+      "Konum kimliği yerine il adı gösterilir",
+      "Logo seçilen partnerin korumalı logo ucundan gelir",
+      "Bilgiler salt okunurdur; kaydet/onay işlemi eklenmez",
+      "Okuma hatası eski firma bilgilerini göstermez",
+      "Tekrar Dene kayıtlı bilgileri yeniden açar",
+      "Bulunamayan partner açıkça belirtilir"
+    ],
+    "scope": "Gerçek React bilgi ekranı; fetch ve Image sunumu sahte. Gerçek tarayıcı kabulü değildir."
+  },
+  "typecheck": "başarılı",
+  "eslint": "0 hata, şema snapshotı nedeniyle 1 RPC uyarısı",
+  "diff": "başarılı",
+  "canli_sql": "Kullanıcı uygulayacak; uygulanmadı."
+}

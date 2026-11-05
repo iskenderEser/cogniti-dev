@@ -1,0 +1,29 @@
+{
+  "sql_api": {
+    "checks": 51,
+    "status": "passed",
+    "scope": "Gerçek SQL/API, ayrı yerel PGlite ve sahte Bunny/Storage; gerçek eğitim yayımlanmadı."
+  },
+  "react": {
+    "passed": 7,
+    "tests": [
+      "Taslak kartında Agora’da Yayımla butonu görünür",
+      "Yayımla önce gerçek Cogniti AlertDialog modalını açar",
+      "İptal yayımlama isteği göndermez",
+      "Eksik içerik hatası modalda görünür; başarı gösterilmez",
+      "Yayımlama sırasında modal düğmeleri kilitlenir",
+      "Başarı modalı kapatır ve toast gösterir",
+      "Yayımlanan kart tekrar yayımlama butonu göstermez"
+    ],
+    "scope": "Gerçek React yönetim ekranı, AlertDialog ve toast; fetch/HOYK görsel sunumu sahte. Gerçek tarayıcı kabulü değildir."
+  },
+  "typecheck": "başarılı",
+  "eslint": {
+    "hata": 0,
+    "uyari": 3,
+    "neden": "Yeni/eski partner RPC adları mevcut sema.json snapshotında yok; canlı şema çekilmedi."
+  },
+  "diff_check": "başarılı",
+  "canli_sql": "Kullanıcı uygulayacak; henüz uygulanmadı.",
+  "gercek_yayimlama": "Yapılmadı."
+}

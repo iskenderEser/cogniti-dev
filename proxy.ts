@@ -10,6 +10,21 @@ import { eclubKisiErisimi } from "@/lib/eclub/kisiErisim";
 import { ECZANEM_KAPALI_MESAJI, eczanemRolErisimi } from "@/lib/eczanem/erisim";
 
 export async function proxy(request: NextRequest) {
+  // Agora iş partnerlerinin açık giriş/kayıt sayfası; alt yollar bu muafiyete dahil değildir.
+  if (request.nextUrl.pathname === "/partner") return NextResponse.next({ request });
+  // Bu yolların partner kimliği kendi sunucu kapısında doğrulanır; iç kullanıcı oturumuna bağlanmaz.
+  if (["/partner/profil", "/partner/egitimler"].includes(request.nextUrl.pathname) && ["GET", "HEAD"].includes(request.method)) return NextResponse.next({ request });
+  if (["/partner/api/giris", "/partner/api/cikis"].includes(request.nextUrl.pathname) && request.method === "POST") return NextResponse.next({ request });
+  // Profil ve logo yollarında ayrı partner oturumu endpoint içinde zorunludur.
+  if (request.nextUrl.pathname === "/partner/api/profil" && ["GET", "POST"].includes(request.method)) return NextResponse.next({ request });
+  if (request.nextUrl.pathname === "/partner/api/logo" && request.method === "GET") return NextResponse.next({ request });
+  if (request.nextUrl.pathname === "/partner/api/egitimler" && ["GET", "POST", "DELETE"].includes(request.method)) return NextResponse.next({ request });
+  // Medya uçları partner üyeliğini ve eğitim sahipliğini kendi sunucu kapısında doğrular.
+  if (request.nextUrl.pathname === "/partner/api/medya/video" && ["GET", "POST", "PUT"].includes(request.method)) return NextResponse.next({ request });
+  if (request.nextUrl.pathname === "/partner/api/medya/podcast" && ["GET", "POST", "PATCH", "PUT"].includes(request.method)) return NextResponse.next({ request });
+  if (request.nextUrl.pathname === "/partner/api/yayinla" && request.method === "POST") return NextResponse.next({ request });
+  // Yalnız üyelik kaydı POST isteği açık; endpoint origin/girdi/DB kapılarını denetler.
+  if (request.nextUrl.pathname === "/partner/api/kayit" && request.method === "POST") return NextResponse.next({ request });
   // Bu endpoint kendi CRON_SECRET kontrolünü yapar; kullanıcı oturumu gerekmez.
   if (request.nextUrl.pathname === "/api/cron/firmastore-cek-eposta") return NextResponse.next({ request });
   // Daily başlangıç testi dahil HMAC kontrolü route içinde; oturum/DB çağrısı gerekmez.

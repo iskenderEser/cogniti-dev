@@ -1,0 +1,26 @@
+{
+  "sql_api": {
+    "checks": 52,
+    "status": "passed",
+    "scope": "Gerçek SQL/API ve katalog etkisi; ayrı yerel PGlite, sahte Bunny/Storage/admin. Canlı yayına işlem yapılmadı."
+  },
+  "react": {
+    "passed": 9,
+    "tests": [
+      "Kayıtlı yayında incele/pasife al/sil eylemleri görünür",
+      "İncele açıklama, çoklu hedef, video ve soruları açar",
+      "Moderasyon gerçek Cogniti teyit modalıyla başlar",
+      "İptal kayıt değiştirmez",
+      "Sürüm çakışması modalda gösterilir",
+      "İşlem sırasında teyit ve iptal kilitlidir",
+      "Pasife alınca liste ve toast güncellenir",
+      "Tekrar aktife alma yeni sürümle çalışır",
+      "Silme sonrasında kayıt listeden çıkar, toast ve boş liste görünür"
+    ],
+    "scope": "Gerçek React moderasyon, AlertDialog ve toast; fetch/HOYK sunumu sahte, gerçek tarayıcı kabulü değildir."
+  },
+  "typecheck": "başarılı",
+  "eslint": "0 hata; şema snapshotı nedeniyle 4 RPC uyarısı",
+  "diff": "başarılı",
+  "canli_sql": "Kullanıcı uygulayacak; henüz uygulanmadı."
+}

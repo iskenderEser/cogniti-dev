@@ -129,7 +129,7 @@ export const MODUL_SEKMELERI: ModulSekme[] = [
   { id: "firmastore", etiket: "FirmaStore", grup: "modul", firmaAdminGorur: true },
 ];
 
-export type GlobalBolumId = "hbstore" | "eclubstore" | "uretim" | "sistem" | "bannerlar" | "veri-sil";
+export type GlobalBolumId = "partnerler" | "hbstore" | "eclubstore" | "uretim" | "sistem" | "bannerlar" | "veri-sil";
 
 export interface GlobalBolum {
   id: GlobalBolumId;

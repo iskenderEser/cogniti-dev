@@ -22,8 +22,9 @@ export default function KarsilamaSayfasi({ fiyatlar = false }: { fiyatlar?: bool
         <nav className={styles.welcomeActions} aria-label="Karşılama gezinmesi">
           <Link className={styles.pricingNav} href={fiyatlar ? "/welcome" : "/welcome/fiyatlar"}>{fiyatlar ? "GİRİŞ SAYFASI" : "PAKETLER VE FİYATLAR"}</Link>
           <Link className={styles.action} href="/login">
-            <LogIn size={16} aria-hidden="true" />Giriş Yap
+            <LogIn size={16} aria-hidden="true" />Giriş
           </Link>
+          <Link className={`${styles.action} ${styles.partnerAction}`} href="/partner"><LogIn size={16} aria-hidden="true" />Partner Girişi</Link>
         </nav>
       </header>
       <main>{fiyatlar ? <FiyatlarIcerigi /> : <CognitiHakkinda />}</main>

@@ -1,0 +1,25 @@
+{
+  "sql_api": {
+    "checks": 49,
+    "status": "passed",
+    "scope": "Gerçek SQL/API, parola doğrulaması ve oturum oluşturma/iptali; ayrı yerel PGlite, sahte cookies/Storage. Canlı hesap değiştirilmedi."
+  },
+  "react": {
+    "passed": 8,
+    "tests": [
+      "Üyelik onayları ve mevcut erişim durumu görünür",
+      "Erişim kapatma gerçek Cogniti modalıyla teyit edilir",
+      "İptal erişimi değiştirmez",
+      "Çakışma hatası modalda gösterilir; başarı toastı çıkmaz",
+      "İşlem sürerken teyit ve iptal kilitlidir",
+      "Kapatma sonucu yeniden okunur, toast ve açma butonu görünür",
+      "Yeniden açma sunucudaki yeni sürümü kullanır ve toast gösterir",
+      "Mevcut onay yönetimi bağlantısı korunur"
+    ],
+    "scope": "Gerçek React ekranı, AlertDialog ve toast; fetch sahte. Gerçek tarayıcı kabulü değildir."
+  },
+  "typecheck": "başarılı",
+  "eslint": "0 hata, şema snapshotı kaynaklı 2 RPC uyarısı",
+  "diff": "başarılı",
+  "canli_sql": "Kullanıcı uygulayacak; henüz uygulanmadı."
+}

@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState, useSyncExternalStore } from "react";
-import { Building2, ChevronDown, ChevronRight, Factory, ImageIcon, Plus, Settings2, Store, Ticket, Trash2, X, LogOut } from "lucide-react";
+import { Handshake, Building2, ChevronDown, ChevronRight, Factory, ImageIcon, Plus, Settings2, Store, Ticket, Trash2, X, LogOut } from "lucide-react";
+import { PARTNER_SAYFALARI, type PartnerSayfasi, type PartnerFirmaOzeti } from "@/lib/agora/partnerFirmaYonetimi";
 import type { Firma } from "../_types";
 import type { GlobalBolumId, ModulSekmeId } from "../_constants";
 import { platformBannerFirmasi } from "@/lib/eclub/banner";
@@ -49,6 +50,12 @@ export function yonetimSayfasiBilgisi(sayfa: FirmaSayfasi, platform = false) {
 }
 
 interface Props {
+  partnerFirmalar?: PartnerFirmaOzeti[];
+  partnerYukleniyor?: boolean;
+  partnerHata?: string;
+  seciliPartnerId?: string | null;
+  seciliPartnerSayfa?: PartnerSayfasi;
+  onPartnerSec?: (partnerId:string,sayfa:PartnerSayfasi) => void;
   firmaAdmin?: boolean;
   firmalar: Firma[];
   seciliFirma: Firma | null;
@@ -67,6 +74,7 @@ interface Props {
 export default function FirmaGezinme(p: Props) {
   const mobil = useSyncExternalStore(mobilDinle, mobilOku, sunucuMobilOku);
   const [arama, setArama] = useState("");
+  const [kapaliPartnerId, setKapaliPartnerId] = useState<string | null>(null);
   const [kapaliFirmaId, setKapaliFirmaId] = useState<string | null>(null);
   useEffect(() => {
     if (!p.acik || !p.hedefGrup) return;
@@ -128,7 +136,26 @@ export default function FirmaGezinme(p: Props) {
     {mobil && <div className={styles.drawerHeader}><Dialog.Title>Yönetim Menüsü</Dialog.Title><Dialog.Close asChild><button type="button" className={styles.button} aria-label="Yönetim menüsünü kapat"><X /></button></Dialog.Close></div>}
     <div className={styles.navScroll}>
     {!p.firmaAdmin && <div className={styles.navSection}>
-      <p className={styles.navTitle} data-nav-grup="Cogniti Yönetimi" tabIndex={-1}>Cogniti Yönetimi</p>
+      <button type="button" className={`${styles.navButton} ${styles.managementEntry}`} data-nav-grup="Cogniti Partner Yönetimi" aria-current={p.globalBolum === "partnerler" && !p.seciliPartnerId ? "page" : undefined} onClick={() => { p.onKapat(); p.onGlobalSec("partnerler"); }}><Handshake aria-hidden="true" />COGNITI PARTNER YÖNETİMİ</button>
+      {p.partnerYukleniyor && <p role="status" className={styles.empty}>Partner firmalar yükleniyor…</p>}
+      {p.partnerHata && <p role="alert" className={styles.empty}>{p.partnerHata}</p>}
+      {(p.partnerFirmalar ?? []).map(partner => {
+        const secili=p.globalBolum==="partnerler" && p.seciliPartnerId===partner.partner_id;
+        const acik=secili && kapaliPartnerId!==partner.partner_id;
+        return <div key={partner.partner_id}>
+          <button type="button" className={styles.companyButton} aria-expanded={acik} aria-controls={`partner-nav-${partner.partner_id}`} onClick={()=>{
+            if(acik){setKapaliPartnerId(partner.partner_id);return;}
+            setKapaliPartnerId(null);p.onPartnerSec?.(partner.partner_id,"firma-bilgileri");
+          }}><Building2 /><span className={styles.companyName}>{partner.sirket_adi}</span>{acik?<ChevronDown />:<ChevronRight />}</button>
+          {acik && <div id={`partner-nav-${partner.partner_id}`} className={styles.companyPages}>
+            {(Object.keys(PARTNER_SAYFALARI) as PartnerSayfasi[]).map(sayfa=><button key={sayfa} type="button" className={styles.navButton} aria-current={p.seciliPartnerSayfa===sayfa?"page":undefined} onClick={()=>{p.onKapat();p.onPartnerSec?.(partner.partner_id,sayfa);}}>{PARTNER_SAYFALARI[sayfa]}</button>)}
+          </div>}
+        </div>;
+      })}
+
+    </div>}
+    {!p.firmaAdmin && <div className={styles.navSection}>
+      <p className={styles.navTitle} data-nav-grup="Cogniti Firma Yönetimi" tabIndex={-1}>COGNITI FİRMA YÖNETİMİ</p>
       <div className={styles.navList}>
         <button type="button" className={styles.navButton} aria-current={p.globalBolum === "yeni-firma" ? "page" : undefined} onClick={() => { p.onKapat(); p.onGlobalSec("yeni-firma"); }}><Plus />Yeni Firma Kaydı</button>
         <div role="separator" style={{ borderTop: "1px solid var(--tema-kontrol-cizgi)", margin: "6px 0" }} />
@@ -150,7 +177,7 @@ export default function FirmaGezinme(p: Props) {
       const secili = p.seciliFirma?.firma_id === f.firma_id;
       const acik = secili && (kapaliFirmaId !== f.firma_id || Boolean(p.acik && p.hedefGrup));
       return <div key={f.firma_id}>
-        <button type="button" className={styles.companyButton} aria-expanded={acik} aria-controls={`firma-nav-${f.firma_id}`} data-nav-grup={platformBannerFirmasi(f.firma_id) ? "Cogniti Yönetimi" : undefined} onClick={() => {
+        <button type="button" className={styles.companyButton} aria-expanded={acik} aria-controls={`firma-nav-${f.firma_id}`} data-nav-grup={platformBannerFirmasi(f.firma_id) ? "Cogniti Firma Yönetimi" : undefined} onClick={() => {
           if (secili && acik) { setKapaliFirmaId(f.firma_id); return; }
           setKapaliFirmaId(null);
           p.onFirmaSec(f);

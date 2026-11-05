@@ -20,6 +20,12 @@ import { useTakimBolgeForm } from "./_hooks/useTakimBolgeForm";
 
 import AdminUstBar from "./_components/AdminUstBar";
 import AdminBreadcrumb from "./_components/AdminBreadcrumb";
+import { usePartnerFirmalari } from "./_hooks/usePartnerFirmalari";
+import { PARTNER_SAYFALARI, type PartnerSayfasi } from "@/lib/agora/partnerFirmaYonetimi";
+import PartnerYayinlari from "./_components/PartnerYayinlari";
+import PartnerUyelikYetkiler from "./_components/PartnerUyelikYetkiler";
+import PartnerFirmaBilgileri from "./_components/PartnerFirmaBilgileri";
+import PartnerYonetimi from "./_components/PartnerYonetimi";
 import TopluTekilSilPaneli from "./_components/TopluTekilSilPaneli";
 import TokenYonetimi from "./_components/TokenYonetimi";
 import TClubYonetimi from "./_components/TClubYonetimi";
@@ -61,9 +67,21 @@ function AdminPanelIcerigi() {
   const sayfaParametresi = aramaParametreleri.get("sayfa") ?? "firmabilgileri";
   const seciliSekme: FirmaSayfasi = Object.hasOwn(FIRMA_SAYFALARI, sayfaParametresi) ? sayfaParametresi as FirmaSayfasi : "firmabilgileri";
   const bolumParametresi = aramaParametreleri.get("bolum");
-  const globalBolum = bolumParametresi && ["bannerlar", "sistem", "hbstore", "eclubstore", "veri-sil", "uretim", "yeni-firma"].includes(bolumParametresi)
+  const globalBolum = bolumParametresi && ["partnerler", "bannerlar", "sistem", "hbstore", "eclubstore", "veri-sil", "uretim", "yeni-firma"].includes(bolumParametresi)
     ? bolumParametresi as GlobalBolumId | "yeni-firma" : null;
   const admin = useAdminPanel(firmaId);
+  const partnerler = usePartnerFirmalari(!firmaAdmin && !!oturumKullanicisi);
+  const partnerId = globalBolum === "partnerler" ? aramaParametreleri.get("partner") : null;
+  const partnerSayfaParametresi = aramaParametreleri.get("partner_sayfa") ?? "firma-bilgileri";
+  const partnerSayfasi:PartnerSayfasi = Object.hasOwn(PARTNER_SAYFALARI,partnerSayfaParametresi) ? partnerSayfaParametresi as PartnerSayfasi : "firma-bilgileri";
+  const seciliPartner = partnerler.firmalar.find(p=>p.partner_id===partnerId);
+  const handlePartnerSec = (id:string,sayfa:PartnerSayfasi) => {
+    const params = new URLSearchParams(aramaParametreleri.toString());
+    params.delete("firma");params.set("bolum","partnerler");params.set("partner",id);params.set("partner_sayfa",sayfa);
+    window.history.pushState(null,"",`?${params.toString()}`);
+    document.getElementById("admin-icerik")?.scrollTo({top:0});setMenuAcik(false);
+  };
+
   const [menuAcik, setMenuAcik] = useState(false);
   const [menuHedefi, setMenuHedefi] = useState<string | null>(null);
 
@@ -76,6 +94,7 @@ function AdminPanelIcerigi() {
 
   const konumuGuncelle = (sekme: FirmaSayfasi, firma: Firma | null, bolum: GlobalBolumId | "yeni-firma" | null = null) => {
     const params = new URLSearchParams(aramaParametreleri.toString());
+    params.delete("partner");params.delete("partner_sayfa");
     if (firma) params.set("firma", firma.firma_id); else params.delete("firma");
     params.set("sayfa", sekme);
     if (bolum) params.set("bolum", bolum); else params.delete("bolum");
@@ -90,7 +109,7 @@ function AdminPanelIcerigi() {
     konumuGuncelle(sekme, firma ?? admin.seciliFirma);
   };
   const handleGlobalSec = (bolum: GlobalBolumId | "yeni-firma") => {
-    konumuGuncelle(seciliSekme, admin.seciliFirma, bolum);
+    konumuGuncelle(seciliSekme, bolum === "partnerler" ? null : admin.seciliFirma, bolum);
   };
 
   if (admin.yukleniyor || !admin.kullanici) return null;
@@ -100,7 +119,7 @@ function AdminPanelIcerigi() {
   const saltOkunur = !globalBolum && seciliSekme !== "firma-admin-yonetimi" && !firmaAdmin && f?.firma_admin_aktif === true;
   const platformSecili = !!f && platformBannerFirmasi(f.firma_id);
   const sayfa = yonetimSayfasiBilgisi(seciliSekme, platformSecili);
-  const globalBaslik = globalBolum ? ({ bannerlar:"Cogniti Bannerları", sistem:"Sistem Ayarları", hbstore:"FirmaStore Çek Yönetimi", eclubstore:"E-Club Çek Teslimatı", "veri-sil":"Yayın Toplu/Tekil Silme", uretim:"İçerik Üretimi", "yeni-firma":"Yeni Firma Kayıt" }[globalBolum]) : null;
+  const globalBaslik = globalBolum ? ({ partnerler:"Cogniti Partner Yönetimi", bannerlar:"Cogniti Bannerları", sistem:"Sistem Ayarları", hbstore:"FirmaStore Çek Yönetimi", eclubstore:"E-Club Çek Teslimatı", "veri-sil":"Yayın Toplu/Tekil Silme", uretim:"İçerik Üretimi", "yeni-firma":"Yeni Firma Kayıt" }[globalBolum]) : null;
 
   return (
     <FirmaYonetimYetkisi value={saltOkunur}><div className={styles.shell}>
@@ -115,18 +134,24 @@ function AdminPanelIcerigi() {
       <HataMesajiContainer mesajlar={admin.mesajlar} />
 
       <div className={styles.body}>
-        <FirmaGezinme firmalar={admin.firmalar} seciliFirma={f} seciliSayfa={seciliSekme}
+        <FirmaGezinme partnerFirmalar={partnerler.firmalar} partnerYukleniyor={partnerler.yukleniyor} partnerHata={partnerler.hata}
+          seciliPartnerId={partnerId} seciliPartnerSayfa={partnerSayfasi} onPartnerSec={handlePartnerSec} firmalar={admin.firmalar} seciliFirma={f} seciliSayfa={seciliSekme}
           globalBolum={globalBolum} onFirmaSec={handleFirmaSecildi} onSayfaSec={handleSekmeSec}
           onGlobalSec={handleGlobalSec} firmaAdmin={firmaAdmin} loading={admin.loading} acik={menuAcik} hedefGrup={menuHedefi} onCikis={admin.cikisYap} onKapat={() => setMenuAcik(false)} />
         <main className={styles.main} id="admin-icerik"><div className={styles.content}>
           <AdminBreadcrumb firma={f} sayfa={seciliSekme} platform={platformSecili} globalBaslik={globalBaslik}
             onSayfaSec={handleSekmeSec} onGrupAc={grup => { setMenuHedefi(grup); setMenuAcik(true); }} />
-          <div className={styles.heading}><div><h1>{globalBaslik ?? (f ? sayfa.baslik : "Firma Yönetimi")}</h1>
+          <div className={styles.heading}><div><h1>{partnerId ? PARTNER_SAYFALARI[partnerSayfasi] : globalBaslik ?? (f ? sayfa.baslik : "Firma Yönetimi")}</h1>
+            {partnerId && seciliPartner && <p>{seciliPartner.sirket_adi}</p>}
             {!globalBolum && f && <p>{f.firma_adi} · {seciliSekme === "kullanicilar" ? "Kullanıcı kayıtları, roller ve erişim yetkileri" : seciliSekme === "firma-admin-yonetimi" ? "Yönetim erişimi ve sorumluluk" : sayfa.baslik}</p>}
             {(globalBolum === "hbstore" || globalBolum === "eclubstore") && <p>Mevcut ortak ekran · Tüm firmalar</p>}
           </div>{!globalBolum && f && <span className={styles.badge}>{platformSecili ? <Settings2 /> : <Building2 />}{f.firma_adi}</span>}</div>
           {!globalBolum && saltOkunur && <p role="status" className={styles.notice}>Firma admini açık · Cogniti bu firma alanında yalnız görüntüleme yapabilir.</p>}
-          {globalBolum === "yeni-firma" ? (
+          {globalBolum === "partnerler" ? (
+            !firmaAdmin && (partnerId && partnerSayfasi === "firma-bilgileri" ? <PartnerFirmaBilgileri key={partnerId} partnerId={partnerId} /> : partnerId && partnerSayfasi === "uyelik-yetkiler" ? <PartnerUyelikYetkiler key={partnerId} partnerId={partnerId} /> : partnerId && partnerSayfasi === "yayinlar" ? <PartnerYayinlari key={partnerId} partnerId={partnerId} /> : partnerId ? <section className={styles.card} aria-label={PARTNER_SAYFALARI[partnerSayfasi]}>
+              <div className={styles.cardBody}>{partnerler.yukleniyor ? <p role="status">Partner bilgisi yükleniyor…</p> : partnerler.hata ? <p role="alert">{partnerler.hata}</p> : !seciliPartner ? <p role="alert">Partner firma bulunamadı.</p> : <p className={styles.empty}>Bu bölüm henüz kullanıma açılmadı.</p>}</div>
+            </section> : <PartnerYonetimi />)
+          ) : globalBolum === "yeni-firma" ? (
             <YeniFirmaFormu onKaydet={admin.handleFirmaEkle} />
           ) : globalBolum === "bannerlar" ? (
             <CognitiBannerlari firmalar={admin.firmalar} />

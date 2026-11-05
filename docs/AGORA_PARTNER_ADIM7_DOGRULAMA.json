@@ -1,0 +1,33 @@
+{
+  "sql_api": {
+    "checks": 48,
+    "status": "passed",
+    "scope": "Yerel PGlite içinde gerçek migration/RPC ve API işlevleri. Bunny/Storage sahte; gerçek yükleme yapılmadı."
+  },
+  "react_medya": {
+    "passed": 12,
+    "tests": [
+      "Aynı formda eğitim videosu ve ayrı tanıtım videosu alanı",
+      "Uyumsuz video sunucuya gitmez",
+      "Eğitim videosu ortak TUS yardımcısıyla gönderilir",
+      "Video aktarımı mevcut hazır-video PUT ucundan tamamlanır",
+      "Otomatik taslak kimliği ve sürümü üst forma iletilir",
+      "TUS hatası başarıya dönüşmez ve yeniden deneme açılır",
+      "2 dakikadan uzun tanıtım yüklemeden önce engellenir",
+      "Tam 2 dakikalık tanıtım ayrı rol ile yüklenir",
+      "Podcast seçildiğinde ses uzantıları gösterilir",
+      "Podcast checksum ve makbuzla ayrı kanaldan tamamlanır",
+      "Podcast başlangıcına SHA256 özeti eklenir",
+      "Yeniden açılışta kayıtlı ses oynatıcısı ve uzun tanıtım hatası görünür"
+    ],
+    "scope": "Gerçek React medya alanı; TUS, XHR ve fetch sahte. Tarayıcı veya dış hizmet yüklemesi değildir."
+  },
+  "regresyon_form": {
+    "passed": 10
+  },
+  "regresyon_bunny_suresi": {
+    "passed": 3
+  },
+  "canli_sql": "Kullanıcı uygulayacak; uygulanmış sayılmaz.",
+  "gercek_dosya_yukleme": "Henüz yapılmadı."
+}

@@ -1,0 +1,25 @@
+{
+  "sql_api": {
+    "checks": 45,
+    "status": "passed",
+    "scope": "Gerçek SQL ve API/ortak doğrulama; ayrı yerel PGlite, sahte oturum/Storage. Medya aktarımı ve canlı tarayıcı kabulü değildir."
+  },
+  "react": {
+    "passed": 10,
+    "tests": [
+      "Yeni form açılır; 10 boş soru kartı gösterilir",
+      "Eksik form sunucuya gönderilmez ve hata görünür",
+      "Doldurulan form kayıt ucuna gönderilir",
+      "Kategori/hedef/açıklama/fiyat ve sorular korunur",
+      "Başarı geri çağrısı ve işlem kilidi çalışır",
+      "Kayıt yeniden açıldığında alanlar ve cevaplar geri gelir",
+      "Düzenleme doğru eğitim ve sürümle gönderilir",
+      "Sunucu hatası görünür; başarı bildirilmez",
+      "İşlem sürerken çift kayıt engellenir",
+      "Yayındaki eğitim formdan değiştirilemez"
+    ],
+    "scope": "Happy DOM içinde gerçek React formu ve ortak bileşenler; fetch sahte, gerçek tarayıcı görsel kabulü değildir."
+  },
+  "typecheck": "başarılı",
+  "eslint": "0 hata / 0 uyarı"
+}

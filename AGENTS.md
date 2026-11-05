@@ -176,3 +176,17 @@ Token sisteminin temel uygulaması ve SQL kurulumları yapılmıştır; aşağı
 - Eczanem tüketiminde gönderim anındaki bağlayan UTT, bölge ve takım bilgisini koruyacak tarihsel kapsamı ele al. Şu anda mevcut bağ ve organizasyon kullanıldığından geçmiş görünüm değişebilir.
 - Eş zamanlı işlem testi kullanıcı kararıyla geçildi; doğrulanmış kabul etme ve yeni bir yöntem için kullanıcı talimatını bekle.
 - Token değişikliklerinin commit ve push durumu ayrıca kontrol edilir; bu işlemler kullanıcı talimatıyla yapılır.
+
+
+## Agora partner IBAN — canlıya geçişte düzeltilecek (5 Kasım 2026)
+
+Kullanıcı kararı: Sistem test ortamındayken gerçek banka hesabı kullanılmayacak. Agora partner profilinde ISO 7064 MOD 97 matematiksel IBAN kontrolü **geçici olarak askıdadır**; sabit TR ve ardından tam 24 rakam biçim kontrolü korunur. Bu karar diğer modüllerin doğrulamalarını değiştirmez.
+
+**CANLIYA GEÇİŞTE DÜZELTİLECEK:** `lib/agora/partnerProfil.ts` içindeki `partnerIbanGecerli` işlevinde ve `agora_partner_profilleri.iban` SQL CHECK kuralında MOD 97 kontrolünü yeniden etkinleştir. İstemci/sunucu ortak doğrulaması, ana kurulum SQL'i ve mevcut veritabanı için geri açma migration'ı birlikte güncellenecek. Test IBAN kayıtları canlıya taşınmadan ele alınacak; canlı gerçek IBAN ile kayıt/yeniden okuma kontrolü yapılmadan bu not tamamlandı sayılmayacak. Test istisnasını kalıcı canlı kuralı kabul etme.
+
+Askıya alma SQL'i: `scripts/sql/agora_partner_iban_test_kurali.sql`. SQL kullanıcı tarafından çalıştırılır; uygulandığı başarı sonucu ile doğrulanır.
+
+
+## Cogniti işlem uyarısı ve teyit standardı
+
+Kullanıcı kararı: İşlem uyarıları ve teyitleri tarayıcının `window.alert`, `window.confirm` veya `window.prompt` pencereleriyle gösterilmez. Cogniti'nin mevcut ortak modal bileşenleri kullanılır (`components/ui/alert-dialog.tsx` gibi). Eğitim silme teyidi de bu standarda bağlıdır. Başarılı işlemin kullanıcıya iletilmesi için istenen toast bildirimleri korunur.

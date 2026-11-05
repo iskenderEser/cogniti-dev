@@ -1,3 +1,4 @@
+import { partnerVideoAktarim } from "@/lib/agora/partnerMedyaSunucu";
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient, createClient } from "@/lib/supabase/server";
 import { hataYaniti, isKuraluHatasi, sunucuHatasi, yetkiHatasi, rolHatasi, validasyonHatasi } from "@/lib/utils/hataIsle";
@@ -9,6 +10,7 @@ import { hazirVideoTamamla } from "@/lib/video/hazirVideoTamamla";
 import { pushYayinlaArkada } from "@/lib/push/orkestrasyon";
 
 export async function PUT(request: NextRequest) {
+  if (request.headers.get("x-agora-partner") === "1") return partnerVideoAktarim(request);
   try {
     const supabase = await createClient();
     const adminSupabase = createAdminClient();

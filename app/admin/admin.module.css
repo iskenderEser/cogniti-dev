@@ -195,3 +195,26 @@
   .drawerFooter button { display:flex; align-items:center; gap:8px; width:100%; min-height:44px; padding:10px 12px; border:0; border-radius:8px; background:transparent; color:var(--tema-vurgu); font:inherit; font-size:14px; cursor:pointer; }
   .sidebar:not([role=dialog]) { display:none; }
 }
+
+.managementEntry { font-size:11px; font-weight:800; letter-spacing:.7px; text-transform:uppercase; }
+
+.partnerUyelikDetay { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin: 20px 0; }
+.partnerUyelikDetay > div { min-width: 0; }
+.partnerUyelikDetay dt { color: var(--tema-kontrol-ikincil-metin); font-size: 12px; font-weight: 700; }
+.partnerUyelikDetay dd { margin: 5px 0 0; color: var(--tema-kontrol-metin); font-size: 13px; overflow-wrap: anywhere; white-space: pre-wrap; }
+.partnerUyelikLogo { display: block; max-width: 100%; max-height: 100px; object-fit: contain; object-position: left center; }
+.partnerUyelikHata { color: var(--tema-bildirim-hata-metin); background: var(--tema-bildirim-hata-zemin); border-color: var(--tema-bildirim-hata-cizgi); }
+@media (max-width: 600px) { .partnerUyelikDetay { grid-template-columns: minmax(0, 1fr); } }
+
+/* Partner bilgi kartlarında ilk alan satırları logo alanının altında aynı hizadadır. */
+.partnerBilgiLogoAlani { height:100px; display:flex; align-items:center; }
+.partnerYetkiliGovde::before { content:""; display:block; height:100px; }
+@media(max-width:760px) { .partnerYetkiliGovde::before { display:none; } }
+
+.partnerYayinKartlar { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px; }
+.partnerYayinKartlar [data-hoyk-kapak] img { object-fit:contain; padding:20px; }
+.partnerYayinVideo { width:100%; aspect-ratio:16/9; border:0; }
+.partnerYayinSes { width:100%; max-width:100%; }
+.partnerYayinSorular { padding-left:22px; display:flex; flex-direction:column; gap:14px; }
+@media(max-width:1199px) { .partnerYayinKartlar { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:639px) { .partnerYayinKartlar { grid-template-columns:minmax(0,1fr); } }

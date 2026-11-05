@@ -1,3 +1,4 @@
+import { partnerVideoSonucunuIsle, medyaUuid } from "@/lib/agora/partnerMedyaSunucu";
 // app/api/bunny/webhook/route.ts
 //
 // Bunny Stream encode-complete webhook (hazır olma + süre terfi tetikleyicisi).
@@ -51,6 +52,7 @@ export async function POST(request: NextRequest) {
     }
 
     const adminSupabase = createAdminClient();
+    if (medyaUuid(guid)) await partnerVideoSonucunuIsle(adminSupabase, guid, durum);
 
     // TUS sonrası talebe bağlanmış fakat henüz videolar zinciri açılmamış hazır
     // videoları, GUID'i idempotent işlem anahtarı yaparak yalnız bir kez tamamla.

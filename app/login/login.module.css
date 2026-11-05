@@ -97,3 +97,27 @@
 .pricingNav:hover { text-decoration: underline; text-underline-offset: 4px; }
 @media (max-width: 560px) { .welcomeActions { gap: 12px; } .pricingNav { font-size: 12px; } }
 @media (max-width: 350px) { .welcomePage .header { padding-inline: 12px; gap: 6px; } .welcomePage .brand img { width: 125px; } .welcomeActions { gap: 8px; } .welcomePage .action { padding-inline: 10px; } }
+
+/* Agora iş partneri giriş bağlantısı. */
+.partnerAction { background: #00a8e7; border-color: #00a8e7; color: #ffffff; }
+.partnerAction:hover { background: #38bdf8; border-color: #38bdf8; }
+/* Giriş bağlantıları birlikte kalır; tablet ve yarım pencerede başlık tek satırdır. */
+.welcomePage .header { flex-wrap: nowrap; }
+.welcomeActions { flex-wrap: nowrap; }
+@media (min-width: 641px) and (max-width: 1024px) {
+  .welcomePage .header { padding-inline: 24px; gap: 16px; }
+  .welcomePage .brand { flex: 0 1 170px; }
+  .welcomeActions { gap: 12px; }
+  .welcomePage .action { padding-inline: 14px; gap: 8px; }
+  .welcomePage .pricingNav { letter-spacing: 1px; white-space: nowrap; }
+}
+@media (max-width: 640px) {
+  .welcomePage .header { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 12px 16px; }
+  .welcomePage .brand { grid-column: 1; grid-row: 1; }
+  .welcomePage .brand img { width: 140px; }
+  .welcomeActions { display: contents; }
+  .welcomePage .pricingNav { grid-column: 2; grid-row: 1; justify-self: end; font-size: 10px; letter-spacing: .7px; white-space: nowrap; }
+  .welcomePage .action { grid-row: 2; min-height: 44px; padding-inline: 14px; }
+  .welcomePage .action:not(.partnerAction) { grid-column: 1; }
+  .welcomePage .partnerAction { grid-column: 2; }
+}
