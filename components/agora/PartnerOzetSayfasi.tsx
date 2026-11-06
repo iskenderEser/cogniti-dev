@@ -3,6 +3,8 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import PartnerKabugu from "./PartnerKabugu";
+import PartnerHakEdisTablosu from "./PartnerHakEdisTablosu";
+import PartnerRaporTablosu from "./PartnerRaporTablosu";
 import styles from "./partner-ozet.module.css";
 
 const BASLIKLAR={
@@ -10,7 +12,7 @@ const BASLIKLAR={
   raporlar:["ID","Eğitim Adı","Satış Fiyatı","Satılan Adet","Toplam Satış Fiyatı","Beğeni Sayısı","Favori Sayısı"],
 };
 
-export default function PartnerOzetSayfasi({firmaAdi,tur}:{firmaAdi:string;tur:keyof typeof BASLIKLAR}) {
+export default function PartnerOzetSayfasi({firmaAdi,tur,partnerId}:{firmaAdi:string;tur:keyof typeof BASLIKLAR;partnerId?:string}) {
   const router=useRouter(),kilit=useRef(false);
   const [cikiliyor,setCikiliyor]=useState(false),[hata,setHata]=useState("");
   const baslik=tur==="hak-edisleri"?"Hak Edişlerim":"Raporlarım";
@@ -20,12 +22,12 @@ export default function PartnerOzetSayfasi({firmaAdi,tur}:{firmaAdi:string;tur:k
     catch{setHata("Çıkış tamamlanamadı. Yeniden deneyin.");kilit.current=false;setCikiliyor(false);}
   }
   return <PartnerKabugu firmaAdi={firmaAdi} onCikis={()=>void cikis()} onAnaSayfa={()=>router.push("/partner/egitimler")} engelli={cikiliyor}>
-    <div className={styles.icerik}><h1>{baslik}</h1>
+    <div className={`${styles.icerik} ${partnerId?styles.hakedisIcerik:""}`}>{!partnerId&&<h1>{baslik}</h1>}
       {hata&&<p role="alert">{hata}</p>}
-      <div className={styles.tabloAlani}><table aria-label={baslik}>
+      {tur==="hak-edisleri" && partnerId ? <PartnerHakEdisTablosu key={partnerId} partnerId={partnerId} endpoint="/partner/api/hak-edisleri" anaBaslik /> : tur==="raporlar" && partnerId ? <PartnerRaporTablosu key={partnerId} partnerId={partnerId} endpoint="/partner/api/raporlar" anaBaslik /> : <div className={styles.tabloAlani}><table aria-label={baslik}>
         <thead><tr>{BASLIKLAR[tur].map(b=><th key={b} scope="col">{b}</th>)}</tr></thead>
         <tbody><tr><td colSpan={BASLIKLAR[tur].length}>Satın alma verileri henüz bağlanmadı.</td></tr></tbody>
-      </table></div>
+      </table></div>}
     </div>
   </PartnerKabugu>;
 }

@@ -1,11 +1,89 @@
 # 📘 HapBilgi — BLUEBOOK
 ### İş Modeli, Mimari, İş Kuralları ve Teknik Envanter Anayasası
-*Son genel inceleme: 28 Eylül 2026 | Asistan bölümü ve ilgili envanter güncellemesi: 9 Eylül 2026 | Ortak yayın arayüzü, mobil akış ve tanbur güncellemesi: 21 Eylül 2026 | E-Club iş modeli ve teknik kapanış güncellemesi: 28 Eylül 2026 | Depo tercihleri kod güncellemesi: 29 Eylül 2026; canlı yapısal kontrol: 5 Ekim 2026 (13/13) | Zorunlu Sade Kontrol Aileleri kararı: 8 Ekim 2026 | E-Club yeni gönderim ve planlama belgeleri: 13 Ekim 2026; canlı son doğrulama bekliyor | Görsel renk envanteri ve doğrulama kaydı: 17 Ekim 2026 | Agora partner, vitrin, satın alma ve üretici yayın alanı: 6 Kasım 2026*
+*Son genel inceleme: 28 Eylül 2026 | Asistan bölümü ve ilgili envanter güncellemesi: 9 Eylül 2026 | Ortak yayın arayüzü, mobil akış ve tanbur güncellemesi: 21 Eylül 2026 | E-Club iş modeli ve teknik kapanış güncellemesi: 28 Eylül 2026 | Depo tercihleri kod güncellemesi: 29 Eylül 2026; canlı yapısal kontrol: 5 Ekim 2026 (13/13) | Zorunlu Sade Kontrol Aileleri kararı: 8 Ekim 2026 | E-Club yeni gönderim ve planlama belgeleri: 13 Ekim 2026; canlı son doğrulama bekliyor | Görsel renk envanteri ve doğrulama kaydı: 17 Ekim 2026 | Agora partner, vitrin, satın alma ve üretici yayın alanı: 6 Kasım 2026 | Ticari gelir modeli ve haftalık banner kiralama: 6 Kasım 2026*
 
 ---
 
 ## 🏛️ Giriş ve Metodoloji
 **HapBilgi BLUEBOOK**, platformun iş modelini, kullanıcı alanlarını, rol ve yetki yapısını, üretim ve yayın akışlarını, öğrenme ve işlem kurallarını, veri mimarisini, arayüz sözleşmelerini ve dosya–tür–işlev envanterini tek kaynakta tanımlayan ana başvuru belgesidir.
+
+### 6 Kasım 2026 — Cogniti'nin ana faaliyeti ve ticari gelir modeli
+
+**Kullanıcı kararı:** Cogniti'nin ana faaliyeti **bilgi taşımaktır**; marka imzası **“bilgi taşır”** bu hizmeti anlatır. Satılan temel ticari değer **gönderidir**. **Token**, gönderiyi ve ekosistemdeki diğer ücretli hizmetleri ölçmek ve yönetmek için kullanılan ortak birimdir.
+
+Kullanıcının bu oturumda belirlediği **altı gelir kalemi**:
+
+**Kullanıcının gelir kaynağı ayrımı:**
+
+- **Cogniti'nin kendi kaynaklarından (1–3):** Gönderi, banner kiralama ve Viva yayınları.
+- **Dış kaynaklardan (4–6):** İçerik üretimi, hediye çeki tedarikçi indirimi/komisyonu ve Agora içerik satışlarından hizmet payı.
+
+| No | Gelir kalemi | Satılan değer ve kazanç biçimi |
+| --- | --- | --- |
+| 1 | **Gönderi — ana kazanç kalemi** | Bilginin hedef kişiye ulaştırılması. Gerçekleşen kişi–yayın gönderimi başına 1 token tüketilir; içeriğin açılması veya push/e-posta teslimi beklenmez. Kullandığın Kadar Öde, aylık paket ve paket aşımı bu hizmetin ticari kullanım seçenekleridir. |
+| 2 | **Banner kiralama** | Belirli banner alanının belirli süreyle kullanılması. Firma kaynaklı haftalık modelde alan başına 200 token; iki haftalık rezervasyonda 400 token uygulanır. Ayrıntılar aşağıdaki haftalık banner sözleşmesindedir. |
+| 3 | **Viva yayınları** | Canlı yayına gerçek katılım hizmeti. Katılımcıların gerçek süreleri toplanır, toplam kişi-dakika mevcut fiyatlama formülüyle tokena çevrilir. Davet sayısı üzerinden sabit token kesintisi güncel model değildir. |
+| 4 | **İçerik üretimi** | Firma için video, podcast, dijital broşür ve literatür hazırlanması karşılığındaki üretim hizmet bedeli. Tam ve kısmi üretim iş akışları Bölüm 5'te; ilan edilen hizmet fiyatları `app/_components/FiyatlarIcerigi.tsx` kaynağındadır. |
+| 5 | **Hediye çeklerinden komisyon / tedarikçi indirimi** | Çek satıcısından alınan indirimin Cogniti'ye kazanç sağlaması. Kullanıcının işletme içi ticari sınıflamasında bu fark **faaliyet dışı kazanç** olarak izlenir. Oran, çek satıcısıyla yapılan anlaşmaya bağlıdır; bu kararda sabit bir oran belirlenmedi. |
+| 6 | **Agora içerik satışlarından hizmet payı** | İş partnerlerinin hazır eğitim içeriklerinin satışından alınan **%15 Cogniti hizmet bedeli**. Satın alma ve partner hak edişi Bölüm 10'da kayıtlıdır. |
+
+**Gönderi kapsamı:** UTT/BM hedeflerine gerçek yayın açılışı, T-Club önerisi, C-Club challenge ve E-Club kişi gönderimi bu ana hizmeti oluşturur. Eczanem'de firma → UTT → eczane ara aktarımı token tüketmez; eczane → danışan gönderimi, kişi başına yayının sahibi firmadan tüketilir. Plan hazırlanması tüketim değildir; gerçek gönderim/açılış esas alınır.
+
+**İçerik üretiminin mevcut ilanı:** Fiyatlar sayfası video için 2.500 token / 25.000 TL, podcast için 1.500 token / 15.000 TL, dijital broşür için 1.000 token / 10.000 TL gösterir; literatür teklif usulüdür. Bu değerler sayfadaki ilanı kaydeder; bu inceleme bir tahsilat veya üretim bedelinin otomatik token kesintisi doğrulaması değildir.
+
+**Hediye çeki kazancının ayrımı:** FirmaStore ve E-Club hediye çeki süreçleri bu tedarik faaliyetinin uygulama alanlarıdır. Çekin toplam tutarı ile Cogniti'nin satıcıdan aldığı indirim ayrı izlenir. Bu kayıt kullanıcı tarafından belirlenen ticari modeli belgeler; satıcı sözleşmesi, gerçekleşmiş komisyon tutarı veya muhasebe entegrasyonu bu incelemede doğrulanmadı.
+
+**Agora gelirinin ayrımı:** Altıncı gelir kalemi, Bölüm 10'daki hazır içerik satışlarından alınan **%15 Cogniti hizmet bedelidir**. Partnerin içerik bedeli ile Cogniti hizmet payı ayrı tutulur; satın alınan içeriğin daha sonra kişilere gönderilmesi ise ayrı gönderi hizmetidir.
+
+### 6 Kasım 2026 — Haftalık banner kiralama: iş ve ücretlendirme kuralları
+
+**Kaynak karşılaştırması:** Haftalık banner yönetimi `635a1528` (2 Kasım 2026) kaynağında mevcuttur. Önceki banner kayıtları görsel yükleme ve gösterimi anlatıyor; aşağıdaki rezervasyon, süre, iptal ve token kurallarını kapsamıyordu. Bu bölüm mevcut kod ve kaynak SQL davranışlarını tamamlar.
+
+**Yerleşim ve yönetim**
+
+- Firma kaynaklı bannerlar `FirmaBannerTakvimi` üzerinden rezervasyonla yönetilir. `EclubBannerYonetimi`, platform firması dışındaki `kaynak="firma"` işlemlerini bu takvime yönlendirir.
+- Kiralanabilen beş alan: E-Club firma ve yayınları (`firma`), Eczanem üye firma görünümü (`uye-ana-sayfa`), eczane personelinin Üyeler (`uyeler`), Üye Yayınları (`uye-yayinlari`) ve İndirim Onayı (`indirim-onayi`) sayfalarıdır. Her alanda 1., 2. veya 3. banner sırası seçilir; takvim firma + alan + sıra kapsamında ayrı yönetilir.
+- Cogniti kaynaklı manuel yerleşimler `CognitiBannerlari` ve mevcut görsel yönetimi üzerinden ayrı yürür. Cogniti ve firma kaynakları aynı sayfanın sıralarını ve limitini paylaşır; diğer kaynağın görseli üzerine yazılamaz. Platform firmasının E-Club ve Eczanem üye ana sayfası alanları beş, diğer firma/alanlar üç sıra kullanır. Bu manuel akış, firma kaynaklı haftalık ücretli rezervasyonla aynı işlem değildir.
+- Takvim okuma ve yazma, firma yönetimi yetkileriyle sunucuda kontrol edilir. Salt okunur firma görünümü rezervasyon oluşturamaz veya değiştiremez.
+
+**Takvim ve görseller**
+
+- Türkiye saatine göre Pazartesi 00.00'da başlar; bir haftalık hak takip eden Pazartesi 00.00'da biter. Arayüz dönemi Pazartesi–Pazar olarak gösterir. Yalnız gelecekteki bir pazartesiye 1 veya 2 haftalık rezervasyon yapılır.
+- Aynı firma + alan + sırada en fazla **iki ardışık hafta** kullanılır; ardından en az **bir hafta ara** verilir. Kural, ayrı rezervasyonlarla iki haftayı aşmayı da engeller. Farklı alan veya sıra ayrı takvimdir.
+- Dolu/çakışan tarih reddedilir; en yakın uygun hafta önerilir. Ekrandaki sekiz hızlı hafta seçeneği rezervasyon aramasının azami ufku değildir.
+- Her hafta için ayrı görsel seçilir. PNG/JPEG/WebP, en fazla 5 MB; dosyanın gerçek biçimi sunucuda doğrulanır. İlgili hafta başlamadan görsel ücretsiz değiştirilebilir; başlamış haftanın görseli değiştirilemez.
+- Aynı sıradaki mevcut manuel banner, haftalık rezervasyonu engeller. Haftalık rezervasyon da aynı sıraya manuel banner yazılmasına karşı korunur.
+
+**Bedel, iptal ve bakiye**
+
+- **Alan/sıra başına haftalık 200 token** alınır: 1 hafta 200, 2 hafta 400 token. Rezervasyon kaydında bedel kesilmez; **ilk hafta başladığında rezervasyonun toplam bedeli tek seferde** işlenir.
+- Başlangıca **en az 24 saat** varsa iptal ücretsizdir. **Son 24 saatte** iptal edilirse rezervasyonun **tam bedeli** kesilir; yayın başladıktan sonra kaldırmada iade yapılmaz. Kesinti tutarı işlem sırasında yeniden doğrulanır ve kullanıcıya onaylatılır.
+- Kullanılabilir token yetmezse eksik tutar firmanın mevcut `asim_borcu` hesabına yazılır. Bannerın bu borç davranışı, normal kişi gönderiminin KKÖ bakiye kapısını değiştirmez.
+- Tüketim `banner_yayin` veya `banner_iptal` türünde, `banner:<rezervasyon_id>` işlem anahtarı ve toplam `miktar` ile kaydedilir. `ucret_islendi` kontrolü ve satır kilitleri tekrar ücretlendirmeyi önler.
+
+**Yayın yaşam döngüsü ve kullanıcı görünümü**
+
+- `firma_banner_yayinlari_isle` dakikalık işleyicisi zamanı gelen rezervasyonda önce bedeli işler, sonra yayını açar. Bedel işlenemezse rezervasyon yayına alınmaz; işlem nedeni tutulur.
+- Durumlar: `rezerve`, `yayinda`, `tamamlandi`, `iptal`, `kaldirildi`, `suresi_gecti`. Süresi bitmiş ve hiç ücretlenmemiş rezervasyon `suresi_gecti`; ücretlenmiş olan `tamamlandi` olur.
+- `firma_banner_aktif_haftalar` görünümü yalnız ücretlenmiş, yayında ve o anın hafta aralığında bulunan görselleri sunar. Süre dışındaki banner kullanıcıya listelenmez; her hafta kendi görseliyle gösterilir.
+- Ortak banner okuyucusu aktif haftalık görselleri mevcut manuel bannerlarla birleştirir. `bitis_at` süre sınırını taşır; açık kullanıcı ekranlarında dakika ve görünürlüğe dönüş yenilemesi ile süre sonu kontrolü uygulanır.
+
+**Kaynak envanteri**
+
+| Dosya | İşlev |
+| --- | --- |
+| `app/admin/eclub/_components/FirmaBannerTakvimi.tsx` | Alan/tarih/süre seçimi, ücret özeti, haftalık görsel, rezervasyon ve kesinti onayı. |
+| `app/admin/eclub/_components/EclubBannerYonetimi.tsx` | Firma kaynağını haftalık takvime; Cogniti kaynağını manuel yönetim akışına yönlendirme. |
+| `app/admin/_components/CognitiBannerlari.tsx` | Cogniti ana sayfa bannerları ve seçilen firma sayfalarındaki Cogniti yerleşimleri. |
+| `app/admin/api/eclub/banner-takvim/route.ts` | Yetkili takvim okuma, rezervasyon, görsel değiştirme ve iptal API'si. |
+| `scripts/sql/firma_banner_haftalik_yonetim.sql` | İki rezervasyon tablosu, takvim/çakışma, ücret/borç, iptal, aktif hafta görünümü ve dakikalık işleyici. |
+| `scripts/sql/cogniti_banner_yonetimi.sql` | Cogniti/firma kaynak ayrımı, ortak limit ve diğer kaynağı koruyan manuel kayıt. |
+| `scripts/sql/banner_gorunurluk.sql` | Manuel bannerı silmeden görünür/gizli yönetme. |
+| `lib/eclub/banner.ts`, `lib/eclub/bannerSunucu.ts` | Alan, kaynak ve limit sözleşmesi; manuel ve haftalık bannerların ortak okunması. |
+| `lib/eclub/useBannerTakvimYenileme.ts`, `components/eclub/BannerRafi.tsx` | Açık kullanıcı sayfasında takvim değişikliklerinin yeniden okunması ve süresi biten görselin kaldırılması. |
+
+**Doğrulama sınırı:** Bu güncellemede arayüz, API, token işleme ve SQL kaynakları karşılaştırıldı. Canlı veritabanına bağlanılmadı, rezervasyon/iptal oluşturulmadı veya token kesilmedi. Haftalık SQL'in kaynakta ve commit'te bulunması canlı kurulum, gerçek kiralama tahsilatı veya uçtan uca kabul kanıtı sayılmaz. Viva'nın önceki canlı kayıtları ve TB-VIVA-01 bekleyişi kendi bölümlerinde korunur.
+
 
 ### 6 Kasım 2026 — Cogniti Agora: güncel iş modeli ve uygulama kaydı
 
@@ -14,6 +92,8 @@ Cogniti İş Partnerlerinin video/podcast ve hazır soru setlerini sunduğu Agor
 İş kuralları, kaynak matrisi, veri sözleşmesi, kullanıcı tarafından doğrulanan SQL sonuçları ve bekleyen işler **10. bölümde** kayıtlıdır. Agora dosya–tür–işlev envanteri **9. bölümün Agora ekinde** yer alır. Bu kayıt `ecdfa640` ve `1f0ef26c` kaynaklarını kapsar; `1f0ef26c` 6 Kasım'da `main` dalına commit edilip uzak depoya gönderilmiştir. Git push, uygulamanın dağıtıldığı veya bütün gerçek kullanıcı akışlarının doğrulandığı anlamına gelmez.
 
 ### 28 Ekim 2026 — Viva: gerçek kullanım üzerinden token tüketimi
+
+**Ticari hizmet:** Viva yayın geliri, katılımcıların gerçek kullanım sürelerinin toplamından doğar. Ücret, yalnız kişi veya davet adedine bağlı sabit bir token değildir; kişi-dakika üzerinden hesaplanır ve yayın sonrası firma token hesabına işlenir. Bu gelir kalemi yukarıdaki ticari modelde ayrı gösterilir.
 
 Bu karar, aşağıdaki tarihsel Viva davet ücretlendirmesinin yerini alır. Davet oluşturmak token tüketmez. Yayın tamamlandığında Daily oturum/katılımcı süreleri alınır; yayın sahibi dahil gerçek katılımlar, çıkışlar ve tekrar girişler toplam kişi-saniyede birleştirilir. İmzalı Daily katılımcı ayrılış olayları, API'de görünmeyen kısa katılımları tamamlar. Eksik veya devam eden oturum kesinleştirilmez; işlem yeniden denenir.
 
@@ -531,7 +611,7 @@ Kulüp motorları ve ortak platform katmanları, ortak mimari ilkeler içinde ke
 23 Ekim 2026 kaynak taramasında `app/admin/` altında 30 API rota dosyası bulunur. Açık giriş rotası (`/admin/api/giris`) dışındaki 29 dosya ortak `lib/utils/adminGirisKontrol.ts` kaynağını doğrudan veya paylaşılan işleyiciye bağımlılık olarak aktararak kullanır. Bu yardımcı Supabase oturumunu doğrular, kullanıcı kimliğinden rolü okur ve `ADMIN_ROLLER` üyeliğini denetler; e-posta adresi yetki kaynağı değildir. Giriş rotası parola ile oturum açar; operasyonel admin erişimi ayrıca rol kontrolünden geçer. Bu kayıt kaynak incelemesidir; gerçek kullanıcıyla canlı erişim testi yapıldığı anlamına gelmez.
 * **Firma & Organizasyon:** `/admin/api/firmalar` (ve takımlar, bölgeler, kullanıcılar, ürünler, teknikler, export, toplu-yükle alt rotaları).
 * **Sistem & Operasyon:** `/admin/api/sistem-ayarlari`, `/admin/api/mesai-bypass`, `/admin/api/veri-sil`, `/admin/api/uretim/atamalar`, `/admin/api/uretim/gorev-devret`.
-* **E-Club Yönetimi:** `/admin/api/eclub/*` altında 5 rota: `kayitli`, `onaylar`, `test-eczaneler`, `test-temizlik`, `bannerlar`.
+* **E-Club Yönetimi:** `/admin/api/eclub/*` altında 6 rota: `kayitli`, `onaylar`, `test-eczaneler`, `test-temizlik`, `bannerlar`, `banner-takvim`. Sonuncusu firma kaynaklı haftalık banner rezervasyonu, görsel değiştirme ve iptal işlemlerini yönetir (6 Kasım 2026 kaynak karşılaştırması).
 * **Mağaza ve Çek Teslimatı:** `/admin/store/api/*` altında 5 rota (`urun-firma`, `upload`, `kategori`, `urun`, `siparis`); `/admin/eclub-cek-teslimat/api/cek-talepleri` altında 1 rota. Eski `/admin/eclub-store/api/*` envanteri güncel değildir.
 * **Firma Kapsamında Eczanem Üyeleri:** `/admin/api/firmalar/[firma_id]/eczanem/uyeler` GET/PATCH işleyicileri `lib/admin/eczanemUyeleri.ts` içinde ortaklaştırılmıştır. E-Club, mağaza ve çek teslimatı dışındaki admin API dosyalarının toplamı, giriş dahil 19'dur.
 
@@ -544,7 +624,7 @@ Toplu kullanıcı yükleme işlemi insan tarafından okunabilir rol ve organizas
 
 ### Firma Kimliği, Bannerlar, Modül Bağımlılığı ve Eczanem Üyeleri
 * **Logo ve Kimlik:** `app/admin/_components/LogoKimlikYonetimi.tsx`, firma logosu ile `ogrenme_platformu_aktif` rozetini yönetir. Ekle/Güncelle, Durdur/Yayına Al ve Kaldır işlemleri bulunur. Görsel `lib/firma/logoOptimizasyonIstemci.ts` üzerinden hazırlanıp `/admin/api/firmalar/upload` ile yüklenir; firma logo/kimlik bilgileri firma güncelleme API'sinde kaydedilir.
-* **Banner Yönetimi:** E-Club için `app/admin/eclub/_components/EclubBannerYonetimi.tsx`, Eczanem için `app/admin/eczanem/_components/EczanemBannerYonetimi.tsx` kullanılır. Ortak `/admin/api/eclub/bannerlar` rotası alanına göre `eclub_firma_bannerlari` veya `eczanem_sayfa_bannerlari` tablosunu yönetir. Firma ve üye ana sayfa bannerlarında Cogniti platform firması en fazla 5, diğer firmalar 3 banner kullanır; personel sayfası alanları 3 bannerla sınırlıdır. Dosya seçimi önizleme, Yayınla işlemi kayıttır; API dosya ve alan/sıra doğrulamasını sunucuda yapar.
+* **Banner Yönetimi (6 Kasım 2026 kaynak karşılaştırması):** E-Club için `app/admin/eclub/_components/EclubBannerYonetimi.tsx`, Eczanem için `app/admin/eczanem/_components/EczanemBannerYonetimi.tsx` kullanılır. Firma kaynaklı yerleşimler `FirmaBannerTakvimi` ve `/admin/api/eclub/banner-takvim` üzerinden haftalık 200 token karşılığında rezerve edilir; ücret, iptal ve yayın sözleşmesi girişteki güncel haftalık banner bölümündedir. Cogniti kaynaklı manuel yerleşimler `CognitiBannerlari` ve ortak `/admin/api/eclub/bannerlar` rotasıyla yürür; rota alanına göre `eclub_firma_bannerlari` veya `eczanem_sayfa_bannerlari` tablosunu yönetir. İki kaynak aynı sayfanın sıralarını ve limitini paylaşır. Firma ve üye ana sayfa alanlarında Cogniti platform firması en fazla 5, diğer firmalar 3 banner kullanır; personel sayfası alanları 3 bannerla sınırlıdır. Manuel akışta dosya seçimi önizleme, Yayınla işlemi kayıttır; haftalık firma rezervasyonu ilk hafta başladığında ücretlenir ve açılır.
 * **E-Club–Eczanem Bağımlılığı:** Firma modülleri bütünüyle bağımsız anahtarlar değildir. Eczanem aynı firmada E-Club açıkken açılabilir. E-Club kapatılırken Eczanem de aynı güncellemede kapatılır. E-Club yeniden açıldığında Eczanem ayrıca açılır; Eczanem'in kapatılması E-Club'ı kapatmaz. Eczanem açılışındaki koşullu güncelleme E-Club'ın eş zamanlı kapanmasına karşı korunur. Kaynak: `app/admin/api/firmalar/[firma_id]/route.ts`. Bölüm 4'te bekleyen olarak kayıtlı `eczanem_eclub_modul_bagimliligi.sql` kurulumunun tamamlandığı bu belge güncellemesiyle iddia edilmez.
 * **Eczanem Üye Yönetimi:** `app/admin/eczanem/_components/EczanemUyeYonetimi.tsx`, seçili firma ve eczane kapsamında üyeleri listeler. API arama, aktif/pasif/tümü filtresi ve 20 kayıtlık sayfalama kullanır; eczane il/ilçe bilgileriyle birlikte telefon son dört hanesi dışında maskelenir. `admin_eczanem_uyeleri_oku` listelemeyi, `admin_eczanem_uyelik_durum_degistir` üyelik durumunu yönetir. PATCH isteği üye, eczane, firma, hedef durum ve kullanıcının gördüğü mevcut durumu taşır; önceki durum uyuşmazlığı çakışma olarak ele alınır. Üyelik durumu ile hesabın aktifliği ayrı alanlardır. Bu işlem üye hesabını silme işlemi değildir. Kaynaklar: `lib/admin/eczanemUyeleri.ts`, `scripts/sql/admin_eczanem_uye_yonetimi.sql`.
 
@@ -4459,7 +4539,7 @@ Kaldırılmış veya taşınmış yollar aktif dosya gibi listelenmez; mevcut es
 | `PartnerFirmaBilgileri.module.css` | Stil / CSS | PartnerFirmaBilgileri.module arayüzünün yerleşim, ölçü ve duyarlı görünüm stillerini tanımlar. |
 | `PartnerFirmaBilgileri.tsx` | UI / React | Erişim yönetimi ile şirket/yetkili bilgilerini gösterir; adres yüksekliği içeriğe uyarlanır. |
 | `PartnerHakEdisleri.tsx` | UI / React | ID ile başlayan hak ediş tablosunun başlıklarını ve boş durumunu sunar; satış verisi bağlı değildir. |
-| `PartnerRaporlari.tsx` | UI / React | ID ile başlayan satış ve etkileşim raporu tablosunun başlıklarını sunar; veri bağlantısı bekler. |
+| `PartnerRaporlari.tsx` | UI / React | Seçili partnerin satış/etkileşim raporunu ortak PartnerRaporTablosu üzerinden yetkili rapor API’sine bağlar. |
 | `PartnerUyelikOnayi.tsx` | UI / React | Profil başvurularının admin tarafından incelenmesi ve üyelik kararını yönetir. |
 | `PartnerUyelikYetkiler.module.css` | Stil / CSS | PartnerUyelikYetkiler.module arayüzünün yerleşim, ölçü ve duyarlı görünüm stillerini tanımlar. |
 | `PartnerUyelikYetkiler.tsx` | UI / React | Partner erişimini açma/kapatma, onay geçmişi ve teyit modalını Firma Bilgileri içinde sunar. |
@@ -4627,7 +4707,7 @@ Kaldırılmış veya taşınmış yollar aktif dosya gibi listelenmez; mevcut es
 
 | Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
 |---|:---:|---|
-| `page.tsx` | UI / React | Onaylı partnerin henüz satış/etkileşim verisine bağlanmamış Raporlarım tablosunu açar. |
+| `page.tsx` | UI / React | Onaylı partnerin kendi satış/etkileşim verilerine bağlanan Raporlarım tablosunu açar; rapor SQL kurulumu kullanıcı tarafından doğrulandı. |
 
 ### 📁 components/agora/
 
@@ -4871,10 +4951,37 @@ Bu tablo bağlantıları gösterir; tüm bu dosyaların yalnız Agora’ya ait o
 
 **Yerel kaynak doğrulaması:** Plan belgesinde podcast ekleri için 31 SQL, 19 API ve 12 arayüz; satın alma/aktarım zinciri için 44; bağımsız üretici alanı için mevcut zincirle toplam 66 SQL, 59 API ve 14 arayüz; vitrin için 29 arayüz; koruma oynatıcı için 16; vitrin/kişisel mobil akış için 13 ve 14 kontrol kayıtlıdır. Bunlar farklı geliştirme aşamalarının tarihsel sayılarıdır; toplanıp bugünkü tek test koşusu sayılmaz. PGlite/HappyDOM ve sahte auth/temel tablolar/medya bağımlılıkları gerçek Supabase/Bunny/AI kabulü değildir. Son navbar yazı/ölçü değişiklikleri sonrası tüm arayüz testleri yeniden çalıştırılmış sayılmaz. Commit öncesi `tsc -p tsconfig.build.json --noEmit --incremental false` ve `git diff --check` başarılıydı; bu belge güncellemesi yeni uygulama testi değildir.
 
+**6 Kasım 2026 — Partner Hak Edişleri, adım 1–5:** Bu çalışma test platformu içindir. Kullanıcı, adımların tek tek yürütülmesini ve her adım sonrası sonraki adım için onayının beklenmesini istedi. Adım 1–3 onaylandı; adım 4'ün veri alanları SQL'i hazırlandı ve kullanıcı `agora_partner_hakedis_alanlari_hazir = true` sonucuyla test veritabanı kurulumunu doğruladı. Adım 5 için kullanıcı onayı alındı; yetkili okuma SQL/API kaynakları hazırlandı. Adım 6 için kullanıcı onayı alındı; tablo bağlantısı hazırlandı. Adım 7'de kullanıcı son kararı: planlanan ödeme gününü admin elle belirler; otomatik 75 gün hesabı uygulanmaz.
+
+- **Onaylanan hesap:** Satış fiyatı KDV hariçtir. Cogniti hizmet bedeli satış fiyatının %15'i; partner hak edişi satış fiyatından bu pay çıkarılarak bulunur. KDV, partner hak edişinin %20'sidir. KDV dahil ödenecek tutar hak ediş × 1,20'dir; parasal sonuçlar kuruşa yuvarlanır. Örnek: 10.000 TL satış → 1.500 TL hizmet bedeli → 8.500 TL hak ediş + 1.700 TL KDV = 10.200 TL ödeme.
+- **Onaylanan satır:** Her başarılı satın alma bir hak ediş satırıdır. Aynı eğitimin farklı üreticilere satılması ayrı satırlardır; aynı siparişin tekrarı veya satın alınan içeriğin yeniden yayımlanması yeni hak ediş oluşturmaz. Görünen ID eğitimin PE kodudur; iç satır kimliği `siparis_id`dir. Eğitim adı, fiyat, hizmet bedeli ve hak ediş siparişteki satış anı değerlerinden okunur.
+- **Onaylanan 10 sütun:** ID, Eğitim Adı, Sipariş Tarihi, Satın Alma Bedeli, Cogniti Hizmet Bedeli (%15), Hak Ediş (KDV hariç), KDV (%20), Ödenecek Tutar (KDV dahil), Planlanan Ödeme Günü, Ödenen Gün. Bu sütunlar adım 6 ile okuma bağlantısına bağlandı.
+- **Adım 4 SQL kaynağı:** `scripts/sql/agora_partner_hakedis_alanlari.sql`. Mevcut `agora_siparisleri.odenecek_tutar` KDV hariç partner hak edişi olarak korunur. `kdv_tutari` ve `kdvli_odenecek_tutar` bu alandan otomatik hesaplanan kolonlardır. `planlanan_odeme_gunu` ve `odenen_gun` ayrı tarih alanlarıdır; kendiliğinden tarih atanmaz, ödeme gerçekleşene kadar Ödenen Gün boş kalır. Test kayıtlarının tamamında aynı %20 kuralı uygulanır.
+- **Bu adımın doğrulaması:** Yerel PGlite/PostgreSQL motorunda sahte temel tablolar ve gerçek satın alma SQL'iyle 13 KDV/ödeme alanı kontrolü ve 44 mevcut satın alma/aktarım kontrolü başarılı. Tekrar kurulum, yeni satın alma, test kaydına kolon eklenmesi, kuruş yuvarlaması, sıfır bedel, otomatik hesapların elle değiştirilememesi, iki tarihin ayrı tutulması ve kaynak fiyat değişince önceki sipariş tutarının korunması sınandı. Kullanıcı SQL'i çalıştırıp `agora_partner_hakedis_alanlari_hazir = true` sonucunu iletti; test veritabanı kurulum teyidi alındı. Partner/admin veri okuma bağlantısı, ödeme bilgisi yönetimi ve ekran kabulü sonraki adımlardadır.
+
+**Adım 5 — Yetkili hak ediş okuma bağlantısı hazır:** Partner `/partner/api/hak-edisleri` GET üzerinden kendi oturumuyla; Cogniti admini `/admin/api/partnerler/[partnerId]/hak-edisleri` GET üzerinden seçili partnerle liste okur. Partner kimliği istemci parametresinden alınmaz. SQL oturum süresini, giriş sürümünü, erişim ve üyelik onayını; admin okuması mevcut aktif admin doğrulayıcısını denetler. Sayfa başına 20 kayıt, sipariş tarihi ve sipariş kimliğiyle kararlı sıralama kullanılır. Satış anındaki eğitim adı/fiyat/tutarlar ve dört KDV/ödeme alanı döner; alıcı firma/kişi veya medya bilgisi listeye eklenmez. Yanıtın partner/sayfa/alanları sunucuda doğrulanır; eksik kurulum veya okuma hatası boş kayıt gibi gösterilmez. Yanıtlar `private, no-store`dur.
+
+Kaynaklar: `scripts/sql/agora_partner_hakedis_okuma.sql`, `lib/agora/hakedis.ts`, iki GET route; testler `tests/agoraPartnerHakedisOkuma.hedef.test.mjs` ve `tests/agoraPartnerHakedisApi.hedef.test.mjs`. Yerel PGlite'da gerçek SQL ile 74 kontrol; gerçek route/yanıt doğrulayıcılarında sahte oturum ve DB bağımlılıklarıyla 132 kontrol başarılı. SQL testi partner kapsamı, süresi bitmiş/değişmiş/kapalı oturum, üyelik, admin dışındaki 26 rol, sayfalama ve doğrudan tablo/özel listeleyici erişiminin kapalı olmasını kapsar. İlk testteki tarih karşılaştırması eşdeğer saat dilimi biçimine bağımlıydı; aynı an ISO biçimine çevrilerek kontrol edildi. SQL'i kullanıcı kuracaktır; beklenen sonuç `agora_partner_hakedis_okuma_hazir = true`. Kullanıcı birleşik kurulum SQL’ini çalıştırıp `agora_partner_hakedis_kurulum_hazir = true` sonucuyla okuma ve manuel planlanan ödeme günü kurulumunu doğruladı. Ekran bağlantısı adım 6’da, manuel planlanan ödeme günü yazma adım 7’de hazırlandı.
+
+**Adım 6 — Hak ediş tablolarının okuma bağlantısı:** Kullanıcı onayıyla partner ve admin aynı `components/agora/PartnerHakEdisTablosu.tsx` bileşenini kullanır. Onaylanan 10 sütun, sipariş kimliğiyle ayrı satırlar, Türkiye tarih/TL biçimi, ayrı planlanan/ödenen gün, 20 kayıtlık sayfalama, ortak Yenile ve ayrı yükleme/boş/hata durumları bağlandı. Partner veya sayfa değişince önceki kapsam gösterilmez; geciken istekler iptal kontrolüyle elenir. Partner ödeme tarihlerini salt okunur görür; adminin planlanan ödeme günü girişi adım 7'de eklenmiştir. Adım 5 okuma ve adım 7 manuel planlanan ödeme günü SQL kurulumu kullanıcı tarafından `agora_partner_hakedis_kurulum_hazir = true` sonucuyla doğrulandı. Tarayıcıdan gerçek kabul henüz yapılmadı.
+
+**Adım 7 — Adminin manuel planlanan ödeme günü girişi:** Kullanıcı son kararıyla otomatik 75 gün vade hesabı uygulanmaz. Admin → Partnerler → ilgili partner → Hak Edişleri tablosunda her satırın Planlanan Ödeme Günü alanı tarih girişi ve Kaydet içerir. Partner aynı kayıtlı tarihi Hak Edişlerim tablosunda salt okunur görür (liste yenilenince). Boş tarih NULL olarak kaydedilir. Başarı/hata toast ile iletilir. Admin PATCH ve `agora_partner_admin_odeme_gunu_kaydet` RPC'si oturum/aktif admin, partner–sipariş kapsamı, geçerli tarih ve önceki değere göre eşzamanlı değişiklik kontrolü yapar. Partner için yazma API'si yoktur; Ödenen Gün ve finansal tutarlar değiştirilmez. SQL: `scripts/sql/agora_partner_hakedis_odeme_gunu.sql`; kullanıcı birleşik kurulum SQL’ini çalıştırdı; `agora_partner_hakedis_kurulum_hazir = true` sonucuyla kurulum teyidi alındı. Gerçek ödeme gününü kaydetme özelliği henüz eklenmedi. Doğrulama: 116 yerel SQL, 159 API ve 21 React/HappyDOM arayüz kontrolü başarılı; TypeScript başarılı; ESLint 0 hata, şema snapshotında henüz bulunmayan iki RPC için 2 uyarı. Supabase kurulumu ve manuel planlanan ödeme gününün admin tarafından kaydedilip partnerde görünmesi kullanıcı tarafından doğrulandı (6 Kasım 2026).
+
+**TB-AGORA-HAKEDIS-01 — TAMAMLANDI (6 Kasım 2026):** Kullanıcı, admin ekranında manuel planlanan ödeme günü girişinin yapıldığını ve kaydedilen tarihin partner ekranında görüldüğünü doğruladı. SQL kurulumu daha önce `agora_partner_hakedis_kurulum_hazir = true` ile doğrulanmıştı. Bu kapsamdaki gerçek ekran kabulü tamamlandı; teknik borç kapatıldı.
+
+**6 Kasım 2026 — Hak Edişleri ve Raporlar kullanıcı kabulü: TAMAMLANDI.** Kullanıcı, admin ve partner tarafındaki Hak Edişleri ve Raporlar geliştirmelerinin tamamlandığını, admin ve partner rapor ekranlarında verilerin görüldüğünü ve görsel testleri onayladığını açıkça bildirdi; “işler bitmiştir” kararıyla bu çalışma kapatıldı. Manuel planlanan ödeme günü kaydı/partnerde görünmesi ile iki SQL kurulumunun başarı sonuçları önceki kayıtlarda doğrulanmıştır. Bu onay, kullanıcı tarafından kabul edilen mevcut geliştirme kapsamı içindir; ek geliştirme, test veya commit/push başlatılmaz.
+
+**6 Kasım 2026 — Partner Raporları geliştirildi:** Kullanıcı, gerçekleşen satış bedellerini toplama kuralını onayladı ve Raporlar sayfasının geliştirilmesini istedi. Partner `/partner/api/raporlar` ile kendi oturum kapsamını; admin `/admin/api/partnerler/[partnerId]/raporlar` ile seçili partneri okur. Aynı `PartnerRaporTablosu` yedi sütun gösterir: ID, Eğitim Adı, Satış Fiyatı (güncel, KDV hariç), Satılan Adet, Toplam Satış (gerçekleşen, KDV hariç), Beğeni Sayısı, Favori Sayısı. Her eğitim bir satırdır; silinmemiş eğitimler satış yoksa sıfırlarla, henüz fiyat girilmemişse fiyatı boş gösterilir. Silinmiş eğitimin gerçekleşmiş satışları raporda korunur. Satışlar tüm zamanları kapsar; tarih/dönem filtresi eklenmedi. Beğeni/favoriler, vitrinle aynı şekilde aktif kullanıcı ve aktif firma kapsamındaki güncel seçimlerdir; geçmiş hareket sayısı değildir.
+
+**Hesap ve güvenlik:** Satılan adet `agora_siparisleri` kayıt sayısı; Toplam Satış `sum(satin_alma_bedeli)`dir. Güncel eğitim fiyatı değişse de gerçekleşen toplam değişmez. Örnek: 2.000 TL × 3 + 3.000 TL × 2 = 12.000 TL; güncel fiyat × toplam adet kullanılmaz. Satış ve etkileşimler ayrı toplanır, çoklu etkileşim satış toplamını çoğaltmaz. Partner oturum süresi/sürümü, erişim ve onaylar; admin aktif rolü ve seçili partner kapsamı SQL’de doğrulanır. Ortak listeleyici doğrudan çağrıya kapalıdır, yalnız yetkili iki RPC service_role’a açılır; mevcut tablo erişim yasakları korunur. Yanıt no-store, 20 kayıtlık kararlı sayfalama, sayfayı koruyan Yenile, yükleme/boş/hata ayrımı ve kapsam değişince önceki sonucu gizleme vardır. Alıcı kimlikleri istemciye gönderilmez. Tablo Hak Edişleri ile aynı sütun ayrımı/hizalama düzenini kullanır; 1440 piksel yerel örnek görüntüsü kontrol edildi.
+
+**Kaynaklar ve durum:** `scripts/sql/agora_partner_raporlari.sql`, `lib/agora/rapor.ts`, iki rapor GET route, `components/agora/PartnerRaporTablosu.tsx`. Raporlara özel 73 yerel PGlite SQL, 130 API ve 15 React/HappyDOM kontrolü başarılı; TypeScript başarılı; ESLint 0 hata, yeni RPC’ler şema snapshotında bulunmadığı için 2 uyarı. SQL kullanıcı tarafından çalıştırıldı; `agora_partner_raporlari_hazir = true` sonucuyla kurulum teyidi alındı (6 Kasım 2026). Kullanıcı, admin ve partner rapor ekranlarında verileri gördüğünü ve görsel testi onayladığını bildirdi (6 Kasım 2026); bu geliştirme tamamlandı.
+
+
 | Açık İş / Teknik Borç | Güncel Durum ve Tamamlanma Sınırı |
 |---|---|
-| Hak Edişleri / Hak Edişlerim | Tablo mevcut, sipariş veri bağlantısı yok. Sütunlar ID, Eğitim Adı, Sipariş Tarihi, Satın Alma Bedeli, Cogniti Hizmet Bedeli (%15), Ödenecek Tutar, KDV, KDV’li Ödenecek Tutar, Ödeme Günü. Sipariş temel ücretleri tutar; KDV oranı/ödeme günü bu çalışmada belirlenmez. |
-| Raporlar / Raporlarım | Tablo mevcut, canlı sipariş/etkileşim bağlantısı yok. Sütunlar ID, Eğitim Adı, Satış Fiyatı, Satılan Adet, Toplam Satış Fiyatı, Beğeni Sayısı, Favori Sayısı. Kaynak Agora siparişleri ve vitrin etkileşimleridir. |
+| Hak Edişleri / Hak Edişlerim | Tablo adım 6 ile sipariş okuma bağlantısına bağlandı. Yukarıdaki 6 Kasım kaydında %20 KDV, KDV hariç hak ediş, KDV dahil ödeme ve ayrı planlanan/gerçekleşen ödeme günüyle 10 sütun onaylandı. Adım 4 alan SQL'i yerelde sınandı; kullanıcı `agora_partner_hakedis_alanlari_hazir = true` sonucuyla test veritabanı kurulumunu doğruladı. Adım 5 yetkili okuma SQL/API kaynakları ve yerel kontrolleri hazır; Okuma ve manuel planlanan ödeme günü SQL kurulumları kullanıcı tarafından doğrulandı; Adminin manuel planlanan ödeme günü kaydı ve partnerde görünmesi kullanıcı tarafından doğrulandı; TB-AGORA-HAKEDIS-01 kapandı (6 Kasım 2026). Gerçek ödeme günü yazma henüz eklenmedi. |
+| Raporlar / Raporlarım | 6 Kasım 2026: Partner/admin ortak rapor tablosu, yetkili API ve SQL kaynakları hazırlandı; aşağıdaki sözleşme geçerlidir. Yerel kontroller başarılı. Kullanıcı `agora_partner_raporlari_hazir = true` ile SQL kurulumunu doğruladı; admin ve partner gerçek ekran kabulü kullanıcı tarafından onaylandı; bu geliştirme tamamlandı (6 Kasım 2026). |
 | TB-AGORA-PODCAST-01 / 02 | Gerçek AI ve manuel TXT/DOCX/PDF/metin transkript üretme → düzenleme → onay → yeniden girişte korunma kabulü kullanıcı kararıyla teknik borçtur. Seçenekleri görmek bu kabulü tamamlamaz. |
 | Partner IBAN canlı geçişi | Testte sabit TR + 24 rakam korunur; ISO 7064 MOD 97 geçici askıdadır. `partnerProfil.ts`, SQL CHECK ve mevcut kayıtları ele alan geçiş birlikte düzeltilip gerçek kayıt/okuma doğrulanmadan canlıya hazır sayılmaz. |
 | Bunny video/indirme koruması | Gerçek domain/token/MediaCage yapılandırması ve tarayıcı kabulü bekler. Filigran ve sunucu kodu tek başına sağlayıcı güvenlik kabulü değildir. |

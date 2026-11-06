@@ -5,5 +5,5 @@ import PartnerOzetSayfasi from "@/components/agora/PartnerOzetSayfasi";
 export default async function PartnerOzetPage(){
   const b=await onayliPartnerBaglami();
   if(!b)redirect("/partner/profil");
-  return <PartnerOzetSayfasi firmaAdi={b.profil!.sirket_adi} tur="raporlar"/>;
+  return <PartnerOzetSayfasi firmaAdi={b.profil!.sirket_adi} tur="raporlar" partnerId={b.partnerId}/>;
 }

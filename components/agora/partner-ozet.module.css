@@ -5,3 +5,31 @@
 .tabloAlani th { text-align:left; padding:12px; background:var(--tema-zemin); border-bottom:1px solid var(--tema-cizgi); font-weight:700; white-space:nowrap; }
 .tabloAlani td { padding:20px 12px; color:var(--tema-ikincil-metin); }
 @media(max-width:639px) { .icerik { padding:20px 16px 40px; } }
+
+.hakedisBaslik { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:20px; }
+.hakedisBaslik h1, .hakedisBaslik h2 { margin:0; color:var(--tema-baslik); font-size:24px; font-weight:800; }
+.hakedisPara { text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
+.hakedisSayfalama { display:flex; justify-content:flex-end; align-items:center; gap:12px; flex-wrap:wrap; margin-top:16px; font-size:12px; }
+.hakedisSayfalama button { border:1px solid var(--tema-cizgi); border-radius:8px; padding:8px 12px; background:var(--tema-yuzey); color:var(--tema-metin); cursor:pointer; }
+.hakedisSayfalama button:disabled { opacity:.5; cursor:default; }
+
+/* Hak edişleri: geniş ekranda on sütun birlikte görünür. */
+.hakedisIcerik { max-width:none; }
+.tabloAlani .hakedisTablo { table-layout:fixed; min-width:1000px; }
+.hakedisTablo th { padding:14px 10px; white-space:normal; line-height:1.5; vertical-align:middle; text-align:center; }
+.hakedisTablo td { padding:18px 10px; vertical-align:middle; text-align:center; color:var(--tema-metin); border-bottom:1px solid var(--tema-cizgi); }
+.hakedisTablo th:not(:last-child), .hakedisTablo td:not(:last-child) { border-right:1px solid var(--tema-cizgi); }
+.hakedisTablo th:nth-child(2), .hakedisTablo td:nth-child(2) { text-align:left; }
+.hakedisTablo tbody tr:last-child td { border-bottom:0; }
+.hakedisBaslikAciklama { display:block; margin-top:3px; color:var(--tema-ikincil-metin); font-size:11px; font-weight:500; }
+.hakedisKimlik, .hakedisTarih { white-space:nowrap; font-variant-numeric:tabular-nums; }
+.hakedisEgitim { overflow-wrap:anywhere; }
+.hakedisTablo .hakedisToplam { color:var(--tema-baslik); font-weight:800; }
+.hakedisTablo th.hakedisPara { text-align:center; white-space:normal; }
+.hakedisTablo form { flex-wrap:wrap; justify-content:flex-end; }
+.hakedisTablo input[type="date"] { width:100%; min-width:0; padding:5px 2px; border:1px solid var(--tema-cizgi); border-radius:6px; background:var(--tema-yuzey); color:var(--tema-metin); font:inherit; }
+.hakedisTablo button[type="submit"] { padding:4px 8px; border:1px solid var(--tema-cizgi); border-radius:6px; background:var(--tema-yuzey); color:var(--tema-metin); font:inherit; cursor:pointer; }
+.hakedisTablo button[type="submit"]:disabled { opacity:.5; cursor:default; }
+
+.tabloAlani .raporTablo { min-width:720px; }
+.raporAciklama { margin:-8px 0 18px; color:var(--tema-ikincil-metin); font-size:12px; line-height:1.5; }

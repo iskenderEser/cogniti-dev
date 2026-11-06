@@ -1,20 +1,6 @@
-import styles from "../admin.module.css";
+import PartnerRaporTablosu from "@/components/agora/PartnerRaporTablosu";
 
-const BASLIKLAR = [
-  "ID",
-  "Eğitim Adı",
-  "Satış Fiyatı",
-  "Satılan Adet",
-  "Toplam Satış Fiyatı",
-  "Beğeni Sayısı",
-  "Favori Sayısı",
-];
-
-export default function PartnerRaporlari() {
-  return <div className={styles.tableWrap}>
-    <table className={styles.table} aria-label="Partner Eğitim Raporları">
-      <thead><tr>{BASLIKLAR.map(baslik => <th key={baslik} scope="col">{baslik}</th>)}</tr></thead>
-      <tbody><tr><td colSpan={BASLIKLAR.length}>Henüz rapor kaydı bulunmuyor.</td></tr></tbody>
-    </table>
-  </div>;
+export default function PartnerRaporlari({ partnerId }: { partnerId: string }) {
+  return <PartnerRaporTablosu key={partnerId} partnerId={partnerId}
+    endpoint={`/admin/api/partnerler/${encodeURIComponent(partnerId)}/raporlar`} />;
 }
