@@ -24,6 +24,7 @@ import { SoruListesi } from "./SoruListesi";
 import { VideoThumb } from "./Yardimcilar";
 
 interface BekleyenSatirProps {
+  secimAlani?: React.ReactNode;
   b: Bekleyen;
   puanAraliklari: PuanAraliklari | null | undefined;
   islemLoading: string | null;
@@ -61,11 +62,11 @@ interface BekleyenSatirProps {
   onVideoAc: (url: string) => void;
   onOnizle?: (hedef: OnizlemeHedefi) => void;
   onYayinlaClick: (b: Bekleyen) => void;
-  onYayinSilClick: (b: Bekleyen) => void;
+  onYayinSilClick?: (b: Bekleyen) => void;
 }
 
 export function BekleyenSatir({
-  b, puanAraliklari, islemLoading, acikAkordiyon, setAcikAkordiyon,
+  secimAlani, b, puanAraliklari, islemLoading, acikAkordiyon, setAcikAkordiyon,
   videoPuanlari, setVideoPuanlari, extraPuanlar, setExtraPuanlar,
   eczanemKazanimModelleri, setEczanemKazanimModelleri,
   barkodlar, setBarkodlar, satisFiyatlar, setSatisFiyatlar,
@@ -141,6 +142,7 @@ export function BekleyenSatir({
 
   return (
     <article className="mb-3 overflow-hidden rounded-2xl border border-[var(--tema-yerel-uretim-cizgi-36)] bg-[var(--tema-yerel-uretim-kart-01)] shadow-[0_8px_22px_var(--tema-yerel-uretim-golge-01)]">
+      {secimAlani && <div className="border-b border-[var(--tema-cizgi)] p-3">{secimAlani}</div>}
       <div className="grid grid-cols-1 lg:grid-cols-[minmax(264px,0.595fr)_minmax(0,1.405fr)]">
       <div className="min-w-0 space-y-4 p-4 lg:flex lg:flex-col lg:justify-center lg:p-5">
         <div>
@@ -296,7 +298,7 @@ export function BekleyenSatir({
             </button>
           );
 
-          const silButonu = (
+          const silButonu = onYayinSilClick && (
             <button type="button" onClick={() => onYayinSilClick(b)}
               disabled={islemLoading === b.soru_seti_durum_id}
               className="h-9 shrink-0 rounded-xl border border-[var(--tema-yerel-uretim-islevsel-cizgi-03)] bg-[var(--tema-yerel-uretim-kart-01)] px-3 text-xs font-extrabold text-[var(--tema-yerel-uretim-islevsel-metin-05)] transition hover:bg-[var(--tema-yerel-uretim-islevsel-zemin-03)] disabled:cursor-not-allowed disabled:opacity-50">

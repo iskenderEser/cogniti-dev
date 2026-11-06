@@ -124,8 +124,8 @@ async function bunnyyeGonder(
   throw new Error("Öğrenme aracı yüklemesi tamamlanamadı.");
 }
 
-async function sesSuresiniOku(dosya: File, signal?: AbortSignal): Promise<number> {
-  const url = URL.createObjectURL(dosya);
+export async function sesSuresiniOku(dosya: File | string, signal?: AbortSignal): Promise<number> {
+  const url = typeof dosya === "string" ? dosya : URL.createObjectURL(dosya);
   const ses = new Audio();
   try {
     const sure = await new Promise<number>((resolve, reject) => {
@@ -149,7 +149,7 @@ async function sesSuresiniOku(dosya: File, signal?: AbortSignal): Promise<number
     ses.pause();
     ses.removeAttribute("src");
     ses.load();
-    URL.revokeObjectURL(url);
+    if (typeof dosya !== "string") URL.revokeObjectURL(url);
   }
 }
 

@@ -10,11 +10,14 @@ import MobilYayinAkisi from "@/components/yayin/MobilYayinAkisi";
 import { DahaFazlaGoster } from "@/components/liste/DahaFazlaGoster";
 import { YenileButonu } from "@/components/ui/yenile-butonu";
 import layout from "./PartnerYayinlari.module.css";
+import { AgoraRafOklari } from "@/components/agora/AgoraRafOklari";
+import rafStyles from "@/components/agora/AgoraVitrini.module.css";
 import styles from "../admin.module.css";
 type Islem="aktif"|"pasif"|"sil";
 type Detay=PartnerYayinIncelemeDetayi;
 
 export default function PartnerYayinlari({partnerId}:{partnerId:string}) {
+  const raf=useRef<HTMLDivElement>(null);
   const [liste,setListe]=useState<PartnerEgitimListesi|null>(null),[durum,setDurum]=useState("tumu"),[sayfa,setSayfa]=useState(1),[yukleniyor,setYukleniyor]=useState(true),[hata,setHata]=useState(""),[kaydediliyor,setKaydediliyor]=useState(false);
   const [aday,setAday]=useState<{egitim:PartnerEgitimi;islem:Islem}|null>(null),[detayId,setDetayId]=useState<string|null>(null),[detay,setDetay]=useState<Detay|null>(null),[detayHata,setDetayHata]=useState("");
   const [aramaMetni,setAramaMetni]=useState(""),[arama,setArama]=useState(""),[aramaTekrari,setAramaTekrari]=useState(0);
@@ -91,7 +94,7 @@ export default function PartnerYayinlari({partnerId}:{partnerId:string}) {
     {liste&&!!liste.kayitlar.length&&<><MobilYayinAkisi<PartnerEgitimi>
       kayitlar={liste.kayitlar} kayitAnahtari={k=>k.egitim_id} renderKart={kart} sayacGoster={false}
       sifirlamaAnahtari={`${partnerId}:${durum}:${arama}:${baslangic}:${bitis}`}
-      masaustuIcerik={<div className={layout.kartlar}>{liste.kayitlar.map(k=><div key={k.egitim_id} className={layout.kart}>{kart(k)}</div>)}</div>}
+      masaustuIcerik={<div className={rafStyles.rafAlani}><AgoraRafOklari raf={raf} baslik="Partner Yayınları"/><div key={`${partnerId}:${durum}:${arama}:${baslangic}:${bitis}`} ref={raf} className={layout.kartlar}>{liste.kayitlar.map(k=><div key={k.egitim_id} className={layout.kart}>{kart(k)}</div>)}</div></div>}
     />{!yukleniyor&&<DahaFazlaGoster dahaVar={liste.kayitlar.length<liste.toplam} gorunenSayi={liste.kayitlar.length} toplam={liste.toplam} onGoster={()=>{if(!kaydediliyor&&!yukleniyor)void oku(sayfa+1,true);}}/>}
       {yukleniyor&&<p role="status" className={layout.sayac}>Yayınlar yükleniyor…</p>}</>}
   </div>;

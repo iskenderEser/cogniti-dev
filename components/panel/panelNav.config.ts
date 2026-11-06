@@ -48,6 +48,7 @@ export interface NavOge {
   // (mevcut Navbar.raporaGit birebir).
   path?: string | ((ctx: NavContext) => string);
   altOglar?: NavOge[];
+  rozetKalici?: boolean;
   badgeKey?: string;             // bildirimler/api "sayilar" anahtarı (talep/senaryo/…)
   aktifYollar?: string[];       // Aynı çalışma alanındaki diğer rotalar
   tamEslesme?: boolean;          // Alt rotalarda başka menü öğesini de aktif göstermemek için
@@ -57,9 +58,8 @@ export interface NavOge {
 export interface NavGrup {
   baslik: string;
   oglar: NavOge[];
-  // false yalnız ayrı kimlik kabuklarında kullanılır. İç sistem PANEL_NAV
-  // gruplarında başlık, görünür öğe sayısından bağımsız olarak daima çizilir.
-  baslikGoster?: boolean;
+  // Başlık görünürlüğü kabuğa veya role göre belirlenir.
+  baslikGoster?: boolean | ((ctx: NavContext) => boolean);
   ayirac?: boolean;
 }
 
@@ -90,9 +90,15 @@ export function navSecimIzi(gruplar: NavGrup[], ctx: NavContext): string {
 }
 
 export const PANEL_NAV: NavGrup[] = [
+  {
+    baslik: "Agora Yayınları",
+    baslikGoster: false,
+    oglar: [{ etiket: "AGORA YAYINLARI", path: "/agora-yayinlari", gate: (c) => URETICI_ROLLER.includes(c.rolKucu) }],
+  },
   // ─── 1. YAYINLAR VE RAPORLAR (Üretici ve İçerik Üreticisi) ───────────────
   {
     baslik: "Yayınlar ve Raporlar",
+    baslikGoster: (c) => !URETICI_ROLLER.includes(c.rolKucu),
     oglar: [
       { etiket: "Yayın Oluşturma ve Takip", path: "/yayin-takip", badgeKey: "talep", gate: (c) => URETICI_ROLLER.includes(c.rolKucu) },
       { etiket: "Yayın Yönetimi",    path: "/yayin-yonetimi",     badgeKey: "yayin",     gate: (c) => URETICI_ROLLER.includes(c.rolKucu) },

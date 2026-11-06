@@ -14,6 +14,9 @@ export const YONETICI_ROLLER = [
   "gm", "gm_yrd", "drk", "paz_md", "blm_md", "grp_pm", "sm",
 ];
 
+// Agora vitrini üretici, TM ve yönetici rollere açıktır.
+export const AGORA_GOREN_ROLLER = [...URETICI_ROLLER, "tm", ...YONETICI_ROLLER];
+
 // ADMIN_ROLLER: Tüm firmalara erişim, /admin paneli ve yönetici raporları yetkisine sahip roller.
 // Firma admini bu listeye dahil değildir; tüm firma yetkisi kazanmaz.
 export const ADMIN_ROLLER = ["admin"];

@@ -7,4 +7,6 @@ export interface AgoraDenemeKaynagi {
   url: string;
   korumaSurumu: number;
   uyari?: string;
+  kapak_url?:string|null;
+  transkript_metni?:string|null;
 }

@@ -18,6 +18,7 @@ interface PodcastTranskriptEditoruProps {
   onaylandi: boolean;
   aiIstendi?: boolean;
   aracId?: string;
+  sunucudaKayitli?: boolean;
   islemDurumu?:
     | "bosta"
     | "taslak_hazirlaniyor"
@@ -51,6 +52,7 @@ export function PodcastTranskriptEditoru({
   onaylandi,
   aiIstendi = false,
   aracId,
+  sunucudaKayitli = false,
   islemDurumu = "bosta",
   yuklemeYuzdesi = 0,
   onAiBaslat,
@@ -442,11 +444,11 @@ export function PodcastTranskriptEditoru({
             <span className="inline-flex items-center rounded-full bg-[var(--tema-yerel-uretim-islevsel-zemin-03)] px-2.5 py-0.5 text-[11px] font-semibold text-[var(--tema-yerel-uretim-islevsel-metin-05)] border border-[var(--tema-yerel-uretim-islevsel-cizgi-03)]">
               Transkript oluşturulamadı
             </span>
-          ) : aracId && (onaylandi || aiDurumu === "onaylandi") ? (
+          ) : (aracId || sunucudaKayitli) && (onaylandi || aiDurumu === "onaylandi") ? (
             <span className="inline-flex items-center rounded-full bg-[var(--tema-yerel-uretim-islevsel-zemin-13)] px-2 py-0.5 text-[11px] font-semibold text-[var(--tema-yerel-uretim-islevsel-metin-17)] border border-[var(--tema-yerel-uretim-islevsel-cizgi-13)]">
               ✓ Onaylandı
             </span>
-          ) : !aracId && onaylandi ? (
+          ) : !aracId && !sunucudaKayitli && onaylandi ? (
             <span className="inline-flex items-center rounded-full bg-[var(--tema-yerel-uretim-sayfa-zemini-06)] px-2 py-0.5 text-[11px] font-medium text-[var(--tema-yerel-uretim-ana-metin-10)] border border-[var(--tema-yerel-uretim-cizgi-18)]">
               Transkript, talep oluşturulurken kaydedilecek
             </span>
@@ -814,18 +816,18 @@ export function PodcastTranskriptEditoru({
       {/* Onay Butonları */}
       <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
         <p className="text-[11px] text-[var(--tema-yerel-uretim-yardimci-metin-05)]">
-          {aracId && (onaylandi || aiDurumu === "onaylandi")
+          {(aracId || sunucudaKayitli) && (onaylandi || aiDurumu === "onaylandi")
             ? "Metin onaylanmıştır. Değişiklik yaparsanız yeniden onaylamanız gerekir."
-            : !aracId && onaylandi
+            : !aracId && !sunucudaKayitli && onaylandi
             ? "Transkript, talep oluşturulurken kaydedilecek."
             : "Podcast ile birlikte yayınlanabilmesi için transkripti onaylamalısınız."}
         </p>
         <div>
-          {aracId && (onaylandi || aiDurumu === "onaylandi") ? (
+          {(aracId || sunucudaKayitli) && (onaylandi || aiDurumu === "onaylandi") ? (
             <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--tema-yerel-uretim-islevsel-metin-17)]">
               ✓ Onaylandı
             </span>
-          ) : !aracId && onaylandi ? (
+          ) : !aracId && !sunucudaKayitli && onaylandi ? (
             <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[var(--tema-yerel-uretim-ana-metin-10)]">
               Transkript, talep oluşturulurken kaydedilecek
             </span>

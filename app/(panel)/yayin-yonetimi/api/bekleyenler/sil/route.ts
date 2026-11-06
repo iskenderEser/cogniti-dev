@@ -30,6 +30,16 @@ export async function DELETE(request: NextRequest) {
       return validasyonHatasi("islem_anahtari geçerli bir UUID olmalıdır.", ["islem_anahtari"]);
     }
 
+    const { data: kaynak, error: kaynakHatasi } = await adminSupabase.from("soru_seti_durumu")
+      .select("soru_setleri(ogrenme_araci_durumu(ogrenme_araclari(metadata)))")
+      .eq("soru_seti_durum_id", body.soru_seti_durum_id).maybeSingle();
+    if (kaynakHatasi) return sunucuHatasi(kaynakHatasi, "Yayın kaynağı doğrulaması");
+    const tek = <T,>(v: T | T[] | null | undefined): T | undefined => Array.isArray(v) ? v[0] : v ?? undefined;
+    const kaynakAraci = tek(tek(tek(kaynak?.soru_setleri)?.ogrenme_araci_durumu)?.ogrenme_araclari);
+    if ((kaynakAraci?.metadata as Record<string, unknown> | null)?.agora_siparis_id) {
+      return validasyonHatasi("Satın alınan yayının ortak medya kaynağı bu işlemle silinemez.", []);
+    }
+
     const { data: hazirlik, error: hazirlikError } = await adminSupabase.rpc("yayin_oncesi_silme_baslat", {
       p_soru_seti_durum_id: body.soru_seti_durum_id,
       p_uretici_id: user.id,

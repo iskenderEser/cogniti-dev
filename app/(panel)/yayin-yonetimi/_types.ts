@@ -21,6 +21,9 @@ export { VARSAYILAN_BAREM_TABLOSU };
 
 // Bekleyen: onaylanmış, henüz yayınlanmamış soru seti + video (puanlama bekliyor).
 export interface Bekleyen {
+  talep_id?: string;
+  agora_siparis_id?: string | null;
+  agora_ayarlandi?: boolean;
   soru_seti_durum_id: string;
   soru_seti_id: string;
   arac_id?: string | null;

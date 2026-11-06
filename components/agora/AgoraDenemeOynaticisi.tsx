@@ -67,6 +67,7 @@ function AgoraDenemeIcerik({ kaynak, yerlesikTamEkran=false }: {kaynak:AgoraDene
         else void alan.current?.requestFullscreen?.().catch(()=>setHata("Tam ekran bu tarayıcıda açılamadı."));
       }}>Tam Ekran</Button>}
     </> : <>
+      {kaynak.kapak_url&&<img src={kaynak.kapak_url} alt="Podcast yayın görseli" className="mx-auto mb-3 max-h-48 max-w-full rounded-lg object-contain"/>}
       {korumali&&<p className={styles.etiket}>Cogniti · Deneme Yayını</p>}
       <audio ref={ses} src={kaynak.url} preload="metadata" controlsList="nodownload noremoteplayback"
         onLoadedMetadata={()=>setSure(Number.isFinite(ses.current?.duration)?ses.current!.duration:0)}
@@ -82,6 +83,7 @@ function AgoraDenemeIcerik({ kaynak, yerlesikTamEkran=false }: {kaynak:AgoraDene
       </div>
       {korumali&&<p className={styles.bilgi}>Başlangıçta ve her 30 saniyede “Kogniti — Deneme Yayını” sesli uyarısı duyulur.</p>}
     </>}
+    {kaynak.tur==="podcast"&&kaynak.transkript_metni&&<details className="mt-3 rounded-lg border p-3"><summary>Transkript</summary><div className="mt-2 max-h-80 overflow-y-auto whitespace-pre-wrap text-sm">{kaynak.transkript_metni}</div></details>}
     {kaynak.uyari&&<p role="status" className={styles.bilgi}>{kaynak.uyari}</p>}
     {hata&&<p role="alert">{hata}</p>}
   </div>;

@@ -70,6 +70,8 @@ export interface PanelNavbarProps {
   hbStoreGoster?: boolean;
   // Mevcut Viva gezinme yetkisi layout tarafından çözülür.
   vivaGoster?: boolean;
+  agoraGoster?: boolean;
+  onAgora?: () => void;
   // Dış müşteri ana sayfası /eclub/ana-sayfa'dir; iç kullanıcıda varsayılan korunur.
   anaSayfaYolu?: string;
   onAnaSayfa?: () => void;
@@ -153,6 +155,8 @@ export default function PanelNavbar({
   siparisPuaniGoster,
   hbStoreGoster,
   vivaGoster = false,
+  agoraGoster = false,
+  onAgora,
   anaSayfaYolu = "/ana-sayfa",
   onAnaSayfa,
   anaSayfaSecili,
@@ -188,6 +192,26 @@ export default function PanelNavbar({
       fontFamily: "'Nunito', sans-serif",
     };
   };
+
+  const agoraAktif = pathname === "/agora" || pathname.startsWith("/agora/");
+  const agoraButonu = () => agoraGoster && <button
+    type="button"
+    aria-label="Agora’yı aç"
+    aria-current={agoraAktif ? "page" : undefined}
+    onClick={() => { if (onAgora) onAgora(); else router.push("/agora"); }}
+    onMouseEnter={() => setHover("agora")}
+    onMouseLeave={() => setHover(null)}
+    className={`${pillClass(agoraAktif)} shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--tema-kontrol-odak)]`}
+    style={{
+      ...pillStyle("agora", agoraAktif),
+      fontWeight: 700,
+      fontSize: "10.2px",
+      padding: "5.1px 13.6px",
+      background: hover === "agora" || agoraAktif ? "#5B21B6" : "#6D28D9",
+      color: "#FFFFFF",
+      boxShadow: "0 4px 12px rgb(109 40 217 / 0.28), inset 0 1px 0 rgb(255 255 255 / 0.25)",
+    }}
+  >AGORA</button>;
 
   const vivaAktif = pathname === "/viva" || pathname.startsWith("/viva/");
   const vivaPill = () => vivaGoster && <button
@@ -305,8 +329,11 @@ export default function PanelNavbar({
             </button>
           )}
 
-          {/* Kullanıcı Adı + Avatar + Çıkış (0.5 cm / 22px sol boşlukla puanlardan ayrıldı) */}
-          <div className="flex flex-col items-end gap-0.5 flex-shrink-0 ml-5 lg:ml-6">
+          <div className={agoraGoster ? "flex items-center gap-3 lg:gap-4" : "ml-5 lg:ml-6"}>
+          {agoraButonu()}
+          {agoraGoster && <div role="separator" aria-orientation="vertical" className="w-px self-stretch bg-[var(--tema-ust-menu-ayirici)]" />}
+          {/* Kullanıcı Adı + Avatar + Çıkış */}
+          <div className="flex flex-col items-end gap-0.5 flex-shrink-0">
             <div className="flex items-center gap-2">
               {adSoyad && <span className="text-sm font-bold whitespace-nowrap" style={{ color: "var(--tema-gezinme-metin)" }}>{adSoyad}</span>}
               <ProfilDugmesi harfler={bashHarfler} menu={profilMenusu} />
@@ -325,10 +352,13 @@ export default function PanelNavbar({
               </button>
             </div>
           </div>
+          </div>
         </div>
 
         {/* Mobil: avatar + hamburger (sol drawer'ı açar). flex-shrink-0 ile asla kesilmez */}
         <div className="flex md:hidden items-center gap-1.5 flex-shrink-0">
+          {agoraButonu()}
+          {agoraGoster && <div role="separator" aria-orientation="vertical" className="mx-1 h-7 w-px bg-[var(--tema-ust-menu-ayirici)]" />}
           <ProfilDugmesi harfler={bashHarfler} menu={profilMenusu} mobil />
           <button
             onClick={onHamburger}

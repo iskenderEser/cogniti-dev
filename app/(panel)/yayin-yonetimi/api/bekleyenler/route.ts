@@ -93,6 +93,10 @@ export async function GET(request: NextRequest) {
     const bekleyenler = onaylananListesi.filter(ss => {
       const soruSeti = Array.isArray(ss.soru_setleri) ? ss.soru_setleri[0] : ss.soru_setleri;
       const taleplerRaw = Array.isArray(soruSeti?.talepler) ? soruSeti?.talepler[0] : soruSeti?.talepler;
+      const ad = Array.isArray(soruSeti?.ogrenme_araci_durumu) ? soruSeti.ogrenme_araci_durumu[0] : soruSeti?.ogrenme_araci_durumu;
+      const a = (ad as { ogrenme_araclari?: unknown })?.ogrenme_araclari;
+      const metadata = ((Array.isArray(a) ? a[0] : a) as { metadata?: Record<string, unknown> } | undefined)?.metadata;
+      if (Boolean(metadata?.agora_siparis_id) !== (searchParams.get("kapsam") === "agora")) return false;
       return !yayindakiIds.has(ss.soru_seti_durum_id)
         && (taleplerRaw as { yayin_oncesi_silme_durumu?: string })?.yayin_oncesi_silme_durumu !== "tamamlandi";
     });
@@ -137,6 +141,9 @@ export async function GET(request: NextRequest) {
 
     // Join sonucundan response yapısını oluştur
     const sonuc: Array<{
+      talep_id: string;
+      agora_siparis_id: string | null;
+      agora_ayarlandi: boolean;
       soru_seti_durum_id: string;
       soru_seti_id: string;
       arac_id: string | null;
@@ -190,6 +197,9 @@ export async function GET(request: NextRequest) {
       const hedefRoller = talep?.hedef_roller ?? ["utt"];
 
       sonuc.push({
+        talep_id: talep.talep_id,
+        agora_ayarlandi: aracHam?.metadata?.agora_yayin_ayarlari === true,
+        agora_siparis_id: typeof aracHam?.metadata?.agora_siparis_id === "string" ? aracHam.metadata.agora_siparis_id : null,
         soru_seti_durum_id: ss.soru_seti_durum_id,
         soru_seti_id: ss.soru_seti_id,
         arac_id: aracHam?.arac_id ?? null,

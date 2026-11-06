@@ -15,7 +15,7 @@ import {
 } from "@/lib/utils/roller";
 import { rolCozucu } from "@/lib/utils/rolCozucu";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const supabase = await createClient();
     const adminSupabase = createAdminClient();
@@ -34,8 +34,8 @@ export async function GET() {
     const [yayinlarRes, bekleyenlerRes] = await Promise.all([
       // Yayındaki ve durdurulanların durum + hedef rollerini çek (hafif)
       adminSupabase
-        .from("yayin_yonetimi")
-        .select("yayin_id, soru_seti_durum_id, durum, hedef_roller")
+        .from("v_yayin_detay")
+        .select("yayin_id, soru_seti_durum_id, durum, hedef_roller, arac_metadata")
         .eq("uretici_id", user.id),
 
       // Onaylanmış bekleyenleri üretici filtresiyle hafifçe çek
@@ -44,6 +44,7 @@ export async function GET() {
         .select(`
           soru_seti_durum_id,
           soru_setleri!inner (
+            ogrenme_araci_durumu (ogrenme_araclari (metadata)),
             talepler!inner (
               uretici_id,
               hedef_roller,
@@ -58,7 +59,8 @@ export async function GET() {
     if (yayinlarRes.error) return sunucuHatasi(yayinlarRes.error, "yayin_yonetimi özet SELECT");
     if (bekleyenlerRes.error) return sunucuHatasi(bekleyenlerRes.error, "bekleyenler özet SELECT");
 
-    const yayinlar = yayinlarRes.data ?? [];
+    const agoraKapsami = new URL(request.url).searchParams.get("kapsam") === "agora";
+    const yayinlar = (yayinlarRes.data ?? []).filter(y => Boolean((y.arac_metadata as Record<string, unknown> | null)?.agora_siparis_id) === agoraKapsami);
     const yayindakiDurumIds = new Set(yayinlar.map(y => y.soru_seti_durum_id).filter(Boolean));
 
     // Durum sayıları
@@ -92,6 +94,9 @@ export async function GET() {
       if (yayindakiDurumIds.has(item.soru_seti_durum_id)) continue;
       const soruSeti = Array.isArray(item.soru_setleri) ? item.soru_setleri[0] : item.soru_setleri;
       const talep = Array.isArray(soruSeti?.talepler) ? soruSeti?.talepler[0] : soruSeti?.talepler;
+      const ad = Array.isArray(soruSeti?.ogrenme_araci_durumu) ? soruSeti.ogrenme_araci_durumu[0] : soruSeti?.ogrenme_araci_durumu;
+      const a = Array.isArray(ad?.ogrenme_araclari) ? ad.ogrenme_araclari[0] : ad?.ogrenme_araclari;
+      if (Boolean((a?.metadata as Record<string, unknown> | null)?.agora_siparis_id) !== agoraKapsami) continue;
       if (!talep || talep.yayin_oncesi_silme_durumu === "tamamlandi") continue;
 
       const grup = yayinHedefGrubuBelirle(talep.hedef_roller);

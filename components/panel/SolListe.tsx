@@ -106,6 +106,7 @@ export default function SolListe(props: SolListeProps) {
     };
 
     return (
+      <>
       <button
         type="button"
         onClick={() => { if (oge.onSecim) oge.onSecim(); else if (path) router.push(path); }}
@@ -116,24 +117,27 @@ export default function SolListe(props: SolListeProps) {
         className="relative w-full flex items-center justify-between rounded-lg cursor-pointer border-none text-left transition-all duration-200"
         style={{
           padding: `7px 10px 7px ${10 + seviye * 8}px`,
-          fontSize: "14px",
-          fontWeight: aktif ? 700 : 600,
-          color: aktif ? "var(--tema-menu-secili-metin)" : path === "/token" ? "var(--tema-kontrol-eylem)" : "var(--tema-gezinme-metin)",
+          fontSize: path === "/agora-yayinlari" ? "12px" : "14px",
+          fontWeight: path === "/agora-yayinlari" ? 800 : aktif ? 700 : 600,
+          letterSpacing: path === "/agora-yayinlari" ? "0.06em" : undefined,
+          color: path === "/agora-yayinlari" ? "#6D28D9" : aktif ? "var(--tema-menu-secili-metin)" : path === "/token" ? "var(--tema-kontrol-eylem)" : "var(--tema-gezinme-metin)",
           background: aktif ? "var(--tema-menu-secili-zemin)" : isHover ? "var(--tema-menu-hover)" : "transparent",
           boxShadow: aktif ? "inset 0 0 0 1px var(--tema-menu-secili-halka)" : "none",
           fontFamily: "'Nunito', sans-serif",
         }}
       >
         <span>{oge.etiket}</span>
-        {sayi > 0 && (
+        {(sayi > 0 || oge.rozetKalici) && (
           <span
             className="flex items-center justify-center rounded-full text-[var(--tema-ters-metin)]"
             style={{ minWidth: "18px", height: "18px", padding: "0 5px", background: "var(--tema-vurgu)", fontSize: "10px", fontWeight: 700, lineHeight: 1 }}
           >
-            {sayi > 99 ? "99+" : sayi}
+            {oge.rozetKalici ? sayi : sayi > 99 ? "99+" : sayi}
           </span>
         )}
       </button>
+      {path === "/agora-yayinlari" && <div role="separator" className="my-2 w-full border-t border-[var(--tema-cizgi)]" />}
+      </>
     );
   };
 
@@ -180,9 +184,9 @@ export default function SolListe(props: SolListeProps) {
         >
           <span>{oge.etiket}</span>
           <span className="flex items-center gap-2">
-            {sayi > 0 && (
+            {(sayi > 0 || oge.rozetKalici) && (
               <span className="flex items-center justify-center rounded-full text-[var(--tema-ters-metin)]" style={{ minWidth: "18px", height: "18px", padding: "0 5px", background: "var(--tema-vurgu)", fontSize: "10px", fontWeight: 700, lineHeight: 1 }}>
-                {sayi > 99 ? "99+" : sayi}
+                {oge.rozetKalici ? sayi : sayi > 99 ? "99+" : sayi}
               </span>
             )}
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} style={{ transform: altAcik ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6" /></svg>
@@ -209,7 +213,7 @@ export default function SolListe(props: SolListeProps) {
           if (gorunur.length === 0) return null;
 
           // Ayrı kimlik kabukları başlığı bilinçli olarak gizleyebilir.
-          if (grup.baslikGoster === false) {
+          if ((typeof grup.baslikGoster === "function" ? grup.baslikGoster(props) : grup.baslikGoster) === false) {
             return (
               <div key={grup.baslik} className="flex flex-col gap-1" style={grup.ayirac ? { borderTop: "1px solid var(--tema-cizgi)", paddingTop: "12px" } : undefined}>
                 {gorunur.map(oge => <Fragment key={oge.anahtar ?? oge.etiket}>{OgeBlogu({ oge })}</Fragment>)}

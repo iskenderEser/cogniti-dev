@@ -6,6 +6,7 @@
 // Kesinlikle bellek içi setTimeout döngüsü içermez.
 // API anahtarı, ses baytları veya transkript metni loglanmaz.
 
+import { partnerTranskriptIsle } from "@/lib/agora/partnerTranskriptIsleyici";
 import { createAdminClient } from "@/lib/supabase/server";
 import { bunnyStorageNesneIndir } from "@/lib/ogrenmeAraci/bunnyStorage";
 import { sesTranskriptiOlusturGemini } from "@/lib/ogrenmeAraci/geminiTranscribe";
@@ -40,6 +41,7 @@ export async function transkriptKuyrukIsle(secenekler?: {
     p_lease_saniye: leaseSaniye,
   });
 
+  if (!rpcError && !hamIs) return partnerTranskriptIsle();
   if (rpcError || !hamIs) {
     return {
       islendi: false,

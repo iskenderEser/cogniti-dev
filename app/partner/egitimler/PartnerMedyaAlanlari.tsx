@@ -5,9 +5,11 @@ import { Upload } from "lucide-react";
 import { SORGU_ARALIGI_MS, TAVAN_SANIYE } from "@/lib/video/islemeDurumu";
 import { Button } from "@/components/ui/button";
 import { bunnyTusYukle, type BunnyVezneIzni } from "@/lib/video/bunnyTusIstemci";
+import { sesSuresiniOku } from "@/lib/ogrenmeAraci/bunnyYuklemeIstemci";
 import { dosyaSha256Parcali } from "@/lib/ogrenmeAraci/sha256Istemci";
 import { dosyaBeyaniDogrula } from "@/lib/ogrenmeAraci/sozlesme";
 import { PartnerYayinOynaticisi } from "@/components/agora/AgoraDenemeOynaticisi";
+import PartnerPodcastEkleri from "./PartnerPodcastEkleri";
 import styles from "./egitimler.module.css";
 
 interface Medya { yukleme_id:string; rol?:string; dosya_adi:string; durum:string; izleme_url?:string|null; dinleme_url?:string|null; sure_saniye?:number|null }
@@ -25,19 +27,21 @@ function podcastGonder(file:File,yukleme:{endpoint:string;headers:Record<string,
     xhr.onerror=xhr.ontimeout=()=>reject(new Error("Podcast aktarımı kesildi. Yeniden yükleyin."));xhr.send(file);
   });
 }
-export default function PartnerMedyaAlanlari({egitimId,egitimAdi,istekId,tur,disabled,onTurDegis,onTaslak,onIslem,onHazirlik}:{
+export default function PartnerMedyaAlanlari({egitimId,egitimAdi,istekId,tur,disabled,onTurDegis,onTaslak,onIslem,onHazirlik,onEkDegisiklik}:{
   egitimId:string|null;egitimAdi:string;istekId:string;tur:"video"|"podcast";disabled:boolean;
+  onEkDegisiklik?:(n:boolean)=>void;
   onTurDegis:(tur:"video"|"podcast")=>void;
   onHazirlik?:(durum:{egitimId:string|null;tur:"video"|"podcast";hazir:boolean})=>void;
   onTaslak:(t:Taslak)=>void;onIslem:(aktif:boolean)=>void;
 }) {
+  const [eklerHazir,setEklerHazir]=useState(false);
   const [videolar,setVideolar]=useState<Medya[]>([]),[podcast,setPodcast]=useState<Medya|null>(null);
   const [aktif,setAktif]=useState<string|null>(null),[yuzde,setYuzde]=useState(0),[hata,setHata]=useState(""),[mesaj,setMesaj]=useState("");
   const kilit=useRef(false),yasiyor=useRef(true),okumaSurumu=useRef(0);
   useEffect(() => {
     const dosya = tur === "video" ? videolar.find(v => v.rol === "egitim") : podcast;
-    onHazirlik?.({egitimId, tur, hazir: aktif === null && (dosya?.durum === "hazir" || (tur === "video" && dosya?.durum === "isleniyor"))});
-  }, [egitimId, tur, videolar, podcast, aktif, onHazirlik]);
+    onHazirlik?.({egitimId, tur, hazir: aktif === null && (tur!=="podcast"||eklerHazir) && (dosya?.durum === "hazir" || (tur === "video" && dosya?.durum === "isleniyor"))});
+  }, [egitimId, tur, videolar, podcast, aktif, eklerHazir, onHazirlik]);
 
   useEffect(()=>{yasiyor.current=true;return()=>{yasiyor.current=false;};},[]);
   const oku=useCallback(async(id:string)=>{
@@ -55,6 +59,17 @@ export default function PartnerMedyaAlanlari({egitimId,egitimAdi,istekId,tur,dis
     if(egitimId)void oku(egitimId).catch(e=>{if(gecerli&&yasiyor.current)setHata(e.message);});
     return()=>{gecerli=false;};
   },[egitimId,oku]);
+  useEffect(()=>{
+    if(tur!=="podcast"||!egitimId||podcast?.durum!=="hazir"||Number(podcast.sure_saniye)>0||!podcast.dinleme_url)return;
+    const c=new AbortController();const id=egitimId,dosya=podcast;
+    void sesSuresiniOku(podcast.dinleme_url,AbortSignal.any([c.signal,AbortSignal.timeout(20000)]))
+      .then(async sure=>{
+        if(c.signal.aborted)return;
+        await json("/partner/api/medya/podcast",{egitim_id:id,yukleme_id:dosya.yukleme_id,islem:"sure_kaydet",sure_saniye:sure},"PATCH");
+        if(!c.signal.aborted&&yasiyor.current)setPodcast(eski=>eski?.yukleme_id===dosya.yukleme_id?{...eski,sure_saniye:sure}:eski);
+      }).catch(e=>{if(!c.signal.aborted&&yasiyor.current)setHata(e instanceof Error?e.message:"Podcast süresi kaydedilemedi.");});
+    return()=>c.abort();
+  },[tur,egitimId,podcast]);
   const videoIsleniyor = tur === "video" && videolar.some(v => v.rol === "egitim" && v.durum === "isleniyor");
   useEffect(() => {
     if (!egitimId || !videoIsleniyor) return;
@@ -96,11 +111,12 @@ export default function PartnerMedyaAlanlari({egitimId,egitimAdi,istekId,tur,dis
         if(yasiyor.current)setMesaj("Video Aktarıldı. İşlenme Arka Planda Devam Ederken Soruları Hazırlayabilirsiniz.");
       }else{
         const kontrol=dosyaBeyaniDogrula({aracTuru:"podcast",dosyaAdi:file.name,mimeType:file.type,dosyaBoyutu:file.size});if(!kontrol.ok)throw new Error(kontrol.hata);
+        const sureSaniye=await sesSuresiniOku(file,AbortSignal.timeout(20000));
         const checksum=await dosyaSha256Parcali(file);
         const d=await json("/partner/api/medya/podcast",{egitim_id:id,egitim_adi:egitimAdi,istek_id:istekId,dosya_adi:file.name,mime_type:file.type,dosya_boyutu:file.size,checksum_sha256:checksum});
         id=d.egitim_id;onTaslak(d);
         const makbuz=await podcastGonder(file,d.yukleme,n=>{if(yasiyor.current)setYuzde(n);});
-        await json("/partner/api/medya/podcast",{egitim_id:id,yukleme_id:d.yukleme_id,makbuz},"PATCH");
+        await json("/partner/api/medya/podcast",{egitim_id:id,yukleme_id:d.yukleme_id,makbuz,sure_saniye:sureSaniye},"PATCH");
         if(yasiyor.current)setMesaj("Podcast Yüklendi.");
       }
       if(id)await oku(id);
@@ -134,6 +150,7 @@ export default function PartnerMedyaAlanlari({egitimId,egitimAdi,istekId,tur,dis
     <div>
       <span id="partner-yayin-araci-baslik" className={styles.alanBasligi}>Yayın Aracı</span>
       {kart()}
+      {tur==="podcast"&&podcast?.durum==="hazir"&&egitimId&&<PartnerPodcastEkleri key={podcast.yukleme_id} egitimId={egitimId} yuklemeId={podcast.yukleme_id} disabled={disabled} onIslem={onIslem} onHazirlik={setEklerHazir} onDegisiklik={onEkDegisiklik}/>}
     </div>
     {egitimId && dosya?.durum !== "hazir" && <Button type="button" variant="outline" disabled={disabled||aktif!==null} onClick={()=>{setHata("");void oku(egitimId).catch(e=>setHata(e.message));}}>Dosya Durumunu Kontrol Et</Button>}
     {mesaj && dosya?.durum !== "hazir" && <p role="status" className={styles.bilgi}>{mesaj}</p>}

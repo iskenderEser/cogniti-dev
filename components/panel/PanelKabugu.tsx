@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, type ReactNode } from "react";
+import { useAgoraVitrini } from "@/components/agora/AgoraVitrinBaglami";
 import { usePathname } from "next/navigation";
 import EczaneKullanimKilavuzu from "@/components/rehber/EczaneKullanimKilavuzu";
 import UreticiKullanimKilavuzu from "@/components/rehber/UreticiKullanimKilavuzu";
@@ -32,6 +33,17 @@ interface Props {
 /** PanelLayout'tan taşınan ortak yerleşim; kimlik veya uzak veri işlemi yapmaz. */
 export default function PanelKabugu({ children, navbar, baglam, gruplar, badge, bildirimler }: Props) {
   const pathname = usePathname();
+  const agora = useAgoraVitrini();
+  const agoraYolu = pathname === "/agora" || pathname.startsWith("/agora/");
+  const partnerler = agora?.veri?.partnerler ?? [];
+  const agoraGruplari:NavGrup[] = [{baslik:"Cogniti Partnerleri",oglar:partnerler.map(p=>({
+    etiket:p.sirket_adi,anahtar:p.partner_id,secili:agora?.seciliPartner===p.partner_id,
+    onSecim:()=>agora?.partnerSec(p.partner_id),badgeKey:p.partner_id,rozetKalici:true,gate:()=>true,
+  }))}];
+  const etkinGruplar = agoraYolu ? agoraGruplari : gruplar;
+  const etkinBadge = agoraYolu ? Object.fromEntries(partnerler.map(p=>[p.partner_id,p.yayin_sayisi])) : badge;
+  const etkinNavbar = agoraYolu ? {...navbar,bilgiPilleri:[{key:"ana-sayfa",etiket:"Ana Sayfa",path:navbar.anaSayfaYolu??"/ana-sayfa"}],
+    onAgora:()=>agora?.partnerSec(null),anaSayfaSecili:false} : navbar;
   const vivaYolu = pathname === "/viva" || pathname.startsWith("/viva/");
   const kilavuzVar = URETICI_ROLLER.includes(baglam.rolKucu)
     || TUKETICI_ROLLER.includes(baglam.rolKucu)
@@ -52,22 +64,22 @@ export default function PanelKabugu({ children, navbar, baglam, gruplar, badge, 
 
   return (
     <div data-viva-panel={vivaYolu || undefined} style={{ height: vivaYolu ? "100dvh" : "100vh", background: "var(--tema-zemin)", fontFamily: "'Nunito', sans-serif", display: "flex", flexDirection: "column", overflow: "hidden" }}>
-      <PanelNavbar {...navbar} onHamburger={() => setDrawerAcik(true)} />
+      <PanelNavbar {...etkinNavbar} onHamburger={() => setDrawerAcik(true)} />
       <MobilDrawer
         {...baglam}
-        gruplar={gruplar}
-        badge={badge}
+        gruplar={etkinGruplar}
+        badge={etkinBadge}
         altAlan={renkAnahtari}
         acik={drawerAcik}
         onKapat={() => setDrawerAcik(false)}
         onCikis={navbar.onCikis}
-        anaSayfaYolu={navbar.anaSayfaYolu}
-        onAnaSayfa={navbar.onAnaSayfa}
-        anaSayfaSecili={navbar.anaSayfaSecili}
-        bilgiPilleri={navbar.bilgiPilleri}
+        anaSayfaYolu={etkinNavbar.anaSayfaYolu}
+        onAnaSayfa={etkinNavbar.onAnaSayfa}
+        anaSayfaSecili={etkinNavbar.anaSayfaSecili}
+        bilgiPilleri={etkinNavbar.bilgiPilleri}
       />
       <div className="flex flex-1" style={{ minHeight: 0 }}>
-        <SolListe {...baglam} gruplar={gruplar} badge={badge} altAlan={renkAnahtari} />
+        <SolListe {...baglam} gruplar={etkinGruplar} badge={etkinBadge} altAlan={renkAnahtari} />
         <main className="flex-1 overflow-y-auto" style={{ minWidth: 0 }}>
           {children}
         </main>

@@ -10,7 +10,7 @@ import { dosyaBeyaniDogrula, dosyaImzasiDogrula } from "@/lib/ogrenmeAraci/sozle
 type Baglam = NonNullable<Awaited<ReturnType<typeof onayliPartnerBaglami>>>;
 export const medyaUuid = (v: unknown): v is string => typeof v === "string" && /^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i.test(v);
 interface Video { yukleme_id: string; video_guid: string; rol: "egitim" | "tanitim"; dosya_adi: string; durum: string; sure_saniye: number | null }
-interface Podcast { yukleme_id: string; dosya_yolu: string; dosya_adi: string; dosya_boyutu: number; mime_type: string; checksum_sha256: string; durum: string }
+interface Podcast { sure_saniye?:number|null; yukleme_id: string; dosya_yolu: string; dosya_adi: string; dosya_boyutu: number; mime_type: string; checksum_sha256: string; durum: string }
 async function oku(b: Baglam, id: string): Promise<{videolar: Video[]; podcastler: Podcast[]} | null> {
   const {data,error}=await b.db.rpc("agora_partner_medya_oku",{p_token_ozeti:b.tokenOzeti,p_egitim_id:id});
   if(error) throw new Error("Medya kurulumu veya kayıtları okunamadı.");
@@ -86,12 +86,18 @@ export async function podcastTamamla(request:Request) {
   const body=await partnerJsonOku(request);if(!body.ok)return body.yanit;
   try{
     const b=await onayliPartnerBaglami();if(!b)return partnerYanit({hata:"Partner oturumunuz doğrulanamadı."},401);
-    const d=body.veri;if(!medyaUuid(d.egitim_id)||!medyaUuid(d.yukleme_id)||typeof d.makbuz!=="string")return partnerYanit({hata:"Geçersiz podcast kaydı."},400);
+    const d=body.veri;if(!medyaUuid(d.egitim_id)||!medyaUuid(d.yukleme_id)||!Number.isSafeInteger(d.sure_saniye)||Number(d.sure_saniye)<=0||(d.islem!=="sure_kaydet"&&typeof d.makbuz!=="string"))return partnerYanit({hata:"Geçersiz podcast kaydı."},400);
     const m=await oku(b,d.egitim_id),a=m?.podcastler.find(a=>a.yukleme_id===d.yukleme_id);if(!a)return partnerYanit({hata:"Podcast bulunamadı."},404);
+    if(d.islem==="sure_kaydet"){
+      if(a.durum!=="hazir")return partnerYanit({hata:"Önce podcast yüklemesini tamamlayın."},409);
+      const {data,error}=await b.db.rpc("agora_partner_podcast_sure_kaydet",{p_token_ozeti:b.tokenOzeti,p_egitim_id:d.egitim_id,p_yukleme_id:d.yukleme_id,p_sure:d.sure_saniye});
+      return error||data!==true?partnerYanit({hata:"Podcast süresi kaydedilemedi."},409):partnerYanit({mesaj:"Podcast süresi kaydedildi."});
+    }
+    if(typeof d.makbuz!=="string")return partnerYanit({hata:"Podcast aktarım makbuzu eksik."},400);
     if(!yuklemeMakbuzuDogrula({makbuz:d.makbuz,aracId:a.yukleme_id,kullaniciId:b.partnerId,dosyaYolu:a.dosya_yolu,dosyaBoyutu:a.dosya_boyutu,mimeType:a.mime_type,checksumSha256:a.checksum_sha256}))return partnerYanit({hata:"Podcast aktarımı doğrulanamadı; yeniden yükleyin."},400);
     const nesne=await bunnyNesneBilgisi(a.dosya_yolu);
     if(!nesne||nesne.dosyaBoyutu!==a.dosya_boyutu||(nesne.checksumSha256!==null&&nesne.checksumSha256!==a.checksum_sha256)||!dosyaImzasiDogrula("podcast",nesne.ilkBaytlar))return partnerYanit({hata:"Ses dosyasının içeriği veya boyutu doğrulanamadı."},400);
-    const {data,error}=await b.db.rpc("agora_partner_podcast_tamamla",{p_token_ozeti:b.tokenOzeti,p_egitim_id:d.egitim_id,p_yukleme_id:d.yukleme_id});
+    const {data,error}=await b.db.rpc("agora_partner_podcast_tamamla",{p_token_ozeti:b.tokenOzeti,p_egitim_id:d.egitim_id,p_yukleme_id:d.yukleme_id,p_sure:d.sure_saniye});
     if(error||data!==true)return partnerYanit({hata:"Podcast kaydedilemedi."},409);
     return partnerYanit({mesaj:"Podcast yüklendi."});
   }catch{return partnerYanit({hata:"Podcast sonucu doğrulanamadı."},503);}
@@ -101,6 +107,6 @@ export async function podcastOku(request:Request) {
     const b=await onayliPartnerBaglami();if(!b)return partnerYanit({hata:"Partner oturumunuz doğrulanamadı."},401);
     const id=new URL(request.url).searchParams.get("egitim_id");if(!medyaUuid(id))return partnerYanit({hata:"Geçersiz eğitim."},400);
     const m=await oku(b,id);if(!m)return partnerYanit({hata:"Eğitim bulunamadı."},404);
-    const a=m.podcastler[0];return partnerYanit({podcast:a?{yukleme_id:a.yukleme_id,dosya_adi:a.dosya_adi,durum:a.durum,dinleme_url:a.durum==="hazir"?bunnyCdnImzaliUrl(a.dosya_yolu):null}:null});
+    const a=m.podcastler[0];return partnerYanit({podcast:a?{yukleme_id:a.yukleme_id,dosya_adi:a.dosya_adi,durum:a.durum,sure_saniye:a.sure_saniye??null,dinleme_url:a.durum==="hazir"?bunnyCdnImzaliUrl(a.dosya_yolu):null}:null});
   }catch{return partnerYanit({hata:"Podcast bilgileri okunamadı."},503);}
 }

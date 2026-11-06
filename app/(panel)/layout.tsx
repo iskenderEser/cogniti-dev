@@ -18,6 +18,7 @@ import { panelBaslangici } from "@/lib/panel/baslangic";
 import { useCallback, useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/app/providers/AuthProvider";
+import { AgoraVitrinSaglayici } from "@/components/agora/AgoraVitrinBaglami";
 import PanelKabugu from "@/components/panel/PanelKabugu";
 import { PANEL_NAV, eclubKisiNavOlustur, type NavContext } from "@/components/panel/panelNav.config";
 import { HBSTORE_BAKIYE_DEGISTI } from "@/lib/tclub/store/olay";
@@ -25,7 +26,7 @@ import { BILDIRIM_ROZETLERI_DEGISTI, bildirimRozetleriniYenile } from "@/lib/bil
 import { ONERI_ZAMANI_DEGISTI } from "@/lib/tclub/oneri/gorunurluk";
 import YarimYuklemeBildirimi from "@/components/ogrenme-araci/YarimYuklemeBildirimi";
 import YayinSonucBildirimi from "@/components/panel/YayinSonucBildirimi";
-import { STORE_ALABILEN_ROLLER, URETICI_ROLLER, TUM_ROLLER } from "@/lib/utils/roller";
+import { STORE_ALABILEN_ROLLER, URETICI_ROLLER, TUM_ROLLER, AGORA_GOREN_ROLLER } from "@/lib/utils/roller";
 import { prefetchTalepMerkezi } from "@/app/(panel)/talepler/_hooks/talepOnbellek";
 import { prefetchYayinOzet } from "@/app/(panel)/yayin-yonetimi/_hooks/ozetOnbellek";
 import { prefetchYayinKatalog } from "@/lib/video/katalogOnbellek";
@@ -251,6 +252,7 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
   const anaSayfaYolu = isEclubKisi ? "/eclub/ana-sayfa" : panelBaslangici(rolKucu).yol;
 
   return (
+    <AgoraVitrinSaglayici etkin={pathname === "/agora" || pathname.startsWith("/agora/")} kimlik={kullanici.id}>
     <PanelKabugu
       navbar={{
         adSoyad: kullanici.adSoyad,
@@ -258,6 +260,7 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
         ozet: isEclubKisi ? null : etkinOzet,
         siparisPuaniGoster: !isEclubKisi && etkinFlags.storeAcik,
         hbStoreGoster: !isEclubKisi && etkinFlags.storeAcik && STORE_ALABILEN_ROLLER.includes(rolKucu),
+        agoraGoster: !isEclubKisi && AGORA_GOREN_ROLLER.includes(rolKucu),
         vivaGoster: isEclubKisi ? etkinFlags.eclubAcik && etkinFirmalar.length > 0 : TUM_ROLLER.includes(rolKucu),
         anaSayfaYolu,
         bilgiPilleri: !isEclubKisi && URETICI_ROLLER.includes(rolKucu) ? [] : undefined,
@@ -274,5 +277,6 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
     >
       {children}
     </PanelKabugu>
+    </AgoraVitrinSaglayici>
   );
 }

@@ -24,6 +24,11 @@ async function ortam(uye = true, silmeAktif = true, rol = "utt") {
   const router = { push: (yol: string) => yollar.push(yol), replace: (yol: string) => yollar.push(yol), prefetch: noop };
   const cikisYap = async () => { cikislar++; };
   const modules: Record<string, unknown> = {
+    "@/components/agora/AgoraVitrinBaglami": { useAgoraVitrini: () => null },
+    "@/components/rehber/TemsilciIsAkisiHaritasi": { default: () => null },
+    "@/components/rehber/BmIsAkisiHaritasi": { default: () => null },
+    "@/components/rehber/TmIsAkisiHaritasi": { default: () => null },
+    "@/components/rehber/UreticiIsAkisiHaritasi": { default: () => null },
     "@/components/rehber/EczaneKullanimKilavuzu": { default: () => null },
     "@/components/rehber/UreticiKullanimKilavuzu": { default: () => null },
     "@/lib/rehber/uttKilavuzu": { uttKilavuzunuSec: () => ({ giris: [], bolumler: [] }) },

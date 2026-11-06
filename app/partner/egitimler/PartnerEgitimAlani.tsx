@@ -16,9 +16,12 @@ import { YenileButonu } from "@/components/ui/yenile-butonu";
 import { DahaFazlaGoster } from "@/components/liste/DahaFazlaGoster";
 import MobilYayinAkisi from "@/components/yayin/MobilYayinAkisi";
 import styles from "./egitimler.module.css";
+import { AgoraRafOklari } from "@/components/agora/AgoraRafOklari";
+import rafStyles from "@/components/agora/AgoraVitrini.module.css";
 
 export default function PartnerEgitimAlani({ sirketAdi, kaydedildi=false }: { sirketAdi: string; logoSurumu: number; kaydedildi?:boolean }) {
   const router=useRouter();
+  const raf=useRef<HTMLDivElement>(null);
   const bildirimGosterildi=useRef(false);
   const [liste, setListe] = useState<PartnerEgitimListesi | null>(null);
   const [durum, setDurum] = useState<PartnerEgitimDurumu | "tumu">("tumu");
@@ -132,7 +135,7 @@ export default function PartnerEgitimAlani({ sirketAdi, kaydedildi=false }: { si
     </AlertDialog>
     <AlertDialog open={!!yayinAdayi} onOpenChange={open => { if (!open && !kilit.current) { setYayinAdayi(null); setHata(""); } }}>
       <AlertDialogContent>
-        <AlertDialogHeader><AlertDialogTitle className="sr-only">Yayımlama Onayı</AlertDialogTitle><AlertDialogDescription>Yayınınız Cogniti Agora'da firmaların tercihine sunulacaktır. Onaylıyor musunuz?</AlertDialogDescription></AlertDialogHeader>
+        <AlertDialogHeader><AlertDialogTitle className="sr-only">Yayımlama Onayı</AlertDialogTitle><AlertDialogDescription>Yayınınız Cogniti Agora&apos;da firmaların tercihine sunulacaktır. Onaylıyor musunuz?</AlertDialogDescription></AlertDialogHeader>
         {hata && <p role="alert" className={styles.hata}>{hata}</p>}
         <AlertDialogFooter>
           <AlertDialogCancel disabled={kaydediliyor}>Hayır</AlertDialogCancel>
@@ -193,7 +196,7 @@ export default function PartnerEgitimAlani({ sirketAdi, kaydedildi=false }: { si
       {liste && liste.kayitlar.length > 0 && <>
         <MobilYayinAkisi<PartnerEgitimi> kayitlar={liste.kayitlar} kayitAnahtari={e=>e.egitim_id} renderKart={kart} sayacGoster={false}
           sifirlamaAnahtari={`${durum}:${arama}:${baslangic}:${bitis}`}
-          masaustuIcerik={<div className={styles.kartlar}>{liste.kayitlar.map(e=><div key={e.egitim_id} className={styles.kart}>{kart(e)}</div>)}</div>}/>
+          masaustuIcerik={<div className={rafStyles.rafAlani}><AgoraRafOklari raf={raf} baslik="Eğitimlerim"/><div key={`${durum}:${arama}:${baslangic}:${bitis}`} ref={raf} className={styles.kartlar}>{liste.kayitlar.map(e=><div key={e.egitim_id} className={styles.kart}>{kart(e)}</div>)}</div></div>}/>
         {!yukleniyor&&<DahaFazlaGoster dahaVar={liste.kayitlar.length<liste.toplam} gorunenSayi={liste.kayitlar.length} toplam={liste.toplam} onGoster={()=>{if(!kilit.current&&!cikiliyor)void oku(sayfa+1,true);}}/>}
         {yukleniyor&&<p role="status" className={styles.bilgi}>Eğitimleriniz yükleniyor…</p>}
       </>}

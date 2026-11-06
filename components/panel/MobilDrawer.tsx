@@ -106,9 +106,10 @@ export default function MobilDrawer(props: MobilDrawerProps) {
   const git = (path: string) => { router.push(path); props.onKapat(); };
   const cikis = () => { props.onKapat(); props.onCikis(); };
 
-  const Satir = ({ etiket, path, sayi, girintili = false, tamEslesme = false, aktifYollar, secili, onSecim, anahtar }: { etiket: string; path: string; sayi?: number; girintili?: boolean; tamEslesme?: boolean; aktifYollar?: string[]; secili?: boolean; onSecim?: () => void; anahtar?: string }) => {
+  const Satir = ({ etiket, path, sayi, girintili = false, tamEslesme = false, aktifYollar, secili, onSecim, anahtar, rozetKalici=false }: { etiket: string; path: string; sayi?: number; girintili?: boolean; tamEslesme?: boolean; aktifYollar?: string[]; secili?: boolean; onSecim?: () => void; anahtar?: string; rozetKalici?:boolean }) => {
     const aktif = secili ?? (Boolean(path && (tamEslesme ? pathname === path : pathname === path || pathname.startsWith(`${path}/`))) || aktifYollar?.some((yol) => pathname === yol || pathname.startsWith(`${yol}/`)) === true);
     return (
+      <>
       <button
         type="button"
         onClick={() => { if (onSecim) { onSecim(); props.onKapat(); } else if (path) git(path); }}
@@ -117,30 +118,33 @@ export default function MobilDrawer(props: MobilDrawerProps) {
         className="w-full flex items-center justify-between rounded-lg cursor-pointer border-none text-left"
         style={{
           padding: girintili ? "10px 12px 10px 20px" : "10px 12px",
-          fontSize: "14px",
-          fontWeight: aktif ? 700 : 600,
-          color: aktif ? "var(--tema-menu-secili-metin)" : path === "/token" ? "var(--tema-kontrol-eylem)" : "var(--tema-gezinme-metin)",
+          fontSize: path === "/agora-yayinlari" ? "12px" : "14px",
+          fontWeight: path === "/agora-yayinlari" ? 800 : aktif ? 700 : 600,
+          letterSpacing: path === "/agora-yayinlari" ? "0.06em" : undefined,
+          color: path === "/agora-yayinlari" ? "#6D28D9" : aktif ? "var(--tema-menu-secili-metin)" : path === "/token" ? "var(--tema-kontrol-eylem)" : "var(--tema-gezinme-metin)",
           background: aktif ? "var(--tema-menu-secili-zemin)" : "transparent",
           fontFamily: "'Nunito', sans-serif",
           minHeight: "44px",
         }}
       >
         <span>{etiket}</span>
-        {sayi && sayi > 0 ? (
+        {(sayi && sayi > 0) || rozetKalici ? (
           <span
             className="flex items-center justify-center rounded-full text-[var(--tema-ters-metin)]"
             style={{ minWidth: "18px", height: "18px", padding: "0 5px", background: "var(--tema-vurgu)", fontSize: "10px", fontWeight: 700, lineHeight: 1 }}
           >
-            {sayi > 99 ? "99+" : sayi}
+            {rozetKalici ? (sayi ?? 0) : sayi! > 99 ? "99+" : sayi}
           </span>
         ) : null}
       </button>
+      {path === "/agora-yayinlari" && <div role="separator" className="my-2 w-full border-t border-[var(--tema-cizgi)]" />}
+      </>
     );
   };
 
   const OgeBlogu = ({ oge, girintili = false }: { oge: NavOge; girintili?: boolean }) => {
     const altOglar = (oge.altOglar ?? []).filter((altOge) => altOge.gate(props));
-    if (altOglar.length === 0) return Satir({ etiket: oge.etiket, path: cozPath(oge), sayi: rozetSayisi(oge), girintili, tamEslesme: oge.tamEslesme, aktifYollar: oge.aktifYollar, secili: oge.secili, onSecim: oge.onSecim, anahtar: oge.anahtar });
+    if (altOglar.length === 0) return Satir({ etiket: oge.etiket, path: cozPath(oge), sayi: rozetSayisi(oge), girintili, tamEslesme: oge.tamEslesme, aktifYollar: oge.aktifYollar, secili: oge.secili, onSecim: oge.onSecim, anahtar: oge.anahtar, rozetKalici: oge.rozetKalici });
     const anahtar = oge.anahtar ?? oge.etiket;
     const altAktif = (Boolean(oge.onSecim) && navOgeAktifMi(oge, props, pathname))
       || altOglar.some(alt => navOgeVeyaAltiAktifMi(alt, props, pathname));
@@ -183,7 +187,7 @@ export default function MobilDrawer(props: MobilDrawerProps) {
           <span className="flex items-center gap-2">
             {sayi > 0 && (
               <span className="flex items-center justify-center rounded-full text-[var(--tema-ters-metin)]" style={{ minWidth: "18px", height: "18px", padding: "0 5px", background: "var(--tema-vurgu)", fontSize: "10px", fontWeight: 700, lineHeight: 1 }}>
-                {sayi > 99 ? "99+" : sayi}
+                {oge.rozetKalici ? sayi : sayi > 99 ? "99+" : sayi}
               </span>
             )}
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} style={{ transform: altAcik ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6" /></svg>
@@ -237,7 +241,7 @@ export default function MobilDrawer(props: MobilDrawerProps) {
             const gorunur = grup.oglar.filter((o) => o.gate(props));
             if (gorunur.length === 0) return null;
 
-            if (grup.baslikGoster === false) {
+            if ((typeof grup.baslikGoster === "function" ? grup.baslikGoster(props) : grup.baslikGoster) === false) {
               return (
                 <div key={grup.baslik} className="flex flex-col gap-1" style={grup.ayirac ? { borderTop: "1px solid var(--tema-cizgi)", paddingTop: "12px" } : undefined}>
                   {gorunur.map(oge => <Fragment key={oge.anahtar ?? oge.etiket}>{OgeBlogu({ oge })}</Fragment>)}

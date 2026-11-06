@@ -482,3 +482,105 @@ Bu kayıt bir sonraki iş içindir; uygulama kodu ve SQL henüz değiştirilmedi
 Kapsam, sınırlamalar ve uygulanma sırası: `docs/AGORA_KORUMA_PAKETI.md`. Kullanıcının taslağı yayımlanmadı.
 
 Tek oynatıcı düzeltmesi: yeni SQL yok. Sesli marka telaffuzu “Kogniti” olarak düzeltildi; orijinal podcast değişmedi. Kullanıcı ilk sesli uyarıyı 15 saniyelik kayıtta duyduğunu doğruladı. Yeni telaffuz ve düzeltilmiş tek oynatıcıda yayımlama sonrası kabul henüz yapılmadı.
+
+### 6 Kasım — Agora firma vitrini
+
+- [x] Üretici, TM ve yönetici roller için navbar giriş butonu ve sunucuda rol kontrollü Agora sayfası.
+- [x] Ana Sayfa tüm partnerlerin raflarını gösterir. Sidebar partner firmaları yayındaki yayın adetlerine göre sıralar. Kalıcı rozetler sıfır dahil tam adedi gösterir.
+- [x] Üç stat kartı Agora genelini gösterir. Haftalık özet haftanın ilk okumasında oluşturulur ve o hafta sabit kalır. Sidebar ve raflar canlı veriden yenilenir.
+- [x] Mevcut Cogniti kontrol gruplarıyla yatay hedef kitle filtresi ve Video/Podcast toggle. Dört raf ortak YayinKarti HOYK bileşenini kullanır.
+- [x] Token gösterimi ortak KKÖ birim fiyatıyla hesaplanır. Yarım ve üzeri yukarı yuvarlanır.
+- [x] Beğeni/favori kayıtları kullanıcı ve yayın bazında saklanır. Tüm aktif üye firmaların etkileşimleri raf sıralamasını besler.
+- [x] Satın alma öncesi video filigranı ve podcast sesli uyarısı mevcut ortak oynatıcıya bağlıdır.
+- [x] Kullanıcı agora_vitrin_hazir=true sonucunu iletti ve vitrini planladığı yapıda gördüğünü doğruladı.
+- [ ] Sipariş Ver işlemi ve token tüketimi yalnız üretici roller için ayrı adımda bağlanacak. Şimdilik düğme pasif, sipariş sayısı bilinmiyor gösterimidir. Hak ediş/satış raporlarının bağlantısı bekliyor.
+- [ ] Video indirme engelinin Bunny ve gerçek tarayıcıyla uçtan uca doğrulanması bekliyor. Filigran tek başına indirme engeli değildir.
+
+
+### 6 Kasım — Satın alma sahipliği düzeltmesi ve sipariş bağlantısı
+
+**Son kullanıcı kararı önceki firma havuzu kararını değiştirir:** Satın alma, yetkili üretici kullanıcıya aittir. Merve ve Arzu aynı firmada olsa da ayrı satın alır; birbirinin satın aldığı paketi kullanamaz. Token kesintisi ve yetersiz tutarın borcu firmaya aittir; firma aktif kalır. Aynı kullanıcının aynı yayını ikinci kez satın alması kapanır. Satın alan kullanıcı süre ve tekrar sınırı olmadan, mevcut rol yetkileri içindeki hedef kitlelere yayın hazırlayabilir.
+
+- [x] Sipariş tekillik anahtarı alici_id + egitim_id. Token işlem anahtarı üretici + eğitim içerir. Firma token hesabı kilidi ortak bakiyenin eşzamanlı tüketimini seri hale getirir.
+- [x] Üretici kullanıcı için Cogniti teyit modali, sipariş API'si ve toast. TM/yönetici sipariş veremez. Kullanıcının aldığı yayının HOYK'unda Daha Önce Satın Aldınız şeridi; satın alma kapalı.
+- [x] Sipariş, token kesintisi ve borç aynı transaction içinde. Fiyat/sürüm değişirse yeni onay istenir. KKÖ fiyatı istemciden alınmaz; ortak sunucu fiyat kaynağı kullanılır.
+- [x] Satın alma anındaki medya kaynağı, bilgiler, soru seti ve ücretler siparişte korunur. %15 hizmet bedeli/ödenecek net tutar kaydedilir. KDV ve ödeme günü uydurulmaz; hak ediş ve rapor ekranlarına bağlantı bu adımda yapılmadı.
+- [x] Mevcut Yayın Yönetimi > Yayına Hazır alanında Agora’dan Satın Aldığım Yayınlar. Seçili hedef kitle için Yayına Hazırla, mevcut talep/hazır içerik/hazır soru seti zincirini kullanır. Her hazırlık isteği tekildir; ayrı hedef/yeni yayın için tekrar hazırlanabilir, yeniden satın alma yapılmaz. Medya dosyası fiziksel çoğaltılmaz. Normal yüklemelerin tekil dosya kuralı korunur; Agora paketine bağlı öğrenme aracı kayıtları aynı kaynağı kullanabilir.
+- [x] Yerel doğrulamalar: 45 SQL/üretim zinciri kontrolü, 65 sipariş API yetki kontrolü, 22 gerçek React vitrin/kabuk/HOYK kontrolü. TypeScript başarılı. API testlerinde auth/DB sahte; PGlite testinde temel tablolar sahte ve dönem yenileme etkisiz bağımlılık. Canlı DB, gerçek Bunny ve tarayıcı kabulü değildir. Yeni eşzamanlı bağlantı testi yapılmadı.
+- [ ] scripts/sql/agora_satin_alma.sql kullanıcı tarafından uygulanacak; agora_satin_alma_hazir sonucu bekleniyor. SQL canlı veritabanında çalıştırılmadı.
+- [ ] Merve ve Arzu kullanıcılarıyla ayrı satın alma, token/borç, sahiplik şeridi ve Yayına Hazırla akışının gerçek ekran kabulü. Video/podcast oynatma ve mevcut yayın araçlarıyla yayımlama kabulü henüz yapılmadı.
+
+### Podcast süre eklemesi — kullanıcı talimatıyla geri alındı
+
+- [x] Satın alma sonrası Yayına Hazırla sırasında Audio ile süre okuma, bunun için eklenen imzalı podcast adresi API/RPC'si ve süre parametresi kaldırıldı. Partner yükleme süreci değiştirilmedi.
+- [ ] Partner podcast kaydında süre eksikliği açık konudur; mevcut üretici yayın hattının süre kontrolü korunur. Önceki 45 SQL kontrolü süre eklemesini içeren tarihsel sonuçtur; bu geri alma sonrasında podcastin uçtan uca yayımlanabildiği iddia edilmez. Kullanıcı talimatıyla diğer geliştirmeler beklemede.
+
+### Partner podcast süre bilgisi — partnerde kaydetme kararı
+
+- [x] Yeni podcast yüklemesinde mevcut üretici ses süresi okuyucusu ortak kullanılır; pozitif tam saniye tamamlanma isteğiyle kaydedilir. Süre okunamazsa yükleme başlatılmaz. Video akışı değiştirilmedi.
+- [x] Daha önce yüklenmiş, süresiz hazır podcastlerde partner kendi eğitim ekranını açtığında mevcut dosyanın metadata süresi okunur ve yalnız eksik alan tamamlanır. Dosya yeniden yüklenmez. Süre değişikliği, başka partnere erişim, süresi biten oturum ve geçersiz süre SQL/API ile reddedilir. Bu bilgi üretici yüklemesindeki gibi istemci metadata beyanıdır; sunucuda ses dosyası yeniden çözümlenmez.
+- [x] Satın alma paketi kayıtlı podcast süresini alır; mevcut Yayına Hazır aktarımı bunu öğrenme aracına taşır. Alıcı tarafında Audio ile süre okuma veya yeni süre parametresi eklenmedi.
+- [ ] scripts/sql/agora_partner_podcast_sure.sql kullanıcı tarafından uygulanacak. Sonuç: agora_partner_podcast_sure_hazir=true. Önceden yüklenmiş podcast için partner eğitim ekranında eksik sürenin tamamlanması ve sonraki firma yayını gerçek ortam kabulü bekleniyor.
+
+- [x] Süre geliştirmesi doğrulandı: 17 yerel SQL kontrolü, 18 gerçek API/ortak süre okuyucusu kontrolü; satın alma/hazır yayın zincirinde 42 kontrol. Partnerden kayıtlı 120 saniyenin üreticinin öğrenme aracına aktarıldığı sınandı. TypeScript başarılı, lint hata yok (şema snapshot RPC uyarıları). Yerel test sonuçlarıdır; gerçek yükleme/oynatma ve SQL kullanıcı uygulaması bekleniyor.
+
+### Partner Yeni Eğitim — podcast yayın görseli ve transkript
+
+- [x] Podcast sesi yüklendiğinde Yeni Eğitim formunda isteğe bağlı yayın görseli yükleme, önizleme ve kaldırma açılır. Görselsiz devam edilir. Ortak destek dosyası kuralları JPEG/PNG/WebP ve 20 MB sınırını doğrular. Dosyalar Bunny Storage'a gider; video TUS akışı değiştirilmedi.
+- [x] Mevcut PodcastTranskriptEditoru kullanılır. Manuel dosya (TXT/DOCX/PDF) sunucuda ayrıştırılır; metin düzenlenir ve açık onayla kaydedilir. Metin sınırı mevcut 10–100000 karakterdir. Onaydan sonra düzenlenirse yeniden onay gerekir; kaydedilmemiş değişiklik çıkış kontrolüne bağlandı.
+- [x] AI seçeneği mevcut Gemini ses transkript servisini kullanır. Partner oturumu firma Auth hesabına dönüştürülmedi; ayrı sahiplik kontrollü kayıt/RPC ve kalıcı lease kuyruğu eklendi. Mevcut cron/local worker, firma kuyruğu boşken partner kuyruğunu işler. Eski/iptal girişim sonucu uygulanmaz. AI çıktısı taslaktır, otomatik onaylanmaz.
+- [x] Başlatılmış ve tamamlanmamış transkript kaydı form ilerlemesini ve SQL yayımlamayı engeller. Transkript yoksa veya partner açıkça transkriptsiz devam ederse yayın açılabilir.
+- [x] Satın alma SQL taslağı, onaylı transkript ve görsel yolunu paket anlık görüntüsüne alır; hazır yayın öğrenme aracına kapak ve onaylı metin metadata'sı olarak aktarır. Eski kapak dosyası değiştirmede fiziksel silinmez; satın alınmış paket referansları korunur.
+- [x] Yerel doğrulama: 31 gerçek ek SQL kontrolü; 19 API kontrolü; gerçek ortak editör/partner bileşeniyle 12 React kontrolü; satın alma/aktarım zincirinde 44 kontrol. TypeScript başarılı. 38 mevcut podcast regresyonundan 37 geçti; değişmeyen erişim route'unda eski inline transkript kodunu arayan bir kaynak metni testi başarısız (mantık daha önce ortak helper'a taşınmış). Yeni gerçek AI/Bunny veya tarayıcı testi yapılmadı.
+- [x] Kullanıcı agora_partner_podcast_ekleri_hazir=true sonucunu iletti. Yeni Eğitim podcast alanlarını ve transkriptsiz akışı sorunsuz/kolay olarak doğruladı.
+- [x] Agora podcast bilgilendirmesi kod bağlantısı tamamlandı; aşağıdaki 6 Kasım kaydı SQL ve gerçek ekran kabulünü ayrıca izler.
+
+### Teknik borç — partner podcast gerçek transkript kabulü
+
+- [ ] TB-AGORA-PODCAST-01: Kullanıcı talimatıyla AI transkriptin gerçek dosyadan oluşturulması, düzenlenmesi, onayı ve yeniden girişte korunması teknik borca bırakıldı.
+- [ ] TB-AGORA-PODCAST-02: Manuel TXT/DOCX/PDF/metin transkript ekleme, düzenleme, onay ve yeniden girişte korunmanın gerçek ekran kabulü teknik borca bırakıldı. Seçeneklerin görünmesi doğrulandı; gerçek oluşturma/onay testi doğrulanmadı.
+- [x] Podcast süre SQL'i uygulandı; kullanıcı sorgusunda PE-10004 / İhtiyacı Bulmak / hazir / 16 saniye kaydı doğrulandı.
+
+### Agora — podcast bilgisi ve bekleyen satın alma kurulumunu tamamlama
+
+- [x] Tüm yetkili Agora ziyaretçileri (üretici, TM, yönetici) kart ve inceleme alanında Transkriptli/Transkriptsiz, Özel Kapak/Standart Kapak bilgilerini görür. Üretici sipariş onayı aynı bilgiyi tekrar gösterir. Bilgi alınamazsa transkriptsiz varsayılmaz; podcast sipariş onayı kapalıdır.
+- [x] Özel görsel ortak HOYK thumbnail alanına imzalı URL olarak bağlandı. İncelemede onaylı transkript açılıp okunabilir; taslak metin ve ham ses dosyası yolu ziyaretçiye verilmez. Sesli önizleme koruması sürer.
+- [x] Tek kurulum dosyası scripts/sql/agora_kurulum_tamamlama.sql, bilgilendirme SQL'iyle bekleyen kullanıcı bazlı satın alma SQL'ini aynı transaction içinde içerir. Partnerin yayın üretim tablolarını yeniden kurmaz.
+- [x] Yerel kontroller: 14 SQL bilgilendirme, 12 API, 28 gerçek vitrin/HOYK React ve 16 koruma oynatıcı kontrolü başarılı. TypeScript başarılı; lint hata yok. Auth/DB/CDN/medya olayları test bağımlılıklarında sahte; gerçek tarayıcı/Bunny/AI testi değildir.
+- [ ] Kullanıcı tek kurulum SQL'ini uygulayacak; agora_podcast_bilgilendirme_hazir ve agora_satin_alma_hazir sonuçları bekleniyor. Sonrasında gerçek kullanıcı satın alma ve üretici havuzuna aktarım kabulü yapılacak.
+- [ ] Partner/admin Hak Edişleri ve Raporlar ekranlarının sipariş verisine bağlanması ayrı bekleyen iş olarak korunur; bu teslimde tamamlandı sayılmaz.
+
+
+## Üretici — Bağımsız Agora Yayınları çalışma alanı (6 Kasım 2026)
+
+Satın alma üretici kullanıcıya aittir. Aynı firmadaki diğer üreticiye havuz erişimi vermez. Satın alınan kaynak tekrar yayına alınabilir; her hazırlık ayrı yayın adayıdır, orijinal medya dosyası çoğaltılmaz. Önceki Yayın Yönetimi içindeki satın alınan yayınlar kutusu bu çalışma alanıyla değiştirilmiştir.
+
+- [x] 1. Üretici yayın oluşturma kodlarındaki hedef, eğitim türü, ürün, teknik ve takım kuralları incelendi. Ürün eğitimi/ürün medikal eğitiminde ürün; Eczanem hedefinde türden bağımsız ürün zorunludur. Satış tekniklerinde ürün tercihlidir, saha hedefinde teknik zorunludur. E-Club ve Eczanem teknik alanı göstermez. Rolün açabildiği eğitim türleri ortak yetenek kaynağından okunur.
+- [x] 2. Üretici sidebarının ilk bağlantısı `Agora Yayınları`: mor metin; yazı altında çizgi yoktur. Sekmenin altında sidebar genişliğinde ince yatay ayırıcı vardır. Yeni sayfa `/agora-yayinlari`; sunucuda üretici rol kapısı. Normal Yayın Yönetimi içindeki eski kutu ve kullanılmayan bileşeni kaldırıldı.
+- [x] 3. Üç stat kartı ve `Agora Yayınlarım / Agora Yayın Yönetimi` toggle eklendi. Statlar kişisel satın alma sayısını, yayına alınmış farklı satın alınan içerik sayısını ve toplam yayına alma sayısını gerçek kayıtlardan gösterir.
+- [x] 4. Kayan partner filtresi, kullanıcıya ait satın alma adedi rozetleri ve ortak HOYK ile `Yeni Satın Aldıklarım / Yayınladıklarım` rafları eklendi. Henüz yayın kaydı olmayan satın alımlar ilk raftadır. Satın alma anındaki kapak/video kaynağı kullanılır; özel kapak yolu sunucuda imzalanır.
+- [x] 5. `Yayına Al` seçilen kaynağı Agora Yayın Yönetimi içinde açar. Hedef, eğitim türü, ürün ve teknik seçimleri rolün mevcut kurallarına göre hazırlanır; eksik zorunlu değerlerle ilerlenmez. Önceki hazırlıklara dönülebilir.
+- [x] 6. Yayın puanları, kazanım modeli, tekrar, yayın günü ve teyit için mevcut `BekleyenSatir`, `useYayinYonetimi` ve ortak modallar kullanıldı. Ayrı bir puanlama/yayımlama uygulaması yazılmadı. Kaynak seçimi tamamlandıktan sonra aynı yatay yayın kartı açılır.
+- [x] 7. Yayın normal dağıtım/puan/raporlama altyapısına mevcut yayımlama servisiyle girer. Agora adayları ve yayınları, geleneksel Yayın Yönetimi listesi/özetinden ayrıldı; yeni yönetimde gösterilir. Eski hazırlıklar ürün/hedef ayarı tamamlanmadan yayımlanamaz. Geleneksel aday silme uç noktası satın alınan ortak medya kaynağını silemez.
+- [x] 8a. Yerel doğrulama tamamlandı: yeni SQL için 22 kontrol (mevcut 44 satın alma/zincir kontrolüyle toplam 66), yeni API için 59 kontrol, gerçek sayfa/HOYK/seçimler için 14 kontrol; mevcut vitrin/kabuk için 29 kontrol. TypeScript başarılı. Lint hata yok; yeni RPC'ler mevcut şema snapshotında bulunmadığından uyarı verir. Testler sahte auth/temel tablolarla PGlite/HappyDOM ortamındadır; canlı DB ve tarayıcı kabulü değildir. Yayın düğmesinin gerçek son kullanıcı dağıtımı bu oturumda çalıştırılmadı.
+- [x] 8b. Kullanıcı `scripts/sql/agora_yayinlari_calisma_alani.sql` kurulumunu `agora_yayinlari_calisma_alani_hazir = true` sonucuyla doğruladı.
+- [ ] 8c. Kullanıcı gerçek üretici hesabında raf → hedef/ürün → yayın ayarları → Yayınla ve tekrar yayına alma akışını kontrol edecek. Mobil/tablet görsel kabulü bekliyor.
+
+- [x] Partner Eğitimlerim: masaüstü/tablet kart alanı yatay kaydırılabilir rafa bağlandı; ortak `AgoraRafOklari` ile Cogniti kenar okları eklendi. Mobilde mevcut `MobilYayinAkisi` korundu.
+
+- [x] Admin Partner Yayınları: masaüstü/tablet kart alanı yatay rafa bağlandı; partnerle aynı ortak Cogniti kenar okları eklendi. Mobilde mevcut ortak dikey akış korundu.
+
+
+## Agora mobil düzeni — kullanıcı onayıyla adım adım (6 Kasım 2026)
+
+- [x] 1. Agora Vitrini — Mobil Düzen: ortak `MobilYayinAkisi` kullanıldı; her raf tek sütunda, ilk 2 kart ve beşer açılan Daha Fazla Göster ile listelenir. Partner/hedef/araç değişiminde raf başlangıca döner. Aynı kapsamda yenileme açık kart sayısını korur. Masaüstü/tablet yatay rafı ve kenar okları korundu.
+- [x] 1. adım yerel kontrolü: gerçek bileşenlerle HappyDOM içinde 13 mobil senaryo ve mevcut 29 vitrin senaryosu geçti. TypeScript ve hedefli lint başarılı. Gerçek cihaz/tarayıcı görsel kabulü yapılmadı.
+- [x] 2. Üretici — Agora Yayınlarım Mobil Düzeni: kullanıcı onayıyla uygulandı. Yeni Satın Aldıklarım ve Yayınladıklarım rafları ortak MobilYayinAkisi ile tek sütunda ilk 2 kart, beşer açılan Daha Fazla Göster düzenine bağlandı. Partner değişiminde iki raf başlangıca döner; aynı kapsamda yenilemede açıklık korunur. Yayına Al bağlantısı ve masaüstü/tablet yatay rafları korundu. 14 yeni mobil senaryo ve mevcut 14 arayüz senaryosu, TypeScript ve hedefli lint geçti. Gerçek cihaz görsel kontrolü yapılmadı.
+- [x] 3. Ortak Görünüm ve Kod Temizliği: kullanıcı onayıyla tamamlandı. Agora raflarının mobil yatay kart genişliği ve aralık kuralları kaldırıldı; HOYK kökünde karşılığı olmayan article seçicisi temizlendi. Ortak kenar okları ve masaüstü/tablet yatay raf kuralları korundu. Partner/adminin son onaylanan raf/listelerine müdahale edilmedi. Mevcut 27 hedefli mobil/masaüstü DOM senaryosu geçti; gerçek tarayıcı görsel kontrolü 4. adımdadır.
+- [x] 4. Kontroller — kullanıcı kararıyla çalışma tamamlandı kabul edildi. Gerçek tarayıcıdaki mobil/tablet/masaüstü yerleşimi, 2+5 liste açılması, filtre sıfırlaması, raf okları, ön izleme/sipariş modalı ve Yayına Al bağlantısı kontrollerini kullanıcı kendisi yapacak. Bu kontroller tarafımızca yapılmış veya başarıyla doğrulanmış sayılmadı; gerçek satın alma/yayımlama işlemi gerçekleştirilmedi.
+
+- [x] Kullanıcı son menü değişikliğini geri aldırdı: Agora Yayınları yeniden Yayınlar ve Raporlar grubunun ilk bağlantısıdır; üretici rolünde grup başlığı geri getirildi. Önceki raf ve mobil geliştirmeler korundu.
+
+- [x] Son kullanıcı kararı: üretici sidebarında Yayınlar ve Raporlar başlığı kaldırıldı. AGORA YAYINLARI büyük harflerle en üstte bağımsız bağlantı olarak yerleştirildi; mor renk ve altındaki yatay ayırıcı korundu. Diğer yayın/rapor bağlantıları korunur. Masaüstü ve mobil menü aynı düzeni kullanır.
+
+- [x] AGORA YAYINLARI bağlantısının yazısı T-Club/E-Club grup başlıklarıyla aynı 12 px, 800 kalınlık ve 0.06em harf aralığına getirildi; masaüstü ve mobilde mor renk korundu.

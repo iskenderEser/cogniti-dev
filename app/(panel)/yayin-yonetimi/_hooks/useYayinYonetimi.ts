@@ -29,6 +29,7 @@ import { sahaHedefliMi, sahaMerkeziPuanKosullariHatasi, type SahaPuanModeli } fr
 import { getOzetOnbellek, setOzetOnbellek, type OzetVerisi } from "./ozetOnbellek";
 
 interface UseYayinYonetimiArgs {
+  kapsam?: "agora" | "geleneksel";
   kullaniciId?: string;
   aktifAnaSekme: YayinHedefGrubu;
   onOzetYuklendi?: (sayilar: Record<string, number>) => void;
@@ -41,8 +42,8 @@ type YayinApiSatiri = Omit<Yayin, "hedef_roller" | "turu_adi"> & {
   egitim_turu: string | null;
 };
 
-export function useYayinYonetimi({ kullaniciId, aktifAnaSekme, onOzetYuklendi, hata, basari }: UseYayinYonetimiArgs) {
-  const baslangicOzet = getOzetOnbellek(kullaniciId);
+export function useYayinYonetimi({ kapsam = "geleneksel", kullaniciId, aktifAnaSekme, onOzetYuklendi, hata, basari }: UseYayinYonetimiArgs) {
+  const baslangicOzet = kapsam === "agora" ? null : getOzetOnbellek(kullaniciId);
 
   const [bekleyenler, setBekleyenler] = useState<Bekleyen[]>([]);
   const [bekleyenHedefSayilari, setBekleyenHedefSayilari] = useState<BekleyenHedefSayilari>(
@@ -134,11 +135,11 @@ export function useYayinYonetimi({ kullaniciId, aktifAnaSekme, onOzetYuklendi, h
 
   const ozetCek = useCallback(async () => {
     try {
-      const res = await fetch("/yayin-yonetimi/api/ozet");
+      const res = await fetch(`/yayin-yonetimi/api/ozet?kapsam=${kapsam}`);
       if (!res.ok) return;
       const d = (await res.json()) as OzetVerisi;
       if (d && d.sayilar) {
-        if (kullaniciId) setOzetOnbellek(kullaniciId, d);
+        if (kullaniciId && kapsam !== "agora") setOzetOnbellek(kullaniciId, d);
         setBekleyenHedefSayilari(d.sayilar as unknown as BekleyenHedefSayilari);
         if (onOzetYuklendi) {
           onOzetYuklendi(d.sayilar);
@@ -158,11 +159,11 @@ export function useYayinYonetimi({ kullaniciId, aktifAnaSekme, onOzetYuklendi, h
     } catch {
       // sessizce geç
     }
-  }, [kullaniciId, onOzetYuklendi]);
+  }, [kullaniciId, onOzetYuklendi, kapsam]);
 
   useEffect(() => {
     if (!kullaniciId) return;
-    const onbellek = getOzetOnbellek(kullaniciId);
+    const onbellek = kapsam === "agora" ? null : getOzetOnbellek(kullaniciId);
     if (onbellek) {
       setBekleyenHedefSayilari(onbellek.sayilar as unknown as BekleyenHedefSayilari);
       setHedefOzetleri(onbellek.hedefler);
@@ -194,7 +195,7 @@ export function useYayinYonetimi({ kullaniciId, aktifAnaSekme, onOzetYuklendi, h
         setTekrarSecenekleri(d.secenekler ?? []);
       }
     })();
-  }, [kullaniciId, hata, ozetCek]);
+  }, [kullaniciId, hata, ozetCek, kapsam]);
 
   const veriCek = useCallback(async (ilkYukleme = false) => {
     if (ilkYukleme) setLoading(true);
@@ -204,8 +205,8 @@ export function useYayinYonetimi({ kullaniciId, aktifAnaSekme, onOzetYuklendi, h
 
     // Bekleyenler ve Yayınlar birbirini beklemeden PARALEL çekilir.
     const [bRes, yayinRes] = await Promise.all([
-      fetch(`/yayin-yonetimi/api/bekleyenler?hedef=${aktifAnaSekme}`),
-      fetch("/yayin-yonetimi/api/yayinlar"),
+      fetch(`/yayin-yonetimi/api/bekleyenler?kapsam=${kapsam}&hedef=${aktifAnaSekme}`),
+      fetch(`/yayin-yonetimi/api/yayinlar?kapsam=${kapsam}`),
     ]);
 
     const [bData, yayinData] = await Promise.all([
@@ -283,7 +284,7 @@ export function useYayinYonetimi({ kullaniciId, aktifAnaSekme, onOzetYuklendi, h
       if (ilkYukleme) setLoading(false);
       else setYenileniyor(false);
     }
-  }, [aktifAnaSekme, hata]);
+  }, [aktifAnaSekme, hata, kapsam]);
 
   useEffect(() => {
     if (!kullaniciId) return;
@@ -429,6 +430,7 @@ export function useYayinYonetimi({ kullaniciId, aktifAnaSekme, onOzetYuklendi, h
       await veriCek();
     }
     setIslemLoading(null);
+    return res.ok;
   };
 
   const handleYayinSil = async (b: Bekleyen) => {

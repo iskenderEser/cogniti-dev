@@ -22,7 +22,7 @@ import { baremTablosuDogrula } from "@/lib/eclub/store/eclubStoreTipler";
 const YAYIN_LISTE_ALANLARI = "yayin_id, arac_id, soru_seti_durum_id, durum, yayin_tarihi, durdurma_tarihi, urun_adi, teknik_adi, video_url, thumbnail_url, video_puani, soru_puani, sorular, hedef_roller, eczanem_kazanim_modeli, talep_no, firma_adi, egitim_turu, arac_turu, arac_kapak_yolu, arac_dosya_yolu, arac_metadata, video_suresi_saniye, arac_metadata_dogrulandi";
 const ECLUB_KOSUL_ALANLARI = "yayin_id, karsilik_puan, karsilik_tl, cek_karsiligi_var_mi, saha_puan_modeli, satis_sarti_tipi, gizli_sart_katlama_orani, barem_tablosu";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient();
     const adminSupabase = createAdminClient();
@@ -54,7 +54,8 @@ export async function GET() {
       for (const kosul of kosullar ?? []) eclubKosullari.set(kosul.yayin_id, kosul);
     }
 
-    const islenmisYayinlar = (yayinlar ?? []).map((y: Record<string, unknown>) => {
+    const agoraKapsami = new URL(request.url).searchParams.get("kapsam") === "agora";
+    const islenmisYayinlar = (yayinlar ?? []).filter(y => Boolean((y.arac_metadata as Record<string, unknown> | null)?.agora_siparis_id) === agoraKapsami).map((y: Record<string, unknown>) => {
       const kapakli = yayinThumbnailCevabi(y as unknown as YayinKapakGirdisi & Record<string, unknown>);
       const aracTuru = (y.arac_turu as string | undefined) ?? "video";
       const videoSuresi = Number(y.video_suresi_saniye) || 0;
@@ -312,6 +313,10 @@ export async function POST(request: NextRequest) {
     const arac = Array.isArray(aracDurum?.ogrenme_araclari) ? aracDurum.ogrenme_araclari[0] : aracDurum?.ogrenme_araclari;
     if (aracDurumError || !arac) {
       return isKuraluHatasi("Öğrenme aracı kaydı doğrulanamadı.");
+    }
+    const agoraMetadata = arac.metadata as Record<string, unknown> | null;
+    if (agoraMetadata?.agora_siparis_id && agoraMetadata.agora_yayin_ayarlari !== true) {
+      return isKuraluHatasi("Agora Yayınları sayfasında hedef rol ve ürün ayarlarını tamamlayın.");
     }
     if (arac.arac_turu !== "video" && (aracDurum?.durum !== "onaylandi" || !arac.metadata_dogrulandi || !arac.dosya_yolu)) {
       return isKuraluHatasi("Öğrenme aracı onayı ve dosya doğrulaması tamamlanmadan yayımlanamaz.");

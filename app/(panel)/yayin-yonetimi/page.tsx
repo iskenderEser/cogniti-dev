@@ -266,6 +266,7 @@ function YayinYonetimiIcerik() {
           )}
         </div>
 
+
         {yy.loading ? (
           <div className="flex flex-col items-center justify-center rounded-2xl border border-[var(--tema-yerel-uretim-cizgi-36)] bg-[var(--tema-yerel-uretim-kart-01)] py-16 text-center shadow-[0_6px_18px_var(--tema-yerel-uretim-golge-09)]">
             <svg className="h-7 w-7 animate-spin text-[var(--tema-yerel-uretim-eylem-metin-15)]" viewBox="0 0 24 24" fill="none">

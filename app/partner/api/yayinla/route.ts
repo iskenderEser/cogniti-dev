@@ -48,6 +48,7 @@ export async function POST(request:Request) {
     if(hazirHata)throw new Error("Koruma paketi kurulumu doğrulanamadı. Koruma SQL’ini uygulayın.");
     if(hazir!==true)return partnerYanit({hata:"Yayın dosyası değişmiş. Listeyi yenileyip yeniden deneyin."},409);
     const {data,error}=await b.db.rpc("agora_partner_egitim_yayimla",{p_token_ozeti:b.tokenOzeti,p_egitim_id:d.egitim_id,p_surum:d.surum});
+    if(error?.code==="22023"&&error.message.includes("Transkripti onaylayın"))return partnerYanit({hata:"Transkripti onaylayın veya transkriptsiz devam edin."},409);
     if(error)throw new Error("Yayımlama sonucu doğrulanamadı. Listeyi yenileyip kontrol edin.");
     const mesajlar:Record<string,string>={yetkisiz:"Partner oturumunuz doğrulanamadı.",bulunamadi:"Eğitim bulunamadı.",kapali:"Bu eğitim yayımlamaya kapalı.",cakisma:"Eğitim değişmiş. Listeyi yenileyin.",bilgiler_eksik:"Önce eğitim bilgilerini tamamlayıp kaydedin.",video_eksik:"Eğitim videosunun yüklenmesi ve işlenmesi tamamlanmalıdır.",podcast_eksik:"Podcast yüklemesi tamamlanmalıdır.",koruma_eksik:"Koruma paketi hazır değil."};
     if(data!=="tamam")return partnerYanit({hata:mesajlar[String(data)]??"Eğitim yayımlanamadı."},data==="yetkisiz"?401:409);

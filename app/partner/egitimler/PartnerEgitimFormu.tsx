@@ -24,6 +24,7 @@ export default function PartnerEgitimFormu({ egitim, istekId, onKapat, onKaydedi
   onDegisiklik?: (degisti:boolean)=>void; saltOkunur?:boolean; baslikGoster?:boolean; ikiSutun?:boolean;
 }) {
   const [form, setForm] = useState<PartnerEgitimFormVerisi>(() => ({ ...bosPartnerEgitimFormu(), egitim_adi: egitim?.egitim_adi ?? "", yayin_araci: egitim?.yayin_araci ?? "video", soru_taslaklari: taslaklariBoyutla([],10,2) }));
+  const [eklerDegisti,setEklerDegisti]=useState(false);
   const aciklamaRef=useRef<HTMLTextAreaElement>(null);
   const baslangicVerisi=useRef(JSON.stringify(form));
   const [egitimId, setEgitimId] = useState(egitim?.egitim_id ?? null);
@@ -50,7 +51,7 @@ export default function PartnerEgitimFormu({ egitim, istekId, onKapat, onKaydedi
       finally { if (!c.signal.aborted) setYukleniyor(false); }
     })(); return () => c.abort();
   }, [egitim]);
-  useEffect(()=>{onDegisiklik?.(okundu&&!saltOkunur&&JSON.stringify(form)!==baslangicVerisi.current);},[form,okundu,saltOkunur,onDegisiklik]);
+  useEffect(()=>{onDegisiklik?.(okundu&&!saltOkunur&&(JSON.stringify(form)!==baslangicVerisi.current||eklerDegisti));},[form,okundu,saltOkunur,onDegisiklik,eklerDegisti]);
   useLayoutEffect(()=>{
     const alan=aciklamaRef.current;
     if(!alan)return;
@@ -107,7 +108,7 @@ export default function PartnerEgitimFormu({ egitim, istekId, onKapat, onKaydedi
           </div>
         </fieldset>
         <PartnerMedyaAlanlari egitimId={egitimId} egitimAdi={form.egitim_adi} istekId={istekId} tur={form.yayin_araci} disabled={bilgilerKapali}
-            onHazirlik={setMedyaHazirligi}
+            onHazirlik={setMedyaHazirligi} onEkDegisiklik={setEklerDegisti}
             onTurDegis={tur => guncelle("yayin_araci", tur)}
             onTaslak={t => { setEgitimId(t.egitim_id); setSurum(t.surum); }}
             onIslem={aktif => { setMedyaYukleniyor(aktif); kilit.current=aktif; onIslem(aktif); }} />
