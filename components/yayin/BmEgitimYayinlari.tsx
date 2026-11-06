@@ -16,7 +16,7 @@ import { oneriTarihKurali } from "@/lib/tclub/oneri/tarihKurali";
 import { yayin_kodu } from "@/lib/utils/yayinKodu";
 import type { UttVideoKategorisi } from "@/lib/video/uttVideoKategorileri";
 import type { YayindakiVideo } from "@/lib/video/yayindakiVideolar";
-import { ArrowLeft, Check, X } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
@@ -27,16 +27,10 @@ const ARAMA_ALANLARI: AramaAlani<YayindakiVideo>[] = [
   { anahtar: "teknik", etiket: "Teknik Adı", deger: (v) => v.teknik_adi ?? "" },
 ];
 
-const tarihGoster = (gun: string) => {
-  const [yil, ay, tarih] = gun.split("-").map(Number);
-  return new Intl.DateTimeFormat("tr-TR", { day: "numeric", month: "long", year: "numeric" })
-    .format(new Date(yil, ay - 1, tarih));
-};
-
 export default function BmEgitimYayinlari({ kategoriBilgisi }: { kategoriBilgisi: UttVideoKategorisi }) {
   const { kullanici } = useAuth();
   const bmMi = kullanici?.rol.trim().toLowerCase() === "bm";
-  const { mesajlar, hata } = useHataMesaji();
+  const { mesajlar, hata, basari, uyari } = useHataMesaji();
   const hataRef = useRef(hata);
   const [yayinlar, setYayinlar] = useState<YayindakiVideo[]>([]);
   const [loading, setLoading] = useState(true);
@@ -53,7 +47,6 @@ export default function BmEgitimYayinlari({ kategoriBilgisi }: { kategoriBilgisi
   const [panelAcik, setPanelAcik] = useState(false);
   const [panelHatasi, setPanelHatasi] = useState("");
   const [sonucBelirsiz, setSonucBelirsiz] = useState(false);
-  const [sonuc, setSonuc] = useState<{ baslik: string; detay: string; kismi: boolean } | null>(null);
 
   useEffect(() => {
     setAktifYayin(null);
@@ -143,12 +136,11 @@ export default function BmEgitimYayinlari({ kategoriBilgisi }: { kategoriBilgisi
       const basarisizSayisi = seciliYayinlar.length - basariliIdler.size;
       if (basariliIdler.size === 0) { setPanelHatasi(veri.hata ?? "Önerilerin hiçbiri gönderilemedi. Seçimleriniz korundu."); return; }
       setSeciliYayinIdleri((mevcut) => mevcut.filter((id) => !basariliIdler.has(id)));
-      const alici = alicilar.find((kisi) => kisi.kullanici_id === aliciId);
-      setSonuc({
-        baslik: basarisizSayisi > 0 ? `${basariliIdler.size} öneri gönderildi, ${basarisizSayisi} öneri gönderilemedi.` : `${basariliIdler.size} öneri gönderildi.`,
-        detay: `${alici ? `${alici.ad} ${alici.soyad}` : "Temsilci"} · ${tarihGoster(baslangic)} – ${tarihGoster(bitis)}${basarisizSayisi > 0 ? " · Gönderilemeyen yayınlar seçili kaldı." : ""}`,
-        kismi: basarisizSayisi > 0,
-      });
+      if (basarisizSayisi > 0) {
+        uyari(`${basariliIdler.size} öneri gönderildi, ${basarisizSayisi} öneri gönderilemedi. Gönderilemeyen yayınlar seçili kaldı.`, undefined, true);
+      } else {
+        basari(`${basariliIdler.size} öneri gönderildi.`);
+      }
       setPanelAcik(false);
       setAliciId("");
       setBaslangic("");
@@ -194,11 +186,6 @@ export default function BmEgitimYayinlari({ kategoriBilgisi }: { kategoriBilgisi
 
       {bmMi && <div className="mb-5 flex flex-wrap items-center justify-between gap-2 text-[11px] font-bold text-[var(--tema-yerel-ortak-sayfa-yardimci-metin-17)]">
         <span>{kategoriBilgisi.etiket} içindeki yayınlar</span>
-      </div>}
-
-      {sonuc && <div role="status" className={`mb-5 flex items-start gap-3 rounded-xl border border-l-4 px-4 py-3 ${sonuc.kismi ? "border-[var(--tema-yerel-ortak-sayfa-islevsel-cizgi-05)] border-l-[var(--tema-yerel-ortak-sayfa-islevsel-cizgi-06)] bg-[var(--tema-yerel-ortak-sayfa-islevsel-zemin-20)] text-[var(--tema-yerel-ortak-sayfa-islevsel-metin-17)]" : "border-[var(--tema-yerel-ortak-sayfa-islevsel-cizgi-07)] border-l-[var(--tema-yerel-ortak-sayfa-islevsel-cizgi-08)] bg-[var(--tema-yerel-ortak-sayfa-islevsel-zemin-21)] text-[var(--tema-yerel-ortak-sayfa-islevsel-metin-18)]"}`}>
-        <Check className="mt-0.5 size-4 shrink-0" /><div className="min-w-0 flex-1"><strong className="block text-xs">{sonuc.baslik}</strong><p className="mt-1 text-[11px]">{sonuc.detay}</p></div>
-        <button type="button" onClick={() => setSonuc(null)} aria-label="Bilgi notunu kapat" className="shrink-0 rounded p-1 hover:bg-[var(--tema-yerel-ortak-sayfa-ortu-01)]/5"><X className="size-4" /></button>
       </div>}
 
       <EgitimYayinFiltreleri

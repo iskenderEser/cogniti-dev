@@ -43,7 +43,7 @@ function OzetKarti({ ikon: Icon, etiket, deger, detay, renk, zemin }: {
 }
 
 export default function EczanemYayinlariPage() {
-  const { mesajlar, hata, basari } = useHataMesaji();
+  const { mesajlar, hata, basari, uyari } = useHataMesaji();
   const [veri, setVeri] = useState<UttEczanemVeri | null>(null);
   const [ilkYukleme, setIlkYukleme] = useState(true);
   const [yenileniyor, setYenileniyor] = useState(false);
@@ -54,7 +54,6 @@ export default function EczanemYayinlariPage() {
   const [seciliYayinIdleri, setSeciliYayinIdleri] = useState<string[]>([]);
 
   const [topluGonderiliyor, setTopluGonderiliyor] = useState(false);
-  const [gonderimSonucu, setGonderimSonucu] = useState<EczanemGonderimSonucu | null>(null);
   const [acikDetayYayinId, setAcikDetayYayinId] = useState<string | null>(null);
 
   const veriCek = useCallback(async (ilk = false) => {
@@ -148,7 +147,6 @@ export default function EczanemYayinlariPage() {
 
   const yayinSecimiDegistir = (yayinId: string) => {
     setSeciliYayinIdleri((onceki) => onceki.includes(yayinId) ? onceki.filter((id) => id !== yayinId) : [...onceki, yayinId]);
-    setGonderimSonucu(null);
   };
 
   const yayinKarti = (yayin: UttEczanemYayin) => {
@@ -204,8 +202,14 @@ export default function EczanemYayinlariPage() {
       }
       sonuc.gonderilenYayin = basariliYayinlar.size;
       sonuc.gonderilenEczane = basariliEczaneler.size;
-      setGonderimSonucu(sonuc);
-      if (sonuc.gonderilenKayit > 0) basari(`${sonuc.gonderilenKayit} gönderim tamamlandı.`);
+      if (sonuc.atlanan > 0) {
+        const ozet = `${sonuc.gonderilenKayit} gönderim tamamlandı, ${sonuc.atlanan} gönderim atlandı.`;
+        const detay = sonuc.hatalar.join(" · ");
+        if (sonuc.gonderilenKayit > 0) uyari(`${ozet} ${detay}`, undefined, true);
+        else hata("Gönderim tamamlanamadı.", "Eczanem gönderimi", detay);
+      } else if (sonuc.gonderilenKayit > 0) {
+        basari(`${sonuc.gonderilenKayit} gönderim tamamlandı.`);
+      }
       await veriCek();
     } catch {
       hata("Gönderim sonuçları yenilenemedi.", "Eczanem gönderimi");
@@ -295,23 +299,18 @@ export default function EczanemYayinlariPage() {
                   { key: "gonderilen", label: `Gönderilenler ${gonderilenYayinlar.length}` },
                 ]}
                 deger={gonderimFiltresi}
-                onDegistir={(filtre) => { setGonderimFiltresi(filtre); secimSifirla(); setGonderimSonucu(null); }}
+                onDegistir={(filtre) => { setGonderimFiltresi(filtre); secimSifirla(); }}
                 ariaLabel="Gönderim durumu"
                 className="w-fit flex-none"
               />
             </div>
-            {gonderimSonucu && <div role="status" className={`rounded-xl border px-4 py-3 text-xs ${gonderimSonucu.gonderilenKayit > 0 ? "border-[var(--tema-yerel-eczanem-islevsel-cizgi-08)] bg-[var(--tema-yerel-eczanem-islevsel-zemin-20)] text-[var(--tema-yerel-eczanem-islevsel-metin-22)]" : "border-[var(--tema-yerel-eczanem-islevsel-cizgi-09)] bg-[var(--tema-yerel-eczanem-islevsel-zemin-21)] text-[var(--tema-yerel-eczanem-islevsel-metin-23)]"}`}>
-              <strong>{gonderimSonucu.gonderilenKayit > 0 ? `${gonderimSonucu.gonderilenYayin} yayın, ${gonderimSonucu.gonderilenEczane} eczaneye gönderildi.` : "Gönderim tamamlanamadı."}</strong>
-              <span className="ml-1">{gonderimSonucu.gonderilenKayit} gönderim tamamlandı{gonderimSonucu.atlanan > 0 ? ` · ${gonderimSonucu.atlanan} gönderim atlandı.` : "."}</span>
-              {gonderimSonucu.hatalar.length > 0 && <details className="mt-2"><summary className="cursor-pointer font-bold">Atlanan gönderimlerin nedenleri</summary><ul className="mt-2 list-disc space-y-1 pl-4">{gonderimSonucu.hatalar.map((satir, index) => <li key={`${index}-${satir}`}>{satir}</li>)}</ul></details>}
-            </div>}
 
             <section>
               <div className="mb-3">
                 <UttYayinTuruToggle
                   yayinlar={durumFiltreliYayinlar}
                   deger={aktifYayinTuru}
-                  onDegistir={(tur) => { setAktifYayinTuru(tur); secimSifirla(); setGonderimSonucu(null); }}
+                  onDegistir={(tur) => { setAktifYayinTuru(tur); secimSifirla(); }}
                   className="w-fit flex-none"
                 />
               </div>
