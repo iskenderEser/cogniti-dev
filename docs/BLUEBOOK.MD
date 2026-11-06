@@ -1,11 +1,17 @@
 # 📘 HapBilgi — BLUEBOOK
 ### İş Modeli, Mimari, İş Kuralları ve Teknik Envanter Anayasası
-*Son genel inceleme: 28 Eylül 2026 | Asistan bölümü ve ilgili envanter güncellemesi: 9 Eylül 2026 | Ortak yayın arayüzü, mobil akış ve tanbur güncellemesi: 21 Eylül 2026 | E-Club iş modeli ve teknik kapanış güncellemesi: 28 Eylül 2026 | Depo tercihleri kod güncellemesi: 29 Eylül 2026; canlı yapısal kontrol: 5 Ekim 2026 (13/13) | Zorunlu Sade Kontrol Aileleri kararı: 8 Ekim 2026 | E-Club yeni gönderim ve planlama belgeleri: 13 Ekim 2026; canlı son doğrulama bekliyor | Görsel renk envanteri ve doğrulama kaydı: 17 Ekim 2026*
+*Son genel inceleme: 28 Eylül 2026 | Asistan bölümü ve ilgili envanter güncellemesi: 9 Eylül 2026 | Ortak yayın arayüzü, mobil akış ve tanbur güncellemesi: 21 Eylül 2026 | E-Club iş modeli ve teknik kapanış güncellemesi: 28 Eylül 2026 | Depo tercihleri kod güncellemesi: 29 Eylül 2026; canlı yapısal kontrol: 5 Ekim 2026 (13/13) | Zorunlu Sade Kontrol Aileleri kararı: 8 Ekim 2026 | E-Club yeni gönderim ve planlama belgeleri: 13 Ekim 2026; canlı son doğrulama bekliyor | Görsel renk envanteri ve doğrulama kaydı: 17 Ekim 2026 | Agora partner, vitrin, satın alma ve üretici yayın alanı: 6 Kasım 2026*
 
 ---
 
 ## 🏛️ Giriş ve Metodoloji
 **HapBilgi BLUEBOOK**, platformun iş modelini, kullanıcı alanlarını, rol ve yetki yapısını, üretim ve yayın akışlarını, öğrenme ve işlem kurallarını, veri mimarisini, arayüz sözleşmelerini ve dosya–tür–işlev envanterini tek kaynakta tanımlayan ana başvuru belgesidir.
+
+### 6 Kasım 2026 — Cogniti Agora: güncel iş modeli ve uygulama kaydı
+
+Cogniti İş Partnerlerinin video/podcast ve hazır soru setlerini sunduğu Agora; partner üretimi, admin yönetimi, firma vitrini ve üreticinin kişisel satın alma/yayımlama alanından oluşur. **Satın alma firmaya değil, satın alma yetkili üretici kullanıcıya aittir; ödeme firma token hesabından yapılır.** Aynı firmadaki başka üretici ayrıca satın alır. Tek yayın hakkı ve firma genelinde tek satın alma önceki taslak kararlardır; güncel model süre/tekrar sınırı olmadan, üreticinin mevcut rol ve yayın kurallarıyla tekrar kullanımdır. TM ve yönetici roller vitrini inceleyebilir, sipariş veremez.
+
+İş kuralları, kaynak matrisi, veri sözleşmesi, kullanıcı tarafından doğrulanan SQL sonuçları ve bekleyen işler **10. bölümde** kayıtlıdır. Agora dosya–tür–işlev envanteri **9. bölümün Agora ekinde** yer alır. Bu kayıt `ecdfa640` ve `1f0ef26c` kaynaklarını kapsar; `1f0ef26c` 6 Kasım'da `main` dalına commit edilip uzak depoya gönderilmiştir. Git push, uygulamanın dağıtıldığı veya bütün gerçek kullanıcı akışlarının doğrulandığı anlamına gelmez.
 
 ### 28 Ekim 2026 — Viva: gerçek kullanım üzerinden token tüketimi
 
@@ -71,13 +77,14 @@ HapBilgi'de günlük ölçüm yoktur. Kullanıcıya sunulan ölçüm zamanı se�
 
 *Repo kaynaklarıyla karşılaştırma ve bölüm güncellemesi: 23 Ekim 2026. Bu kayıt kaynak kodun mevcut yapısını belgeler; canlı veritabanı kurulumu veya yeni bir uçtan uca test sonucu değildir.*
 
-### 1. Üç Kimlik Düzlemi, Kullanıcı Alanları ve Öğrenme Zinciri
+### 1. Dört Kimlik Düzlemi, Kullanıcı Alanları ve Öğrenme Zinciri
 **Marka ve teknik ad ayrımı:** Platformun kullanıcıya görünen adı **Cogniti**, marka imzası **“Cogniti · bilgi taşır”**dır. Önceki **HapBilgi** adı tarihsel belgelerde, teknik anahtarlarda ve korunmuş dosya/veri adlarında bulunabilir; marka değişimi bu teknik kimlikleri veya geçmiş kayıtları değiştirmez. Kaynaklar: `app/layout.tsx`, `components/marka/CognitiLogo.tsx`.
 
 Cogniti, ilaç ve sağlık sektörüne özgü; rol ve iş kurallarıyla korunan üretim, yayın, öğrenme, ölçüm ve platform işlemlerini tek yapıda birleştiren dijital bir platformdur. Kullanıcı alanları ticari müşteri sınıfları değil, uygulamanın teknik kimlik ve yetki düzlemleridir:
 1. **İç Platform Kullanıcıları:** Firma çalışanları, İçerik Üreticisi ve platform yöneticisi teknik olarak `kullanicilar` düzleminde yaşar. Firma kullanıcılarının erişimi firma $\rightarrow$ takım $\rightarrow$ bölge hiyerarşisi ile rol ve yetenek profillerine göre belirlenir.
 2. **E-Club Kullanıcıları:** Eczacı, ikinci eczacı, yardımcı eczacı ve eczane teknisyeni `eclub_kisiler` düzleminde yaşar. Kişinin eczane ve firma bağlantıları ayrı üyelik ilişkileri üzerinden kurulur; yapı çok firmalı kullanımı destekler.
 3. **Eczanem Uygulaması Üyeleri:** Eczanenin müşterisi veya müşteri adayı olabilen üyeler `eczanem_musteriler` düzleminde yaşar. Üyelik, öğrenme ve platform işlemleri eczane bazındaki aktif üyelik ilişkisi üzerinden yürür.
+4. **Cogniti İş Partnerleri:** `/partner` alanı `agora_is_partnerleri` ve ayrı partner oturumu üzerinden çalışır; firma, E-Club veya Eczanem girişine bağlanmaz. İlk giriş onayı, profil tamamlama ve üyelik onayı admin kontrolündedir. Firma vitrini `/agora` ve üretici çalışma alanı `/agora-yayinlari` ise iç platform kimliğini kullanır. Ayrıntılar 10. bölümdedir.
 
 Platform **Video** (`video`), **Podcast** (`podcast`), **Dijital Broşür** (`gorsel`) ve **Literatür** (`flip_pdf`) öğrenme araçlarını destekler. Yayın ile gerçek öğrenme aracı arasındaki ortak kimlik `yayin_id + arac_id + arac_turu` bileşimidir; rol bazlı puan, soru ve işlem kuralları ilgili kullanıcı alanının kendi motorunda uygulanır.
 
@@ -85,8 +92,8 @@ Platform **Video** (`video`), **Podcast** (`podcast`), **Dijital Broşür** (`go
 
 ### 2. Kimlik ve Organizasyon Hiyerarşisi
 * **Firma İçi Organizasyon Omurgası:** `firmalar` (Kök) $\rightarrow$ `takimlar` (Takım) $\rightarrow$ `bolgeler` (Saha Bölgesi) zinciri firma içi kullanıcıların kapsamını belirler; E-Club ve Eczanem kimlikleri bu ağacın doğrudan personel düğümleri değildir.
-* **3 Kimlik Düzlemi:** İç platform kullanıcıları `kullanicilar`, eczane kullanıcıları `eclub_kisiler`, Eczanem uygulaması üyeleri `eczanem_musteriler` tablosunda saklanır. E-Club'ın eczane ve firma ilişkileri `eclub_eczane_master`, `eclub_eczaneler`, `eclub_eczane_firma`, `eclub_utt_eczane` ve `eclub_kisi_eczane`; Eczanem üyeliği ise `eczanem_uyelikler` üzerinden kurulur.
-* **Ortak Giriş:** Üç kimlik düzlemi de `/login` üzerinden e-posta veya cep telefonu ve şifreyle giriş yapabilir. Başarılı girişten sonra kullanıcı, çözümlenen kimlik türü ve rolüne uygun alana yönlendirilir.
+* **4 Kimlik Düzlemi:** İç platform kullanıcıları `kullanicilar`, eczane kullanıcıları `eclub_kisiler`, Eczanem uygulaması üyeleri `eczanem_musteriler`, iş partnerleri `agora_is_partnerleri` tablosunda saklanır. E-Club'ın eczane ve firma ilişkileri `eclub_eczane_master`, `eclub_eczaneler`, `eclub_eczane_firma`, `eclub_utt_eczane` ve `eclub_kisi_eczane`; Eczanem üyeliği ise `eczanem_uyelikler` üzerinden kurulur.
+* **Ortak Giriş ve Partner Ayrımı:** İç platform, E-Club ve Eczanem kimlikleri `/login` üzerinden e-posta veya cep telefonu ve şifreyle giriş yapabilir. Başarılı girişten sonra kullanıcı, çözümlenen kimlik türü ve rolüne uygun alana yönlendirilir. İş partneri bu ortak Auth girişinin dördüncü dalı değildir; `/partner` üzerinde ayrı oturum kullanır.
 * **E-Club Üyelik Daveti:** UTT yeni kişiye şifre vermez. Giriş hesabı bulunmayan kişi şifresiz ve girişe kapalı oluşturulur; 24 saatlik, tek kullanımlık e-posta davetinden `/sifre-olustur` ekranında şifresini iki kez girer. Başarılı kayıtta şifre, e-posta doğrulaması ve Auth erişiminin açılması aynı Auth güncellemesinde yapılır; tarayıcı davetten oturum almaz ve `/login` sayfasına gider. Hazır hesapların şifreleri korunur. UTT daveti yeniden gönderebilir; eski bağlantı geçersizleşir. Gönderim hatası kişi kaydını kaybettirmez.
 
 * **Kimlik ve Rol Çözümleme:** Rol yetkisinin kaynağı istemci metadata'sı değildir. İstemcide `app/providers/AuthProvider.tsx`, oturumu doğruladıktan sonra kullanıcıya daraltılmış `v_auth_kimlik` görünümünden kimlik türünü, rolü ve profil alanlarını okur. Sunucudaki ortak `lib/utils/rolCozucu.ts`, `service_role` SELECT yetkili `v_auth_kimlik_admin` görünümünden rolü çözer; kayıt yoksa veya okuma hatası varsa boş rol döndürür. Mevcut admin API proxy bekçisi ise rolü doğrudan `kullanicilar` tablosundan doğrular. Tüm okuma yollarının aynı yardımcı fonksiyondan geçtiği varsayılmaz; istemci görünümü, sunucu görünümü ve doğrudan admin kontrolü ayrı katmanlardır.
@@ -143,6 +150,7 @@ Oturum sonrasında Hakkında navbar/mobil bağlantıları ve ilk mobil karşıla
 21 Ekim giriş tasarımının tarihsel test ve kontrol sınırları `docs/LOGIN_KARSILAMA_DOGRULAMA_2026_10_21.md` içindedir; bu belge sonraki rota ayrımını tek başına doğrulamaz. Güncel ayrımın yerel davranış kontrolleri `tests/loginKarsilama.hedef.test.ts` ve `tests/karsilamaRotalari.hedef.test.ts` kaynaklarında bulunur. Bu bölüm güncellemesi yeni bir canlı test yapıldığı anlamına gelmez.
 
 ### 5. İçerik Üretim Hattı ve Servis Soyutlamaları
+* **Agora hazır paket hattı (6 Kasım 2026):** Partner video/podcast ve hazır soru setini birlikte sunar. Satın alan üretici `/agora-yayinlari` içinden mevcut hedef/ürün kurallarıyla yayın hazırlar; V4 eşdeğeri hazır kaynak, ortak yayın ayarları ve yayımlama servisi üzerinden dağıtılır. Geleneksel Yayın Yönetimi listeleri ve özetleri Agora kapsamından ayrıdır; orijinal medya fiziksel olarak çoğaltılmaz. Ayrıntılar 10. bölümdedir.
 * **Dört Öğrenme Aracı:** Üretim hattı Video, Podcast, Dijital Broşür ve Literatür araçlarını ortak üretim sözleşmesi altında, araca özgü dosya, metadata, ilerleme ve tamamlama kurallarıyla yönetir.
 * **4 Üretim Varyantı:** V1 (Tam Üretim), V2 (Hazır Öğrenme Aracı), V3 (Hazır Soru Seti), V4 (Hazır Öğrenme Aracı ve Hazır Soru Seti). Varyant ve durum pilleri seçilen aracın gerçek adını gösterir; örneğin hazır kaynak bir podcast ise “Hazır Podcast” yazılır.
 * **Tarihsel Teknik Anahtarlar:** Veritabanındaki `video` üretim aşaması ile `hazir_video` alanı geriye dönük uyumluluk için ortak teknik anahtar olarak korunur; kullanıcı arayüzüne doğrudan basılmaz.
@@ -494,6 +502,7 @@ Kulüp motorları ve ortak platform katmanları, ortak mimari ilkeler içinde ke
 *İlk kayıt: 25 Ağustos 2026 | Güncelleme: 23 Ekim 2026 | Kapsam: Admin M2 Kabuğu, 30 API Rotası, Yönetim Kuralları, Sahne Arkası Orphan Tasfiyesi ve Veritabanı Şema Anlık Görüntüsü*
 
 ### 1. Admin Yönetim Mimarisi (`app/admin/`)
+* **Cogniti Partner Yönetimi (6 Kasım 2026):** Partner onayları ve partner firma listesi, Cogniti Firma Yönetimi alanının üzerinde ayrı yönetim alanıdır. Güncel firma alt sayfaları Firma Bilgileri, Yayınlar, Hak Edişleri ve Raporlar’dır. Erişim yönetimi Firma Bilgileri içinde, onay geçmişi açılır alandadır; önceki ayrı Üyelik ve Yetkiler sayfası aktif menü sözleşmesi değildir. Hak ediş ve rapor tablolarının veri bağlantısı bekler. Kaynaklar ve sınırlar 10. bölümdedir.
 
 **30 Ekim 2026 — Firma merkezli admin kabuğu, ilk aşama:** `FirmaGezinme` firma → bölüm → sayfa ağacını sidebar içinde sunar; son yaprak sayfa başlığı ve konum satırı olur. `AdminUstBar`, mevcut Cogniti logosunu ve tema değişkenlerini kullanır. İlk tamamlanan çalışma alanı Kullanıcılar'dır: `KullaniciYonetimi`, liste/arama/filtreler, sayfa içi kullanıcı düzenleme ve onay, tekil ekleme ve toplu yüklemeyi açık bölümlerde birleştirir. `KullaniciFormAlanlari` oluşturma ve düzenleme alanlarını paylaşır. Kullanıcı API'leri ve yetkileri değişmedi. Önceki firma kartı anahtarları ve dışa aktarma/silme işlemleri Firma Ayarları / Firma İşlemleri sayfalarına taşındı. `useAdminPanel`, firma geçişinde önceki kullanıcı/takım verisini temizler, eski firmadan geç gelen yanıtları uygulamaz; yükleme hatası yeni firma kaydı gibi gösterilmez.
 
@@ -4390,6 +4399,490 @@ Kaldırılmış veya taşınmış yollar aktif dosya gibi listelenmez; mevcut es
 
 | Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
 |---|:---:|---|
+
+## AGORA EK ENVANTERİ — PARTNER, ADMİN, VİTRİN VE ÜRETİCİ YAYIN ALANI
+
+*Güncelleme: 6 Kasım 2026 | Kapsam: Git tarafından izlenen Agora modülü kaynakları, SQL’leri, testleri ve ilgili belgeler. Önceki genel envanterin tamamı bu tarihte yeniden taranmış sayılmaz. SQL dosyaları tarihsel migration sırasını korur; aynı RPC’nin eski tanımı güncel sözleşme yerine kullanılmaz. Ortak bileşenlere yapılan bağlantılar 10. bölümün kod matrisindedir.*
+
+### 📁 app/(panel)/agora-yayinlari/api/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `route.ts` | API / Route Handler | Kişisel satın alma listesi ve Agora yayın ayarını üretici sahipliğiyle yürütür. |
+
+### 📁 app/(panel)/agora-yayinlari/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `page.tsx` | UI / React | Yalnız üreticiye açık bağımsız Agora Yayınları çalışma alanını açar. |
+
+### 📁 app/(panel)/agora/api/etkilesim/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `route.ts` | API / Route Handler | Yetkili kullanıcının vitrin beğeni/favori tercihini kaydeder. |
+
+### 📁 app/(panel)/agora/api/havuz/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `route.ts` | API / Route Handler | Satın alınan havuzu okuma ve hazır yayın aktarımı işlemlerini yetkili üretici bağlamına bağlar. |
+
+### 📁 app/(panel)/agora/api/siparis/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `route.ts` | API / Route Handler | Üreticinin sipariş isteğini güncel sunucu KKÖ fiyatıyla atomik satın alma RPC’sine bağlar. |
+
+### 📁 app/(panel)/agora/api/vitrin/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `route.ts` | API / Route Handler | Yetkili firma kullanıcısına Agora vitrin verisini ve podcast ek bilgilerini sunar. |
+
+### 📁 app/(panel)/agora/api/yayin/[egitimId]/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `route.ts` | API / Route Handler | Agora yayın önizlemesini ve podcast medya akışını oturum/yayın erişimiyle sunar. |
+
+### 📁 app/(panel)/agora/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `page.tsx` | UI / React | Firma kimliği ve rol kapısıyla Agora vitrinini açar. |
+
+### 📁 app/admin/_components/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `PartnerFirmaBilgileri.module.css` | Stil / CSS | PartnerFirmaBilgileri.module arayüzünün yerleşim, ölçü ve duyarlı görünüm stillerini tanımlar. |
+| `PartnerFirmaBilgileri.tsx` | UI / React | Erişim yönetimi ile şirket/yetkili bilgilerini gösterir; adres yüksekliği içeriğe uyarlanır. |
+| `PartnerHakEdisleri.tsx` | UI / React | ID ile başlayan hak ediş tablosunun başlıklarını ve boş durumunu sunar; satış verisi bağlı değildir. |
+| `PartnerRaporlari.tsx` | UI / React | ID ile başlayan satış ve etkileşim raporu tablosunun başlıklarını sunar; veri bağlantısı bekler. |
+| `PartnerUyelikOnayi.tsx` | UI / React | Profil başvurularının admin tarafından incelenmesi ve üyelik kararını yönetir. |
+| `PartnerUyelikYetkiler.module.css` | Stil / CSS | PartnerUyelikYetkiler.module arayüzünün yerleşim, ölçü ve duyarlı görünüm stillerini tanımlar. |
+| `PartnerUyelikYetkiler.tsx` | UI / React | Partner erişimini açma/kapatma, onay geçmişi ve teyit modalını Firma Bilgileri içinde sunar. |
+| `PartnerYayinInceleme.tsx` | UI / React | Seçilen yayının bilgilerini, daralıp genişleyen açıklamasını, medyasını ve soru setini gösterir. |
+| `PartnerYayinlari.module.css` | Stil / CSS | PartnerYayinlari.module arayüzünün yerleşim, ölçü ve duyarlı görünüm stillerini tanımlar. |
+| `PartnerYayinlari.tsx` | UI / React | Adminin seçili partner yayınlarını arama/tarih/durum filtresiyle listeler; inceleme, aktif/pasif ve silme işlemlerini bağlar. |
+| `PartnerYonetimi.tsx` | UI / React | Admin ilk giriş ve üyelik onay yönetimini ayrı sekmelerle sunar. |
+
+### 📁 app/admin/_hooks/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `usePartnerFirmalari.ts` | TypeScript / Lib | Admin sidebarındaki partner firma listesini ve yenileme durumunu yönetir. |
+
+### 📁 app/admin/api/partnerler/[partnerId]/erisim/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `route.ts` | API / Route Handler | Adminin seçili partner erişim bilgisini okumasını ve değiştirmesini sağlar. |
+
+### 📁 app/admin/api/partnerler/[partnerId]/logo/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `route.ts` | API / Route Handler | Adminin yetkili olduğu partner logosunu sunar. |
+
+### 📁 app/admin/api/partnerler/[partnerId]/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `route.ts` | API / Route Handler | Adminin seçili partner firma/profil bilgilerini okumasını sağlar. |
+
+### 📁 app/admin/api/partnerler/[partnerId]/yayinlar/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `route.ts` | API / Route Handler | Adminin partner yayınlarını filtrelemesi, incelemesi ve durum/silme işlemlerini yürütür. |
+
+### 📁 app/admin/api/partnerler/firmalar/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `route.ts` | API / Route Handler | Admin sidebarı için partner firma listesini sunar. |
+
+### 📁 app/admin/api/partnerler/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `route.ts` | API / Route Handler | Admin ilk giriş başvurularını ve karar işlemlerini yürütür. |
+
+### 📁 app/admin/api/partnerler/uyelik/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `route.ts` | API / Route Handler | Admin üyelik başvurusu, profil inceleme ve karar işlemlerini yürütür. |
+
+### 📁 app/partner/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `PartnerGiris.tsx` | UI / React | Partner giriş ve üyelik başvuru arayüzünü sunar; firma girişinden ayrıdır. |
+| `page.tsx` | UI / React | Ayrı partner girişini açar; mevcut partner oturumunun durumuna göre yönlendirir. |
+| `partner.module.css` | Stil / CSS | partner.module arayüzünün yerleşim, ölçü ve duyarlı görünüm stillerini tanımlar. |
+
+### 📁 app/partner/api/cikis/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `route.ts` | API / Route Handler | Partner oturumunu kapatır ve partner çerezini temizler. |
+
+### 📁 app/partner/api/egitimler/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `route.ts` | API / Route Handler | Partner eğitim listesi/detayı, form kaydı ve silmeyi sahiplik kontrolüyle yürütür. |
+
+### 📁 app/partner/api/giris/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `route.ts` | API / Route Handler | E-posta/şifre ve ilk giriş/erişim durumuyla ayrı partner oturumu açar. |
+
+### 📁 app/partner/api/kayit/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `route.ts` | API / Route Handler | Partner üyelik başvurusunu kalıcı kayıt işleyicisine bağlar. |
+
+### 📁 app/partner/api/koruma/[egitimId]/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `route.ts` | API / Route Handler | Partnere ait aynı yayının taslak/yayında durumuna uygun medya önizlemesini çözer. |
+
+### 📁 app/partner/api/logo/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `route.ts` | API / Route Handler | Partner logosunu oturum ve dosya kurallarıyla yükler/okur. |
+
+### 📁 app/partner/api/medya/podcast-ekleri/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `route.ts` | API / Route Handler | Partner podcast kapak ve manuel/AI transkript işlemlerini sahiplik kontrolüyle yürütür. |
+
+### 📁 app/partner/api/medya/podcast/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `route.ts` | API / Route Handler | Podcast yükleme, doğrulama ve süre kaydını partner bağlamında yürütür. |
+
+### 📁 app/partner/api/medya/video/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `route.ts` | API / Route Handler | Partner video TUS yükleme başlangıcı/sonucu ve medya durumunu yönetir. |
+
+### 📁 app/partner/api/profil/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `route.ts` | API / Route Handler | Partner şirket/yetkili profilini okur ve sürüm kontrollü kaydeder. |
+
+### 📁 app/partner/api/yayinla/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `route.ts` | API / Route Handler | Eğitim/soru/medya hazırlığını doğrular, koruma kaydını hazırlar ve Agora’da yayımlar. |
+
+### 📁 app/partner/egitimler/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `PartnerEgitimAlani.tsx` | UI / React | Partner eğitim listesi, filtreler, raflar, inceleme, yayımlama ve silme işlemlerini yönetir. |
+| `PartnerEgitimFormu.tsx` | UI / React | Hedef, eğitim bilgileri, soru seti ve fiyat adımlarını; kayıt ve kaydedilmemiş değişiklik durumunu yönetir. |
+| `PartnerEgitimSayfasi.tsx` | UI / React | Eğitim listesi ile yeni eğitim/inceleme görünümünü partner kabuğunda düzenler. |
+| `PartnerMedyaAlanlari.tsx` | UI / React | Video/podcast seçimini, yüklemeyi, işlenme durumunu ve aynı kaynağın önizlemesini yönetir. |
+| `PartnerPodcastEkleri.tsx` | UI / React | Podcast kapak ve transkript tercihlerini ortak editöre ve partner ekleri API’sine bağlar. |
+| `egitimler.module.css` | Stil / CSS | egitimler.module arayüzünün yerleşim, ölçü ve duyarlı görünüm stillerini tanımlar. |
+| `page.tsx` | UI / React | Onaylı partnerin eğitimlerim liste/inceleme alanını açar. |
+
+### 📁 app/partner/egitimler/yeni/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `page.tsx` | UI / React | Onaylı partnerin bağımsız Yeni Eğitim formunu açar. |
+
+### 📁 app/partner/hak-edisleri/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `page.tsx` | UI / React | Onaylı partnerin henüz satış verisine bağlanmamış Hak Edişlerim tablosunu açar. |
+
+### 📁 app/partner/profil/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `PartnerIbanAlani.tsx` | UI / React | Sabit TR ön eki ve 24 rakamı gruplandıran IBAN girişini sunar. |
+| `PartnerLogoAlani.tsx` | UI / React | Partner logo yükleme ve yatay önizleme alanını sunar. |
+| `PartnerProfil.tsx` | UI / React | Şirket ve yetkili bilgileriyle profil kaydını ve üyelik onay durumunu yönetir. |
+| `page.tsx` | UI / React | Partner profil tamamlama ve üyelik onayı bekleme ekranını açar. |
+
+### 📁 app/partner/raporlar/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `page.tsx` | UI / React | Onaylı partnerin henüz satış/etkileşim verisine bağlanmamış Raporlarım tablosunu açar. |
+
+### 📁 components/agora/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `AgoraDenemeOynaticisi.module.css` | Stil / CSS | AgoraDenemeOynaticisi.module arayüzünün yerleşim, ölçü ve duyarlı görünüm stillerini tanımlar. |
+| `AgoraDenemeOynaticisi.tsx` | UI / React | Aynı video/podcast kaynağını koruma sürümüne göre oynatır; video filigranı ve aralıklı sesli uyarıyı yönetir. |
+| `AgoraPodcastBilgisi.tsx` | UI / React | Transkript ve özel/standart kapak bilgisini kart ve sipariş incelemesinde sunar. |
+| `AgoraRafOklari.tsx` | UI / React | Masaüstü/tablet raf kenarlarında ortak sağ-sol kaydırma oklarını sunar. |
+| `AgoraSiparisModali.tsx` | UI / React | Dinamik partner/yayın adı ve token tutarıyla sipariş teyidi alır; sipariş API’sini çağırır. |
+| `AgoraVitrinBaglami.tsx` | UI / React | Agora vitrin verisi, seçili partner ve yenileme durumunu ortak bağlamda tutar. |
+| `AgoraVitrini.module.css` | Stil / CSS | AgoraVitrini.module arayüzünün yerleşim, ölçü ve duyarlı görünüm stillerini tanımlar. |
+| `AgoraVitrini.tsx` | UI / React | Genel/partner vitrini, hedef/araç filtreleri, dört raf ve önizleme/sipariş etkileşimlerini sunar. |
+| `AgoraYayinEditoru.tsx` | UI / React | Satın alınan kaynağın hedef/ürün seçimlerini mevcut rol kurallarıyla hazırlar; ortak yayın yönetimi kartına bağlar. |
+| `AgoraYayinlarim.tsx` | UI / React | Kişisel satın alma statları, partner filtreleri, iki raf ve Agora Yayın Yönetimi sekmesini sunar. |
+| `PartnerKabugu.tsx` | UI / React | Partner sayfalarını ortak panel navbarı, sidebarı ve içerik yerleşimiyle çevreler. |
+| `PartnerNavbar.tsx` | UI / React | Partner kimliği ve çıkış işlemlerini ortak PanelNavbar sözleşmesine bağlar. |
+| `PartnerOzetSayfasi.tsx` | UI / React | Partner hak ediş/rapor tablolarının ortak kabuğunu ve henüz bağlanmamış veri durumunu gösterir. |
+| `partner-ozet.module.css` | Stil / CSS | partner-ozet.module arayüzünün yerleşim, ölçü ve duyarlı görünüm stillerini tanımlar. |
+
+### 📁 components/yayin/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `PartnerEgitimKarti.module.css` | Stil / CSS | PartnerEgitimKarti.module arayüzünün yerleşim, ölçü ve duyarlı görünüm stillerini tanımlar. |
+| `PartnerEgitimKarti.tsx` | UI / React | Partner ve admin için ortak YayinKarti tabanlı eğitim HOYK’unu, kısa ID’yi ve işlem alanını tanımlar. |
+
+### 📁 docs/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `AGORA_KORUMA_PAKETI.md` | Dokümantasyon / Doğrulama | Koruma paketinin geliştirme planını ve tarihsel kabul sınırlarını kaydeder; son uygulama farkları 10. bölümde ayrılır. |
+| `AGORA_PARTNER_ADIM6_DOGRULAMA.json` | Dokümantasyon / Doğrulama | Adı belirtilen Agora partner geliştirmesine ait tarihsel doğrulama sonuçları ve kontrol sınırlarını kaydeder; yeni canlı kabul yerine geçmez. |
+| `AGORA_PARTNER_ADIM7_DOGRULAMA.json` | Dokümantasyon / Doğrulama | Adı belirtilen Agora partner geliştirmesine ait tarihsel doğrulama sonuçları ve kontrol sınırlarını kaydeder; yeni canlı kabul yerine geçmez. |
+| `AGORA_PARTNER_ADIM8_DOGRULAMA.json` | Dokümantasyon / Doğrulama | Adı belirtilen Agora partner geliştirmesine ait tarihsel doğrulama sonuçları ve kontrol sınırlarını kaydeder; yeni canlı kabul yerine geçmez. |
+| `AGORA_PARTNER_ADIM9_1_DOGRULAMA.json` | Dokümantasyon / Doğrulama | Adı belirtilen Agora partner geliştirmesine ait tarihsel doğrulama sonuçları ve kontrol sınırlarını kaydeder; yeni canlı kabul yerine geçmez. |
+| `AGORA_PARTNER_ADIM9_2_DOGRULAMA.json` | Dokümantasyon / Doğrulama | Adı belirtilen Agora partner geliştirmesine ait tarihsel doğrulama sonuçları ve kontrol sınırlarını kaydeder; yeni canlı kabul yerine geçmez. |
+| `AGORA_PARTNER_ADIM9_3_DOGRULAMA.json` | Dokümantasyon / Doğrulama | Adı belirtilen Agora partner geliştirmesine ait tarihsel doğrulama sonuçları ve kontrol sınırlarını kaydeder; yeni canlı kabul yerine geçmez. |
+| `AGORA_PARTNER_ORTAK_KART_DOGRULAMA.json` | Dokümantasyon / Doğrulama | Adı belirtilen Agora partner geliştirmesine ait tarihsel doğrulama sonuçları ve kontrol sınırlarını kaydeder; yeni canlı kabul yerine geçmez. |
+| `AGORA_PARTNER_TANITIM_KALDIRMA_DOGRULAMA.json` | Dokümantasyon / Doğrulama | Adı belirtilen Agora partner geliştirmesine ait tarihsel doğrulama sonuçları ve kontrol sınırlarını kaydeder; yeni canlı kabul yerine geçmez. |
+| `AGORA_PARTNER_THUMBNAIL_DOGRULAMA.json` | Dokümantasyon / Doğrulama | Adı belirtilen Agora partner geliştirmesine ait tarihsel doğrulama sonuçları ve kontrol sınırlarını kaydeder; yeni canlı kabul yerine geçmez. |
+| `Agora Partner Yapısı Kurma.md` | Dokümantasyon / Doğrulama | İş adımlarını, kullanıcı kararlarını, kurulum sonuçlarını ve tarihsel doğrulama sınırlarını kaydeder; güncel sözleşme 10. bölümdedir. |
+
+### 📁 lib/agora/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `koruma.ts` | TypeScript / Lib | Önizleme koruma sürümü, sesli uyarı kaynağı/aralığı ve oynatıcı kaynak tipini tanımlar. |
+| `korumaSunucu.ts` | TypeScript / Lib | Aynı site medya isteği, sesli uyarı dosyası, korumalı video URL’si ve oturum üst katmanına bağlı podcast akışını sağlar. |
+| `partnerEgitimFormu.ts` | TypeScript / Lib | Kategori, çoklu hedef, en fazla 500 kelime, fiyat ve hazır soru seti girişlerini ortak doğrular. |
+| `partnerEgitimleri.ts` | TypeScript / Lib | Partner eğitim kayıtları, durum etiketleri ve liste/veri doğrulama sözleşmelerini tanımlar. |
+| `partnerErisim.ts` | TypeScript / Lib | Partner erişim bilgileri ve admin API yanıtının tip/doğrulama sözleşmesini tanımlar. |
+| `partnerFirmaYonetimi.ts` | TypeScript / Lib | Admin partner alt sayfaları ve firma listesi yanıt sözleşmesini tanımlar. |
+| `partnerHttp.ts` | TypeScript / Lib | Partner API’lerinde aynı kaynak/gövde doğrulaması ve önbelleksiz JSON yanıtını ortaklaştırır. |
+| `partnerKaydi.ts` | TypeScript / Lib | Başvurunun ad soyad, e-posta ve Türkiye cep telefonu girişlerini doğrular ve normalleştirir. |
+| `partnerKayitApi.ts` | TypeScript / Lib | Boyut, origin, JSON ve tekrar kayıt sınırlarıyla kalıcı başvuru işleyicisini sağlar; e-posta/Auth hesabı oluşturmaz. |
+| `partnerMedyaSunucu.ts` | TypeScript / Lib | Partner medya yükleme/doğrulama, Bunny video sonucu ve podcast süre işlemlerini sunucuda yürütür. |
+| `partnerOnayTipleri.ts` | TypeScript / Lib | İlk giriş başvurusu, onay durumu ve liste yanıtının tip/doğrulamasını tanımlar. |
+| `partnerOturumu.ts` | TypeScript / Lib | Ayrı partner çerezi, token üretimi/özeti ve oturum okuma sözleşmesini sağlar. |
+| `partnerProfil.ts` | TypeScript / Lib | Partner profil alanları ve test ortamındaki TR + 24 rakam IBAN doğrulamasını tanımlar. |
+| `partnerProfilForm.ts` | TypeScript / Lib | Profil formunun giriş ve biçimlendirme yardımcılarını sağlar. |
+| `partnerProfilSunucu.ts` | TypeScript / Lib | Partner oturumu, profil ve onaylı partner erişimini sunucu bağlamında çözer. |
+| `partnerSifre.ts` | TypeScript / Lib | Partner test şifresini scrypt ile özetler ve sabit zamanlı karşılaştırmayla doğrular. |
+| `partnerTranskriptIsleyici.ts` | TypeScript / Lib | Kalıcı partner transkript kuyruğunu işler; iş sahiplenme, sonuç ve eski girişim sınırlarını uygular. |
+| `partnerUyelikTipleri.ts` | TypeScript / Lib | Üyelik başvurusu/profil verisi ve admin yanıtının tip/doğrulama sözleşmesini tanımlar. |
+| `vitrin.ts` | TypeScript / Lib | Agora yayın/veri tiplerini, ortak KKÖ’den token hesabını ve dört rafın filtre/sıralamasını tanımlar. |
+| `vitrinSunucu.ts` | TypeScript / Lib | Firma Auth oturumunu ve Agora görme rolünü sunucu tarafında çözer. |
+| `yayinArama.ts` | TypeScript / Lib | Partner/admin eğitim adı, PE kodu, fiyat ve tarih arama girişlerini çözümler. |
+| `yayinAyarlari.ts` | TypeScript / Lib | Üreticinin Agora yayını için hedef, eğitim türü, ürün ve teknik seçim sözleşmesini mevcut rol yeteneklerinden üretir. |
+
+### 📁 public/agora/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `deneme-yayini.wav` | Ses / Varlık | Önceki telaffuzlu sesli uyarı varlığıdır; güncel koruma kaynağı kogniti-deneme-yayini.wav dosyasıdır. |
+| `kogniti-deneme-yayini.wav` | Ses / Varlık | Önizlemede kullanılan “Kogniti — Deneme Yayını” sesli uyarı varlığıdır. |
+
+### 📁 scripts/sql/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `agora_kurulum_tamamlama.sql` | SQL / Migration | Podcast bilgilendirmesi ile kullanıcı bazlı satın alma kurulumunu tek transaction içinde birleştirir. |
+| `agora_partner_admin_kart_id.sql` | SQL / Migration | Admin yayın liste yanıtına partnerle aynı kısa eğitim kodunu ekler. |
+| `agora_partner_admin_yayin_arama.sql` | SQL / Migration | Admin yayınlarında ad, kısa kod ve fiyat arama RPC’sini kurar. |
+| `agora_partner_admin_yayin_tarih.sql` | SQL / Migration | Admin yayın aramasına yayın tarihi başlangıç/bitiş filtresini ekler. |
+| `agora_partner_admin_yayinlar.sql` | SQL / Migration | Admin yayın listesi, detay, aktif/pasif/silme RPC’leri ve işlem geçmişini kurar. |
+| `agora_partner_egitim_formu.sql` | SQL / Migration | Eğitim bilgileri ve hazır soru setinin detay okuma/kayıt RPC’lerini kurar. |
+| `agora_partner_egitim_id.sql` | SQL / Migration | Firma sırası 10’ar artan ve yayın sırası 001–999 olan değişmez PE kodlarını ve sayaçlarını kurar. |
+| `agora_partner_egitim_silme.sql` | SQL / Migration | Eğitim silmeyi sahiplik/sürüm kontrollü mantıksal silme olarak günceller. |
+| `agora_partner_egitim_yonetimi.sql` | SQL / Migration | Partner eğitim tablosunu ve ilk taslak/liste/silme RPC’lerini kurar. |
+| `agora_partner_firma_bilgileri.sql` | SQL / Migration | Adminin seçili partner profilini okuma sözleşmesini kurar. |
+| `agora_partner_iban_test_kurali.sql` | SQL / Migration | Yalnız test ortamında MOD 97 kontrolünü askıya alır; TR ve 24 rakam biçimini korur. |
+| `agora_partner_ilk_giris_onayi.sql` | SQL / Migration | Admin ilk giriş kararını, karar geçmişini ve ayrı partner oturum RPC’lerini kurar. |
+| `agora_partner_kart_id.sql` | SQL / Migration | Partner liste yanıtına kısa eğitim kodunu ekler. |
+| `agora_partner_koruma_paketi.sql` | SQL / Migration | Koruma sürümünü medya kaynağına bağlayan hazırlık/yayımlama RPC’leri ve kapıyı kurar. |
+| `agora_partner_liste_duzeni.sql` | SQL / Migration | Partner eğitim listesine arama ve yayın tarihi filtrelerini ekler. |
+| `agora_partner_medya_yukleme.sql` | SQL / Migration | Partner video/podcast kayıtlarını ve bağımsız yükleme/sonuç RPC’lerini kurar. |
+| `agora_partner_podcast_ekleri.sql` | SQL / Migration | Podcast kapak/transkript ekleri, kalıcı AI işi ve yayımlama kontrolünü kurar. |
+| `agora_partner_podcast_sure.sql` | SQL / Migration | Pozitif podcast süresini partner yükleme kaydında saklar; eski süresiz dosyayı yeniden yüklemeden tamamlama RPC’sini kurar. |
+| `agora_partner_profil_tamamlama.sql` | SQL / Migration | Şirket/yetkili profilini ve onaya gönderilecek profil kaydını kurar. |
+| `agora_partner_tanitim_kaldir.sql` | SQL / Migration | Tanıtım videosu zorunluluğunu yayımlama ve admin işlemlerinden kaldırır; eski dosyaları silmez. |
+| `agora_partner_test_hesabi_guncelle.sql` | SQL / Migration | Kullanıcının test partner hesabı kimliği/şifresi değişikliği için hazırlanmış test migration’ıdır. |
+| `agora_partner_thumbnail.sql` | SQL / Migration | Partner/admin kartlarına gerçek video GUID’sinden thumbnail kaynağını ekler. |
+| `agora_partner_uyelik_kaydi.sql` | SQL / Migration | Ayrı partner başvuru tablosu ve kayıt RPC’sini kurar. |
+| `agora_partner_uyelik_onayi.sql` | SQL / Migration | Profil sonrası üyelik kararını ve sürüm kontrollü onay geçmişini kurar. |
+| `agora_partner_uyelik_yetkiler.sql` | SQL / Migration | Partner erişim kararı/geçmişini ve giriş/oturum kapılarını günceller. |
+| `agora_partner_yayimlama.sql` | SQL / Migration | Hazır eğitim ve soru seti üzerinden Agora katalog yayımını kurar; sonraki migration’larla güncellenir. |
+| `agora_podcast_bilgilendirme.sql` | SQL / Migration | Yetkili vitrin ziyaretçilerine transkript/kapak bilgisi ve kontrollü medya detayını sunar. |
+| `agora_satin_alma.sql` | SQL / Migration | Kullanıcıya bağlı sipariş, firma token/borç işlemi, paket anlık görüntüsü ve hazır yayın aktarımını kurar. |
+| `agora_vitrin_kurulum.sql` | SQL / Migration | Vitrin, haftalık stat özeti, kullanıcı beğeni/favorileri ve medya okuma RPC’lerini kurar. |
+| `agora_yayinlari_calisma_alani.sql` | SQL / Migration | Kişisel yayın havuzunu ve üretici hedef/ürün/teknik ayarı RPC’lerini kurar. |
+
+### 📁 tests/
+
+| Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
+|---|:---:|---|
+| `agoraKorumaOynaticisi.hedef.test.mjs` | Test / Kaynak | Koruma oynatıcısının filigran ve sesli uyarı davranışlarını sınayan yerel test kaynağıdır; dosyanın varlığı test başarısı kanıtı değildir. |
+| `agoraKorumaSunucu.hedef.test.mjs` | Test / Kaynak | Sunucu medya erişimi ve koruma yardımcılarını sınayan yerel test kaynağıdır; dosyanın varlığı test başarısı kanıtı değildir. |
+| `agoraPartnerFormu.hedef.test.ts` | Test / Kaynak | Partner eğitim formu doğrulamasını sınayan yerel test kaynağıdır; dosyanın varlığı test başarısı kanıtı değildir. |
+| `agoraPartnerKaydi.hedef.test.ts` | Test / Kaynak | Partner başvuru doğrulama ve API davranışını sınayan yerel test kaynağıdır; dosyanın varlığı test başarısı kanıtı değildir. |
+| `agoraPartnerOnay.hedef.test.ts` | Test / Kaynak | İlk giriş/partner onay akışını sınayan yerel test kaynağıdır; dosyanın varlığı test başarısı kanıtı değildir. |
+| `agoraPartnerOrtakKart.hedef.test.mjs` | Test / Kaynak | Partner ve adminin ortak eğitim kartını sınayan yerel test kaynağıdır; dosyanın varlığı test başarısı kanıtı değildir. |
+| `agoraPartnerPodcastEkleri.hedef.test.mjs` | Test / Kaynak | Partner podcast ekleri SQL sözleşmesini sınayan yerel test kaynağıdır; dosyanın varlığı test başarısı kanıtı değildir. |
+| `agoraPartnerPodcastEkleriApi.hedef.test.mjs` | Test / Kaynak | Partner podcast ekleri API yetki ve işlemlerini sınayan yerel test kaynağıdır; dosyanın varlığı test başarısı kanıtı değildir. |
+| `agoraPartnerPodcastEkleriArayuz.hedef.test.mjs` | Test / Kaynak | Ortak transkript editörü ve partner ekleri arayüzünü sınayan yerel test kaynağıdır; dosyanın varlığı test başarısı kanıtı değildir. |
+| `agoraPartnerPodcastSure.hedef.test.mjs` | Test / Kaynak | Partner podcast süresi SQL ve aktarım sözleşmesini sınayan yerel test kaynağıdır; dosyanın varlığı test başarısı kanıtı değildir. |
+| `agoraPartnerPodcastSureApi.hedef.test.mjs` | Test / Kaynak | Partner süre API’si ve ortak süre okuyucusunu sınayan yerel test kaynağıdır; dosyanın varlığı test başarısı kanıtı değildir. |
+| `agoraPartnerYayinArama.hedef.test.mjs` | Test / Kaynak | Partner/admin ad, kod, fiyat ve tarih aramasını sınayan yerel test kaynağıdır; dosyanın varlığı test başarısı kanıtı değildir. |
+| `agoraPodcastBilgilendirme.hedef.test.mjs` | Test / Kaynak | Podcast vitrin bilgilendirmesi SQL sözleşmesini sınayan yerel test kaynağıdır; dosyanın varlığı test başarısı kanıtı değildir. |
+| `agoraPodcastBilgilendirmeApi.hedef.test.mjs` | Test / Kaynak | Podcast vitrin detay/bilgilendirme API’sini sınayan yerel test kaynağıdır; dosyanın varlığı test başarısı kanıtı değildir. |
+| `agoraSatinAlma.hedef.test.mjs` | Test / Kaynak | Kişisel sipariş, token/borç ve hazır yayın aktarım zincirini sınayan yerel test kaynağıdır; dosyanın varlığı test başarısı kanıtı değildir. |
+| `agoraSiparisApi.hedef.test.mjs` | Test / Kaynak | Sipariş API’sinin rol, kimlik ve girdi sınırlarını sınayan yerel test kaynağıdır; dosyanın varlığı test başarısı kanıtı değildir. |
+| `agoraTekOynaticiForm.hedef.test.mjs` | Test / Kaynak | Partner formundaki tek medya oynatıcı sözleşmesini sınayan yerel test kaynağıdır; dosyanın varlığı test başarısı kanıtı değildir. |
+| `agoraVitrin.hedef.test.mjs` | Test / Kaynak | Vitrin verisi, filtre, sıralama ve token hesabını sınayan yerel test kaynağıdır; dosyanın varlığı test başarısı kanıtı değildir. |
+| `agoraVitrinArayuz.hedef.test.mjs` | Test / Kaynak | Vitrin, ortak HOYK ve panel kabuğu arayüzünü sınayan yerel test kaynağıdır; dosyanın varlığı test başarısı kanıtı değildir. |
+| `agoraVitrinMobil.hedef.test.mjs` | Test / Kaynak | Vitrin mobil 2+5 akışı ve filtre sıfırlamasını sınayan yerel test kaynağıdır; dosyanın varlığı test başarısı kanıtı değildir. |
+| `agoraYayinlariApi.hedef.test.mjs` | Test / Kaynak | Üretici kişisel yayın alanı API yetki ve ayarlarını sınayan yerel test kaynağıdır; dosyanın varlığı test başarısı kanıtı değildir. |
+| `agoraYayinlariArayuz.hedef.test.mjs` | Test / Kaynak | Üretici yayın alanı, HOYK ve hedef/ürün seçimlerini sınayan yerel test kaynağıdır; dosyanın varlığı test başarısı kanıtı değildir. |
+| `agoraYayinlariSql.hedef.test.mjs` | Test / Kaynak | Kişisel yayın havuzu ve hazırlık ayarlarının SQL sözleşmesini sınayan yerel test kaynağıdır; dosyanın varlığı test başarısı kanıtı değildir. |
+| `agoraYayinlarimMobil.hedef.test.mjs` | Test / Kaynak | Satın alınan yayınların mobil 2+5 akışını sınayan yerel test kaynağıdır; dosyanın varlığı test başarısı kanıtı değildir. |
+
+---
+
+# 10. BÖLÜM: COGNITI AGORA — PARTNER, VİTRİN, SATIN ALMA VE YAYIN YÖNETİMİ
+*Kaynak ve kullanıcı kararlarıyla bölüm güncellemesi: 6 Kasım 2026. Kapsam `ecdfa640` ve `1f0ef26c` kaynaklarıdır. Bu kayıt geliştirme, SQL kurulum sonucu, yerel test ve gerçek kullanıcı kabulünü birbirinin yerine kullanmaz.*
+
+### 1. Aşama: İş Modeli, Kimlik ve Rol Sınırları
+
+* **Marka ve alan ayrımı:** Partner girişindeki kimlik **Cogniti İş Partneri**dir; **Agora**, partner yayınlarının Cogniti içinde sunulduğu alt markadır. `/partner` ayrı giriş/başvuru alanı; `/agora` firma vitrini; `/agora-yayinlari` satın alan üreticinin kişisel yayın alanıdır. Partner firma içi üretici rolü değildir; ayrı kimlik ve oturum kullanır.
+* **İki aşamalı admin onayı:** Başvuruda Ad Soyad, E-Posta ve Cep Telefonu alınır. Admin ilk girişi onaylar; partner giriş yaptıktan sonra şirket adı, il, ilçe, adres, vergi dairesi, vergi numarası, IBAN ve logo ile profilini tamamlar. Profil ayrıca üyelik onayına gider; eğitim yönetimi onaylı partner bağlamı ister. Mevcut test kurgusu adminin belirlediği test şifresiyle çalışır. İlk taslaktaki otomatik geçici şifre e-postası mevcut kayıt API’sinin davranışı değildir; gerçek e-posta gönderimi bu çalışma kapsamında kurulmuş sayılmaz.
+* **Partner oturumu:** `cogniti_partner_oturum` HTTP-only çerezi `/partner` yoluna bağlıdır; üretimde Secure kullanır, ömrü sekiz saattir. Rastgele tokenın SHA-256 özetiyle oturum çözülür; şifre scrypt ile doğrulanır. Firma Auth kimliği ile partner oturumu birbirinin yerine kullanılmaz. Profil/medya/yayın yazımlarında sunucuda sahiplik ve sürüm kontrolü yapılır.
+* **Görme ve satın alma:** `AGORA_GOREN_ROLLER` kapsamındaki üretici, TM ve yönetici roller vitrini görür. Sipariş yalnız `URETICI_ROLLER` kapsamındaki 13 üretici rolüne açıktır; TM ve yöneticiye satın alma yetkisi verilmez. Partner/admin yönetim ekranının bulunması firma adına sipariş yetkisi oluşturmaz.
+* **Kişisel satın alma:** Siparişin sahibi `alici_id` ile üretici kullanıcıdır. Aynı firmadaki Merve ve Arzu aynı yayını ayrı ayrı satın alabilir; birbirlerinin havuzunu kullanamaz. Aynı üreticinin aynı eğitimi ikinci kez satın alması kapalıdır. Yayın diğer alıcılar için vitrinde kalır; satın alanın kartında **Daha Önce Satın Aldınız** şeridi ve kapalı sipariş düğmesi görünür.
+* **Tekrar kullanım:** Satın alan üretici, kaynağı süre ve tekrar sınırı olmadan, mevcut rolünün izin verdiği hedeflere yeni yayınlar hazırlamak için kullanır. Her hazırlık ayrı yayın adayıdır. Partnerin önerdiği hedefler vitrin filtresidir; üreticinin yayımlama yetkisinin yerine geçmez. Tek satın alma–tek yayınlama, firma genelinde ortak havuz ve firmaya münhasır satış önceki taslaklardır; güncel sözleşme değildir. V4 eşdeğeri paket hazır medya ve hazır soru setiyle gelir; alıcıdan yeni soru seti istenmez.
+
+### 2. Aşama: Partner Üretimi ve Admin Yönetimi
+
+* **Partner navigasyonu:** Ortak `PanelNavbar` üzerinden Cogniti kimliği ve partner/çıkış bilgisi gösterilir. `PartnerKabugu` sidebarında Eğitimlerim, Hak Edişlerim ve Raporlarım vardır. Yeni Eğitim ayrı `/partner/egitimler/yeni` sayfasıdır; İncele seçili eğitime odaklanır, diğer eğitimleri formun altına eklemez. Eğitimlerim dönüşü başlık hizasındadır; kaydedilmemiş değişiklik için Cogniti teyidi kullanılır.
+* **Yeni Eğitim düzeni:** Solda ayrı Hedef Kitle kartı ve kategori/ad, yayın aracı, açıklama kartı; sağda Soru Seti bulunur. Fiyat kartların dışında yer alır. Sıralı etkinleşme Hedef Kitle → Eğitim Bilgileri/Medya → Soru Seti → Fiyat şeklindedir. Açıklamada 500 kelime üst sınırdır, doldurulması gereken asgari miktar değildir; yazma/yapıştırma sınırı ve sunucu doğrulaması vardır. Sayaç alanın sağ altındadır. Medya aktarımının tamamlanması ile Bunny kodlamasının tamamlanması ayrı durumlardır; aktarım sonrası form ilerleyebilir, yayımlama hazır medyayı ayrıca ister.
+* **Hazır paket:** Partner birden fazla hedef seçebilir. Yayın aracı Video veya Podcast’tir; Viva bu kapsamda park edilmiştir. Tanıtım videosu yeni eğitim akışından kaldırılmıştır; eski dosyalar bu nedenle fiziksel silinmez. Eğitim açıklaması en fazla 500 kelime, soru seti büyüklüğü 10/15/20/25, seçenek sayısı 2/3/4’tür; yayın başına soru sayısı ve doğru cevaplar paketle korunur. Başlangıçta iki soru alanı gösterilir; Soru Alanı Aç birer alan açar ve seçilen sayıda sonlanır. Toplu yüklemede yüklenen sorular açılır. Soruları Yükleyin/Kaldır düğmesi yükleme durumuna göre değişir; kayıttan sonra kilitlenir. Her soruyu ayrı akordiyon yapma tasarımı kaldırılmıştır. Soru seti tamamlanmadan Eğitimi Kaydet sunulmaz; geçersiz değerlerle işlem yapılamaz.
+* **Medya ve podcast:** Video doğrudan Bunny Stream TUS hattını kullanır; ham GUID kaydedilir, kodlama asenkrondur. Video üst sınırı 5 GB, podcast üst sınırı 250 MB’tır. Podcast Bunny Storage hattındadır; pozitif tam saniye süre partner kaydında saklanır. Eski süresiz podcast, partner dosyasının metadata’sı okunarak yeniden yüklemeden tamamlanabilir. Bu süre istemci metadata beyanıdır; sunucuda dosyayı baştan çözümleme değildir. Satın alma sırasında alıcı tarayıcısına süre ölçtürülmez.
+* **Podcast ekleri:** Ses sonrasında isteğe bağlı kapak (JPEG/PNG/WebP, en fazla 20 MB) ve ortak `PodcastTranskriptEditoru` açılır. Transkriptsiz devam, manuel dosya/metin veya AI seçenekleri vardır. AI çıktısı taslaktır; açık onay gerekir. Onaylı metin değişirse yeniden onaylanır. Başlatılıp tamamlanmamış transkript yayımlamayı engeller; açıkça transkriptsiz devam edilebilir. AI işleri kalıcı, sahiplenme süresi kontrollü partner kuyruğundadır; mevcut işleyici firma kuyruğu boşken partner işlerini işler. Kapak ve onaylı metin satın alma paketine alınır; önceki satın alma referansları için eski kapaklar kendiliğinden silinmez.
+* **ID:** İlişkilerdeki UUID korunur; kart ve tabloda sütun başlığı **ID**, gösterim alanı `partner_egitim_id` olur. Firma numarası 10, 20, 30…; partner başına yayın sırası 001–999’dur. İlk örnek `PE-10001`dir. 999 üst sınırdır; kodlar değiştirilemez ve silinen kod tekrar kullanılmaz. Firma numarası büyüdüğünde PE kodu sabit beş rakamla sınırlanmaz.
+* **Ortak HOYK:** Partner ve admin aynı `PartnerEgitimKarti` → `YayinKarti` bileşenini kullanır. Gerçek video kaynağı thumbnail’i, kısa ID, fiyat ve durum ortak kart sözleşmesine bağlıdır; ekranın işlem düğmeleri dışarıdan verilir. Kartın ortak olması, ekranların liste yetkisini veya sorgu kapsamını birleştirmez. Agora vitrin ve kişisel satın alma kartları da `YayinKarti` kullanır; üzerlerindeki alıcı işlemleri yönetim kartından farklıdır.
+* **Admin alanı:** COGNITI PARTNER YÖNETİMİ, COGNITI FİRMA YÖNETİMİ üzerinde ayrı alandır. Partner firma adları sol listede açılır. Güncel alt sayfalar Firma Bilgileri, Yayınlar, Hak Edişleri ve Raporlar’dır. Erişim aç/kapat ile açılır Onay Geçmişi, Firma Bilgileri içindedir; ilk tasarımdaki ayrı Üyelik ve Yetkiler menüsü güncel değildir. Şirket ve Yetkili Bilgileri yan yana, dar ekranda uyarlanarak sunulur; başlıklar kalın, içerik normaldir. Adres sabit genişlikte içeriğe göre yükselir; IBAN alanı kapsayıcısını aşmadan içerik uzunluğuna uyarlanır.
+* **Yayın işlemleri:** Partner kayıtları taslak/yayında/pasif durumlarında yönetir ve kendi eğitimini mantıksal silebilir. Admin yayını inceleyebilir, pasife alabilir, yeniden aktife alabilir veya mantıksal silebilir; işlem geçmişi tutulur. İşlem teyitleri tarayıcı confirm yerine Cogniti modalıdır; başarılı işlemlerde toast kullanılır. Admin incelemede Eğitim Hakkında alanı başlangıçta yaklaşık 4–5 satırdır; tıklamayla içeriğe açılır, tekrar tıklamayla daralır.
+* **Liste ve raf:** Partner/admin listelerinde ad, PE kodu, fiyat ve yayın tarihi başlangıç/bitiş filtreleri durum sekmeleriyle birlikte çalışır. Masaüstü/tablet yatay rafı ortak `AgoraRafOklari` ile kayar. Mobilde `MobilYayinAkisi` kullanılır. Yayın listelerinde Önceki/Sonraki yerine Daha Fazla Göster ile devam edilir; bu karar admin başvuru tablosunun sayfalamasını değiştirmez.
+* **Erişimi kapatma:** Admin kapatıp yeniden açabilir. Kapatma mevcut partner oturumlarını sonlandırır; yeniden açma eski oturumu diriltmez, partner tekrar giriş yapar. Satın alınmış/devam eden/tekrarlı yayınlarla ilişkili silme–durdurma–erişim kapatma yaşam döngüsü kullanıcı kararıyla park edilmiştir; bu ayrıntı çözüldü sayılmaz.
+
+### 3. Aşama: Agora Vitrini, Sipariş ve Token
+
+* **Navigasyon:** Vitrin sidebarda bir firma yayın modülü bağlantısı olarak açılmaz; navbarın mor, beyaz büyük harfli ve kalın **AGORA** pill’iyle açılır. Pill logo ile aynı yatay eksende, profil alanının solunda ince dikey ayırıcıyla yer alır; gölge kullanır. Üretici sidebarındaki **AGORA YAYINLARI** kişisel çalışma alanıdır, vitrin butonuyla aynı hedef değildir. Üreticinin genel Ana Sayfa gizlemesini geri açma isteği durduruldu; genel `/ana-sayfa` gizleme/yönlendirme koşulu bu çalışmada kaldırılmadı. Vitrinin Ana Sayfa bağlantısı firma rol başlangıcına döner; üreticide mevcut hedef `/yayin-yonetimi`dir.
+* **Genel vitrin ve partner seçimi:** Agora ilk açılışta tüm partner yayınlarını gösterir. Partner adları sol sidebarda güncel yayındaki adet rozetiyle yer alır, yayın sayısına göre sıralanır. Partner seçilince aynı raflar o partnerle sınırlanır. Hedef kitle yatay kayan filtre, Video/Podcast ikili kapsül kontroldür. Zaman ölçütü seçimi yoktur.
+* **Statlar ve raflar:** Üç stat Cogniti Partnerleri, Toplam Yayın Sayısı, Toplam Sipariş Sayısı’nı gösterir. Haftalık özet haftanın ilk okumasında oluşturulur ve hafta boyunca aynı kalır; raf/sidebar kayıtları yenilenebilir. Raflar Yeniler, En Çok Sipariş Verilenler, En Çok Beğenilenler, En Çok Favorilenenler’dir. Beğeni/favoriler Agora ziyaretçilerinin vitrin etkileşimleridir; satın alma sonrası eğitim izleyicilerinin cevap/tamamlama kayıtları değildir. Kullanıcı/yayın/tür bazındaki tercihler toplam aktif firma etkileşimlerini ve raf sırasını besler.
+* **Podcast bilgilendirmesi:** Satın almadan önce tüm yetkili ziyaretçiler Transkriptli/Transkriptsiz ve Özel Kapak/Standart Kapak bilgisini görür. Özel kapak imzalı URL ile HOYK’a bağlanır; incelemede onaylı transkript okunabilir. Bilgi okunamadığında transkriptsiz varsayılmaz; podcast sipariş onayı kapalı kalır.
+* **Fiyat ve teyit:** Kartın altında solda partner TL fiyatının ortak KKÖ token birim fiyatına bölünmüş tam token değeri, sağda Sipariş Ver bulunur. Yuvarlama 0,5 altı aşağı; eşit/üstü yukarıdır. KKÖ fiyatı `lib/token/fiyatlandirma.ts` kaynağından sunucuda okunur; bugün 9,90 TL, sabit döviz kuru değildir. Teyitte dinamik partner adı, yayın adı, token ve “hazır soru setiyle birlikte sizin yayın havuzunuza eklenecektir” açıklaması kullanılır.
+* **Atomik sipariş:** `agora_satin_al` rol/sahiplik ve güncel yayın/fiyat sürümünü doğrular; sipariş kaydı, token tüketimi ve borcu aynı transaction içinde yazar. Tekillik `alici_id + egitim_id`, tüketim işlem anahtarı üretici + eğitimdir. Tekrar isteği aynı siparişi döndürür; ikinci ücret yaratmaz. Firma token hesabı satır kilidi ortak bakiyeyi korur; iki bağımsız bağlantıyla yarış testi yapılmış kabul edilmez.
+* **Borç istisnası:** Satın alma bedeli firma hesabından tüketilir; yetmeyen tutar borca yazılır ve firma aktif kalır. Bu, Agora alımına özgü onaylanmış karardır; normal yayın/gönderim kapılarını kaldırmaz. Aylık/KKÖ yenileme bağımlılığı korunur. Sipariş SQL’i eski sıfırda otomatik pasife alma tetikleyicisi etkinse kurulumun önce düzeltilmesini ister.
+* **Paketin korunması:** Sipariş eğitim sürümü, kaynak medya, süre, açıklama, soru seti/ayarları, kapak/onaylı transkript ve ücretlerin satın alma anındaki görüntüsünü saklar. Kaynak sonradan değişse veya vitrinden kalksa satın alınan kayıt korunur. Orijinal medya dosyası çoğaltılmaz; üreticinin hazır yayın zincirinde ayrı öğrenme aracı/talep ilişkisi kurulur. Normal yüklemelerin tekil dosya kuralı korunur, Agora kaynağı farklı üreticilerce ayrı kayıtlarla kullanılabilir.
+
+### 4. Aşama: Üreticinin Bağımsız Agora Yayınları Alanı
+
+* **Sidebar:** **AGORA YAYINLARI** üretici sidebarının en üstünde bağımsız mor bağlantıdır; T-Club/E-Club başlıklarıyla aynı 12 px, 800 kalınlık ve harf aralığını kullanır. Altında sidebarı yatay kesen ince ayırıcı vardır; metin altı çizgisi değildir. Üreticide Yayınlar ve Raporlar grup başlığı gösterilmez, diğer yayın/rapor bağlantıları korunur. Mobil menü aynı sözleşmeye bağlıdır. Önceki geri alma kaydı güncel menü kararının yerine geçmez.
+* **Özet ve listeler:** Üç stat kişisel satın alma, yayımlanan farklı satın alınmış içerik ve toplam yayına alma sayısını gösterir. Agora Yayınlarım / Agora Yayın Yönetimi ikili kontrolü altında partnerler yatay filtrelenir; rozetler yalnız o kullanıcının satın alma adetleridir. Yeni Satın Aldıklarım henüz yayımlanmayan kaynakları, Yayınladıklarım en az bir yayın kaydı olan kaynakları gösterir.
+* **Hızlı yayına hazırlama:** HOYK altındaki Yayına Al kaynağı Agora Yayın Yönetimi’nde açar. Üretici hedef rol, izinli eğitim türü, ürün, gerektiğinde teknik/takım seçer; kaynağın hazır soru seti yeniden oluşturulmaz. Ürün/teknik gerekliliği yorumla değil `TALEP_TURU_KURALLARI` ve ortak rol yetenekleriyle çözülür: Ürün Eğitimi ve Ürün Medikal Eğitiminde ürün zorunlu; Eczanem hedefinde türden bağımsız ürün zorunlu; Satış Tekniklerinde ürün tercihlidir, saha hedefinde teknik gerekir. E-Club/Eczanem teknik alanı göstermez. PM ailesi ve Medikal Müdürün Eczanem yetkisi korunur.
+* **Ortak yayın araçları:** Ayarlar `agora_yayin_ayarla` üzerinden doğrulanır. Mevcut `BekleyenSatir`, `useYayinYonetimi` ve ortak modallar; puan, kazanım modeli, tekrar, tarih ve Yayınla işlemini yürütür. Yayın mevcut dağıtım/puan/rapor altyapısına girer. Eski hazırlanmış adaylar hedef/ürün ayarı tamamlanmadan yayımlanamaz; `agora_ayarlandi` bu ayrımı taşır. Agora’ya özel ayrı puanlama motoru yazılmaz.
+* **Geleneksel hattan ayrım:** Önceki Yayın Yönetimi içindeki Agora’dan Satın Aldığım Yayınlar kutusu kaldırılmıştır. Agora adayları/yayınları geleneksel liste ve özetten ayrı kapsamda okunur; ortak hook Agora kapsamında geleneksel özet önbelleğine yazmaz. Geleneksel silme API’si satın alınmış ortak medya kaynağını silemez. Kaynak kişisel havuzda kalır; başka yayın hazırlamak için yeniden satın alınmaz.
+* **Mobil sözleşmesi:** Vitrindeki her raf ile Yeni Satın Aldıklarım/Yayınladıklarım rafları mobilde ortak `MobilYayinAkisi` ile tek sütundur. Başlangıç iki kayıt, Daha Fazla Göster her seferinde beş kayıttır. Vitrinde partner/hedef/araç, kişisel listede partner değişince açıklık başlangıca döner; aynı kapsamda yenileme açıklığı korur. Masaüstü/tablette yatay raf ve ortak kenar okları korunur. Yerel DOM doğrulaması gerçek cihaz görsel kabulü yerine geçmez.
+
+### 5. Aşama: Önizleme Koruması ve Satın Alma Sonrası Kaynak
+
+* **Tek kaynak/tek içerik:** Partnerin yüklediği aynı medya kullanılır; ayrı bir deneme video/podcast yayını üretilmez. Taslak önizleme normaldir; yayımlanmış kaynakta önizleme koruma sürümü uygulanır. Satın alınan paketin normal firma yayın hattında oynatımı önizleme filigranı/sesli uyarısını taşımaz. Bu, orijinal dosyanın üzerine kalıcı filigran işlemek veya aynı içeriği iki dosyada saklamak değildir.
+* **Video:** `AgoraDenemeOynaticisi` üzerinde şeffaf Cogniti logosu sağ üstte, Ön İzleme ifadesi üst orta alanda yer alır. Bunlar oynatıcı katmanıdır. Logo katmanı tek başına indirme veya ekran kaydı engeli değildir. Mevcut vitrin API’si korumalı URL üretilemediğinde normal Bunny embed adresine döner; bu durumda filigranın görünmesi token/domain kısıtının etkin olduğunu kanıtlamaz. `korumaliVideoUrl` ayrıca Bunny token anahtarı, kütüphane kimliği ve `AGORA_BUNNY_KORUMA_DOGRULANDI` yapılandırmasına bağlıdır; sırlar belgeye yazılmaz.
+* **Podcast:** Başlangıçta ve her 30 saniyelik içerik bölümünde “Kogniti — Deneme Yayını” sesli uyarısı çalınır; içerik uyarı sırasında durur ve sonra devam eder. Dosyanın kendisi yeniden seslendirilmez. Ham depolama yolu ziyaretçiye verilmez; sunucu Range akışı aynı kaynak/oturum erişimine bağlıdır. Yerel indirme/uzak oynatma kontrolleri gösterilmez.
+* **Güncel kapı ile bekleyen sağlayıcı kontrolü:** Kullanıcı talimatıyla partner Yayımla API’sindeki Bunny video koruma ayarını ayrıca doğrulatıp yayını engelleyen kontrol kaldırılmıştır; hazır medya, bilgi/soru seti, koruma kaydı ve podcast eklerinin onay kontrolleri sürer. Bu kaldırma Bunny domain/token/MediaCage ayarlarının gerçek ortamda doğrulandığı anlamına gelmez. Vitrin/partner/admin medya çözümlemeleri farklı yetki katmanlarıdır; gerçek Bunny ve tarayıcı indirme kısıtı kabulü açık iştir. Tarayıcıya ulaşan medyanın hiçbir şekilde kopyalanamayacağı garantisi verilmez. Satın alma sonrası paylaşımın tüm roller için yeni bir genel engelleme kuralı bu çalışmada kurulmuş sayılmaz.
+
+### 6. Aşama: Depo Şema ve RPC Sözleşmesi
+
+| Kaynak | Görev ve Sınır |
+|---|---|
+| `agora_is_partnerleri`, `agora_partner_oturumlari`, `agora_partner_onay_gecmisi` | Ayrı başvuru/ilk giriş kimliği, özet tokenlı oturum ve admin karar geçmişi. |
+| `agora_partner_profilleri`, `agora_partner_uyelik_gecmisi`, `agora_partner_erisim_gecmisi` | Şirket/yetkili profili, üyelik ve erişim kararları; sürüm kontrolü. |
+| `agora_partner_egitimleri`, `agora_yayindaki_egitimler` | Hazır eğitim/soru paketi ve satışa açık katalog görünümü; mantıksal silme ile kaynak referanslarını korur. |
+| `agora_partner_videolari`, `agora_partner_podcastleri` | Video GUID’si ile podcast depolama/süre/özet bilgisini ayrı medya modellerinde saklar. |
+| `agora_partner_podcast_ekleri`, `agora_partner_transkript_isleri` | Kapak/onaylı metin ve kalıcı AI transkript işlerini tutar. |
+| `agora_partner_firma_sayaci`, `agora_partner_egitim_sayaclari` | Firma sıra numarası ve partner başına 999 eğitim sınırını uygular. |
+| `agora_partner_yayin_islem_gecmisi` | Adminin yayın durum/silme işlemlerini kaydeder. |
+| `agora_vitrin_etkilesimleri`, `agora_vitrin_haftalik_ozet` | Kullanıcı beğeni/favorileri ve haftanın ilk okumasıyla alınan genel statlar. |
+| `agora_siparisleri` | Kişisel sipariş, firma maliyeti, %15 hizmet payı, net tutar ve değişmez paket görüntüsü; tekillik kullanıcı + eğitimdir. |
+| `agora_yayin_hazirliklari` | Siparişten ayrı yayın hazırlıkları, üretici/hedef ve mevcut talep zinciri ilişkisi. |
+| `agora_vitrin_oku`, `agora_vitrin_etkilesim_kaydet`, `agora_vitrin_medya`, `agora_vitrin_podcast_bilgileri` | Yetkili firma kullanıcısına vitrin/etkileşim/önizleme sözleşmesi. |
+| `agora_satin_al`, `agora_havuz_oku`, `agora_yayin_hazirla` | Sipariş, kişisel paket okuma ve mevcut hazır yayın zincirine aktarım. |
+| `agora_yayinlarim_oku`, `agora_yayin_ayarla` | Bağımsız Agora Yayınları listesi ve hedef/ürün/teknik ayar kapısı. |
+
+Sunucu kimlik/rol bağlamını kendisi çözer; istemcinin firma veya kullanıcı kimliği seçmesiyle yetki verilmez. Tablolar RLS ve doğrudan erişim iptalleriyle korunur; hizmet rolünün çağırdığı kontrollü SECURITY DEFINER RPC’ler işlem sınırlarını uygular. SQL dosyası hazırlamak, şema snapshot’ının veya canlı fonksiyonların güncellendiğinin kanıtı değildir. Migration’ların çalışma sırası önce partner/medya, sonra vitrin, satın alma ve kişisel yayın alanıdır; farklı tarihlerde aynı RPC’yi yeniden tanımlayan dosyalar tek başına rastgele uygulanmaz.
+
+### 7. Aşama: Operasyonel Kod ve İş Akışı Kaydı
+
+| Dosya / Alan | İşlev ve Ortak Kaynak Bağı |
+|---|---|
+| `app/partner/`, `lib/agora/partner*` | Ayrı partner başvuru/oturum/profil, medya ve eğitim yönetimi. |
+| `app/admin/_components/Partner*`, `app/admin/api/partnerler/`, `app/admin/_hooks/usePartnerFirmalari.ts` | Onaylar, erişim, firma listesi, yayın inceleme/işlemleri ve henüz boş finans/rapor tabloları. |
+| `components/yayin/PartnerEgitimKarti.tsx`, `components/yayin/YayinKarti.tsx` | Partner/admin ortak HOYK; vitrin ve üretici havuzu da aynı temel yayın kartını kullanır. |
+| `app/(panel)/agora/`, `components/agora/AgoraVitrin*`, `lib/agora/vitrin*` | Rol kapılı vitrin, stat/sidebar/raf ve kişisel etkileşimler. |
+| `components/agora/AgoraSiparisModali.tsx`, `scripts/sql/agora_satin_alma.sql` | Dinamik teyit ve kullanıcıya ait atomik sipariş/token işlemi. |
+| `app/(panel)/agora-yayinlari/`, `components/agora/AgoraYayinlarim.tsx`, `AgoraYayinEditoru.tsx`, `lib/agora/yayinAyarlari.ts` | Kişisel havuzdan hedef/ürün seçerek bağımsız yayın hazırlama. |
+| `app/(panel)/yayin-yonetimi/_components/BekleyenSatir.tsx`, `_hooks/useYayinYonetimi.ts`, `_types.ts` ve `api/` | Ortak yatay yayın kartı, kapsam ayrımı, ayarlar ve normal yayımlama zinciri. |
+| `components/panel/PanelNavbar.tsx`, `PanelKabugu.tsx`, `SolListe.tsx`, `MobilDrawer.tsx`, `panelNav.config.ts`, `app/(panel)/layout.tsx` | Navbar AGORA pill’i, kişisel bağımsız sidebar bağlantısı ve iki ekranda aynı menü kuralları. |
+| `lib/utils/roller.ts`, `lib/uretici/yetenekler.ts`, `lib/token/fiyatlandirma.ts` | Görme/satın alma rolleri, hedef/tür/ürün gerekliliği ve ortak KKÖ fiyatı. |
+| `components/agora/AgoraRafOklari.tsx`, `AgoraVitrini.module.css`, `components/yayin/MobilYayinAkisi.tsx` | Ortak raf kenar okları ile mobil iki + beş kayıt akışı. |
+| `app/(panel)/talepler/_components/PodcastTranskriptEditoru.tsx`, `lib/ogrenmeAraci/bunnyYuklemeIstemci.ts`, `transkriptKuyrukIsleyici.ts` | Paylaşılan transkript editörü, ses süresi/destek yükleme yardımcıları ve partner kuyruk bağlantısı. |
+| `components/agora/AgoraDenemeOynaticisi.tsx`, `lib/agora/koruma.ts`, `korumaSunucu.ts` | Aynı kaynakta önizleme filigranı, sesli uyarı ve kontrollü medya çözümlemesi. |
+
+Bu tablo bağlantıları gösterir; tüm bu dosyaların yalnız Agora’ya ait olduğu veya ortak bileşenin veritabanını kendisinin sorguladığı anlamına gelmez. Tam Agora dosya–tür–işlev listesi 9. bölümün ek envanterindedir.
+
+### 8. Aşama: Kurulum, Doğrulama ve Açık İşler
+
+**Kullanıcının ilettiği kurulum sonuçları:** Partner üyelik kaydı, ilk giriş onayı, profil tamamlama, IBAN test kuralı, üyelik onayı, eğitim yönetimi/silme/form/medya/yayımlama, admin firma bilgileri/erişim/yayınlar/arama/tarih filtreleri için ilgili `*_hazir = true` sonuçları konuşmada alındı. `agora_vitrin_hazir`, `agora_partner_podcast_sure_hazir`, `agora_partner_podcast_ekleri_hazir`, `agora_podcast_bilgilendirme_hazir`, `agora_satin_alma_hazir` ve `agora_yayinlari_calisma_alani_hazir` sonuçları da kullanıcı tarafından true olarak paylaşıldı. Bunlar kullanıcının çalıştırdığı SQL sonuçlarıdır; bu dokümantasyon sırasında canlı DB bağlantısı veya yeni SQL çalıştırması yapılmadı.
+
+**Gerçek kullanıcı bildirimleri:** Profilin kaydı ve admin üyelik onayı; silme modalı/toast ve eğitimin silinmesi; Agora’da yayımlama modalı/toast ve yayında listesi; partner/admin kart/işlemleri ve podcast alanlarının görünmesi kullanıcı tarafından bildirildi. Transkriptsiz podcast akışı kolay/sorunsuz olarak onaylandı. Kullanıcı sorgusunda `PE-10004 / İhtiyacı Bulmak / hazir / 16 saniye` görüldü. İlk gerçek Agora siparişi LAIR için verildi; kullanıcı ekranında satın alındı şeridi ve kapalı sipariş butonu görüldü. Bu bildirimler Merve/Arzu ile tüm uçtan uca yayımlama ve tekrar kullanım senaryolarının tamamının denenmiş olduğu anlamına gelmez.
+
+**Yerel kaynak doğrulaması:** Plan belgesinde podcast ekleri için 31 SQL, 19 API ve 12 arayüz; satın alma/aktarım zinciri için 44; bağımsız üretici alanı için mevcut zincirle toplam 66 SQL, 59 API ve 14 arayüz; vitrin için 29 arayüz; koruma oynatıcı için 16; vitrin/kişisel mobil akış için 13 ve 14 kontrol kayıtlıdır. Bunlar farklı geliştirme aşamalarının tarihsel sayılarıdır; toplanıp bugünkü tek test koşusu sayılmaz. PGlite/HappyDOM ve sahte auth/temel tablolar/medya bağımlılıkları gerçek Supabase/Bunny/AI kabulü değildir. Son navbar yazı/ölçü değişiklikleri sonrası tüm arayüz testleri yeniden çalıştırılmış sayılmaz. Commit öncesi `tsc -p tsconfig.build.json --noEmit --incremental false` ve `git diff --check` başarılıydı; bu belge güncellemesi yeni uygulama testi değildir.
+
+| Açık İş / Teknik Borç | Güncel Durum ve Tamamlanma Sınırı |
+|---|---|
+| Hak Edişleri / Hak Edişlerim | Tablo mevcut, sipariş veri bağlantısı yok. Sütunlar ID, Eğitim Adı, Sipariş Tarihi, Satın Alma Bedeli, Cogniti Hizmet Bedeli (%15), Ödenecek Tutar, KDV, KDV’li Ödenecek Tutar, Ödeme Günü. Sipariş temel ücretleri tutar; KDV oranı/ödeme günü bu çalışmada belirlenmez. |
+| Raporlar / Raporlarım | Tablo mevcut, canlı sipariş/etkileşim bağlantısı yok. Sütunlar ID, Eğitim Adı, Satış Fiyatı, Satılan Adet, Toplam Satış Fiyatı, Beğeni Sayısı, Favori Sayısı. Kaynak Agora siparişleri ve vitrin etkileşimleridir. |
+| TB-AGORA-PODCAST-01 / 02 | Gerçek AI ve manuel TXT/DOCX/PDF/metin transkript üretme → düzenleme → onay → yeniden girişte korunma kabulü kullanıcı kararıyla teknik borçtur. Seçenekleri görmek bu kabulü tamamlamaz. |
+| Partner IBAN canlı geçişi | Testte sabit TR + 24 rakam korunur; ISO 7064 MOD 97 geçici askıdadır. `partnerProfil.ts`, SQL CHECK ve mevcut kayıtları ele alan geçiş birlikte düzeltilip gerçek kayıt/okuma doğrulanmadan canlıya hazır sayılmaz. |
+| Bunny video/indirme koruması | Gerçek domain/token/MediaCage yapılandırması ve tarayıcı kabulü bekler. Filigran ve sunucu kodu tek başına sağlayıcı güvenlik kabulü değildir. |
+| Erişim kapatma ve satın alınmış yayınların yaşam döngüsü | Devam eden/tekrarlı yayınlarda silme–durdurma sırası ayrıntılı planlanacak; kullanıcı bu konuyu park etti. Mevcut erişim aç/kapat korunur. |
+| Üretici gerçek yayımlama ve rol kabulü | Kişisel havuz → hedef/ürün → yayın ayarları → Yayınla → tekrar yayına alma ve farklı üretici sahipliği gerçek kullanıcılarla tam doğrulanmadı. Yeni iki bağlantılı token yarış testi yapılmadı. |
+| Mobil/tablet/masaüstü son kabul | Kullanıcı kontrolleri kendisi yapacağını söyleyerek işi tamamlandı kabul etti. Ajan gerçek tarayıcı görsel/işlem kabulünü yapmış veya başarılı bulmuş sayılmaz. |
+
+Detaylı iş geçmişi `docs/Agora Partner Yapısı Kurma.md` ve `docs/AGORA_*.json` kayıtlarındadır. Bu belgelerdeki önceki taslak karar ve bekleme notları, bu bölümdeki son kullanıcı kararını ve açık durum ayrımını geçersiz kılmaz. Mobil uygulama/PWA seçeneklerinin konuşulması geliştirme kararı veya tamamlanmış mobil uygulama olarak kaydedilmez.
 
 ---
 
