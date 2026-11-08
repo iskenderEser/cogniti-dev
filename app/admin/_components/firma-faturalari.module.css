@@ -1,0 +1,28 @@
+.sekmeler { display:inline-flex; flex-wrap:wrap; gap:4px; padding:4px; margin-bottom:16px; border:1px solid var(--tema-kontrol-cizgi); border-radius:12px; background:var(--tema-yuzey); }
+.sekmeler button { padding:10px 16px; border:0; border-radius:9px; background:transparent; color:var(--tema-kontrol-ikincil-metin); font:inherit; font-size:13px; font-weight:600; cursor:pointer; }
+.sekmeler button[aria-selected=true] { background:var(--tema-kontrol-eylem); color:var(--tema-kontrol-eylem-metin); }
+.sekmeler button:focus-visible { outline:2px solid var(--tema-kontrol-odak); outline-offset:2px; }
+.aciklama { margin:0 0 16px; font-size:12px; line-height:1.6; color:var(--tema-ikincil-metin); }
+.tablo { width:100%; border-collapse:collapse; color:var(--tema-metin); font-size:12px; text-align:left; }
+.tablo th,.tablo td { padding:12px; border-bottom:1px solid var(--tema-kontrol-cizgi); vertical-align:middle; }
+.tablo thead th { background:var(--tema-zemin); font-weight:700; }
+.tablo tbody th { font-weight:500; }
+.tablo:not(.liste) td:nth-child(3),.tablo:not(.liste) td:nth-child(5),.tablo:not(.liste) td:last-child,.tablo:not(.liste) th:nth-child(3),.tablo:not(.liste) th:nth-child(5),.tablo:not(.liste) th:last-child { text-align:right; }
+.tablo tfoot th { text-align:right; }
+.tablo tfoot tr:last-child { background:var(--tema-secili); font-weight:700; }
+@media(max-width:700px){.tablo{min-width:660px}.tablo th,.tablo td{padding:10px}.sekmeler button{padding:10px;font-size:12px}}
+
+.listeButonu { padding:9px 14px; border:1px solid var(--tema-kontrol-cizgi); border-radius:9px; background:var(--tema-yuzey); color:var(--tema-kontrol-eylem); font:inherit; font-size:12px; font-weight:600; cursor:pointer; }
+.listeButonu:hover { background:var(--tema-secili); }
+.listeButonu:focus-visible { outline:2px solid var(--tema-kontrol-odak); outline-offset:2px; }
+.liste>thead>tr>th,.liste>tbody>tr>td { text-align:left; }
+.liste>thead>tr>th:nth-child(5),.liste>tbody>tr>td:nth-child(5) { text-align:right; }
+.liste .bosListe { padding:36px 16px; text-align:center; color:var(--tema-ikincil-metin); }
+
+.liste { table-layout:fixed; }
+.liste>thead>tr>th:nth-child(4),.liste>tbody>tr>td:nth-child(4),.liste>thead>tr>th:nth-child(7),.liste>tbody>tr>td:nth-child(7) { text-align:center; }
+.liste>tbody>tr>td.bosListe { text-align:center; padding:32px 16px; }
+
+.ustTabloAlani { margin-bottom:24px; }
+
+.liste .detaySatiri>td { padding:20px 0; text-align:left; }

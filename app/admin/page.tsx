@@ -28,6 +28,7 @@ import PartnerYayinlari from "./_components/PartnerYayinlari";
 import PartnerFirmaBilgileri from "./_components/PartnerFirmaBilgileri";
 import PartnerYonetimi from "./_components/PartnerYonetimi";
 import TopluTekilSilPaneli from "./_components/TopluTekilSilPaneli";
+import FirmaFaturalari from "./_components/FirmaFaturalari";
 import TokenYonetimi from "./_components/TokenYonetimi";
 import TClubYonetimi from "./_components/TClubYonetimi";
 import CClubYonetimi from "./_components/CClubYonetimi";
@@ -147,7 +148,7 @@ function AdminPanelIcerigi() {
             {!globalBolum && f && <p>{f.firma_adi} · {seciliSekme === "kullanicilar" ? "Kullanıcı kayıtları, roller ve erişim yetkileri" : seciliSekme === "firma-admin-yonetimi" ? "Yönetim erişimi ve sorumluluk" : sayfa.baslik}</p>}
             {(globalBolum === "hbstore" || globalBolum === "eclubstore") && <p>Mevcut ortak ekran · Tüm firmalar</p>}
           </div>{!globalBolum && f && <span className={styles.badge}>{platformSecili ? <Settings2 /> : <Building2 />}{f.firma_adi}</span>}</div>
-          {!globalBolum && saltOkunur && <p role="status" className={styles.notice}>Firma admini açık · Cogniti bu firma alanında yalnız görüntüleme yapabilir.</p>}
+          {!globalBolum && saltOkunur && <p role="status" className={styles.yoneticiUyarisi}>COGNİTİ YÖNETİCİYE MESAJ: Firma admini açık · Cogniti bu firma alanında yalnız görüntüleme yapabilir.</p>}
           {globalBolum === "partnerler" ? (
             !firmaAdmin && (partnerId && partnerSayfasi === "firma-bilgileri" ? <PartnerFirmaBilgileri key={partnerId} partnerId={partnerId} /> : partnerId && partnerSayfasi === "yayinlar" ? <PartnerYayinlari key={partnerId} partnerId={partnerId} /> : partnerId ? <section className={styles.card} aria-label={PARTNER_SAYFALARI[partnerSayfasi]}>
               <div className={styles.cardBody}>{partnerler.yukleniyor ? <p role="status">Partner bilgisi yükleniyor…</p> : partnerler.hata ? <p role="alert">{partnerler.hata}</p> : !seciliPartner ? <p role="alert">Partner firma bulunamadı.</p> : partnerSayfasi === "hak-edisleri" ? <PartnerHakEdisleri key={partnerId} partnerId={partnerId} /> : partnerSayfasi === "raporlar" ? <PartnerRaporlari key={partnerId} partnerId={partnerId} /> : <p className={styles.empty}>Bu bölüm henüz kullanıma açılmadı.</p>}</div>
@@ -177,6 +178,8 @@ function AdminPanelIcerigi() {
               ))}
               {seciliSekme === "firma-admin-yonetimi" && !firmaAdmin && !platformSecili && <FirmaAdminYonetimi key={f.firma_id} firmaId={f.firma_id} onDegisti={aktif => admin.firmaBilgileriniYansit({ ...f, firma_admin_aktif: aktif })} />}
               {(seciliSekme === "firmaayarlar" || seciliSekme === "firmaislemler") && <FirmaYonetimIslemleri key={`${f.firma_id}-${seciliSekme}`} firma={f} admin={admin} firmaAdmin={firmaAdmin} islemler={seciliSekme === "firmaislemler"} />}
+
+              {(seciliSekme === "faturalar" || seciliSekme === "proforma-fatura") && !firmaAdmin && !platformSecili && <FirmaFaturalari key={`${f.firma_id}-${seciliSekme}`} proforma={seciliSekme === "proforma-fatura"} />}
 
               {(seciliSekme === "token" || seciliSekme === "abonelik-paketleri") && <TokenYonetimi key={`${f.firma_id}-${seciliSekme}`} firmaId={f.firma_id} gorunum={seciliSekme === "abonelik-paketleri" ? "paketler" : "kullanim"} />}
 

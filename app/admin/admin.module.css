@@ -188,7 +188,7 @@
   .drawerHeader { justify-content:flex-end; margin-bottom:4px; flex-shrink:0; }
   .drawerHeader .button { width:32px; min-height:32px; padding:4px; border:0; background:transparent; color:var(--tema-yardimci-metin); }
   .navScroll { flex:1; min-height:0; overflow-y:auto; overscroll-behavior:contain; }
-  .sidebar .navButton { font-size:14px; min-height:44px; padding:10px 12px; }
+  .sidebar .navButton { font-size:12px; min-height:44px; padding:10px 12px; }
   .sidebar .groupSummary { font-size:12px; min-height:44px; }
   .sidebar .companyButton { font-size:14px; min-height:44px; }
   .drawerFooter { flex-shrink:0; padding:12px 0 0; margin-top:12px; border-top:1px solid var(--tema-mobil-menu-ayirici); }
@@ -217,3 +217,5 @@
 .partnerYayinSorular { padding-left:22px; display:flex; flex-direction:column; gap:14px; }
 @media(max-width:1199px) { .partnerYayinKartlar { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media(max-width:639px) { .partnerYayinKartlar { grid-template-columns:minmax(0,1fr); } }
+
+.yoneticiUyarisi { padding:14px 18px; margin:0 0 20px; border:1px solid var(--tema-bildirim-hata-cizgi); border-radius:10px; background:var(--tema-bildirim-hata-zemin); color:var(--tema-bildirim-hata-metin); font-size:12px; font-weight:700; line-height:1.5; }

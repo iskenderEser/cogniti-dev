@@ -25,6 +25,7 @@ export default function AdminBreadcrumb(p: Props) {
     </> : <>
       {p.sayfa === "firmabilgileri" ? <span aria-current="page">{p.platform ? "Cogniti Firma Yönetimi" : p.firma.firma_adi}</span> : <button type="button" onClick={() => p.onSayfaSec("firmabilgileri")}>{p.platform ? "Cogniti Firma Yönetimi" : p.firma.firma_adi}</button>}
       {bilgi.grup && <><ChevronRight aria-hidden="true" /><button type="button" onClick={() => p.onGrupAc(bilgi.grup!)}>{bilgi.grup}</button></>}
+      {(p.sayfa === "proforma-fatura" || p.sayfa === "faturalar") && <><ChevronRight aria-hidden="true" /><button type="button" onClick={() => p.onGrupAc("Faturalar")}>Faturalar</button></>}
       {eclub && <><ChevronRight aria-hidden="true" /><button type="button" onClick={() => p.onSayfaSec("eclub-uyeler")}>E-Club</button></>}
       {eczanem && <><ChevronRight aria-hidden="true" /><button type="button" onClick={() => p.onSayfaSec("eczanem")}>Eczanem</button></>}
       <ChevronRight aria-hidden="true" /><span aria-current="page">{bilgi.baslik}</span>

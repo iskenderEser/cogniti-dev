@@ -14,8 +14,10 @@ const mobilDinle = (bildir: () => void) => { const sorgu = window.matchMedia(mob
 const mobilOku = () => window.matchMedia(mobilSorgu).matches;
 const sunucuMobilOku = () => false;
 
-export type FirmaSayfasi = ModulSekmeId | "abonelik-paketleri" | "firmabilgileri" | "firmaayarlar" | "firma-admin-yonetimi" | "firmaislemler" | "eclub-bannerlar" | "eclub-uyeler" | "eclub-puan-tl" | "eczanem-cek-yonetimi" | "eczanem-bannerlar";
+export type FirmaSayfasi = ModulSekmeId | "proforma-fatura" | "faturalar" | "abonelik-paketleri" | "firmabilgileri" | "firmaayarlar" | "firma-admin-yonetimi" | "firmaislemler" | "eclub-bannerlar" | "eclub-uyeler" | "eclub-puan-tl" | "eczanem-cek-yonetimi" | "eczanem-bannerlar";
 export const FIRMA_SAYFALARI: Record<FirmaSayfasi, { baslik: string; etiket?: string; grup?: string }> = {
+  "proforma-fatura": { baslik:"Proforma Fatura", grup:"Abonelik Yönetimi" },
+  faturalar: { baslik:"Giden Faturalar", grup:"Abonelik Yönetimi" },
   firmabilgileri: { baslik:"Firma Bilgileri" },
   kullanicilar: { baslik: "Kullanıcılar", grup: "Firma Yönetimi" },
   organizasyon: { baslik: "Organizasyon", grup: "Firma Yönetimi" },
@@ -104,6 +106,13 @@ export default function FirmaGezinme(p: Props) {
         <div className={styles.leaves}>
           {buton("abonelik-paketleri")}
           {buton("token")}
+          {!p.firmaAdmin && !platformSayfalari && <details className={styles.group} open={secili && (p.seciliSayfa === "proforma-fatura" || p.seciliSayfa === "faturalar")}>
+            <summary data-nav-grup="Faturalar" className={styles.groupSummary}>Faturalar</summary>
+            <div className={styles.leaves}>
+              {buton("proforma-fatura")}
+              {buton("faturalar")}
+            </div>
+          </details>}
         </div>
       </details>
       <details className={styles.group} open={!platformSayfalari || secili}><summary data-nav-grup={platformSayfalari ? "Platform Yönetimi" : "Firma Yönetimi"} className={styles.groupSummary}>{platformSayfalari ? "Platform Yönetimi" : "Firma Yönetimi"}</summary><div className={styles.leaves}>
