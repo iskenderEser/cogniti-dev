@@ -12,21 +12,21 @@ export async function POST(request:Request) {
   try{
     const b=await onayliPartnerBaglami();if(!b)return partnerYanit({hata:"Partner oturumunuz doğrulanamadı."},401);
     const d=body.veri;
-    if(!medyaUuid(d.egitim_id)||!Number.isSafeInteger(d.surum)||Number(d.surum)<1)return partnerYanit({hata:"Geçersiz eğitim kaydı."},400);
+    if(!medyaUuid(d.egitim_id)||!Number.isSafeInteger(d.surum)||Number(d.surum)<1)return partnerYanit({hata:"Geçersiz yayın kaydı."},400);
     const {data:e,error:detayHata}=await b.db.rpc("agora_partner_egitim_detay_oku",{p_token_ozeti:b.tokenOzeti,p_egitim_id:d.egitim_id});
-    if(detayHata)throw new Error("Eğitim bilgileri doğrulanamadı.");
-    if(!e)return partnerYanit({hata:"Eğitim bulunamadı."},404);
+    if(detayHata)throw new Error("Yayın bilgileri doğrulanamadı.");
+    if(!e)return partnerYanit({hata:"Yayın bulunamadı."},404);
     if(e.durum!=="yayinda"){
-      if(e.durum!=="taslak"||e.surum!==d.surum)return partnerYanit({hata:"Eğitim değişmiş veya yayımlamaya kapalı. Listeyi yenileyin."},409);
+      if(e.durum!=="taslak"||e.surum!==d.surum)return partnerYanit({hata:"Yayın değişmiş veya yayımlamaya kapalı. Listeyi yenileyin."},409);
       const form=partnerEgitimFormDogrula({...e.bilgiler,egitim_adi:e.egitim_adi});
-      if(!form.ok)return partnerYanit({hata:`Önce eğitim bilgilerini tamamlayıp kaydedin. ${form.hata}`},400);
+      if(!form.ok)return partnerYanit({hata:`Önce yayın bilgilerini tamamlayıp kaydedin. ${form.hata}`},400);
       const {data:m,error:medyaHata}=await b.db.rpc("agora_partner_medya_oku",{p_token_ozeti:b.tokenOzeti,p_egitim_id:d.egitim_id});
       if(medyaHata)throw new Error("Dosya bilgileri doğrulanamadı.");
-      if(!m)return partnerYanit({hata:"Eğitim dosyaları bulunamadı."},404);
+      if(!m)return partnerYanit({hata:"Yayın dosyaları bulunamadı."},404);
       const roller=form.veri.yayin_araci==="video"?["egitim"]:[];
       for(const rol of roller){
         const v=m.videolar.find((v:{rol:string})=>v.rol===rol);
-        const ad="Eğitim videosu";
+        const ad="Yayın videosu";
         if(!v)return partnerYanit({hata:`${ad} yüklenmelidir.`},400);
         const durum=await bunnyVideoDurumu(v.video_guid);
         if(!durum.ok)throw new Error(`${ad} doğrulanamadı. Yeniden deneyin.`);
@@ -50,8 +50,8 @@ export async function POST(request:Request) {
     const {data,error}=await b.db.rpc("agora_partner_egitim_yayimla",{p_token_ozeti:b.tokenOzeti,p_egitim_id:d.egitim_id,p_surum:d.surum});
     if(error?.code==="22023"&&error.message.includes("Transkripti onaylayın"))return partnerYanit({hata:"Transkripti onaylayın veya transkriptsiz devam edin."},409);
     if(error)throw new Error("Yayımlama sonucu doğrulanamadı. Listeyi yenileyip kontrol edin.");
-    const mesajlar:Record<string,string>={yetkisiz:"Partner oturumunuz doğrulanamadı.",bulunamadi:"Eğitim bulunamadı.",kapali:"Bu eğitim yayımlamaya kapalı.",cakisma:"Eğitim değişmiş. Listeyi yenileyin.",bilgiler_eksik:"Önce eğitim bilgilerini tamamlayıp kaydedin.",video_eksik:"Eğitim videosunun yüklenmesi ve işlenmesi tamamlanmalıdır.",podcast_eksik:"Podcast yüklemesi tamamlanmalıdır.",koruma_eksik:"Koruma paketi hazır değil."};
-    if(data!=="tamam")return partnerYanit({hata:mesajlar[String(data)]??"Eğitim yayımlanamadı."},data==="yetkisiz"?401:409);
-    return partnerYanit({mesaj:"Eğitim Agora’da yayımlandı."});
-  }catch(e){return partnerYanit({hata:e instanceof Error?e.message:"Eğitim yayımlanamadı."},503);}
+    const mesajlar:Record<string,string>={yetkisiz:"Partner oturumunuz doğrulanamadı.",bulunamadi:"Yayın bulunamadı.",kapali:"Bu yayın yayımlamaya kapalı.",cakisma:"Yayın değişmiş. Listeyi yenileyin.",bilgiler_eksik:"Önce yayın bilgilerini tamamlayıp kaydedin.",video_eksik:"Yayın videosunun yüklenmesi ve işlenmesi tamamlanmalıdır.",podcast_eksik:"Podcast yüklemesi tamamlanmalıdır.",koruma_eksik:"Koruma paketi hazır değil."};
+    if(data!=="tamam")return partnerYanit({hata:mesajlar[String(data)]??"Yayın yayımlanamadı."},data==="yetkisiz"?401:409);
+    return partnerYanit({mesaj:"Yayın Agora’da yayımlandı."});
+  }catch(e){return partnerYanit({hata:e instanceof Error?e.message:"Yayın yayımlanamadı."},503);}
 }

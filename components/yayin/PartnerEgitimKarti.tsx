@@ -11,7 +11,7 @@ interface Props {
   islemler: ReactNode;
 }
 
-/** Partner eğitiminin tüm yönetim ekranlarındaki ortak HOYK tanımı. */
+/** Partner yayınının tüm yönetim ekranlarındaki ortak HOYK tanımı. */
 export function PartnerEgitimKarti({ egitim, onIncele, islemler }: Props) {
   return <YayinKarti
     yayin={{
@@ -23,7 +23,7 @@ export function PartnerEgitimKarti({ egitim, onIncele, islemler }: Props) {
       yayin_tarihi: egitim.olusturuldu_at,
     }}
     className={styles.kart}
-    ariaLabel={`${egitim.egitim_adi} Eğitim Bilgileri`}
+    ariaLabel={`${egitim.egitim_adi} Yayın Bilgileri`}
     onClick={onIncele}
     etkilesimGoster={false}
     izlenmeGoster={false}
@@ -33,7 +33,7 @@ export function PartnerEgitimKarti({ egitim, onIncele, islemler }: Props) {
     yayinTuruGoster={!!egitim.yayin_araci}
     solUstRozet={<span>{EGITIM_DURUMLARI[egitim.durum]}</span>}
     tarihSatiriSagAksiyon={egitim.partner_egitim_id ? <span
-      aria-label={`Eğitim ID: ${egitim.partner_egitim_id}`}
+      aria-label={`Yayın ID: ${egitim.partner_egitim_id}`}
       className="shrink-0 font-mono text-xs text-[var(--tema-hoyk-talep-metni)] sm:text-[10px]"
     >{egitim.partner_egitim_id}</span> : undefined}
     puanYaniRozet={<span className={styles.fiyat}>{egitim.fiyat_tl === null

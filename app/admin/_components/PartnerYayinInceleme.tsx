@@ -61,7 +61,7 @@ export default function PartnerYayinInceleme({detay,hata,baslik,onKapat}:{detay:
               <Bilgi etiket="Hedef Kitle">{b?.hedef_roller?.length?<HedefRolPilleri hedefRoller={b.hedef_roller}/>:"Belirlenmedi"}</Bilgi>
             </dl>
             <button type="button" aria-expanded={aciklamaAcik} onClick={()=>setAciklamaAcik(acik=>!acik)} className="block w-full cursor-pointer rounded-xl border border-[var(--tema-yayin-detay-cizgi)] bg-[var(--tema-yayin-detay-yuzey)] p-3.5 text-left">
-              <span className="block text-xs font-bold text-[var(--tema-yayin-detay-alan-etiket)]">Eğitim Hakkında</span>
+              <span className="block text-xs font-bold text-[var(--tema-yayin-detay-alan-etiket)]">Yayın Hakkında</span>
               <span className={`mt-2 whitespace-pre-wrap break-words text-sm font-normal leading-relaxed text-[var(--tema-yayin-detay-koyu-metin)] ${aciklamaAcik?"block":"line-clamp-5"}`}>{b?.aciklama||"Bilgi Girilmedi"}</span>
             </button>
             <SadeKontrolGrubu tur="sekme" aria-label="Yayın İnceleme Bölümleri">

@@ -6,7 +6,7 @@ import { YenileButonu } from "@/components/ui/yenile-butonu";
 import styles from "./partner-ozet.module.css";
 
 const BASLIKLAR = [
-  ["ID", ""], ["Eğitim Adı", ""], ["Satış Fiyatı", "Güncel · KDV hariç"],
+  ["ID", ""], ["Yayın Adı", ""], ["Satış Fiyatı", "Güncel · KDV hariç"],
   ["Satılan Adet", ""], ["Toplam Satış", "Gerçekleşen · KDV hariç"],
   ["Beğeni Sayısı", ""], ["Favori Sayısı", ""],
 ];
@@ -47,14 +47,14 @@ export default function PartnerRaporTablosu({ partnerId, endpoint, anaBaslik = f
   }, [anahtar, endpoint, partnerId, sayfa]);
 
   const toplamSayfa = veri ? Math.max(1, Math.ceil(veri.toplam / veri.sayfa_boyutu)) : 1;
-  return <section aria-label="Partner eğitim raporları" aria-busy={yukleniyor}>
+  return <section aria-label="Partner yayın raporları" aria-busy={yukleniyor}>
     <div className={styles.hakedisBaslik}>
-      <Baslik>{anaBaslik ? "Raporlarım" : "Eğitim Raporları"}</Baslik>
+      <Baslik>{anaBaslik ? "Raporlarım" : "Yayın Raporları"}</Baslik>
       <YenileButonu yenileniyor={yukleniyor} onYenile={() => setSurum(n => n + 1)} />
     </div>
     <p className={styles.raporAciklama}>Satışlar tüm zamanları kapsar; beğeni ve favoriler güncel sayılardır.</p>
     {hata && <p role="alert">{hata}</p>}
-    <div className={styles.tabloAlani}><table className={`${styles.hakedisTablo} ${styles.raporTablo}`} aria-label="Partner Eğitim Raporları">
+    <div className={styles.tabloAlani}><table className={`${styles.hakedisTablo} ${styles.raporTablo}`} aria-label="Partner Yayın Raporları">
       <colgroup>{GENISLIKLER.map((genislik, i) => <col key={i} style={{ width: `${genislik}%` }} />)}</colgroup>
       <thead><tr>{BASLIKLAR.map(([baslik, aciklama], i) => <th key={baslik} scope="col" className={i >= 3 && i <= 7 ? styles.hakedisPara : undefined}>
         {baslik}{aciklama && <span className={styles.hakedisBaslikAciklama}>{aciklama}</span>}
@@ -62,7 +62,7 @@ export default function PartnerRaporTablosu({ partnerId, endpoint, anaBaslik = f
       <tbody>
         {yukleniyor ? <tr><td colSpan={7} role="status">Raporlar yükleniyor…</td></tr>
           : hata ? <tr><td colSpan={7}>Yenile düğmesiyle tekrar deneyebilirsiniz.</td></tr>
-          : !veri?.kayitlar.length ? <tr><td colSpan={7}>{veri?.toplam ? "Bu sayfada kayıt bulunmuyor." : "Henüz raporlanacak eğitim bulunmuyor."}</td></tr>
+          : !veri?.kayitlar.length ? <tr><td colSpan={7}>{veri?.toplam ? "Bu sayfada kayıt bulunmuyor." : "Henüz raporlanacak yayın bulunmuyor."}</td></tr>
           : veri.kayitlar.map(r => <tr key={r.egitim_id}>
             <td className={styles.hakedisKimlik}>{r.partner_egitim_id}</td>
             <td className={styles.hakedisEgitim}>{r.egitim_adi}</td>
@@ -74,7 +74,7 @@ export default function PartnerRaporTablosu({ partnerId, endpoint, anaBaslik = f
       </tbody>
     </table></div>
     {veri && <div className={styles.hakedisSayfalama}>
-      <span>{veri.toplam.toLocaleString("tr-TR")} eğitim · Sayfa {sayfa} / {toplamSayfa}</span>
+      <span>{veri.toplam.toLocaleString("tr-TR")} yayın · Sayfa {sayfa} / {toplamSayfa}</span>
       <button type="button" disabled={sayfa <= 1} onClick={() => setSayfa(n => n - 1)}>Önceki</button>
       <button type="button" disabled={sayfa >= toplamSayfa || sayfa >= 100000} onClick={() => setSayfa(n => n + 1)}>Sonraki</button>
     </div>}

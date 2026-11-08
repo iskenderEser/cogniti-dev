@@ -42,9 +42,9 @@ export default function PartnerYayinlari({partnerId}:{partnerId:string}) {
     const c=new AbortController();
     void(async()=>{try{
       const r=await fetch(`${endpoint}?egitim_id=${detayId}`,{cache:"no-store",signal:AbortSignal.any([c.signal,AbortSignal.timeout(15000)])});const d=await r.json();
-      if(!r.ok)throw new Error(d.hata||"Eğitim bilgileri okunamadı.");if(d.egitim?.egitim_id!==detayId||!d.medya)throw new Error("Eğitim bilgileri doğrulanamadı.");
+      if(!r.ok)throw new Error(d.hata||"Yayın bilgileri okunamadı.");if(d.egitim?.egitim_id!==detayId||!d.medya)throw new Error("Yayın bilgileri doğrulanamadı.");
       if(!c.signal.aborted)setDetay(d);
-    }catch(e){if(!c.signal.aborted)setDetayHata(e instanceof Error?e.message:"Eğitim bilgileri okunamadı.");}})();return()=>c.abort();
+    }catch(e){if(!c.signal.aborted)setDetayHata(e instanceof Error?e.message:"Yayın bilgileri okunamadı.");}})();return()=>c.abort();
   },[endpoint,detayId]);
   function incele(e:PartnerEgitimi){if(kilit.current)return;setDetayId(e.egitim_id);}
 
@@ -53,7 +53,7 @@ export default function PartnerYayinlari({partnerId}:{partnerId:string}) {
     try{
       const r=await fetch(endpoint,{method:"POST",headers:{"Content-Type":"application/json"},signal:AbortSignal.timeout(30000),body:JSON.stringify({egitim_id:aday.egitim.egitim_id,islem:aday.islem,surum:aday.egitim.surum})});const d=await r.json();
       if(!r.ok)throw new Error(d.hata||"Yayın işlemi tamamlanamadı.");
-      basari(aday.islem==="aktif"?"Eğitim aktife alındı.":aday.islem==="pasif"?"Eğitim pasife alındı.":"Eğitim silindi.");setAday(null);setDetayId(null);
+      basari(aday.islem==="aktif"?"Yayın aktife alındı.":aday.islem==="pasif"?"Yayın pasife alındı.":"Yayın silindi.");setAday(null);setDetayId(null);
       await oku();
     }catch(e){setHata(e instanceof Error?e.message:"İşlem sonucu doğrulanamadı. Listeyi yenileyin.");}
     finally{kilit.current=false;setKaydediliyor(false);}
@@ -66,17 +66,17 @@ export default function PartnerYayinlari({partnerId}:{partnerId:string}) {
   return <div className={layout.sayfa}>
     <HataMesajiContainer mesajlar={mesajlar} />
     <AlertDialog open={!!aday} onOpenChange={open=>{if(!open&&!kilit.current){setAday(null);setHata("");}}}>
-      <AlertDialogContent><AlertDialogHeader><AlertDialogTitle>{aday?.islem==="sil"?"Eğitimi Sil":aday?.islem==="pasif"?"Eğitimi Pasife Al":"Eğitimi Aktife Al"}</AlertDialogTitle><AlertDialogDescription>“{aday?.egitim.egitim_adi}” {aday?.islem==="sil"?"partnerin eğitim listesinden ve Agora’dan kaldırılacaktır.":aday?.islem==="pasif"?"Agora’da gösterilmeyecektir.":"Agora’da yeniden listelenecektir."}</AlertDialogDescription></AlertDialogHeader>
+      <AlertDialogContent><AlertDialogHeader><AlertDialogTitle>{aday?.islem==="sil"?"Yayını Sil":aday?.islem==="pasif"?"Yayını Pasife Al":"Yayını Aktife Al"}</AlertDialogTitle><AlertDialogDescription>“{aday?.egitim.egitim_adi}” {aday?.islem==="sil"?"partnerin yayın listesinden ve Agora’dan kaldırılacaktır.":aday?.islem==="pasif"?"Agora’da gösterilmeyecektir.":"Agora’da yeniden listelenecektir."}</AlertDialogDescription></AlertDialogHeader>
         {hata&&<p role="alert" className={styles.notice}>{hata}</p>}
         <AlertDialogFooter><AlertDialogCancel disabled={kaydediliyor}>İptal</AlertDialogCancel><AlertDialogAction disabled={kaydediliyor} onClick={ev=>{ev.preventDefault();void uygula();}}>{kaydediliyor?"İşleniyor…":aday?.islem==="sil"?"Sil":aday?.islem==="pasif"?"Pasife Al":"Aktife Al"}</AlertDialogAction></AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
     <div className={layout.kontroller}>
-      <div className={layout.durumAlani}><SadeKapsulFiltre etiket="Yayın Durumu" deger={durum} onDegistir={v=>{if(kilit.current)return;setDurum(v);setSayfa(1);setListe(null);setDetayId(null);}} secenekler={[{deger:"tumu",etiket:"Tümü"},{deger:"yayinda",etiket:"Aktif"},{deger:"pasif",etiket:"Pasif"},{deger:"taslak",etiket:"Taslak"}].map(x=>({...x,disabled:kaydediliyor}))}/>{liste&&<span className={layout.sayac}>{liste.toplam} Eğitim</span>}</div>
+      <div className={layout.durumAlani}><SadeKapsulFiltre etiket="Yayın Durumu" deger={durum} onDegistir={v=>{if(kilit.current)return;setDurum(v);setSayfa(1);setListe(null);setDetayId(null);}} secenekler={[{deger:"tumu",etiket:"Tümü"},{deger:"yayinda",etiket:"Aktif"},{deger:"pasif",etiket:"Pasif"},{deger:"taslak",etiket:"Taslak"}].map(x=>({...x,disabled:kaydediliyor}))}/>{liste&&<span className={layout.sayac}>{liste.toplam} Yayın</span>}</div>
       <div className={layout.eylemler}>
         <form role="search" aria-label="Partner Yayın Arama" className={layout.arama} onSubmit={ev=>{ev.preventDefault();if(kilit.current)return;setArama(aramaMetni.trim());setSayfa(1);setListe(null);setDetayId(null);setAramaTekrari(n=>n+1);}}>
-          <label htmlFor="partner-yayin-arama" className="sr-only">Eğitim Adı, PE Kodu veya Fiyat</label>
-          <input id="partner-yayin-arama" type="search" placeholder="Eğitim adı, PE kodu veya fiyat" maxLength={200} value={aramaMetni} disabled={kaydediliyor} onChange={ev=>setAramaMetni(ev.target.value)}/>
+          <label htmlFor="partner-yayin-arama" className="sr-only">Yayın Adı, PE Kodu veya Fiyat</label>
+          <input id="partner-yayin-arama" type="search" placeholder="Yayın adı, PE kodu veya fiyat" maxLength={200} value={aramaMetni} disabled={kaydediliyor} onChange={ev=>setAramaMetni(ev.target.value)}/>
           <button type="submit" className={styles.button} disabled={kaydediliyor}>Ara</button>
         </form>
         <YenileButonu yenileniyor={yukleniyor} disabled={kaydediliyor} onYenile={()=>oku()}/>
@@ -89,7 +89,7 @@ export default function PartnerYayinlari({partnerId}:{partnerId:string}) {
     </div>
     {hata&&!aday&&<p role="alert" className={styles.notice}>{hata}</p>}
     {yukleniyor&&!liste&&<p role="status" className={layout.bos}>Yayınlar yükleniyor…</p>}
-    {liste&&!liste.kayitlar.length&&<p className={layout.bos}>Arama ve durum seçimine uygun eğitim bulunmuyor.</p>}
+    {liste&&!liste.kayitlar.length&&<p className={layout.bos}>Arama ve durum seçimine uygun yayın bulunmuyor.</p>}
     {detayId&&<PartnerYayinInceleme key={`${partnerId}:${detayId}`} detay={detay?.egitim.egitim_id===detayId?detay:null} hata={detayHata} baslik={liste?.kayitlar.find(e=>e.egitim_id===detayId)?.egitim_adi??"Yayın İncelemesi"} onKapat={()=>setDetayId(null)}/>}
     {liste&&!!liste.kayitlar.length&&<><MobilYayinAkisi<PartnerEgitimi>
       kayitlar={liste.kayitlar} kayitAnahtari={k=>k.egitim_id} renderKart={kart} sayacGoster={false}

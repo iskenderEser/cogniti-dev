@@ -8,8 +8,8 @@ import PartnerRaporTablosu from "./PartnerRaporTablosu";
 import styles from "./partner-ozet.module.css";
 
 const BASLIKLAR={
-  "hak-edisleri":["ID","Eğitim Adı","Sipariş Tarihi","Satın Alma Bedeli","Cogniti Hizmet Bedeli (%15)","Ödenecek Tutar","KDV","KDV’li Ödenecek Tutar","Ödeme Günü"],
-  raporlar:["ID","Eğitim Adı","Satış Fiyatı","Satılan Adet","Toplam Satış Fiyatı","Beğeni Sayısı","Favori Sayısı"],
+  "hak-edisleri":["ID","Yayın Adı","Sipariş Tarihi","Satın Alma Bedeli","Cogniti Hizmet Bedeli (%15)","Ödenecek Tutar","KDV","KDV’li Ödenecek Tutar","Ödeme Günü"],
+  raporlar:["ID","Yayın Adı","Satış Fiyatı","Satılan Adet","Toplam Satış Fiyatı","Beğeni Sayısı","Favori Sayısı"],
 };
 
 export default function PartnerOzetSayfasi({firmaAdi,tur,partnerId}:{firmaAdi:string;tur:keyof typeof BASLIKLAR;partnerId?:string}) {

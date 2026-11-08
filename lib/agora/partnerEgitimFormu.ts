@@ -25,16 +25,16 @@ export function partnerAciklamaSinirla(metin: string): string {
 }
 export function partnerEgitimFormDogrula(body: Record<string, unknown>) {
   const ad = egitimAdiDogrula(body.egitim_adi);
-  if (!ad) return { ok: false as const, hata: "Eğitim Adı 3–200 karakter olmalıdır." };
-  if (typeof body.kategori !== "string" || !TALEP_TURU_SIRA.includes(body.kategori as TalepTuru)) return { ok: false as const, hata: "Eğitim Kategorisi seçin." };
-  // Agora eğitimi birden çok kitleye sunulabilir; firma yayın grubunun tekli kuralı uygulanmaz.
+  if (!ad) return { ok: false as const, hata: "Yayın Adı 3–200 karakter olmalıdır." };
+  if (typeof body.kategori !== "string" || !TALEP_TURU_SIRA.includes(body.kategori as TalepTuru)) return { ok: false as const, hata: "Yayın Kategorisi seçin." };
+  // Agora yayını birden çok kitleye sunulabilir; firma yayın grubunun tekli kuralı uygulanmaz.
   const hedefler = body.hedef_roller;
   const roller = Array.isArray(hedefler) && hedefler.length > 0
     && hedefler.every((r: unknown) => typeof r === "string" && TUM_HEDEF_ROLLER.includes(r as HedefRol))
     ? TUM_HEDEF_ROLLER.filter(r => hedefler.includes(r)) : null;
   if (!roller) return { ok: false as const, hata: "Geçerli bir Hedef Kitle seçin." };
   if (body.yayin_araci !== "video" && body.yayin_araci !== "podcast") return { ok: false as const, hata: "Video veya Podcast seçin." };
-  if (typeof body.aciklama !== "string" || !body.aciklama.trim() || body.aciklama.length > 10000 || partnerKelimeSayisi(body.aciklama) > 500) return { ok: false as const, hata: "Eğitim Hakkında alanına en fazla 500 kelime yazın." };
+  if (typeof body.aciklama !== "string" || !body.aciklama.trim() || body.aciklama.length > 10000 || partnerKelimeSayisi(body.aciklama) > 500) return { ok: false as const, hata: "Yayın Hakkında alanına en fazla 500 kelime yazın." };
   if (typeof body.fiyat_tl !== "string" || !/^\d{1,10}([.,]\d{1,2})?$/.test(body.fiyat_tl)) return { ok: false as const, hata: "Fiyatı TL olarak, en fazla iki ondalıkla girin." };
   const fiyat = Number(body.fiyat_tl.replace(",", "."));
   if (!Number.isFinite(fiyat) || fiyat < 0 || fiyat > 9999999999.99) return { ok: false as const, hata: "Fiyat geçersiz." };

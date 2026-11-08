@@ -131,5 +131,28 @@ try {
   await db.exec('SET ROLE service_role');
   eq((await save(admin,p1,id(225),'2027-02-02','2027-02-01')).rows[0].data.planlanan_odeme_gunu,'2027-02-02');
   await db.exec('RESET ROLE');
+  const toplamSql = await file('agora_partner_hakedis_toplamlar.sql');
+  await db.exec(toplamSql); await db.exec(toplamSql); passed += 2;
+  const filtreli = async (q='', bas=null, son=null, page=1) => (await db.query(
+    'SELECT agora_partner_hakedis_filtrele($1,$2,$3,$4::date,$5::date) AS data', [token,page,q,bas,son])).rows[0].data;
+  const beklenen = {satin_alma_bedeli:250000,hizmet_bedeli:37500,hak_edis:212500,kdv_tutari:42500,kdvli_odenecek_tutar:255000};
+  eq((await partnerRead()).genel_toplam,beklenen);
+  eq((await adminRead()).filtre_toplam,beklenen);
+  eq((await filtreli()).filtre_toplam,beklenen);
+  eq((await filtreli('',null,null,2)).filtre_toplam,beklenen);
+  eq((await filtreli('eşleşmez')).filtre_toplam,{satin_alma_bedeli:0,hizmet_bedeli:0,hak_edis:0,kdv_tutari:0,kdvli_odenecek_tutar:0});
+  eq((await filtreli('eşleşmez')).genel_toplam,beklenen);
+  await db.query("UPDATE agora_siparisleri SET egitim_adi='Tek kayıt',siparis_tarihi='2026-11-07T12:00:00+03' WHERE siparis_id=$1",[id(225)]);
+  eq((await filtreli('Tek kayıt')).filtre_toplam,{satin_alma_bedeli:10000,hizmet_bedeli:1500,hak_edis:8500,kdv_tutari:1700,kdvli_odenecek_tutar:10200});
+  eq((await filtreli('Tek kayıt')).genel_toplam,beklenen);
+  eq((await filtreli('', '2026-11-07','2026-11-07')).filtre_toplam.satin_alma_bedeli,10000);
+  eq((await filtreli('eşleşmez','2026-11-07','2026-11-07')).filtre_toplam.satin_alma_bedeli,0);
+  eq((await adminRead(p3)).genel_toplam.satin_alma_bedeli,0);
+  for(const role of ['anon','authenticated','service_role']) {
+    await db.exec('SET ROLE '+role);
+    await fail(db.query("SELECT agora_partner_hakedis_filtre_kayitlari($1,1,'',NULL,NULL)",[p1]));
+    if(role==='service_role')eq((await filtreli()).genel_toplam,beklenen);else await fail(filtreli());
+    await db.exec('RESET ROLE');
+  }
   console.log(JSON.stringify({ passed, scope: 'Yerel PGlite; sahte kimlik/oturum tabloları, gerçek sipariş şeması, admin doğrulayıcı ve hak ediş SQLleri. Supabase bağlantısı yok.' }));
 } finally { await db.close(); }

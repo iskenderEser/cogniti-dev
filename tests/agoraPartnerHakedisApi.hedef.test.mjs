@@ -13,7 +13,8 @@ const partner = id(11), admin = id(1);
 let partnerAuth = true, adminRole = 'admin', adminActive = true, calls = [], rpcError = null, override;
 const row = { siparis_id: id(21), partner_egitim_id: 'PE-10001', egitim_adi: 'Eğitim', siparis_tarihi: '2026-11-06T08:00:00+00:00',
   satin_alma_bedeli: 10000, hizmet_bedeli: 1500, hak_edis: 8500, kdv_tutari: 1700, kdvli_odenecek_tutar: 10200, planlanan_odeme_gunu: null, odenen_gun: null };
-const list = (partnerId = partner, sayfa = 1) => ({ partner_id: partnerId, toplam: 1, sayfa, sayfa_boyutu: 20, kayitlar: [structuredClone(row)] });
+const toplamlar={satin_alma_bedeli:10000,hizmet_bedeli:1500,hak_edis:8500,kdv_tutari:1700,kdvli_odenecek_tutar:10200};
+const list = (partnerId = partner, sayfa = 1) => ({ genel_toplam:{...toplamlar},filtre_toplam:{...toplamlar}, partner_id: partnerId, toplam: 1, sayfa, sayfa_boyutu: 20, kayitlar: [structuredClone(row)] });
 const db = { rpc: async (name, args) => {
   calls.push({ name, args });
   return { data: override === undefined ? list(args.p_partner_id ?? partner, args.p_sayfa) : override, error: rpcError };
@@ -110,4 +111,7 @@ rpcError=null;override={siparis_id:row.siparis_id,planlanan_odeme_gunu:null};
 eq((await patch({...update,planlanan_odeme_gunu:null})).status,200);
 override={siparis_id:id(99),planlanan_odeme_gunu:'2027-01-20'};
 eq((await patch(update)).status,503);
+for(const alan of ['genel_toplam','filtre_toplam'])for(const bad of [null,{}, {...toplamlar,hak_edis:-1},{...toplamlar,kdv_tutari:'1700'}]) {
+  override={...list(),[alan]:bad};eq((await get()).status,503);eq((await getAdmin()).status,503);
+}
 console.log(JSON.stringify({ passed, scope: 'Gerçek iki GET route ve yanıt doğrulayıcı; sahte oturum/DB bağımlılıkları. Partner kapsamı, admin rolü, sayfalama ve hata ayrımı.' }));

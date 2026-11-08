@@ -14,7 +14,12 @@ export interface PartnerHakEdisKaydi {
   odenen_gun: string | null;
 }
 
+export type PartnerHakEdisToplamlari = Pick<PartnerHakEdisKaydi,
+  "satin_alma_bedeli" | "hizmet_bedeli" | "hak_edis" | "kdv_tutari" | "kdvli_odenecek_tutar">;
+
 export interface PartnerHakEdisListesi {
+  genel_toplam: PartnerHakEdisToplamlari;
+  filtre_toplam: PartnerHakEdisToplamlari;
   partner_id: string;
   toplam: number;
   sayfa: number;
@@ -55,6 +60,13 @@ export function partnerHakEdisListesiGecerli(
   if (r.partner_id !== partnerId || !Number.isSafeInteger(r.toplam) || Number(r.toplam) < 0
     || r.sayfa !== sayfa || r.sayfa_boyutu !== 20 || !Array.isArray(r.kayitlar)
     || r.kayitlar.length > 20 || r.kayitlar.length > Number(r.toplam)) return false;
+  for (const alan of ["genel_toplam", "filtre_toplam"]) {
+    const toplam = r[alan];
+    if (!toplam || typeof toplam !== "object" || Array.isArray(toplam)) return false;
+    const t = toplam as Record<string, unknown>;
+    if (!["satin_alma_bedeli", "hizmet_bedeli", "hak_edis", "kdv_tutari", "kdvli_odenecek_tutar"].every(k =>
+      typeof t[k] === "number" && Number.isFinite(t[k]) && Number(t[k]) >= 0)) return false;
+  }
   const kayitlar: unknown[] = r.kayitlar;
   if (!kayitlar.every(hakedisKaydiGecerli)) return false;
   return new Set(kayitlar.map(r => r.siparis_id)).size === kayitlar.length;

@@ -35,7 +35,7 @@ export default function PartnerEgitimSayfasi({sirketAdi,egitim,istekId}:{sirketA
       <div className={styles.baslik}><h1>{egitim ? "Taslağı Düzenle" : <><svg aria-hidden="true" className="inline-block rounded-full align-middle" width="20" height="20" viewBox="0 0 20 20">
           <circle cx="10" cy="10" r="10" fill="var(--tema-hata)" />
           <path d="M0 10h20M10 0v20" stroke="white" strokeWidth="1" />
-        </svg>{" "}Yeni Eğitim</>}</h1><Button type="button" variant="outline" disabled={mesgul} onClick={listeyeDon}><ArrowLeft size={16} aria-hidden="true"/>Eğitimlerim</Button></div>
+        </svg>{" "}Yeni Yayın</>}</h1><Button type="button" variant="outline" disabled={mesgul} onClick={listeyeDon}><ArrowLeft size={16} aria-hidden="true"/>Yayınlarım</Button></div>
       {hata&&<p role="alert" className={styles.hata}>{hata}</p>}
       <PartnerEgitimFormu ikiSutun egitim={egitim} istekId={istekId} baslikGoster={false} onDegisiklik={setDegisti}
         onKapat={egitim ? listeyeDon : undefined} onIslem={aktif=>{kilit.current=aktif;setMesgul(aktif);}}

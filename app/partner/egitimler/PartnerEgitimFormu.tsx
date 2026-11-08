@@ -45,9 +45,9 @@ export default function PartnerEgitimFormu({ egitim, istekId, onKapat, onKaydedi
     void (async () => {
       try {
         const r = await fetch(`/partner/api/egitimler?egitim_id=${egitim.egitim_id}`, { cache: "no-store", signal: AbortSignal.any([c.signal, AbortSignal.timeout(15000)]) });
-        const d = await r.json(); if (!r.ok) throw new Error(d.hata || "Eğitim okunamadı.");
+        const d = await r.json(); if (!r.ok) throw new Error(d.hata || "Yayın okunamadı.");
         if (!c.signal.aborted) { const bilgiler = { ...bosPartnerEgitimFormu(), ...d.bilgiler, egitim_adi: d.egitim_adi }; const yuklenen={ ...bilgiler, soru_taslaklari: taslaklariBoyutla(bilgiler.soru_taslaklari, bilgiler.soru_seti_buyuklugu, bilgiler.secenek_sayisi) }; baslangicVerisi.current=JSON.stringify(yuklenen); setForm(yuklenen); setSurum(d.surum); setOkundu(true); }
-      } catch (e) { if (!c.signal.aborted) setHata(e instanceof Error ? e.message : "Eğitim okunamadı."); }
+      } catch (e) { if (!c.signal.aborted) setHata(e instanceof Error ? e.message : "Yayın okunamadı."); }
       finally { if (!c.signal.aborted) setYukleniyor(false); }
     })(); return () => c.abort();
   }, [egitim]);
@@ -81,7 +81,7 @@ export default function PartnerEgitimFormu({ egitim, istekId, onKapat, onKaydedi
     kilit.current = true; setKaydediliyor(true); onIslem(true); setHata("");
     try {
       const r = await fetch("/partner/api/egitimler", { method: "POST", headers: { "Content-Type": "application/json" }, signal: AbortSignal.timeout(20000), body: JSON.stringify({ ...form, ayrintili: true, egitim_id: egitimId, surum, istek_id: istekId }) });
-      const d = await r.json(); if (!r.ok) throw new Error(d.hata || "Eğitim kaydedilemedi.");
+      const d = await r.json(); if (!r.ok) throw new Error(d.hata || "Yayın kaydedilemedi.");
       setKayitTamamlandi(true);
       await onKaydedildi();
     } catch (e) { setHata(e instanceof Error ? e.message : "Kayıt sonucu doğrulanamadı. Listeyi kontrol edin."); }
@@ -92,8 +92,8 @@ export default function PartnerEgitimFormu({ egitim, istekId, onKapat, onKaydedi
       ? f.hedef_roller.filter(r => r !== hedef)
       : [...f.hedef_roller, hedef] }));
   }
-  return <section className={ikiSutun ? `${styles.editor} ${styles.panelliEditor}` : styles.editor} aria-label="Eğitim Oluşturma Formu">
-    {baslikGoster&&<div className={styles.editorBaslik}><h2>{egitim ? "Eğitim Bilgileri" : "Yeni Eğitim Ekle"}</h2></div>}
+  return <section className={ikiSutun ? `${styles.editor} ${styles.panelliEditor}` : styles.editor} aria-label="Yayın Oluşturma Formu">
+    {baslikGoster&&<div className={styles.editorBaslik}><h2>{egitim ? "Yayın Bilgileri" : "Yeni Yayın Ekle"}</h2></div>}
     <form onSubmit={kaydet} noValidate className={styles.formAlanlari}>
       <div className={ikiSutun?styles.formSutunlari:styles.formAlanlari}>
       <div className={styles.formAlanlari}>
@@ -103,8 +103,8 @@ export default function PartnerEgitimFormu({ egitim, istekId, onKapat, onKaydedi
       <div data-adim="2" data-aktif={sirali && aktifAdim === 2} aria-disabled={sirali && !hedefTamam} className={ikiSutun ? `${styles.formAlanlari} ${styles.formPaneli}` : styles.formAlanlari}>
         <fieldset disabled={bilgilerKapali} className={styles.formAlanlari}>
           <div className={styles.formSatiri}>
-          <SadeFormSecimi etiket="Eğitim Kategorisi" value={form.kategori} onChange={e => guncelle("kategori", e.target.value as TalepTuru)}><option value="">Kategori Seçin</option>{TALEP_TURU_SIRA.map(k => <option key={k} value={k}>{TALEP_TURU_KURALLARI[k].ad}</option>)}</SadeFormSecimi>
-          <div><label htmlFor="partner-egitim-adi">Eğitim Adı</label><Input ref={adInput} id="partner-egitim-adi" value={form.egitim_adi} maxLength={200} onChange={e => guncelle("egitim_adi", e.target.value)} /></div>
+          <SadeFormSecimi etiket="Yayın Kategorisi" value={form.kategori} onChange={e => guncelle("kategori", e.target.value as TalepTuru)}><option value="">Kategori Seçin</option>{TALEP_TURU_SIRA.map(k => <option key={k} value={k}>{TALEP_TURU_KURALLARI[k].ad}</option>)}</SadeFormSecimi>
+          <div><label htmlFor="partner-egitim-adi">Yayın Adı</label><Input ref={adInput} id="partner-egitim-adi" value={form.egitim_adi} maxLength={200} onChange={e => guncelle("egitim_adi", e.target.value)} /></div>
           </div>
         </fieldset>
         <PartnerMedyaAlanlari egitimId={egitimId} egitimAdi={form.egitim_adi} istekId={istekId} tur={form.yayin_araci} disabled={bilgilerKapali}
@@ -114,7 +114,7 @@ export default function PartnerEgitimFormu({ egitim, istekId, onKapat, onKaydedi
             onIslem={aktif => { setMedyaYukleniyor(aktif); kilit.current=aktif; onIslem(aktif); }} />
         <fieldset disabled={bilgilerKapali} className={styles.formAlanlari}>
           <div>
-            <label htmlFor="partner-egitim-aciklama">Eğitim Hakkında</label>
+            <label htmlFor="partner-egitim-aciklama">Yayın Hakkında</label>
             <div className={styles.aciklamaKutusu}>
               <textarea ref={aciklamaRef} className={styles.aciklama} id="partner-egitim-aciklama" aria-describedby="partner-egitim-kelime-sayisi" rows={3} maxLength={10000} value={form.aciklama} onChange={e => guncelle("aciklama", partnerAciklamaSinirla(e.target.value))} />
               <p id="partner-egitim-kelime-sayisi" className={styles.kelimeSayaci}>{partnerKelimeSayisi(form.aciklama)} / 500 Kelime</p>
@@ -164,13 +164,13 @@ export default function PartnerEgitimFormu({ egitim, istekId, onKapat, onKaydedi
         </section>
       </fieldset>
       </div>
-      {yukleniyor && <p role="status">Eğitim Yükleniyor…</p>}
+      {yukleniyor && <p role="status">Yayın Yükleniyor…</p>}
       {uyari && <p role="status" className={styles.bilgi}>{uyari}</p>}
       {hata && <p role="alert" className={styles.hata}>{hata}</p>}
       <div className={styles.editorDugmeler}>
         {!saltOkunur && soruSetiTamam && (!sirali || bilgilerTamam) && (
           <Button type="submit" disabled={fiyatKapali || !partnerEgitimFormDogrula(form as unknown as Record<string, unknown>).ok} className="bg-[var(--tema-kontrol-eylem)] text-white hover:bg-[var(--tema-kontrol-eylem)] hover:brightness-95">
-            {kaydediliyor ? "Kaydediliyor…" : "Eğitimi Kaydet"}
+            {kaydediliyor ? "Kaydediliyor…" : "Yayını Kaydet"}
           </Button>
         )}
         {onKapat && (

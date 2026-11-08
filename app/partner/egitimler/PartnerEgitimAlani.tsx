@@ -56,14 +56,14 @@ export default function PartnerEgitimAlani({ sirketAdi, kaydedildi=false }: { si
         setSayfa(istenenSayfa);
       }
     } catch {
-      if (surum === kontrol.surum && !controller.signal.aborted) { if(!ekle)setListe(null); setHata("Eğitimleriniz okunamadı. Yenile ile tekrar deneyin."); }
+      if (surum === kontrol.surum && !controller.signal.aborted) { if(!ekle)setListe(null); setHata("Yayınlarınız okunamadı. Yenile ile tekrar deneyin."); }
     } finally { if (surum === kontrol.surum) setYukleniyor(false); }
   }, [durum, arama, baslangic, bitis]);
   useEffect(() => { const kontrol = istek.current; void oku(); return () => { kontrol.surum++; kontrol.controller?.abort(); }; }, [oku,aramaTekrari]);
 
   useEffect(()=>{
     if(kaydedildi&&!bildirimGosterildi.current){
-      bildirimGosterildi.current=true;basari("Eğitim bilgileri kaydedildi.");
+      bildirimGosterildi.current=true;basari("Yayın bilgileri kaydedildi.");
       window.history.replaceState(window.history.state,"","/partner/egitimler");
     }
   },[kaydedildi,basari]);
@@ -82,11 +82,11 @@ export default function PartnerEgitimAlani({ sirketAdi, kaydedildi=false }: { si
       const data = await r.json();
       if (!r.ok) {
         if (r.status === 401) { window.location.replace("/partner/profil"); return; }
-        if (r.status === 409) { setSilmeAdayi(null); await oku(); setHata(typeof data.hata === "string" ? data.hata : "Eğitim değişmiş. Listeyi kontrol edin."); return; }
-        throw new Error(typeof data.hata === "string" ? data.hata : "Eğitim silinemedi.");
+        if (r.status === 409) { setSilmeAdayi(null); await oku(); setHata(typeof data.hata === "string" ? data.hata : "Yayın değişmiş. Listeyi kontrol edin."); return; }
+        throw new Error(typeof data.hata === "string" ? data.hata : "Yayın silinemedi.");
       }
       if (editor?.egitim?.egitim_id === egitim.egitim_id) setEditor(null);
-      setSilmeAdayi(null); basari("Eğitim silindi.");
+      setSilmeAdayi(null); basari("Yayın silindi.");
       await oku();
     } catch (e) { setHata(e instanceof Error ? e.message : "Silme sonucu doğrulanamadı. Listeyi yenileyip kontrol edin."); }
     finally { kilit.current = false; setKaydediliyor(false); setSilinenId(null); }
@@ -96,8 +96,8 @@ export default function PartnerEgitimAlani({ sirketAdi, kaydedildi=false }: { si
     kilit.current=true;setKaydediliyor(true);setHata("");
     try {
       const r=await fetch("/partner/api/yayinla",{method:"POST",headers:{"Content-Type":"application/json"},signal:AbortSignal.timeout(30000),body:JSON.stringify({egitim_id:egitim.egitim_id,surum:egitim.surum})});
-      const d=await r.json();if(!r.ok)throw new Error(d.hata||"Eğitim yayımlanamadı.");
-      setYayinAdayi(null);basari("Eğitim Agora’da yayımlandı.");
+      const d=await r.json();if(!r.ok)throw new Error(d.hata||"Yayın yayımlanamadı.");
+      setYayinAdayi(null);basari("Yayın Agora’da yayımlandı.");
       await oku();
     }catch(e){setHata(e instanceof Error?e.message:"Yayımlama sonucu doğrulanamadı. Listeyi yenileyin.");}
     finally{kilit.current=false;setKaydediliyor(false);}
@@ -115,17 +115,17 @@ export default function PartnerEgitimAlani({ sirketAdi, kaydedildi=false }: { si
   const kart=(e:PartnerEgitimi)=><PartnerEgitimKarti key={e.egitim_id} egitim={e} onIncele={()=>editorAc(e)} islemler={<div className={styles.kartIslemleri} data-islem-duzeni="yatay">
     {e.durum==="taslak"&&<Button type="button" className={styles.yayimlaButonu} disabled={kaydediliyor||cikiliyor||!!editor} onClick={ev=>{ev.stopPropagation();setHata("");setYayinAdayi(e);}}><Send size={12} aria-hidden="true"/>Agora’da Yayımla</Button>}
     <Button type="button" variant="outline" disabled={kaydediliyor||cikiliyor} onClick={ev=>{ev.stopPropagation();editorAc(e);}}><Pencil size={12} aria-hidden="true"/>İncele</Button>
-    <Button type="button" variant="outline" className={styles.silButonu} disabled={kaydediliyor||cikiliyor} onClick={ev=>{ev.stopPropagation();setHata("");setSilmeAdayi(e);}}><Trash2 size={12} aria-hidden="true"/>{silinenId===e.egitim_id?"Siliniyor…":"Eğitimi Sil"}</Button>
+    <Button type="button" variant="outline" className={styles.silButonu} disabled={kaydediliyor||cikiliyor} onClick={ev=>{ev.stopPropagation();setHata("");setSilmeAdayi(e);}}><Trash2 size={12} aria-hidden="true"/>{silinenId===e.egitim_id?"Siliniyor…":"Yayını Sil"}</Button>
   </div>}/>;
   const egitimFormu=editor?<PartnerEgitimFormu key={editor.istekId} egitim={editor.egitim} istekId={editor.istekId} saltOkunur baslikGoster={false} onKapat={()=>{if(!kilit.current)setEditor(null);}} onIslem={aktif => { kilit.current = aktif; setKaydediliyor(aktif); }} onKaydedildi={async () => {
-        setEditor(null); basari("Eğitim bilgileri kaydedildi.");
+        setEditor(null); basari("Yayın bilgileri kaydedildi.");
         if (durum !== "tumu" || arama || baslangic || bitis) { setListe(null); setDurum("tumu"); setArama(""); setAramaMetni(""); setBaslangic(""); setBitis(""); } else await oku();
       }} />:null;
   return <PartnerKabugu className={styles.page} firmaAdi={sirketAdi} onCikis={()=>void cikis()} onAnaSayfa={()=>router.push("/partner/egitimler")} engelli={kaydediliyor||cikiliyor}>
     <HataMesajiContainer mesajlar={mesajlar} />
     <AlertDialog open={!!silmeAdayi} onOpenChange={open => { if (!open && !kilit.current) { setSilmeAdayi(null); setHata(""); } }}>
       <AlertDialogContent>
-        <AlertDialogHeader><AlertDialogTitle>Eğitimi Sil</AlertDialogTitle><AlertDialogDescription>“{silmeAdayi?.egitim_adi}” eğitimini silmek istediğinize emin misiniz? Eğitim, listenizden kaldırılacak.</AlertDialogDescription></AlertDialogHeader>
+        <AlertDialogHeader><AlertDialogTitle>Yayını Sil</AlertDialogTitle><AlertDialogDescription>“{silmeAdayi?.egitim_adi}” yayınını silmek istediğinize emin misiniz? Yayın, listenizden kaldırılacak.</AlertDialogDescription></AlertDialogHeader>
         {hata && <p role="alert" className={styles.hata}>{hata}</p>}
         <AlertDialogFooter>
           <AlertDialogCancel disabled={kaydediliyor}>İptal</AlertDialogCancel>
@@ -144,7 +144,7 @@ export default function PartnerEgitimAlani({ sirketAdi, kaydedildi=false }: { si
       </AlertDialogContent>
     </AlertDialog>
     <div className={styles.icerik}>
-      <div className={styles.baslik}><div><h1>Eğitimlerim</h1></div><Button type="button" className={styles.yeniButonu} disabled={!acik} onClick={() => editorAc(null)}><Plus size={18} aria-hidden="true" />Yeni Eğitim</Button></div>
+      <div className={styles.baslik}><div><h1>Yayınlarım</h1></div><Button type="button" className={styles.yeniButonu} disabled={!acik} onClick={() => editorAc(null)}><Plus size={18} aria-hidden="true" />Yeni Yayın</Button></div>
       {editor?.egitim?<Dialog.Root open onOpenChange={open=>{if(!open&&!kilit.current)setEditor(null);}}>
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 z-50 bg-[var(--tema-yayin-detay-ortu)] backdrop-blur-sm"/>
@@ -162,20 +162,20 @@ export default function PartnerEgitimAlani({ sirketAdi, kaydedildi=false }: { si
               </div>
               {editor.egitim.durum==="taslak"&&<Button type="button" variant="outline" onClick={()=>router.push(`/partner/egitimler/yeni?egitim=${editor.egitim!.egitim_id}`)}><Pencil size={14} aria-hidden="true"/>Taslağı Düzenle</Button>}
               <Dialog.Close disabled={kaydediliyor} aria-label="İncelemeyi Kapat" className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-[var(--tema-yayin-detay-cizgi)] text-[var(--tema-yayin-detay-aciklama)] hover:bg-[var(--tema-yayin-detay-kapat-hover)] disabled:opacity-50"><X className="size-4" aria-hidden="true"/></Dialog.Close>
-              <Dialog.Description className="sr-only">Seçilen eğitimin bilgilerini, öğrenme aracını ve soru setini inceleyin.</Dialog.Description>
+              <Dialog.Description className="sr-only">Seçilen yayının bilgilerini, öğrenme aracını ve soru setini inceleyin.</Dialog.Description>
             </header>
             <div className="min-h-0 flex-1 overflow-y-auto bg-[var(--tema-yayin-detay-govde-zemin)] p-4 sm:p-6">{egitimFormu}</div>
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>:null}
       <div className={styles.araclar}>
-        <div className={styles.durumAlani}><SadeKapsulFiltre etiket="Eğitim Durumu" deger={durum} onDegistir={v=>{if(kilit.current||!["tumu","taslak","yayinda","pasif"].includes(v))return;setDurum(v as PartnerEgitimDurumu|"tumu");setListe(null);}} secenekler={[
+        <div className={styles.durumAlani}><SadeKapsulFiltre etiket="Yayın Durumu" deger={durum} onDegistir={v=>{if(kilit.current||!["tumu","taslak","yayinda","pasif"].includes(v))return;setDurum(v as PartnerEgitimDurumu|"tumu");setListe(null);}} secenekler={[
           {deger:"tumu",etiket:"Tümü"},{deger:"taslak",etiket:"Taslak"},{deger:"yayinda",etiket:"Yayında"},{deger:"pasif",etiket:"Pasif"},
-        ].map(x=>({...x,disabled:kaydediliyor||cikiliyor}))}/>{liste&&<span className={styles.sayac}>{liste.toplam} Eğitim</span>}</div>
+        ].map(x=>({...x,disabled:kaydediliyor||cikiliyor}))}/>{liste&&<span className={styles.sayac}>{liste.toplam} Yayın</span>}</div>
         <div className={styles.eylemler}>
-          <form role="search" aria-label="Eğitim Arama" className={styles.arama} onSubmit={ev=>{ev.preventDefault();if(kilit.current||cikiliyor)return;setArama(aramaMetni.trim());setListe(null);setAramaTekrari(n=>n+1);}}>
-            <label htmlFor="partner-egitim-arama" className="sr-only">Eğitim Adı, PE Kodu veya Fiyat</label>
-            <input id="partner-egitim-arama" type="search" placeholder="Eğitim adı, PE kodu veya fiyat" maxLength={200} value={aramaMetni} disabled={kaydediliyor||cikiliyor} onChange={ev=>setAramaMetni(ev.target.value)}/>
+          <form role="search" aria-label="Yayın Arama" className={styles.arama} onSubmit={ev=>{ev.preventDefault();if(kilit.current||cikiliyor)return;setArama(aramaMetni.trim());setListe(null);setAramaTekrari(n=>n+1);}}>
+            <label htmlFor="partner-egitim-arama" className="sr-only">Yayın Adı, PE Kodu veya Fiyat</label>
+            <input id="partner-egitim-arama" type="search" placeholder="Yayın adı, PE kodu veya fiyat" maxLength={200} value={aramaMetni} disabled={kaydediliyor||cikiliyor} onChange={ev=>setAramaMetni(ev.target.value)}/>
             <Button type="submit" className={styles.araButonu} disabled={kaydediliyor||cikiliyor}>Ara</Button>
           </form>
           <YenileButonu yenileniyor={yukleniyor} disabled={kaydediliyor||cikiliyor} onYenile={()=>oku()}/>
@@ -187,18 +187,18 @@ export default function PartnerEgitimAlani({ sirketAdi, kaydedildi=false }: { si
         {(baslangic||bitis)&&<Button type="button" variant="outline" disabled={kaydediliyor||cikiliyor} onClick={()=>{setBaslangic("");setBitis("");setListe(null);}}>Tarihleri Temizle</Button>}
       </div>
       {hata && !silmeAdayi && !yayinAdayi && <p role="alert" className={styles.hata}>{hata}</p>}
-      {yukleniyor && !liste && <p role="status" className={styles.bilgi}>Eğitimleriniz yükleniyor…</p>}
+      {yukleniyor && !liste && <p role="status" className={styles.bilgi}>Yayınlarınız yükleniyor…</p>}
       {liste && liste.toplam === 0 && !arama && !baslangic && !bitis && <section className={styles.bos}>
-        <div className={styles.bosSimge}><GraduationCap size={36} aria-hidden="true" /></div><h2>{durum === "tumu" ? "İlk Eğitiminizi Ekleyin" : "Bu Durumda Eğitim Bulunmuyor"}</h2><p>{durum === "tumu" ? "Eğitimlerinizi burada listeleyebilir ve yönetebilirsiniz." : "Diğer eğitimlerinizi görmek için Tümü seçeneğine geçin."}</p>
-        {durum === "tumu" && <Button type="button" className={styles.yeniButonu} disabled={!acik} onClick={() => editorAc(null)}><Plus size={18} aria-hidden="true" />Yeni Eğitim</Button>}
+        <div className={styles.bosSimge}><GraduationCap size={36} aria-hidden="true" /></div><h2>{durum === "tumu" ? "İlk Yayınınızı Ekleyin" : "Bu Durumda Yayın Bulunmuyor"}</h2><p>{durum === "tumu" ? "Yayınlarınızı burada listeleyebilir ve yönetebilirsiniz." : "Diğer yayınlarınızı görmek için Tümü seçeneğine geçin."}</p>
+        {durum === "tumu" && <Button type="button" className={styles.yeniButonu} disabled={!acik} onClick={() => editorAc(null)}><Plus size={18} aria-hidden="true" />Yeni Yayın</Button>}
       </section>}
-      {liste && liste.toplam === 0 && !!(arama||baslangic||bitis) && <p className={styles.bilgi}>Arama ve filtrelere uygun eğitim bulunamadı.</p>}
+      {liste && liste.toplam === 0 && !!(arama||baslangic||bitis) && <p className={styles.bilgi}>Arama ve filtrelere uygun yayın bulunamadı.</p>}
       {liste && liste.kayitlar.length > 0 && <>
         <MobilYayinAkisi<PartnerEgitimi> kayitlar={liste.kayitlar} kayitAnahtari={e=>e.egitim_id} renderKart={kart} sayacGoster={false}
           sifirlamaAnahtari={`${durum}:${arama}:${baslangic}:${bitis}`}
-          masaustuIcerik={<div className={rafStyles.rafAlani}><AgoraRafOklari raf={raf} baslik="Eğitimlerim"/><div key={`${durum}:${arama}:${baslangic}:${bitis}`} ref={raf} className={styles.kartlar}>{liste.kayitlar.map(e=><div key={e.egitim_id} className={styles.kart}>{kart(e)}</div>)}</div></div>}/>
+          masaustuIcerik={<div className={rafStyles.rafAlani}><AgoraRafOklari raf={raf} baslik="Yayınlarım"/><div key={`${durum}:${arama}:${baslangic}:${bitis}`} ref={raf} className={styles.kartlar}>{liste.kayitlar.map(e=><div key={e.egitim_id} className={styles.kart}>{kart(e)}</div>)}</div></div>}/>
         {!yukleniyor&&<DahaFazlaGoster dahaVar={liste.kayitlar.length<liste.toplam} gorunenSayi={liste.kayitlar.length} toplam={liste.toplam} onGoster={()=>{if(!kilit.current&&!cikiliyor)void oku(sayfa+1,true);}}/>}
-        {yukleniyor&&<p role="status" className={styles.bilgi}>Eğitimleriniz yükleniyor…</p>}
+        {yukleniyor&&<p role="status" className={styles.bilgi}>Yayınlarınız yükleniyor…</p>}
       </>}
     </div>
   </PartnerKabugu>;

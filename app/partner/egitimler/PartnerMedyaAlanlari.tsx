@@ -100,7 +100,7 @@ export default function PartnerMedyaAlanlari({egitimId,egitimAdi,istekId,tur,dis
     kilit.current=true;setAktif(rol);setYuzde(0);setHata("");setMesaj("");onIslem(true);
     let id=egitimId;
     try{
-      if(egitimAdi.trim().length<3)throw new Error("Önce Eğitim Adını Girin.");
+      if(egitimAdi.trim().length<3)throw new Error("Önce Yayın Adını Girin.");
       const video=tur==="video";
       if(video){
         if(!["video/mp4","video/webm","video/quicktime"].includes(file.type)||file.size<=0||file.size>5*1024**3)throw new Error("MP4, WebM veya MOV seçin (en fazla 5 GB).");
@@ -138,7 +138,7 @@ export default function PartnerMedyaAlanlari({egitimId,egitimAdi,istekId,tur,dis
           <span>Dosyanızı Yükleyin</span>
           <span className={styles.medyaBoyutBilgisi}>{video ? "(Sınır 5 GB)" : "(Sınır 250 MB)"}</span>
         </label>
-        <input id={`partner-medya-${rol}`} aria-label={video?"Eğitim Videosu Yükle":"Podcast Yükle"} type="file" disabled={disabled||aktif!==null} accept={video?".mp4,.webm,.mov":".mp3,.m4a,.aac"} className={styles.medyaInput} onChange={e=>{const file=e.target.files?.[0];e.target.value="";if(file)void yukle(file);}} /></>}
+        <input id={`partner-medya-${rol}`} aria-label={video?"Yayın Videosu Yükle":"Podcast Yükle"} type="file" disabled={disabled||aktif!==null} accept={video?".mp4,.webm,.mov":".mp3,.m4a,.aac"} className={styles.medyaInput} onChange={e=>{const file=e.target.files?.[0];e.target.value="";if(file)void yukle(file);}} /></>}
         {aktif===rol&&<div role="status"><progress max={100} value={yuzde} aria-label="Yükleme İlerlemesi" /> %{yuzde} Yükleniyor…</div>}
         {dosya&&<div className={styles.medyaSonuc}><strong>{dosya.dosya_adi}</strong>{dosya.durum !== "hazir" && <p>{dosya.durum==="isleniyor"?"Aktarıldı · İşleniyor":dosya.durum==="hata"?"İşlenemedi · Yeniden Yükleyin":"Aktarım Tamamlanmadı · Yeniden Yükleyin"}</p>}
           {egitimId&&dosya.durum==="hazir"&&<PartnerYayinOynaticisi key={tur+":"+dosya.yukleme_id} egitimId={egitimId} tur={tur} yerlesikTamEkran/>}

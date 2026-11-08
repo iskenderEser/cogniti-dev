@@ -16,7 +16,7 @@ export async function partnerProfilBaglami() {
 }
 
 
-/** Eğitim sayfaları ve sonraki eğitim API'leri bu sunucu kapısını kullanır. */
+/** Yayın sayfaları ve sonraki yayın API'leri bu sunucu kapısını kullanır. */
 export async function onayliPartnerBaglami() {
   const b = await partnerProfilBaglami();
   return b?.uyelikDurumu === "onaylandi" && b.profil ? b : null;

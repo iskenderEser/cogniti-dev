@@ -18,9 +18,9 @@ export async function GET(r:Request,c:Context) {
   const {partnerId}=await c.params;if(!medyaUuid(partnerId))return partnerYanit({hata:"Geçersiz partner."},400);
   const db=createAdminClient(AbortSignal.timeout(20000)),params=new URL(r.url).searchParams,egitimId=params.get("egitim_id");
   if(egitimId!==null){
-   if(!medyaUuid(egitimId))return partnerYanit({hata:"Geçersiz eğitim."},400);
+   if(!medyaUuid(egitimId))return partnerYanit({hata:"Geçersiz yayın."},400);
    const {data,error}=await db.rpc("agora_partner_admin_yayin_detayi",{p_admin_id:auth.kullaniciId,p_partner_id:partnerId,p_egitim_id:egitimId});
-   if(error)throw new Error("Eğitim bilgileri okunamadı.");if(!data)return partnerYanit({hata:"Eğitim bulunamadı."},404);
+   if(error)throw new Error("Yayın bilgileri okunamadı.");if(!data)return partnerYanit({hata:"Yayın bulunamadı."},404);
    const m=dosyalar(data);
    const video=(v:Dosya|undefined)=>v?{dosya_adi:v.dosya_adi,durum:v.durum,sure_saniye:v.sure_saniye,izleme_url:v.durum==="hazir"&&v.video_guid&&process.env.BUNNY_LIBRARY_ID?`https://player.mediadelivery.net/embed/${process.env.BUNNY_LIBRARY_ID}/${v.video_guid}`:null}:null;
    return partnerYanit({egitim:data.egitim,medya:{egitimVideo:video(m.egitimVideo),tanitim:video(m.tanitim),podcast:m.podcast?{dosya_adi:m.podcast.dosya_adi,durum:m.podcast.durum,dinleme_url:m.podcast.durum==="hazir"&&m.podcast.dosya_yolu?bunnyCdnImzaliUrl(m.podcast.dosya_yolu):null}:null}});
@@ -54,8 +54,8 @@ export async function POST(r:Request,c:Context) {
   const db=createAdminClient(AbortSignal.timeout(25000));
   if(d.islem==="aktif"){
    const {data:detay,error}=await db.rpc("agora_partner_admin_yayin_detayi",{p_admin_id:auth.kullaniciId,p_partner_id:partnerId,p_egitim_id:d.egitim_id});
-   if(error)throw new Error("Eğitim dosyaları doğrulanamadı.");if(!detay)return partnerYanit({hata:"Eğitim bulunamadı."},404);
-   if(detay.egitim.durum==="taslak")return partnerYanit({hata:"Taslak eğitimi önce partner Agora’da yayımlamalıdır."},409);
+   if(error)throw new Error("Yayın dosyaları doğrulanamadı.");if(!detay)return partnerYanit({hata:"Yayın bulunamadı."},404);
+   if(detay.egitim.durum==="taslak")return partnerYanit({hata:"Taslak yayını önce partner Agora’da yayımlamalıdır."},409);
    const m=dosyalar(detay),videolar=detay.egitim.yayin_araci==="video"?[m.egitimVideo]:[];
    for(const v of videolar){
     if(!v?.video_guid)return partnerYanit({hata:"Yayın dosyaları eksik."},409);
@@ -66,8 +66,8 @@ export async function POST(r:Request,c:Context) {
   }
   const {data,error}=await db.rpc("agora_partner_admin_yayin_islemi",{p_admin_id:auth.kullaniciId,p_partner_id:partnerId,p_egitim_id:d.egitim_id,p_islem:d.islem,p_surum:d.surum});
   if(error)throw new Error("İşlem sonucu doğrulanamadı. Listeyi yenileyin.");
-  const hatalar:Record<string,string>={bulunamadi:"Eğitim bulunamadı.",cakisma:"Eğitim değişmiş. Listeyi yenileyin.",taslak:"Taslak eğitimi önce partner Agora’da yayımlamalıdır.",onay_eksik:"Partnerin üyelik onayı tamamlanmalıdır.",dosya_eksik:"Yayın dosyaları tamamlanmamış."};
+  const hatalar:Record<string,string>={bulunamadi:"Yayın bulunamadı.",cakisma:"Yayın değişmiş. Listeyi yenileyin.",taslak:"Taslak yayını önce partner Agora’da yayımlamalıdır.",onay_eksik:"Partnerin üyelik onayı tamamlanmalıdır.",dosya_eksik:"Yayın dosyaları tamamlanmamış."};
   if(data!=="tamam")return partnerYanit({hata:hatalar[String(data)]??"Yayın işlemi tamamlanamadı."},data==="bulunamadi"?404:409);
-  return partnerYanit({mesaj:d.islem==="aktif"?"Eğitim aktife alındı.":d.islem==="pasif"?"Eğitim pasife alındı.":"Eğitim silindi."});
+  return partnerYanit({mesaj:d.islem==="aktif"?"Yayın aktife alındı.":d.islem==="pasif"?"Yayın pasife alındı.":"Yayın silindi."});
  }catch(e){return partnerYanit({hata:e instanceof Error?e.message:"Yayın işlemi tamamlanamadı."},503);}
 }

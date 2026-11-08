@@ -11,13 +11,13 @@ export async function GET(request:Request, context:{params:Promise<{egitimId:str
     const b = await onayliPartnerBaglami();
     if (!b) return partnerYanit({hata:"Partner oturumu doğrulanamadı."},401);
     const {egitimId} = await context.params;
-    if (!medyaUuid(egitimId)) return partnerYanit({hata:"Geçersiz eğitim."},400);
+    if (!medyaUuid(egitimId)) return partnerYanit({hata:"Geçersiz yayın."},400);
     const args = {p_token_ozeti:b.tokenOzeti,p_egitim_id:egitimId};
     const [{data:e,error:eh},{data:m,error:mh}] = await Promise.all([b.db.rpc("agora_partner_egitim_detay_oku",args),b.db.rpc("agora_partner_medya_oku",args)]);
     if (eh || mh) throw new Error("Koruma bilgileri okunamadı.");
-    if (!e || !m) return partnerYanit({hata:"Eğitim bulunamadı."},404);
+    if (!e || !m) return partnerYanit({hata:"Yayın bulunamadı."},404);
     const yayimlanmis = e.durum !== "taslak";
-    // Bu uç yalnız eğitim sahibine açıktır. Sağlayıcı kurulumu sahip incelemesini kapatmaz; yayımlama API/SQL kapısı ayrı korunur.
+    // Bu uç yalnız yayın sahibine açıktır. Sağlayıcı kurulumu sahip incelemesini kapatmaz; yayımlama API/SQL kapısı ayrı korunur.
     const paketHazir=e.koruma_surumu===AGORA_KORUMA_SURUMU;
     const korumaSurumu=yayimlanmis?AGORA_KORUMA_SURUMU:0;
     const tur = yayimlanmis ? e.yayin_araci : (new URL(request.url).searchParams.get("tur") ?? e.yayin_araci);

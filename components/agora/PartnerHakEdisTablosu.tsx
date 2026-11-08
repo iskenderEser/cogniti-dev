@@ -3,11 +3,12 @@
 import { useEffect, useState } from "react";
 import { partnerHakEdisListesiGecerli, type PartnerHakEdisListesi } from "@/lib/agora/hakedis";
 import { YenileButonu } from "@/components/ui/yenile-butonu";
+import { Button } from "@/components/ui/button";
 import PartnerOdemeGunu from "./PartnerOdemeGunu";
 import styles from "./partner-ozet.module.css";
 
 const BASLIKLAR = [
-  ["ID", ""], ["Eğitim Adı", ""], ["Sipariş Tarihi", ""],
+  ["ID", ""], ["Yayın Adı", ""], ["Sipariş Tarihi", ""],
   ["Satış Bedeli", "KDV hariç"], ["Cogniti Payı", "%15"],
   ["Hak Ediş", "KDV hariç"], ["KDV", "%20"],
   ["Ödenecek Tutar", "KDV dahil"], ["Planlanan Ödeme", ""], ["Ödenen Gün", ""],
@@ -21,10 +22,14 @@ type Sonuc = { anahtar: string; veri: PartnerHakEdisListesi | null; hata: string
 export default function PartnerHakEdisTablosu({ partnerId, endpoint, anaBaslik = false, odemeDuzenlenebilir = false }: {
   partnerId: string; endpoint: string; anaBaslik?: boolean; odemeDuzenlenebilir?: boolean;
 }) {
+  const [baslangic, setBaslangic] = useState("");
+  const [bitis, setBitis] = useState("");
+  const [arama, setArama] = useState("");
+  const [aranan, setAranan] = useState("");
   const [sayfa, setSayfa] = useState(1);
   const [surum, setSurum] = useState(0);
   const [sonuc, setSonuc] = useState<Sonuc | null>(null);
-  const anahtar = `${partnerId}:${endpoint}:${sayfa}:${surum}`;
+  const anahtar = `${partnerId}:${endpoint}:${sayfa}:${surum}:${aranan}:${baslangic}:${bitis}`;
   const yukleniyor = sonuc?.anahtar !== anahtar;
   const veri = yukleniyor ? null : sonuc?.veri;
   const hata = yukleniyor ? "" : sonuc?.hata;
@@ -34,7 +39,7 @@ export default function PartnerHakEdisTablosu({ partnerId, endpoint, anaBaslik =
     const controller = new AbortController();
     void (async () => {
       try {
-        const yanit = await fetch(`${endpoint}?sayfa=${sayfa}`, { cache: "no-store", signal: controller.signal });
+        const yanit = await fetch(`${endpoint}?${new URLSearchParams({ sayfa: String(sayfa), ...(anaBaslik ? { arama: aranan, baslangic, bitis } : {}) })}`, { cache: "no-store", signal: controller.signal });
         const data: unknown = await yanit.json();
         if (!yanit.ok) {
           const mesaj = data && typeof data === "object" && "hata" in data && typeof data.hata === "string" ? data.hata : "Hak edişler okunamadı.";
@@ -47,7 +52,7 @@ export default function PartnerHakEdisTablosu({ partnerId, endpoint, anaBaslik =
       }
     })();
     return () => controller.abort();
-  }, [anahtar, endpoint, partnerId, sayfa]);
+  }, [anahtar, endpoint, partnerId, sayfa, anaBaslik, aranan, baslangic, bitis]);
 
   const toplamSayfa = veri ? Math.max(1, Math.ceil(veri.toplam / veri.sayfa_boyutu)) : 1;
   return <section aria-label="Partner hak ediş kayıtları" aria-busy={yukleniyor}>
@@ -55,6 +60,20 @@ export default function PartnerHakEdisTablosu({ partnerId, endpoint, anaBaslik =
       <Baslik>{anaBaslik ? "Hak Edişlerim" : "Hak Ediş Kayıtları"}</Baslik>
       <YenileButonu yenileniyor={yukleniyor} onYenile={() => setSurum(n => n + 1)} />
     </div>
+    {anaBaslik && <div className={styles.hakedisAraclar}>
+      <form role="search" aria-label="Hak Ediş Arama" className={styles.hakedisArama} onSubmit={e => {
+        e.preventDefault(); setAranan(arama.trim()); setSayfa(1); setSurum(n => n + 1);
+      }}>
+        <label htmlFor="partner-hakedis-arama" className="sr-only">ID veya Yayın Adı</label>
+        <input id="partner-hakedis-arama" type="search" placeholder="ID veya yayın adı" maxLength={200} value={arama} onChange={e => setArama(e.target.value)} />
+        <Button type="submit" className={styles.hakedisAraButonu}>Ara</Button>
+      </form>
+      <div className={styles.hakedisTarihler} role="group" aria-label="Sipariş Tarihi Filtresi">
+      <label>Sipariş Tarihi · Başlangıç<input type="date" aria-label="Sipariş Tarihi Başlangıç" value={baslangic} max={bitis || undefined} onChange={e => { setBaslangic(e.target.value); setSayfa(1); }} /></label>
+      <label>Bitiş<input type="date" aria-label="Sipariş Tarihi Bitiş" value={bitis} min={baslangic || undefined} onChange={e => { setBitis(e.target.value); setSayfa(1); }} /></label>
+      {(baslangic || bitis) && <Button type="button" variant="outline" onClick={() => { setBaslangic(""); setBitis(""); setSayfa(1); }}>Tarihleri Temizle</Button>}
+      </div>
+    </div>}
     {hata && <p role="alert">{hata}</p>}
     <div className={styles.tabloAlani}><table className={styles.hakedisTablo} aria-label="Partner Hak Edişleri">
       <colgroup>{GENISLIKLER.map((genislik, i) => <col key={i} style={{ width: `${genislik}%` }} />)}</colgroup>
@@ -64,7 +83,7 @@ export default function PartnerHakEdisTablosu({ partnerId, endpoint, anaBaslik =
       <tbody>
         {yukleniyor ? <tr><td colSpan={10} role="status">Hak edişler yükleniyor…</td></tr>
           : hata ? <tr><td colSpan={10}>Yenile düğmesiyle tekrar deneyebilirsiniz.</td></tr>
-          : !veri?.kayitlar.length ? <tr><td colSpan={10}>{veri?.toplam ? "Bu sayfada kayıt bulunmuyor." : "Henüz hak ediş kaydı bulunmuyor."}</td></tr>
+          : !veri?.kayitlar.length ? <tr><td colSpan={10}>{veri?.toplam ? "Bu sayfada kayıt bulunmuyor." : aranan || baslangic || bitis ? "Arama ve tarihlere uygun hak ediş bulunmuyor." : "Henüz hak ediş kaydı bulunmuyor."}</td></tr>
           : veri.kayitlar.map(r => <tr key={r.siparis_id}>
             <td className={styles.hakedisKimlik}>{r.partner_egitim_id}</td><td className={styles.hakedisEgitim}>{r.egitim_adi}</td><td className={styles.hakedisTarih}>{gun(r.siparis_tarihi)}</td>
             <td className={styles.hakedisPara}>{para.format(r.satin_alma_bedeli)}</td>
@@ -76,6 +95,17 @@ export default function PartnerHakEdisTablosu({ partnerId, endpoint, anaBaslik =
               siparisId={r.siparis_id} egitimId={r.partner_egitim_id} deger={r.planlanan_odeme_gunu} /> : gun(r.planlanan_odeme_gunu)}</td><td className={styles.hakedisTarih}>{gun(r.odenen_gun)}</td>
           </tr>)}
       </tbody>
+      {veri && !hata && <tfoot>
+        {([ ["Genel Toplam", veri.genel_toplam], ["Seçilen Filtrelerin Toplamı", veri.filtre_toplam] ] as const).map(([etiket, toplam]) => <tr key={etiket}>
+          <th scope="row" colSpan={3}>{etiket}</th>
+          <td className={styles.hakedisPara}>{para.format(toplam.satin_alma_bedeli)}</td>
+          <td className={styles.hakedisPara}>{para.format(toplam.hizmet_bedeli)}</td>
+          <td className={styles.hakedisPara}>{para.format(toplam.hak_edis)}</td>
+          <td className={styles.hakedisPara}>{para.format(toplam.kdv_tutari)}</td>
+          <td className={`${styles.hakedisPara} ${styles.hakedisToplam}`}>{para.format(toplam.kdvli_odenecek_tutar)}</td>
+          <td colSpan={2} />
+        </tr>)}
+      </tfoot>}
     </table></div>
     {veri && <div className={styles.hakedisSayfalama}>
       <span>{veri.toplam.toLocaleString("tr-TR")} kayıt · Sayfa {sayfa} / {toplamSayfa}</span>

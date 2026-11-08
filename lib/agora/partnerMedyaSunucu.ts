@@ -17,10 +17,10 @@ async function oku(b: Baglam, id: string): Promise<{videolar: Video[]; podcastle
   return data;
 }
 async function egitim(b: Baglam,d: Record<string,unknown>) {
-  if (!(d.egitim_id===null || medyaUuid(d.egitim_id)) || !medyaUuid(d.istek_id) || !egitimAdiDogrula(d.egitim_adi)) throw new Error("Önce Eğitim Adını Girin.");
+  if (!(d.egitim_id===null || medyaUuid(d.egitim_id)) || !medyaUuid(d.istek_id) || !egitimAdiDogrula(d.egitim_adi)) throw new Error("Önce Yayın Adını Girin.");
   const {data,error}=await b.db.rpc("agora_partner_medya_egitimi",{p_token_ozeti:b.tokenOzeti,p_egitim_id:d.egitim_id,p_egitim_adi:d.egitim_adi,p_istek_id:d.istek_id});
   if(error)throw new Error("Medya yükleme kurulumu doğrulanamadı.");
-  if(!data)throw new Error("Eğitim bulunamadı veya düzenlemeye kapalı.");
+  if(!data)throw new Error("Yayın bulunamadı veya düzenlemeye kapalı.");
   return data as {egitim_id:string;surum:number};
 }
 export async function partnerVideoSonucunuIsle(db: SupabaseClient,guid:string,durum:{hazir:boolean;hatali:boolean;videoSuresiSaniye:number|null}) {
@@ -55,14 +55,14 @@ export async function videoBaslat(request:Request) {
 export async function videoOku(request:Request) {
   try{
     const b=await onayliPartnerBaglami();if(!b)return partnerYanit({hata:"Partner oturumunuz doğrulanamadı."},401);
-    const id=new URL(request.url).searchParams.get("egitim_id");if(!medyaUuid(id))return partnerYanit({hata:"Geçersiz eğitim."},400);
-    let m=await oku(b,id);if(!m)return partnerYanit({hata:"Eğitim bulunamadı."},404);
+    const id=new URL(request.url).searchParams.get("egitim_id");if(!medyaUuid(id))return partnerYanit({hata:"Geçersiz yayın."},400);
+    let m=await oku(b,id);if(!m)return partnerYanit({hata:"Yayın bulunamadı."},404);
     const videolar=["egitim","tanitim"].map(rol=>m!.videolar.find(v=>v.rol===rol)).filter((v):v is Video=>!!v);
     for(const v of videolar.filter(v=>v.durum==="isleniyor" || v.durum==="yukleniyor")){
       const durum=await bunnyVideoDurumu(v.video_guid);if(!durum.ok)throw new Error("Video işlenme durumu alınamadı; yeniden kontrol edin.");
       await partnerVideoSonucunuIsle(b.db,v.video_guid,durum);
     }
-    m=await oku(b,id);if(!m)return partnerYanit({hata:"Eğitim bulunamadı."},404);
+    m=await oku(b,id);if(!m)return partnerYanit({hata:"Yayın bulunamadı."},404);
     return partnerYanit({videolar:["egitim","tanitim"].map(rol=>m!.videolar.find(v=>v.rol===rol)).filter(Boolean).map(v=>({...v,izleme_url:v!.durum==="hazir"?`https://player.mediadelivery.net/embed/${process.env.BUNNY_LIBRARY_ID}/${v!.video_guid}`:null}))});
   }catch(e){return partnerYanit({hata:e instanceof Error?e.message:"Video bilgileri okunamadı."},503);}
 }
@@ -105,8 +105,8 @@ export async function podcastTamamla(request:Request) {
 export async function podcastOku(request:Request) {
   try{
     const b=await onayliPartnerBaglami();if(!b)return partnerYanit({hata:"Partner oturumunuz doğrulanamadı."},401);
-    const id=new URL(request.url).searchParams.get("egitim_id");if(!medyaUuid(id))return partnerYanit({hata:"Geçersiz eğitim."},400);
-    const m=await oku(b,id);if(!m)return partnerYanit({hata:"Eğitim bulunamadı."},404);
+    const id=new URL(request.url).searchParams.get("egitim_id");if(!medyaUuid(id))return partnerYanit({hata:"Geçersiz yayın."},400);
+    const m=await oku(b,id);if(!m)return partnerYanit({hata:"Yayın bulunamadı."},404);
     const a=m.podcastler[0];return partnerYanit({podcast:a?{yukleme_id:a.yukleme_id,dosya_adi:a.dosya_adi,durum:a.durum,sure_saniye:a.sure_saniye??null,dinleme_url:a.durum==="hazir"?bunnyCdnImzaliUrl(a.dosya_yolu):null}:null});
   }catch{return partnerYanit({hata:"Podcast bilgileri okunamadı."},503);}
 }

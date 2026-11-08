@@ -50,7 +50,7 @@ export default function PartnerUyelikOnayi() {
         return;
       }
       if (karar === "onaylandi") basari(`${secili.ad_soyad} üyeliği onaylandı.`);
-      setSecili(null); setMesaj(karar === "onaylandi" ? "Üyelik onaylandı. Partner eğitim alanına erişebilir." : "Üyelik reddedildi. Partner profilini düzeltip yeniden gönderebilir.");
+      setSecili(null); setMesaj(karar === "onaylandi" ? "Üyelik onaylandı. Partner yayın alanına erişebilir." : "Üyelik reddedildi. Partner profilini düzeltip yeniden gönderebilir.");
       await yenile();
     } catch { setHata("İşlem sonucu doğrulanamadı. Yenile ile güncel durumu kontrol edin."); }
     finally { kilit.current = false; setKaydediliyor(false); }
