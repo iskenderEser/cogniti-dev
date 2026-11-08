@@ -1,5 +1,2 @@
-import KarsilamaSayfasi from "../../_components/KarsilamaSayfasi";
-
-export default function Fiyatlar() {
-  return <KarsilamaSayfasi fiyatlar />;
-}
+import { redirect } from "next/navigation";
+export default function EskiFiyatlar() { redirect("/welcome"); }

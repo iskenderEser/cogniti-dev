@@ -23,6 +23,7 @@ const FIRMA_YONETIM_SAYFALARI = new Set([
 ]);
 // Firma admini yalnız firma yönetimi uçlarına ulaşır; hedef kayıtlar route'ta doğrulanır.
 export function firmaAdminIstegiIzinliMi(pathname: string, method: string, params: URLSearchParams, firmaId: string) {
+  if (["/fiyatlar", "/fiyatlar/api"].includes(pathname) && ["GET", "HEAD"].includes(method)) return true;
   if (pathname === "/tema/api" && ["GET", "PUT"].includes(method)) return true;
   const okuma = method === "GET" || method === "HEAD";
   // Public klasöründeki firma logosu sayfa yetkisi istemez.

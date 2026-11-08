@@ -1,4 +1,4 @@
-const SECENEKLER = new Set(["Kullandığın Kadar Öde", "10.000 token / ay", "30.000 token / ay", "75.000 token / ay"]);
+const SECENEKLER = new Set(["Kullandığın Kadar Öde", "10.000 token / ay", "30.000 token / ay", "75.000 token / ay", "6 Ay Taahhütlü Paket 1", "6 Ay Taahhütlü Paket 2", "6 Ay Taahhütlü Paket 3"]);
 const hata = (mesaj: string, status: number) => Response.json({ hata: mesaj }, { status });
 
 export async function POST(request: Request) {

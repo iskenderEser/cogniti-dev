@@ -6,6 +6,8 @@
 
 "use client";
 
+import { useAuth } from "@/app/providers/AuthProvider";
+import { fiyatlariGorebilir } from "@/lib/fiyat/erisim";
 import type { PanelNavbarOzet } from "@/lib/panel/panelCache";
 import CognitiLogo from "@/components/marka/CognitiLogo";
 import { useRouter, usePathname } from "next/navigation";
@@ -70,6 +72,9 @@ export interface PanelNavbarProps {
   hbStoreGoster?: boolean;
   // Mevcut Viva gezinme yetkisi layout tarafından çözülür.
   vivaGoster?: boolean;
+  fiyatlarGoster?: boolean;
+  fiyatlarYolu?: string;
+  onFiyatlar?: () => void;
   agoraGoster?: boolean;
   onAgora?: () => void;
   // Dış müşteri ana sayfası /eclub/ana-sayfa'dir; iç kullanıcıda varsayılan korunur.
@@ -155,6 +160,9 @@ export default function PanelNavbar({
   siparisPuaniGoster,
   hbStoreGoster,
   vivaGoster = false,
+  fiyatlarGoster,
+  fiyatlarYolu = "/fiyatlar",
+  onFiyatlar,
   agoraGoster = false,
   onAgora,
   anaSayfaYolu = "/ana-sayfa",
@@ -171,6 +179,9 @@ export default function PanelNavbar({
 }: PanelNavbarProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const { kullanici } = useAuth();
+  const fiyatlarAcik = fiyatlarGoster ?? fiyatlariGorebilir(kullanici?.rol);
+  const planlamaYolu = fiyatlarYolu.startsWith("/partner/") ? "/partner/planlama-araci" : "/planlama-araci";
   const [hover, setHover] = useState<string | null>(null);
 
   // Logo hedefini önceden hazırla; üreticilerde bu hedef Yayın Yönetimi'dir.
@@ -307,6 +318,12 @@ export default function PanelNavbar({
             ))}
           </div>}
 
+          {fiyatlarAcik && <button type="button" onClick={() => router.push(planlamaYolu)}
+            aria-current={pathname === planlamaYolu ? "page" : undefined}
+            className="mr-4 cursor-pointer whitespace-nowrap border-0 bg-transparent p-0 text-[11px] font-normal tracking-[1.8px] text-[var(--tema-kontrol-eylem)] hover:underline">PLANLAMA ARACI</button>}
+          {fiyatlarAcik && <button type="button" onClick={() => { if (onFiyatlar) onFiyatlar(); else router.push(fiyatlarYolu); }}
+            aria-current={pathname === fiyatlarYolu ? "page" : undefined}
+            className="md:mr-6 lg:mr-8 cursor-pointer whitespace-nowrap border-0 bg-transparent p-0 text-[11px] font-normal tracking-[1.8px] text-[var(--tema-kontrol-eylem)] hover:underline">PAKETLER VE FİYATLAR</button>}
           {bilgiPilleri.length > 0 && <div className="h-5 w-[1px] bg-[var(--tema-ust-menu-ayirici)]" />}
           {ozet && (
             <OzetKapsul ozet={ozet} siparisPuaniGoster={siparisPuaniGoster} />
@@ -360,7 +377,7 @@ export default function PanelNavbar({
           {agoraButonu()}
           {agoraGoster && <div role="separator" aria-orientation="vertical" className="mx-1 h-7 w-px bg-[var(--tema-ust-menu-ayirici)]" />}
           <ProfilDugmesi harfler={bashHarfler} menu={profilMenusu} mobil />
-          <button
+          {onHamburger && <button
             onClick={onHamburger}
             aria-label="Menü"
             className="flex flex-col gap-1 p-1 bg-transparent border-none cursor-pointer"
@@ -368,9 +385,11 @@ export default function PanelNavbar({
             <span className="block w-4 bg-[var(--tema-ust-menu-simge)]" style={{ height: "1.5px" }} />
             <span className="block w-4 bg-[var(--tema-ust-menu-simge)]" style={{ height: "1.5px" }} />
             <span className="block w-4 bg-[var(--tema-ust-menu-simge)]" style={{ height: "1.5px" }} />
-          </button>
+          </button>}
         </div>
       </div>
+      {fiyatlarAcik && <div className="flex md:hidden justify-end gap-4 pt-1"><button type="button" onClick={() => router.push(planlamaYolu)} aria-current={pathname === planlamaYolu ? "page" : undefined} className="cursor-pointer whitespace-nowrap border-0 bg-transparent p-0 text-[11px] font-normal tracking-[1.8px] text-[var(--tema-kontrol-eylem)] hover:underline">PLANLAMA ARACI</button><button type="button" onClick={() => { if (onFiyatlar) onFiyatlar(); else router.push(fiyatlarYolu); }}
+        aria-current={pathname === fiyatlarYolu ? "page" : undefined} className="md:mr-6 lg:mr-8 cursor-pointer whitespace-nowrap border-0 bg-transparent p-0 text-[11px] font-normal tracking-[1.8px] text-[var(--tema-kontrol-eylem)] hover:underline">PAKETLER VE FİYATLAR</button></div>}
       {vivaGoster && <div className="absolute left-1/2 z-[51] flex h-4 sm:h-9 w-32 -translate-x-1/2 items-start justify-center pt-0.5 [&>button]:-translate-y-3 sm:[&>button]:translate-y-0" style={{ top: "calc(100% - 1px)" }}>
         <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 128 38" preserveAspectRatio="none" aria-hidden="true" style={{ filter: "drop-shadow(0 3px 3px color-mix(in srgb, var(--tema-metin) 5%, transparent))" }}>
           <path d="M0 1C8 1 10 5 14 17L16 24C19 33 23 37 31 37H97C105 37 109 33 112 24L114 17C118 5 120 1 128 1V-2H0Z" fill="var(--tema-ust-menu-zemin)" />

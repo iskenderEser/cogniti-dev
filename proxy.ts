@@ -13,8 +13,9 @@ export async function proxy(request: NextRequest) {
   // Agora iş partnerlerinin açık giriş/kayıt sayfası; alt yollar bu muafiyete dahil değildir.
   if (request.nextUrl.pathname === "/partner") return NextResponse.next({ request });
   // Bu yolların partner kimliği kendi sunucu kapısında doğrulanır; iç kullanıcı oturumuna bağlanmaz.
-  if (["/partner/profil", "/partner/egitimler", "/partner/egitimler/yeni", "/partner/hak-edisleri", "/partner/raporlar"].includes(request.nextUrl.pathname) && ["GET", "HEAD"].includes(request.method)) return NextResponse.next({ request });
+  if (["/partner/profil", "/partner/egitimler", "/partner/egitimler/yeni", "/partner/hak-edisleri", "/partner/raporlar", "/partner/fiyatlar", "/partner/planlama-araci"].includes(request.nextUrl.pathname) && ["GET", "HEAD"].includes(request.method)) return NextResponse.next({ request });
   if (["/partner/api/giris", "/partner/api/cikis"].includes(request.nextUrl.pathname) && request.method === "POST") return NextResponse.next({ request });
+  if (request.nextUrl.pathname === "/partner/api/fiyatlar" && request.method === "GET") return NextResponse.next({ request });
   // Profil ve logo yollarında ayrı partner oturumu endpoint içinde zorunludur.
   if (request.nextUrl.pathname === "/partner/api/profil" && ["GET", "POST"].includes(request.method)) return NextResponse.next({ request });
   if (request.nextUrl.pathname === "/partner/api/logo" && request.method === "GET") return NextResponse.next({ request });
@@ -35,7 +36,7 @@ export async function proxy(request: NextRequest) {
   if (request.nextUrl.pathname === "/api/viva/daily-webhook") return NextResponse.next({ request });
   if (["/marka/cogniti-blue.svg", "/marka/cogniti-green.svg"].includes(request.nextUrl.pathname)) return NextResponse.next({ request });
   // Karşılama adresleri herkese açıktır; oturuma göre panel içeriğine dönüşmez.
-  if (["/", "/welcome", "/welcome/fiyatlar", "/api/musteri-talebi"].includes(request.nextUrl.pathname)) return NextResponse.next({ request });
+  if (["/", "/welcome", "/api/musteri-talebi"].includes(request.nextUrl.pathname)) return NextResponse.next({ request });
   let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(
@@ -514,6 +515,7 @@ export async function proxy(request: NextRequest) {
   }
   // -------------------------------------------------------------------------
 
+  if (["/fiyatlar", "/planlama-araci"].includes(pathname)) supabaseResponse.headers.set("Cache-Control", "private, no-store");
   return supabaseResponse;
 }
 

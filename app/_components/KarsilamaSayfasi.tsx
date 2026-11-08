@@ -7,11 +7,10 @@ import CognitiHakkinda from "@/components/panel/bilgi/CognitiHakkinda";
 import { useTema } from "@/app/providers/TemaProvider";
 import GirisAltBilgileri from "@/app/login/_components/GirisAltBilgileri";
 import styles from "@/app/login/login.module.css";
-import FiyatlarIcerigi from "./FiyatlarIcerigi";
 import switchStyles from "@/components/tema/tema-secici.module.css";
 
 /** Herkese açık karşılama yalnız /welcome adresinde sunulur. */
-export default function KarsilamaSayfasi({ fiyatlar = false }: { fiyatlar?: boolean }) {
+export default function KarsilamaSayfasi() {
   const { tema, temaDegistir } = useTema();
   return (
     <div className={`${styles.page} ${styles.welcomePage}`}>
@@ -20,14 +19,13 @@ export default function KarsilamaSayfasi({ fiyatlar = false }: { fiyatlar?: bool
           <CognitiLogo width={220} height={73} />
         </Link>
         <nav className={styles.welcomeActions} aria-label="Karşılama gezinmesi">
-          <Link className={styles.pricingNav} href={fiyatlar ? "/welcome" : "/welcome/fiyatlar"}>{fiyatlar ? "GİRİŞ SAYFASI" : "PAKETLER VE FİYATLAR"}</Link>
           <Link className={styles.action} href="/login">
             <LogIn size={16} aria-hidden="true" />Giriş
           </Link>
           <Link className={`${styles.action} ${styles.partnerAction}`} href="/partner"><LogIn size={16} aria-hidden="true" />Partner Girişi</Link>
         </nav>
       </header>
-      <main>{fiyatlar ? <FiyatlarIcerigi /> : <CognitiHakkinda />}</main>
+      <main><CognitiHakkinda /></main>
       <GirisAltBilgileri gorunum={
         <div className={styles.appearance}><span>Görünüm</span>
           <div className={`${switchStyles.secici} ${styles.themeSwitch}`}>

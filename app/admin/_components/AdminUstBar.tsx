@@ -19,6 +19,8 @@ export default function AdminUstBar(p:Props) {
       <button type="button" className={styles.brand} onClick={p.onAnaSayfa} aria-label="Cogniti yönetimine dön"><CognitiLogo className={styles.logo} /><span className={styles.brandText}>Yönetim</span></button>
     </div>
     <div className={styles.navbarActions}>
+      <Link href="/planlama-araci" style={{color:"var(--tema-kontrol-eylem)",fontSize:11,fontWeight:400,letterSpacing:"1.8px",marginRight:24,textDecoration:"none",whiteSpace:"nowrap"}}>PLANLAMA ARACI</Link>
+      <Link href="/fiyatlar" style={{color:"var(--tema-kontrol-eylem)",fontSize:11,fontWeight:400,letterSpacing:"1.8px",marginRight:24,textDecoration:"none",whiteSpace:"nowrap"}}>PAKETLER VE FİYATLAR</Link>
       {!p.firmaAdmin && <Link href="/viva" className={styles.button}>Viva</Link>}
 
       <div className={styles.profile}><div><span className={styles.profileName}>{p.kullaniciAd}</span><button type="button" className={styles.logout} onClick={p.onCikis}><LogOut size={11} style={{ display:"inline", marginRight:4 }} />Çıkış</button></div><span className={styles.avatar} aria-hidden="true">{p.kullaniciAd.split(/\s+/).map(n=>n[0]).slice(0,2).join("")}</span></div>
