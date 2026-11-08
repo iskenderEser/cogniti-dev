@@ -284,8 +284,8 @@
   .araclar { margin-top: 28px; gap: 24px 20px; }
 }
 
-.vivaBolumu { border-top: 0; }
-.vivaAlan { min-height: 120px; }
+.vivaBolumu { border-top: 0; padding-block:16px 24px; }
+.vivaAlan { min-height: 0; }
 .vivaBasligi {
   display: flex;
   align-items: center;
@@ -328,3 +328,14 @@
   background: var(--tema-hakkinda-vurgu);
   opacity: .5;
 }
+
+/* İlk bölüm ayırıcısının üstünde bir satır daha az boşluk. */
+.sahne { padding-bottom:40px; }
+@container (min-width:561px) and (max-width:1024px) {
+ .sahne { padding-bottom:24px; }
+}
+@container (max-width:560px) {
+ .sahne { padding-bottom:12px; }
+}
+
+.araclarAciklamasi { max-width:none; }

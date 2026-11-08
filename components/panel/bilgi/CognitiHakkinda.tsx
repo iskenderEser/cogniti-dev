@@ -107,7 +107,7 @@ export default function CognitiHakkinda() {
         <section className={styles.bolum} aria-labelledby={`${id}-araclar`}>
           <p className={styles.bolumEtiketi}>Cogniti Tanıtım ve Öğrenme Araçları</p>
           <h2 className={styles.bolumBasligi} id={`${id}-araclar`}>İzleyin, dinleyin, okuyun</h2>
-          <p className={`${styles.bolumAciklamasi} ${styles.vurguCumlesi}`}>
+          <p className={`${styles.bolumAciklamasi} ${styles.vurguCumlesi} ${styles.araclarAciklamasi}`}>
             Herkes farklı öğrenir. Farklı tanıtım ve öğrenme araçları sayesinde verimlilik artar.
           </p>
           <div className={styles.araclar}>

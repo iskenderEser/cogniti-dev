@@ -121,3 +121,9 @@
   .welcomePage .action:not(.partnerAction) { grid-column: 1; }
   .welcomePage .partnerAction { grid-column: 2; }
 }
+
+/* Welcome sayfasının yazı tipi. */
+.welcomePage { font-family:var(--font-montserrat), sans-serif; }
+.welcomePage main > * { font-family:inherit; }
+
+.welcomePage .action { font-family:var(--font-montserrat), sans-serif; font-weight:400; }
