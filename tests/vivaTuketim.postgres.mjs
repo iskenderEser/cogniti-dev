@@ -31,6 +31,7 @@ try{
  await db.query("SELECT cogniti_token_aylik_donemi_yukle($1)",[id(101)]);
  await db.query("INSERT INTO viva_etkinlikler(etkinlik_id,firma_id,sahip_id,baslik,baslangic,bitis,olusturma_ozeti,durum) VALUES($1,$2,$3,'Eski yayın',now(),now()+interval '1 hour','{}','planlandi')",[id(299),id(101),id(201)]);
  await db.query("INSERT INTO viva_katilimcilar(etkinlik_id,tur,kullanici_id) VALUES($1,'ic',$2)",[id(299),id(201)]);
+ await db.query(read('scripts/sql/cogniti_merkezi_fiyat_tarifesi.sql'));
  const sql=read('scripts/sql/cogniti_token_viva_kullanim_kurulum.sql');
  await check('Kullanım migration iki kez uygulanır; eski veriler silinmez',async()=>{await db.query(sql);await db.query(sql);});
  await check('Kuyruk yaması eski fonksiyonu yükseltir ve tekrar uygulanabilir',async()=>{
@@ -38,7 +39,7 @@ try{
   let source=(await db.query(q)).rows[0].s;
   const filter="    AND NOT EXISTS(SELECT 1 FROM public.viva_daily_yasam yasam_is JOIN public.viva_daily_odalar oda_is USING(etkinlik_id) WHERE yasam_is.etkinlik_id=i.etkinlik_id AND yasam_is.durum<>'tamam' AND oda_is.oda_adi IS NOT NULL)\n";
   assert.ok(source.includes(filter));source=source.replace(filter,'');
-  const price="  IF (p_veri->>'kko_fiyat')::numeric<=0";
+  const price="  IF j.kko_fiyat IS NULL";
   source=source.replace(price,"  IF EXISTS(SELECT 1 FROM public.viva_daily_yasam WHERE etkinlik_id=j.etkinlik_id AND durum<>'tamam') THEN RETURN NULL; END IF;\n"+price);
   source=source.replace("   RETURN jsonb_build_object('tamam',true,'token',0);","   RETURN NULL;");
   await db.query(source);
@@ -172,6 +173,55 @@ try{
  });
  await check('Anon ve üye fiyat veya tüketim RPCsi çağıramaz',async()=>{
   const r=(await db.query("SELECT has_function_privilege('anon','cogniti_token_viva_islem(text,jsonb)','EXECUTE') a,has_function_privilege('authenticated','cogniti_token_viva_islem(text,jsonb)','EXECUTE') b")).rows[0];assert.equal(r.a,false);assert.equal(r.b,false);
+ });
+
+ await check('Viva parametreyi istemciden almaz; tarife değişse de ayrılmış işin fiyatı korunur',async()=>{
+  await create(320,201);await close(320);
+  let job=await rpc('ayir',{kko_fiyat:.01,usd_dakika:100,kur:100,katsayi:100});
+  assert.equal((await db.query('SELECT kko_fiyat FROM cogniti_viva_tuketim_isleri WHERE etkinlik_id=$1',[id(320)])).rows[0].kko_fiyat,'9.9');
+  await rpc('kaydet',measurement(job,360000));
+  await db.query("UPDATE cogniti_fiyat_tarifesi SET degerler=jsonb_set(degerler,'{viva_usd_tl}','110'),surum=surum+1 WHERE tekil");
+  await db.query("UPDATE cogniti_viva_tuketim_isleri SET olcum_at=now()-interval '1 minute',tekrar=now()-interval '1 minute' WHERE etkinlik_id=$1",[id(320)]);
+  job=await rpc('ayir');assert.equal((await rpc('kaydet',measurement(job,360000))).token,200);
+  await create(321,201);assert.equal((await settle(321,360000)).token,400);
+  assert.equal((await db.query("SELECT (cogniti_tarife_bedeli_hesapla('viva',450.5,jsonb_build_object('kko_token_tl',9.9,'viva_kisi_dakika_usd',.004,'viva_usd_tl',55,'viva_satis_katsayisi',1.5))->>'token')::int AS n")).rows[0].n,0);
+ });
+ // Banner veri kaynağı ve yetki kapısı bu yerel testte sentetiktir; ücret/rezervasyon işlevleri gerçek SQL'dir.
+ await db.query(`CREATE TABLE eclub_firma_bannerlari(firma_id uuid,sira integer,dosya_yolu text,kaynak text DEFAULT 'firma');
+ CREATE TABLE eczanem_sayfa_bannerlari(firma_id uuid,alan text,sira integer,dosya_yolu text,kaynak text DEFAULT 'firma');
+ CREATE OR REPLACE FUNCTION firma_yonetim_yazma_yetkili_mi(p_actor uuid,p_firma uuid) RETURNS boolean LANGUAGE sql AS $$SELECT p_actor='${id(201)}'::uuid AND p_firma='${id(101)}'::uuid$$;`);
+ await db.query(read('scripts/sql/firma_banner_haftalik_yonetim.sql'));
+ const baglantiSql=read('scripts/sql/cogniti_viva_banner_merkezi_fiyat.sql');
+ await check('Merkezi bağlantı SQL kurulur ve tekrar kurulabilir',async()=>{await db.query(baglantiSql);await db.query(baglantiSql);});
+ const monday=(await db.query("SELECT (date_trunc('week',now() AT TIME ZONE 'Europe/Istanbul')::date+7)::text AS gun")).rows[0].gun;
+ const calendar=async(weeks=2)=>(await db.query("SELECT firma_banner_takvim($1,'firma',1,$2::date,$3) AS d",[id(101),monday,weeks])).rows[0].d;
+ const reserve=async(n,quote,slot=1,weeks=2)=>(await db.query("SELECT firma_banner_rezerve_fiyatli($1,$2,$3,'firma',$4,$5::date,$6::text[],$7,$8)",[id(201),id(101),id(n),slot,monday,Array.from({length:weeks},(_,i)=>`firma-banner-rezervasyon/${id(101)}/${n}-${i}.png`),quote.tarife_surumu,quote.toplam_token])).rows[0];
+ let quote=await calendar();
+ await check('Banner ekran bedelleri merkezden gelir; rezervasyonda sürüm ve tutar saklanır',async()=>{
+  assert.equal(quote.haftalik_token,200);assert.equal(quote.hafta_1_token,200);assert.equal(quote.hafta_2_token,400);
+  await reserve(700,quote);
+  const row=(await db.query('SELECT haftalik_token,toplam_token,tarife_surumu FROM firma_banner_rezervasyonlari WHERE rezervasyon_id=$1',[id(700)])).rows[0];
+  assert.equal(row.toplam_token,'400');assert.equal(row.tarife_surumu,quote.tarife_surumu);
+ });
+ await check('Banner eski teklif reddedilir; fiyat değişikliği rezervasyon ve iptal bedelini değiştirmez',async()=>{
+  await db.query("UPDATE cogniti_fiyat_tarifesi SET degerler=jsonb_set(degerler,'{banner_haftalik_token}','350'),surum=surum+1 WHERE tekil");
+  await assert.rejects(reserve(701,quote,2),{code:'40001'});
+  assert.equal((await db.query('SELECT count(*)::int AS n FROM firma_banner_rezervasyonlari WHERE rezervasyon_id=$1',[id(701)])).rows[0].n,0);
+  quote=await calendar();assert.equal(quote.hafta_2_token,700);await reserve(701,quote,2);
+  await db.query(`CREATE OR REPLACE FUNCTION firma_banner_simdi() RETURNS timestamptz LANGUAGE sql STABLE AS $$SELECT coalesce(nullif(current_setting('app.banner_test_simdi',true),''),'${monday}T00:00:00+03:00')::timestamptz$$;`);
+  const cut=(await db.query('SELECT firma_banner_iptal($1,$2,$3,400) AS d',[id(201),id(101),id(700)])).rows[0].d;assert.equal(cut.kesinti,400);
+  const t=(await db.query("SELECT miktar FROM cogniti_token_tuketimleri WHERE islem_anahtari=$1",['banner:'+id(700)])).rows[0];assert.equal(t.miktar,'400');
+  await db.query('SELECT firma_banner_iptal($1,$2,$3,400)',[id(201),id(101),id(700)]);
+  assert.equal((await db.query("SELECT count(*)::int n FROM cogniti_token_tuketimleri WHERE islem_anahtari=$1",['banner:'+id(700)])).rows[0].n,1);
+ });
+ await check('Banner yayın işleyicisi kayıtlı bedeli bir kez işler',async()=>{
+  await db.query('SELECT firma_banner_yayinlari_isle()');await db.query('SELECT firma_banner_yayinlari_isle()');
+  const t=(await db.query("SELECT miktar FROM cogniti_token_tuketimleri WHERE islem_anahtari=$1",['banner:'+id(701)])).rows;assert.equal(t.length,1);assert.equal(t[0].miktar,'700');
+ });
+ await check('Yeni rezervasyon yalnız fiyat onaylı RPC ile ve yetkili aktörle yapılır',async()=>{
+  const acl=(await db.query("SELECT has_function_privilege('service_role','firma_banner_rezerve(uuid,uuid,uuid,text,integer,date,text[])','EXECUTE') AS eski,has_function_privilege('anon','firma_banner_rezerve_fiyatli(uuid,uuid,uuid,text,integer,date,text[],integer,bigint)','EXECUTE') AS anon")).rows[0];
+  assert.equal(acl.eski,false);assert.equal(acl.anon,false);
+  await assert.rejects(db.query("SELECT firma_banner_rezerve_fiyatli($1,$2,$3,'firma',3,$4::date,ARRAY[$5]::text[],1,200)",[id(200),id(101),id(702),monday,`firma-banner-rezervasyon/${id(101)}/fake.png`]),{code:'42501'});
  });
  console.log(`Toplam ${passed}/${passed}; yalnız sentetik yerel PostgreSQL.`);
 } finally {await other?.end().catch(()=>{});await db?.end().catch(()=>{});if(started)execFileSync(join(bin,'pg_ctl'),['-D',dir,'-m','immediate','-w','stop'],{stdio:'pipe'});}

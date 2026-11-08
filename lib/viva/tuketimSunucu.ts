@@ -1,7 +1,6 @@
 import "server-only";
 import { createHash } from "node:crypto";
 import { createAdminClient } from "@/lib/supabase/server";
-import { KKO_TOKEN_FIYATI, VIVA_KISI_DAKIKA_USD, VIVA_USD_TL, VIVA_SATIS_KATSAYISI } from "@/lib/token/fiyatlandirma";
 import { vivaDailyAyar } from "./daily";
 import { vivaDailyKullanimi, type VivaDailyKullanim } from "./tuketimDaily.mjs";
 
@@ -21,7 +20,7 @@ export async function vivaDailyTuketimOku(oda: string, sonTarih: number): Promis
 export async function vivaTuketimIsle(rpc: Rpc, oku: typeof vivaDailyTuketimOku, sonTarih: number) {
   let islenen = 0, bekleyen = 0, hatali = 0;
   for (let i = 0; i < 5 && Date.now() < sonTarih; i++) {
-    const is = await rpc("ayir", { kko_fiyat: KKO_TOKEN_FIYATI, usd_dakika: VIVA_KISI_DAKIKA_USD, kur: VIVA_USD_TL, katsayi: VIVA_SATIS_KATSAYISI });
+    const is = await rpc("ayir");
     if (!is) break;
     if (is.tamam === true) { islenen++; continue; }
     const kimlik = { etkinlik_id: is.etkinlik_id, kira: is.kira };

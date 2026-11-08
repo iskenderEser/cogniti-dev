@@ -8,7 +8,7 @@ import { trGunu } from "@/lib/zaman/kontrol";
 import { hataYaniti, sunucuHatasi, validasyonHatasi } from "@/lib/utils/hataIsle";
 
 function dbHatasi(e: { code: string; message: string }) {
-  if (["42P01", "42883", "PGRST202", "PGRST205"].includes(e.code)) return NextResponse.json({ hata: "Haftalık banner SQL kurulumu bekleniyor." }, { status: 503 });
+  if (["42P01", "42703", "42883", "PGRST202", "PGRST205"].includes(e.code)) return NextResponse.json({ hata: "Haftalık banner SQL kurulumu bekleniyor." }, { status: 503 });
   return hataYaniti(["22023", "40001", "42501", "P0002"].includes(e.code) ? e.message : "Banner işlemi tamamlanamadı.", "Haftalık banner", e,
     e.code === "42501" ? 403 : e.code === "40001" ? 409 : e.code === "P0002" ? 404 : e.code === "22023" ? 422 : 500);
 }
@@ -21,6 +21,11 @@ export async function GET(request: NextRequest) {
     const db = createAdminClient(), sonuc = await db.rpc("firma_banner_takvim", { p_firma: firma, p_alan: alan, p_sira: sira, p_bas: bas, p_hafta: hafta });
     if (sonuc.error) return dbHatasi(sonuc.error);
     const depo = db.storage.from(ECLUB_BANNER_BUCKET), data = sonuc.data;
+    if (!data || !Number.isSafeInteger(data.tarife_surumu) || data.tarife_surumu < 1
+      || ![data.haftalik_token,data.toplam_token,data.hafta_1_token,data.hafta_2_token].every(v => Number.isSafeInteger(v) && v > 0)
+      || !Array.isArray(data.rezervasyonlar) || !data.rezervasyonlar.every((r: { toplam_token?: number }) => Number.isSafeInteger(r.toplam_token) && Number(r.toplam_token)>0)) {
+      return NextResponse.json({ hata:"Banner merkezi fiyat SQL kurulumu bekleniyor." }, {status:503});
+    }
     return NextResponse.json({ ...data,
       rezervasyonlar: (data.rezervasyonlar ?? []).map((r: { gorseller: { dosya_yolu: string }[] }) => ({ ...r, gorseller: r.gorseller.map(h => ({ ...h, url: depo.getPublicUrl(h.dosya_yolu).data.publicUrl })) })),
       mevcut_bannerlar: (data.mevcut_bannerlar ?? []).map((b: { dosya_yolu: string }) => ({ ...b, url: depo.getPublicUrl(b.dosya_yolu).data.publicUrl })),
@@ -36,6 +41,8 @@ export async function POST(request: NextRequest) {
     const hafta = Number(f.get("hafta")), sira = Number(f.get("sira")), bas = String(f.get("bas") ?? ""), haftaNo = Number(f.get("hafta_no"));
     if (islem === "rezerve" && (![1, 2].includes(hafta) || ![1, 2, 3].includes(sira) || !gunGecerli(bas))) return validasyonHatasi("Hafta ve alan seçin.", ["takvim"]);
     if (islem === "gorsel" && ![0, 1].includes(haftaNo)) return validasyonHatasi("Geçerli hafta seçin.", ["hafta_no"]);
+    const beklenenTarife = Number(f.get("tarife_surumu")), beklenenBedel = Number(f.get("toplam_token"));
+    if (islem === "rezerve" && (!Number.isSafeInteger(beklenenTarife) || beklenenTarife < 1 || !Number.isSafeInteger(beklenenBedel) || beklenenBedel < 1)) return validasyonHatasi("Takvimi yenileyip banner bedelini onaylayın.", ["fiyat"]);
     // Her hafta kendi görseline sahiptir; dosyalar kayıttan önce doğrulanır.
     const dosyalar = Array.from({ length: islem === "rezerve" ? hafta : 1 }, (_, i) => f.get(`gorsel_${i}`));
     const uzantilar: string[] = [];
@@ -54,7 +61,7 @@ export async function POST(request: NextRequest) {
       yuklenen.push(yol);
     }
     const sonuc = islem === "rezerve"
-      ? await db.rpc("firma_banner_rezerve", { p_aktor: yetki.kullaniciId, p_firma: firma, p_id: id, p_alan: alan, p_sira: sira, p_bas: bas, p_yollar: yuklenen })
+      ? await db.rpc("firma_banner_rezerve_fiyatli", { p_beklenen_tarife:beklenenTarife,p_beklenen_bedel:beklenenBedel, p_aktor: yetki.kullaniciId, p_firma: firma, p_id: id, p_alan: alan, p_sira: sira, p_bas: bas, p_yollar: yuklenen })
       : await db.rpc("firma_banner_gorsel_degistir", { p_aktor: yetki.kullaniciId, p_firma: firma, p_id: id, p_hafta: haftaNo, p_yol: yuklenen[0] });
     if (sonuc.error) { await depo.remove(yuklenen); return dbHatasi(sonuc.error); }
     return NextResponse.json({ ok: true, mesaj: islem === "rezerve" ? "Rezervasyon kaydedildi. Ücret ilk hafta başladığında işlenecek." : "Haftanın görseli güncellendi." });
@@ -66,7 +73,7 @@ export async function POST(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     const q = request.nextUrl.searchParams, firma = q.get("firma_id"), id = q.get("rezervasyon_id"), beklenen = Number(q.get("beklenen_kesinti"));
-    if (!uuidGecerliMi(firma) || !uuidGecerliMi(id) || !q.has("beklenen_kesinti") || ![0,200,400].includes(beklenen)) return validasyonHatasi("Geçerli rezervasyon seçin.", ["rezervasyon_id"]);
+    if (!uuidGecerliMi(firma) || !uuidGecerliMi(id) || !q.has("beklenen_kesinti") || (!Number.isSafeInteger(beklenen) || beklenen < 0)) return validasyonHatasi("Geçerli rezervasyon seçin.", ["rezervasyon_id"]);
     const yetki = await firmaYonetimIslemKontrol(firma); if (!yetki.gecerli) return yetki.yanit;
     const sonuc = await createAdminClient().rpc("firma_banner_iptal", { p_aktor: yetki.kullaniciId, p_firma: firma, p_id: id, p_beklenen_kesinti: beklenen });
     if (sonuc.error) return dbHatasi(sonuc.error);

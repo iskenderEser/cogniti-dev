@@ -6,8 +6,8 @@ import { trGunu, trGunEkle } from "@/lib/zaman/kontrol";
 import styles from "../../admin.module.css";
 
 type Gorsel = { hafta_no: number; url: string; baslangic_at: string };
-type Kayit = { rezervasyon_id: string; sira: number; baslangic: string; baslangic_at: string; bitis_at: string; hafta_sayisi: number; durum: string; ucret_islendi: boolean; gorseller: Gorsel[]; son_hata: string | null };
-type Takvim = { simdi: string; uygun: boolean; onerilen: string | null; manuel_engel: boolean; rezervasyonlar: Kayit[]; mevcut_bannerlar: { sira: number; kaynak: string; url: string }[] };
+type Kayit = { toplam_token: number; rezervasyon_id: string; sira: number; baslangic: string; baslangic_at: string; bitis_at: string; hafta_sayisi: number; durum: string; ucret_islendi: boolean; gorseller: Gorsel[]; son_hata: string | null };
+type Takvim = { tarife_surumu:number; haftalik_token:number; toplam_token:number; hafta_1_token:number; hafta_2_token:number; simdi: string; uygun: boolean; onerilen: string | null; manuel_engel: boolean; rezervasyonlar: Kayit[]; mevcut_bannerlar: { sira: number; kaynak: string; url: string }[] };
 function gelecekPazartesi() {
   const gun = trGunu();
   const haftaGunu = new Date(`${gun}T12:00:00+03:00`).getUTCDay();
@@ -45,7 +45,7 @@ export default function FirmaBannerTakvimi({ firmaId, firmaAdi, alan }: { firmaI
   }
   function rezerve() {
     if (!veri?.uygun || Array.from({ length: hafta }, (_, i) => dosyalar[i]).some(d => !d)) return;
-    const f = new FormData(); f.set("firma_id", firmaId); f.set("alan", alan); f.set("sira", String(sira)); f.set("bas", bas); f.set("hafta", String(hafta)); f.set("rezervasyon_id", crypto.randomUUID());
+    const f = new FormData(); f.set("firma_id", firmaId); f.set("alan", alan); f.set("sira", String(sira)); f.set("bas", bas); f.set("hafta", String(hafta)); f.set("rezervasyon_id", crypto.randomUUID()); f.set("tarife_surumu", String(veri.tarife_surumu)); f.set("toplam_token", String(veri.toplam_token));
     for (let i = 0; i < hafta; i++) f.set(`gorsel_${i}`, dosyalar[i]);
     void isle(() => fetch(endpoint, { method: "POST", body: f }));
   }
@@ -56,13 +56,13 @@ export default function FirmaBannerTakvimi({ firmaId, firmaAdi, alan }: { firmaI
   }
   const alanAdi = alan === "firma" ? "Eclub Firma ve Yayınları" : `Eczanem · ${ECZANEM_BANNER_ALANLARI[alan]}`;
   return <section className={styles.card}>
-    <div className={styles.cardHeader}><div><h2>{firmaAdi} · {alanAdi}</h2><p>Pazartesi–Pazar · Haftalık 200 token</p></div><button type="button" className={styles.button} disabled={busy || loading} onClick={() => setYenileme(n => n + 1)}>Yenile</button></div>
+    <div className={styles.cardHeader}><div><h2>{firmaAdi} · {alanAdi}</h2><p>Pazartesi–Pazar · Haftalık {veri ? veri.haftalik_token : "—"} token</p></div><button type="button" className={styles.button} disabled={busy || loading} onClick={() => setYenileme(n => n + 1)}>Yenile</button></div>
     <div className={styles.cardBody}>
       {hata && <p role="alert" className={styles.notice}>{hata}</p>}{mesaj && <p role="status" className={styles.notice}>{mesaj}</p>}
       <div className={styles.formGrid}>
         <label className={styles.field}>Banner alanı<select className={styles.input} value={sira} disabled={busy} onChange={e => { setSira(Number(e.target.value)); setOnay(null); }}><option value={1}>Birinci banner</option><option value={2}>İkinci banner</option><option value={3}>Üçüncü banner</option></select></label>
         <label className={styles.field}>Başlangıç pazartesisi<input className={styles.input} type="date" value={bas} min={gelecekPazartesi()} step={7} disabled={busy} onChange={e => { if (e.target.value) { setBas(e.target.value); setOnay(null); } }} /></label>
-        <label className={styles.field}>Yayın süresi<select className={styles.input} value={hafta} disabled={busy} onChange={e => { setHafta(Number(e.target.value)); setOnay(null); }}><option value={1}>1 hafta · 200 token</option><option value={2}>2 hafta · 400 token</option></select></label>
+        <label className={styles.field}>Yayın süresi<select className={styles.input} value={hafta} disabled={busy} onChange={e => { setHafta(Number(e.target.value)); setOnay(null); }}><option value={1}>1 hafta · {veri ? veri.hafta_1_token : "—"} token</option><option value={2}>2 hafta · {veri ? veri.hafta_2_token : "—"} token</option></select></label>
       </div>
       <p>Aynı alanda en fazla iki ardışık hafta; ardından en az bir hafta ara verilir.</p>
       <div className={styles.actions} aria-label="Yayın haftaları">{Array.from({ length: 8 }, (_, i) => gunEkle(gelecekPazartesi(), i * 7)).map(g => <button type="button" key={g} className={styles.button} aria-pressed={bas === g} disabled={busy} onClick={() => { setBas(g); setOnay(null); }}>{tarih(g)}</button>)}</div>
@@ -72,9 +72,9 @@ export default function FirmaBannerTakvimi({ firmaId, firmaAdi, alan }: { firmaI
         {!veri.uygun && veri.onerilen && <button type="button" className={styles.button} disabled={busy} onClick={() => { setBas(veri.onerilen!); setOnay(null); }}>En yakın uygun hafta: {tarih(veri.onerilen)}</button>}
         {!saltOkunur && <fieldset disabled={busy || loading || !veri.uygun} style={{ border: 0, padding: 0, margin: 0, minWidth: 0 }}>
           <div className={styles.formGrid}>{Array.from({ length: hafta }, (_, i) => <label className={styles.field} key={i}>{tarih(gunEkle(bas, i * 7))} haftasının görseli{dosyalar[i] && <span>{dosyalar[i].name}</span>}<input type="file" accept="image/png,image/jpeg,image/webp" onChange={e => setDosyalar(d => ({ ...d, [i]: e.target.files?.[0] as File }))} /></label>)}</div>
-          <p>Toplam {hafta * 200} token ilk hafta başladığında birlikte işlenir. Bakiye yetmezse eksik kısım firmanın borcuna yazılır.</p>
+          <p>Toplam {veri.toplam_token} token ilk hafta başladığında birlikte işlenir. Bakiye yetmezse eksik kısım firmanın borcuna yazılır.</p>
           <p>Başlangıca en az 24 saat varsa iptal ücretsizdir. Son 24 saatte iptalde bedelin tamamı kesilir. Yayın başladıktan sonra iade yapılmaz.</p>
-          <button type="button" className={`${styles.button} ${styles.primary}`} disabled={busy || Array.from({ length: hafta }, (_, i) => dosyalar[i]).some(d => !d)} onClick={rezerve}>Onayla ve rezerve et · {hafta * 200} token</button>
+          <button type="button" className={`${styles.button} ${styles.primary}`} disabled={busy || Array.from({ length: hafta }, (_, i) => dosyalar[i]).some(d => !d)} onClick={rezerve}>Onayla ve rezerve et · {veri.toplam_token} token</button>
         </fieldset>}
         {veri.mevcut_bannerlar.length > 0 && <><h3>Mevcut bannerlar</h3>{veri.mevcut_bannerlar.map(b => <div key={`${b.sira}/${b.kaynak}`}><p>{b.sira}. alan · {b.kaynak === "cogniti" ? "Cogniti bannerı" : "Önceki banner"}</p>
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -85,7 +85,7 @@ export default function FirmaBannerTakvimi({ firmaId, firmaAdi, alan }: { firmaI
         <h3>Yayınlar ve rezervasyonlar</h3>
         {!veri.rezervasyonlar.length && <p>Rezervasyon bulunmuyor.</p>}
         {veri.rezervasyonlar.map(r => {
-          const simdi = Date.parse(veri.simdi), basMs = Date.parse(r.baslangic_at), acik = ["rezerve", "yayinda"].includes(r.durum), bedel = r.hafta_sayisi * 200;
+          const simdi = Date.parse(veri.simdi), basMs = Date.parse(r.baslangic_at), acik = ["rezerve", "yayinda"].includes(r.durum), bedel = r.toplam_token;
           const kesinti = r.ucret_islendi || simdi > basMs - 86400000;
           return <section key={r.rezervasyon_id} className={styles.card}>
             <div className={styles.cardHeader}><h3>{r.sira}. alan · {tarih(r.baslangic)} – {tarih(gunEkle(r.baslangic, r.hafta_sayisi * 7 - 1))}</h3><span>{durumAdi[r.durum]}</span></div>

@@ -87,10 +87,13 @@ BEGIN
  END IF;
 END $patch$;
 
+ALTER TABLE public.cogniti_viva_tuketim_isleri ADD COLUMN IF NOT EXISTS tarife_surumu integer;
+
 CREATE OR REPLACE FUNCTION public.cogniti_token_viva_islem(p_islem text,p_veri jsonb DEFAULT '{}') RETURNS jsonb
 LANGUAGE plpgsql SECURITY DEFINER SET search_path=public,pg_temp AS $$
 DECLARE j public.cogniti_viva_tuketim_isleri%ROWTYPE; e public.viva_etkinlikler%ROWTYPE;
  h public.cogniti_token_hesaplari%ROWTYPE; o public.viva_daily_odalar%ROWTYPE; y record;
+ fiyat public.cogniti_fiyat_tarifesi%ROWTYPE;
  k uuid; saniye numeric; adet bigint; v_kalan bigint; pay bigint; asim bigint; tid uuid; ay date; eski boolean;
  beklenen text[]; gelen text[]; webhook_saniye numeric; api_saniye numeric; v_session jsonb;
 BEGIN
@@ -109,11 +112,13 @@ BEGIN
    UPDATE public.cogniti_viva_tuketim_isleri SET durum='tamam',token=0,toplam_saniye=0,tamamlandi=now(),donem=date_trunc('month',coalesce(j.kapanis,e.bitis) AT TIME ZONE 'Europe/Istanbul')::date WHERE etkinlik_id=j.etkinlik_id;
    RETURN jsonb_build_object('tamam',true,'token',0);
   END IF;
-  IF (p_veri->>'kko_fiyat')::numeric<=0 OR (p_veri->>'usd_dakika')::numeric<>0.004 OR (p_veri->>'kur')::numeric<>55 OR (p_veri->>'katsayi')::numeric<>1.5
-   OR p_veri->>'kko_fiyat' IS NULL OR p_veri->>'usd_dakika' IS NULL OR p_veri->>'kur' IS NULL OR p_veri->>'katsayi' IS NULL THEN RAISE EXCEPTION 'Viva fiyatları eksik.' USING ERRCODE='22023'; END IF;
+  IF j.kko_fiyat IS NULL OR j.usd_dakika IS NULL OR j.kur IS NULL OR j.katsayi IS NULL THEN
+   SELECT * INTO STRICT fiyat FROM public.cogniti_fiyat_tarifesi WHERE tekil;
+  END IF;
   k:=gen_random_uuid();
   UPDATE public.cogniti_viva_tuketim_isleri SET kira=k,kira_bitis=statement_timestamp()+interval '90 seconds',
-   kapanis=coalesce(kapanis,e.bitis),kko_fiyat=coalesce(kko_fiyat,(p_veri->>'kko_fiyat')::numeric),usd_dakika=coalesce(usd_dakika,0.004),kur=coalesce(kur,55),katsayi=coalesce(katsayi,1.5)
+   kapanis=coalesce(kapanis,e.bitis),kko_fiyat=coalesce(kko_fiyat,(fiyat.degerler->>'kko_token_tl')::numeric),usd_dakika=coalesce(usd_dakika,(fiyat.degerler->>'viva_kisi_dakika_usd')::numeric),kur=coalesce(kur,(fiyat.degerler->>'viva_usd_tl')::numeric),katsayi=coalesce(katsayi,(fiyat.degerler->>'viva_satis_katsayisi')::numeric),
+   tarife_surumu=coalesce(tarife_surumu,fiyat.surum)
    WHERE etkinlik_id=j.etkinlik_id;
   RETURN jsonb_build_object('etkinlik_id',j.etkinlik_id,'kira',k,'domain',o.domain,'oda_adi',o.oda_adi);
  END IF;
@@ -155,7 +160,7 @@ BEGIN
  IF NOT FOUND THEN RAISE EXCEPTION 'Token hesabı bulunamadı.' USING ERRCODE='22023'; END IF;
  IF h.paket_turu='aylik' THEN PERFORM 1 FROM public.cogniti_token_aylik_donemi_yukle(j.firma_id);
  ELSE PERFORM public.cogniti_token_kko_aylik_yukle(j.firma_id); SELECT * INTO h FROM public.cogniti_token_hesaplari WHERE firma_id=j.firma_id; END IF;
- adet:=round(saniye/60*j.usd_dakika*j.kur*j.katsayi/j.kko_fiyat); v_kalan:=adet;
+ adet:=(public.cogniti_tarife_bedeli_hesapla('viva',saniye,jsonb_build_object('kko_token_tl',j.kko_fiyat,'viva_kisi_dakika_usd',j.usd_dakika,'viva_usd_tl',j.kur,'viva_satis_katsayisi',j.katsayi))->>'token')::bigint; v_kalan:=adet;
  ay:=date_trunc('month',j.kapanis AT TIME ZONE 'Europe/Istanbul')::date;
  eski:=h.paket_turu='kullandigin_kadar_ode' AND h.kko_donem>ay;
  IF adet>0 THEN

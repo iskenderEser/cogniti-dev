@@ -16,6 +16,20 @@ CREATE TABLE IF NOT EXISTS public.firma_banner_rezervasyonlari(
  son_hata text,
  created_at timestamptz NOT NULL DEFAULT now()
 );
+ALTER TABLE public.firma_banner_rezervasyonlari
+ ADD COLUMN IF NOT EXISTS haftalik_token bigint,
+ ADD COLUMN IF NOT EXISTS toplam_token bigint,
+ ADD COLUMN IF NOT EXISTS tarife_surumu integer;
+-- Önceki kurulumdaki rezervasyonların onaylanmış bedeli; yeni fiyat olarak kullanılmaz.
+UPDATE public.firma_banner_rezervasyonlari SET haftalik_token=200,toplam_token=hafta_sayisi*200
+ WHERE haftalik_token IS NULL AND toplam_token IS NULL;
+ALTER TABLE public.firma_banner_rezervasyonlari ALTER COLUMN haftalik_token SET NOT NULL, ALTER COLUMN toplam_token SET NOT NULL;
+DO $constraint$ BEGIN
+ IF NOT EXISTS(SELECT 1 FROM pg_constraint WHERE conrelid='public.firma_banner_rezervasyonlari'::regclass AND conname='firma_banner_kayitli_fiyat_check') THEN
+  ALTER TABLE public.firma_banner_rezervasyonlari ADD CONSTRAINT firma_banner_kayitli_fiyat_check CHECK(haftalik_token>0 AND toplam_token=hafta_sayisi*haftalik_token);
+ END IF;
+END $constraint$;
+
 CREATE TABLE IF NOT EXISTS public.firma_banner_haftalari(
  rezervasyon_id uuid NOT NULL REFERENCES public.firma_banner_rezervasyonlari(rezervasyon_id) ON DELETE CASCADE,
  hafta_no smallint NOT NULL CHECK(hafta_no IN (0,1)),
@@ -72,7 +86,7 @@ END $$;
 
 CREATE OR REPLACE FUNCTION public.firma_banner_rezerve(p_aktor uuid,p_firma uuid,p_id uuid,p_alan text,p_sira integer,p_bas date,p_yollar text[])
 RETURNS uuid LANGUAGE plpgsql SECURITY DEFINER SET search_path=public,pg_temp AS $$
-DECLARE r public.firma_banner_rezervasyonlari%ROWTYPE; n integer:=cardinality(p_yollar); i integer;
+DECLARE r public.firma_banner_rezervasyonlari%ROWTYPE; n integer:=cardinality(p_yollar); i integer; fiyat jsonb;
 BEGIN
  IF NOT public.firma_yonetim_yazma_yetkili_mi(p_aktor,p_firma) THEN RAISE EXCEPTION 'Firma yönetimi işlem yetkiniz yok.' USING ERRCODE='42501'; END IF;
  IF p_id IS NULL OR p_alan IS NULL OR p_alan NOT IN('firma','uye-ana-sayfa','uyeler','uye-yayinlari','indirim-onayi') OR p_sira IS NULL OR p_sira NOT BETWEEN 1 AND 3
@@ -85,10 +99,26 @@ BEGIN
  SELECT * INTO r FROM public.firma_banner_rezervasyonlari WHERE rezervasyon_id=p_id;
  IF FOUND THEN RAISE EXCEPTION 'Rezervasyon zaten kaydedilmiş; listeyi yenileyin.' USING ERRCODE='40001'; END IF;
  IF NOT public.firma_banner_uygun_mu(p_firma,p_alan,p_sira,p_bas,n) THEN RAISE EXCEPTION 'Alan dolu veya iki ardışık hafta sınırı aşılıyor. Takvimi yenileyin.' USING ERRCODE='40001'; END IF;
- INSERT INTO public.firma_banner_rezervasyonlari(rezervasyon_id,firma_id,alan,sira,baslangic,hafta_sayisi,olusturan_id) VALUES(p_id,p_firma,p_alan,p_sira,p_bas,n,p_aktor);
+ fiyat:=public.cogniti_hizmet_bedeli_hesapla('banner',n);
+ INSERT INTO public.firma_banner_rezervasyonlari(rezervasyon_id,firma_id,alan,sira,baslangic,hafta_sayisi,olusturan_id,haftalik_token,toplam_token,tarife_surumu) VALUES(p_id,p_firma,p_alan,p_sira,p_bas,n,p_aktor,(fiyat->'degerler'->>'banner_haftalik_token')::bigint,(fiyat->>'token')::bigint,(fiyat->>'surum')::integer);
  FOR i IN 1..n LOOP INSERT INTO public.firma_banner_haftalari VALUES(p_id,i-1,p_yollar[i]); END LOOP;
  RETURN p_id;
 END $$;
+
+CREATE OR REPLACE FUNCTION public.firma_banner_rezerve_fiyatli(p_aktor uuid,p_firma uuid,p_id uuid,p_alan text,p_sira integer,p_bas date,p_yollar text[],p_beklenen_tarife integer,p_beklenen_bedel bigint)
+RETURNS uuid LANGUAGE plpgsql SECURITY DEFINER SET search_path='' AS $f$
+DECLARE fiyat jsonb;
+BEGIN
+ IF NOT public.firma_yonetim_yazma_yetkili_mi(p_aktor,p_firma) THEN RAISE EXCEPTION 'Firma yönetimi işlem yetkiniz yok.' USING ERRCODE='42501'; END IF;
+ -- Admin fiyat değişikliği bu işlem bitene kadar bekler; gösterilen ve kaydedilen fiyat aynıdır.
+ PERFORM 1 FROM public.cogniti_fiyat_tarifesi WHERE tekil FOR SHARE;
+ fiyat:=public.cogniti_hizmet_bedeli_hesapla('banner',cardinality(p_yollar));
+ IF p_beklenen_tarife IS DISTINCT FROM (fiyat->>'surum')::integer OR p_beklenen_bedel IS DISTINCT FROM (fiyat->>'token')::bigint THEN
+  RAISE EXCEPTION 'Banner fiyatı değişmiş. Takvimi yenileyip yeni bedeli onaylayın.' USING ERRCODE='40001';
+ END IF;
+ RETURN public.firma_banner_rezerve(p_aktor,p_firma,p_id,p_alan,p_sira,p_bas,p_yollar);
+END;
+$f$;
 
 -- Diğer token motorları değişmez. Banner bedeli tek tüketim ve gerçek dağılımla kaydedilir.
 CREATE OR REPLACE FUNCTION public.firma_banner_ucret_isle(p_id uuid,p_iptal boolean DEFAULT false)
@@ -103,7 +133,7 @@ BEGIN
  IF NOT FOUND THEN RAISE EXCEPTION 'Firmanın token hesabı yok.'; END IF;
  IF h.paket_turu='kullandigin_kadar_ode' THEN PERFORM public.cogniti_token_kko_aylik_yukle(r.firma_id);
  ELSE PERFORM public.cogniti_token_aylik_donemi_yukle(r.firma_id); END IF;
- bedel:=r.hafta_sayisi*200; v_kalan:=bedel;
+ bedel:=r.toplam_token; v_kalan:=bedel;
  INSERT INTO public.cogniti_token_tuketimleri(firma_id,gonderen_turu,gonderen_id,alici_turu,alici_kimligi,islem_turu,kaynak_id,islem_anahtari,miktar,asim_miktari)
  VALUES(r.firma_id,'firma_kullanicisi',r.olusturan_id,'firma_kullanicisi',r.firma_id::text,CASE WHEN p_iptal THEN 'banner_iptal' ELSE 'banner_yayin' END,r.rezervasyon_id,'banner:'||r.rezervasyon_id,bedel,0)
  RETURNING tuketim_id INTO tid;
@@ -127,14 +157,14 @@ BEGIN
  IF NOT public.firma_yonetim_yazma_yetkili_mi(p_aktor,p_firma) THEN RAISE EXCEPTION 'Firma yönetimi işlem yetkiniz yok.' USING ERRCODE='42501'; END IF;
  SELECT * INTO r FROM public.firma_banner_rezervasyonlari WHERE rezervasyon_id=p_id AND firma_id=p_firma FOR UPDATE;
  IF NOT FOUND THEN RAISE EXCEPTION 'Rezervasyon bulunamadı.' USING ERRCODE='P0002'; END IF;
- IF r.durum IN('iptal','kaldirildi') THEN RETURN jsonb_build_object('ok',true,'kesinti',CASE WHEN r.ucret_islendi THEN r.hafta_sayisi*200 ELSE 0 END); END IF;
+ IF r.durum IN('iptal','kaldirildi') THEN RETURN jsonb_build_object('ok',true,'kesinti',CASE WHEN r.ucret_islendi THEN r.toplam_token ELSE 0 END); END IF;
  IF r.durum NOT IN('rezerve','yayinda') OR public.firma_banner_an(r.baslangic+r.hafta_sayisi*7)<=an THEN RAISE EXCEPTION 'Bu rezervasyon sona ermiş.' USING ERRCODE='22023'; END IF;
  ceza:=an>public.firma_banner_an(r.baslangic)-interval '24 hours';
- IF p_beklenen_kesinti IS DISTINCT FROM (CASE WHEN ceza OR r.ucret_islendi THEN r.hafta_sayisi*200 ELSE 0 END) THEN
+ IF p_beklenen_kesinti IS DISTINCT FROM (CASE WHEN ceza OR r.ucret_islendi THEN r.toplam_token ELSE 0 END) THEN
   RAISE EXCEPTION 'İptal bedeli değişti. Takvimi yenileyip güncel bedeli onaylayın.' USING ERRCODE='40001'; END IF;
  IF ceza THEN PERFORM public.firma_banner_ucret_isle(p_id,true); END IF;
  UPDATE public.firma_banner_rezervasyonlari SET durum=CASE WHEN an>=public.firma_banner_an(r.baslangic) THEN 'kaldirildi' ELSE 'iptal' END WHERE rezervasyon_id=p_id;
- RETURN jsonb_build_object('ok',true,'kesinti',CASE WHEN ceza OR r.ucret_islendi THEN r.hafta_sayisi*200 ELSE 0 END);
+ RETURN jsonb_build_object('ok',true,'kesinti',CASE WHEN ceza OR r.ucret_islendi THEN r.toplam_token ELSE 0 END);
 END $$;
 
 CREATE OR REPLACE FUNCTION public.firma_banner_gorsel_degistir(p_aktor uuid,p_firma uuid,p_id uuid,p_hafta integer,p_yol text) RETURNS void
@@ -170,7 +200,7 @@ END $$;
 
 CREATE OR REPLACE FUNCTION public.firma_banner_takvim(p_firma uuid,p_alan text,p_sira integer,p_bas date,p_hafta integer)
 RETURNS jsonb LANGUAGE plpgsql STABLE SECURITY DEFINER SET search_path=public,pg_temp AS $$
-DECLARE d date; onerilen date; kayitlar jsonb; eski jsonb; i integer; azami integer; engel boolean;
+DECLARE d date; onerilen date; kayitlar jsonb; eski jsonb; i integer; azami integer; engel boolean; fiyat jsonb; fiyat1 jsonb; fiyat2 jsonb;
 BEGIN
  IF p_firma IS NULL OR p_alan IS NULL OR p_alan NOT IN('firma','uye-ana-sayfa','uyeler','uye-yayinlari','indirim-onayi') OR p_sira IS NULL OR p_sira NOT BETWEEN 1 AND 3 OR p_hafta IS NULL OR p_hafta NOT IN(1,2) OR p_bas IS NULL OR extract(isodow FROM p_bas)<>1 THEN RAISE EXCEPTION 'Geçersiz takvim isteği.' USING ERRCODE='22023'; END IF;
  IF p_alan='firma' THEN SELECT coalesce(jsonb_agg(to_jsonb(b)),'[]') INTO eski FROM public.eclub_firma_bannerlari b WHERE firma_id=p_firma;
@@ -191,7 +221,9 @@ BEGIN
   FROM public.firma_banner_rezervasyonlari r WHERE r.firma_id=p_firma AND r.alan=p_alan
    AND (r.durum IN('rezerve','yayinda') OR r.baslangic>=p_bas AND r.baslangic<p_bas+56)
  )x;
- RETURN jsonb_build_object('simdi',public.firma_banner_simdi(),'onerilen',onerilen,'manuel_engel',engel,'uygun',public.firma_banner_an(p_bas)>public.firma_banner_simdi() AND public.firma_banner_uygun_mu(p_firma,p_alan,p_sira,p_bas,p_hafta),'rezervasyonlar',kayitlar,'mevcut_bannerlar',eski);
+ fiyat:=public.cogniti_hizmet_bedeli_hesapla('banner',p_hafta);
+ fiyat1:=public.cogniti_hizmet_bedeli_hesapla('banner',1); fiyat2:=public.cogniti_hizmet_bedeli_hesapla('banner',2);
+ RETURN jsonb_build_object('tarife_surumu',fiyat->'surum','haftalik_token',fiyat->'degerler'->'banner_haftalik_token','toplam_token',fiyat->'token','hafta_1_token',fiyat1->'token','hafta_2_token',fiyat2->'token','simdi',public.firma_banner_simdi(),'onerilen',onerilen,'manuel_engel',engel,'uygun',public.firma_banner_an(p_bas)>public.firma_banner_simdi() AND public.firma_banner_uygun_mu(p_firma,p_alan,p_sira,p_bas,p_hafta),'rezervasyonlar',kayitlar,'mevcut_bannerlar',eski);
 END $$;
 
 CREATE OR REPLACE VIEW public.firma_banner_aktif_haftalar AS
@@ -203,11 +235,12 @@ CREATE OR REPLACE VIEW public.firma_banner_aktif_haftalar AS
 REVOKE ALL ON public.firma_banner_aktif_haftalar FROM PUBLIC,anon,authenticated;
 GRANT SELECT ON public.firma_banner_aktif_haftalar TO service_role;
 DO $yetki$ DECLARE r record; BEGIN
- FOR r IN SELECT p.oid::regprocedure AS imza FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace WHERE n.nspname='public' AND p.proname IN('firma_banner_simdi','firma_banner_an','firma_banner_manuel_koruma','firma_banner_uygun_mu','firma_banner_rezerve','firma_banner_ucret_isle','firma_banner_iptal','firma_banner_gorsel_degistir','firma_banner_yayinlari_isle','firma_banner_takvim') LOOP
+ FOR r IN SELECT p.oid::regprocedure AS imza FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace WHERE n.nspname='public' AND p.proname IN('firma_banner_simdi','firma_banner_an','firma_banner_manuel_koruma','firma_banner_uygun_mu','firma_banner_rezerve_fiyatli','firma_banner_ucret_isle','firma_banner_iptal','firma_banner_gorsel_degistir','firma_banner_yayinlari_isle','firma_banner_takvim') LOOP
   EXECUTE format('REVOKE ALL ON FUNCTION %s FROM PUBLIC,anon,authenticated',r.imza);
   EXECUTE format('GRANT EXECUTE ON FUNCTION %s TO service_role',r.imza);
  END LOOP;
 END $yetki$;
+REVOKE ALL ON FUNCTION public.firma_banner_rezerve(uuid,uuid,uuid,text,integer,date,text[]) FROM PUBLIC,anon,authenticated,service_role;
 DO $cron$ BEGIN
  IF NOT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname='cron') THEN RAISE EXCEPTION 'pg_cron bulunamadı; otomatik yayın için kurulum gerekli.'; END IF;
  PERFORM cron.schedule('firma-banner-haftalik-yayin','* * * * *','SELECT public.firma_banner_yayinlari_isle();');

@@ -5,11 +5,11 @@ const oda="viva-00000000000040008000000000000001-n1";
 const kullanim={toplam_saniye:36000,oturum_sayisi:1,katilim_sayisi:10,oturum_idleri:[],katilimlar:[]};
 process.env.DAILY_DOMAIN="cogniti-viva.daily.co";
 process.env.DAILY_API_KEY="test-only";
-test("işleyici ortak fiyatları kullanır ve Daily verisini tek kaydetme çağrısına taşır",async()=>{
+test("işleyici fiyat göndermeden merkezi tüketim işini ayırır ve Daily verisini tek kaydetme çağrısına taşır",async()=>{
  const calls:{islem:string;veri?:Record<string,unknown>}[]=[];let first=true;
  const rpc=async(islem:string,veri?:Record<string,unknown>)=>{calls.push({islem,veri});if(islem==="ayir"){if(!first)return null;first=false;return {etkinlik_id:"e",kira:"k",oda_adi:oda,domain:process.env.DAILY_DOMAIN};}return{tamam:true};};
  assert.deepEqual(await vivaTuketimIsle(rpc,async()=>kullanim,Date.now()+1000),{islenen:1,bekleyen:0,hatali:0});
- assert.equal(calls[0].veri?.kko_fiyat,9.9);assert.equal(calls[0].veri?.kur,55);assert.equal(calls[0].veri?.katsayi,1.5);
+ assert.equal(calls[0].veri,undefined);
  assert.equal(calls[1].veri?.toplam_saniye,36000);assert.match(String(calls[1].veri?.ozet),/^[a-f0-9]{64}$/);
 });
 test("Daily hatası işi yeniden denemeye bırakır; sıfır maliyet diye kaydetmez",async()=>{
