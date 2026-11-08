@@ -8,6 +8,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import FiyatTarifesi from "./FiyatTarifesi";
 import EclubTestEczaneleri from "../eclub/_components/EclubTestEczaneleri";
 import type { SistemAyari } from "../_types";
 import { RENK_BORDO, RENK_BORDO_KENAR, RENK_BORDO_ZEMIN } from "../_constants";
@@ -137,6 +138,8 @@ export default function SistemAyarlari({ hata, basari }: SistemAyarlariProps) {
       <p style={{ fontSize: "12px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)", marginBottom: "16px" }}>
         Değerler tüm firmalara aynı uygulanır. Yeni ayar eklemek migration işidir; buradan yalnızca mevcut değerler güncellenir.
       </p>
+
+      <div style={{ marginBottom:24 }}><FiyatTarifesi hata={hata} basari={basari} /></div>
 
       <div style={{ maxWidth: 980, marginBottom: 24 }}>
         <EclubTestEczaneleri hata={hata} basari={basari} />

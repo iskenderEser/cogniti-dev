@@ -1,0 +1,22 @@
+.tablo { width:100%; border-collapse:collapse; font-size:12px; color:var(--tema-metin); }
+.tablo th, .tablo td { padding:12px; border:1px solid var(--tema-cizgi); text-align:left; }
+.tablo thead th { background:var(--tema-zemin); font-weight:800; }
+.tablo tbody th { font-weight:600; }
+.tablo input { width:160px; max-width:100%; min-height:40px; border:1px solid var(--tema-kontrol-cizgi); border-radius:8px; padding:8px 10px; background:var(--tema-yuzey); color:var(--tema-metin); font:inherit; }
+.ozet { margin-top:16px; font-size:12px; line-height:1.6; color:var(--tema-ikincil-metin); }
+.ozet p { margin:8px 0; }
+.eylemler { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-top:16px; font-size:12px; }
+@media(max-width:640px) { .tablo th, .tablo td { padding:8px; } .tablo input { width:120px; } }
+
+.hizmetler { margin-top:20px; }
+
+.vivaTablo { table-layout:fixed; min-width:740px; }
+.vivaTablo input { width:100%; min-width:0; }
+
+.tabloBasligi { margin:0 0 12px; font-size:14px; font-weight:800; color:var(--tema-baslik); }
+.tabloBasligi.hizmetler { margin-top:20px; }
+
+.aciklama { margin:0 0 12px; font-size:12px; line-height:1.6; color:var(--tema-ikincil-metin); }
+.sm2Tablo { table-layout:fixed; }
+.sm2Tablo th:first-child { width:25%; }
+.sm2Tablo thead th:not(:first-child), .sm2Tablo td { text-align:right; font-variant-numeric:tabular-nums; }
