@@ -1,0 +1,18 @@
+{
+  "postgres": "18.6",
+  "passed": 11,
+  "tests": [
+    "Ortak migration tekrar kurulabilir, geçmiş Medikal yayın/planlar bir defa işaretlenir",
+    "Geçmiş 60 günlük Medikal yayın mevcut tüketimle sürer; geriye dönük blok yazılmaz",
+    "Geçmiş plan aktive olunca da yeni hesap/blok gerektirmez",
+    "Yeni Medikal yayın hesabını açık seçer; UTT tesliminde uygun üyeler ortak mekanizmayla bloklanır",
+    "Danışana teslim aynı bloktan bir token tüketir, tekrar çift düşmez",
+    "30 gün dolunca kalan bloklar serbestleşir; yayın gönderilemez ve yeni token üretilmez",
+    "Tekrar kurulum yeni Medikal yayını geçmişe katmaz, süresini ve hesabını değiştirmez",
+    "Yeni Medikal planında 30 gün yalnız gerçek aktivasyonda başlar",
+    "Hesap değişimi/başkasının yayını ve yetkisiz üretici reddedilir",
+    "Firma hesabı kişiselden ayrı kullanılır, yetersizlikte UTT teslimi/blok birlikte geri alınır",
+    "Anon/authenticated geçmiş işaretlerini değiştiremez ve ortak RPCyi çağıramaz"
+  ],
+  "scope": "Yerel PostgreSQL Unix socket, sahte temel tablolar; gerçek süre, blok, Medikal düzeltmesi ve ortaklaştırma migrationları. Eski tüketim gözlemci stub kullanır. Canlı/tarayıcı testi değildir."
+}

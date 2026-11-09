@@ -13,6 +13,8 @@
 //    davet aşamasındaki kayıtlar sayılmaz — eşik şişirme yapısal imkânsız.
 
 import { SupabaseClient } from "@supabase/supabase-js";
+import { eczanemGonderimBaslangiclari } from "./gonderimSuresiSunucu";
+import { eczanemGonderimSuresi, eczanemGonderimSuresiHatasi, ECZANEM_SURE_DOLDU_MESAJI, type EczanemGonderimSuresi } from "./gonderimSuresi";
 import { pushYayinlaEczanemMusterilereArkada } from "@/lib/push/orkestrasyon";
 import { eczaneEczanemFirmaIdleri, eczaneYayinErisimiDogrula } from "@/lib/eczanem/erisim";
 import { ogrenmeAraciBayraklari } from "@/lib/ogrenmeAraci/bayraklar";
@@ -86,8 +88,8 @@ async function yayinAdMap(
   adminSupabase: SupabaseClient,
   yayinIdler: string[],
   firmaIdler?: string[],
-): Promise<Map<string, { urun_adi: string; teknik_adi: string; firma_adi: string | null; talep_no: number | null; video_puani: number | null; icerik_turu: string | null; video_url: string | null; thumbnail_url: string | null; yayin_tarihi: string | null; arac_id: string; arac_turu: OgrenmeAraciTuru }>> {
-  const map = new Map<string, { urun_adi: string; teknik_adi: string; firma_adi: string | null; talep_no: number | null; video_puani: number | null; icerik_turu: string | null; video_url: string | null; thumbnail_url: string | null; yayin_tarihi: string | null; arac_id: string; arac_turu: OgrenmeAraciTuru }>();
+): Promise<Map<string, { urun_adi: string; teknik_adi: string; firma_adi: string | null; talep_no: number | null; video_puani: number | null; icerik_turu: string | null; video_url: string | null; thumbnail_url: string | null; yayin_tarihi: string | null; gonderim_baslangic_at: string | null; gonderim_sure_muaf: boolean; arac_id: string; arac_turu: OgrenmeAraciTuru }>> {
+  const map = new Map<string, { urun_adi: string; teknik_adi: string; firma_adi: string | null; talep_no: number | null; video_puani: number | null; icerik_turu: string | null; video_url: string | null; thumbnail_url: string | null; yayin_tarihi: string | null; gonderim_baslangic_at: string | null; gonderim_sure_muaf: boolean; arac_id: string; arac_turu: OgrenmeAraciTuru }>();
   if (yayinIdler.length === 0) return map;
   let sorgu = adminSupabase
     .from("v_yayin_detay")
@@ -100,6 +102,7 @@ async function yayinAdMap(
   }
   const { data, error } = await sorgu;
   if (error) throw new Error("Eczanem yayın bilgileri okunamadı.");
+  const sureler = await eczanemGonderimBaslangiclari(adminSupabase,(data ?? []).map(y => y.yayin_id));
   for (const y of (data as VYayinAdDetay[] | null) ?? []) {
     if (!y.arac_id || !y.arac_turu) continue;
     const { thumbnail_url } = yayinThumbnailCevabi(y);
@@ -113,6 +116,8 @@ async function yayinAdMap(
       video_url: y.video_url ?? null,
       thumbnail_url: thumbnail_url ?? null,
       yayin_tarihi: y.yayin_tarihi ?? null,
+      gonderim_baslangic_at: sureler.get(y.yayin_id)?.baslangic ?? null,
+      gonderim_sure_muaf: sureler.get(y.yayin_id)?.sureMuaf === true,
       arac_id: y.arac_id,
       arac_turu: y.arac_turu,
     });
@@ -181,7 +186,7 @@ async function aktifUyeSayilari(
 //  UTT TARAFI (İP-§5.1–5.3)
 // ════════════════════════════════════════════════════════════════════════
 
-export interface UttEczanemYayin {
+export interface UttEczanemYayin extends EczanemGonderimSuresi {
   yayin_id: string;
   talep_no: number | null;
   firma_adi: string | null;
@@ -302,6 +307,8 @@ export async function uttEczanemVerisi(
     adminSupabase, (yayinRaw ?? []).map((yayin) => yayin.yayin_id),
   );
 
+  const sureler = await eczanemGonderimBaslangiclari(adminSupabase,(yayinRaw ?? []).map(y => y.yayin_id));
+
   const yayinlar: UttEczanemYayin[] = ((yayinRaw as VYayinAdDetay[] | null) ?? []).filter((y) => Boolean(y.arac_id && y.arac_turu)).map(y => {
     const { thumbnail_url } = yayinThumbnailCevabi(y);
     return {
@@ -316,6 +323,8 @@ export async function uttEczanemVerisi(
       video_url: y.video_url ?? null,
       thumbnail_url: thumbnail_url ?? null,
       yayin_tarihi: y.yayin_tarihi ?? null,
+      gonderim_baslangic_at: sureler.get(y.yayin_id)?.baslangic ?? null,
+      gonderim_sure_muaf: sureler.get(y.yayin_id)?.sureMuaf === true,
       arac_id: y.arac_id!,
       arac_turu: y.arac_turu!,
       gonderim_incelemesi_tamamlandi: false,
@@ -418,7 +427,11 @@ export async function eczaneyeGonder(
     p_yayin_id: yayinId,
     p_eczane_id: eczaneId,
   });
-  if (error) throw new Error("Eczanem gönderimi veritabanında tamamlanamadı.");
+  if (error) {
+    if (error.message?.includes("ECZANEM_TOKEN:yetersiz")) throw new Error("Bu eczanenin üyeleri için yeterli kullanılabilir token ayrılamadı. PM ile iletişime geçin.");
+    if (error.message?.includes("ECZANEM_TOKEN:hesap_secilmedi")) throw new Error("PM bu yayın için token hesabını henüz seçmedi.");
+    throw new Error(eczanemGonderimSuresiHatasi(error) ?? "Eczanem gönderimi veritabanında tamamlanamadı.");
+  }
   const sonuc = Array.isArray(data) ? data[0] : data;
   if (!sonuc || typeof sonuc.ok !== "boolean") throw new Error("Eczanem gönderim sonucu alınamadı.");
   return { ok: sonuc.ok, hata: sonuc.hata ?? undefined };
@@ -428,7 +441,7 @@ export async function eczaneyeGonder(
 //  ECZANE TARAFI (İP-§5.5)
 // ════════════════════════════════════════════════════════════════════════
 
-export interface EczaneGelenVideo {
+export interface EczaneGelenVideo extends EczanemGonderimSuresi {
   yayin_id: string;
   firma_adi: string | null;
   talep_no: number | null;
@@ -499,6 +512,8 @@ export async function eczaneGelenVideolar(
       teknik_adi: ad?.teknik_adi ?? "-",
       icerik_turu: ad?.icerik_turu ?? null,
       yayin_tarihi: ad?.yayin_tarihi ?? null,
+      gonderim_baslangic_at: ad?.gonderim_baslangic_at ?? null,
+      gonderim_sure_muaf: ad?.gonderim_sure_muaf === true,
       gorunen_urun_id: gorunenUrunIdleri.get(gonderim.yayin_id) ?? null,
       video_url: ad?.video_url ?? null,
       thumbnail_url: ad?.thumbnail_url ?? null,
@@ -668,6 +683,10 @@ export async function musteriyeGonder(
     return { ok: false, hata: yayinErisimi.hata ?? "Eczanem erişimi doğrulanamadı.", gonderilen: 0, atlanan: 0 };
   }
 
+  const sureler = await eczanemGonderimBaslangiclari(adminSupabase,[yayinId]);
+  const sure = eczanemGonderimSuresi(sureler.get(yayinId)?.baslangic,Date.now(),sureler.get(yayinId)?.sureMuaf === true);
+  if (!sure.acik) return { ok: false, hata: sure.bitis ? ECZANEM_SURE_DOLDU_MESAJI : "Yayının gönderim süresi doğrulanamadı.", gonderilen: 0, atlanan: 0 };
+
   const { data, error } = await adminSupabase.rpc("eczanem_musterilere_video_gonder", {
     p_eczane_id: eczaneId,
     p_gonderen_kisi_id: gonderenKisiId,
@@ -694,6 +713,9 @@ export async function musteriyeGonder(
 
 
 function musteriTokenHatasi(error: { code?: string; message?: string }): string {
+  if (error.message?.includes("ECZANEM_TOKEN:")) return "Bu yayın seçilen danışanlara şu anda iletilemiyor. Bağlı UTT ile iletişime geçin.";
+  const sureHatasi = eczanemGonderimSuresiHatasi(error);
+  if (sureHatasi) return sureHatasi;
   if (error.code === "P0001" && error.message === "COGNITI_TOKEN:bakiye_yetersiz") {
     return "Yayın sahibi firmanın token bakiyesi yetersiz. Seçilen gönderimlerin hiçbiri yapılmadı.";
   }
@@ -716,6 +738,11 @@ export async function musterilereTopluGonder(
   for (const yayinId of yayinlar) {
     const erisim = await eczaneYayinErisimiDogrula(adminSupabase, eczaneId, yayinId);
     if (!erisim.ok) return { ok: false, hata: erisim.hata ?? "Eczanem erişimi doğrulanamadı.", gonderilen: 0, atlanan: 0 };
+  }
+  const sureler = await eczanemGonderimBaslangiclari(adminSupabase,yayinlar);
+  for (const yayinId of yayinlar) {
+    const sure = eczanemGonderimSuresi(sureler.get(yayinId)?.baslangic,Date.now(),sureler.get(yayinId)?.sureMuaf === true);
+    if (!sure.acik) return { ok: false, hata: sure.bitis ? ECZANEM_SURE_DOLDU_MESAJI : "Yayının gönderim süresi doğrulanamadı.", gonderilen: 0, atlanan: 0 };
   }
   const { data, error } = await adminSupabase.rpc("cogniti_token_eczanem_toplu_gonder", {
     p_eczane_id: eczaneId, p_gonderen_kisi_id: gonderenKisiId,

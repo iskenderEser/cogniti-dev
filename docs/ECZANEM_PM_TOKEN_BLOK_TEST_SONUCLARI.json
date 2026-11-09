@@ -1,0 +1,23 @@
+{
+  "postgres": "18.6",
+  "passed": 16,
+  "tests": [
+    "bloklama migration ilk ve tekrar kurulur",
+    "kişisel hesabı PM açık seçer; UTT tesliminde 3 uygun üye bloklanır",
+    "başarılı teslim bloktan tüketir; tekrar gönderim çift düşmez",
+    "snapshot dışı yeni danışan bloktan veya başka hesaptan tüketemez",
+    "30 gün sonunda harcanmayan blok çözülür; yeni token yaratılmaz",
+    "firma hesabı seçilirse yalnız ortak blok ve tüketim artar",
+    "hesap seçilmemiş yayın teslimi reddedilir; eczane kaydı ve blok oluşmaz",
+    "tekrar kurulum yeni yayınları eski hesap kapsamına almaz",
+    "Medikal, UTT ve başka PM yayın hesabını seçemez; seçilmiş hesap değişemez",
+    "yetersiz token durumunda eczane teslimi ve kısmi blok birlikte geri alınır",
+    "eski yayın mevcut tüketim fonksiyonuyla sürer; yeni hesaba taşınmaz",
+    "aynı kişisel hesapta eş zamanlı iki yayın bloku bakiyeyi aşamaz",
+    "karma danışan seçiminde bir blok yoksa önceki tüketim de geri alınır",
+    "tüm snapshot üyelerine teslim bitince o yayının bloku sıfırlanır",
+    "yükleme süresi dolunca blok kullanılabilir bakiyeye dönmez ve tüketilemez",
+    "anon/authenticated blok tabloları ve PM işlemine erişemez"
+  ],
+  "scope": "Yerel Unix socket, sahte temel tablolar; değiştirilmemiş PM09/30 gün/Esnek hesap ve yeni bloklama SQL. Canlı sipariş/push veya tarayıcı testi değildir."
+}

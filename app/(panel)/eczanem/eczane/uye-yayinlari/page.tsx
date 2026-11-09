@@ -1,5 +1,8 @@
 "use client";
 
+import { useEczanemGonderimSaati } from "@/components/eczanem/GonderimSuresi";
+import { eczanemGonderimSuresi } from "@/lib/eczanem/gonderimSuresi";
+
 import EczanemSayfaBanner from "@/components/eczanem/EczanemSayfaBanner";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CheckCircle2, ChevronLeft, CircleAlert, Send, UsersRound } from "lucide-react";
@@ -45,6 +48,7 @@ function OzetKarti({ ikon: Icon, etiket, deger, detay, renk, zemin }: {
 export default function EczanemDagitimPage() {
   const { mesajlar, hata, basari } = useHataMesaji();
   const [veri, setVeri] = useState<EczaneDagitimVerisi | null>(null);
+  const simdi = useEczanemGonderimSaati((veri?.videolar ?? []).map(y => y.gonderim_baslangic_at));
   const [ilkYukleme, setIlkYukleme] = useState(true);
   const [yenileniyor, setYenileniyor] = useState(false);
   const [veriHatasi, setVeriHatasi] = useState<string | null>(null);
@@ -85,7 +89,7 @@ export default function EczanemDagitimPage() {
   const ozetMap = useMemo<ReadonlyMap<string, EczaneDagitimOzeti>>(() => new Map(
     (veri?.video_ozetleri ?? []).map((ozet) => [ozet.yayin_id, ozet]),
   ), [veri?.video_ozetleri]);
-  const gonderilebilirYayinlar = yayinlar.filter((yayin) => (ozetMap.get(yayin.yayin_id)?.gonderilebilir_uye_sayisi ?? 0) > 0);
+  const gonderilebilirYayinlar = yayinlar.filter((yayin) => eczanemGonderimSuresi(yayin.gonderim_baslangic_at,simdi,yayin.gonderim_sure_muaf).acik && (ozetMap.get(yayin.yayin_id)?.gonderilebilir_uye_sayisi ?? 0) > 0);
   const gonderilenYayinlar = yayinlar.filter((yayin) => (ozetMap.get(yayin.yayin_id)?.gonderilen_uye_sayisi ?? 0) > 0);
   const durumFiltreliYayinlar = gonderimFiltresi === "gonderilebilir"
     ? gonderilebilirYayinlar
@@ -132,6 +136,7 @@ export default function EczanemDagitimPage() {
     return <EczaneDanisanYayinKarti
       key={yayin.yayin_id}
       yayin={yayin}
+      simdi={simdi}
       ozet={ozet}
       secili={seciliYayinIdleri.includes(yayin.yayin_id)}
       secilebilir={gonderilebilirIdler.has(yayin.yayin_id) && !topluGonderiliyor}

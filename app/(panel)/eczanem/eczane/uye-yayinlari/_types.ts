@@ -1,6 +1,7 @@
+import type { EczanemGonderimSuresi } from "@/lib/eczanem/gonderimSuresi";
 import type { OgrenmeAraciTuru } from "@/lib/ogrenmeAraci/tipler";
 
-export interface EczaneDagitimYayini {
+export interface EczaneDagitimYayini extends EczanemGonderimSuresi {
   yayin_id: string;
   firma_adi: string | null;
   talep_no: number | null;

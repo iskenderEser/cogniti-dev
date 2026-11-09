@@ -1,8 +1,9 @@
+import type { EczanemGonderimSuresi } from "@/lib/eczanem/gonderimSuresi";
 import type { OgrenmeAraciTuru } from "@/lib/ogrenmeAraci/tipler";
 
 // Eczanem Yayınları UTT dağıtım yüzeyinin istemci sözleşmeleri.
 
-export interface UttEczanemYayin {
+export interface UttEczanemYayin extends EczanemGonderimSuresi {
   yayin_id: string;
   talep_no: number | null;
   firma_adi: string | null;

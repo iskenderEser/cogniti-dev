@@ -1,5 +1,8 @@
 "use client";
 
+import { useEczanemGonderimSaati } from "@/components/eczanem/GonderimSuresi";
+import { eczanemGonderimSuresi } from "@/lib/eczanem/gonderimSuresi";
+
 import UttGonderimIncelemesi from "@/components/eclub/UttGonderimIncelemesi";
 import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
 import OgrenmeAraciOnizleme from "@/components/ogrenme-araci/OgrenmeAraciOnizleme";
@@ -45,6 +48,7 @@ function OzetKarti({ ikon: Icon, etiket, deger, detay, renk, zemin }: {
 export default function EczanemYayinlariPage() {
   const { mesajlar, hata, basari, uyari } = useHataMesaji();
   const [veri, setVeri] = useState<UttEczanemVeri | null>(null);
+  const simdi = useEczanemGonderimSaati((veri?.yayinlar ?? []).map(y => y.gonderim_baslangic_at));
   const [ilkYukleme, setIlkYukleme] = useState(true);
   const [yenileniyor, setYenileniyor] = useState(false);
   const [veriHatasi, setVeriHatasi] = useState<string | null>(null);
@@ -122,7 +126,7 @@ export default function EczanemYayinlariPage() {
   const gonderimMap = useMemo<ReadonlyMap<string, UttEczanemGonderim>>(() => new Map(
     (veri?.gonderimler ?? []).map((gonderim) => [`${gonderim.yayin_id}::${gonderim.eczane_id}`, gonderim]),
   ), [veri?.gonderimler]);
-  const gonderilebilirYayinlar = yayinlar.filter((yayin) => yayin.gonderim_incelemesi_tamamlandi && hazirEczaneler.some(
+  const gonderilebilirYayinlar = yayinlar.filter((yayin) => eczanemGonderimSuresi(yayin.gonderim_baslangic_at,simdi,yayin.gonderim_sure_muaf).acik && yayin.gonderim_incelemesi_tamamlandi && hazirEczaneler.some(
     (eczane) => !gonderimMap.has(`${yayin.yayin_id}::${eczane.eczane_id}`),
   ));
   const gonderilenYayinlar = yayinlar.filter((yayin) => eczaneler.some(
@@ -154,6 +158,7 @@ export default function EczanemYayinlariPage() {
     return <EczanemYayinGonderimKarti
       key={yayin.yayin_id}
       yayin={yayin}
+      simdi={simdi}
       esik={esik}
       eczaneler={eczaneler}
       gonderimler={yayinGonderimleri}

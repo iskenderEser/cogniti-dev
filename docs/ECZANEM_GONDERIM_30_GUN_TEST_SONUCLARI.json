@@ -1,0 +1,19 @@
+{
+  "postgres": "18.6",
+  "passed": 12,
+  "tests": [
+    "ilk ve tekrar kurulum geçmiş süreyi yenilemez",
+    "planlanan yayın başlangıcı ilk gerçek aktivasyonda oluşur",
+    "30 gün içindeki gerçek UTT ve danışan RPC gönderimleri başarılıdır",
+    "süresi dolmuş yayın UTT gönderiminde ve doğrudan INSERTte reddedilir",
+    "eczane danışan gönderiminde süre dolunca tüketim oluşmaz",
+    "durdur/devam et ve yayın tarihini güncellemek süreyi sıfırlamaz",
+    "kilitte bekleyen gönderim süre dolduktan sonra ilerleyemez",
+    "çoklu gönderimde süresi dolan kayıt önceki gönderimleri de geri alır",
+    "önceden teslim edilen kayıt silinmez ve Eczanem dışı yayın değişmez",
+    "başlangıcı olmayan kayıt güvenli kapanır; service_role başlangıcı değiştiremez",
+    "PM/Jr PM/Kıdemli PM kaynakları kabul edilir; Medikal kaynak reddedilir",
+    "çıkış rolü korunur; sonradan rol veya yayın sahibi değiştirmek başlangıcı yenilemez"
+  ],
+  "scope": "Yerel Unix socket ve sahte temel tablolar; değiştirilmemiş PM09 ve 30 gün SQL. Canlı DB/gerçek push/izleme testi değildir."
+}

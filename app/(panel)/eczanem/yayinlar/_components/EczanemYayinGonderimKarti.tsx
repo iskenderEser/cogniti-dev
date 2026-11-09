@@ -1,10 +1,14 @@
 "use client";
 
+import { GonderimSuresi } from "@/components/eczanem/GonderimSuresi";
+import { eczanemGonderimSuresi } from "@/lib/eczanem/gonderimSuresi";
+
 import { YayinKarti } from "@/components/yayin/YayinKarti";
 import { yayin_kodu } from "@/lib/utils/yayinKodu";
 import type { UttEczanemEczane, UttEczanemGonderim, UttEczanemYayin } from "../_types";
 
 interface Props {
+  simdi: number;
   yayin: UttEczanemYayin;
   esik: number;
   eczaneler: readonly UttEczanemEczane[];
@@ -21,10 +25,11 @@ interface Props {
 }
 
 export function EczanemYayinGonderimKarti({
-  yayin, esik, eczaneler, gonderimler, secili, secilebilir, gonderilecekGoster,
+  simdi, yayin, esik, eczaneler, gonderimler, secili, secilebilir: secimIzni, gonderilecekGoster,
   gonderimDetayiGoster, gonderimDetayiAcik, onSecim, onOnizle,
   onGonderimDetayiAc, onGonderimDetayiKapat,
 }: Props) {
+  const secilebilir = secimIzni && eczanemGonderimSuresi(yayin.gonderim_baslangic_at,simdi,yayin.gonderim_sure_muaf).acik;
   const eczaneMap = new Map(eczaneler.map((eczane) => [eczane.eczane_id, eczane]));
   const gonderilenEczaneler = gonderimler.filter((gonderim) => eczaneMap.has(gonderim.eczane_id));
   const hazirEczaneler = eczaneler.filter((eczane) => eczane.esik_uygun);
@@ -66,6 +71,7 @@ export function EczanemYayinGonderimKarti({
           )}
           altEkIcerik={(
             <div className="mt-2 border-t border-[var(--tema-hoyk-ek-icerik-cizgi)] pt-2" aria-label="Eczane gönderim koşulu">
+              {!yayin.gonderim_sure_muaf && <GonderimSuresi baslangic={yayin.gonderim_baslangic_at} simdi={simdi} />}
               <span className="max-w-full rounded-md border border-[var(--tema-hoyk-kosul-cizgi)] bg-[var(--tema-hoyk-kosul-zemin)] px-1.5 py-0.5 text-[10px] font-normal leading-tight text-[var(--tema-hoyk-gonderim-metin)] sm:text-[8px]">
                 En az {esik} aktif üye
               </span>

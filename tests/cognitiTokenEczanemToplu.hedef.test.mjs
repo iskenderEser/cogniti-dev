@@ -5,9 +5,13 @@ import vm from 'node:vm';
 import ts from 'typescript';
 const source = readFileSync(new URL('../lib/eczanem/gonderim.ts', import.meta.url), 'utf8');
 const code = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText;
-function scenario(result, denied) {
+const sureExports={};
+vm.runInNewContext(ts.transpileModule(readFileSync('lib/eczanem/gonderimSuresi.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText,{exports:sureExports});
+function scenario(result, denied, baslangic=new Date().toISOString()) {
   const pushes=[], calls=[], checks=[], exports={};
   vm.runInNewContext(code, {exports, console, require: id => {
+    if(id==='./gonderimSuresi')return sureExports;
+    if(id==='./gonderimSuresiSunucu')return {eczanemGonderimBaslangiclari:async(_db,ids)=>new Map(ids.map(id=>[id,{baslangic,sureMuaf:false}]))};
     if (id === '@/lib/push/orkestrasyon') return {pushYayinlaEczanemMusterilereArkada: (...args)=>pushes.push(args)};
     if (id === '@/lib/eczanem/erisim') return {eczaneYayinErisimiDogrula: async (_db,eczane,pub)=>{
       checks.push({eczane,pub});return pub===denied ? {ok:false,hata:'Erişim kapalı.'} : {ok:true};
@@ -53,4 +57,14 @@ test('Boş seçim ve teknik istek sınırı yazma yapmadan reddedilir',async()=>
 test('Beklenmedik veritabanı hatasında teknik ayrıntılar kullanıcıya aktarılmaz',async()=>{
   const s=scenario({data:null,error:{code:'23514',message:'internal detail'}});const result=await s.run();
   assert.equal(result.ok,false);assert.doesNotMatch(result.hata,/internal detail/);assert.equal(s.pushes.length,0);
+});
+
+test('30 günlük süre dolmuşsa yazma RPCsi ve push oluşmaz',async()=>{
+ const s=scenario({},undefined,new Date(Date.now()-31*86400000).toISOString());const r=await s.run();
+ assert.equal(r.ok,false);assert.match(r.hata,/30 günlük gönderim süresi doldu/);assert.equal(s.calls.length,0);assert.equal(s.pushes.length,0);
+});
+
+test('eczane kullanıcısına blok ve token hesabı ayrıntıları aktarılmaz',async()=>{
+ const s=scenario({data:null,error:{code:'P0001',message:'ECZANEM_TOKEN:blok_yok'}});const r=await s.run();
+ assert.equal(r.ok,false);assert.match(r.hata,/Bağlı UTT/);assert.doesNotMatch(r.hata,/bakiye|token|blok|hesap|ECZANEM_TOKEN/i);assert.equal(s.pushes.length,0);
 });
