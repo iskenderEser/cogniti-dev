@@ -63,6 +63,8 @@ export const FIYAT_KALEMLERI = [
     "ad": "3. Paket · Aşım birim fiyatı",
     "birim": "TL/token"
   },
+  { "anahtar": "paket_25k_token_miktari", "grup": "Abonelik", "ad": "4. Paket · Token miktarı", "birim": "Token/ay" },
+  { "anahtar": "paket_25k_token_tl", "grup": "Abonelik", "ad": "4. Paket · Token birim fiyatı", "birim": "TL/token" },
   {
     "anahtar": "uretim_video_tl",
     "grup": "İçerik üretimi",
@@ -118,7 +120,7 @@ export interface FiyatTarifesi {
   surum: number;
   sm2: Sm2Fiyat[];
   degerler: FiyatDegerleri;
-  hesaplar: { viva_kisi_dakika_tl: number; viva_kisi_dakika_token: number; paket_10k_aylik_tl: number; paket_30k_aylik_tl: number; paket_75k_aylik_tl: number };
+  hesaplar: { viva_kisi_dakika_tl: number; viva_kisi_dakika_token: number; paket_10k_aylik_tl: number; paket_30k_aylik_tl: number; paket_75k_aylik_tl: number; paket_25k_aylik_tl: number };
 }
 export function fiyatDegerleriGecerli(veri: unknown): veri is FiyatDegerleri {
   if (!veri || typeof veri !== "object" || Array.isArray(veri)) return false;
@@ -137,7 +139,7 @@ export function fiyatTarifesiGecerli(veri: unknown): veri is FiyatTarifesi {
   if (!Number.isSafeInteger(d.surum) || Number(d.surum) < 1 || !fiyatDegerleriGecerli(d.degerler)
     || !sm2MatrisiGecerli(d.sm2) || !d.hesaplar || typeof d.hesaplar !== "object" || Array.isArray(d.hesaplar)) return false;
   const h = d.hesaplar as Record<string, unknown>;
-  return ["viva_kisi_dakika_tl", "viva_kisi_dakika_token", "paket_10k_aylik_tl", "paket_30k_aylik_tl", "paket_75k_aylik_tl"].every(k =>
+  return ["viva_kisi_dakika_tl", "viva_kisi_dakika_token", "paket_10k_aylik_tl", "paket_30k_aylik_tl", "paket_75k_aylik_tl", "paket_25k_aylik_tl"].every(k =>
     typeof h[k] === "number" && Number.isFinite(h[k]) && Number(h[k]) > 0);
 }
 export function fiyatMetniniOku(metin: string): number | null {

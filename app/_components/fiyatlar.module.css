@@ -1,4 +1,4 @@
-.page { max-width:1080px; margin:auto; padding:40px 32px 56px; color:var(--tema-kontrol-metin); font-size:15px; line-height:1.5; }
+.page { max-width:1440px; margin:auto; padding:40px 32px 56px; color:var(--tema-kontrol-metin); font-size:15px; line-height:1.5; }
 .page h1,.page h2,.page h3,.page p { margin:0; }
 .page h1 { font-size:14px; letter-spacing:1.8px; line-height:1.5; margin-bottom:28px; font-weight:400; color:var(--tema-kontrol-eylem); }
 .page h2 { font-size:22px; letter-spacing:-.04em; line-height:1.25; font-weight:700; }
@@ -11,6 +11,7 @@
 .price { text-align:right; color:var(--tema-kontrol-eylem); }
 .price strong { font-size:42px; letter-spacing:-.06em; font-weight:600; }
 .price small { font-size:15px; }
+.kkoSagAlan { display:flex; flex-direction:column; gap:16px; min-width:0; }
 .flex { align-items:start; }
 .flex>div:first-child>p { max-width:32ch; }
 .hesaplayici { min-width:0; background:var(--tema-zemin); border:1px solid var(--tema-kontrol-cizgi); padding:18px; border-radius:12px; }
@@ -30,11 +31,22 @@
 .paketTablosu th:first-child { text-align:left; }
 .paketTablosu tbody td:last-child { font-weight:600; }
 .paketTablosu tbody tr:last-child>* { border:0; }
+.packages { display:grid; grid-template-columns:minmax(0,1fr) minmax(450px,590px); align-items:start; gap:40px; }
+.abonelikTabloKarti { min-width:0; padding:18px; border:1px solid var(--tema-kontrol-cizgi); border-radius:12px; background:var(--tema-zemin); }
+.abonelikTabloKarti .paketTablosu { margin-top:0; }
+.abonelikTabloKarti .paketTablosu th,.abonelikTabloKarti .paketTablosu td { padding:12px 8px; }
+.abonelikTabloKarti .paketTablosu tbody td:last-child { white-space:nowrap; }
+.abonelikTabloKarti .paketTablosu tbody th { white-space:nowrap; }
+.abonelikPaketSecenegi { display:inline-flex; align-items:center; gap:6px; cursor:pointer; }
+.abonelikPaketSecenegi input { margin:0; accent-color:var(--tema-kontrol-eylem); }
+.abonelikSiparisAlani { display:flex; justify-content:flex-end; margin-top:16px; }
+@media(max-width:1299px){.packages{grid-template-columns:1fr;gap:20px}}
 @media(max-width:700px){
  .page{padding:24px 16px 40px}.sheet>section{padding:22px 18px}
  .pay,.flex{grid-template-columns:1fr;gap:16px}.price{text-align:left}.price strong{font-size:34px}
  .flex>div:first-child>p{max-width:none}.hesaplayici{padding:12px}.hesapSonuc>div:last-child strong{font-size:21px}
  .paketTablosu th,.paketTablosu td{padding:10px 3px;font-size:clamp(11px,3vw,14px)}.paketTablosu thead th{font-size:11px}
+ .abonelikTabloKarti .paketTablosu th,.abonelikTabloKarti .paketTablosu td{padding:10px 3px}
 }
 
 .secimAlani { position:relative; margin-top:5px; }
@@ -60,12 +72,42 @@
 
 .hesapSonuc>div:last-child { justify-content:flex-end; gap:16px; }
 
-.hesaplayici { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px 24px; }
+.hesaplayici { display:block; }
 .hesapKontroller { grid-column:1; grid-row:1; grid-template-columns:1fr; align-content:start; gap:14px; }
 .hesapSonuc { grid-column:2; grid-row:1; grid-template-columns:1fr; margin:0; gap:12px; align-content:start; }
 .hesapSonuc>div { display:grid; gap:2px; }
 .hesapSonuc>div:last-child { grid-column:1; display:grid; justify-content:start; align-items:start; padding-top:10px; gap:2px; }
 .faturaOzeti { text-align:left; }
 .page .hesapNotu { grid-column:1/-1; margin:0; }
-@media(min-width:901px){.flex{grid-template-columns:minmax(0,.8fr) minmax(0,1.6fr);gap:28px}}
+.esnekMaddeler { display:grid; gap:8px; list-style:none; padding:0; margin:12px 0 0; color:var(--tema-ikincil-metin); }
+.esnekMaddeler li { display:flex; align-items:baseline; gap:8px; }
+.esnekMaddeler li>span { flex-shrink:0; }
+@media(min-width:1300px){
+ .flex { grid-template-columns:minmax(0,1fr) minmax(450px,590px); justify-content:stretch; gap:40px; }
+ .esnekMaddeler li { white-space:nowrap; }
+}
+@media(min-width:901px) and (max-width:1299px){.flex{grid-template-columns:1fr;gap:20px}}
 @media(max-width:420px){.hesaplayici{grid-template-columns:1fr}.hesapKontroller,.hesapSonuc{grid-column:1;grid-row:auto}}
+
+.hesaplayici { --hesap-sutunlari:minmax(150px,1.1fr) repeat(2,minmax(0,1fr)); }
+.hesapUstSatir { display:grid; grid-template-columns:var(--hesap-sutunlari); gap:16px; align-items:start; }
+.hesapUstSatir>.hesapDeger:last-child { grid-column:3/-1; }
+.hesapUstSatir>.hesapSecim { justify-self:stretch; }
+.hesapSecim { display:grid; gap:8px; min-width:0; font-size:12px; line-height:18px; color:var(--tema-ikincil-metin); }
+.hesapSecim .secimAlani { margin-top:0; }
+.hesapSecim select { display:block; width:100%; height:32px; min-height:32px; background:var(--tema-yuzey); color:var(--tema-kontrol-metin); font:inherit; font-size:15px; line-height:24px; border:1px solid var(--tema-kontrol-cizgi); border-radius:7px; padding:3px 32px 3px 9px; cursor:pointer; }
+.hesapSecim select:focus-visible { outline:2px solid var(--tema-kontrol-odak); outline-offset:2px; }
+.hesapDeger { display:grid; min-width:0; align-content:start; gap:8px; font-variant-numeric:tabular-nums; }
+.hesapDeger>span { font-size:12px; line-height:18px; color:var(--tema-ikincil-metin); }
+.hesapDeger>strong { display:flex; align-items:center; min-height:32px; font-size:18px; line-height:27px; font-weight:400; overflow-wrap:anywhere; }
+.page .hesaplayici .hesapNotu { margin-top:16px; }
+@media(max-width:560px){
+ .hesapUstSatir { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ .hesapUstSatir>.hesapSecim { grid-column:1/-1; }
+ .hesapUstSatir>.hesapDeger:last-child { grid-column:auto; }
+}
+
+.paketSagAlan { min-width:0; }
+.planlamaBaglantisiAlani { display:flex; justify-content:flex-end; margin-top:10px; }
+.planlamaBaglantisi { display:inline-flex; align-items:center; gap:5px; color:var(--tema-kontrol-eylem); font-size:11px; font-weight:400; text-decoration:none; }
+.planlamaBaglantisi:hover { text-decoration:underline; }

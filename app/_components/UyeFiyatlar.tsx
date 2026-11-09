@@ -19,6 +19,6 @@ export default function UyeFiyatlar({ rol, partnerAdi }: { rol: string; partnerA
     <PanelNavbar adSoyad={partnerAdi ?? kullanici?.adSoyad} profilAltBilgi={partnerAdi ? "Cogniti İş Partneri" : undefined}
       anaSayfaYolu={anaSayfaYolu} bilgiPilleri={[{key:"ana-sayfa",etiket:"Ana Sayfa",path:anaSayfaYolu}]}
       fiyatlarGoster fiyatlarYolu={rol === "partner" ? "/partner/fiyatlar" : "/fiyatlar"} onCikis={() => void cikis()} />
-    <main><FiyatlarIcerigi /></main>
+    <main><FiyatlarIcerigi rol={kullanici?.rol ?? rol} kullaniciId={kullanici?.id ?? ""} /></main>
   </>;
 }

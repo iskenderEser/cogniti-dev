@@ -4,9 +4,12 @@ import { usePathname } from "next/navigation";
 import { taahhutluPaketlerGecerli, type TaahhutluPaket } from "@/lib/fiyat/taahhut";
 import EsnekPaketHesaplayici from "./EsnekPaketHesaplayici";
 import styles from "./fiyatlar.module.css";
-const fiyat = new Intl.NumberFormat("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2});
-export default function FiyatlarIcerigi(){
+import KkoSecimModali from "@/components/satinAlma/KkoSecimModali";
+import AbonelikPaketSecimi from "./AbonelikPaketSecimi";
+export default function FiyatlarIcerigi({rol="",kullaniciId=""}:{rol?:string;kullaniciId?:string}){
  const pathname=usePathname();
+ const planlamaYolu=pathname.startsWith("/partner/")?"/partner/planlama-araci":"/planlama-araci";
+ const planlamaBaglantisi=()=><div className={styles.planlamaBaglantisiAlani}><a className={styles.planlamaBaglantisi} href={planlamaYolu}>Planlama Aracı <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17 17 7M7 7h10v10" /></svg></a></div>;
  const [paketler,setPaketler]=useState<TaahhutluPaket[]|null>(null);
  const [hata,setHata]=useState(false);
  useEffect(()=>{
@@ -26,20 +29,33 @@ export default function FiyatlarIcerigi(){
   <h1>PAKETLER VE FİYATLAR</h1>
   <div className={styles.sheet}>
    <section className={styles.pay} aria-labelledby="kullandigin-kadar">
-    <div><h2 id="kullandigin-kadar">Kullandığın Kadar Öde</h2><p>Ayda 1.500 tokena kadar taahhütsüz kullanım. Kullandığınız tokenlar ay sonunda faturalanır.</p></div>
-    <div className={styles.price}><strong>9,90 TL</strong> <small>/ token</small></div>
+    <div><h2 id="kullandigin-kadar">Kullandığın Kadar Öde</h2><ul className={styles.esnekMaddeler}>
+     <li><span aria-hidden="true">→</span> Dilediğiniz kadar kullanın.</li>
+     <li><span aria-hidden="true">→</span> Kullandığınız kadar faturalanacaktır, unutmayın.</li>
+    </ul></div>
+    <div className={styles.kkoSagAlan}>
+     <div className={styles.price}><strong>9,90 TL</strong> <small>/ token</small></div>
+     <KkoSecimModali key={`${kullaniciId}:${rol}`} rol={rol} kullaniciId={kullaniciId} />
+    </div>
    </section>
    <section className={styles.flex} aria-labelledby="esnek-baslik">
-    <div><h2 id="esnek-baslik">Esnek Paket</h2><p>Tokenlarınızın tamamı başta yüklenir. Token adedini ve ödeme süresini seçerek aylık ödemenizi hesaplayın.</p></div>
-    <EsnekPaketHesaplayici />
+    <div><h2 id="esnek-baslik">Esnek Paket</h2><ul className={styles.esnekMaddeler}>
+     <li><span aria-hidden="true">→</span> İhtiyacınız kadar satın alın.</li>
+     <li><span aria-hidden="true">→</span> 31 Aralık&apos;a kadar dilediğiniz zaman kullanın.</li>
+     <li><span aria-hidden="true">→</span> Satın aldığınız tokenların her ay yüklenmeyeceğini, unutmayın.</li>
+    </ul></div>
+    <div className={styles.paketSagAlan}><EsnekPaketHesaplayici rol={rol} kullaniciId={kullaniciId} />{planlamaBaglantisi()}</div>
    </section>
    <section className={styles.packages} aria-labelledby="paketler">
-    <h2 id="paketler">Taahhütlü Paketler</h2>
-    <p>Tüm tokenler baştan yüklenir. Fatura, 6 ay boyunca aylık olarak düzenlenir.</p>
-    {hata ? <p role="alert">Paket fiyatları okunamadı. Sayfayı yenileyin.</p> : !paketler ? <p role="status">Paket fiyatları yükleniyor…</p> : <table className={styles.paketTablosu} aria-label="Taahhütlü paket fiyatları">
-     <thead><tr><th scope="col">Paket</th><th scope="col">Toplam yüklenecek token</th><th scope="col">TL / token</th><th scope="col">Aylık Fatura tutarı</th></tr></thead>
-     <tbody>{paketler.map(p=><tr key={p.ad}><th scope="row">{p.ad}</th><td>{p.token.toLocaleString("tr-TR")}</td><td>{fiyat.format(p.birim)}</td><td>{p.aylik.toLocaleString("tr-TR",{maximumFractionDigits:2})} TL</td></tr>)}</tbody>
-    </table>}
+    <div><h2 id="paketler">Abonelik Paketleri</h2><ul className={styles.esnekMaddeler}>
+     <li><span aria-hidden="true">→</span> Tüketiminize uygun paketi seçin.</li>
+     <li><span aria-hidden="true">→</span> Sabit fiyat garantisi ile aylık ödeyin.</li>
+     <li><span aria-hidden="true">→</span> Kullanmadığınız tokenların bir sonraki aya devrolacağını, unutmayın.</li>
+    </ul></div>
+    <div className={styles.paketSagAlan}><div className={styles.abonelikTabloKarti}>
+    {hata ? <p role="alert">Paket fiyatları okunamadı. Sayfayı yenileyin.</p> : !paketler ? <p role="status">Paket fiyatları yükleniyor…</p> :
+     <AbonelikPaketSecimi key={`${kullaniciId}:${rol}`} paketler={paketler} rol={rol} kullaniciId={kullaniciId} />}
+    </div>{planlamaBaglantisi()}</div>
    </section>
   </div>
  </div>;

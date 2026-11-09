@@ -4,6 +4,7 @@ import { useAuth } from "@/app/providers/AuthProvider";
 import { YONETICI_ROLLER } from "@/lib/utils/roller";
 import styles from "./token.module.css";
 import TokenKullanimTablosu from "./_components/TokenKullanimTablosu";
+import TokenBakiyeOzeti from "@/components/panel/TokenBakiyeOzeti";
 import { SadeFormSecimi, SadeKapsulFiltre, SadeKontrolButonu, SadeKontrolGrubu } from "@/components/kontrol/SadeKontroller";
 import { SadeKisiSecimi } from "@/components/kontrol/KisiKontroller";
 import type { YayinTuruFiltreDegeri } from "@/components/ogrenme-araci/YayinTuruFiltresi";
@@ -82,6 +83,7 @@ export default function TokenSayfasi(){
  return <main className={styles.page}>
   <div className={styles.breadcrumb}>Cogniti　›　<span>Token Kullanımı</span></div>
   <h1>Token Kullanımı</h1><p className={styles.subtitle}>Firmanızın token bakiyesini ve kullanımını takip edin.</p>
+  <TokenBakiyeOzeti yalnizKko />
   {hata && <p role="alert" className={styles.error}>{hata}</p>}
   {!data && yukleniyor ? <p>Bilgiler yükleniyor…</p> : data && !data.hesap_var ? <p>Firmanız için henüz token hesabı açılmadı.</p> : data?.hesap_var && <>
    {sahaGorunumu ? <>

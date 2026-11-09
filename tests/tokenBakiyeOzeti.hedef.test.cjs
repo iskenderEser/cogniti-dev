@@ -1,0 +1,21 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const {Window}=require('happy-dom');const win=new Window({url:'http://localhost/ana-sayfa'});
+for(const k of ['window','document','navigator'])Object.defineProperty(globalThis,k,{configurable:true,value:win[k]});globalThis.IS_REACT_ACT_ENVIRONMENT=true;
+const React=require('react'),{createRoot}=require('react-dom/client'),ts=require('typescript');
+const empty={paket:null,toplam:0,kullanilan:0,kalan:0,suresi_dolan:0,ayrilan:0};
+let bad=false,payload={kisisel:{...empty,paket:'esnek',toplam:3000,kullanilan:1000,kalan:1500,suresi_dolan:500},firma_ortak:{...empty,paket:'esnek',toplam:6000,kullanilan:2000,kalan:4000}},pathname='/ana-sayfa',calls=0;
+const exportsMock={};
+const dep={};vm.runInNewContext(ts.transpileModule(fs.readFileSync('lib/satinAlma/bakiyeOzeti.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports:dep,require:()=>({TUM_ROLLER:[]})});
+vm.runInNewContext(ts.transpileModule(fs.readFileSync('components/panel/TokenBakiyeOzeti.tsx','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX,target:ts.ScriptTarget.ES2022}}).outputText,{exports:exportsMock,AbortController,Date,window,document,fetch:async()=>{calls++;return Response.json(payload,{status:bad?503:200});},require:n=>n==='react'?React:n==='react/jsx-runtime'?require(n):n==='next/navigation'?{usePathname:()=>pathname}:n.endsWith('.css')?{default:{}}:n==='@/lib/satinAlma/bakiyeOzeti'?dep:assert.fail(n)});
+(async()=>{
+ const host=document.createElement('div');document.body.append(host);const root=createRoot(host);
+ await React.act(async()=>root.render(React.createElement(exportsMock.default)));
+ assert.ok(host.textContent.includes('Kişisel Token Hesabı'));assert.ok(host.textContent.includes('Firma Token Hesabı'));
+ assert.ok(host.textContent.includes('3.000'));assert.ok(host.textContent.includes('Süresi dolan 500'));
+ bad=true;await React.act(async()=>host.querySelector('button').click());assert.ok(host.querySelector('[role="alert"]'));assert.ok(!host.textContent.includes('3.000'));assert.ok(!host.textContent.includes('Toplam 0'));
+ bad=false;payload={kisisel:null,firma_ortak:empty};await React.act(async()=>host.querySelector('button').click());assert.ok(!host.textContent.includes('Kişisel Token Hesabı'));assert.ok(host.textContent.includes('Henüz satın alım yok'));
+ const before=calls;await React.act(async()=>window.dispatchEvent(new win.Event(exportsMock.TOKEN_BAKIYE_YENILE_OLAYI)));assert.equal(calls,before+1);
+ pathname='/fiyatlar';await React.act(async()=>root.render(React.createElement(exportsMock.default)));assert.equal(calls,before+2);
+ await React.act(async()=>root.unmount());const ended=calls;window.dispatchEvent(new win.Event(exportsMock.TOKEN_BAKIYE_YENILE_OLAYI));assert.equal(calls,ended);
+ await win.happyDOM.close();console.log('Başarılı: kişisel/ortak gösterim, süre sonu, hata/sıfır ayrımı, yeniden okuma ve olay temizliği. CSS geometrisi test edilmedi.');
+})().catch(e=>{console.error(e);process.exitCode=1;});

@@ -10,6 +10,8 @@ import { useAuth } from "@/app/providers/AuthProvider";
 import { fiyatlariGorebilir } from "@/lib/fiyat/erisim";
 import type { PanelNavbarOzet } from "@/lib/panel/panelCache";
 import CognitiLogo from "@/components/marka/CognitiLogo";
+import TokenBakiyeOzeti from "./TokenBakiyeOzeti";
+import { satinAlmaBakiyesiGorebilir } from "@/lib/satinAlma/bakiyeOzeti";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
@@ -390,6 +392,7 @@ export default function PanelNavbar({
       </div>
       {fiyatlarAcik && <div className="flex md:hidden justify-end gap-4 pt-1"><button type="button" onClick={() => router.push(planlamaYolu)} aria-current={pathname === planlamaYolu ? "page" : undefined} className="cursor-pointer whitespace-nowrap border-0 bg-transparent p-0 text-[11px] font-normal tracking-[1.8px] text-[var(--tema-kontrol-eylem)] hover:underline">PLANLAMA ARACI</button><button type="button" onClick={() => { if (onFiyatlar) onFiyatlar(); else router.push(fiyatlarYolu); }}
         aria-current={pathname === fiyatlarYolu ? "page" : undefined} className="md:mr-6 lg:mr-8 cursor-pointer whitespace-nowrap border-0 bg-transparent p-0 text-[11px] font-normal tracking-[1.8px] text-[var(--tema-kontrol-eylem)] hover:underline">PAKETLER VE FİYATLAR</button></div>}
+      {kullanici?.kimlik_turu === "kullanici" && kullanici.firma_id && satinAlmaBakiyesiGorebilir(kullanici.rol) && !fiyatlarYolu.startsWith("/partner/") && <TokenBakiyeOzeti key={`${kullanici.id}:${kullanici.firma_id}:${kullanici.rol}`} />}
       {vivaGoster && <div className="absolute left-1/2 z-[51] flex h-4 sm:h-9 w-32 -translate-x-1/2 items-start justify-center pt-0.5 [&>button]:-translate-y-3 sm:[&>button]:translate-y-0" style={{ top: "calc(100% - 1px)" }}>
         <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 128 38" preserveAspectRatio="none" aria-hidden="true" style={{ filter: "drop-shadow(0 3px 3px color-mix(in srgb, var(--tema-metin) 5%, transparent))" }}>
           <path d="M0 1C8 1 10 5 14 17L16 24C19 33 23 37 31 37H97C105 37 109 33 112 24L114 17C118 5 120 1 128 1V-2H0Z" fill="var(--tema-ust-menu-zemin)" />

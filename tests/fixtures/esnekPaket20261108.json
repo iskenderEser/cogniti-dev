@@ -1,0 +1,742 @@
+[
+  {
+    "token_adedi": 2500,
+    "ay": 0,
+    "birim_fiyat": 9.0
+  },
+  {
+    "token_adedi": 2500,
+    "ay": 1,
+    "birim_fiyat": 9.27
+  },
+  {
+    "token_adedi": 2500,
+    "ay": 2,
+    "birim_fiyat": 9.41
+  },
+  {
+    "token_adedi": 2500,
+    "ay": 3,
+    "birim_fiyat": 9.54
+  },
+  {
+    "token_adedi": 3000,
+    "ay": 0,
+    "birim_fiyat": 8.82
+  },
+  {
+    "token_adedi": 3000,
+    "ay": 1,
+    "birim_fiyat": 9.09
+  },
+  {
+    "token_adedi": 3000,
+    "ay": 2,
+    "birim_fiyat": 9.22
+  },
+  {
+    "token_adedi": 3000,
+    "ay": 3,
+    "birim_fiyat": 9.35
+  },
+  {
+    "token_adedi": 3500,
+    "ay": 0,
+    "birim_fiyat": 8.67
+  },
+  {
+    "token_adedi": 3500,
+    "ay": 1,
+    "birim_fiyat": 8.93
+  },
+  {
+    "token_adedi": 3500,
+    "ay": 2,
+    "birim_fiyat": 9.06
+  },
+  {
+    "token_adedi": 3500,
+    "ay": 3,
+    "birim_fiyat": 9.19
+  },
+  {
+    "token_adedi": 4000,
+    "ay": 0,
+    "birim_fiyat": 8.54
+  },
+  {
+    "token_adedi": 4000,
+    "ay": 1,
+    "birim_fiyat": 8.8
+  },
+  {
+    "token_adedi": 4000,
+    "ay": 2,
+    "birim_fiyat": 8.93
+  },
+  {
+    "token_adedi": 4000,
+    "ay": 3,
+    "birim_fiyat": 9.05
+  },
+  {
+    "token_adedi": 4500,
+    "ay": 0,
+    "birim_fiyat": 8.43
+  },
+  {
+    "token_adedi": 4500,
+    "ay": 1,
+    "birim_fiyat": 8.68
+  },
+  {
+    "token_adedi": 4500,
+    "ay": 2,
+    "birim_fiyat": 8.81
+  },
+  {
+    "token_adedi": 4500,
+    "ay": 3,
+    "birim_fiyat": 8.93
+  },
+  {
+    "token_adedi": 5000,
+    "ay": 0,
+    "birim_fiyat": 8.32
+  },
+  {
+    "token_adedi": 5000,
+    "ay": 1,
+    "birim_fiyat": 8.57
+  },
+  {
+    "token_adedi": 5000,
+    "ay": 2,
+    "birim_fiyat": 8.7
+  },
+  {
+    "token_adedi": 5000,
+    "ay": 3,
+    "birim_fiyat": 8.82
+  },
+  {
+    "token_adedi": 5500,
+    "ay": 0,
+    "birim_fiyat": 8.23
+  },
+  {
+    "token_adedi": 5500,
+    "ay": 1,
+    "birim_fiyat": 8.48
+  },
+  {
+    "token_adedi": 5500,
+    "ay": 2,
+    "birim_fiyat": 8.6
+  },
+  {
+    "token_adedi": 5500,
+    "ay": 3,
+    "birim_fiyat": 8.72
+  },
+  {
+    "token_adedi": 6000,
+    "ay": 0,
+    "birim_fiyat": 8.15
+  },
+  {
+    "token_adedi": 6000,
+    "ay": 1,
+    "birim_fiyat": 8.39
+  },
+  {
+    "token_adedi": 6000,
+    "ay": 2,
+    "birim_fiyat": 8.51
+  },
+  {
+    "token_adedi": 6000,
+    "ay": 3,
+    "birim_fiyat": 8.63
+  },
+  {
+    "token_adedi": 6500,
+    "ay": 0,
+    "birim_fiyat": 8.07
+  },
+  {
+    "token_adedi": 6500,
+    "ay": 1,
+    "birim_fiyat": 8.31
+  },
+  {
+    "token_adedi": 6500,
+    "ay": 2,
+    "birim_fiyat": 8.43
+  },
+  {
+    "token_adedi": 6500,
+    "ay": 3,
+    "birim_fiyat": 8.55
+  },
+  {
+    "token_adedi": 7000,
+    "ay": 0,
+    "birim_fiyat": 8.0
+  },
+  {
+    "token_adedi": 7000,
+    "ay": 1,
+    "birim_fiyat": 8.24
+  },
+  {
+    "token_adedi": 7000,
+    "ay": 2,
+    "birim_fiyat": 8.36
+  },
+  {
+    "token_adedi": 7000,
+    "ay": 3,
+    "birim_fiyat": 8.48
+  },
+  {
+    "token_adedi": 7500,
+    "ay": 0,
+    "birim_fiyat": 7.93
+  },
+  {
+    "token_adedi": 7500,
+    "ay": 1,
+    "birim_fiyat": 8.17
+  },
+  {
+    "token_adedi": 7500,
+    "ay": 2,
+    "birim_fiyat": 8.29
+  },
+  {
+    "token_adedi": 7500,
+    "ay": 3,
+    "birim_fiyat": 8.4
+  },
+  {
+    "token_adedi": 8000,
+    "ay": 0,
+    "birim_fiyat": 7.87
+  },
+  {
+    "token_adedi": 8000,
+    "ay": 1,
+    "birim_fiyat": 8.1
+  },
+  {
+    "token_adedi": 8000,
+    "ay": 2,
+    "birim_fiyat": 8.22
+  },
+  {
+    "token_adedi": 8000,
+    "ay": 3,
+    "birim_fiyat": 8.34
+  },
+  {
+    "token_adedi": 8500,
+    "ay": 0,
+    "birim_fiyat": 7.81
+  },
+  {
+    "token_adedi": 8500,
+    "ay": 1,
+    "birim_fiyat": 8.04
+  },
+  {
+    "token_adedi": 8500,
+    "ay": 2,
+    "birim_fiyat": 8.16
+  },
+  {
+    "token_adedi": 8500,
+    "ay": 3,
+    "birim_fiyat": 8.27
+  },
+  {
+    "token_adedi": 9000,
+    "ay": 0,
+    "birim_fiyat": 7.75
+  },
+  {
+    "token_adedi": 9000,
+    "ay": 1,
+    "birim_fiyat": 7.98
+  },
+  {
+    "token_adedi": 9000,
+    "ay": 2,
+    "birim_fiyat": 8.1
+  },
+  {
+    "token_adedi": 9000,
+    "ay": 3,
+    "birim_fiyat": 8.22
+  },
+  {
+    "token_adedi": 9500,
+    "ay": 0,
+    "birim_fiyat": 7.7
+  },
+  {
+    "token_adedi": 9500,
+    "ay": 1,
+    "birim_fiyat": 7.93
+  },
+  {
+    "token_adedi": 9500,
+    "ay": 2,
+    "birim_fiyat": 8.04
+  },
+  {
+    "token_adedi": 9500,
+    "ay": 3,
+    "birim_fiyat": 8.16
+  },
+  {
+    "token_adedi": 10000,
+    "ay": 0,
+    "birim_fiyat": 7.65
+  },
+  {
+    "token_adedi": 10000,
+    "ay": 1,
+    "birim_fiyat": 7.88
+  },
+  {
+    "token_adedi": 10000,
+    "ay": 2,
+    "birim_fiyat": 7.99
+  },
+  {
+    "token_adedi": 10000,
+    "ay": 3,
+    "birim_fiyat": 8.11
+  },
+  {
+    "token_adedi": 12500,
+    "ay": 0,
+    "birim_fiyat": 7.43
+  },
+  {
+    "token_adedi": 12500,
+    "ay": 1,
+    "birim_fiyat": 7.65
+  },
+  {
+    "token_adedi": 12500,
+    "ay": 2,
+    "birim_fiyat": 7.76
+  },
+  {
+    "token_adedi": 12500,
+    "ay": 3,
+    "birim_fiyat": 7.88
+  },
+  {
+    "token_adedi": 15000,
+    "ay": 0,
+    "birim_fiyat": 7.25
+  },
+  {
+    "token_adedi": 15000,
+    "ay": 1,
+    "birim_fiyat": 7.47
+  },
+  {
+    "token_adedi": 15000,
+    "ay": 2,
+    "birim_fiyat": 7.58
+  },
+  {
+    "token_adedi": 15000,
+    "ay": 3,
+    "birim_fiyat": 7.69
+  },
+  {
+    "token_adedi": 17500,
+    "ay": 0,
+    "birim_fiyat": 7.1
+  },
+  {
+    "token_adedi": 17500,
+    "ay": 1,
+    "birim_fiyat": 7.31
+  },
+  {
+    "token_adedi": 17500,
+    "ay": 2,
+    "birim_fiyat": 7.42
+  },
+  {
+    "token_adedi": 17500,
+    "ay": 3,
+    "birim_fiyat": 7.53
+  },
+  {
+    "token_adedi": 20000,
+    "ay": 0,
+    "birim_fiyat": 6.97
+  },
+  {
+    "token_adedi": 20000,
+    "ay": 1,
+    "birim_fiyat": 7.18
+  },
+  {
+    "token_adedi": 20000,
+    "ay": 2,
+    "birim_fiyat": 7.29
+  },
+  {
+    "token_adedi": 20000,
+    "ay": 3,
+    "birim_fiyat": 7.39
+  },
+  {
+    "token_adedi": 22500,
+    "ay": 0,
+    "birim_fiyat": 6.86
+  },
+  {
+    "token_adedi": 22500,
+    "ay": 1,
+    "birim_fiyat": 7.06
+  },
+  {
+    "token_adedi": 22500,
+    "ay": 2,
+    "birim_fiyat": 7.17
+  },
+  {
+    "token_adedi": 22500,
+    "ay": 3,
+    "birim_fiyat": 7.27
+  },
+  {
+    "token_adedi": 25000,
+    "ay": 0,
+    "birim_fiyat": 6.75
+  },
+  {
+    "token_adedi": 25000,
+    "ay": 1,
+    "birim_fiyat": 6.96
+  },
+  {
+    "token_adedi": 25000,
+    "ay": 2,
+    "birim_fiyat": 7.06
+  },
+  {
+    "token_adedi": 25000,
+    "ay": 3,
+    "birim_fiyat": 7.16
+  },
+  {
+    "token_adedi": 27500,
+    "ay": 0,
+    "birim_fiyat": 6.66
+  },
+  {
+    "token_adedi": 27500,
+    "ay": 1,
+    "birim_fiyat": 6.86
+  },
+  {
+    "token_adedi": 27500,
+    "ay": 2,
+    "birim_fiyat": 6.96
+  },
+  {
+    "token_adedi": 27500,
+    "ay": 3,
+    "birim_fiyat": 7.06
+  },
+  {
+    "token_adedi": 30000,
+    "ay": 0,
+    "birim_fiyat": 6.58
+  },
+  {
+    "token_adedi": 30000,
+    "ay": 1,
+    "birim_fiyat": 6.77
+  },
+  {
+    "token_adedi": 30000,
+    "ay": 2,
+    "birim_fiyat": 6.87
+  },
+  {
+    "token_adedi": 30000,
+    "ay": 3,
+    "birim_fiyat": 6.97
+  },
+  {
+    "token_adedi": 35000,
+    "ay": 0,
+    "birim_fiyat": 6.43
+  },
+  {
+    "token_adedi": 35000,
+    "ay": 1,
+    "birim_fiyat": 6.62
+  },
+  {
+    "token_adedi": 35000,
+    "ay": 2,
+    "birim_fiyat": 6.71
+  },
+  {
+    "token_adedi": 35000,
+    "ay": 3,
+    "birim_fiyat": 6.81
+  },
+  {
+    "token_adedi": 40000,
+    "ay": 0,
+    "birim_fiyat": 6.3
+  },
+  {
+    "token_adedi": 40000,
+    "ay": 1,
+    "birim_fiyat": 6.48
+  },
+  {
+    "token_adedi": 40000,
+    "ay": 2,
+    "birim_fiyat": 6.58
+  },
+  {
+    "token_adedi": 40000,
+    "ay": 3,
+    "birim_fiyat": 6.67
+  },
+  {
+    "token_adedi": 45000,
+    "ay": 0,
+    "birim_fiyat": 6.18
+  },
+  {
+    "token_adedi": 45000,
+    "ay": 1,
+    "birim_fiyat": 6.37
+  },
+  {
+    "token_adedi": 45000,
+    "ay": 2,
+    "birim_fiyat": 6.46
+  },
+  {
+    "token_adedi": 45000,
+    "ay": 3,
+    "birim_fiyat": 6.55
+  },
+  {
+    "token_adedi": 50000,
+    "ay": 0,
+    "birim_fiyat": 6.08
+  },
+  {
+    "token_adedi": 50000,
+    "ay": 1,
+    "birim_fiyat": 6.26
+  },
+  {
+    "token_adedi": 50000,
+    "ay": 2,
+    "birim_fiyat": 6.35
+  },
+  {
+    "token_adedi": 50000,
+    "ay": 3,
+    "birim_fiyat": 6.44
+  },
+  {
+    "token_adedi": 55000,
+    "ay": 0,
+    "birim_fiyat": 5.98
+  },
+  {
+    "token_adedi": 55000,
+    "ay": 1,
+    "birim_fiyat": 6.16
+  },
+  {
+    "token_adedi": 55000,
+    "ay": 2,
+    "birim_fiyat": 6.25
+  },
+  {
+    "token_adedi": 55000,
+    "ay": 3,
+    "birim_fiyat": 6.34
+  },
+  {
+    "token_adedi": 60000,
+    "ay": 0,
+    "birim_fiyat": 5.9
+  },
+  {
+    "token_adedi": 60000,
+    "ay": 1,
+    "birim_fiyat": 6.08
+  },
+  {
+    "token_adedi": 60000,
+    "ay": 2,
+    "birim_fiyat": 6.17
+  },
+  {
+    "token_adedi": 60000,
+    "ay": 3,
+    "birim_fiyat": 6.25
+  },
+  {
+    "token_adedi": 75000,
+    "ay": 0,
+    "birim_fiyat": 5.68
+  },
+  {
+    "token_adedi": 75000,
+    "ay": 1,
+    "birim_fiyat": 5.85
+  },
+  {
+    "token_adedi": 75000,
+    "ay": 2,
+    "birim_fiyat": 5.94
+  },
+  {
+    "token_adedi": 75000,
+    "ay": 3,
+    "birim_fiyat": 6.02
+  },
+  {
+    "token_adedi": 87500,
+    "ay": 0,
+    "birim_fiyat": 5.53
+  },
+  {
+    "token_adedi": 87500,
+    "ay": 1,
+    "birim_fiyat": 5.7
+  },
+  {
+    "token_adedi": 87500,
+    "ay": 2,
+    "birim_fiyat": 5.78
+  },
+  {
+    "token_adedi": 87500,
+    "ay": 3,
+    "birim_fiyat": 5.86
+  },
+  {
+    "token_adedi": 100000,
+    "ay": 0,
+    "birim_fiyat": 5.4
+  },
+  {
+    "token_adedi": 100000,
+    "ay": 1,
+    "birim_fiyat": 5.56
+  },
+  {
+    "token_adedi": 100000,
+    "ay": 2,
+    "birim_fiyat": 5.64
+  },
+  {
+    "token_adedi": 100000,
+    "ay": 3,
+    "birim_fiyat": 5.73
+  },
+  {
+    "token_adedi": 112500,
+    "ay": 0,
+    "birim_fiyat": 5.29
+  },
+  {
+    "token_adedi": 112500,
+    "ay": 1,
+    "birim_fiyat": 5.45
+  },
+  {
+    "token_adedi": 112500,
+    "ay": 2,
+    "birim_fiyat": 5.52
+  },
+  {
+    "token_adedi": 112500,
+    "ay": 3,
+    "birim_fiyat": 5.6
+  },
+  {
+    "token_adedi": 125000,
+    "ay": 0,
+    "birim_fiyat": 5.18
+  },
+  {
+    "token_adedi": 125000,
+    "ay": 1,
+    "birim_fiyat": 5.34
+  },
+  {
+    "token_adedi": 125000,
+    "ay": 2,
+    "birim_fiyat": 5.42
+  },
+  {
+    "token_adedi": 125000,
+    "ay": 3,
+    "birim_fiyat": 5.5
+  },
+  {
+    "token_adedi": 137500,
+    "ay": 0,
+    "birim_fiyat": 5.09
+  },
+  {
+    "token_adedi": 137500,
+    "ay": 1,
+    "birim_fiyat": 5.24
+  },
+  {
+    "token_adedi": 137500,
+    "ay": 2,
+    "birim_fiyat": 5.32
+  },
+  {
+    "token_adedi": 137500,
+    "ay": 3,
+    "birim_fiyat": 5.4
+  },
+  {
+    "token_adedi": 150000,
+    "ay": 0,
+    "birim_fiyat": 5.01
+  },
+  {
+    "token_adedi": 150000,
+    "ay": 1,
+    "birim_fiyat": 5.16
+  },
+  {
+    "token_adedi": 150000,
+    "ay": 2,
+    "birim_fiyat": 5.23
+  },
+  {
+    "token_adedi": 150000,
+    "ay": 3,
+    "birim_fiyat": 5.31
+  }
+]

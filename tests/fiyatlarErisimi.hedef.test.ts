@@ -14,8 +14,8 @@ function yukle(path:string, deps:Record<string,unknown>) {
 }
 const sonuc=(tip:string)=>()=>{throw new Error(tip)};
 const jsx={jsx:(_type:unknown,props:unknown)=>({props})};
-test('yetkiler: tüm geçerli iç roller; UTT/KD_UTT ve BM hariç',()=>{
- for(const rol of TUM_ROLLER) assert.equal(fiyatlariGorebilir(rol), !TUKETICI_ROLLER.includes(rol)&&rol!=='bm',rol);
+test('yetkiler: tüm geçerli iç roller; UTT/KD_UTT, BM ve İU hariç',()=>{
+ for(const rol of TUM_ROLLER) assert.equal(fiyatlariGorebilir(rol), !TUKETICI_ROLLER.includes(rol)&&rol!=='bm'&&rol!=='iu',rol);
  for(const rol of [...ECLUB_TUKETICI_ROLLERI,MUSTERI_ROLU,'partner','', 'bilinmeyen']) assert.equal(fiyatlariGorebilir(rol),false,rol);
 });
 test('iç fiyat sayfası sunucuda oturum ve rol kontrolü yapar',async()=>{
@@ -27,14 +27,16 @@ test('iç fiyat sayfası sunucuda oturum ve rol kontrolü yapar',async()=>{
  });
  await assert.rejects(p.default(),/giris/);
  user={id:'test'};
- for(rol of ['utt','kd_utt','bm','eczaci','ikinci_eczaci','yardimci_eczaci','eczane_teknisyeni','musteri',''])await assert.rejects(p.default(),/yasak/);
- for(rol of ['admin','firma_admin','tm','pm','gm','iu']) assert.equal((await p.default()).props.rol,rol);
+ for(rol of ['utt','kd_utt','bm','iu','eczaci','ikinci_eczaci','yardimci_eczaci','eczane_teknisyeni','musteri',''])await assert.rejects(p.default(),/yasak/);
+ for(rol of ['admin','firma_admin','tm','pm','gm']) assert.equal((await p.default()).props.rol,rol);
 });
-test('partner sayfası yalnız onaylı partner oturumu ile açılır',async()=>{
- let partner:unknown=null;
- const p=yukle('app/partner/fiyatlar/page.tsx',{'react/jsx-runtime':jsx,'next/navigation':{redirect:sonuc('partner-giris')},
- '@/lib/agora/partnerProfilSunucu':{onayliPartnerBaglami:async()=>partner},'@/app/_components/UyeFiyatlar':{default:()=>null}});
- await assert.rejects(p.default(),/partner-giris/);
- partner={profil:{sirket_adi:'Partner'}};
- assert.equal((await p.default()).props.partnerAdi,'Partner');
+test('partner fiyat ve planlama sayfaları doğrudan erişime kapalıdır',()=>{
+ for(const yol of ['fiyatlar','planlama-araci']) {
+  const p=yukle(`app/partner/${yol}/page.tsx`,{'next/navigation':{notFound:sonuc('yasak')}});
+  assert.throws(()=>p.default(),/yasak/);
+ }
+});
+test('partner fiyat API erişimi kapalıdır',async()=>{
+ const p=yukle('app/partner/api/fiyatlar/route.ts',{'@/lib/agora/partnerHttp':{partnerYanit:(body:unknown,status:number)=>({body,status})}});
+ assert.equal((await p.GET()).status,403);
 });

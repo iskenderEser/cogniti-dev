@@ -1,0 +1,20 @@
+{
+  "postgres": "18.6",
+  "passed": 13,
+  "tests": [
+    "SQL ilk kurulum ve tekrar kurulumda çalışır",
+    "13 üretici rol kişisel, 8 yönetici/firma admin rolü ortak bakiye oluşturur",
+    "TM, Cogniti Admin ve diğer kapalı roller satın alamaz",
+    "pasif kullanıcı ve pasif firma satın alamaz",
+    "firma ve kişi bakiyeleri birbirinden ayrıdır",
+    "geçersiz adet, fiyat ve eski tarife kayıt oluşturmaz",
+    "eş zamanlı aynı onay tek sipariş ve tek yükleme oluşturur",
+    "ortak bakiyenin eş zamanlı ilk alımları tek ortak hesapta birikir",
+    "yükleme hatasında sipariş ve yeni kişisel bakiye birlikte geri alınır",
+    "tarife değişince eski sipariş fiyatı korunur; aynı onay tekrar yüklemez",
+    "firma değiştiren kullanıcı eski onayı yeni firmaya taşıyamaz",
+    "anon/authenticated işleme erişemez; service_role doğrudan tablo yazamaz",
+    "eski KKÖ hesabı ve yüklemeleri değişmedi"
+  ],
+  "scope": "Yerel Unix socket; sahte firma/kullanıcı/tarife tabloları; değiştirilmemiş adım 1 SQL. Gerçek gönderim veya Supabase testi değildir."
+}

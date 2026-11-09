@@ -1,0 +1,21 @@
+{
+  "postgres": "18.6",
+  "passed": 14,
+  "tests": [
+    "KKÖ SQL iki kez kurulabilir",
+    "13 üretici kişisel ve 8 yönetici firma hesabı seçebilir; yanlış hesap reddedilir",
+    "TM, Cogniti Admini ve diğer kapalı roller reddedilir",
+    "Tek onayın tekrarı ikinci yükleme oluşturmaz; yeni anahtarla mükerrer onay reddedilir",
+    "Kişisel hesap diğer kişiye gösterilmez; firma KKÖ tüm firma rollerinde görünür",
+    "Gerçek ortak tüketim KKÖ hakkını azaltır; limit bittiğinde yeni tüketim reddedilir",
+    "KKÖ’den Esnek’e geçiş önceki tüketimi korur ve yeni paketi eksiksiz yükler",
+    "Kalan paket bittiğinde dahi bloke varsa KKÖ reddedilir; bloke bitince aynı ay ek hak yüklenmez",
+    "Başarısız paket yüklemesi KKÖ kapanışını da geri alır",
+    "Ay yenilemesi eski tüketimi korur; yeni ay 1500 ile başlar ve yeniden yenilemez",
+    "İki bağlantının aynı onayı tek kez uygulanır",
+    "Pasif kullanıcı, pasif firma, eski fiyat ve anahtar içeriği uyuşmazlığı reddedilir",
+    "Doğrudan tablo ve iç işlev erişimleri kapalı; yalnız sunucu seçim/özet uçları açık",
+    "Firma yönetimi KKÖ tercihini ve gerçek tüketim kaydını okur; üretici admin raporuna erişemez"
+  ],
+  "scope": "Yerel Unix socket; sahte temel tablolar; gerçek KKÖ SQL, sipariş ve ortak tüketim fonksiyonu. Gerçek ay sınırı/cron, tam Eczanem zinciri, Viva ve tarayıcı/canlı kullanıcı doğrulanmadı."
+}

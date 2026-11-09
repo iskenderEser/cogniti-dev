@@ -13,6 +13,7 @@ const PAKETLER = [
   { ad:"Paket 1", miktar:"paket_10k_token_miktari", birim:"paket_10k_token_tl", asim:"paket_10k_asim_tl" },
   { ad:"Paket 2", miktar:"paket_30k_token_miktari", birim:"paket_30k_token_tl", asim:"paket_30k_asim_tl" },
   { ad:"Paket 3", miktar:"paket_75k_token_miktari", birim:"paket_75k_token_tl", asim:"paket_75k_asim_tl" },
+  { ad:"Paket 4", miktar:"paket_25k_token_miktari", birim:"paket_25k_token_tl" },
 ] as const;
 
 type Props = { hata: (mesaj: string) => void; basari: (mesaj: string) => void };
@@ -82,7 +83,7 @@ export default function FiyatTarifesi({ hata, basari }: Props) {
             : "Paket 2 fiyatlarını görmek için geçerli, sıfırdan büyük bir KKÖ birim fiyatı girin."}</p>}
           <div className={styles.tableWrap}>
             <table className={`${local.tablo} ${local.sm2Tablo}`} aria-label="Paket 2 adet ve süre fiyat matrisi" aria-describedby="sm2-aciklama">
-              <thead><tr><th scope="col">Toplam Token Adedi</th>{SM2_SURELERI.map(ay => <th scope="col" key={ay}>{ay} Ay</th>)}</tr></thead>
+              <thead><tr><th scope="col">Toplam Token Adedi</th>{SM2_SURELERI.map(ay => <th scope="col" key={ay}>{ay === 0 ? "Peşin" : `${ay + 1} Ay`}</th>)}</tr></thead>
               <tbody>{SM2_TOKEN_ADETLERI.map(adet => <tr key={adet}>
                 <th scope="row">{adet.toLocaleString("tr-TR")}</th>
                 {SM2_SURELERI.map(ay => {
@@ -97,23 +98,24 @@ export default function FiyatTarifesi({ hata, basari }: Props) {
           </div>
           <div id="sm2-aciklama" className={local.ozet}>
             <p>Fiyatlar güncel kayıtlı KKÖ birim fiyatı × veritabanında sabitlenen hücre katsayısı ile hesaplanır. KKÖ değiştiğinde tüm tablo aynı oranda güncellenir.</p>
-            <p>Seçilen token adedi tüm süre için toplamdır ve başlangıçta tek seferde yüklenir. Toplam bedel = token adedi × birim fiyat; aylık fatura = toplam bedel ÷ seçilen ay sayısı.</p>
+            <p>Tokenlar başlangıçta tek seferde yüklenir. Toplam bedel = token adedi × peşin birim fiyat. Ödeme tek seferde yapılır; sipariş verildiğinde fatura kesilir.</p>
           </div>
           <h4 className={`${local.tabloBasligi} ${local.hizmetler}`}>Paket 3</h4>
         </div>
         <div className={styles.tableWrap}><table className={local.tablo} aria-label="Paket fiyatları">
-          <thead><tr><th>Paket Adı</th><th>Aylık Token Miktarı</th><th>6 Aylık Toplam Token Miktarı</th><th>Birim Fiyat (TL/token)</th></tr></thead>
+          <thead><tr><th>Paket Adı</th><th>Aylık Token Miktarı</th><th>Birim Fiyat (TL/token)</th><th>Aylık Tutar (TL)</th></tr></thead>
           <tbody>{PAKETLER.filter(p => p.ad !== "Giriş Paketi").map(p => <tr key={p.ad}>
             <th scope="row">{p.ad}</th>
             <td><input id={`fiyat-${p.miktar}`} aria-label={`${p.ad} Aylık token miktarı`} type="text" inputMode="numeric" maxLength={24}
               value={taslak[p.miktar] ?? ""} disabled={kaydediliyor} onChange={e => setTaslak(v => ({...v,[p.miktar]:e.target.value}))} /></td>
-            <td>{(() => { const miktar = fiyatMetniniOku(taslak[p.miktar] ?? ""); return miktar !== null && Number.isInteger(miktar) && miktar > 0 ? (miktar * 6).toLocaleString("tr-TR") : "—"; })()}</td>
             {([{ anahtar:p.birim, etiket:"Birim fiyat" }]).map(a => <td key={a.anahtar}>
               <input id={`fiyat-${a.anahtar}`} aria-label={`${p.ad} ${a.etiket}`} type="text" inputMode="decimal" maxLength={24}
                 value={taslak[a.anahtar] ?? ""} disabled={kaydediliyor} onChange={e => setTaslak(v => ({...v,[a.anahtar]:e.target.value}))} />
             </td>)}
+            <td>{(() => { const miktar = fiyatMetniniOku(taslak[p.miktar] ?? ""), birim = fiyatMetniniOku(taslak[p.birim] ?? ""); return miktar !== null && Number.isInteger(miktar) && miktar > 0 && birim !== null && birim > 0 ? `${(miktar * birim).toLocaleString("tr-TR", {maximumFractionDigits:2})} TL` : "—"; })()}</td>
           </tr>)}</tbody>
         </table></div>
+        <p className={local.aciklama}>Tokenlar her ay yüklenir. Aylık tutar, aylık token miktarı × birim fiyat olarak hesaplanır.</p>
         <div className={local.hizmetler}>
         <h3 className={local.tabloBasligi}>Hizmet Token-Fiyat Listesi</h3>
         <div className={styles.tableWrap}><table className={local.tablo} aria-label="Hizmet fiyatları">
@@ -141,7 +143,7 @@ export default function FiyatTarifesi({ hata, basari }: Props) {
         <div className={local.ozet}>
           <p><strong>Viva hesabı:</strong> Kişi-dakika × USD maliyeti × kur × satış katsayısı ÷ KKÖ token fiyatı. Toplam kullanım sonunda tam tokena yuvarlanır.</p>
           <p><strong>Banner hesabı:</strong> Hafta sayısı × kayıtlı haftalık token bedeli.</p>
-          <p><strong>Kayıtlı aylık paketler:</strong> {tarife.degerler.paket_10k_token_miktari?.toLocaleString("tr-TR")} token: {para.format(tarife.hesaplar.paket_10k_aylik_tl)} · {tarife.degerler.paket_30k_token_miktari?.toLocaleString("tr-TR")} token: {para.format(tarife.hesaplar.paket_30k_aylik_tl)} · {tarife.degerler.paket_75k_token_miktari?.toLocaleString("tr-TR")} token: {para.format(tarife.hesaplar.paket_75k_aylik_tl)}.</p>
+          <p><strong>Kayıtlı aylık paketler:</strong> {tarife.degerler.paket_10k_token_miktari?.toLocaleString("tr-TR")} token: {para.format(tarife.hesaplar.paket_10k_aylik_tl)} · {tarife.degerler.paket_30k_token_miktari?.toLocaleString("tr-TR")} token: {para.format(tarife.hesaplar.paket_30k_aylik_tl)} · {tarife.degerler.paket_75k_token_miktari?.toLocaleString("tr-TR")} token: {para.format(tarife.hesaplar.paket_75k_aylik_tl)} · {tarife.degerler.paket_25k_token_miktari?.toLocaleString("tr-TR")} token: {para.format(tarife.hesaplar.paket_25k_aylik_tl)}.</p>
           <p>Fiyatlar KDV hariçtir. Hesap özeti kayıtlı değerlere aittir. Viva ve banner bu tarifeyi merkezi bağlantı SQL kurulumu tamamlandıktan sonra kullanır.</p>
         </div>
         <div className={local.eylemler}><span>Tarife sürümü: {tarife.surum}</span><Button type="button" disabled={kaydediliyor} onClick={() => void kaydet()}>{kaydediliyor ? "Kaydediliyor…" : "Fiyatları Kaydet"}</Button></div>

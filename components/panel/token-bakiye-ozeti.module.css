@@ -1,0 +1,11 @@
+.alan { display:flex; justify-content:flex-end; align-items:center; flex-wrap:wrap; gap:10px 22px; min-width:0; padding-top:9px; margin-top:8px; border-top:1px solid var(--tema-cizgi); color:var(--tema-ikincil-metin); font-size:11px; line-height:1.6; }
+.ozet { min-width:0; }
+.baslik { display:block; color:var(--tema-kontrol-metin); font-weight:400; }
+.paket { color:var(--tema-ikincil-metin); }
+.degerler { display:flex; flex-wrap:wrap; gap:3px 12px; }
+.degerler>span { white-space:nowrap; }
+.rakam { margin-left:3px; font-variant-numeric:tabular-nums; color:var(--tema-kontrol-metin); }
+.durum { overflow-wrap:anywhere; }
+.yenile { border:0; padding:0; background:transparent; color:var(--tema-kontrol-eylem); font:inherit; cursor:pointer; white-space:nowrap; }
+.yenile:hover { text-decoration:underline; }
+@media(max-width:700px) { .alan { justify-content:flex-start; align-items:flex-start; gap:8px; } .ozet { flex-basis:100%; } }

@@ -12,14 +12,28 @@ const React = await import('react');
 const { createRoot } = await import('react-dom/client');
 const html = JSON.parse(fs.readFileSync('app/planlama-araci/icerik.json', 'utf8'));
 const script = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)][0][1];
+const priceData = {
+ surum:1,
+ sm2:JSON.parse(fs.readFileSync('tests/fixtures/esnekPaket20261109.json','utf8')).map(h=>({...h,katsayi:h.birim_fiyat/9.9})),
+ paketler:[{ad:'Paket 1',token:5000,birim:5.9,aylik:29500},{ad:'Paket 2',token:10000,birim:4.85,aylik:48500},{ad:'Paket 3',token:15000,birim:3.9,aylik:58500},{ad:'Paket 4',token:25000,birim:2.9,aylik:72500}],
+ kko:{limit:1500,birim:9.9},
+};
+function loadPriceModule(file) {
+ const result={};
+ vm.runInNewContext(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,
+ {exports:result,require:n=>loadPriceModule('lib/fiyat/'+n.replace('./','')+'.ts')});
+ return result;
+}
 const mocks = {
+  '@/lib/fiyat/planlama':loadPriceModule('lib/fiyat/planlama.ts'),
   react: React, 'react/jsx-runtime': jsxRuntime,
   'next/navigation': { useRouter: () => ({ replace() {} }) },
   '@/app/providers/AuthProvider': { useAuth: () => ({ kullanici: null, cikisYap: async () => {} }) },
   '@/components/panel/PanelNavbar': { default: () => null },
   '@/lib/panel/baslangic': { panelBaslangici: () => ({ yol: '/admin' }) },
 };
-let storageFails = false;
+let storageFails = false, priceFails = false;
+const priceRequests=[];
 const storageBridge = {
   getItem: k => win.localStorage.getItem(k),
   setItem: (k, v) => { if (storageFails) throw new Error('Depolama kapalı'); win.localStorage.setItem(k, v); },
@@ -27,7 +41,7 @@ const storageBridge = {
 const exportsObj = {};
 vm.runInNewContext(ts.transpileModule(fs.readFileSync('app/_components/UyePlanlama.tsx', 'utf8'), {
   compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX, target: ts.ScriptTarget.ES2022 },
-}).outputText, { exports: exportsObj, require: n => { assert.ok(n in mocks, n); return mocks[n]; }, window: win, localStorage: storageBridge, fetch: globalThis.fetch });
+}).outputText, { exports: exportsObj, require: n => { assert.ok(n in mocks, n); return mocks[n]; }, window: win, localStorage: storageBridge, AbortController, fetch: async(url)=>{priceRequests.push(url);return Response.json(priceFails?{}:priceData);} });
 const Planlama = exportsObj.default;
 const key = id => `cogniti:planlama:${id}:v1`;
 let child;
@@ -53,12 +67,12 @@ function attach(container, announce = true) {
     close: () => docWin.happyDOM.close(),
   };
 }
-async function mount(id, early = false) {
+async function mount(id, early = false, rol = 'admin') {
   const container = document.createElement('div'); document.body.append(container);
   const root = createRoot(container);
   function Host() {
     React.useLayoutEffect(() => { if (early) child = attach(container, false); }, []);
-    return React.createElement(Planlama, { rol: 'admin', kullaniciId: id, icerik: html });
+    return React.createElement(Planlama, { rol, kullaniciId: id, icerik: html });
   }
   await React.act(async () => root.render(React.createElement(Host)));
   if (!early) child = attach(container);
@@ -132,6 +146,24 @@ test('Planlama cevapları: geç/erken iframe, refresh, hesap ayrımı, hepsini s
     form.change('tAudience', 21); await form.flush();
     assert.doesNotMatch(form.container.textContent, /Cevaplar kaydedilemedi/);
     assert.equal(JSON.parse(storage.getItem(key('hesap-a'))).values.tAudience, '21');
+    await form.unmount();
+  });
+  await t.test('partner fiyat API yolu ve fiyat hatasında yeniden deneme cevapları korur', async () => {
+    priceFails=true;
+    form=await mount('partner-fiyat',false,'partner');
+    assert.equal(priceRequests.at(-1),'/partner/api/fiyatlar');
+    assert.match(form.container.textContent,/Güncel fiyatlar okunamadı/);
+    for(const [id,value] of Object.entries({tAudience:1,tPublications:6500,tRecommendationAudience:0,tRecommendations:0}))form.change(id,value);
+    for(const k of ['c','e','m'])form.change('on-'+k,false);
+    await form.flush();
+    assert.equal(form.doc.getElementById('recommendedPackage').textContent,'');
+    priceFails=false;
+    const button=form.container.querySelector('button');
+    const props=button[Object.keys(button).find(k=>k.startsWith('__reactProps'))];
+    await React.act(async()=>props.onClick());await form.flush();
+    assert.equal(form.doc.getElementById('tPublications').value,'6500');
+    assert.equal(form.doc.getElementById('recommendedPackage').textContent,'44.915,00 TL');
+    assert.equal(JSON.parse(win.localStorage.getItem(key('partner-fiyat'))).values.tPublications,'6500');
     await form.unmount();
   });
   await win.happyDOM.close();
