@@ -1,0 +1,38 @@
+import {execFileSync} from 'node:child_process';
+import {mkdtempSync,mkdirSync,readFileSync,writeFileSync,rmSync} from 'node:fs';
+import {join} from 'node:path';
+import assert from 'node:assert/strict';
+import pg from 'pg';
+const bin=process.env.ESNEK_PG_BIN;if(!bin)throw Error('ESNEK_PG_BIN gerekli');
+const root=mkdtempSync('/tmp/cogniti-siparis-okuma-'),data=join(root,'data'),socket=join(root,'socket');mkdirSync(socket);
+const id=n=>`00000000-0000-4000-8000-${String(n).padStart(12,'0')}`;
+const db=new pg.Client({host:socket,port:55467,user:'okuma_test',database:'postgres'});let started=false;const tests=[];
+const run=async(n,f)=>{await f();tests.push(n);console.log(`OK ${tests.length}: ${n}`);};
+const sql=readFileSync('scripts/sql/cogniti_satin_alinan_paketler_okuma.sql','utf8');
+const read=async(user=10,firm=1,page=0)=>(await db.query('SELECT cogniti_firma_satin_alinan_paketler($1,$2,$3) r',[id(user),id(firm),page])).rows[0].r;
+try{
+ execFileSync(join(bin,'initdb'),['-D',data,'-U','okuma_test','-A','trust','--no-locale','--encoding=UTF8'],{stdio:'pipe'});
+ execFileSync(join(bin,'pg_ctl'),['-D',data,'-l',join(root,'log'),'-o',`-k ${socket} -h '' -p 55467`,'-w','start'],{stdio:'pipe'});started=true;await db.connect();
+ assert.equal((await db.query('SELECT inet_server_addr() a')).rows[0].a,null);
+ await db.query(`CREATE ROLE anon NOLOGIN;CREATE ROLE authenticated NOLOGIN;CREATE ROLE service_role NOLOGIN;
+ CREATE TABLE firmalar(firma_id uuid PRIMARY KEY,aktif boolean,firma_admin_aktif boolean);
+ CREATE TABLE kullanicilar(kullanici_id uuid PRIMARY KEY,firma_id uuid,rol text,aktif_mi boolean,ad text,soyad text);
+ CREATE TABLE cogniti_fiyat_tarifesi(tekil boolean,surum integer,degerler jsonb);
+ CREATE TABLE cogniti_sm2_fiyat_oranlari(token_adedi integer,ay integer,katsayi numeric);`);
+ await db.query(readFileSync('scripts/sql/cogniti_esnek_paket_siparis_adim1.sql','utf8'));
+ await db.query('INSERT INTO firmalar VALUES($1,true,true),($2,true,true),($3,true,true)',[id(1),id(2),id(3)]);
+ for(const [u,f,role] of [[10,1,'firma_admin'],[11,2,'firma_admin'],[12,null,'admin'],[13,1,'pm'],[14,1,'tm'],[15,1,null],[16,1,'gm']])await db.query('INSERT INTO kullanicilar VALUES($1,$2,$3,true,$4,$5)',[id(u),f?id(f):null,role,'Test','Kişi']);
+ await db.query("INSERT INTO cogniti_satin_alma_bakiyeleri(bakiye_id,firma_id,bakiye_turu,sahip_id) VALUES($1,$2,'kisisel',$3),($4,$2,'firma_ortak',null),($5,$6,'firma_ortak',null)",[id(100),id(1),id(13),id(101),id(102),id(2)]);
+ for(let n=0;n<22;n++)await db.query(`INSERT INTO cogniti_esnek_paket_siparisleri(siparis_id,firma_id,bakiye_id,satin_alan_id,satin_alan_rol,satin_alan_ad_soyad,token_adedi,birim_fiyat,tarife_surumu,islem_anahtari,siparis_tarihi) VALUES($1,$2,$3,$4,'pm','Kayıtlı İsim',2500,8.50,7,$5,'2026-11-09 10:00:00+03')`,[id(200+n),n===21?id(2):id(1),n===21?id(102):n%2?id(101):id(100),id(13),id(500+n)]);
+ await db.query("INSERT INTO cogniti_esnek_paket_yuklemeleri(siparis_id,firma_id,bakiye_id,miktar,kalan,son_kullanim_at) SELECT siparis_id,firma_id,bakiye_id,token_adedi,token_adedi,statement_timestamp()+interval '1 year' FROM cogniti_esnek_paket_siparisleri");
+ await run('okuma SQL ilk ve tekrar kurulumda çalışır',async()=>{await db.query(sql);await db.query(sql);});
+ const before=(await db.query('SELECT jsonb_agg(to_jsonb(s)) d FROM cogniti_esnek_paket_siparisleri s')).rows[0].d;
+ await run('firma admini yalnız kendi firmasının kişisel ve ortak siparişlerini okur',async()=>{const d=await read();assert.equal(d.toplam,21);assert.equal(d.siparisler.length,20);assert.equal(d.firma_id,id(1));assert.ok(d.siparisler.some(s=>s.bakiye_turu==='kisisel'));assert.ok(d.siparisler.some(s=>s.bakiye_turu==='firma_ortak'));assert.equal(d.siparisler[0].toplam_tutar,21250);assert.equal(d.siparisler[0].satin_alan_ad_soyad,'Kayıtlı İsim');await assert.rejects(read(10,2),e=>e.code==='42501');assert.equal((await read(11,2)).toplam,1);});
+ await run('aynı tarihli kayıtlar kararlı sırada ve sayfalar çakışmadan gelir',async()=>{const a=await read(),b=await read(10,1,1);assert.equal(a.siparisler[0].siparis_id,id(220));assert.equal(b.siparisler.length,1);assert.equal(b.siparisler[0].siparis_id,id(200));assert.ok(!a.siparisler.some(s=>s.siparis_id===b.siparisler[0].siparis_id));});
+ await run('Cogniti admini yalnız okur; boş firma boş liste döner',async()=>{assert.equal((await read(12,2)).toplam,1);assert.deepEqual((await read(12,3)).siparisler,[]);});
+ await run('diğer roller, boş rol, pasif kullanıcı ve kapalı firma admini reddedilir',async()=>{for(const u of [13,14,15,16])await assert.rejects(read(u),e=>e.code==='42501');await db.query('UPDATE kullanicilar SET aktif_mi=false WHERE kullanici_id=$1',[id(10)]);await assert.rejects(read(),e=>e.code==='42501');await db.query('UPDATE kullanicilar SET aktif_mi=true WHERE kullanici_id=$1',[id(10)]);await db.query('UPDATE firmalar SET firma_admin_aktif=false WHERE firma_id=$1',[id(1)]);await assert.rejects(read(),e=>e.code==='42501');await db.query('UPDATE firmalar SET firma_admin_aktif=true WHERE firma_id=$1',[id(1)]);});
+ await run('geçersiz sayfa ve olmayan firma reddedilir',async()=>{for(const p of [-1,1000001,null])await assert.rejects(read(12,1,p),e=>e.code==='22023');await assert.rejects(read(12,999),e=>e.code==='22023');});
+ await run('anon/authenticated okuyamaz; service_role RPC okur, tablo doğrudan açılmaz',async()=>{for(const role of ['anon','authenticated']){await db.query(`SET ROLE ${role}`);try{await assert.rejects(read(),e=>e.code==='42501');}finally{await db.query('RESET ROLE');}}await db.query('SET ROLE service_role');try{assert.equal((await read()).toplam,21);await assert.rejects(db.query('SELECT * FROM cogniti_esnek_paket_siparisleri'),e=>e.code==='42501');}finally{await db.query('RESET ROLE');}});
+ await run('liste sipariş veya yükleme yazmaz; tarihsel alıcı adı değişmez',async()=>{await db.query("UPDATE kullanicilar SET ad='Yeni' WHERE kullanici_id=$1",[id(13)]);assert.equal((await read()).siparisler[0].satin_alan_ad_soyad,'Kayıtlı İsim');assert.deepEqual((await db.query('SELECT jsonb_agg(to_jsonb(s)) d FROM cogniti_esnek_paket_siparisleri s')).rows[0].d,before);assert.equal((await db.query('SELECT count(*)::int n FROM cogniti_esnek_paket_yuklemeleri')).rows[0].n,22);});
+ writeFileSync('docs/COGNITI_SATIN_ALINAN_PAKETLER_TEST_SONUCLARI.json',JSON.stringify({postgres:(await db.query('SHOW server_version')).rows[0].server_version,passed:tests.length,tests,scope:'Yerel Unix socket, sahte firma/kullanıcı/siparişler; değiştirilmemiş sipariş ve okuma SQL. Canlı DB/tarayıcı değildir.'},null,2)+'\n');
+}finally{await db.end().catch(()=>{});if(started)execFileSync(join(bin,'pg_ctl'),['-D',data,'-m','immediate','-w','stop'],{stdio:'pipe'});rmSync(root,{recursive:true,force:true});}

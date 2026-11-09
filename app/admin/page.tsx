@@ -29,7 +29,8 @@ import PartnerFirmaBilgileri from "./_components/PartnerFirmaBilgileri";
 import PartnerYonetimi from "./_components/PartnerYonetimi";
 import TopluTekilSilPaneli from "./_components/TopluTekilSilPaneli";
 import FirmaFaturalari from "./_components/FirmaFaturalari";
-import TokenYonetimi from "./_components/TokenYonetimi";
+import FirmaTokenKullanimi from "./_components/FirmaTokenKullanimi";
+import SatinAlinanPaketler from "./_components/SatinAlinanPaketler";
 import TClubYonetimi from "./_components/TClubYonetimi";
 import CClubYonetimi from "./_components/CClubYonetimi";
 import PuanYonetimi from "./_components/PuanYonetimi";
@@ -181,7 +182,8 @@ function AdminPanelIcerigi() {
 
               {(seciliSekme === "faturalar" || seciliSekme === "proforma-fatura") && !firmaAdmin && !platformSecili && <FirmaFaturalari key={`${f.firma_id}-${seciliSekme}`} proforma={seciliSekme === "proforma-fatura"} />}
 
-              {(seciliSekme === "token" || seciliSekme === "abonelik-paketleri") && <TokenYonetimi key={`${f.firma_id}-${seciliSekme}`} firmaId={f.firma_id} gorunum={seciliSekme === "abonelik-paketleri" ? "paketler" : "kullanim"} />}
+              {seciliSekme === "abonelik-paketleri" && <SatinAlinanPaketler key={f.firma_id} firmaId={f.firma_id} />}
+              {seciliSekme === "token" && <FirmaTokenKullanimi key={f.firma_id} firmaId={f.firma_id} />}
 
               {seciliSekme === "organizasyon" && <TakimBolgeFormu {...takimBolge} firmaAdi={f.firma_adi} takimlar={admin.takimlar} yukleniyor={admin.firmaVerileriYukleniyor} veriHatasi={admin.firmaVeriHatasi} />}
 

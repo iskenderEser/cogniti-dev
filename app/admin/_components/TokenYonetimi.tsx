@@ -97,7 +97,7 @@ export default function TokenYonetimi({ firmaId, gorunum = "paketler" }: { firma
   const disabled = busy || loading || loadFailed;
   const tokenMiktari = Number(miktar);
   const yuklemeGecerli = Number.isSafeInteger(tokenMiktari) && tokenMiktari >= 1 && tokenMiktari <= 10000000 && Boolean(aciklama.trim()) && aciklama.length <= 500;
-  return <div className={styles.stack} aria-label={paketSayfasi ? "Abonelik Paketleri" : "Token Kullanım Listesi"} aria-busy={busy || loading}>
+  return <div className={styles.stack} aria-label={paketSayfasi ? "Satın Alınan Paketler" : "Token Kullanım Listesi"} aria-busy={busy || loading}>
     <section className={styles.card} aria-labelledby="admin-token-hesap-baslik">
       <div className={styles.cardHeader}><div><h2 id="admin-token-hesap-baslik"><Wallet />Hesap Özeti</h2><p>Seçili firmanın abonelik paketi ve mevcut token bakiyesi</p></div><button type="button" className={styles.button} disabled={busy || loading} onClick={() => void refresh()}><RefreshCw />{loading ? "Yenileniyor…" : "Yenile"}</button></div>
       <div className={styles.cardBody}>

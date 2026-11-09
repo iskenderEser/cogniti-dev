@@ -23,8 +23,13 @@ const FIRMA_YONETIM_SAYFALARI = new Set([
 ]);
 // Firma admini yalnız firma yönetimi uçlarına ulaşır; hedef kayıtlar route'ta doğrulanır.
 export function firmaAdminIstegiIzinliMi(pathname: string, method: string, params: URLSearchParams, firmaId: string) {
-  if (["/fiyatlar", "/fiyatlar/api"].includes(pathname) && ["GET", "HEAD"].includes(method)) return true;
+  if (pathname === "/api/satin-alma/esnek-paket") return method === "POST";
+  if (pathname === "/api/satin-alma/kko") return method === "POST";
+  if (pathname === "/api/satin-alma/abonelik") return method === "POST";
+  if (["/fiyatlar", "/fiyatlar/api", "/api/token-bakiyeleri"].includes(pathname) && ["GET", "HEAD"].includes(method)) return true;
   if (pathname === "/tema/api" && ["GET", "PUT"].includes(method)) return true;
+  const siparisOkuma = pathname.match(/^\/admin\/api\/firmalar\/([^/]+)\/(?:satin-alinan-paketler|esnek-token-kullanimi)$/);
+  if (siparisOkuma) return siparisOkuma[1] === firmaId && ["GET", "HEAD"].includes(method);
   const okuma = method === "GET" || method === "HEAD";
   // Public klasöründeki firma logosu sayfa yetkisi istemez.
   if (pathname === "/hepifarma_logo_dark.png") return okuma;

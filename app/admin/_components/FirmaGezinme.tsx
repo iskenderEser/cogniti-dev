@@ -37,7 +37,7 @@ export const FIRMA_SAYFALARI: Record<FirmaSayfasi, { baslik: string; etiket?: st
   "eczanem-cek-yonetimi": { baslik: "Eczanem Çek Yönetimi", grup: "Modüller" },
   eczanem: { baslik: "Erişim ve Üye Yönetimi", grup: "Modüller" },
   firmastore: { baslik: "FirmaStore Çek Yönetimi", grup: "Modüller" },
-  "abonelik-paketleri": { baslik:"Abonelik Paketleri", grup:"Abonelik Yönetimi" },
+  "abonelik-paketleri": { baslik:"Satın Alınan Paketler", grup:"Abonelik Yönetimi" },
   token: { baslik:"Token Kullanım Listesi", etiket:"Token Kullanımı", grup:"Abonelik Yönetimi" },
 };
 

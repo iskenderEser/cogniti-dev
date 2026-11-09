@@ -6038,3 +6038,83 @@ SM2 hesap makinesi Esnek Paket kartına eklendi: 2.500–8.500 toplam token, 500
 ### Taahhütlü fiyatların admin tarifesine bağlantısı — 7 Kasım 2026
 
 `/fiyatlar` ve partner fiyat sayfasındaki taahhütlü paketler, Sistem Ayarları → Paket 3 tablosunun kayıtlı birim fiyat ve aylık token değerlerinden okunur. Toplam token = aylık token × 6; aylık fatura tutarı = aylık token × birim fiyat. Kod içindeki sabit taahhütlü fiyat listesi kaldırıldı. Kullanıcı `cogniti_taahhutlu_fiyatlar_baglandi = true` sonucunu paylaştı; DB bağlantı SQL kurulumu doğrulandı. Admin değer değişikliği sonrası gerçek arayüz kontrolü henüz kullanıcı tarafından onaylanmadı.
+
+### Esnek Paket yeni Excel listesi — 8 Kasım 2026
+
+Kullanıcının `cogniti_fiyat_tablosu.xlsx` dosyasındaki **yalnız esnek** satırları için `scripts/sql/cogniti_esnek_paket_yeni_liste.sql` hazırlandı: 2.500–150.000 aralığındaki 37 tanımlı adet × Peşin/1/2/3 ay = 148 fiyat. Liste sürekli bir aralık değildir; Excel'deki adet basamakları korunur. Eski 4/5 ay satırları kaldırılır; eski 65 hücre kısıtı ve doğrulaması yeni listeye geçirilir. KKÖ ve mevcut taahhütlü/Süper Paket değerleri değiştirilmez. Mevcut KKÖ bağlantısı korunur: Excel'in 9,90 TL referansına göre hücre katsayıları saklanır; sonraki KKÖ değişikliği fiyatları aynı oranda günceller. Değişiklik varsa tarife sürümü ve geçmiş kaydı bir kez güncellenir; aynı SQL'in tekrar çalıştırılması fiyatları veya sürümü değiştirmez.
+
+İç kullanıcı ve partner Esnek Paket hesaplayıcısı ile Sistem Ayarları matrisi yeni adet/vadeleri kullanır. Peşin seçimi sıfır ayla temsil edilir, toplam bedelin tamamı gösterilir; sıfıra bölme yapılmaz. Yeni migration mevcut merkezi tarife/SM2/fiyat okuma kurulumlarının üzerine kullanıcı tarafından **en son** çalıştırılır; önceki 65 hücreli kurulum veya eski fiyat yükleme SQL'leri ardından yeniden çalıştırılmaz. Başarı alanı: `cogniti_esnek_paket_yeni_liste_yuklendi = true`.
+
+Doğrulama: yerel PGlite'da 316 kontrol (148 kaynak fiyat, eski listeden geçiş, KKÖ/diğer paketlerin korunması, tekrar çalışma ve yetkiler); admin React testinde 194, iç kullanıcı/partner hesaplayıcı testinde 31 kontrol başarılı. TypeScript kontrolü başarılı. Testler canlı Supabase'e bağlanmaz. Gerçek tarayıcı açılmadı. SQL canlı veritabanında uygulanmadı; kullanıcı başarı sonucunu paylaşana kadar yükleme tamamlanmış sayılmaz. Commit/push yapılmadı.
+
+**Kullanıcı SQL sonucu — 8 Kasım 2026:** Kullanıcı `cogniti_esnek_paket_yeni_liste_yuklendi = true` sonucunu paylaştı. Yeni Esnek Paket listesinin veritabanı kurulumu kullanıcı sonucuyla doğrulandı. Önceki paragraftaki uygulama bekleyişi bu sonuçla kapandı; gerçek tarayıcı görünümü ve canlı fiyat okuma akışı ayrıca doğrulanmış sayılmaz.
+
+**Kullanıcı ekran doğrulaması — 8 Kasım 2026:** Kullanıcı “SQL işlendi, fiyatlar görüldü” bilgisini verdi. Yeni Esnek Paket listesinin SQL uygulaması ve fiyatların uygulama ekranında görünmesi kullanıcı tarafından doğrulandı. Önceki kayıttaki ekran doğrulama bekleyişi bu kapsamda kapandı. Ajan tarayıcıyı açmadı; satın alma/ödeme işlemi test edilmiş sayılmaz.
+
+### Esnek Paket — peşin fiyatla vade farksız fatura bölme (8 Kasım 2026)
+
+Kullanıcı kararıyla Paketler ve Fiyatlar ekranındaki Esnek Paket yalnız kayıtlı peşin (`ay=0`) birim fiyatını kullanır. Üst satır token seçimi → toplam fiyat → birim fiyat; alt satır “Faturamı böl” → Peşin/2 fatura/3 fatura seçimi ve her faturanın tutarı olarak düzenlendi. Seçim toplam bedeli veya birim fiyatı değiştirmez. Bölme kuruş üzerinden yapılır; bölünemeyen kuruş farkı son faturaya eklenerek fatura toplamları peşin bedelle eşit tutulur. Sistem Ayarları'ndaki fiyat matrisi ve SQL kayıtları bu değişiklikle değiştirilmez. Bu ekran tutar gösterimidir; fatura oluşturma veya ödeme entegrasyonu eklenmedi. İç kullanıcı ve partner React testlerinde 65 kontrol ile hedefli lint geçti. Gerçek tarayıcı açılmadı; commit/push yapılmadı.
+
+### Paket 2 — son Esnek Paket fiyat listesi (9 Kasım 2026)
+
+Kullanıcı yeni fiyatlama kapsamında önce yalnız Esnek Paket listesinin yüklenmesini istedi. Kaynak `esnek_fiyat_listesi_son.xlsx`, `Esnek Fiyat!A10:B80`: 2.500–25.000 arası 500, 26.000–50.000 arası 1.000 adımla toplam 71 peşin fiyat. Uç değerler 2.500 token için 8,50 TL/token; 50.000 token için 3,50 TL/token. Önceki 148 hücreli Esnek Paket listesi bu yeni kaynakla değiştirilir; Paket 2 matrisi yalnız Peşin sütununu kullanır. Fiyatlar ekranı aynı kaynaktan yeni adet/fiyatları okur; peşin tutarı vade farksız Peşin/2/3 faturaya bölme davranışı korunur. KKÖ'nün 1.500 token/ay ve 9,90 TL/token değerleri, diğer paketler ve abonelik kayıtları değiştirilmez. Aylık yüklenecek yeni dört abonelik paketi bu işlemin dışında kalır.
+
+Kurulum: kullanıcı `scripts/sql/cogniti_esnek_paket_son_liste.sql` dosyasının tamamını çalıştıracak. Önceden kurulmuş merkezi tarife/SM2/fiyat okuma yapısını kullanır; eski token/vade kayıtlarını kaldırıp yalnız 71 peşin fiyatı yükler, token ve vade CHECK kurallarını günceller. Mevcut KKÖ oran mekanizması 9,90 TL referansıyla korunur. Tekrar çalıştırma sürümü gereksiz artırmaz. Önceki liste SQL'leri bu migration'dan sonra yeniden çalıştırılmaz. Beklenen başarı alanı `cogniti_esnek_paket_son_liste_yuklendi = true`; kullanıcı sonucu henüz bekleniyor. Canlı SQL ajan tarafından çalıştırılmadı.
+
+Doğrulama: yerel PGlite 162 kontrol; admin React 117 kontrol; iç kullanıcı/partner hesaplayıcı 65 kontrol başarılı. Gerçek kullanıcı verisi veya Supabase bağlantısı kullanılmadı. Tarayıcı açılmadı; commit/push yapılmadı. Bu doğrulama gerçek veritabanına uygulama veya canlı ekran kabulü yerine geçmez.
+
+**Kullanıcı SQL sonucu — 9 Kasım 2026:** Kullanıcı `cogniti_esnek_paket_son_liste_yuklendi = true` sonucunu paylaştı. Son Esnek Paket listesinin veritabanına uygulanması kullanıcı sonucuyla doğrulandı; önceki kayıttaki SQL sonucu bekleyişi kapandı. Yeni fiyatların canlı ekranda görünmesi henüz ayrıca doğrulanmadı.
+
+### Esnek Paket — fatura bölmenin kaldırılması (9 Kasım 2026)
+
+Kullanıcı kararı: Esnek Paket tek seferde ödenir; sipariş verildiğinde fatura kesilir. Kullanıcının gördüğü hesaplayıcıdan “Faturamı böl”, Peşin/2/3 fatura seçimi ve bölünmüş tutarların hesaplanması/gösterimi kaldırıldı. Token seçimi, kayıtlı peşin birim fiyat ve toplam fiyat korunur. Fiyatlar sayfası ve admin açıklamaları bu karara uyarlandı. Önceki fatura bölme kararı bu kayıtla yürürlükten kalktı. Gerçek fatura oluşturma veya ödeme entegrasyonu bu ekran değişikliğiyle kurulmuş sayılmaz; yeni SQL gerekmez. İç kullanıcı/partner React testindeki 35 kontrol başarılı. Tarayıcı açılmadı; commit/push yapılmadı.
+
+### Paket 3 — dört aylık abonelik paketi (9 Kasım 2026)
+
+Kullanıcı kararı: eski Süper/6 aylık toplu paket tablosu kaldırılacak; tek abonelik tablosu Paket 1–4 olarak aylık token yüklemeli olacak. Fiyat tanımları: Paket 1 = 5.000 × 5,90 = 29.500 TL/ay; Paket 2 = 10.000 × **4,85** = 48.500 TL/ay; Paket 3 = 15.000 × 3,90 = 58.500 TL/ay; Paket 4 = 25.000 × 2,90 = 72.500 TL/ay. Küçük/Büyük adları kullanılmaz. Önceki Süper Paket gösterimi ve altı aylık token çarpanı bu kararla kaldırıldı.
+
+Admin Sistem Ayarları → Paket 3 aylık miktar, birim fiyat ve aylık tutarı gösterir; dört paket düzenlenebilir. İç kullanıcı/partner Paketler ve Fiyatlar ekranı “Abonelik Paketleri” başlığıyla aynı merkezi kayıtları okur. İlk üç teknik anahtar korunur; dördüncü için `paket_25k_token_miktari` ve `paket_25k_token_tl` eklenir. Yeni aşım fiyatı uydurulmadı; önceki aşım kayıtları değiştirilmez. KKÖ ve 71 peşin Esnek Paket fiyatı korunur.
+
+Kullanıcı `scripts/sql/cogniti_aylik_abonelik_fiyatlari.sql` dosyasını çalıştıracak. Merkezi JSON doğrulaması 22 alanı kapsar, dört fiyat tanımı yüklenir, admin okuma/kaydetme ve iç kullanıcı/partner fiyat okuma RPC'leri aylık dört paketi döndürür. Aynı değerlerle tekrar çalıştırma sürümü/geçmişi artırmaz. Başarı alanı `cogniti_aylik_abonelik_fiyatlari_yuklendi = true`; kullanıcı sonucu henüz bekleniyor. Ajan canlı DB'ye SQL uygulamadı. Eski fiyat kurulum SQL'leri bu migration'dan sonra yeniden çalıştırılmaz.
+
+Yerel doğrulama: PGlite 37 kontrol (doğru dört fiyat, 4,85 düzeltmesi, 6 çarpanının kaldırılması, KKÖ/Esnek korunması, tekrar çalışma, dördüncü paketin düzenlenmesi, yetkiler); admin React 122 kontrol; iç kullanıcı/partner hesaplayıcı ve abonelik görünümü 51 kontrol geçti. TypeScript ve hedefli lint başarılı. Gerçek tarayıcı açılmadı, commit/push yapılmadı. Bu çalışma fiyat tanımlarını ve ekranlarını günceller; gerçek aylık token yükleme cron'u, abonelik satın alımı ve fatura kesme entegrasyonu çalıştırılmış veya doğrulanmış sayılmaz.
+
+### Planlama Aracı — merkezi tarife bağlantısı (9 Kasım 2026)
+
+Kullanıcının düzeltme talebiyle Planlama Aracı'nın JSON içindeki eski 148 sabit esnek fiyatı ve sabit KKÖ fiyatı kaldırıldı. İç kullanıcı `/fiyatlar/api`, onaylı partner `/partner/api/fiyatlar` üzerinden güncel tarife sürümü, 71 peşin esnek fiyatı, dört aylık abonelik paketi ve KKÖ miktar/birim fiyatını okur. Yetki kapıları korunur. Mevcut fiyat API yardımcısı KKÖ'yü doğrulanmış `cogniti_fiyat_tarifesi.surum,degerler` alanlarından alır; RPC sonucu ve KKÖ kaydının sürümleri farklıysa karışık fiyat döndürmez. Yeni SQL gerektirmez; önceki son Esnek Paket ve aylık abonelik SQL kurulumlarını kullanır.
+
+Öneri hesabı ihtiyacı karşılayan esnek/abonelik seçenekleriyle, limit içindeyse KKÖ'yü toplam bedelle karşılaştırır. Abonelik bedeli aylık, esnek bedeli tek sefer olarak öneri satırında açıkça yazılır. Başlık “Önerilen Paket” oldu. 6.500 token ihtiyacı 6,91 TL/token ve 44.915 TL tek sefer; 10.000 token ihtiyacı Paket 2 için 48.500 TL/ay üretir. İhtiyaç son esnek kademeyi ve tüm abonelik miktarlarını aşarsa paket uydurulmaz. Modül maliyetleri seçilen güncel birim fiyatla hesaplanır. Fiyat yüklenirken veya hatada eski sabit fiyatlar kullanılmaz; hata/yeniden deneme cevap taslağını değiştirmez. Fiyat ve taslak mesaj akışları ayrıdır.
+
+Hedefli testler: 71 esnek kademe, dört abonelik, KKÖ sınırı, canlı tarife mesajıyla değişiklik, 50.000 üzeri ihtiyaç, hata/yeniden deneme, partner API yolu, yenileme, hesap ayrımı ve Hepsini sil kontrolleri başarılı. Tarayıcı açılmadı; canlı DB'ye yazılmadı; commit/push yapılmadı. Lintte yeni hata yok; mevcut fiyat okuma RPC'sinin şema snapshotında bulunmamasına ait bir uyarı var.
+
+### Planlama fiyat okuma bağlantısı düzeltmesi (9 Kasım 2026)
+
+Kullanıcı fiyatların görünmediğini bildirdi. Önceki bağlantının doğrudan `cogniti_fiyat_tarifesi` tablosunu service_role ile okuması mevcut SQL'deki tablo erişim iptaliyle çelişiyordu. Doğrudan tablo okuması kaldırıldı; fiyatlar ve KKÖ yalnız aynı SECURITY DEFINER okuma RPC'sinden alınır. `scripts/sql/cogniti_planlama_tarife_okuma.sql` mevcut fiyat okuma fonksiyonunun yanıtına `kko.limit` ve `kko.birim` ekler; veri güncellemez ve tablo izni açmaz. Yeni abonelik kurulum SQL'inin fonksiyonu da aynı yanıtla uyumlandı. Önceki “yeni SQL gerekmiyor” kaydı bu düzeltmeyle geçersizdir. Kullanıcı yalnız okuma düzeltme SQL'ini çalıştıracak; beklenen alan `cogniti_planlama_tarife_okuma_hazir = true`. Uygulama sonucu henüz bekleniyor.
+
+Yerel PGlite testinde doğrudan tablo erişiminin kapalı kaldığı, service_role okuma RPC'sinin KKÖ/71 esnek fiyat/dört paketi döndürdüğü, fiyatların/sürümün değişmediği ve tekrar uygulanabilirlik kontrol edildi. Tarayıcı açılmadı; canlı DB'ye SQL uygulanmadı; commit/push yapılmadı.
+
+### Planlama — yan yana iki öneri (9 Kasım 2026)
+
+Kullanıcı isteğiyle tek “Önerilen Paket” sonucu yerine “Önerilerimiz” başlığı altında “Önerilen Esnek Paket” ve “Önerilen Abonelik Paketi” yan yana gösterilir. Her iki öneride token adedi, toplam bedel ve birim fiyat vardır; abonelik adedi token/ay olarak etiketlenir. Her tür için ihtiyacı karşılayan en yakın üst kademe ayrı seçilir; yetersiz abonelik önerilmez. 6.260 token/ay örneğinde esnek 6.500 token / 44.915 TL / 6,91 TL ve abonelik 10.000 token/ay / 48.500 TL / 4,85 TL döner. Modül maliyetlerinin mevcut en düşük bedelli uygun seçenek hesabı korunur. Sığmayan üst iki alan için sabit sağ/sol kaydırmalar kaldırıldı; dar ekranda ihtiyaç ve öneriler alt alta geçer. Hedefli fiyat/taslak testleri (9 test) geçti; yeni SQL gerekmez, tarayıcı açılmadı, commit/push yapılmadı.
+
+**Planlama modül karşılaştırması — 9 Kasım 2026:** Kullanıcı isteğiyle üçüncü satırda Esnek Paket altında ve Abonelik Paketi altında ayrı dört modül özeti gösterilir. İki tabloda tüketilecek token miktarları aynıdır; sol maliyetler önerilen esnek paketin, sağ maliyetler önerilen aboneliğin birim fiyatından hesaplanır. Önceki en düşük bedelli uygun seçenekle ortak modül maliyeti hesabı kaldırıldı. 6.260 token örneğinde 240/20/4.800/1.200 dağılımı her iki tarafta aynıdır; fiyatlar solda 6,91, sağda 4,85 TL/token kullanır. Fiyat yokken tutar gösterilmez; kapalı modül iki tarafta sıfırdır. 10 hedefli fiyat/taslak testi geçti. Yeni SQL yok; tarayıcı açılmadı, commit/push yapılmadı.
+
+
+### Esnek Paket sipariş modalı — 9 Kasım 2026
+
+Paketler ve Fiyatlar'daki Esnek Paket seçimi, ayrı `components/satinAlma/EsnekPaketSiparis.tsx` bileşeni ve `POST /api/satin-alma/esnek-paket` üzerinden mevcut denetimli sipariş RPC'sine bağlandı. Üretici kişisel; yönetici/Firma Admini ortak hesaba alır. TM/Cogniti Admini satın alamaz. Modal adet/birim/toplam/hesap bilgisini onaylatır; fiyat değişince yeniden onay ister. Çift tıklama kilidi, oturum depolamasında sabit işlem anahtarı ve belirsiz yanıtta aynı siparişin yeniden denenmesi vardır. Başarı navbar token özetini yeniler. Yeni SQL yok; daha önce onaylanmış Adım 1 kurulumu kullanılır. Sunucu/API, React davranış ve hesaplayıcı regresyon testleri ile TypeScript başarılı; lintte yalnız mevcut RPC snapshot uyarısı var. Gerçek sipariş/tarayıcı kabulü henüz yok. Satın Alınan Paketler ve Token Kullanımı ekranlarının yeni kayıtlara bağlanması sonraki işlerdir. Ayrıntı: `docs/COGNITI_ESNEK_PAKET_SIPARIS_PLANI.md`.
+
+
+### Satın Alınan Paketler gerçek sipariş bağlantısı — 9 Kasım 2026
+
+Admin firma ekranındaki liste yeni Esnek Paket sipariş/yükleme kayıtlarına bağlandı: tarih, paket, tarihsel satın alan, token hesabı, miktar, birim ve paket tutarı; detayda %20 KDV/genel tutar ve son kullanım. Yeni salt okuma RPC ve firma kapsamlı GET ucu, mevcut yönetim yetkilerini korur. 20 kayıtlı kararlı sayfalama, boş/hata/yeniden deneme ve ortak mobil tablo vardır; istatistik kartı veya manuel işlem eklenmedi. 8 gerçek yerel PostgreSQL, 4 API ve 27 React kontrolü; TypeScript başarılı; lintte yalnız yeni RPC snapshot uyarısı. Kullanıcı `cogniti_satin_alinan_paketler_okuma_kuruldu = true` sonucunu iletti; okuma SQL kurulumu doğrulandı (9 Kasım 2026). Tarayıcı/gerçek sipariş kabulü yapılmadı. Ayrıntı: `docs/COGNITI_ESNEK_PAKET_SIPARIS_PLANI.md`; sonuçlar: `docs/COGNITI_SATIN_ALINAN_PAKETLER_TEST_SONUCLARI.json`.
+
+
+### Firma Token Kullanımı — yeni Esnek hesapları (9 Kasım 2026)
+
+`FirmaTokenKullanimi` kişisel/firma hesaplarını toplam, kullanılan, blokeli/ayrılan, kullanılabilir ve süresi dolan miktarlarla gösterir. Gerçek saha/E-Club tüketimleri ve yalnız tüketilmiş Eczanem blokları hesap/üretici/yayın bazında okunur; UTT adına yeni tüketim veya bloktan sahte tüketim yazılmaz. Hesap filtresi ve 50 satırlık sayfalama vardır. KKÖ/önceki rapor aynı sayfada açılım altında korunur; yeni Esnek rapor eski hesap varlığına bağlı değildir. Yeni salt okuma RPC ve firma kapsamlı GET ucu mevcut admin/Firma Admini okuma yetkisini korur. 10 yerel PostgreSQL senaryosu, 5 API ve 28 React kontrolü; TypeScript başarılı; lintte yalnız yeni RPC snapshot uyarısı. Kullanıcı `cogniti_firma_esnek_token_kullanimi_kuruldu = true` sonucunu iletti; okuma SQL kurulumu doğrulandı (9 Kasım 2026). Gerçek kullanıcı/tarayıcı kabulü yapılmadı. Ayrıntılar `docs/COGNITI_ESNEK_PAKET_SIPARIS_PLANI.md` ve `docs/COGNITI_FIRMA_ESNEK_TOKEN_KULLANIMI_TEST_SONUCLARI.json`.
+
+
+### Esnek Paket gerçek kullanıcı kabulü park edildi — 9 Kasım 2026
+
+Kullanıcı uçtan uca gerçek kullanıcı kabulünü teknik borca bıraktı: **TB-ESNEK-01, BEKLİYOR**. Yeni açık talimat olmadan gerçek sipariş/yayın/gönderim testi başlatılmaz. Kapanma koşulları `docs/COGNITI_TOKEN_PLANI.md` ve `docs/COGNITI_ESNEK_PAKET_SIPARIS_PLANI.md` içinde. Yeni rapor şu anda Admin/Firma Admini firma yönetimindeki Token Kullanımı ekranındadır; üretici/yönetici `/token` ekranının yeni hesap raporuna bağlantısı henüz yapılmadı. Navbar özetleri bağlıdır; kullanıcı rol raporu tamamlanmış sayılmaz.

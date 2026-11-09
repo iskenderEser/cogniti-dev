@@ -1,0 +1,22 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const {Window}=require('happy-dom');const win=new Window({url:'http://localhost/admin'});
+for(const k of ['window','document','navigator'])Object.defineProperty(globalThis,k,{configurable:true,value:win[k]});globalThis.IS_REACT_ACT_ENVIRONMENT=true;
+const React=require('react'),{createRoot}=require('react-dom/client'),ts=require('typescript');
+const id=n=>`00000000-0000-4000-8000-${String(n).padStart(12,'0')}`;
+const row={siparis_id:id(20),siparis_tarihi:'2026-11-09T10:00:00+03:00',satin_alan_ad_soyad:'Merve Test',satin_alan_rol:'pm',bakiye_turu:'kisisel',token_adedi:2500,birim_fiyat:8.5,toplam_tutar:21250,son_kullanim_at:'2027-01-01T00:00:00+03:00'};
+let mode='normal',calls=[],passed=0;
+const mocks={react:React,'react/jsx-runtime':require('react/jsx-runtime'),'lucide-react':{ShoppingBag:()=>null},'@/components/ui/button':{Button:p=>React.createElement('button',p)},'./MobilUyumluTablo':{default:({children})=>React.createElement('table',null,children)}};
+const cache=new Map();function load(path){if(cache.has(path))return cache.get(path);const exports={};vm.runInNewContext(ts.transpileModule(fs.readFileSync(path,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX,target:ts.ScriptTarget.ES2022}}).outputText,{exports,Intl,Date,AbortController,Error,fetch:async(url,options)=>{calls.push({url,options});const page=Number(new URL(url,'http://localhost').searchParams.get('sayfa'));if(mode==='error')return Response.json({hata:'SQL kurulumu bekleniyor.'},{status:503});return Response.json({firma_id:mode==='foreign'?id(2):id(1),sayfa:page,sayfa_boyutu:20,toplam:mode==='empty'?0:21,siparisler:mode==='empty'?[]:[{...row,siparis_id:id(20+page),bakiye_turu:page?'firma_ortak':'kisisel'}]});},require:n=>mocks[n]??(n.endsWith('.css')?{default:{}}:n.startsWith('@/')?load(n.slice(2)+'.ts'):assert.fail(n))});cache.set(path,exports);return exports;}
+const C=load('app/admin/_components/SatinAlinanPaketler.tsx').default;
+const ok=v=>{assert.ok(v);passed++;};
+async function mount(){const host=document.createElement('div');document.body.append(host);const root=createRoot(host);await React.act(async()=>root.render(React.createElement(C,{firmaId:id(1)})));return{host,root,close:async()=>{await React.act(async()=>root.unmount());host.remove();}};}
+async function click(s,t){await React.act(async()=>{const b=[...s.host.querySelectorAll('button')].find(x=>x.textContent===t);assert.ok(b,t);b.click();});}
+(async()=>{
+ let s=await mount();ok(s.host.textContent.includes('Merve Test'));ok(s.host.textContent.includes('Kişisel Token Hesabı'));ok(s.host.textContent.includes('Esnek Paket'));ok(s.host.querySelectorAll('thead th').length===8);ok(s.host.querySelectorAll('section').length===1);ok(!s.host.querySelector('form'));ok(s.host.textContent.includes('4.250,00 TL'));ok(s.host.textContent.includes('25.500,00 TL'));ok(s.host.textContent.includes('31.12.2026'));ok(s.host.textContent.includes('23:59'));ok(s.host.textContent.includes('9.11.2026'));ok(s.host.textContent.includes('10:00'));ok(calls.at(-1).options.cache==='no-store');ok(calls.at(-1).url.includes(id(1)));
+ await click(s,'Sonraki');ok(s.host.textContent.includes('Sayfa 2 / 2'));ok(s.host.textContent.includes('Firma Token Hesabı'));ok([...s.host.querySelectorAll('button')].find(x=>x.textContent==='Sonraki').disabled);await click(s,'Önceki');ok(s.host.textContent.includes('Sayfa 1 / 2'));await s.close();ok(calls.at(-1).options.signal.aborted);
+ mode='empty';s=await mount();ok(s.host.textContent.includes('Henüz satın alma kaydı bulunmuyor'));ok(!s.host.querySelector('details'));await s.close();
+ mode='error';s=await mount();ok(s.host.querySelector('[role=alert]'));ok(s.host.textContent.includes('SQL kurulumu bekleniyor'));ok(!s.host.textContent.includes('Henüz satın alma kaydı'));mode='normal';await click(s,'Yeniden Dene');ok(s.host.textContent.includes('Merve Test'));await s.close();
+ mode='foreign';s=await mount();ok(!s.host.textContent.includes('Merve Test'));ok(s.host.querySelector('[role=alert]'));await s.close();
+ await win.happyDOM.close();console.log(JSON.stringify({passed,scope:'Gerçek satın alma listesi React bileşeni; sahte API/tablo kabuğu. Liste, hesap, KDV, Türkiye tarihi, sayfalama, boş/hata/yeniden deneme, firma ayrımı.'}));
+})().catch(e=>{console.error(e);process.exitCode=1;});

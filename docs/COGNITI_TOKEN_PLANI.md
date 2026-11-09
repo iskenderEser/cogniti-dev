@@ -219,3 +219,10 @@ Commit öncesi kontrol: `npm run typecheck:build` ve `git diff --check` başarı
 ### TB-VIVA-01 — otomatik kontör tüketimi canlı kabulü (28 Ekim 2026)
 
 Durum: **BEKLİYOR — teknik borç**. Kullanıcı deployment'ı tamamladı; 126983 numaralı kontrol isteği HTTP 200, zaman aşımı yok ve güncel `tuketim` bölümüyle sıfır hata döndürdü. Çağrıda iş yoktu. Kalan iş: yeni gerçek yayın bittikten sonra manuel tetikleme olmadan üretim cron'unun kapanış ve tüketimi tamamlaması, pozitif tutarda doğru bakiyeden tek tüketim düşmesi ve sonraki çağrılarda tekrar düşmemesinin kanıtlanması. Yerel hedefli çalıştırmalar veya işsiz endpoint kontrolü bu kabulü tamamlamaz. Kullanıcı bu kontrolün teknik borç olarak tutulmasını istedi; test başlatılmadı. Ayrıntı ve kapanma koşulları: `docs/VIVA_TOKEN_KULLANIM_GECISI.md`, TB-VIVA-01.
+
+
+## TB-ESNEK-01 — gerçek kullanıcıyla uçtan uca kabul
+
+**Durum: BEKLİYOR — teknik borç (9 Kasım 2026).** Kullanıcı gerçek kullanıcı testini teknik borca bırakmayı istedi. Açık yeni talimat olmadan gerçek sipariş, yayın veya gönderim testi başlatılmaz. Kapanma koşulu: yetkili üreticinin kişisel, yönetici/Firma Admininin firma hesabına sipariş vermesi; tek sipariş/tek yükleme; doğru navbar bakiyesi; seçilen hesapta gerçek gönderim tüketimi ve yetersiz bakiye engeli; satın alma/tüketim raporlarına doğru yansıma. Yerel testler ve SQL kurulumundaki true sonuçları bu kabulün yerine geçmez.
+
+**Rapor erişimi hakkında mevcut sınır:** Yeni kişisel/firma hesap raporu Admin → Firma → Abonelik Yönetimi → Token Kullanımı ekranına bağlandı. Firma Admini kendi firmasını, Cogniti Admini mevcut salt okuma yönetim yetkisiyle firma kaydını okuyabilir. Üretici/yönetici rollerin `/token` sayfası bu yeni Esnek rapora henüz bağlanmadı; navbar özetleri bağlıdır. Kullanıcıya yönelik rol kapsamlı rapor bağlantısı tamamlanmış sayılmaz. Bu not o bağlantıyı geliştirme veya erişim kapsamını genişletme onayı değildir.

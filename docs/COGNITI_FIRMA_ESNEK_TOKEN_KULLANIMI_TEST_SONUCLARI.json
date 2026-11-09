@@ -1,0 +1,23 @@
+{
+  "postgres": "18.6",
+  "passed": 10,
+  "tests": [
+    "SQL kurulumu ve tekrar kurulumu başarılı",
+    "kişisel ve ortak alım/kullanım/ayırma/kalan/süre sonu doğru ayrılır",
+    "saha, E-Club ve tüketilmiş Eczanem birleşir; bloklar tüketilmez",
+    "çoklanan yayın görünümü toplamı ikiye katlamaz; ortak ve kişisel gönderiler birleşmez",
+    "hesap filtresi sadece seçilen hesaptaki gönderimleri toplar",
+    "firma ve hesap kapsamı SQL içinde de korunur; admin salt okur",
+    "yetkisiz/pasif kullanıcı ve kapalı firma admini reddedilir",
+    "anon/authenticated RPC okuyamaz; service_role yalnız denetimli RPCyi kullanır",
+    "salt okuma yükleme ve blok kayıtlarını değiştirmez",
+    "sayfalama kararlı; hesap veya sayfa filtresi kapsamı genişletmez"
+  ],
+  "scope": "Yerel Unix socket; sahte temel/kullanım kayıtları. Yeni rapor ve sipariş SQLleri değiştirilmeden, ayırma yardımcısının repodaki tanımıyla çalıştırıldı. Canlı DB/tarayıcı testi değildir.",
+  "api_testleri": 5,
+  "react_kontrolu": 28,
+  "typecheck": "npm run typecheck:build başarılı",
+  "lint": "0 hata, yeni RPC şema snapshotında olmadığı için 1 uyarı",
+  "canli_sql": "Kullanıcı cogniti_firma_esnek_token_kullanimi_kuruldu = true sonucuyla kurulumu doğruladı (9 Kasım 2026). Gerçek kullanıcı kabulü değildir.",
+  "tarayici": "Açılmadı; gerçek kullanıcı ve görsel kabul yapılmadı"
+}
