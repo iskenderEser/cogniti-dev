@@ -1,0 +1,14 @@
+.alan { min-width:0; padding:16px; border:1px solid var(--tema-kontrol-cizgi); border-radius:12px; background:var(--tema-zemin); color:var(--tema-kontrol-metin); font-size:12px; line-height:1.6; }
+.secimler { display:flex; flex-wrap:wrap; gap:10px 20px; min-width:0; border:0; padding:0; margin:0 0 14px; }
+.secimler legend { margin-bottom:8px; font-size:13px; }
+.secimler label { display:flex; flex-wrap:wrap; align-items:center; gap:6px; cursor:pointer; }
+.secimler input { accent-color:var(--tema-kontrol-eylem); }
+.secimler label span { color:var(--tema-ikincil-metin); }
+.ozet { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px 16px; margin:0; }
+.ozet>div { min-width:0; }
+.ozet dt { color:var(--tema-ikincil-metin); }
+.ozet dd { margin:2px 0 0; overflow-wrap:anywhere; font-variant-numeric:tabular-nums; }
+.durum { font-size:12px; line-height:1.6; color:var(--tema-kontrol-metin); }
+.not { margin:12px 0 0; color:var(--tema-ikincil-metin); font-size:11px; }
+.yenile { color:var(--tema-kontrol-eylem); border:0; background:transparent; padding:0; font:inherit; cursor:pointer; text-decoration:underline; }
+@media(max-width:420px) { .secimler label { width:100%; } .ozet { grid-template-columns:1fr; } }

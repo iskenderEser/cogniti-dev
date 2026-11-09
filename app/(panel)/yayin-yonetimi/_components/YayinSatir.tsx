@@ -9,6 +9,9 @@
 "use client";
 
 import { useState } from "react";
+import { useAuth } from "@/app/providers/AuthProvider";
+import { ECZANEM_TALEP_ACAN_ROLLER } from "@/lib/utils/roller";
+import PmYayinTokenHesabi from "@/components/eczanem/PmYayinTokenHesabi";
 import type { Yayin, OnizlemeHedefi } from "../_types";
 import type { Soru } from "@/app/(panel)/talepler/_types";
 import type { HesaplananTur } from "@/lib/tclub/tur/kayit";
@@ -54,6 +57,8 @@ export function YayinSatir({
   getSoruPuani, setSoruPuani, hepsineAyniPuanAta,
   onVideoAc, onOnizle, onDurumDegistir, kartGorunumu = false, onPlanIslem,
 }: YayinSatirProps) {
+  const { kullanici } = useAuth();
+  const pmEczanem = ECZANEM_TALEP_ACAN_ROLLER.includes(kullanici?.rol ?? "") && y.hedef_roller.includes("eczanem");
   const yayinda = y.durum === "yayinda";
   const eczanemIndirimsiz = y.hedef_roller.includes("eczanem") && y.eczanem_kazanim_modeli === "indirimsiz";
   const planlandi = y.durum === "planlandi";
@@ -130,6 +135,7 @@ export function YayinSatir({
           )}
           <span className="absolute right-2 top-2 flex max-w-[70%] flex-wrap justify-end gap-1">
             <HedefRolPilleri hedefRoller={y.hedef_roller} />
+            {pmEczanem && <PmYayinTokenHesabi yayinId={y.yayin_id} />}
           </span>
           {tiklanabilir && (
             <span className="absolute inset-0 flex items-center justify-center">
@@ -297,6 +303,7 @@ export function YayinSatir({
           <div className="flex flex-wrap items-center gap-1.5">
             <span className="truncate text-base font-extrabold text-[var(--tema-yerel-uretim-ana-metin-28)]">{y.urun_adi}</span>
             <HedefRolPilleri hedefRoller={y.hedef_roller} />
+            {pmEczanem && <PmYayinTokenHesabi yayinId={y.yayin_id} />}
             {y.video_isleniyor ? (
               <span className="inline-flex items-center gap-1 rounded-full border border-[var(--tema-yerel-uretim-islevsel-cizgi-06)] bg-[var(--tema-yerel-uretim-islevsel-zemin-04)] px-2 py-0.5 text-[10px] font-bold leading-tight text-[var(--tema-yerel-uretim-islevsel-metin-25)]">
                 <svg className="animate-spin h-2.5 w-2.5 text-[var(--tema-yerel-uretim-islevsel-metin-07)]" fill="none" viewBox="0 0 24 24">

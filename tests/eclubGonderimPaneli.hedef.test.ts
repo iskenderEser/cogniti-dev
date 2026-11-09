@@ -84,12 +84,15 @@ test('çoklu yayın tek kayıt çağrısına gider; yanıtsız denemede işlem a
   await click('Özeti göster →');
   assert.match(document.querySelector('[role=dialog]')?.textContent ?? '', /2 kayıt/);
   assert.equal(kayitlar.length, 0);
+  assert.equal(document.querySelector('input[value=firma_ortak]'),null);
+  assert.equal(button('Gönderimi oluştur')?.disabled,false);
   await click('Gönderimi oluştur');
   assert.equal(kayitlar.length, 1);
   await click('Gönderimi oluştur');
   assert.equal(kayitlar.length, 2);
   assert.deepEqual(kayitlar[0][0], ['y', 'y2']);
   assert.equal(kayitlar[0][3], kayitlar[1][3]);
+  assert.equal(kayitlar[0].length, 4);
   assert.equal(tamam, 1);
   assert.match(document.body.textContent ?? '', /2 yayın gönderildi/);
 });

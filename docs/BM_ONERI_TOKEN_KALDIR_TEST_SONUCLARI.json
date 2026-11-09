@@ -1,0 +1,13 @@
+{
+  "postgres": "18.6",
+  "passed": 6,
+  "tests": [
+    "Önceki gerçek tetikleyici öneri başına token tüketir",
+    "Kaldırma SQLi iki kez kurulabilir; yalnız hedef tetikleyici ve işlev kalkar",
+    "Öneri yeni tüketim yazmaz; kalan ve geçmiş rapor kaynağı değişmez",
+    "Token sıfırken öneri kaydı oluşturulur",
+    "Token hesabı yokken öneri kaydı oluşturulur; geçmiş tüketim silinmez",
+    "Token dışındaki veritabanı kontrolü korunur"
+  ],
+  "scope": "Yerel Unix socket, sahte temel tablolar; repodaki eski tetikleyici ve kaldırma SQLi değiştirilmeden çalıştırıldı. Tüketim alt işlevi gözlemci stub; canlı sistem/gerçek kullanıcı testi değildir."
+}

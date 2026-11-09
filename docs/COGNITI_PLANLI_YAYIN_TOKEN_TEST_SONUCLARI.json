@@ -1,0 +1,22 @@
+{
+  "postgres": "18.6",
+  "passed": 15,
+  "tests": [
+    "Plan rezervasyonu SQLi iki kez kurulur",
+    "İleri tarihli saha planı 2 token ayırır; kullanılanı artırmaz ve başka yayın harcayamaz",
+    "Ayrılan token gerçek aktivasyonda tek kez tüketilir; rezervasyon serbest kalır",
+    "E-Club planı aynı mekanizmayla doğru üye sayısı kadar ayırır",
+    "Tarih değişikliği yeni tarihte geçerli yüklemeleri yeniden ayırır, yetersizse eski plan korunur",
+    "Aktivasyonda alıcı artarsa aynı hesaptan fark alınır; azalırsa fazla ayrım tüketilmez",
+    "Gerçekleşmeyen aktivasyon kısmi tüketimi geri alır ve kullanılmayan plan tokenlarını serbest bırakır",
+    "İptal rezervasyonu geçmişiyle saklar, token yaratmaz ve tüketim yazmaz",
+    "Firma hesabında rezervasyon kişisel hesabı değiştirmez",
+    "Plan yüklemenin son kullanımını aşamaz; önizleme de aynı sınırı kullanır",
+    "Eczanem bloklayıcı ayrılmış plan tokenlarını harcayamaz",
+    "İki bağımsız plan aynı hesaptaki son tokenları fazla ayıramaz",
+    "Zamanı gelen planlarda bir başarısızlık diğerini engellemez, cron tekrarı çift tüketmez",
+    "Yetki kalkınca gerçekleşmeyen planın rezervasyonu bırakılır",
+    "Anonim/oturumlu kullanıcı rezervasyon tablolarını veya işlevlerini doğrudan kullanamaz"
+  ],
+  "scope": "Yerel Unix socket; sahte temel tablolar; gerçek ortak açılış, plan rezervasyonu ve Eczanem ayırma SQLleri. Canlı sistem/tarayıcı testi değildir."
+}

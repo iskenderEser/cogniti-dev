@@ -1,0 +1,18 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import vm from 'node:vm';
+import ts from 'typescript';
+const compile=p=>ts.transpileModule(readFileSync(p,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
+const errors={};vm.runInNewContext(compile('lib/token/yayinHatasi.ts'),{exports:errors});
+function setup({role='pm',owner='me',mutationError=null,matched=true,activated=1}={}){
+ const writes=[],rpc=[];const db={from(){let mutation=false;const q={select(){return q},eq(k,v){writes.push({filter:k,value:v});return q},single(){return q},update(value){mutation=true;writes.push({update:value});return q},delete(){mutation=true;writes.push({delete:true});return q},then(resolve,reject){return Promise.resolve(mutation?{data:matched?[{yayin_id:'pub'}]:[],error:mutationError}:{data:{yayin_id:'pub',uretici_id:owner,durum:'planlandi'},error:null}).then(resolve,reject)}};return q},rpc:async(name,args)=>{rpc.push({name,args});return {data:activated,error:null}}};
+ const exports={};const fail=(hata,status)=>Response.json({hata},{status});
+ const deps={'next/server':{NextResponse:{json:Response.json.bind(Response)}},'@/lib/supabase/server':{createClient:async()=>({auth:{getUser:async()=>({data:{user:{id:'me'}},error:null})}}),createAdminClient:()=>db},'@/lib/utils/rolCozucu':{rolCozucu:async()=>role},'@/lib/utils/roller':{URETICI_ROLLER:['pm','med_md','egt_md','ik_md']},'@/lib/token/yayinHatasi':errors,'@/lib/utils/hataIsle':{veriKontrol:()=>({gecerli:true}),yetkiHatasi:()=>fail('Oturum',401),rolHatasi:m=>fail(m,403),validasyonHatasi:m=>fail(m,400),isKuraluHatasi:m=>fail(m,422),hataYaniti:m=>fail(m,503),sunucuHatasi:e=>{throw e}}};
+ vm.runInNewContext(compile('app/(panel)/yayin-yonetimi/api/yayinlar/[yayin_id]/route.ts'),{exports,Response,Date,require:n=>deps[n]??assert.fail(n)});
+ return {writes,rpc,put:body=>exports.PUT({json:async()=>body},{params:Promise.resolve({yayin_id:'pub'})})};
+}
+test('Tarih değişikliği yalnız hâlâ planlı kaydı değiştirir ve rezervasyon hatasını aktarır',async()=>{const s=setup();assert.equal((await s.put({islem:'tarih_degistir',yayin_gunu:'2031-05-20'})).status,200);assert.ok(s.writes.some(x=>x.filter==='durum'&&x.value==='planlandi'));const t=setup({mutationError:{code:'P0001',message:'ESNEK_PLAN:yetersiz'}});const r=await t.put({islem:'tarih_degistir',yayin_gunu:'2031-05-20'});assert.equal(r.status,422);assert.match((await r.json()).hata,/Plan kaydedilmedi/);});
+test('İptal yalnız planlı kaydı siler; eş zamanlı aktivasyonda başarı göstermez',async()=>{const s=setup();const r=await s.put({islem:'plan_iptal'});assert.equal(r.status,200);assert.match((await r.json()).mesaj,/serbest bırakıldı/);assert.ok(s.writes.some(x=>x.filter==='durum'&&x.value==='planlandi'));const t=setup({matched:false});assert.equal((await t.put({islem:'plan_iptal'})).status,422);});
+test('Hemen yayınla kanonik aktivasyona gider; gerçekleşmeyen sonuç başarı olmaz',async()=>{const s=setup();assert.equal((await s.put({islem:'hemen_yayinla'})).status,200);assert.equal(s.rpc[0].name,'yayin_planlananlari_aktive');const t=setup({activated:0});assert.equal((await t.put({islem:'hemen_yayinla'})).status,422);});
+test('Başkasının planı ve UTT yönetimi reddedilir; geçmiş tarih yazılmaz',async()=>{for(const opts of [{owner:'other'},{role:'utt'}]){const s=setup(opts);assert.equal((await s.put({islem:'plan_iptal'})).status,403);assert.ok(!s.writes.some(x=>x.delete||x.update));}const s=setup();assert.equal((await s.put({islem:'tarih_degistir',yayin_gunu:'2020-01-01'})).status,422);assert.ok(!s.writes.some(x=>x.update));});

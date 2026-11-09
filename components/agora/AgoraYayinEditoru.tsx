@@ -14,6 +14,7 @@ export function AgoraYayinEditoru({hedef,talepId,onYayinlandi,onDuzenle}:{hedef:
  const {mesajlar,hata,basari}=useHataMesaji();
  const [acikAkordiyon,setAcikAkordiyon]=useState<string|null>(null);
  const [onizleme,setOnizlemeHedefi]=useState<OnizlemeHedefi|null>(null);
+ const [onayPlanTarihi,setOnayPlanTarihi]=useState<string|null>(null);
  const [onay,setOnayModal]=useState<Bekleyen|null>(null);
  const yy=useYayinYonetimi({kapsam:"agora",kullaniciId:kullanici?.id,aktifAnaSekme:hedef,hata,basari});
  const handleVideoAc=(url:string)=>setOnizlemeHedefi({arac_turu:"video",video_url:url});
@@ -42,13 +43,13 @@ export function AgoraYayinEditoru({hedef,talepId,onYayinlandi,onDuzenle}:{hedef:
                 getSoruPuani={yy.getSoruPuani} setSoruPuani={yy.setSoruPuani} hepsineAyniPuanAta={yy.hepsineAyniPuanAta}
                 onVideoAc={handleVideoAc}
                 onOnizle={setOnizlemeHedefi}
-                onYayinlaClick={setOnayModal}
+                onYayinlaClick={b=>{setOnayPlanTarihi(new Date(`${yy.yayinGunleri[b.soru_seti_durum_id]}T07:00:00+03:00`).getTime()>Date.now()?yy.yayinGunleri[b.soru_seti_durum_id]:null);setOnayModal(b);}}
                 
               />
  ))}
  {!talepId&&yy.yayinlar.filter(y=>y.hedef_roller.join(",")===(hedef==="eczaci_ve_eczane_teknisyeni"?"eczaci,eczane_teknisyeni":hedef)).map(y=><YayinSatir key={y.yayin_id} y={y} islemLoading={yy.islemLoading} acikAkordiyon={acikAkordiyon} setAcikAkordiyon={setAcikAkordiyon} formatTarih={t=>new Date(t).toLocaleString("tr-TR")} tekrarBilgi={yy.tekrarBilgi[y.yayin_id]} getSoruPuani={yy.getSoruPuani} setSoruPuani={yy.setSoruPuani} hepsineAyniPuanAta={yy.hepsineAyniPuanAta} onVideoAc={handleVideoAc} onOnizle={setOnizlemeHedefi} onDurumDegistir={yy.handleDurumDegistir} onPlanIslem={yy.handlePlanIslem}/>)}
  {onizleme&&<OgrenmeAraciOnizlemeModal hedef={onizleme} onKapat={()=>setOnizlemeHedefi(null)}/>}
- {onay&&<YayinOnayModal bekleyen={onay} onIptal={()=>setOnayModal(null)} onYayinla={async()=>{const b=onay;setOnayModal(null);try{if(await yy.handleYayinla(b))onYayinlandi();}catch{hata("Yayın işlemi tamamlanamadı. Yayınlarınızı yenileyip kontrol edin.");}}}/>}
+ {onay&&<YayinOnayModal key={onay.soru_seti_durum_id} ureticiRol={(kullanici?.rol??"").trim().toLowerCase()} planTarihi={onayPlanTarihi} bekleyen={onay} onIptal={()=>setOnayModal(null)} onYayinla={async(hesap)=>{const b=onay;setOnayModal(null);try{if(await yy.handleYayinla(b,hesap))onYayinlandi();}catch{hata("Yayın işlemi tamamlanamadı. Yayınlarınızı yenileyip kontrol edin.");}}}/>}
  <HataMesajiContainer mesajlar={mesajlar}/>
  </>;
 }

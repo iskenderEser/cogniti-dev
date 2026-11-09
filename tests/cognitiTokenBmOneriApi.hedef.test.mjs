@@ -10,7 +10,7 @@ const requests = [
   { yayin_id: 'pub-1', kullanici_id: 'utt-1', oneri_baslangic: '2030-01-02', oneri_bitis: '2030-01-04' },
   { yayin_id: 'pub-1', kullanici_id: 'utt-2', oneri_baslangic: '2030-01-02', oneri_bitis: '2030-01-04' },
 ];
-function setup({ dbError = null, dateExpires = false } = {}) {
+function setup({ dbError = null, dateExpires = false, role = 'bm', weekly = true, monthly = true, recipientAllowed = true } = {}) {
   const inserts = [], notifications = [];
   let dateCalls = 0;
   const db = { from(table) {
@@ -26,7 +26,7 @@ function setup({ dbError = null, dateExpires = false } = {}) {
         if (table === 'kullanicilar' && filters.get('kullanici_id') === 'bm-1') {
           value = { data: { firma_id: 'firm-1', bolge_id: 'region-1', takim_id: 'team-1' }, error: null };
         } else if (table === 'kullanicilar') {
-          value = { data: requests.map(r => ({ kullanici_id: r.kullanici_id })), error: null };
+          value = { data: recipientAllowed ? requests.map(r => ({ kullanici_id: r.kullanici_id })) : [], error: null };
         } else if (table === 'v_yayin_detay') {
           value = { data: [{ yayin_id: 'pub-1', durum: 'yayinda', urun_adi: 'Ürün', hedef_roller: ['utt'], firma_id: 'firm-1', takim_id: 'team-1' }], error: null };
         } else if (table === 'oneri_kayitlari') {
@@ -61,10 +61,10 @@ function setup({ dbError = null, dateExpires = false } = {}) {
       };
     } },
     '@/lib/tclub/oneri/limitKontrol': {
-      haftalikLimitKontrol: async () => ({ hepsi_geciyor: true }),
-      aylikKotaKontrol: async () => ({ geciyor: true }), MAKS_ALICI_HAFTA: 3,
+      haftalikLimitKontrol: async () => ({ hepsi_geciyor: weekly, asan_aliciler: [{mevcut:3,istenen:1}] }),
+      aylikKotaKontrol: async () => ({ geciyor: monthly }), MAKS_ALICI_HAFTA: 3,
     },
-    '@/lib/utils/rolCozucu': { rolCozucu: async () => 'bm' },
+    '@/lib/utils/rolCozucu': { rolCozucu: async () => role },
     '@/lib/utils/raporUtils': { PERIYOTLAR: [] },
   };
   const exports = {};
@@ -84,15 +84,6 @@ test('İki BM önerisi tek toplu INSERT ile kaydedilir; bildirimler başarıdan 
   assert.equal(s.notifications.length, 2);
   assert.ok(s.inserts[0].every(r => r.oneren_id === 'bm-1'));
 });
-for (const [code,message] of [
-  ['bakiye_yetersiz', /token bakiyesi.*yetersiz/],
-  ['hesap_yok', /token hesabı.*açılmamış/],
-]) test(`Token hatası ${code}: tek toplu istek başarısız olur, bildirim oluşturulmaz`, async () => {
-  const s = setup({ dbError: { code: 'P0001', message: `COGNITI_TOKEN:${code}` } });
-  const response = await s.post(); const data = await response.json();
-  assert.equal(response.status, 422); assert.match(data.hata, message);
-  assert.equal(s.inserts.length, 1); assert.equal(s.notifications.length, 0);
-});
 test('Veritabanı hatasında başarı dönülmez ve bildirim oluşturulmaz', async () => {
   const s = setup({ dbError: { code: '23514', message: 'fixture error' } });
   const response = await s.post(); assert.equal(response.status, 500);
@@ -102,4 +93,8 @@ test('Gönderim öncesi tarih geçersizleşirse hiç INSERT yapılmaz', async ()
   const s = setup({ dateExpires: true }); const response = await s.post();
   assert.equal(response.status, 422); assert.equal(s.inserts.length, 0);
   assert.equal(s.notifications.length, 0);
+});
+
+test('Rol, alıcı kapsamı ve haftalık/aylık öneri limitleri token kaldırıldıktan sonra da korunur',async()=>{
+ for(const opts of [{role:'utt'},{recipientAllowed:false},{weekly:false},{monthly:false}]){const s=setup(opts);assert.ok([403,422].includes((await s.post()).status));assert.equal(s.inserts.length,0);assert.equal(s.notifications.length,0);}
 });

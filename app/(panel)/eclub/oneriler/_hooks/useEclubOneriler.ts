@@ -74,7 +74,7 @@ export function useEclubOneriler({ hazir, hata, basari }: UseArgs) {
       const veri = await res.json();
       if (!res.ok) { hata(veri.hata ?? 'İşlem kaydedilemedi.', veri.adim, veri.detay); return null; }
       basari(veri.mesaj); await veriCek();
-      if (veri.gonderilen_sayisi > 0) bildirimRozetleriniYenile();
+      if (veri.gonderilen_sayisi > 0) { bildirimRozetleriniYenile(); window.dispatchEvent(new Event("cogniti-token-bakiye-yenile")); }
       return veri as TopluGonderimSonucu;
     } catch (err) { hata('Gönderim işlemi tamamlanamadı.', 'Toplu gönderim', err instanceof Error ? err.message : undefined); return null; }
     finally { setGonderLoading(false); }

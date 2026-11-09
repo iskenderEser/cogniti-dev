@@ -53,7 +53,7 @@ export async function PUT(
           if (tokenHatasi) return isKuraluHatasi(tokenHatasi);
           return hataYaniti("Yayın aktive edilemedi.", "yayin_planlananlari_aktive RPC", rpcError);
         }
-        if (!aktiveSayisi) return isKuraluHatasi("Aktivasyon gerçekleşmedi — yayın planlandı durumunda olmayabilir.");
+        if (!aktiveSayisi) return isKuraluHatasi("Yayın açılamadı veya plan durumu değişti. Plan için kullanılmayan tokenlar serbest bırakılır; listeyi ve hesabınızı yenileyin.");
         return NextResponse.json({ mesaj: "Yayın hemen yayına alındı." }, { status: 200 });
       }
 
@@ -67,23 +67,26 @@ export async function PUT(
         if (aday.getTime() <= Date.now()) {
           return isKuraluHatasi("Seçilen günün 07:00'i geçmiş. Hemen yayınlamak için 'Hemen Yayınla' kullanın.");
         }
-        const { error: updateError } = await adminSupabase
+        const { data: guncel, error: updateError } = await adminSupabase
           .from("yayin_yonetimi")
           .update({ yayin_tarihi: aday.toISOString() })
-          .eq("yayin_id", yayin_id);
+          .eq("yayin_id", yayin_id).eq("durum", "planlandi").select("yayin_id");
+        if (updateError) { const tokenHatasi=yayinTokenHatasi(updateError); if(tokenHatasi) return isKuraluHatasi(tokenHatasi); }
         if (updateError) return hataYaniti("Yayın tarihi güncellenemedi.", "yayin_yonetimi UPDATE — yayin_tarihi", updateError);
-        return NextResponse.json({ mesaj: "Yayın tarihi güncellendi." }, { status: 200 });
+        if (!guncel?.length) return isKuraluHatasi("Plan durumu değişti. Listeyi yenileyin.");
+        return NextResponse.json({ mesaj: "Yayın tarihi ve token rezervasyonu güncellendi." }, { status: 200 });
       }
 
       if (islem === "plan_iptal") {
         // Kayıt silinir; video "yayına bekleyenler" kuyruğuna (ve rozete) geri döner.
         // Planlı yayının turu/bildirimi/izlemesi doğmamıştır — silme yetimsizdir.
-        const { error: silError } = await adminSupabase
+        const { data: silinen, error: silError } = await adminSupabase
           .from("yayin_yonetimi")
           .delete()
-          .eq("yayin_id", yayin_id);
+          .eq("yayin_id", yayin_id).eq("durum", "planlandi").select("yayin_id");
         if (silError) return hataYaniti("Plan iptal edilemedi.", "yayin_yonetimi DELETE — plan iptali", silError);
-        return NextResponse.json({ mesaj: "Plan iptal edildi; video yayına bekleyenlere döndü." }, { status: 200 });
+        if (!silinen?.length) return isKuraluHatasi("Plan durumu değişti. Listeyi yenileyin.");
+        return NextResponse.json({ mesaj: "Plan iptal edildi; ayrılan tokenlar serbest bırakıldı; video yayına bekleyenlere döndü." }, { status: 200 });
       }
 
       return validasyonHatasi("Planlanmış yayın için islem 'tarih_degistir', 'hemen_yayinla' ya da 'plan_iptal' olmalıdır.", ["islem"]);

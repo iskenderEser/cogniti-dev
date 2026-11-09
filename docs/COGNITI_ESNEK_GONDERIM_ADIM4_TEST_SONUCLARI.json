@@ -1,0 +1,23 @@
+{
+  "postgres": "18.6",
+  "passed": 16,
+  "tests": [
+    "Adım 4 SQL iki kez kurulur",
+    "Gerçek yayın INSERT hedef başına tek tüketir; kişisel ve ortak ayrıdır",
+    "Ortak hesaptan tüketim kişisel hesabı değiştirmez",
+    "Yetersiz hesapta bütün yayın ve önceki alıcı tüketimleri geri alınır",
+    "Hesapsız anlık yayın engellenir, plan kaydı tüketmez ve eski aktivasyon yolu korunur",
+    "Eczanem sonraki dağıtımı yayın açılışında tüketilmez",
+    "Aktif Eczanem blokları başka gönderimde harcanamaz",
+    "Süresi dolmuş yükleme tüketilmez",
+    "13 üretici rolü kişisel gönderir, kapalı roller ve başkasının kişisel hesabı reddedilir",
+    "Gerçek E-Club anlık RPC aynı transaction içinde tüketir; tekrar aynı sonucu döndürür",
+    "E-Club kişisel hesap seçimi başkasının hesabına ulaşmaz",
+    "Toplu E-Club yetersizlikte hiçbir öneri veya kısmi tüketim bırakmaz",
+    "İki bağlantı aynı hesapla eş zamanlı yayın açarken tokenı aşamaz",
+    "Aynı adayın ikinci yayını ikinci tüketim oluşturmaz",
+    "İki bağlantıyla aynı E-Club anahtarı tek gönderim/tüketim oluşturur",
+    "Anonim/oturumlu doğrudan tüketim, yeni tablolar ve RPC kapalıdır"
+  ],
+  "scope": "Yerel Unix socket, sahte temel tablolar; gerçek Adım 4, yayın/E-Club tetikleyicileri ve E-Club gönderim SQLleri. Eski tüketim gözlemci stub ile sınanır; canlı sistem/tarayıcı testi değildir."
+}

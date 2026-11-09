@@ -8,6 +8,8 @@
 // (bekleyen / yayında / durdurulan).
 
 "use client";
+import type { BakiyeTuru } from "@/lib/satinAlma/esnekPaket";
+
 
 import { useEffect, useState, useCallback, useMemo, Suspense, type ReactNode } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -99,6 +101,7 @@ function YayinYonetimiIcerik() {
   const [onizlemeHedefi, setOnizlemeHedefi] = useState<OnizlemeHedefi | null>(null);
   const handleVideoAc = (url: string) => setOnizlemeHedefi({ arac_turu: "video", video_url: url });
   const [onayModal, setOnayModal] = useState<Bekleyen | null>(null);
+  const [onayPlanTarihi, setOnayPlanTarihi] = useState<string|null>(null);
   const [silmeModal, setSilmeModal] = useState<Bekleyen | null>(null);
 
   useEffect(() => {
@@ -145,11 +148,11 @@ function YayinYonetimiIcerik() {
     new Date(tarih).toLocaleDateString("tr-TR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
 
   // Yayınla onayı: modaldaki içeriği yayınlar, modalı kapatır.
-  const handleYayinlaOnayla = async () => {
+  const handleYayinlaOnayla = async (hesap?: BakiyeTuru) => {
     if (!onayModal) return;
     const b = onayModal;
     setOnayModal(null);
-    await yy.handleYayinla(b);
+    await yy.handleYayinla(b,hesap);
   };
 
   const handleYayinSilOnayla = async () => {
@@ -307,7 +310,7 @@ function YayinYonetimiIcerik() {
                 getSoruPuani={yy.getSoruPuani} setSoruPuani={yy.setSoruPuani} hepsineAyniPuanAta={yy.hepsineAyniPuanAta}
                 onVideoAc={handleVideoAc}
                 onOnizle={setOnizlemeHedefi}
-                onYayinlaClick={setOnayModal}
+                onYayinlaClick={b => { setOnayPlanTarihi(new Date(`${yy.yayinGunleri[b.soru_seti_durum_id]}T07:00:00+03:00`).getTime() > Date.now() ? yy.yayinGunleri[b.soru_seti_durum_id] : null); setOnayModal(b); }}
                 onYayinSilClick={setSilmeModal}
               />
             ))
@@ -423,7 +426,7 @@ function YayinYonetimiIcerik() {
       {onizlemeHedefi && <OgrenmeAraciOnizlemeModal hedef={onizlemeHedefi} onKapat={() => setOnizlemeHedefi(null)} />}
 
       {onayModal && (
-        <YayinOnayModal bekleyen={onayModal} onIptal={() => setOnayModal(null)} onYayinla={handleYayinlaOnayla} />
+        <YayinOnayModal key={onayModal.soru_seti_durum_id} bekleyen={onayModal} ureticiRol={rol} planTarihi={onayPlanTarihi} onIptal={() => setOnayModal(null)} onYayinla={handleYayinlaOnayla} />
       )}
 
       {silmeModal && (

@@ -1,3 +1,4 @@
+import { partnerJsonOku } from "@/lib/agora/partnerHttp";
 // app/eclub/oneriler/api/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
@@ -252,8 +253,11 @@ export async function POST(request: NextRequest) {
     let secim;
     let tarihleriHesapla = true;
     try {
-      const body = await request.json();
+      const okunan = await partnerJsonOku(request, 16384);
+      if (!okunan.ok) return okunan.yanit;
+      const body = okunan.veri;
       secim = gonderimIsteginiOku(body);
+      if (body.token_hesap_turu != null) throw new Error('UTT token hesabı seçemez.');
       if (body.tarihleri_hesapla !== undefined && typeof body.tarihleri_hesapla !== 'boolean') throw new Error('Tarih kontrolü seçeneği geçersiz.');
       tarihleriHesapla = body.tarihleri_hesapla !== false;
     }
@@ -297,7 +301,7 @@ export async function POST(request: NextRequest) {
     }
     const kaydedilenler = sonuc.sonuclar.filter(s => s.kaydedildi);
     // Plan oluştururken bildirim yoktur; yalnız gerçek öneri kayıtları bildirilir.
-    if (secim.islem === 'gonder') {
+    if (secim.islem === 'gonder' && !data.yeniden_deneme) {
       for (const kayit of kaydedilenler) {
         if (!kayit.oneri_id) throw new Error('Gönderimin öneri kimliği eksik.');
         const yayin = yayinMap.get(kayit.yayin_id)!;

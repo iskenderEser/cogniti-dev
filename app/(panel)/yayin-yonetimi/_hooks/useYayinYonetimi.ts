@@ -1,4 +1,6 @@
 "use client";
+import type { BakiyeTuru } from "@/lib/satinAlma/esnekPaket";
+
 
 import { etkinPuanAraliklari, puanAraligaUygunMu, puanAraliklariGecerliMi, type PuanAraliklari } from "@/lib/uretici/puanAraliklari";
 // app/yayin-yonetimi/_hooks/useYayinYonetimi.ts
@@ -353,7 +355,7 @@ export function useYayinYonetimi({ kapsam = "geleneksel", kullaniciId, aktifAnaS
 
   // ─── Yayınlama ──────────────────────────────────────────────────────────
 
-  const handleYayinla = async (b: Bekleyen) => {
+  const handleYayinla = async (b: Bekleyen, hesap?: BakiyeTuru) => {
     if (!tumPuanlarAtandiMi(b)) {
       hata("Yayın puanlarını ve kazanım koşullarını tamamlayın.");
       return;
@@ -387,10 +389,12 @@ export function useYayinYonetimi({ kapsam = "geleneksel", kullaniciId, aktifAnaS
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         soru_seti_durum_id: b.soru_seti_durum_id,
+        ...(hesap && !eczanem ? { token_hesap_turu: hesap } : {}),
         // Opsiyonel yayın günü — boşsa gönderilmez (hemen yayın).
         ...(yayinGunleri[b.soru_seti_durum_id] ? { yayin_gunu: yayinGunleri[b.soru_seti_durum_id] } : {}),
         ...(eczanem
           ? {
+              eczanem_token_hesap_turu: hesap,
               eczanem_kazanim_modeli: eczanemKazanimModelleri[b.soru_seti_durum_id],
               ...(!indirimsiz ? {
                 barkod: barkodlar[b.soru_seti_durum_id] ?? "",
@@ -426,6 +430,7 @@ export function useYayinYonetimi({ kapsam = "geleneksel", kullaniciId, aktifAnaS
     else {
       // Planlı yayında API tarihli mesaj döner; hemen yayında bilinen metin.
       basari(d.mesaj ?? `${b.urun_adi} yayına alındı.`);
+      window.dispatchEvent(new Event("cogniti-token-bakiye-yenile"));
       setYayinGunleri(prev => { const yeni = { ...prev }; delete yeni[b.soru_seti_durum_id]; return yeni; });
       await veriCek();
     }
@@ -464,6 +469,7 @@ export function useYayinYonetimi({ kapsam = "geleneksel", kullaniciId, aktifAnaS
       body: JSON.stringify({ islem, ...(yayin_gunu ? { yayin_gunu } : {}) }),
     });
     const d = await res.json();
+    window.dispatchEvent(new Event("cogniti-token-bakiye-yenile"));
     if (!res.ok) { hata(d.hata ?? "İşlem gerçekleştirilemedi.", d.adim, d.detay); }
     else { basari(d.mesaj ?? "İşlem tamamlandı."); await veriCek(); }
     setIslemLoading(null);
@@ -473,6 +479,7 @@ export function useYayinYonetimi({ kapsam = "geleneksel", kullaniciId, aktifAnaS
     setIslemLoading(yayin_id);
     const res = await fetch(`/yayin-yonetimi/api/yayinlar/${yayin_id}`, { method: "PUT" });
     const d = await res.json();
+    window.dispatchEvent(new Event("cogniti-token-bakiye-yenile"));
     if (!res.ok) { hata(d.hata ?? "İşlem gerçekleştirilemedi.", d.adim, d.detay); }
     else { basari(mevcutDurum === "yayinda" ? "Yayın durduruldu." : "Yayın yeniden başlatıldı."); await veriCek(); }
     setIslemLoading(null);

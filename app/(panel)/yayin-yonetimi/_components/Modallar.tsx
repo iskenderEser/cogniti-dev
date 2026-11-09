@@ -8,7 +8,11 @@
 
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import GonderimBakiyeSecimi from "@/components/token/GonderimBakiyeSecimi";
+import { ECZANEM_TALEP_ACAN_ROLLER } from "@/lib/utils/roller";
+import type { BakiyeTuru } from "@/lib/satinAlma/esnekPaket";
+import { PmTokenHesapSecimi } from "@/components/eczanem/PmTokenHesapSecimi";
 import type { Bekleyen, OnizlemeHedefi } from "../_types";
 import type { OgrenmeAraciTuru } from "@/lib/ogrenmeAraci/tipler";
 import { HedefRolPilleri } from "@/components/pill";
@@ -108,30 +112,39 @@ export function VideoOnizlemeModal({ url, onKapat }: { url: string; onKapat: () 
   return <OgrenmeAraciOnizlemeModal hedef={url} onKapat={onKapat} />;
 }
 
-export function YayinOnayModal({ bekleyen, onIptal, onYayinla }: {
+export function YayinOnayModal({ bekleyen, ureticiRol, planTarihi = null, onIptal, onYayinla }: {
   bekleyen: Bekleyen;
+  planli?: boolean;
+  planTarihi?: string | null;
+  ureticiRol: string;
   onIptal: () => void;
-  onYayinla: () => void;
+  onYayinla: (hesap?: BakiyeTuru) => void;
 }) {
   useEscapeKapat(onIptal);
+  const [hesap,setHesap] = useState<BakiyeTuru|null>(null);
+  const eczanem = bekleyen.hedef_roller.includes("eczanem");
+  const pmEczanem = eczanem && ECZANEM_TALEP_ACAN_ROLLER.includes(ureticiRol);
+  const anlikTuketim = !eczanem;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "var(--tema-yerel-uretim-ortu-02)" }}>
-      <div role="dialog" aria-modal="true" aria-labelledby="yayin-onay-baslik" className="w-full max-w-sm rounded-2xl border border-[var(--tema-yerel-uretim-cizgi-01)] bg-[var(--tema-yerel-uretim-kart-01)] p-6 shadow-2xl">
+      <div role="dialog" aria-modal="true" aria-labelledby="yayin-onay-baslik" className="max-h-[90vh] overflow-y-auto w-full max-w-sm rounded-2xl border border-[var(--tema-yerel-uretim-cizgi-01)] bg-[var(--tema-yerel-uretim-kart-01)] p-6 shadow-2xl">
         <div id="yayin-onay-baslik" className="mb-2.5 text-base font-extrabold text-[var(--tema-yerel-uretim-ana-metin-18)]">Yayın onayı</div>
         <div className="text-sm text-[var(--tema-yerel-uretim-yardimci-metin-01)] leading-relaxed mb-3">
-          <strong>{bekleyen.urun_adi}</strong> ürünü yayınlanacaktır.
+          <strong>{bekleyen.urun_adi}</strong> ürünü {planTarihi ? `${new Date(`${planTarihi}T07:00:00+03:00`).toLocaleDateString("tr-TR")} tarihinde yayına açılmak üzere planlanacaktır.` : "yayınlanacaktır."}
         </div>
         <div className="flex items-center gap-2 mb-5">
           <HedefRolPilleri hedefRoller={bekleyen.hedef_roller} />
           <span className="text-xs text-[var(--tema-yerel-uretim-yardimci-metin-02)]">hedef kitleye yayınlanacak.</span>
         </div>
+        {pmEczanem && <PmTokenHesapSecimi deger={hesap} onDegistir={setHesap} />}
+        {anlikTuketim && <GonderimBakiyeSecimi secim={{ akis: "yayin_acilis", kaynakIdler: [bekleyen.soru_seti_durum_id], aliciIdler: [], planTarihi }} onHazir={setHesap} />}
         <div className="flex gap-2.5 justify-end">
           <button type="button" onClick={onIptal}
             className="px-4 py-2 rounded-lg border border-[var(--tema-yerel-uretim-cizgi-01)] bg-transparent text-[var(--tema-yerel-uretim-yardimci-metin-01)] text-xs cursor-pointer"
             style={{ fontFamily: "'Nunito', sans-serif" }}>İptal</button>
-          <button type="button" onClick={onYayinla}
+          <button type="button" disabled={(pmEczanem || anlikTuketim) && !hesap} onClick={() => onYayinla(hesap ?? undefined)}
             className="px-4 py-2 rounded-lg border-none text-[var(--tema-yerel-uretim-ters-metin-01)] text-xs font-semibold cursor-pointer"
-            style={{ background: "var(--tema-yerel-uretim-eylem-zemin-01)", fontFamily: "'Nunito', sans-serif" }}>Yayınla</button>
+            style={{ background: "var(--tema-yerel-uretim-eylem-zemin-01)", fontFamily: "'Nunito', sans-serif" }}>{planTarihi ? "Planı kaydet" : "Yayınla"}</button>
         </div>
       </div>
     </div>

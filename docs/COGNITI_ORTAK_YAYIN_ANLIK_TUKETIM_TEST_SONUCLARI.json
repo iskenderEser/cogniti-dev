@@ -1,0 +1,25 @@
+{
+  "postgres": "18.6",
+  "passed": 18,
+  "tests": [
+    "Ortak SQL ilk ve tekrar kurulur; eski yayınlar tek seferlik işaretlenir",
+    "E-Club önizleme hedef unvan/aktif bağ/takım ve tekil kişi sayısını kullanır",
+    "E-Club açılışı üreticinin kişisel hesabından tekil üye başına anında tüketir",
+    "UTTnin gerçek üye dağıtımı ve aynı anahtarlı deneme ikinci tüketim yaratmaz",
+    "Durdur/devam et ve migration tekrarı tekrar tüketmez/geçmişe katmaz",
+    "E-Club ve saha ortak hesap seçimi aynı motoru kullanır; İK saha yayınını açabilir",
+    "İKnın E-Club hedefi hem önizleme hem gerçek SQL yazımında reddedilir",
+    "PM/Medikal/Eğitim aileleri E-Club açabilir; UTT/yönetici açamaz",
+    "Yetersizlikte yayın/açılış kaydı/tüketim birlikte geri alınır; ortak hesaba geçiş olmaz",
+    "Sıfır üyeli açılış ücretli açılış kaydını korur; UTTde sonradan ikinci tüketim olmaz",
+    "Yeni plan kaydı tüketmez, gerçek aktivasyonda tek kez tüketir",
+    "E-Club bildirimi için yalnız firma UTT kimlikleri döner, üye UUIDleri karışmaz",
+    "Hesap/üretici/hedef sahteciliği ve aynı adayın ikinci yayını engellenir",
+    "İki bağımsız bağlantıda aynı hesabın eş zamanlı açılışı fazla token harcayamaz",
+    "Gerçek plan aktivasyonu açılış/tüketim/bildirimleri tek kez oluşturur",
+    "Plan aktivasyonunda yetersizlik yayını planlı bırakır; kısmi tüketim/bildirim yoktur",
+    "Eczanem hedefi ortak anlık tüketim dışında kalır",
+    "UTT hesaplı eski RPC ve hesap önizlemesi kapalı; dahili tüketim doğrudan çağrılamaz"
+  ],
+  "scope": "Yerel Unix socket, sahte temel tablolar; gerçek ortak SQL ve E-Club kota/gönderim SQLleri. Supabase/gerçek kullanıcı/push testi değildir."
+}

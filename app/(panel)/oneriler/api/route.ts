@@ -512,7 +512,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Toplu öneri tek INSERT ile kaydedilir. Token hatasında tamamı geri alınır.
+    // Öneri token tüketmez. Mevcut öneri kuralları kontrol edildikten sonra tek INSERT ile kaydedilir.
     const kayitlar = [];
     for (const oneri of oneriler) {
       const tarih = oneriTarihKurali(oneri.oneri_baslangic, oneri.oneri_bitis);
@@ -534,14 +534,6 @@ export async function POST(request: NextRequest) {
       .select("oneri_id, yayin_id, kullanici_id, oneri_baslangic, oneri_bitis");
 
     if (oneriError) {
-      if (oneriError.code === "P0001") {
-        if (oneriError.message === "COGNITI_TOKEN:bakiye_yetersiz") {
-          return isKuraluHatasi("Firmanızın token bakiyesi bu gönderim için yetersiz. Hiçbir öneri gönderilmedi.");
-        }
-        if (oneriError.message === "COGNITI_TOKEN:hesap_yok") {
-          return isKuraluHatasi("Firmanızın token hesabı henüz açılmamış. Hiçbir öneri gönderilmedi.");
-        }
-      }
       return hataYaniti("Öneriler kaydedilemedi. Gönderim yapılmadı.", "oneri_kayitlari toplu INSERT", oneriError);
     }
     if (!kaydedilenler?.length) {

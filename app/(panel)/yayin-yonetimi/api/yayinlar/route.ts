@@ -1,3 +1,5 @@
+import { partnerJsonOku } from "@/lib/agora/partnerHttp";
+import { ECZANEM_TALEP_ACAN_ROLLER } from "@/lib/utils/roller";
 import { puanAraligaUygunMu, puanAraligiMetni } from "@/lib/uretici/puanAraliklari";
 import { talepPuanAraliklariOku } from "@/lib/uretici/puanAraliklariSunucu";
 // app/yayin-yonetimi/api/yayinlar/route.ts
@@ -85,7 +87,14 @@ export async function POST(request: NextRequest) {
     const rol = await rolCozucu(adminSupabase, user.id);
     if (!URETICI_ROLLER.includes(rol)) return rolHatasi("Sadece yetkili roller yayına alabilir.");
 
-    const body = await request.json();
+    const okunan = await partnerJsonOku(request, 65536);
+    if (!okunan.ok) return okunan.yanit;
+    // Mevcut yayın sözleşmesinin alanları aşağıdaki hedefe özgü kapılarda doğrulanır.
+    const body = okunan.veri as Record<string, unknown> & {
+      barem_tablosu: Parameters<typeof baremTablosuDogrula>[0];
+      gizli_sart_katlama_orani: number; tekrar_periyot_gun: number | null;
+      satis_fiyati: number;
+    };
     const {
       soru_seti_durum_id,
       ileri_sarma_acik,
@@ -147,12 +156,21 @@ export async function POST(request: NextRequest) {
 
     // Eczanem yayını mı? Hedef rol talepten türer — forma güvenmez (sunucu tarafı).
     const eczanemHedefi = hedefRoller.includes("eczanem");
+    const tokenHesabi = body.eczanem_token_hesap_turu;
+    if (eczanemHedefi && !ECZANEM_TALEP_ACAN_ROLLER.includes(rol)) return rolHatasi("Bu hedefe yayın açma yetkiniz bulunmuyor.");
+    if (eczanemHedefi && tokenHesabi !== "kisisel" && tokenHesabi !== "firma_ortak") {
+      return validasyonHatasi("Eczanem yayını için kullanılacak token hesabını seçin.", ["eczanem_token_hesap_turu"]);
+    }
+    if (!eczanemHedefi && tokenHesabi !== undefined && tokenHesabi !== null) return validasyonHatasi("Bu hesap seçimi yalnız Eczanem yayınları içindir.", ["eczanem_token_hesap_turu"]);
     const eczanemIndirimsiz = eczanemHedefi && eczanem_kazanim_modeli === "indirimsiz";
     if (!eczanemHedefi && eczanem_kazanim_modeli != null) {
       return validasyonHatasi("Eczanem kazanım modeli bu hedefte kullanılamaz.", ["eczanem_kazanim_modeli"]);
     }
     const eclubHedefi = yalnizEclubHedefliMi(hedefRoller);
     const sahaHedefi = sahaHedefliMi(hedefRoller);
+    const yayinTokenHesabi = body.token_hesap_turu;
+    if (eczanemHedefi && yayinTokenHesabi != null) return validasyonHatasi("Eczanem ayrı token hesabı seçimini kullanır.", ["token_hesap_turu"]);
+    if (!eczanemHedefi && yayinTokenHesabi !== "kisisel" && yayinTokenHesabi !== "firma_ortak") return validasyonHatasi("Kullanılacak token hesabını seçin.", ["token_hesap_turu"]);
     if (sahaHedefi) {
       const kosulHatasi = sahaMerkeziPuanKosullariHatasi(cek_karsiligi_var_mi, karsilik_puan, karsilik_tl);
       if (kosulHatasi) return validasyonHatasi(kosulHatasi, ["cek_karsiligi_var_mi", "karsilik_puan", "karsilik_tl"]);
@@ -353,6 +371,8 @@ export async function POST(request: NextRequest) {
         soru_seti_durum_id,
         arac_durum_id: soruSeti.arac_durum_id ?? null,
         uretici_id: user.id,
+        ...(eczanemHedefi ? { eczanem_token_hesap_turu: tokenHesabi } : {}),
+        ...(!eczanemHedefi ? { token_hesap_turu: yayinTokenHesabi } : {}),
         eczanem_kazanim_modeli: eczanemHedefi ? eczanem_kazanim_modeli : null,
         durum: planliTarih ? "planlandi" : "yayinda",
         yayin_tarihi: planliTarih ? planliTarih.toISOString() : simdi,
