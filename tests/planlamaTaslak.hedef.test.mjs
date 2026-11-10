@@ -14,8 +14,8 @@ const html = JSON.parse(fs.readFileSync('app/planlama-araci/icerik.json', 'utf8'
 const script = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)][0][1];
 const priceData = {
  surum:1,
- sm2:JSON.parse(fs.readFileSync('tests/fixtures/esnekPaket20261109.json','utf8')).map(h=>({...h,katsayi:h.birim_fiyat/9.9})),
- paketler:[{ad:'Paket 1',token:5000,birim:5.9,aylik:29500},{ad:'Paket 2',token:10000,birim:4.85,aylik:48500},{ad:'Paket 3',token:15000,birim:3.9,aylik:58500},{ad:'Paket 4',token:25000,birim:2.9,aylik:72500}],
+ sm2:JSON.parse(fs.readFileSync('tests/fixtures/esnekPaketLogaritmik.json','utf8')).map(h=>({...h,ay:0,katsayi:h.birim_fiyat/9.9})),
+ paketler:[{id: 1, ad: 'Paket 1',token:5000,birim:5.9,aylik:29500},{id: 2, ad: 'Paket 2',token:10000,birim:4.85,aylik:48500},{id: 3, ad: 'Paket 3',token:15000,birim:3.9,aylik:58500},{id: 4, ad: 'Paket 4',token:25000,birim:2.9,aylik:72500}],
  kko:{limit:1500,birim:9.9},
 };
 function loadPriceModule(file) {
@@ -162,7 +162,7 @@ test('Planlama cevapları: geç/erken iframe, refresh, hesap ayrımı, hepsini s
     const props=button[Object.keys(button).find(k=>k.startsWith('__reactProps'))];
     await React.act(async()=>props.onClick());await form.flush();
     assert.equal(form.doc.getElementById('tPublications').value,'6500');
-    assert.equal(form.doc.getElementById('recommendedPackage').textContent,'44.915,00 TL');
+    assert.equal(form.doc.getElementById('recommendedPackage').textContent,'30.030,00 TL');
     assert.equal(JSON.parse(win.localStorage.getItem(key('partner-fiyat'))).values.tPublications,'6500');
     await form.unmount();
   });

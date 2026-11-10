@@ -17,7 +17,7 @@ export default function AbonelikPaketSecimi({ paketler, rol, kullaniciId }: {
   kullaniciId: string;
 }) {
   const grup = useId();
-  const [seciliPaket, setSeciliPaket] = useState("");
+  const [seciliPaket, setSeciliPaket] = useState<number | null>(null);
   const [acik, setAcik] = useState(false);
   const [baslangic, setBaslangic] = useState("");
   const [bekliyor, setBekliyor] = useState(false);
@@ -26,7 +26,7 @@ export default function AbonelikPaketSecimi({ paketler, rol, kullaniciId }: {
   const [tarifeDegisti, setTarifeDegisti] = useState(false);
   const gonderiliyor = useRef(false);
   const hesapTuru = kullaniciId ? esnekPaketBakiyeTuru(rol) : null;
-  const secim = paketler.find(paket => paket.ad === seciliPaket);
+  const secim = paketler.find(paket => paket.id === seciliPaket);
   const hesapAdi = hesapTuru === "kisisel" ? "Kişisel Token Hesabı" : "Firma Token Hesabı";
   const aylikKurus = secim ? Math.round(secim.aylik * 100) : 0;
   const kdvKurus = Math.round(aylikKurus / 5);
@@ -34,7 +34,7 @@ export default function AbonelikPaketSecimi({ paketler, rol, kullaniciId }: {
 
   async function onayla() {
     if (!hesapTuru || !secim || !ilkDonem || tarifeDegisti || gonderiliyor.current) return;
-    const paketNo = paketler.indexOf(secim) + 1;
+    const paketNo = secim.id;
     const anahtar = `cogniti-abonelik:${kullaniciId}:${hesapTuru}:${paketNo}:${secim.token}:${aylikKurus}:${baslangic}`;
     gonderiliyor.current = true;
     setBekliyor(true);
@@ -52,7 +52,7 @@ export default function AbonelikPaketSecimi({ paketler, rol, kullaniciId }: {
       if (yanit.ok && veri.ok === true && typeof veri.siparisId === "string") {
         sessionStorage.removeItem(anahtar);
         setAcik(false);
-        setSeciliPaket("");
+        setSeciliPaket(null);
         setKayitSonucu({ paket: secim.ad, hesap: hesapAdi });
         window.dispatchEvent(new Event("cogniti-token-bakiye-yenile"));
       } else if ([400, 401, 403, 409].includes(yanit.status)) {
@@ -72,17 +72,19 @@ export default function AbonelikPaketSecimi({ paketler, rol, kullaniciId }: {
     }
   }
 
+  if (!paketler.length) return <p>Şu anda satışta abonelik paketi bulunmuyor.</p>;
+
   return <>
     <table className={styles.paketTablosu} aria-label="Abonelik paket fiyatları">
       <thead><tr><th scope="col">Paket</th><th scope="col">Token / ay</th><th scope="col">TL / token</th><th scope="col">Aylık Fatura tutarı</th></tr></thead>
       <tbody>
         {paketler.map(paket => (
-          <tr key={paket.ad}>
+          <tr key={paket.id}>
             <th scope="row">
               {hesapTuru ? (
                 <label className={styles.abonelikPaketSecenegi}>
-                  <input type="radio" name={grup} value={paket.ad}
-                    checked={seciliPaket === paket.ad} onChange={() => setSeciliPaket(paket.ad)} />
+                  <input type="radio" name={grup} value={paket.id}
+                    checked={seciliPaket === paket.id} onChange={() => setSeciliPaket(paket.id)} />
                   {paket.ad}
                 </label>
               ) : paket.ad}

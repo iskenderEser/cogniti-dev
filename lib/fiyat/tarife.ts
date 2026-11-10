@@ -1,4 +1,5 @@
-import { sm2MatrisiGecerli, type Sm2Fiyat } from "./sm2";
+import { ESNEK_UC_FIYAT_ANAHTARLARI, sm2MatrisiGecerli, type Sm2Fiyat } from "./sm2";
+import { taahhutluPaketlerGecerli, type TaahhutluPaket } from "./taahhut";
 
 export const FIYAT_KALEMLERI = [
   { anahtar:"kko_token_miktari", grup:"Abonelik", ad:"Giriş Paketi · Token miktarı", birim:"Token/ay" },
@@ -65,6 +66,8 @@ export const FIYAT_KALEMLERI = [
   },
   { "anahtar": "paket_25k_token_miktari", "grup": "Abonelik", "ad": "4. Paket · Token miktarı", "birim": "Token/ay" },
   { "anahtar": "paket_25k_token_tl", "grup": "Abonelik", "ad": "4. Paket · Token birim fiyatı", "birim": "TL/token" },
+  { anahtar: "esnek_2500_token_tl", grup: "Esnek Paket", ad: "2.500 token birim fiyatı", birim: "TL/token" },
+  { anahtar: "esnek_50000_token_tl", grup: "Esnek Paket", ad: "50.000 token birim fiyatı", birim: "TL/token" },
   {
     "anahtar": "uretim_video_tl",
     "grup": "İçerik üretimi",
@@ -120,6 +123,7 @@ export interface FiyatTarifesi {
   surum: number;
   sm2: Sm2Fiyat[];
   degerler: FiyatDegerleri;
+  abonelik_paketleri: TaahhutluPaket[];
   hesaplar: { viva_kisi_dakika_tl: number; viva_kisi_dakika_token: number; paket_10k_aylik_tl: number; paket_30k_aylik_tl: number; paket_75k_aylik_tl: number; paket_25k_aylik_tl: number };
 }
 export function fiyatDegerleriGecerli(veri: unknown): veri is FiyatDegerleri {
@@ -130,6 +134,7 @@ export function fiyatDegerleriGecerli(veri: unknown): veri is FiyatDegerleri {
     if (anahtar === "uretim_literatur_tl" && v === null) return true;
     return typeof v === "number" && Number.isFinite(v) && (anahtar === "kko_asim_tl" ? v >= 0 : v > 0) && v <= 1000000000
       && Math.abs(v * 1000000 - Math.round(v * 1000000)) < 0.0001
+      && (!ESNEK_UC_FIYAT_ANAHTARLARI.some(k => k === anahtar) || Math.abs(v * 100 - Math.round(v * 100)) < 0.0001)
       && (!(anahtar === "banner_haftalik_token" || anahtar.endsWith("_token_miktari")) || Number.isInteger(v));
   });
 }
@@ -137,7 +142,8 @@ export function fiyatTarifesiGecerli(veri: unknown): veri is FiyatTarifesi {
   if (!veri || typeof veri !== "object" || Array.isArray(veri)) return false;
   const d = veri as Record<string, unknown>;
   if (!Number.isSafeInteger(d.surum) || Number(d.surum) < 1 || !fiyatDegerleriGecerli(d.degerler)
-    || !sm2MatrisiGecerli(d.sm2) || !d.hesaplar || typeof d.hesaplar !== "object" || Array.isArray(d.hesaplar)) return false;
+    || !sm2MatrisiGecerli(d.sm2) || !taahhutluPaketlerGecerli(d.abonelik_paketleri)
+    || !d.hesaplar || typeof d.hesaplar !== "object" || Array.isArray(d.hesaplar)) return false;
   const h = d.hesaplar as Record<string, unknown>;
   return ["viva_kisi_dakika_tl", "viva_kisi_dakika_token", "paket_10k_aylik_tl", "paket_30k_aylik_tl", "paket_75k_aylik_tl", "paket_25k_aylik_tl"].every(k =>
     typeof h[k] === "number" && Number.isFinite(h[k]) && Number(h[k]) > 0);

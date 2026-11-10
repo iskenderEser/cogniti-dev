@@ -47,8 +47,8 @@ function load(path) {
 }
 const Component = load('app/_components/AbonelikPaketSecimi.tsx').default;
 const paketler = [
-  { ad: 'Paket 1', token: 5000, birim: 5.9, aylik: 29500 },
-  { ad: 'Paket 2', token: 10000, birim: 4.85, aylik: 48500 },
+  { id: 1, ad: 'Paket 1', token: 5000, birim: 5.9, aylik: 29500 },
+  { id: 7, ad: 'Paket 2', token: 10000, birim: 4.85, aylik: 48500 },
 ];
 
 async function mount(rol) {
@@ -82,6 +82,7 @@ async function mount(rol) {
   await React.act(async () => { onay.click(); onay.click(); });
   assert.equal(calls.length, 2);
   assert.deepEqual(calls[0], calls[1]);
+  assert.equal(calls[0].paketNo, 7);
   assert.equal(calls[0].baslangic, '2026-11-28');
   await React.act(async () => resolveRequest());
   assert.match(pm.el.querySelector('[role=status]').textContent, /Paket 2 · Kişisel Token Hesabı/);

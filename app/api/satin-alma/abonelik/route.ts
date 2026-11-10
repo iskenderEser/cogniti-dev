@@ -11,7 +11,7 @@ export async function POST(request: Request) {
   const { hesapTuru, paketNo, aylikToken, aylikKurus, islemAnahtari, baslangic } = body.veri;
   if (Object.keys(body.veri).length !== 6 || (hesapTuru !== "kisisel" && hesapTuru !== "firma_ortak")
     || typeof baslangic !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(baslangic)
-    || !pozitifTamSayi(paketNo, 4) || !pozitifTamSayi(aylikToken, 1_000_000_000)
+    || !pozitifTamSayi(paketNo, 2147483647) || !pozitifTamSayi(aylikToken, 1_000_000_000)
     || !pozitifTamSayi(aylikKurus, Number.MAX_SAFE_INTEGER) || !uuidGecerliMi(islemAnahtari)) {
     return partnerYanit({ hata: "Abonelik siparişi bilgileri geçersiz." }, 400);
   }
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
     });
     if (error?.code === "42501") return partnerYanit({ hata: "Bu hesap için sipariş yetkiniz yok." }, 403);
     if (error && ["22023", "22007", "22008"].includes(error.code)) return partnerYanit({ hata: "Abonelik siparişi bilgileri doğrulanamadı." }, 400);
-    if (error?.code === "P0001") return partnerYanit({ hata: "Paket fiyatı veya ilk dönem tarihi değişti. Sayfayı yenileyip güncel tutarı onaylayın." }, 409);
+    if (error?.code === "P0001") return partnerYanit({ hata: "Paket artık satışta olmayabilir, fiyatı veya ilk dönem tarihi değişmiş olabilir. Sayfayı yenileyin." }, 409);
     if (error || !uuidGecerliMi(data?.siparis_id)) return belirsizSonuc();
 
     return partnerYanit({ ok: true, siparisId: data.siparis_id });
