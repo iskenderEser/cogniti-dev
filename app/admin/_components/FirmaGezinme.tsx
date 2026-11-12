@@ -8,15 +8,22 @@ import type { GlobalBolumId, ModulSekmeId } from "../_constants";
 import { platformBannerFirmasi } from "@/lib/eclub/banner";
 import styles from "../admin.module.css";
 import { Dialog } from "radix-ui";
+import { FATURA_BOLUMLERI, FATURA_KALEMLERI, FATURA_SAYFALARI, faturaSayfasiBilgisi, type FaturaSayfasi } from "@/lib/admin/faturaSayfalari";
 
 const mobilSorgu = "(max-width: 767px)";
 const mobilDinle = (bildir: () => void) => { const sorgu = window.matchMedia(mobilSorgu); sorgu.addEventListener("change", bildir); return () => sorgu.removeEventListener("change", bildir); };
 const mobilOku = () => window.matchMedia(mobilSorgu).matches;
 const sunucuMobilOku = () => false;
 
-export type FirmaSayfasi = ModulSekmeId | "proforma-fatura" | "faturalar" | "abonelik-paketleri" | "firmabilgileri" | "firmaayarlar" | "firma-admin-yonetimi" | "firmaislemler" | "eclub-bannerlar" | "eclub-uyeler" | "eclub-puan-tl" | "eczanem-cek-yonetimi" | "eczanem-bannerlar";
+export const CEK_ALIMI_SAYFALARI = ["firmstore-cekleri", "eczane-cekleri"] as const;
+export const PAKET_ALIMI_SAYFALARI = ["paket-alimlari-kko", "paket-alimlari-esnek", "paket-alimlari-abonelik"] as const;
+const DIGER_SATIN_ALIM_SAYFALARI = ["viva-kullanim", "banner-alim", "agora-yayin-alim", "icerik-uretimi-alimi"] as const;
+export const SATIN_ALIM_SAYFALARI = ["abonelik-paketleri", ...PAKET_ALIMI_SAYFALARI, ...DIGER_SATIN_ALIM_SAYFALARI, ...CEK_ALIMI_SAYFALARI] as const;
+
+export type FirmaSayfasi = ModulSekmeId | FaturaSayfasi | typeof SATIN_ALIM_SAYFALARI[number] | "proforma-fatura" | "faturalar" | "satin-almalar" | "firmabilgileri" | "firmaayarlar" | "firma-admin-yonetimi" | "firmaislemler" | "eclub-bannerlar" | "eclub-uyeler" | "eclub-puan-tl" | "eczanem-cek-yonetimi" | "eczanem-bannerlar";
 export const FIRMA_SAYFALARI: Record<FirmaSayfasi, { baslik: string; etiket?: string; grup?: string }> = {
-  "proforma-fatura": { baslik:"Proforma Fatura", grup:"Abonelik Yönetimi" },
+  ...FATURA_SAYFALARI,
+  "proforma-fatura": { baslik:"Onaylı Proforma Faturalar", grup:"Abonelik Yönetimi" },
   faturalar: { baslik:"Giden Faturalar", grup:"Abonelik Yönetimi" },
   firmabilgileri: { baslik:"Firma Bilgileri" },
   kullanicilar: { baslik: "Kullanıcılar", grup: "Firma Yönetimi" },
@@ -37,7 +44,17 @@ export const FIRMA_SAYFALARI: Record<FirmaSayfasi, { baslik: string; etiket?: st
   "eczanem-cek-yonetimi": { baslik: "Eczanem Çek Yönetimi", grup: "Modüller" },
   eczanem: { baslik: "Erişim ve Üye Yönetimi", grup: "Modüller" },
   firmastore: { baslik: "FirmaStore Çek Yönetimi", grup: "Modüller" },
-  "abonelik-paketleri": { baslik:"Satın Alınan Paketler", grup:"Abonelik Yönetimi" },
+  "abonelik-paketleri": { baslik:"Paket Alımları", grup:"Abonelik Yönetimi" },
+  "paket-alimlari-kko": { baslik:"Kullandığın Kadar Öde", grup:"Abonelik Yönetimi" },
+  "paket-alimlari-esnek": { baslik:"Esnek Paket", grup:"Abonelik Yönetimi" },
+  "paket-alimlari-abonelik": { baslik:"Aylık Abonelik Paketleri", grup:"Abonelik Yönetimi" },
+  "satin-almalar": { baslik:"Satın Alımlar", grup:"Abonelik Yönetimi" },
+  "viva-kullanim": { baslik:"Viva Kullanımı", grup:"Abonelik Yönetimi" },
+  "banner-alim": { baslik:"Banner Alımı", grup:"Abonelik Yönetimi" },
+  "agora-yayin-alim": { baslik:"Agora Yayını Alımı", grup:"Abonelik Yönetimi" },
+  "icerik-uretimi-alimi": { baslik:"İçerik Üretimi Alımı", grup:"Abonelik Yönetimi" },
+  "firmstore-cekleri": { baslik:"FirmaStore Çekleri", grup:"Abonelik Yönetimi" },
+  "eczane-cekleri": { baslik:"Eczane Çekleri", grup:"Abonelik Yönetimi" },
   token: { baslik:"Token Kullanım Listesi", etiket:"Token Kullanımı", grup:"Abonelik Yönetimi" },
 };
 
@@ -101,28 +118,56 @@ export default function FirmaGezinme(p: Props) {
     const buton = (sayfa: FirmaSayfasi) => sayfaButonu(sayfa, firma);
     return <>
       {buton("firmabilgileri")}
-      <details className={styles.group} open={secili && FIRMA_SAYFALARI[p.seciliSayfa].grup === "Abonelik Yönetimi"}>
+      <details name={`firma-${firma.firma_id}-ana`} className={styles.group} open={secili && FIRMA_SAYFALARI[p.seciliSayfa].grup === "Abonelik Yönetimi"}>
         <summary data-nav-grup="Abonelik Yönetimi" className={styles.groupSummary}>Abonelik Yönetimi</summary>
         <div className={styles.leaves}>
-          {buton("abonelik-paketleri")}
           {buton("token")}
-          {!p.firmaAdmin && !platformSayfalari && <details className={styles.group} open={secili && (p.seciliSayfa === "proforma-fatura" || p.seciliSayfa === "faturalar")}>
+          <details name={`firma-${firma.firma_id}-abonelik`} className={styles.group} open={secili && (p.seciliSayfa === "satin-almalar" || SATIN_ALIM_SAYFALARI.some(sayfa => sayfa === p.seciliSayfa))}>
+            <summary data-nav-grup="Satın Alımlar" className={styles.groupSummary}>Satın Alımlar</summary>
+            <div className={styles.leaves}>
+              <details name={`firma-${firma.firma_id}-alim`} className={styles.group} open={secili && (p.seciliSayfa === "abonelik-paketleri" || PAKET_ALIMI_SAYFALARI.some(sayfa => sayfa === p.seciliSayfa))}>
+                <summary data-nav-grup="Paket Alımları" className={styles.groupSummary}>Paket Alımları</summary>
+                <div className={styles.leaves}>{PAKET_ALIMI_SAYFALARI.map(buton)}</div>
+              </details>
+              {DIGER_SATIN_ALIM_SAYFALARI.map(buton)}
+              <details name={`firma-${firma.firma_id}-alim`} className={styles.group} open={secili && CEK_ALIMI_SAYFALARI.some(sayfa => sayfa === p.seciliSayfa)}>
+                <summary data-nav-grup="Çek Alımları" className={styles.groupSummary}>Çek Alımları</summary>
+                <div className={styles.leaves}>{CEK_ALIMI_SAYFALARI.map(buton)}</div>
+              </details>
+            </div>
+          </details>
+          {!p.firmaAdmin && !platformSayfalari && <details name={`firma-${firma.firma_id}-abonelik`} className={styles.group} open={secili && (p.seciliSayfa === "proforma-fatura" || p.seciliSayfa === "faturalar" || !!faturaSayfasiBilgisi(p.seciliSayfa))}>
             <summary data-nav-grup="Faturalar" className={styles.groupSummary}>Faturalar</summary>
             <div className={styles.leaves}>
-              {buton("proforma-fatura")}
-              {buton("faturalar")}
+              {FATURA_BOLUMLERI.map(bolum => {
+                const fatura = faturaSayfasiBilgisi(p.seciliSayfa);
+                return <details key={bolum.id} name={`firma-${firma.firma_id}-faturalar`} className={styles.group} open={secili && (p.seciliSayfa === bolum.eskiSayfa || fatura?.bolum.id === bolum.id)}>
+                  <summary data-nav-grup={bolum.baslik} className={styles.groupSummary}>{bolum.baslik}</summary>
+                  <div className={styles.leaves}>
+                    <details name={`firma-${firma.firma_id}-${bolum.id}-kalem`} className={styles.group} open={secili && fatura?.bolum.id === bolum.id && fatura.kalem.grup === "paket"}>
+                      <summary data-nav-grup={`${bolum.baslik} · Paket Alımları`} className={styles.groupSummary}>Paket Alımları</summary>
+                      <div className={styles.leaves}>{FATURA_KALEMLERI.filter(k => k.grup === "paket").map(k => buton(`${bolum.id}-${k.id}`))}</div>
+                    </details>
+                    {FATURA_KALEMLERI.filter(k => k.grup === "diger").map(k => buton(`${bolum.id}-${k.id}`))}
+                    <details name={`firma-${firma.firma_id}-${bolum.id}-kalem`} className={styles.group} open={secili && fatura?.bolum.id === bolum.id && fatura.kalem.grup === "cek"}>
+                      <summary data-nav-grup={`${bolum.baslik} · Çek Alımları`} className={styles.groupSummary}>Çek Alımları</summary>
+                      <div className={styles.leaves}>{FATURA_KALEMLERI.filter(k => k.grup === "cek").map(k => buton(`${bolum.id}-${k.id}`))}</div>
+                    </details>
+                  </div>
+                </details>;
+              })}
             </div>
           </details>}
         </div>
       </details>
-      <details className={styles.group} open={!platformSayfalari || secili}><summary data-nav-grup={platformSayfalari ? "Platform Yönetimi" : "Firma Yönetimi"} className={styles.groupSummary}>{platformSayfalari ? "Platform Yönetimi" : "Firma Yönetimi"}</summary><div className={styles.leaves}>
+      <details name={`firma-${firma.firma_id}-ana`} className={styles.group} open={secili && FIRMA_SAYFALARI[p.seciliSayfa].grup === "Firma Yönetimi"}><summary data-nav-grup={platformSayfalari ? "Platform Yönetimi" : "Firma Yönetimi"} className={styles.groupSummary}>{platformSayfalari ? "Platform Yönetimi" : "Firma Yönetimi"}</summary><div className={styles.leaves}>
         {(["organizasyon", "kullanicilar", "urunteknik", "puan-yonetimi", "firmaislemler", "logokimlik", "firmaayarlar"] as const).map(buton)}
         {!p.firmaAdmin && !platformSayfalari && buton("firma-admin-yonetimi")}
       </div></details>
-      <details className={styles.group} open={secili && FIRMA_SAYFALARI[p.seciliSayfa].grup === "Modüller"}><summary data-nav-grup="Modüller" className={styles.groupSummary}>Modüller</summary><div className={styles.leaves}>
+      <details name={`firma-${firma.firma_id}-ana`} className={styles.group} open={secili && FIRMA_SAYFALARI[p.seciliSayfa].grup === "Modüller"}><summary data-nav-grup="Modüller" className={styles.groupSummary}>Modüller</summary><div className={styles.leaves}>
         {(["tclub", "cclub"] as const).map(buton)}
         {buton("firmastore")}
-        <details className={styles.group} open={secili && (p.seciliSayfa === "eclub" || p.seciliSayfa === "eclub-bannerlar" || p.seciliSayfa === "eclub-uyeler" || p.seciliSayfa === "eclub-puan-tl")}>
+        <details name={`firma-${firma.firma_id}-moduller`} className={styles.group} open={secili && (p.seciliSayfa === "eclub" || p.seciliSayfa === "eclub-bannerlar" || p.seciliSayfa === "eclub-uyeler" || p.seciliSayfa === "eclub-puan-tl")}>
           <summary className={styles.groupSummary}>E-Club</summary>
           <div className={styles.leaves}>
             {buton("eclub-uyeler")}
@@ -130,7 +175,7 @@ export default function FirmaGezinme(p: Props) {
             {buton("eclub-puan-tl")}
           </div>
         </details>
-        <details className={styles.group} open={secili && (p.seciliSayfa === "eczanem" || p.seciliSayfa === "eczanem-bannerlar" || p.seciliSayfa === "eczanem-cek-yonetimi")}>
+        <details name={`firma-${firma.firma_id}-moduller`} className={styles.group} open={secili && (p.seciliSayfa === "eczanem" || p.seciliSayfa === "eczanem-bannerlar" || p.seciliSayfa === "eczanem-cek-yonetimi")}>
           <summary className={styles.groupSummary}>Eczanem</summary>
           <div className={styles.leaves}>
             {buton("eczanem")}

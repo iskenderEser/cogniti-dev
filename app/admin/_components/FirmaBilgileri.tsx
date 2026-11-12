@@ -5,10 +5,9 @@ import YeniFirmaFormu from "./YeniFirmaFormu";
 import type {Firma,YeniFirmaBilgileri} from "../_types";
 import styles from "../admin.module.css";
 const ALANLAR = ["firma_adi","adres","vergi_dairesi","vergi_numarasi","sorumlu_ad_soyad","sorumlu_telefon","sorumlu_eposta","logo_url","vergi_dairesi_kodu"] as const;
-function FirmaBilgileri({firmaId,onGuncellendi}:{firmaId:string;onGuncellendi:(firma:Firma)=>void}) {
+function FirmaBilgileri({firmaId,onGuncellendi,basari}:{firmaId:string;onGuncellendi:(firma:Firma)=>void;basari:(mesaj:string)=>void}) {
  const [bilgiler,setBilgiler]=useState<YeniFirmaBilgileri|null>(null);
  const [hata,setHata]=useState("");
- const [kaydedildi,setKaydedildi]=useState(false);
  const [deneme,setDeneme]=useState(0);
  useEffect(()=>{
   const controller=new AbortController();
@@ -23,17 +22,17 @@ function FirmaBilgileri({firmaId,onGuncellendi}:{firmaId:string;onGuncellendi:(f
   return ()=>controller.abort();
  },[firmaId,deneme]);
  async function kaydet(veri:YeniFirmaBilgileri) {
-  setHata("");setKaydedildi(false);
+  setHata("");
   try {
    const res=await fetch(`/admin/api/firmalar/${firmaId}`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(veri)});
    const data=await res.json();
    if(!res.ok)throw new Error(data.hata ?? "Firma bilgileri kaydedilemedi.");
-   onGuncellendi(data.firma);setKaydedildi(true);return true;
+   onGuncellendi(data.firma);basari("Firma bilgileri kaydedildi.");return true;
   }catch(err){setHata(err instanceof Error?err.message:"Firma bilgileri kaydedilemedi.");return false;}
  }
  return <div className={styles.stack}>
   {hata && <div role="alert" className={styles.notice}>{hata}{!bilgiler && <button type="button" className={styles.button} onClick={()=>setDeneme(n=>n+1)}>Tekrar Dene</button>}</div>}
-  {bilgiler ? <><YeniFirmaFormu firmaId={firmaId} ilkBilgiler={bilgiler} duzenleme onKaydet={kaydet} />{kaydedildi && <p role="status">Firma bilgileri kaydedildi.</p>}</> : !hata && <p role="status">Firma bilgileri yükleniyor…</p>}
+  {bilgiler ? <YeniFirmaFormu firmaId={firmaId} ilkBilgiler={bilgiler} duzenleme onKaydet={kaydet} /> : !hata && <p role="status">Firma bilgileri yükleniyor…</p>}
  </div>;
 }
 

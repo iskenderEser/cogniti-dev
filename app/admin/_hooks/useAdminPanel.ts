@@ -375,13 +375,13 @@ export function useAdminPanel(istenenFirmaId: string | null = null) {
 
   // Yenileme ve geri/ileri gezinmede URL'deki firmayı geri yükle.
   useEffect(() => {
-    const hedefFirmaId = istenenFirmaId ?? kullanici?.firma_id;
+    const hedefFirmaId = istenenFirmaId ?? (kullanici?.rol === FIRMA_ADMIN_ROLU ? kullanici.firma_id : null);
     if (hedefFirmaId && seciliFirmaRef.current !== hedefFirmaId) {
       const firma = firmalar.find(f => f.firma_id === hedefFirmaId);
       if (firma) handleFirmaSecildi(firma);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [firmalar, kullanici?.firma_id, istenenFirmaId]);
+  }, [firmalar, kullanici?.firma_id, kullanici?.rol, istenenFirmaId]);
 
   const refreshKullanicilar = () => {
     if (seciliFirma) kullanicilariCek(seciliFirma.firma_id);

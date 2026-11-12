@@ -1,0 +1,42 @@
+.tablo { width:100%; border-collapse:collapse; font-size:12px; text-align:left; }
+.tablo th { padding:15px; background:var(--tema-zemin); color:var(--tema-kontrol-ikincil-metin); font-size:11px; font-weight:800; }
+.tablo td { padding:20px 15px; border-top:1px solid var(--tema-kontrol-cizgi); vertical-align:middle; }
+.toplamSatiri { background:var(--tema-zemin); }
+.tablo .toplamSatiri th,.tablo .toplamSatiri td { border-top:1px solid var(--tema-kontrol-cizgi); }
+@media(max-width:767px) { .tablo .toplamSatiri th,.tablo .toplamSatiri td { border-top:0; } }
+.tablo .rakam { text-align:right; white-space:nowrap; font-weight:700; font-variant-numeric:tabular-nums; }
+.tablo .islem { white-space:nowrap; }
+.buton { display:inline-flex; align-items:center; justify-content:center; gap:6px; min-height:36px; padding:7px 12px; border:1px solid var(--tema-kontrol-cizgi); border-radius:9px; background:var(--tema-yuzey); color:var(--tema-kontrol-eylem); font:inherit; font-size:12px; font-weight:700; cursor:pointer; }
+.buton:hover,.buton[aria-expanded=true] { background:var(--tema-kontrol-hover); }
+.onayla { background:var(--tema-kontrol-eylem); color:var(--tema-kontrol-eylem-metin); border-color:var(--tema-kontrol-eylem); }
+.onayla:hover { background:var(--tema-kontrol-eylem); filter:brightness(.95); }
+.durum { font-size:11px; color:var(--tema-kontrol-metin); font-weight:700; }
+.durum small { display:block; color:var(--tema-kontrol-ikincil-metin); font-weight:400; margin-top:5px; }
+.tablo .belgeSatiri { padding:0 22px 24px; border-top:0; }
+.belge { max-width:1050px; margin:2px auto 0; border:1px solid var(--tema-kontrol-cizgi); border-radius:12px; overflow:hidden; background:var(--tema-kart); color:var(--tema-kontrol-metin); }
+.belgeBaslik { display:flex; justify-content:space-between; align-items:flex-start; gap:24px; padding:24px 26px; border-bottom:1px solid var(--tema-kontrol-cizgi); }
+.belgeBaslik h3 { margin:0 0 7px; font-size:19px; letter-spacing:.7px; font-weight:800; }
+.belgeBaslik p { margin:0; font-size:12px; color:var(--tema-kontrol-ikincil-metin); }
+.referans { max-width:50%; text-align:right; font-size:11px; overflow-wrap:anywhere; }
+.taraflar { display:grid; grid-template-columns:1fr 1fr; gap:30px; padding:22px 26px; border-bottom:1px solid var(--tema-kontrol-cizgi); }
+.taraflar h4 { margin:0 0 9px; font-size:10px; letter-spacing:.8px; color:var(--tema-kontrol-ikincil-metin); }
+.taraflar strong { display:block; font-size:13px; line-height:1.7; }
+.taraflar p { margin:5px 0 0; font-size:11px; line-height:1.8; color:var(--tema-kontrol-ikincil-metin); white-space:pre-wrap; overflow-wrap:anywhere; }
+.kalemAlani { overflow-x:auto; }
+.kalemler { width:100%; border-collapse:collapse; font-size:12px; }
+.kalemler th { background:var(--tema-zemin); color:var(--tema-kontrol-ikincil-metin); font-size:11px; padding:13px 16px; text-align:left; }
+.kalemler td { padding:18px 16px; border-bottom:1px solid var(--tema-kontrol-cizgi); }
+.kalemler th:nth-child(2),.kalemler td:nth-child(2),.kalemler th:nth-child(n+4),.kalemler td:nth-child(n+4) { text-align:right; white-space:nowrap; }
+.toplamlar { width:330px; max-width:calc(100% - 52px); margin:18px 26px 20px auto; }
+.toplamlar>div { display:flex; justify-content:space-between; gap:25px; padding:8px 0; font-size:12px; }
+.toplamlar dt { color:var(--tema-kontrol-ikincil-metin); }
+.toplamlar dd { margin:0; font-weight:700; white-space:nowrap; }
+.toplamlar .genel { border-top:1px solid var(--tema-kontrol-cizgi); margin-top:6px; padding-top:13px; font-size:14px; font-weight:800; }
+.notlar { padding:18px 26px; border-top:1px solid var(--tema-kontrol-cizgi); color:var(--tema-kontrol-ikincil-metin); font-size:11px; line-height:1.9; }
+.notlar p { margin:0; }
+.aciklama { white-space:pre-wrap; overflow-wrap:anywhere; }
+.modalAlan { display:block; font-size:12px; font-weight:700; }
+.modalAlan textarea { display:block; width:100%; min-height:112px; resize:vertical; margin-top:8px; padding:11px 12px; border:1px solid var(--tema-kontrol-cizgi); border-radius:9px; background:var(--tema-yuzey); color:var(--tema-kontrol-metin); font:inherit; font-size:13px; font-weight:400; line-height:1.6; }
+.hata { color:var(--tema-vurgu); font-size:12px; margin:8px 0; }
+.bilgi { padding:18px 22px 23px; color:var(--tema-kontrol-ikincil-metin); font-size:12px; }
+@media(max-width:767px) { .taraflar { grid-template-columns:1fr; gap:18px; } .belgeBaslik { flex-wrap:wrap; padding:18px; } .referans { max-width:100%; text-align:left; } .tablo .belgeSatiri { padding:0 12px 16px; } .kalemler { min-width:600px; } }

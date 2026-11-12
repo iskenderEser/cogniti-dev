@@ -26,3 +26,5 @@
 .ustTabloAlani { margin-bottom:24px; }
 
 .liste .detaySatiri>td { padding:20px 0; text-align:left; }
+.paketListe>thead>tr>th:nth-child(5),.paketListe>tbody>tr>td:nth-child(5) { text-align:right; white-space:nowrap; }
+.paketListe .referans { max-width:190px; overflow-wrap:anywhere; font-size:11px; }

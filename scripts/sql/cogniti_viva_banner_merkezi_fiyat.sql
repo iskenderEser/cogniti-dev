@@ -29,7 +29,12 @@ BEGIN
   IF haftalik IS NULL OR haftalik<=0 OR haftalik>1000000000 OR haftalik<>trunc(haftalik) THEN
    RAISE EXCEPTION 'Banner fiyatı eksik veya geçersiz.' USING ERRCODE='22023';
   END IF;
+  kko:=(p_degerler->>'kko_token_tl')::numeric;
+  IF kko IS NULL OR kko<=0 OR kko::text IN ('NaN','Infinity','-Infinity') THEN
+   RAISE EXCEPTION 'KKÖ birim fiyatı eksik veya geçersiz.' USING ERRCODE='22023';
+  END IF;
   token:=p_miktar*haftalik;
+  tl:=round(token*kko,2);
  ELSE RAISE EXCEPTION 'Geçersiz hizmet türü veya hafta.' USING ERRCODE='22023'; END IF;
  RETURN jsonb_build_object('token',token,'hesap_bedeli_tl',tl);
 END;

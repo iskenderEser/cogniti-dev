@@ -29,8 +29,18 @@ import PartnerFirmaBilgileri from "./_components/PartnerFirmaBilgileri";
 import PartnerYonetimi from "./_components/PartnerYonetimi";
 import TopluTekilSilPaneli from "./_components/TopluTekilSilPaneli";
 import FirmaFaturalari from "./_components/FirmaFaturalari";
+import { faturaSayfasiBilgisi } from "@/lib/admin/faturaSayfalari";
 import FirmaTokenKullanimi from "./_components/FirmaTokenKullanimi";
+import AgoraYayinAlimlari from "./_components/AgoraYayinAlimlari";
+import BannerAlimlari from "./_components/BannerAlimlari";
+import VivaKullanimAlimlari from "./_components/VivaKullanimAlimlari";
+import FirmaStoreCekAlimlari from "./_components/FirmaStoreCekAlimlari";
+import IcerikUretimiAlimlari from "./_components/IcerikUretimiAlimlari";
+import EczaneCekAlimlari from "./_components/EczaneCekAlimlari";
 import SatinAlinanPaketler from "./_components/SatinAlinanPaketler";
+import KkoPaketAlimlari from "./_components/KkoPaketAlimlari";
+import AbonelikPaketAlimlari from "./_components/AbonelikPaketAlimlari";
+import EsnekPaketAlimlari from "./_components/EsnekPaketAlimlari";
 import TClubYonetimi from "./_components/TClubYonetimi";
 import CClubYonetimi from "./_components/CClubYonetimi";
 import PuanYonetimi from "./_components/PuanYonetimi";
@@ -69,7 +79,9 @@ function AdminPanelIcerigi() {
   const firmaId = firmaAdmin ? oturumKullanicisi?.firma_id ?? null : aramaParametreleri.get("firma");
   const sayfaParametresi = aramaParametreleri.get("sayfa") ?? "firmabilgileri";
   const seciliSekme: FirmaSayfasi = Object.hasOwn(FIRMA_SAYFALARI, sayfaParametresi) ? sayfaParametresi as FirmaSayfasi : "firmabilgileri";
-  const bolumParametresi = aramaParametreleri.get("bolum");
+  const faturaSayfasi = faturaSayfasiBilgisi(seciliSekme);
+  const bolumParametresi = aramaParametreleri.get("bolum")
+    ?? (!firmaAdmin && !firmaId && !aramaParametreleri.has("sayfa") ? "yeni-firma" : null);
   const globalBolum = bolumParametresi && ["partnerler", "bannerlar", "sistem", "hbstore", "eclubstore", "veri-sil", "uretim", "yeni-firma"].includes(bolumParametresi)
     ? bolumParametresi as GlobalBolumId | "yeni-firma" : null;
   const admin = useAdminPanel(firmaId);
@@ -149,7 +161,9 @@ function AdminPanelIcerigi() {
             {!globalBolum && f && <p>{f.firma_adi} · {seciliSekme === "kullanicilar" ? "Kullanıcı kayıtları, roller ve erişim yetkileri" : seciliSekme === "firma-admin-yonetimi" ? "Yönetim erişimi ve sorumluluk" : sayfa.baslik}</p>}
             {(globalBolum === "hbstore" || globalBolum === "eclubstore") && <p>Mevcut ortak ekran · Tüm firmalar</p>}
           </div>{!globalBolum && f && <span className={styles.badge}>{platformSecili ? <Settings2 /> : <Building2 />}{f.firma_adi}</span>}</div>
-          {!globalBolum && saltOkunur && <p role="status" className={styles.yoneticiUyarisi}>COGNİTİ YÖNETİCİYE MESAJ: Firma admini açık · Cogniti bu firma alanında yalnız görüntüleme yapabilir.</p>}
+          {!globalBolum && saltOkunur && <p role="status" className={styles.yoneticiUyarisi}>{["paket-alimlari-esnek", "paket-alimlari-abonelik", "paket-alimlari-kko", "viva-kullanim", "banner-alim", "agora-yayin-alim"].includes(seciliSekme)
+            ? "COGNİTİ YÖNETİCİYE MESAJ: Firma admini açık · Bu alanda açıklama yazarak firma adına proforma onayı verebilirsiniz."
+            : "COGNİTİ YÖNETİCİYE MESAJ: Firma admini açık · Cogniti bu firma alanında yalnız görüntüleme yapabilir."}</p>}
           {globalBolum === "partnerler" ? (
             !firmaAdmin && (partnerId && partnerSayfasi === "firma-bilgileri" ? <PartnerFirmaBilgileri key={partnerId} partnerId={partnerId} /> : partnerId && partnerSayfasi === "yayinlar" ? <PartnerYayinlari key={partnerId} partnerId={partnerId} /> : partnerId ? <section className={styles.card} aria-label={PARTNER_SAYFALARI[partnerSayfasi]}>
               <div className={styles.cardBody}>{partnerler.yukleniyor ? <p role="status">Partner bilgisi yükleniyor…</p> : partnerler.hata ? <p role="alert">{partnerler.hata}</p> : !seciliPartner ? <p role="alert">Partner firma bulunamadı.</p> : partnerSayfasi === "hak-edisleri" ? <PartnerHakEdisleri key={partnerId} partnerId={partnerId} /> : partnerSayfasi === "raporlar" ? <PartnerRaporlari key={partnerId} partnerId={partnerId} /> : <p className={styles.empty}>Bu bölüm henüz kullanıma açılmadı.</p>}</div>
@@ -172,7 +186,7 @@ function AdminPanelIcerigi() {
             <p style={{ fontSize: "13px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)" }}>Soldan bir firma seçin.</p>
           ) : (
             <>
-              {seciliSekme === "firmabilgileri" && <FirmaBilgileri key={f.firma_id} firmaId={f.firma_id} onGuncellendi={admin.firmaBilgileriniYansit} />}
+              {seciliSekme === "firmabilgileri" && <FirmaBilgileri key={f.firma_id} firmaId={f.firma_id} onGuncellendi={admin.firmaBilgileriniYansit} basari={admin.basari} />}
               {seciliSekme === "kullanicilar" && (admin.firmaVerileriYukleniyor ? <p role="status" className={styles.empty}>{f.firma_adi} kullanıcıları yükleniyor…</p> : admin.firmaVeriHatasi ? <div role="alert" className={styles.notice}>Firma bilgileri yüklenemedi. Yeniden denemek için firmayı tekrar seçin.</div> : (
                 <KullaniciYonetimi key={f.firma_id} firma={f} kullanicilar={admin.kullanicilar} takimlar={admin.takimlar}
                   refreshKullanicilar={admin.refreshKullanicilar} refreshTakimlar={admin.refreshTakimlar} hata={admin.hata} basari={admin.basari} />
@@ -180,9 +194,19 @@ function AdminPanelIcerigi() {
               {seciliSekme === "firma-admin-yonetimi" && !firmaAdmin && !platformSecili && <FirmaAdminYonetimi key={f.firma_id} firmaId={f.firma_id} onDegisti={aktif => admin.firmaBilgileriniYansit({ ...f, firma_admin_aktif: aktif })} />}
               {(seciliSekme === "firmaayarlar" || seciliSekme === "firmaislemler") && <FirmaYonetimIslemleri key={`${f.firma_id}-${seciliSekme}`} firma={f} admin={admin} firmaAdmin={firmaAdmin} islemler={seciliSekme === "firmaislemler"} />}
 
-              {(seciliSekme === "faturalar" || seciliSekme === "proforma-fatura") && !firmaAdmin && !platformSecili && <FirmaFaturalari key={`${f.firma_id}-${seciliSekme}`} proforma={seciliSekme === "proforma-fatura"} />}
+              {(seciliSekme === "faturalar" || seciliSekme === "proforma-fatura" || faturaSayfasi) && !firmaAdmin && !platformSecili &&
+                <FirmaFaturalari key={`${f.firma_id}-${seciliSekme}`} firmaId={f.firma_id} proforma={seciliSekme === "proforma-fatura" || faturaSayfasi?.bolum.id === "proforma"} kalem={faturaSayfasi?.kalem.id} />}
 
-              {seciliSekme === "abonelik-paketleri" && <SatinAlinanPaketler key={f.firma_id} firmaId={f.firma_id} />}
+              {seciliSekme === "paket-alimlari-esnek" && <EsnekPaketAlimlari key={f.firma_id} firmaId={f.firma_id} />}
+              {seciliSekme === "paket-alimlari-abonelik" && <AbonelikPaketAlimlari key={f.firma_id} firmaId={f.firma_id} />}
+              {seciliSekme === "paket-alimlari-kko" && <KkoPaketAlimlari key={f.firma_id} firmaId={f.firma_id} />}
+              {seciliSekme === "banner-alim" && <BannerAlimlari key={f.firma_id} firmaId={f.firma_id} basari={admin.basari} />}
+              {seciliSekme === "agora-yayin-alim" && <AgoraYayinAlimlari key={f.firma_id} firmaId={f.firma_id} basari={admin.basari} />}
+              {seciliSekme === "icerik-uretimi-alimi" && <IcerikUretimiAlimlari key={f.firma_id} firmaId={f.firma_id} />}
+              {seciliSekme === "firmstore-cekleri" && <FirmaStoreCekAlimlari key={f.firma_id} firmaId={f.firma_id} />}
+              {seciliSekme === "eczane-cekleri" && <EczaneCekAlimlari key={f.firma_id} firmaId={f.firma_id} />}
+              {seciliSekme === "viva-kullanim" && <VivaKullanimAlimlari key={f.firma_id} firmaId={f.firma_id} basari={admin.basari} />}
+              {seciliSekme === "abonelik-paketleri" && <SatinAlinanPaketler key={`${f.firma_id}:${seciliSekme}`} firmaId={f.firma_id} />}
               {seciliSekme === "token" && <FirmaTokenKullanimi key={f.firma_id} firmaId={f.firma_id} />}
 
               {seciliSekme === "organizasyon" && <TakimBolgeFormu {...takimBolge} firmaAdi={f.firma_adi} takimlar={admin.takimlar} yukleniyor={admin.firmaVerileriYukleniyor} veriHatasi={admin.firmaVeriHatasi} />}

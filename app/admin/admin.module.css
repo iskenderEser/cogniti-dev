@@ -28,6 +28,13 @@
 .groupSummary::after { content:'›'; margin-left:auto; color:var(--tema-ikincil-metin); }
 .group[open]>.groupSummary::after { transform:rotate(90deg); }
 .leaves { padding-left:12px; display:flex; flex-direction:column; gap:3px; }
+.companyPages>.group { margin-top:16px; }
+.companyPages>.group>.groupSummary { color:var(--tema-kontrol-metin); font-weight:800; }
+.companyPages .leaves { border-left:1px solid var(--tema-kontrol-cizgi); margin-left:0; padding-left:12px; gap:3px; }
+.companyPages .leaves>.group>.groupSummary { font-weight:600; color:var(--tema-kontrol-metin); }
+.companyPages .leaves .navButton { font-weight:400; }
+.companyPages .navButton[aria-current=page] { position:relative; background:var(--tema-menu-secili-zemin); box-shadow:none; }
+.companyPages .navButton[aria-current=page]::before { content:""; position:absolute; left:0; top:8px; bottom:8px; width:3px; border-radius:3px; background:var(--tema-kontrol-eylem); }
 .search { width:100%; min-width:0; height:40px; border:1px solid var(--tema-kontrol-cizgi); border-radius:12px; padding:0 12px; background:var(--tema-yuzey); color:var(--tema-metin); font:inherit; font-size:12px; margin-bottom:12px; }
 .main { min-width:0; flex:1; overflow:auto; padding:30px clamp(20px,3vw,44px) 48px; scroll-behavior:smooth; }
 .content { max-width:1480px; margin:auto; }

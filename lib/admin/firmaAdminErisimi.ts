@@ -17,7 +17,9 @@ export async function firmaAdminErisiminiDogrula(db: SupabaseClient, kimlik: Fir
   return { ok: true as const, firma: { firma_id: data.firma_id as string, firma_adi: data.firma_adi as string } };
 }
 const FIRMA_YONETIM_SAYFALARI = new Set([
-  "firmabilgileri", "abonelik-paketleri", "token", "organizasyon", "kullanicilar", "urunteknik",
+  "firmabilgileri", "abonelik-paketleri", "satin-almalar", "token", "organizasyon", "kullanicilar", "urunteknik",
+  "paket-alimlari-kko", "paket-alimlari-esnek", "paket-alimlari-abonelik",
+  "viva-kullanim", "banner-alim", "agora-yayin-alim", "icerik-uretimi-alimi", "firmstore-cekleri", "eczane-cekleri",
   "puan-yonetimi", "firmaislemler", "logokimlik", "firmaayarlar", "tclub", "cclub", "firmastore",
   "eclub", "eclub-uyeler", "eclub-bannerlar", "eclub-puan-tl", "eczanem", "eczanem-bannerlar", "eczanem-cek-yonetimi",
 ]);
@@ -28,7 +30,9 @@ export function firmaAdminIstegiIzinliMi(pathname: string, method: string, param
   if (pathname === "/api/satin-alma/abonelik") return method === "POST";
   if (["/fiyatlar", "/fiyatlar/api", "/api/token-bakiyeleri"].includes(pathname) && ["GET", "HEAD"].includes(method)) return true;
   if (pathname === "/tema/api" && ["GET", "PUT"].includes(method)) return true;
-  const siparisOkuma = pathname.match(/^\/admin\/api\/firmalar\/([^/]+)\/(?:satin-alinan-paketler|esnek-token-kullanimi)$/);
+  const proforma = pathname.match(/^\/admin\/api\/firmalar\/([^/]+)\/(?:esnek-proformalar|abonelik-proformalar|kko-proformalar|viva-proformalar|banner-proformalar|agora-proformalar|icerik-proformalar|firmastore-proformalar|eczane-cek-proformalar)$/);
+  if (proforma) return proforma[1] === firmaId && ["GET", "HEAD", "POST"].includes(method);
+  const siparisOkuma = pathname.match(/^\/admin\/api\/firmalar\/([^/]+)\/(?:satin-alinan-paketler|esnek-token-kullanimi|viva-alimlari|banner-alimlari)$/);
   if (siparisOkuma) return siparisOkuma[1] === firmaId && ["GET", "HEAD"].includes(method);
   const okuma = method === "GET" || method === "HEAD";
   // Public klasöründeki firma logosu sayfa yetkisi istemez.
