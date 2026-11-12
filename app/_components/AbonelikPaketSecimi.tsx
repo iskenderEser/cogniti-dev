@@ -110,21 +110,33 @@ export default function AbonelikPaketSecimi({ paketler, rol, kullaniciId }: {
             <Button type="button" disabled={!secim}>Siparişi Tamamla</Button>
           </AlertDialogTrigger>
           {secim && ilkDonem && (
-            <AlertDialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto">
+            <AlertDialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto [container-type:inline-size]">
               <AlertDialogHeader>
-                <AlertDialogTitle>Abonelik Siparişini Onaylayın</AlertDialogTitle>
-                <AlertDialogDescription>Seçtiğiniz paketi ve aylık tutarı kontrol edin.</AlertDialogDescription>
+                <AlertDialogTitle className="font-bold">{secim.ad} İçin Abonelik Detaylarınız</AlertDialogTitle>
+                <AlertDialogDescription className="whitespace-nowrap text-[length:min(10px,2.05cqw)]">
+                  Cogniti abonelik paketleri her ayın 1&apos;inde yenilenir. Seçtiğiniz paketi ve aylık tutarı lütfen kontrol edin.
+                </AlertDialogDescription>
               </AlertDialogHeader>
+              <h3 className="relative py-3 text-sm font-bold before:absolute before:inset-x-0 before:top-0 before:h-px before:origin-top before:scale-y-[0.25] before:bg-[var(--tema-pencere-cizgi)] after:absolute after:inset-x-0 after:bottom-0 after:h-px after:origin-bottom after:scale-y-[0.25] after:bg-[var(--tema-pencere-cizgi)]">Abonelik Başlangıç Detaylarınız</h3>
               <dl className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
                 <dt>Seçilen Paket</dt><dd className="text-right">{secim.ad}</dd>
-                <dt>İlk Dönem</dt><dd className="text-right">{ilkDonem.kalanGun} gün</dd>
-                <dt>İlk Yüklenecek Token</dt><dd className="text-right">{ilkDonem.token.toLocaleString("tr-TR")}</dd>
-                <dt>İlk Dönem Tutarı</dt><dd className="text-right">{fiyat.format(ilkDonem.kurus / 100)} TL</dd>
-                <dt>İlk Dönem KDV (%20)</dt><dd className="text-right">{fiyat.format(ilkDonem.kdvKurus / 100)} TL</dd>
-                <dt className="font-semibold">İlk Dönem KDV Dahil Toplam</dt>
+                <div className="col-span-2 flex justify-between gap-4">
+                  <dt>
+                    Başlangıç Kullanım Süreniz{" "}
+                    <span className="text-[length:min(10px,2.05cqw)] font-light italic">(Abonelik başlangıç sürenize göre hesaplanır)</span>
+                  </dt>
+                  <dd className="whitespace-nowrap text-right">{ilkDonem.kalanGun} gün</dd>
+                </div>
+                <dt>Yüklenecek Token</dt><dd className="text-right">{ilkDonem.token.toLocaleString("tr-TR")}</dd>
+                <dt>Yüklenen Token Tutarı</dt><dd className="text-right">{fiyat.format(ilkDonem.kurus / 100)} TL</dd>
+                <dt>KDV (%20)</dt><dd className="text-right">{fiyat.format(ilkDonem.kdvKurus / 100)} TL</dd>
+                <dt className="font-semibold">Toplam Tutar</dt>
                 <dd className="text-right font-semibold">{fiyat.format((ilkDonem.kurus + ilkDonem.kdvKurus) / 100)} TL</dd>
-                <dt>Token Adedi / Ay</dt><dd className="text-right">{secim.token.toLocaleString("tr-TR")}</dd>
+              </dl>
+              <h3 className="relative py-3 text-sm font-bold before:absolute before:inset-x-0 before:top-0 before:h-px before:origin-top before:scale-y-[0.25] before:bg-[var(--tema-pencere-cizgi)] after:absolute after:inset-x-0 after:bottom-0 after:h-px after:origin-bottom after:scale-y-[0.25] after:bg-[var(--tema-pencere-cizgi)]">Abonelik Devam Detaylarınız</h3>
+              <dl className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
                 <dt>Token Hesabı</dt><dd className="text-right">{hesapAdi}</dd>
+                <dt>Token Adedi / Ay</dt><dd className="text-right">{secim.token.toLocaleString("tr-TR")}</dd>
                 <dt>KDV Hariç Aylık Tutar</dt><dd className="text-right">{fiyat.format(aylikKurus / 100)} TL</dd>
                 <dt>KDV (%20)</dt><dd className="text-right">{fiyat.format(kdvKurus / 100)} TL</dd>
                 <dt className="font-semibold">KDV Dahil Aylık Toplam</dt>

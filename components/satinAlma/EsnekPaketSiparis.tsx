@@ -82,15 +82,16 @@ export default function EsnekPaketSiparis({ rol, kullaniciId, teklif, fiyatYenil
     <AlertDialog open={acik} onOpenChange={v => { if (!kilit.current) setAcik(v); }}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Esnek Paket Siparişini Onaylayın</AlertDialogTitle>
-          <AlertDialogDescription>Tokenlar {hesapAdi}na yüklenecek. Sipariş şirket hesabına kaydedilecek.</AlertDialogDescription>
+          <AlertDialogTitle>Esnek Paket Sipariş Detayı</AlertDialogTitle>
+          <AlertDialogDescription>Tokenlarınızı 31 Aralık&apos;a kadar dilediğiniz zaman kullanabilirsiniz.</AlertDialogDescription>
         </AlertDialogHeader>
         {siparis && <dl className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+          <dt>Token Hesabı</dt><dd className="text-right">{hesapAdi}</dd>
           <dt>Token Adedi</dt><dd className="text-right">{siparis.tokenAdedi.toLocaleString("tr-TR")}</dd>
-          <dt>Birim Fiyat / Token</dt><dd className="text-right">{para(siparis.birimFiyat)} TL</dd>
-          <dt>Paket Tutarı</dt><dd className="text-right">{para(paketTutariKurus / 100)} TL</dd>
-          <dt>KDV</dt><dd className="text-right">{para(kdvKurus / 100)} TL</dd>
-          <dt className="font-semibold">Genel Tutar</dt><dd className="text-right font-semibold">{para((paketTutariKurus + kdvKurus) / 100)} TL</dd>
+          <dt>KDV Hariç Paket Tutarı</dt><dd className="text-right">{para(paketTutariKurus / 100)} TL</dd>
+          <dt>KDV (%20)</dt><dd className="text-right">{para(kdvKurus / 100)} TL</dd>
+          <dt className="font-semibold">KDV Dahil Paket Toplamı</dt>
+          <dd className="text-right font-semibold">{para((paketTutariKurus + kdvKurus) / 100)} TL</dd>
         </dl>}
         {mesaj && <p role="alert" className="text-sm">{mesaj}</p>}
         <AlertDialogFooter>

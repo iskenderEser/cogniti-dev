@@ -72,7 +72,7 @@ async function mount(rol) {
   await pm.select(1);
   await pm.click('Siparişi Tamamla');
   assert.match(pm.el.querySelector('[role=alertdialog]').textContent, /58\.200,00 TL/);
-  assert.match(pm.el.querySelector('[role=alertdialog]').textContent, /İlk Dönem3 günİlk Yüklenecek Token1\.000İlk Dönem Tutarı4\.850,00 TL/);
+  assert.match(pm.el.querySelector('[role=alertdialog]').textContent, /Başlangıç Kullanım Süreniz \(Abonelik başlangıç sürenize göre hesaplanır\)3 günYüklenecek Token1\.000Yüklenen Token Tutarı4\.850,00 TL/);
   status = 0;
   await pm.click('Onayla');
   assert.match(pm.el.querySelector('[role=alert]').textContent, /doğrulanamadı/);

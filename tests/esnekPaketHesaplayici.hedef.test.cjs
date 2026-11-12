@@ -46,6 +46,11 @@ const ok=v=>{assert.ok(v);passed++;};
   ok(table.textContent.includes('4,85'));ok(host.textContent.includes('Tüketiminize uygun paketi seçin.'));
   const links=[...host.querySelectorAll('a')].filter(a=>a.textContent.includes('Planlama Aracı'));
   ok(links.length===2);ok(links.every(a=>a.getAttribute('href')===(currentPath.startsWith('/partner')?'/partner/planlama-araci':'/planlama-araci')));
+  const hizmet=document.querySelector('#icerik-uretimi');
+  const hizmetSatirlari=[...hizmet.querySelectorAll('tbody tr')];
+  ok(hizmetSatirlari.slice(0,3).map(satir=>[...satir.cells].map(hucre=>hucre.textContent).join('|')).join(';')==='Video|2.500|200|2.700;Podcast|1.500|200|1.700;Dijital Broşür|1.000|200|1.200');
+  ok(hizmetSatirlari[3].cells.length===2&&hizmetSatirlari[3].cells[0].textContent==='Literatür'&&hizmetSatirlari[3].cells[1].colSpan===3&&hizmetSatirlari[3].cells[1].textContent==='Teklif Usulü');
+  ok(hizmet.querySelector('#icerik-uretimi-fiyat-notu').textContent==="1 Token KDV hariç 9,90 TL'den faturalanır.");
   await React.act(async()=>pageRoot.unmount());host.remove();
  }
  bad=true;const el=document.createElement('div');document.body.append(el);const root=createRoot(el);await React.act(async()=>root.render(React.createElement(Calculator)));ok(el.textContent.includes('Fiyatlar okunamadı'));await React.act(async()=>root.unmount());await win.happyDOM.close();console.log(JSON.stringify({passed,scope:'Gerçek React hesaplayıcı; iç kullanıcı ve partner, sahte API. Tek seferde ödeme, fatura bölme kaldırılması, siparişte fatura açıklaması, peşin fiyatlar ve eksik liste.'}));
