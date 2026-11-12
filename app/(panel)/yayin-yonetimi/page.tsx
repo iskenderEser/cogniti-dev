@@ -11,7 +11,7 @@
 import type { BakiyeTuru } from "@/lib/satinAlma/esnekPaket";
 
 
-import { useEffect, useState, useCallback, useMemo, Suspense, type ReactNode } from "react";
+import { useEffect, useState, useCallback, useMemo, useRef, Suspense, type ReactNode } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
 import { useAuth } from "@/app/providers/AuthProvider";
@@ -93,6 +93,8 @@ function YayinYonetimiIcerik() {
 
   const [aktifAnaSekme, setAktifAnaSekme] = useState<YayinHedefGrubu>(baslangicHedef ?? "utt");
   const [aktifSekme, setAktifSekme] = useState<AltSekme>(baslangicDurum);
+  const uygulananAcilis = useRef<string | null>(null);
+  const acilisAnahtari = JSON.stringify([kullaniciId, durumParam, hedefParam]);
   const [aktifYayinTuru, setAktifYayinTuru] = useState<YayinTuruFiltreDegeri>("tumu");
   const [aktifZaman, setAktifZaman] = useState<Periyot>("bu_ay");
 
@@ -126,15 +128,19 @@ function YayinYonetimiIcerik() {
   }, [durumParam, hedefParam, anaSekmeler]);
 
   const onOzetYuklendi = useCallback((sayilar: Record<string, number>) => {
-    if (!baslangicHedef && baslangicDurum === "bekleyen") {
-      const ilkBekleyenHedef = anaSekmeler.find(
-        (hedef) => Number(sayilar?.[hedef] ?? 0) > 0,
-      );
-      if (ilkBekleyenHedef) {
-        setAktifAnaSekme(ilkBekleyenHedef);
-      }
+    if (uygulananAcilis.current === acilisAnahtari) return;
+    uygulananAcilis.current = acilisAnahtari;
+
+    const ilkBekleyenHedef = baslangicHedef
+      ? (sayilar[baslangicHedef] > 0 ? baslangicHedef : undefined)
+      : anaSekmeler.find((hedef) => sayilar[hedef] > 0);
+    if (durumParam !== "yayinda" && durumParam !== "durdurulan" && durumParam !== "bekleyen") {
+      setAktifSekme(ilkBekleyenHedef ? "bekleyen" : "yayinda");
     }
-  }, [baslangicHedef, baslangicDurum, anaSekmeler]);
+    if (!baslangicHedef && ilkBekleyenHedef && (durumParam !== "yayinda" && durumParam !== "durdurulan")) {
+      setAktifAnaSekme(ilkBekleyenHedef);
+    }
+  }, [acilisAnahtari, anaSekmeler, baslangicHedef, durumParam]);
 
   const yy = useYayinYonetimi({
     kullaniciId,
@@ -251,7 +257,10 @@ function YayinYonetimiIcerik() {
         </div>
 
         <div className="flex min-w-0 flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <YayinDurumuToggle aktifDurum={aktifSekme} onDurumDegistir={setAktifSekme} />
+          <YayinDurumuToggle aktifDurum={aktifSekme} onDurumDegistir={(durum) => {
+            uygulananAcilis.current = acilisAnahtari;
+            setAktifSekme(durum);
+          }} />
           {aktifSekme === "bekleyen" ? (
             <ListeArama
               arama={bekleyenListe.arama}

@@ -135,7 +135,6 @@ export function YayinSatir({
           )}
           <span className="absolute right-2 top-2 flex max-w-[70%] flex-wrap justify-end gap-1">
             <HedefRolPilleri hedefRoller={y.hedef_roller} />
-            {pmEczanem && <PmYayinTokenHesabi yayinId={y.yayin_id} />}
           </span>
           {tiklanabilir && (
             <span className="absolute inset-0 flex items-center justify-center">
@@ -187,6 +186,7 @@ export function YayinSatir({
           )}
 
           {y.hedef_roller.includes("eczanem") && <span className={eclubBilgiPili}>{eczanemIndirimsiz ? "İndirimsiz" : "İndirimli"}</span>}
+          {pmEczanem && <PmYayinTokenHesabi yayinId={y.yayin_id} />}
           {sahaHedefliMi(y.hedef_roller) && (
             <div className="border-t border-[var(--tema-yerel-uretim-cizgi-10)] pt-2" aria-label="Yayın puan modeli">
               <span className={eclubBilgiPili}>
