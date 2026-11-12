@@ -421,6 +421,111 @@ try {
     }
     await db.query('SET ROLE service_role'); assert.equal((await report(4)).satirlar.length,50); await db.query('RESET ROLE');
   });
+  const sahaSql=readFileSync('scripts/sql/cogniti_token_saha_aylik_kartlari.sql','utf8');
+  const saha=async(user,role,bm=null,utt=null,at='2026-11-12T09:00:00Z')=>(await db.query(
+    'SELECT cogniti_token_saha_aylik_kartlari($1,$2,$3,$4,$5) result',
+    [id(user),role,bm===null?null:id(bm),utt===null?null:id(utt),at]
+  )).rows[0].result;
+  await check('Saha aylık kartları tekrar kurulur ve güncel tüketim kaynaklarını birlikte okur',async()=>{
+    await db.query(`
+      CREATE TABLE cogniti_satin_alma_bakiyeleri(firma_id uuid);
+      CREATE TABLE cogniti_esnek_gonderim_tuketimleri(firma_id uuid,gonderen_id uuid,kaynak_id uuid,alici_turu text,miktar integer,created_at timestamptz);
+      CREATE TABLE eczanem_token_bloklari(firma_id uuid,yayin_id uuid,eczane_id uuid,musteri_id uuid,gonderim_id uuid,durum text,tuketildi_at timestamptz);
+      CREATE TABLE eclub_oneri_kayitlari(oneri_id uuid PRIMARY KEY,oneren_id uuid,yayin_id uuid,kisi_id uuid,oneri_baslangic timestamptz);
+    `);
+    await db.query(sahaSql); await db.query(sahaSql);
+    const at='2026-11-10T01:00:00Z';
+    await consume(4,300,200,undefined,undefined,2,at);
+    await consume(5,300,200,undefined,undefined,4,at);
+    await consume(3,300,4,'firma_kullanicisi','tclub_oneri',3,at);
+    await consume(7,300,7,'firma_kullanicisi','banner_yayin',30,at);
+    await consume(4,300,200,undefined,undefined,60,'2026-10-31T20:59:59Z');
+    await consume(4,300,200,undefined,undefined,50,'2026-11-11T21:00:00Z');
+    await consume(8,302,200,undefined,undefined,40,at,101);
+    await consume(200,300,411,'eczanem_musteri','eczanem_musteri',1,at,100,'eclub_kisi',`eczanem-gonderim:${id(870)}`);
+    await db.query(`INSERT INTO eczanem_eczane_gonderimleri(yayin_id,eczane_id,gonderen_utt_id,created_at)
+        VALUES($1,$2,$3,'2026-11-09');
+      `.trim(),[id(300),id(871),id(4)]);
+    await db.query('INSERT INTO eczanem_gonderimler VALUES($1,$2,$3,$4,$5,$6,\'video\'),($7,$2,$3,$8,$5,$6,\'video\')',
+      [id(870),id(871),id(300),id(411),id(200),at,id(872),id(412)]);
+    await db.query(`INSERT INTO eczanem_token_bloklari VALUES
+      ($1,$2,$3,$4,$5,'tuketildi',$6),($1,$2,$3,$7,NULL,'blokeli',NULL)`,
+      [id(100),id(300),id(871),id(412),id(872),at,id(413)]);
+    await db.query(`INSERT INTO cogniti_esnek_gonderim_tuketimleri VALUES
+      ($1,$2,$3,'eclub_kisi',1,$5),($1,$4,$3,'eclub_kisi',1,$5),($1,$4,$3,'firma_kullanicisi',1,$5)`,
+      [id(100),id(4),id(300),id(7),at]);
+    for(const [n,gonderen,yayin,uye,tarih] of [
+      [880,4,300,200,at],[881,4,300,201,at],[882,5,300,201,at],
+      [883,4,302,200,at],[884,4,300,200,'2026-10-31T20:59:59Z'],[885,4,300,201,'2026-11-11T21:00:00Z'],
+    ]) await db.query('INSERT INTO eclub_oneri_kayitlari VALUES($1,$2,$3,$4,$5)',[id(n),id(gonderen),id(yayin),id(uye),tarih]);
+    await db.query(`INSERT INTO eczanem_gonderimler VALUES
+      ($1,$2,$3,$4,$5,$6,'video'),($7,$2,$3,$8,$5,'2026-11-11T21:00:00Z','video')`,
+      [id(873),id(871),id(300),id(414),id(200),at,id(874),id(415)]);
+    const gun=(await saha(4,'utt')).gun_sonu;
+    assert.deepEqual(gun,{hazir:true,donem_baslangici:'2026-11-01',veri_tarihi:'2026-11-11',
+      firma_toplam_token:44,eclub_token:3,eczanem_token:2,oneri_token:null,
+      firma_yayin_token:14,eclub_gonderi:2,eczanem_gonderi:3});
+    const ilkGun=(await saha(4,'utt',null,null,'2026-11-01T09:00:00Z')).gun_sonu;
+    assert.deepEqual([ilkGun.firma_yayin_token,ilkGun.eclub_gonderi,ilkGun.eczanem_gonderi],[0,0,0]);
+  });
+  await check('BM, TM ve Kd. UTT toplamları seçili kapsamla sınırlıdır',async()=>{
+    const bm=(await saha(3,'bm')).gun_sonu;
+    assert.deepEqual([bm.firma_yayin_token,bm.eclub_gonderi,bm.eczanem_gonderi,bm.oneri_token],[14,2,3,3]);
+    const tm=(await saha(2,'tm')).gun_sonu;
+    assert.deepEqual([tm.firma_yayin_token,tm.eclub_gonderi,tm.eczanem_gonderi,tm.oneri_token],[14,3,3,3]);
+    assert.deepEqual((await saha(2,'tm',3,4)).gun_sonu,bm);
+    await db.query("UPDATE kullanicilar SET rol='kd_utt' WHERE kullanici_id=$1",[id(4)]);
+    assert.equal((await saha(4,'utt')).gun_sonu.eczanem_gonderi,3);
+    await assert.rejects(saha(3,'bm',null,5),{code:'42501'});
+    await assert.rejects(saha(4,'tm'),{code:'42501'});
+    await assert.rejects(saha(99,'utt'),{code:'42501'});
+  });
+  await check('Saha kartları yeni hesapta sıfırı gösterir ve tarayıcı rolleri RPC çağırmaz',async()=>{
+    await db.query('INSERT INTO firmalar VALUES($1,true)',[id(103)]);
+    await db.query("INSERT INTO kullanicilar(kullanici_id,firma_id,rol,aktif_mi) VALUES($1,$2,'utt',true)",[id(97),id(103)]);
+    assert.equal((await saha(97,'utt')).hesap_var,false);
+    await db.query('INSERT INTO cogniti_satin_alma_bakiyeleri VALUES($1)',[id(103)]);
+    const rapor=await saha(97,'utt');
+    assert.equal(rapor.hesap_var,true);
+    assert.equal(rapor.gun_sonu.firma_toplam_token,0);
+    for(const role of ['anon','authenticated']) {
+      await db.query(`SET ROLE ${role}`); await assert.rejects(saha(4,'utt'),{code:'42501'}); await db.query('RESET ROLE');
+    }
+    await db.query('SET ROLE service_role'); assert.equal((await saha(4,'utt')).gun_sonu.eclub_gonderi,2); await db.query('RESET ROLE');
+  });
+  await check('UTT YTD toplamı yıl sınırını, ay toplamı seçili ayı ve iki toplam sayfalamayı doğru uygular',async()=>{
+    // Bu senaryoda Viva kaydı yok. Yayın raporunun Viva bağımlılığı boş kaynakla temsil edilir.
+    await db.query(`CREATE FUNCTION public.cogniti_token_viva_rapor_satirlari(uuid,text,text,uuid,uuid,uuid)
+      RETURNS TABLE(id text,tarih date,yayin_id uuid,yayin_adi text,urun text,arac text,rol text,
+        gonderilen bigint,token bigint,davetli_turleri text[],davetli_sayisi bigint,katilim_sayisi integer)
+      LANGUAGE sql AS 'SELECT NULL::text,NULL::date,NULL::uuid,NULL::text,NULL::text,NULL::text,NULL::text,
+        NULL::bigint,NULL::bigint,NULL::text[],NULL::bigint,NULL::integer WHERE false'`);
+    const sql=readFileSync('scripts/sql/cogniti_token_utt_ay_toplam.sql','utf8');
+    await db.query(sql); await db.query(sql);
+    await db.query('INSERT INTO cogniti_token_hesaplari(firma_id) VALUES($1)',[id(103)]);
+    await db.query("INSERT INTO v_yayin_detay VALUES($1,$2,'Test','video','Test Firma',990)",[id(990),id(103)]);
+    await consume(97,990,200,undefined,undefined,9,'2025-12-31T20:59:59Z',103);
+    await consume(97,990,200,undefined,undefined,4,'2025-12-31T21:00:00Z',103);
+    await consume(97,990,200,undefined,undefined,2,'2026-11-10T01:00:00Z',103);
+    const detay=async(user,kanal,yil,ay,sayfa=0)=>(await db.query(
+      "SELECT cogniti_token_utt_donem_detay_raporu($1,$2,$3,'video','eclub',$4,$5) result",
+      [id(user),sayfa,kanal,ay,yil]
+    )).rows[0].result;
+    const kasim=await detay(97,'eclub',2026,'2026-11-01');
+    assert.deepEqual([kasim.genel_toplam,kasim.yil_toplami,kasim.ay_toplami,total(kasim)],[15,6,2,2]);
+    const sonrakiSayfa=await detay(97,'eclub',2026,'2026-11-01',1);
+    assert.deepEqual([sonrakiSayfa.yil_toplami,sonrakiSayfa.ay_toplami,total(sonrakiSayfa)],[6,2,0]);
+    assert.equal((await detay(97,'eclub',2025,null)).yil_toplami,9);
+    assert.equal((await detay(97,'eclub',9999,null)).yil_toplami,0);
+    await db.query("INSERT INTO eczanem_eczane_gonderimleri(yayin_id,eczane_id,gonderen_utt_id,created_at) VALUES($1,$2,$3,'2026-01-01')",[id(300),id(889),id(4)]);
+    await db.query("INSERT INTO eczanem_gonderimler VALUES($1,$2,$3,$4,$5,'2026-01-02','video')",
+      [id(890),id(889),id(300),id(416),id(200)]);
+    await consume(200,300,416,'eczanem_musteri','eczanem_musteri',2,'2026-01-02',100,'eclub_kisi',`eczanem-gonderim:${id(890)}`);
+    const eczanemKasim=await detay(4,'eczanem',2026,'2026-11-01');
+    assert.equal(eczanemKasim.ay_toplami,1);
+    assert.ok(eczanemKasim.yil_toplami>eczanemKasim.ay_toplami);
+    await assert.rejects(detay(97,'eclub',2025,'2026-11-01'),{code:'22023'});
+  });
   console.log(`${passed} PostgreSQL kontrolü başarılı.`);
 } finally {
   await db?.end().catch(()=>{});

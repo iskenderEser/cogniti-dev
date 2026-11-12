@@ -10,12 +10,31 @@ vm.runInNewContext(ts.transpileModule(fs.readFileSync('components/panel/TokenBak
 (async()=>{
  const host=document.createElement('div');document.body.append(host);const root=createRoot(host);
  await React.act(async()=>root.render(React.createElement(exportsMock.default)));
- assert.ok(host.textContent.includes('Kişisel Token Hesabı'));assert.ok(host.textContent.includes('Firma Token Hesabı'));
- assert.ok(host.textContent.includes('3.000'));assert.ok(host.textContent.includes('Süresi dolan 500'));
+ assert.ok(!host.textContent.includes('Kişisel Token Hesabı'));assert.ok(host.textContent.includes('Firma Token Hesabı'));
+ assert.ok(!host.textContent.includes('3.000'));assert.ok(host.textContent.includes('6.000'));
  bad=true;await React.act(async()=>host.querySelector('button').click());assert.ok(host.querySelector('[role="alert"]'));assert.ok(!host.textContent.includes('3.000'));assert.ok(!host.textContent.includes('Toplam 0'));
  bad=false;payload={kisisel:null,firma_ortak:empty};await React.act(async()=>host.querySelector('button').click());assert.ok(!host.textContent.includes('Kişisel Token Hesabı'));assert.ok(host.textContent.includes('Henüz satın alım yok'));
  const before=calls;await React.act(async()=>window.dispatchEvent(new win.Event(exportsMock.TOKEN_BAKIYE_YENILE_OLAYI)));assert.equal(calls,before+1);
  pathname='/fiyatlar';await React.act(async()=>root.render(React.createElement(exportsMock.default)));assert.equal(calls,before+2);
+ const esnek={...empty,paket:'esnek',toplam:2500,kullanilan:100,kalan:2300,ayrilan:100};
+ const abonelik={...empty,paket:'abonelik',toplam:5000,kullanilan:200,kalan:4800};
+ const hesap={paket:'abonelik',toplam:7500,kullanilan:300,kalan:7100,suresi_dolan:0,ayrilan:100,paketler:[esnek,abonelik]};
+ payload={kisisel:hesap,firma_ortak:hesap};
+ await React.act(async()=>window.dispatchEvent(new win.Event(exportsMock.TOKEN_BAKIYE_YENILE_OLAYI)));
+ assert.equal(host.querySelectorAll('[aria-label="Kişisel Token Hesabı"]').length,0);
+ assert.equal(host.querySelectorAll('[aria-label="Firma Token Hesabı"]').length,2);
+ assert.equal((host.textContent.match(/Esnek Paket/g)||[]).length,1);
+ assert.equal((host.textContent.match(/Abonelik/g)||[]).length,1);
+ assert.ok(!host.textContent.includes('7.500'));
+ assert.equal(exportsMock.bakiyePaketleri(payload.kisisel).find(paket=>paket.paket==='esnek').kalan,2300);
+ assert.equal(exportsMock.bakiyePaketleri(payload.kisisel).find(paket=>paket.paket==='abonelik').kalan,4800);
+ const kko={...empty,paket:'kko',toplam:1500,kullanilan:200,kalan:1300};
+ payload={kisisel:{...hesap,toplam:9000,kullanilan:500,kalan:8400,paketler:[esnek,abonelik,kko]},firma_ortak:hesap};
+ await React.act(async()=>window.dispatchEvent(new win.Event(exportsMock.TOKEN_BAKIYE_YENILE_OLAYI)));
+ assert.equal(host.querySelectorAll('[aria-label="Kişisel Token Hesabı"]').length,1);
+ assert.ok(host.textContent.includes('KKÖ'));
+
+ assert.equal(dep.satinAlmaBakiyeOzetiGecerli({...payload,firma_ortak:{...hesap,kalan:7101}}),false);
  await React.act(async()=>root.unmount());const ended=calls;window.dispatchEvent(new win.Event(exportsMock.TOKEN_BAKIYE_YENILE_OLAYI));assert.equal(calls,ended);
  await win.happyDOM.close();console.log('Başarılı: kişisel/ortak gösterim, süre sonu, hata/sıfır ayrımı, yeniden okuma ve olay temizliği. CSS geometrisi test edilmedi.');
 })().catch(e=>{console.error(e);process.exitCode=1;});

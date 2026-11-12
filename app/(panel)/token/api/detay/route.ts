@@ -44,10 +44,12 @@ export async function GET(request: NextRequest) {
     if (gonderi === "eczanem" && arac === "viva") return validasyonHatasi("Eczanem için Viva kullanılamaz.", ["arac"]);
     const toplam = request.nextUrl.searchParams.get("toplam");
     const ay = request.nextUrl.searchParams.get("ay");
+    const yil = request.nextUrl.searchParams.get("yil");
     if ((toplam !== null && toplam !== "1") || (ay !== null && (!/^(?!0000)\d{4}-(0[1-9]|1[0-2])$/.test(ay) || toplam !== "1"))) return validasyonHatasi("Geçersiz ay filtresi.", ["ay"]);
+    if (yil !== null && (!/^(?!0000)\d{4}$/.test(yil) || toplam !== "1" || (ay !== null && ay.slice(0,4) !== yil))) return validasyonHatasi("Geçersiz yıl filtresi.", ["yil"]);
     if (toplam && (bm || tm || yonetici || takimMuduru || bolgeMuduru || utt || !["eclub", "eczanem"].includes(gonderi))) return validasyonHatasi("Geçersiz toplam kapsamı.", ["toplam"]);
     const result = toplam === "1"
-      ? await admin.rpc("cogniti_token_utt_ay_detay_raporu", { p_kullanici:user.id, p_sayfa:Number(sayfaMetni), p_gonderi:gonderi, p_arac:arac, p_alici:alici ?? "eclub", p_ay:ay ? `${ay}-01` : null })
+      ? await admin.rpc(yil ? "cogniti_token_utt_donem_detay_raporu" : "cogniti_token_utt_ay_detay_raporu", { p_kullanici:user.id, p_sayfa:Number(sayfaMetni), p_gonderi:gonderi, p_arac:arac, p_alici:alici ?? "eclub", p_ay:ay ? `${ay}-01` : null, ...(yil ? { p_yil:Number(yil) } : {}) })
       : gonderi === "icerik"
       ? await admin.rpc("cogniti_token_uretici_icerik_detay_raporu", { p_kullanici:user.id, p_tm:takimMuduru, p_bm:bolgeMuduru, p_sayfa:Number(sayfaMetni), p_arac:arac, p_tur:egitimTuru })
       : gonderi === "urun_egitimi"
@@ -82,7 +84,9 @@ export async function GET(request: NextRequest) {
       console.error("Token detayları alınamadı", result.error.code);
       return NextResponse.json({ hata: "Token kullanım detayları alınamadı." }, { status: 500 });
     }
-    const data = result.data as { satirlar: TokenDetayHamSatir[]; devami_var: boolean; genel_toplam?: number; ay_toplami?: number | null };
-    return NextResponse.json({ satirlar: data.satirlar.map(tokenDetaySunumu), devamiVar: data.devami_var, ...(toplam === "1" ? { genelToplam: data.genel_toplam, ayToplami: data.ay_toplami } : {}) }, { headers: { "Cache-Control": "private, no-store" } });
+    const data = result.data as { satirlar: TokenDetayHamSatir[]; devami_var: boolean; genel_toplam?: number; yil_toplami?: number; ay_toplami?: number | null };
+    const toplamlar = yil ? { yilToplami: data.yil_toplami, ayToplami: data.ay_toplami }
+      : toplam === "1" ? { genelToplam: data.genel_toplam, ayToplami: data.ay_toplami } : {};
+    return NextResponse.json({ satirlar: data.satirlar.map(tokenDetaySunumu), devamiVar: data.devami_var, ...toplamlar }, { headers: { "Cache-Control": "private, no-store" } });
   } catch (error) { return sunucuHatasi(error, "Token kullanım detayları"); }
 }

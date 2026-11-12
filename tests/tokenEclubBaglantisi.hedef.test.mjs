@@ -27,6 +27,17 @@ const filtreler = load('lib/eclub/yayinGonderimFiltreleri.ts', { ...temel, '@/li
 const mobil = load('components/yayin/MobilYayinAkisi.tsx', temel);
 const id = n => `00000000-0000-4000-8000-${String(n).padStart(12, '0')}`;
 const bos = () => null;
+temel['@/components/panel/TokenBakiyeOzeti'] = { useTokenBakiyeOzeti: () => ({ guncel: null }), TokenBakiyeGorunumu: bos };
+temel['@/lib/satinAlma/bakiyeOzeti'] = { satinAlmaBakiyesiGorebilir: () => true };
+temel['@/lib/uretici/yetenekler'] = { ureticiYetenegi: () => null, TALEP_TURU_SIRA: [] };
+temel['@/components/kontrol/SadeKontroller'] = { SadeTabloSecimi: bos };
+const sade = {
+  SadeKontrolGrubu: ({ children }) => h('div', {}, children),
+  SadeKontrolButonu: ({ children, ...props }) => h('button', props, children),
+  SadeTabloSecimi: ({ etiket, deger, disabled, secenekler, onDegistir }) => h('select', {
+    'aria-label': etiket, value: deger, disabled, onChange: e => onDegistir(e.target.value),
+  }, secenekler.map(s => h('option', { key: s.deger, value: s.deger }, s.etiket))),
+};
 
 async function ekran({ query = '', hedef = 'eczane_teknisyeni', sent = true, loading = false, arac = 'video' } = {}) {
   const yayinlar = Array.from({ length: 6 }, (_, i) => ({ yayin_id: id(i + 1), hedef_roller: hedef === 'ortak' ? ['eczaci', 'eczane_teknisyeni'] : [hedef], yayin_tarihi: `2026-10-${String(i + 1).padStart(2, '0')}`, arac_turu: arac, arac_id: id(i + 100), video_url: id(i + 200), urun_adi: `Ürün ${i + 1}` }));
@@ -136,10 +147,10 @@ test('Token diğer rollerde veya yayın kimliği yokken düz metin olarak kalır
 test('Token kapsülleri sorguyu değiştirir, sayfayı sıfırlar ve geciken eski yanıtı göstermez', async()=>{
   const calls=[],pending=new Map();
   const fetcher=async(url)=>{
-    if(url==='/token/api/rapor')return{ok:true,json:async()=>({hesap_var:true,gun_sonu:{hazir:true,veri_tarihi:'2026-10-28',plan_limiti:1500,firma_toplam_token:31,eclub_token:11,eczanem_token:10}})};
+    if(url==='/token/api/rapor?gorunum=utt')return{ok:true,json:async()=>({hesap_var:true,gun_sonu:{hazir:true,veri_tarihi:'2026-10-28',plan_limiti:1500,firma_yayin_token:31,eclub_gonderi:11,eczanem_gonderi:10}})};
     calls.push(url);const p=new URL(url,'http://localhost').searchParams;
     const arac=p.get('arac')??'tumu';
-    const data={satirlar:[{id:`${arac}-${p.get('sayfa')}`,gonderimTarihi:'29.10.2026',yayinKodu:'hepifarma_30037',yayinId:null,yayinAdi:'Deneme_11_27_10_2026',urun:`Kayıt ${arac}`,yayinAraci:arac,gonderilenRol:'Eczacı',davetliler:'Eclub üyesi',davetliSayisi:20,katilimSayisi:13,eczaneSayisi:2,gonderilenSayi:37,toplamToken:10}],devamiVar:arac==='tumu'&&p.get('sayfa')==='0'};
+    const data={satirlar:[{id:`${arac}-${p.get('sayfa')}`,gonderimTarihi:'29.10.2026',yayinKodu:'hepifarma_30037',yayinId:null,yayinAdi:'Deneme_11_27_10_2026',urun:`Kayıt ${arac}`,yayinAraci:arac,gonderilenRol:'Eczacı',davetliler:'Eclub üyesi',davetliSayisi:20,katilimSayisi:13,eczaneSayisi:2,gonderilenSayi:37,toplamToken:10}],devamiVar:arac==='tumu'&&p.get('sayfa')==='0',yilToplami:10,ayToplami:p.has('ay')?0:null};
     if(arac==='video')await new Promise(resolve=>pending.set(arac,resolve));
     return{ok:true,json:async()=>data};
   };
@@ -147,9 +158,9 @@ test('Token kapsülleri sorguyu değiştirir, sayfayı sıfırlar ve geciken esk
     '@/components/kontrol/KisiKontroller':{SadeKisiSecimi:bos},
     './TokenHoykModal':{default:bos},'../token.module.css':{default:new Proxy({},{get:(_,k)=>String(k)})},'./token.module.css':{default:new Proxy({},{get:(_,k)=>String(k)})},'lucide-react':{BarChart3:bos},
     '@/components/ui/button':{Button:({children,variant,size,...props})=>h('button',props,children)},'@/components/ui/table':{},
-    '@/components/kontrol/SadeKontroller':{SadeKapsulFiltre:({secenekler,deger,onDegistir,etiket})=>h('nav',{'aria-label':etiket},secenekler.map(x=>h('button',{key:x.deger,'aria-pressed':deger===x.deger,onClick:()=>onDegistir(x.deger)},x.etiket)))},
+    '@/components/kontrol/SadeKontroller':{...sade,SadeKapsulFiltre:({secenekler,deger,onDegistir,etiket})=>h('nav',{'aria-label':etiket},secenekler.map(x=>h('button',{key:x.deger,'aria-pressed':deger===x.deger,onClick:()=>onDegistir(x.deger)},x.etiket)))},
     '@/lib/ogrenmeAraci/turSunumu':load('lib/ogrenmeAraci/turSunumu.ts',temel)};
-  for(const [name,tag]of Object.entries({Table:'table',TableBody:'tbody',TableCell:'td',TableHead:'th',TableHeader:'thead',TableRow:'tr'}))modules['@/components/ui/table'][name]=({children,...props})=>h(tag,props,children);
+  for(const [name,tag]of Object.entries({Table:'table',TableFooter:'tfoot',TableBody:'tbody',TableCell:'td',TableHead:'th',TableHeader:'thead',TableRow:'tr'}))modules['@/components/ui/table'][name]=({children,...props})=>h(tag,props,children);
   modules['./_components/TokenKullanimTablosu']=load('app/(panel)/token/_components/TokenKullanimTablosu.tsx',modules,{fetch:fetcher});
   const Page=load('app/(panel)/token/page.tsx',modules,{fetch:fetcher}).default;
   const c=document.createElement('div');document.body.append(c);const root=createRoot(c);
@@ -158,9 +169,14 @@ test('Token kapsülleri sorguyu değiştirir, sayfayı sıfırlar ve geciken esk
     await act(async()=>root.render(h(Page)));
     const stats=[...c.querySelectorAll('.uttStats article')];
     assert.equal(stats.length,4);
-    assert.deepEqual(stats.map(x=>x.querySelector('span').textContent),['Token Kullanım Limiti','Toplam Kullanılan Token','Eclub Token Kullanımı','Eczanem Token Kullanımı']);
-    assert.deepEqual(stats.map(x=>x.querySelector('strong').textContent),['1.500 Token/Ay','31','11','10']);
-    assert.deepEqual(stats.map(x=>x.querySelector('small').textContent),['Kullandığın kadar öde paketi tercih edilmiştir.','Tüm firma kullanımı','Eclub üyeleri için gönderi ve etkinlik yayınları tüketimi','Eczanem üyeleri için gönderilerdeki tüketim']);
+    assert.deepEqual(stats.map(x=>x.querySelector('span').textContent),['Firma Token Kullanımı','Toplam Gönderi','E-Club Üyelerine Gönderi','Eczanem Üyeleri İçin Gönderi']);
+    assert.deepEqual(stats.map(x=>x.querySelector('strong').textContent),['31','21','11','10']);
+    assert.deepEqual(stats.map(x=>x.querySelector('small').textContent),[
+      'Hedef rollere yönelik yayınlar için ay içinde kullanılan toplam token.',
+      'Ay içinde E-Club ve Eczanem üyelerine yapılan toplam yayın gönderisi.',
+      'Ay içinde E-Club üyelerine yapılan yayın gönderileri.',
+      'Ay içinde Eczanem üyelerine yapılan yayın gönderileri.',
+    ]);
     assert(c.textContent.includes('28.10.2026 gün sonu itibarıyladır'));
     assert(calls[0].includes('gonderi=eclub'));assert(c.textContent.includes('Kayıt tumu'));
     const nameShown=()=>[...c.querySelectorAll('th')].some(x=>x.textContent==='Etkinlik Adı');
@@ -179,19 +195,26 @@ test('Token kapsülleri sorguyu değiştirir, sayfayı sıfırlar ve geciken esk
     await click('Podcastler');assert(c.textContent.includes('Kayıt podcast'));assert(!c.textContent.includes('Kayıt tumu'));
     await act(async()=>pending.get('video')());assert(!c.textContent.includes('Kayıt video'));
     for(const [label,arac]of [['Dijital Broşürler','gorsel'],['Literatürler','flip_pdf'],['Viva','viva']]){await click(label);assert(calls.at(-1).includes(`arac=${arac}`));assert(c.textContent.includes(`Kayıt ${arac}`));assert.equal(nameShown(),arac==='viva');checkCode(arac!=='viva');}
-    assert.deepEqual([...c.querySelectorAll('th')].map(x=>x.textContent),['Gönderim Tarihi','Etkinlik Adı','Ürün Adı','Yayın Aracı','Davetliler','Davetli Sayısı','Katılım Sayısı','Kullanılan Token']);
+    assert.deepEqual([...c.querySelectorAll('th')].map(x=>x.textContent),['Etkinlik Tarihi','Etkinlik Adı','Ürün Adı','Yayın Aracı','Davetliler','Davetli Sayısı','Katılım Sayısı','Kullanılan Token']);
     assert.deepEqual([...c.querySelectorAll('tbody tr td')].slice(4).map(x=>x.textContent),['Eclub üyesi','20','13','10']);
     for(const[label,value]of [['Davetliler','Eclub üyesi'],['Davetli Sayısı','20'],['Katılım Sayısı','13']])assert.equal([...c.querySelectorAll('dt')].find(x=>x.textContent===label)?.nextElementSibling.textContent,value);
     await click('Tümü');assert(!calls.at(-1).includes('arac='));assert(c.textContent.includes('Kayıt tumu'));checkCode(true);
     assert(![...c.querySelectorAll('th')].some(x=>x.textContent==='Davetli Sayısı'));
-    await click('Eczanem Detayları');assert.equal(c.querySelectorAll('table').length,2);
-    assert.deepEqual([...c.querySelectorAll('.uttStats strong')].map(x=>x.textContent),['1.500 Token/Ay','31','11','10']);
+    await click('Eczanem Üyesi');assert.equal(c.querySelectorAll('table').length,2);
+    assert.deepEqual([...c.querySelectorAll('.uttStats strong')].map(x=>x.textContent),['31','21','11','10']);
     assert(calls.at(-1).includes('gonderi=eczanem'));
     const eczaTable=c.querySelectorAll('table')[1];
     assert.deepEqual([...eczaTable.querySelectorAll('th')].map(x=>x.textContent),['Gönderim Tarihi','Yayın Kodu','Ürün Adı','Yayın Aracı','Gönderilen Eczane Sayısı','İletilen Üye Sayısı','Kullanılan Token']);
     assert.deepEqual([...eczaTable.querySelectorAll('tbody tr td')].slice(4).map(x=>x.textContent),['2','37','10']);
     await click('Literatürler');assert(calls.at(-1).includes('gonderi=eczanem'));assert(calls.at(-1).includes('arac=flip_pdf'));
-    await click('E-Club Detayları');assert.equal(c.querySelector('[hidden]'),null);
+    await click('Eczacı ve Ecz. Teknisyeni');assert.equal(c.querySelector('[hidden]'),null);
+    const aySecimi=c.querySelector('select[aria-label="Token kullanım ayı"]');
+    const yil=c.querySelector('select[aria-label="Token kullanım yılı"]').value;
+    await act(async()=>{aySecimi.value='11';aySecimi.dispatchEvent(new dom.Event('change',{bubbles:true}));});
+    assert.equal(new URL(calls.at(-1),'http://localhost').searchParams.get('yil'),yil);
+    assert.equal(new URL(calls.at(-1),'http://localhost').searchParams.get('ay'),`${yil}-11`);
+    assert.deepEqual([...c.querySelectorAll('tfoot tr')].map(row=>row.textContent),['Kasım Ayı Toplamı0','YTD Toplam10']);
+    assert.deepEqual([...c.querySelectorAll('.mobilTokenToplamlari dt')].map(label=>label.textContent),['Kasım Ayı Toplamı','YTD Toplam']);
   }finally{await act(async()=>root.unmount());c.remove();}
 });
 test('BM: dört kart, bölge toplamı, UTT seçimi, geciken yanıt ve iki tablonun kapsamı birlikte değişir',async()=>{
@@ -200,16 +223,16 @@ test('BM: dört kart, bölge toplamı, UTT seçimi, geciken yanıt ve iki tablon
   calls.push(url);const q=new URL(url,'http://localhost').searchParams,utt=q.get('utt_id')??'';
   assert.equal(q.get('gorunum'),'bm');
   if(utt===a)await new Promise(resolve=>pending.push(resolve));
-  if(url.startsWith('/token/api/rapor'))return{ok:true,json:async()=>({hesap_var:true,secili_utt_id:utt||null,uttler:[{utt_id:a,utt_adi:'Ali Bir'},{utt_id:b,utt_adi:'Berk İki'}],gun_sonu:{hazir:true,veri_tarihi:'2026-10-28',plan_limiti:1500,firma_toplam_token:31,eclub_token:utt===b?6:utt===a?11:17,eczanem_token:utt===b?2:utt===a?5:7}})};
+  if(url.startsWith('/token/api/rapor'))return{ok:true,json:async()=>({hesap_var:true,secili_utt_id:utt||null,uttler:[{utt_id:a,utt_adi:'Ali Bir'},{utt_id:b,utt_adi:'Berk İki'}],gun_sonu:{hazir:true,veri_tarihi:'2026-10-28',plan_limiti:1500,firma_yayin_token:31,eclub_gonderi:utt===b?6:utt===a?11:17,eczanem_gonderi:utt===b?2:utt===a?5:7}})};
   return{ok:true,json:async()=>({satirlar:[{id:`${utt}-${q.get('sayfa')}`,gonderimTarihi:'28.10.2026',yayinKodu:'Hepifarma_30037',yayinId:null,yayinAdi:'Etkinlik',urun:utt===b?'Berk kaydı':utt===a?'Ali kaydı':'Bölge kaydı',yayinAraci:'Video',gonderilenRol:'Eczacı',gonderilenSayi:1,toplamToken:1}],devamiVar:q.get('sayfa')==='0'})};
  };
  const modules={...temel,'@/app/providers/AuthProvider':{useAuth:()=>({kullanici:{id:'bm',rol:'bm'}})},
   './TokenHoykModal':{default:bos},'../token.module.css':{default:new Proxy({},{get:(_,k)=>String(k)})},'./token.module.css':{default:new Proxy({},{get:(_,k)=>String(k)})},'lucide-react':{BarChart3:bos},
   '@/components/ui/button':{Button:({children,variant,size,...props})=>h('button',props,children)},'@/components/ui/table':{},
   '@/components/kontrol/KisiKontroller':{SadeKisiSecimi:({baslik,kisiler,deger,onDegistir,bosSecenekEtiketi})=>h('select',{'aria-label':baslik,value:deger,onChange:e=>onDegistir(e.target.value)},h('option',{value:''},bosSecenekEtiketi),kisiler.map(k=>h('option',{key:k.deger,value:k.deger},k.adSoyad)))},
-  '@/components/kontrol/SadeKontroller':{SadeKapsulFiltre:({secenekler,deger,onDegistir,etiket})=>h('nav',{'aria-label':etiket},secenekler.map(x=>h('button',{key:x.deger,'aria-pressed':deger===x.deger,onClick:()=>onDegistir(x.deger)},x.etiket)))},
+  '@/components/kontrol/SadeKontroller':{...sade,SadeKapsulFiltre:({secenekler,deger,onDegistir,etiket})=>h('nav',{'aria-label':etiket},secenekler.map(x=>h('button',{key:x.deger,'aria-pressed':deger===x.deger,onClick:()=>onDegistir(x.deger)},x.etiket)))},
   '@/lib/ogrenmeAraci/turSunumu':load('lib/ogrenmeAraci/turSunumu.ts',temel)};
- for(const[name,tag]of Object.entries({Table:'table',TableBody:'tbody',TableCell:'td',TableHead:'th',TableHeader:'thead',TableRow:'tr'}))modules['@/components/ui/table'][name]=({children,...props})=>h(tag,props,children);
+ for(const[name,tag]of Object.entries({Table:'table',TableFooter:'tfoot',TableBody:'tbody',TableCell:'td',TableHead:'th',TableHeader:'thead',TableRow:'tr'}))modules['@/components/ui/table'][name]=({children,...props})=>h(tag,props,children);
  modules['./_components/TokenKullanimTablosu']=load('app/(panel)/token/_components/TokenKullanimTablosu.tsx',modules,{fetch:fetcher});
  const Page=load('app/(panel)/token/page.tsx',modules,{fetch:fetcher}).default;
  const c=document.createElement('div');document.body.append(c);const root=createRoot(c);
@@ -217,16 +240,16 @@ test('BM: dört kart, bölge toplamı, UTT seçimi, geciken yanıt ve iki tablon
  const choose=async value=>{const el=c.querySelector('select');await act(async()=>{Object.getOwnPropertyDescriptor(dom.HTMLSelectElement.prototype,'value').set.call(el,value);el.dispatchEvent(new dom.Event('change',{bubbles:true}));});};
  const values=()=>[...c.querySelectorAll('.uttStats strong')].map(x=>x.textContent);
  try{
-  await act(async()=>root.render(h(Page)));assert.deepEqual(values(),['1.500 Token/Ay','31','17','7']);assert(c.textContent.includes('Bölge kaydı'));
+  await act(async()=>root.render(h(Page)));assert.deepEqual(values(),['31','24','17','7']);assert(c.textContent.includes('Bölge kaydı'));
   assert.equal(c.querySelector('select').value,'');assert.equal(c.querySelectorAll('option').length,3);
   await click('Daha fazla göster');assert(calls.at(-1).includes('sayfa=1'));
-  await choose(a);assert.deepEqual(values(),['1.500 Token/Ay','31','—','—']);assert(!c.textContent.includes('Bölge kaydı'));
-  await choose(b);assert.deepEqual(values(),['1.500 Token/Ay','31','6','2']);assert(c.textContent.includes('Berk kaydı'));assert(calls.some(url=>url.includes(`utt_id=${b}`)&&url.includes('sayfa=0')));
-  await act(async()=>pending.forEach(resolve=>resolve()));assert.deepEqual(values(),['1.500 Token/Ay','31','6','2']);assert(!c.textContent.includes('Ali kaydı'));
+  await choose(a);assert.deepEqual(values(),['31','—','—','—']);assert(!c.textContent.includes('Bölge kaydı'));
+  await choose(b);assert.deepEqual(values(),['31','8','6','2']);assert(c.textContent.includes('Berk kaydı'));assert(calls.some(url=>url.includes(`utt_id=${b}`)&&url.includes('sayfa=0')));
+  await act(async()=>pending.forEach(resolve=>resolve()));assert.deepEqual(values(),['31','8','6','2']);assert(!c.textContent.includes('Ali kaydı'));
   await click('Viva');assert(calls.at(-1).includes('arac=viva'));assert(calls.at(-1).includes(`utt_id=${b}`));assert([...c.querySelectorAll('th')].some(x=>x.textContent==='Katılım Sayısı'));
-  await click('Eczanem Detayları');assert(calls.at(-1).includes('gonderi=eczanem'));assert(calls.at(-1).includes(`utt_id=${b}`));
-  await choose('');assert.deepEqual(values(),['1.500 Token/Ay','31','17','7']);assert(!calls.at(-1).includes('utt_id='));
-  await click('Tümü');assert(calls.at(-1).includes('gonderi=eczanem'));assert(!calls.at(-1).includes('arac='));
+  await click('Eczanem Üyesi');assert(calls.at(-1).includes('gonderi=eczanem'));assert(calls.at(-1).includes(`utt_id=${b}`));
+  await choose('');assert.deepEqual(values(),['31','24','17','7']);assert(!calls.at(-1).includes('utt_id='));
+  const eczanem = calls.filter(url=>url.includes('gonderi=eczanem')).at(-1);assert(eczanem);assert(!eczanem.includes('arac='));
  }finally{await act(async()=>root.unmount());c.remove();}
 });
 test('TM: iki bağlı seçim takım/bölge/UTT toplamlarını değiştirir; BM değişince UTT ve sayfa sıfırlanır',async()=>{
@@ -237,16 +260,16 @@ test('TM: iki bağlı seçim takım/bölge/UTT toplamlarını değiştirir; BM d
   if(utt===uttA)await new Promise(resolve=>pending.push(resolve));
   if(url.startsWith('/token/api/rapor'))return{ok:true,json:async()=>({hesap_var:true,secili_bm_id:bm||null,secili_utt_id:utt||null,
    bmler:[{bm_id:bmA,bm_adi:'A Müdür'},{bm_id:bmB,bm_adi:'B Müdür'}],uttler:bm?[{utt_id:bm===bmA?uttA:uttB,utt_adi:bm===bmA?'A Temsilci':'B Temsilci'}]:[],
-   gun_sonu:{hazir:true,veri_tarihi:'2026-10-28',plan_limiti:1500,firma_toplam_token:50,eclub_token:utt?4:bm===bmA?11:bm===bmB?6:17,eczanem_token:utt?2:bm===bmA?5:bm===bmB?3:8}})};
+   gun_sonu:{hazir:true,veri_tarihi:'2026-10-28',plan_limiti:1500,firma_yayin_token:50,eclub_gonderi:utt?4:bm===bmA?11:bm===bmB?6:17,eczanem_gonderi:utt?2:bm===bmA?5:bm===bmB?3:8}})};
   return{ok:true,json:async()=>({satirlar:[{id:`${bm}-${utt}-${q.get('sayfa')}`,gonderimTarihi:'28.10.2026',yayinKodu:'Hepifarma_30037',yayinId:null,yayinAdi:'Etkinlik',urun:utt?'Temsilci kaydı':bm===bmA?'A bölge kaydı':bm===bmB?'B bölge kaydı':'Takım kaydı',yayinAraci:'Video',gonderilenRol:'Eczacı',gonderilenSayi:1,toplamToken:1}],devamiVar:q.get('sayfa')==='0'})};
  };
  const modules={...temel,'@/app/providers/AuthProvider':{useAuth:()=>({kullanici:{id:'tm',rol:'tm'}})},
   './TokenHoykModal':{default:bos},'../token.module.css':{default:new Proxy({},{get:(_,k)=>String(k)})},'./token.module.css':{default:new Proxy({},{get:(_,k)=>String(k)})},'lucide-react':{BarChart3:bos},
   '@/components/ui/button':{Button:({children,variant,size,...props})=>h('button',props,children)},'@/components/ui/table':{},
   '@/components/kontrol/KisiKontroller':{SadeKisiSecimi:({baslik,kisiler,deger,onDegistir,bosSecenekEtiketi,disabled})=>h('select',{'aria-label':baslik,value:deger,disabled,onChange:e=>onDegistir(e.target.value)},h('option',{value:''},bosSecenekEtiketi),kisiler.map(k=>h('option',{key:k.deger,value:k.deger},k.adSoyad)))},
-  '@/components/kontrol/SadeKontroller':{SadeKapsulFiltre:({secenekler,deger,onDegistir,etiket})=>h('nav',{'aria-label':etiket},secenekler.map(x=>h('button',{key:x.deger,'aria-pressed':deger===x.deger,onClick:()=>onDegistir(x.deger)},x.etiket)))},
+  '@/components/kontrol/SadeKontroller':{...sade,SadeKapsulFiltre:({secenekler,deger,onDegistir,etiket})=>h('nav',{'aria-label':etiket},secenekler.map(x=>h('button',{key:x.deger,'aria-pressed':deger===x.deger,onClick:()=>onDegistir(x.deger)},x.etiket)))},
   '@/lib/ogrenmeAraci/turSunumu':load('lib/ogrenmeAraci/turSunumu.ts',temel)};
- for(const[name,tag]of Object.entries({Table:'table',TableBody:'tbody',TableCell:'td',TableHead:'th',TableHeader:'thead',TableRow:'tr'}))modules['@/components/ui/table'][name]=({children,...props})=>h(tag,props,children);
+ for(const[name,tag]of Object.entries({Table:'table',TableFooter:'tfoot',TableBody:'tbody',TableCell:'td',TableHead:'th',TableHeader:'thead',TableRow:'tr'}))modules['@/components/ui/table'][name]=({children,...props})=>h(tag,props,children);
  modules['./_components/TokenKullanimTablosu']=load('app/(panel)/token/_components/TokenKullanimTablosu.tsx',modules,{fetch:fetcher});
  const Page=load('app/(panel)/token/page.tsx',modules,{fetch:fetcher}).default;
  const c=document.createElement('div');document.body.append(c);const root=createRoot(c);
@@ -255,17 +278,17 @@ test('TM: iki bağlı seçim takım/bölge/UTT toplamlarını değiştirir; BM d
  const values=()=>[...c.querySelectorAll('.uttStats strong')].map(x=>x.textContent);
  const reps=()=>c.querySelector('select[aria-label="Temsilciler"]');
  try{
-  await act(async()=>root.render(h(Page)));assert.deepEqual(values(),['1.500 Token/Ay','50','17','8']);assert(reps().disabled);assert(c.textContent.includes('Takım kaydı'));
-  await choose('Bölge Müdürleri',bmA);assert(!reps().disabled);assert.equal(reps().options.length,2);assert.equal(reps().options[1].value,uttA);assert.deepEqual(values(),['1.500 Token/Ay','50','11','5']);
+  await act(async()=>root.render(h(Page)));assert.deepEqual(values(),['50','25','17','8']);assert(reps().disabled);assert(c.textContent.includes('Takım kaydı'));
+  await choose('Bölge Müdürleri',bmA);assert(!reps().disabled);assert.equal(reps().options.length,2);assert.equal(reps().options[1].value,uttA);assert.deepEqual(values(),['50','16','11','5']);
   await click('Daha fazla göster');assert(calls.at(-1).includes('sayfa=1'));
-  await choose('Temsilciler',uttA);assert.deepEqual(values(),['1.500 Token/Ay','50','—','—']);
-  await choose('Bölge Müdürleri',bmB);assert.equal(reps().value,'');assert.equal(reps().options[1].value,uttB);assert.deepEqual(values(),['1.500 Token/Ay','50','6','3']);
+  await choose('Temsilciler',uttA);assert.deepEqual(values(),['50','—','—','—']);
+  await choose('Bölge Müdürleri',bmB);assert.equal(reps().value,'');assert.equal(reps().options[1].value,uttB);assert.deepEqual(values(),['50','9','6','3']);
   assert(calls.some(url=>url.includes(`bm_id=${bmB}`)&&url.includes('sayfa=0')&&!url.includes('utt_id=')));
-  await act(async()=>pending.forEach(resolve=>resolve()));assert.deepEqual(values(),['1.500 Token/Ay','50','6','3']);assert(!c.textContent.includes('Temsilci kaydı'));
-  await choose('Temsilciler',uttB);assert.deepEqual(values(),['1.500 Token/Ay','50','4','2']);
+  await act(async()=>pending.forEach(resolve=>resolve()));assert.deepEqual(values(),['50','9','6','3']);assert(!c.textContent.includes('Temsilci kaydı'));
+  await choose('Temsilciler',uttB);assert.deepEqual(values(),['50','6','4','2']);
   await click('Viva');assert(calls.at(-1).includes(`bm_id=${bmB}`));assert(calls.at(-1).includes(`utt_id=${uttB}`));assert(calls.at(-1).includes('arac=viva'));
-  await click('Eczanem Detayları');assert(calls.at(-1).includes('gonderi=eczanem'));assert(calls.at(-1).includes(`utt_id=${uttB}`));
-  await choose('Bölge Müdürleri','');assert(reps().disabled);assert.equal(reps().value,'');assert.equal(reps().options.length,1);assert.deepEqual(values(),['1.500 Token/Ay','50','17','8']);
+  await click('Eczanem Üyesi');assert(calls.at(-1).includes('gonderi=eczanem'));assert(calls.at(-1).includes(`utt_id=${uttB}`));
+  await choose('Bölge Müdürleri','');assert(reps().disabled);assert.equal(reps().value,'');assert.equal(reps().options.length,1);assert.deepEqual(values(),['50','25','17','8']);
   const lastDetail=calls.filter(url=>url.startsWith('/token/api/detay')).at(-1);assert(!lastDetail.includes('bm_id='));assert(!lastDetail.includes('utt_id='));assert(lastDetail.includes('sayfa=0'));
  }finally{await act(async()=>root.unmount());c.remove();}
 });
@@ -284,9 +307,9 @@ test('Yönetici: üç bağlı seçim firma/takım/bölge/UTT toplamlarını izle
   './TokenHoykModal':{default:bos},'../token.module.css':{default:new Proxy({},{get:(_,k)=>String(k)})},'./token.module.css':{default:new Proxy({},{get:(_,k)=>String(k)})},'lucide-react':{BarChart3:bos},
   '@/components/ui/button':{Button:({children,variant,size,...props})=>h('button',props,children)},'@/components/ui/table':{},
   '@/components/kontrol/KisiKontroller':{SadeKisiSecimi:({baslik,kisiler,deger,onDegistir,bosSecenekEtiketi,disabled})=>h('select',{'aria-label':baslik,value:deger,disabled,onChange:e=>onDegistir(e.target.value)},h('option',{value:''},bosSecenekEtiketi),kisiler.map(k=>h('option',{key:k.deger,value:k.deger},k.adSoyad)))},
-  '@/components/kontrol/SadeKontroller':{SadeKapsulFiltre:({secenekler,deger,onDegistir,etiket})=>h('nav',{'aria-label':etiket},secenekler.map(x=>h('button',{key:x.deger,'aria-pressed':deger===x.deger,onClick:()=>onDegistir(x.deger)},x.etiket)))},
+  '@/components/kontrol/SadeKontroller':{...sade,SadeKapsulFiltre:({secenekler,deger,onDegistir,etiket})=>h('nav',{'aria-label':etiket},secenekler.map(x=>h('button',{key:x.deger,'aria-pressed':deger===x.deger,onClick:()=>onDegistir(x.deger)},x.etiket)))},
   '@/lib/ogrenmeAraci/turSunumu':load('lib/ogrenmeAraci/turSunumu.ts',temel)};
- for(const[name,tag]of Object.entries({Table:'table',TableBody:'tbody',TableCell:'td',TableHead:'th',TableHeader:'thead',TableRow:'tr'}))modules['@/components/ui/table'][name]=({children,...props})=>h(tag,props,children);
+ for(const[name,tag]of Object.entries({Table:'table',TableFooter:'tfoot',TableBody:'tbody',TableCell:'td',TableHead:'th',TableHeader:'thead',TableRow:'tr'}))modules['@/components/ui/table'][name]=({children,...props})=>h(tag,props,children);
  modules['./_components/TokenKullanimTablosu']=load('app/(panel)/token/_components/TokenKullanimTablosu.tsx',modules,{fetch:fetcher});
  const Page=load('app/(panel)/token/page.tsx',modules,{fetch:fetcher}).default;
  const c=document.createElement('div');document.body.append(c);const root=createRoot(c);
@@ -295,19 +318,20 @@ test('Yönetici: üç bağlı seçim firma/takım/bölge/UTT toplamlarını izle
  const click=async label=>{const el=[...c.querySelectorAll('button')].find(x=>x.textContent===label);assert(el,label);await act(async()=>el.click());};
  const values=()=>[...c.querySelectorAll('.uttStats strong')].map(x=>x.textContent);
  try{
-  await act(async()=>root.render(h(Page)));assert.deepEqual(values(),['1.500 Token/Ay','50','24','9']);assert(select('Bölge Müdürleri').disabled);assert(select('Temsilciler').disabled);assert(c.textContent.includes('Firma kaydı'));
-  await choose('Takım Müdürleri',tmA);assert(!select('Bölge Müdürleri').disabled);assert(select('Temsilciler').disabled);assert.equal(select('Bölge Müdürleri').options[1].value,bmA);assert.deepEqual(values(),['1.500 Token/Ay','50','17','6']);
+  await act(async()=>root.render(h(Page)));assert.deepEqual(values(),['1.500 Token/Ay','50','24','9']);assert(select('Bölge Müdürleri').disabled);assert(select('Temsilciler').disabled);assert(c.textContent.includes('Verileri görmek için tanıtım müdürü seçin.'));
+  await choose('Tanıtım Müdürleri',tmA);assert(!select('Bölge Müdürleri').disabled);assert(select('Temsilciler').disabled);assert.equal(select('Bölge Müdürleri').options[1].value,bmA);assert.deepEqual(values(),['1.500 Token/Ay','50','17','6']);
   await choose('Bölge Müdürleri',bmA);assert(!select('Temsilciler').disabled);assert.equal(select('Temsilciler').options[1].value,uttA);assert.deepEqual(values(),['1.500 Token/Ay','50','6','2']);
   await click('Daha fazla göster');assert(calls.at(-1).includes('sayfa=1'));
   await choose('Temsilciler',uttA);assert.deepEqual(values(),['1.500 Token/Ay','50','—','—']);
-  await choose('Takım Müdürleri',tmB);assert.equal(select('Bölge Müdürleri').value,'');assert.equal(select('Temsilciler').value,'');assert(select('Temsilciler').disabled);assert.equal(select('Bölge Müdürleri').options[1].value,bmB);
+  await choose('Tanıtım Müdürleri',tmB);assert.equal(select('Bölge Müdürleri').value,'');assert.equal(select('Temsilciler').value,'');assert(select('Temsilciler').disabled);assert.equal(select('Bölge Müdürleri').options[1].value,bmB);
   assert.deepEqual(values(),['1.500 Token/Ay','50','17','6']);await act(async()=>pending.forEach(resolve=>resolve()));assert.deepEqual(values(),['1.500 Token/Ay','50','17','6']);assert(!c.textContent.includes('Temsilci kaydı'));
   const afterTmChange=calls.filter(url=>url.startsWith('/token/api/detay')).at(-1);assert(afterTmChange.includes(`tm_id=${tmB}`));assert(!afterTmChange.includes('bm_id='));assert(!afterTmChange.includes('utt_id='));assert(afterTmChange.includes('sayfa=0'));
   await choose('Bölge Müdürleri',bmB);await choose('Temsilciler',uttB);assert.deepEqual(values(),['1.500 Token/Ay','50','4','1']);
   await click('Viva');assert(calls.at(-1).includes(`tm_id=${tmB}`));assert(calls.at(-1).includes(`bm_id=${bmB}`));assert(calls.at(-1).includes(`utt_id=${uttB}`));assert(calls.at(-1).includes('arac=viva'));
-  await click('Eczanem Detayları');assert(calls.at(-1).includes('gonderi=eczanem'));assert(calls.at(-1).includes(`utt_id=${uttB}`));
+  await click('Eczanem Üyesi');assert(calls.at(-1).includes('gonderi=eczanem'));assert(calls.at(-1).includes(`utt_id=${uttB}`));
   await choose('Bölge Müdürleri','');assert.equal(select('Temsilciler').value,'');assert(select('Temsilciler').disabled);assert.deepEqual(values(),['1.500 Token/Ay','50','17','6']);
-  await choose('Takım Müdürleri','');assert(select('Bölge Müdürleri').disabled);assert(select('Temsilciler').disabled);assert.deepEqual(values(),['1.500 Token/Ay','50','24','9']);
-  const last=calls.filter(url=>url.startsWith('/token/api/detay')).at(-1);assert(!last.includes('tm_id='));assert(!last.includes('bm_id='));assert(!last.includes('utt_id='));
+  const detaySayisi=calls.filter(url=>url.startsWith('/token/api/detay')).length;
+  await choose('Tanıtım Müdürleri','');assert(select('Bölge Müdürleri').disabled);assert(select('Temsilciler').disabled);assert.deepEqual(values(),['1.500 Token/Ay','50','24','9']);
+  assert.equal(calls.filter(url=>url.startsWith('/token/api/detay')).length,detaySayisi);
  }finally{await act(async()=>root.unmount());c.remove();}
 });

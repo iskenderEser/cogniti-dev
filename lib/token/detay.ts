@@ -6,7 +6,7 @@ import { yayin_kodu } from "@/lib/utils/yayinKodu";
 
 export type TokenDetayHamSatir = { id: string; tarih: string; yayin_id?: string | null; yayin_adi?: string | null; davetli_turleri?: string[] | null; davetli_sayisi?: number | null; katilim_sayisi?: number | null; eczane_sayisi?: number; firma_adi?: string | null; talep_no?: number | null; urun: string | null; arac: string | null; rol: string; gonderilen: number | null; token: number };
 export type TokenKullanimSatiri = { id: string; gonderimTarihi: string; yayinKodu: string; yayinId: string | null; yayinAdi: string; davetliler?: string; davetliSayisi?: number | null; katilimSayisi?: number | null; eczaneSayisi?: number; urun: string; yayinAraci: string; gonderilenRol: string; gonderilenSayi: number | null; toplamToken: number };
-export type TokenDetayYaniti = { satirlar: TokenKullanimSatiri[]; devamiVar: boolean; genelToplam?: number; ayToplami?: number | null };
+export type TokenDetayYaniti = { satirlar: TokenKullanimSatiri[]; devamiVar: boolean; yilToplami?: number; ayToplami?: number | null };
 const digerRoller: Record<string, string> = { viva_katilim: "Viva katılımı", firma_kullanicisi: "Firma kullanıcısı", eclub_uyesi: "E-Club üyesi", ozel_davetli: "Özel davetli" };
 
 export function tokenDetaySunumu(satir: TokenDetayHamSatir): TokenKullanimSatiri {

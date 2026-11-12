@@ -106,7 +106,7 @@ export default function MobilDrawer(props: MobilDrawerProps) {
   const git = (path: string) => { router.push(path); props.onKapat(); };
   const cikis = () => { props.onKapat(); props.onCikis(); };
 
-  const Satir = ({ etiket, path, sayi, girintili = false, tamEslesme = false, aktifYollar, secili, onSecim, anahtar, rozetKalici=false }: { etiket: string; path: string; sayi?: number; girintili?: boolean; tamEslesme?: boolean; aktifYollar?: string[]; secili?: boolean; onSecim?: () => void; anahtar?: string; rozetKalici?:boolean }) => {
+  const Satir = ({ etiket, path, sayi, girintili = false, tamEslesme = false, aktifYollar, secili, onSecim, anahtar, kalin, yaziBoyutu, rozetKalici=false }: { etiket: string; path: string; sayi?: number; girintili?: boolean; tamEslesme?: boolean; aktifYollar?: string[]; secili?: boolean; onSecim?: () => void; anahtar?: string; kalin?: boolean; yaziBoyutu?: number; rozetKalici?:boolean }) => {
     const aktif = secili ?? (Boolean(path && (tamEslesme ? pathname === path : pathname === path || pathname.startsWith(`${path}/`))) || aktifYollar?.some((yol) => pathname === yol || pathname.startsWith(`${yol}/`)) === true);
     return (
       <>
@@ -118,10 +118,10 @@ export default function MobilDrawer(props: MobilDrawerProps) {
         className="w-full flex items-center justify-between rounded-lg cursor-pointer border-none text-left"
         style={{
           padding: girintili ? "10px 12px 10px 20px" : "10px 12px",
-          fontSize: path === "/agora-yayinlari" ? "12px" : "14px",
-          fontWeight: path === "/agora-yayinlari" ? 800 : aktif ? 700 : 600,
+          fontSize: yaziBoyutu ?? (path === "/agora-yayinlari" ? 12 : 14),
+          fontWeight: path === "/agora-yayinlari" ? 800 : (aktif || kalin) ? 700 : 600,
           letterSpacing: path === "/agora-yayinlari" ? "0.06em" : undefined,
-          color: path === "/agora-yayinlari" ? "#6D28D9" : aktif ? "var(--tema-menu-secili-metin)" : path === "/token" ? "var(--tema-kontrol-eylem)" : "var(--tema-gezinme-metin)",
+          color: path === "/agora-yayinlari" ? "#6D28D9" : aktif ? "var(--tema-menu-secili-metin)" : path === "/token" && !girintili ? "var(--tema-kontrol-eylem)" : "var(--tema-gezinme-metin)",
           background: aktif ? "var(--tema-menu-secili-zemin)" : "transparent",
           fontFamily: "'Nunito', sans-serif",
           minHeight: "44px",
@@ -144,7 +144,7 @@ export default function MobilDrawer(props: MobilDrawerProps) {
 
   const OgeBlogu = ({ oge, girintili = false }: { oge: NavOge; girintili?: boolean }) => {
     const altOglar = (oge.altOglar ?? []).filter((altOge) => altOge.gate(props));
-    if (altOglar.length === 0) return Satir({ etiket: oge.etiket, path: cozPath(oge), sayi: rozetSayisi(oge), girintili, tamEslesme: oge.tamEslesme, aktifYollar: oge.aktifYollar, secili: oge.secili, onSecim: oge.onSecim, anahtar: oge.anahtar, rozetKalici: oge.rozetKalici });
+    if (altOglar.length === 0) return Satir({ etiket: oge.etiket, path: cozPath(oge), sayi: rozetSayisi(oge), girintili, tamEslesme: oge.tamEslesme, aktifYollar: oge.aktifYollar, secili: oge.secili, onSecim: oge.onSecim, anahtar: oge.anahtar, kalin: oge.kalin, yaziBoyutu: oge.yaziBoyutu, rozetKalici: oge.rozetKalici });
     const anahtar = oge.anahtar ?? oge.etiket;
     const altAktif = (Boolean(oge.onSecim) && navOgeAktifMi(oge, props, pathname))
       || altOglar.some(alt => navOgeVeyaAltiAktifMi(alt, props, pathname));
@@ -181,7 +181,7 @@ export default function MobilDrawer(props: MobilDrawerProps) {
           onClick={dalDegistir}
           aria-expanded={altAcik}
           className="flex w-full cursor-pointer items-center justify-between border-none bg-transparent text-left"
-          style={{ padding: girintili ? "10px 12px 4px 20px" : "10px 12px 4px", minHeight: "44px", fontSize: "14px", fontWeight: 700, color: "var(--tema-gezinme-metin)", fontFamily: "'Nunito', sans-serif" }}
+          style={{ padding: girintili ? "10px 12px 4px 20px" : "10px 12px 4px", minHeight: "44px", fontSize: oge.yaziBoyutu ?? 14, fontWeight: 700, color: "var(--tema-gezinme-metin)", fontFamily: "'Nunito', sans-serif" }}
         >
           <span>{oge.etiket}</span>
           <span className="flex items-center gap-2">

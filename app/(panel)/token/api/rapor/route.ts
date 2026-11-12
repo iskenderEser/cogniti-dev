@@ -10,9 +10,10 @@ export async function GET(request: NextRequest) {
     const supabase = await createClient();
     const { data: { user }, error } = await supabase.auth.getUser();
     if (error || !user) return yetkiHatasi();
-    const bm = request.nextUrl.searchParams.get("gorunum") === "bm";
-    const tm = request.nextUrl.searchParams.get("gorunum") === "tm";
-    const yonetici = request.nextUrl.searchParams.get("gorunum") === "yonetici";
+    const gorunum = request.nextUrl.searchParams.get("gorunum");
+    const bm = gorunum === "bm";
+    const tm = gorunum === "tm";
+    const yonetici = gorunum === "yonetici";
     const takimMuduru = request.nextUrl.searchParams.get("tm_id") || null;
     const bolgeMuduru = request.nextUrl.searchParams.get("bm_id") || null;
     const utt = request.nextUrl.searchParams.get("utt_id") || null;
@@ -33,10 +34,8 @@ export async function GET(request: NextRequest) {
     if ((egitim || oneri) && (!yonetici || bm || tm || utt)) return validasyonHatasi("Geçersiz gönderi filtresi.", ["gonderi"]);
     const result = yonetici
       ? await createAdminClient().rpc("cogniti_token_yonetici_raporu", { p_kullanici: user.id, p_tm: takimMuduru, p_bm: bolgeMuduru, p_utt: utt })
-      : tm
-      ? await createAdminClient().rpc("cogniti_token_tm_raporu", { p_kullanici: user.id, p_bm: bolgeMuduru, p_utt: utt })
-      : bm
-      ? await createAdminClient().rpc("cogniti_token_bm_raporu", { p_kullanici: user.id, p_utt: utt })
+      : bm || tm || gorunum === "utt"
+      ? await createAdminClient().rpc("cogniti_token_saha_aylik_kartlari", { p_kullanici: user.id, p_gorunum: gorunum, p_bm: bolgeMuduru, p_utt: utt })
       : await createAdminClient().rpc("cogniti_token_raporu", { p_kullanici: user.id });
     if (result.error?.code === "42501") return yetkiHatasi("Token raporuna erişiminiz bulunmuyor.");
     if (result.error) { console.error("Token raporu alınamadı",result.error.code); return NextResponse.json({hata:"Token bilgileri alınamadı."},{status:500}); }

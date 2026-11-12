@@ -20,14 +20,19 @@ function Ozet({ baslik, veri }: { baslik: string; veri: BakiyeOzeti }) {
     </div>
   </div>;
 }
-export default function TokenBakiyeOzeti({ yalnizKko = false }: { yalnizKko?: boolean } = {}) {
+export function bakiyePaketleri(veri: BakiyeOzeti | null | undefined) {
+  return veri ? veri.paketler?.length ? veri.paketler : [veri] : [];
+}
+export function useTokenBakiyeOzeti(hesapAnahtari?: string | null) {
   const pathname = usePathname();
   const [yenileme, setYenileme] = useState(0);
   const [sonuc, setSonuc] = useState<{ anahtar: string; veri?: SatinAlmaBakiyeOzeti; hata?: string } | null>(null);
   const sonYenileme = useRef(0);
-  const anahtar = `${pathname}:${yenileme}`;
+  const anahtar = `${hesapAnahtari ?? ""}:${pathname}:${yenileme}`;
+  const etkin = hesapAnahtari !== null;
   const guncel = sonuc?.anahtar === anahtar ? sonuc : null;
   useEffect(() => {
+    if (!etkin) return;
     const controller = new AbortController();
     sonYenileme.current = Date.now();
     async function oku() {
@@ -43,8 +48,9 @@ export default function TokenBakiyeOzeti({ yalnizKko = false }: { yalnizKko?: bo
     }
     void oku();
     return () => controller.abort();
-  }, [anahtar]);
+  }, [anahtar, etkin]);
   useEffect(() => {
+    if (!etkin) return;
     const yenile = () => setYenileme(n => n + 1);
     const geriDondu = () => {
       if (document.visibilityState === "visible" && Date.now() - sonYenileme.current >= 5000) yenile();
@@ -57,13 +63,28 @@ export default function TokenBakiyeOzeti({ yalnizKko = false }: { yalnizKko?: bo
       window.removeEventListener("focus", geriDondu);
       document.removeEventListener("visibilitychange", geriDondu);
     };
-  }, []);
-  if (yalnizKko && guncel?.veri && guncel.veri.kisisel?.paket !== "kko" && guncel.veri.firma_ortak.paket !== "kko") return null;
+  }, [etkin]);
+  return { guncel, yenile: () => setYenileme(n => n + 1) };
+}
+
+export function TokenBakiyeGorunumu({ ozet, yalnizKko = false }: {
+  ozet: ReturnType<typeof useTokenBakiyeOzeti>;
+  yalnizKko?: boolean;
+}) {
+  const { guncel, yenile } = ozet;
+  const kisiselKko = bakiyePaketleri(guncel?.veri?.kisisel).find(paket => paket.paket === "kko");
+  const firma = bakiyePaketleri(guncel?.veri?.firma_ortak).filter(paket => !yalnizKko || paket.paket === "kko");
+  if (yalnizKko && guncel?.veri && !kisiselKko && !firma.length) return null;
   return <div className={styles.alan} aria-label={yalnizKko ? "KKÖ Kullanımı · Cari Ay" : "Token bakiyeleri"} aria-busy={!guncel}>
-    {!guncel ? <span className={styles.durum} role="status">Token bakiyeleri yükleniyor…</span> : guncel.hata ? <span className={styles.durum} role="alert">{guncel.hata} <button type="button" className={styles.yenile} onClick={() => setYenileme(n => n + 1)}>Tekrar dene</button></span> : guncel.veri && <>
-      {guncel.veri.kisisel && guncel.veri.kisisel.toplam > 0 && (!yalnizKko || guncel.veri.kisisel.paket === "kko") && <Ozet baslik="Kişisel Token Hesabı" veri={guncel.veri.kisisel} />}
-      {(!yalnizKko || guncel.veri.firma_ortak.paket === "kko") && <Ozet baslik="Firma Token Hesabı" veri={guncel.veri.firma_ortak} />}
-      <button type="button" className={styles.yenile} onClick={() => setYenileme(n => n + 1)}>Yenile</button>
+    {!guncel ? <span className={styles.durum} role="status">Token bakiyeleri yükleniyor…</span> : guncel.hata ? <span className={styles.durum} role="alert">{guncel.hata} <button type="button" className={styles.yenile} onClick={yenile}>Tekrar dene</button></span> : guncel.veri && <>
+      {kisiselKko && <Ozet baslik="Kişisel Token Hesabı" veri={kisiselKko} />}
+      {firma.map(paket => <Ozet key={paket.paket ?? "bos"} baslik="Firma Token Hesabı" veri={paket} />)}
+      <button type="button" className={styles.yenile} onClick={yenile}>Yenile</button>
     </>}
   </div>;
+}
+
+export default function TokenBakiyeOzeti() {
+  const ozet = useTokenBakiyeOzeti();
+  return <TokenBakiyeGorunumu ozet={ozet} />;
 }

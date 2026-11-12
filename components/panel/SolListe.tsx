@@ -117,10 +117,10 @@ export default function SolListe(props: SolListeProps) {
         className="relative w-full flex items-center justify-between rounded-lg cursor-pointer border-none text-left transition-all duration-200"
         style={{
           padding: `7px 10px 7px ${10 + seviye * 8}px`,
-          fontSize: path === "/agora-yayinlari" ? "12px" : "14px",
-          fontWeight: path === "/agora-yayinlari" ? 800 : aktif ? 700 : 600,
+          fontSize: oge.yaziBoyutu ?? (path === "/agora-yayinlari" ? 12 : 14),
+          fontWeight: path === "/agora-yayinlari" ? 800 : (aktif || oge.kalin) ? 700 : 600,
           letterSpacing: path === "/agora-yayinlari" ? "0.06em" : undefined,
-          color: path === "/agora-yayinlari" ? "#6D28D9" : aktif ? "var(--tema-menu-secili-metin)" : path === "/token" ? "var(--tema-kontrol-eylem)" : "var(--tema-gezinme-metin)",
+          color: path === "/agora-yayinlari" ? "#6D28D9" : aktif ? "var(--tema-menu-secili-metin)" : path === "/token" && seviye === 0 ? "var(--tema-kontrol-eylem)" : "var(--tema-gezinme-metin)",
           background: aktif ? "var(--tema-menu-secili-zemin)" : isHover ? "var(--tema-menu-hover)" : "transparent",
           boxShadow: aktif ? "inset 0 0 0 1px var(--tema-menu-secili-halka)" : "none",
           fontFamily: "'Nunito', sans-serif",
@@ -180,7 +180,7 @@ export default function SolListe(props: SolListeProps) {
           onClick={dalDegistir}
           aria-expanded={altAcik}
           className="flex w-full cursor-pointer items-center justify-between border-none bg-transparent text-left"
-          style={{ padding: `7px 10px 3px ${10 + seviye * 8}px`, fontSize: "14px", fontWeight: 700, color: "var(--tema-gezinme-metin)", fontFamily: "'Nunito', sans-serif" }}
+          style={{ padding: `7px 10px 3px ${10 + seviye * 8}px`, fontSize: oge.yaziBoyutu ?? 14, fontWeight: 700, color: "var(--tema-gezinme-metin)", fontFamily: "'Nunito', sans-serif" }}
         >
           <span>{oge.etiket}</span>
           <span className="flex items-center gap-2">

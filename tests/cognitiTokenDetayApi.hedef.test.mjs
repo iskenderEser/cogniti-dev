@@ -43,6 +43,19 @@ test('Token detay: geçersiz sayfa veritabanına ulaşmaz', async () => {
     const s = setup(); assert.equal((await s.get(`sayfa=${value}`)).status, 400); assert.equal(s.calls.length, 0);
   }
 });
+test('UTT detayında YTD ve seçili ay toplamı ayrı aktarılır', async () => {
+  const s = setup({ data: { satirlar: [], devami_var: false, genel_toplam: 29, yil_toplami: 10, ay_toplami: 0 } });
+  const response = await s.get('gonderi=eczanem&toplam=1&yil=2026&ay=2026-11');
+  assert.equal(response.status, 200);
+  assert.deepEqual(await response.json(), { satirlar: [], devamiVar: false, yilToplami: 10, ayToplami: 0 });
+  assert.deepEqual(s.calls, [{ name: 'cogniti_token_utt_donem_detay_raporu', args: {
+    p_kullanici: 'session-user', p_sayfa: 0, p_gonderi: 'eczanem', p_arac: 'tumu', p_alici: 'eclub',
+    p_ay: '2026-11-01', p_yil: 2026,
+  } }]);
+  const invalid = setup();
+  assert.equal((await invalid.get('gonderi=eczanem&toplam=1&yil=2025&ay=2026-11')).status, 400);
+  assert.equal(invalid.calls.length, 0);
+});
 test('Token detay: kapsüller doğrulanarak filtreli RPC’ye aktarılır', async () => {
   for (const arac of ['tumu','video','podcast','gorsel','flip_pdf','viva']) {
     const s = setup(); assert.equal((await s.get(`gonderi=eclub&arac=${arac}&sayfa=1`)).status,200);

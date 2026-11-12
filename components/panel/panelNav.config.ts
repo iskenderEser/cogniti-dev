@@ -1,4 +1,5 @@
 import { type EclubGezinmeFirmasi } from "@/lib/eclub/firmaGezinme";
+import { esnekPaketBakiyeTuru } from "@/lib/satinAlma/esnekPaket";
 // components/panel/panelNav.config.ts
 //
 // Panel gezinme TEK KAYNAĞI — Faz 1 / Adım 1.1
@@ -49,6 +50,8 @@ export interface NavOge {
   path?: string | ((ctx: NavContext) => string);
   altOglar?: NavOge[];
   rozetKalici?: boolean;
+  kalin?: boolean;
+  yaziBoyutu?: number;
   badgeKey?: string;             // bildirimler/api "sayilar" anahtarı (talep/senaryo/…)
   aktifYollar?: string[];       // Aynı çalışma alanındaki diğer rotalar
   tamEslesme?: boolean;          // Alt rotalarda başka menü öğesini de aktif göstermemek için
@@ -88,6 +91,10 @@ export function navSecimIzi(gruplar: NavGrup[], ctx: NavContext): string {
   gruplar.forEach(grup => grup.oglar.forEach(oku));
   return JSON.stringify(anahtarlar.sort());
 }
+
+const tokenCuzdaniGorunur = (c: NavContext) => c.kimlikTuru === "kullanici" && URETICI_ROLLER.includes(c.rolKucu);
+const tokenAlimi: NavOge = { etiket: "Token Alımı", path: "/cuzdan", gate: (c) => c.kimlikTuru === "kullanici" && esnekPaketBakiyeTuru(c.rolKucu) !== null };
+const tokenKullanimi: NavOge = { etiket: "Token Kullanımı", path: "/token", gate: (c) => c.kimlikTuru !== "eclub_kisi" && c.rolKucu !== "admin" };
 
 export const PANEL_NAV: NavGrup[] = [
   {
@@ -207,7 +214,16 @@ export const PANEL_NAV: NavGrup[] = [
       { etiket: "Mutabakat Takip", path: "/eczanem/yonetici/mutabakat-takip", tamEslesme: true, gate: (c) => c.eclubAcik && c.eczanemAcik && YONETICI_ROLLER.includes(c.rolKucu) },
     ],
   },
-  { baslik: "Token Kullanımı", baslikGoster: false, ayirac: true, oglar: [{ etiket: "Token Kullanımı", path: "/token", gate: (c) => c.kimlikTuru !== "eclub_kisi" && c.rolKucu !== "admin" }] },
+  {
+    baslik: "Token Kullanımı",
+    baslikGoster: false,
+    ayirac: true,
+    oglar: [
+      { etiket: "TOKEN CÜZDANI", path: "/token-cuzdani", kalin: true, yaziBoyutu: 12, gate: tokenCuzdaniGorunur, altOglar: [tokenAlimi, tokenKullanimi] },
+      { ...tokenAlimi, gate: (c) => !tokenCuzdaniGorunur(c) && tokenAlimi.gate(c) },
+      { ...tokenKullanimi, gate: (c) => !tokenCuzdaniGorunur(c) && tokenKullanimi.gate(c) },
+    ],
+  },
 ];
 
 const MOBIL_KISISEL_HBSTORE_YOLLARI = new Set([

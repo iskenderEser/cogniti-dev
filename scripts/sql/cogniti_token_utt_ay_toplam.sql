@@ -1,26 +1,30 @@
--- Yalnız UTT/Kd.UTT: ay filtresi ve sayfalardan bağımsız iki toplam.
--- Mevcut raporlar, stat kartları, tüketimler ve bakiyeler değiştirilmez.
+-- Yalnız UTT/Kd.UTT: ay filtresi ve sayfalamadan bağımsız yıl/ay toplamları.
 BEGIN;
-CREATE OR REPLACE FUNCTION public.cogniti_token_utt_ay_detay_raporu(
+CREATE OR REPLACE FUNCTION public.cogniti_token_utt_donem_detay_raporu(
  p_kullanici uuid,p_sayfa integer DEFAULT 0,p_gonderi text DEFAULT 'eclub',
- p_arac text DEFAULT 'tumu',p_alici text DEFAULT 'eclub',p_ay date DEFAULT NULL
+ p_arac text DEFAULT 'tumu',p_alici text DEFAULT 'eclub',p_ay date DEFAULT NULL,p_yil integer DEFAULT NULL
 ) RETURNS jsonb LANGUAGE plpgsql STABLE SECURITY DEFINER SET search_path=public,pg_temp AS $$
 DECLARE k record; v_kapsam text:='benim'; v_sonuc jsonb;
+ v_yil_baslangici date; v_yil_bitis date;
 BEGIN
  IF p_sayfa IS NULL OR p_sayfa<0 OR p_sayfa>10000
   OR p_gonderi IS NULL OR p_gonderi NOT IN ('eclub','eczanem')
   OR p_arac IS NULL OR p_arac NOT IN ('tumu','video','podcast','gorsel','flip_pdf','viva')
   OR p_alici IS NULL OR p_alici NOT IN ('eczaci','eczane_teknisyeni','eclub')
   OR (p_gonderi='eczanem' AND p_arac='viva')
-  OR (p_ay IS NOT NULL AND (extract(day FROM p_ay)<>1 OR extract(year FROM p_ay) NOT BETWEEN 1 AND 9999)) THEN
+  OR (p_ay IS NOT NULL AND (extract(day FROM p_ay)<>1 OR extract(year FROM p_ay) NOT BETWEEN 1 AND 9999))
+  OR (p_yil IS NOT NULL AND (p_yil NOT BETWEEN 1 AND 9999 OR (p_ay IS NOT NULL AND extract(year FROM p_ay)<>p_yil))) THEN
   RAISE EXCEPTION 'Geçersiz ay veya detay filtresi.' USING ERRCODE='22023';
  END IF;
+ v_yil_baslangici:=make_date(p_yil,1,1);
+ v_yil_bitis:=least(make_date(p_yil+1,1,1),(statement_timestamp() AT TIME ZONE 'Europe/Istanbul')::date+1);
  SELECT u.kullanici_id,u.firma_id,u.rol,u.takim_id,u.bolge_id INTO k
  FROM public.kullanicilar u JOIN public.firmalar f ON f.firma_id=u.firma_id AND f.aktif=true
  WHERE u.kullanici_id=p_kullanici AND u.aktif_mi=true AND lower(u.rol) IN ('utt','kd_utt');
  IF NOT FOUND THEN RAISE EXCEPTION 'Token detaylarına erişiminiz bulunmuyor.' USING ERRCODE='42501'; END IF;
  IF NOT EXISTS(SELECT 1 FROM public.cogniti_token_hesaplari WHERE firma_id=k.firma_id) THEN
  RETURN jsonb_build_object('satirlar','[]'::jsonb,'devami_var',false,'genel_toplam',0,
+ 'yil_toplami',CASE WHEN p_yil IS NOT NULL THEN 0 END,
  'ay_toplami',CASE WHEN p_ay IS NOT NULL THEN 0 END,'ay',to_char(p_ay,'YYYY-MM'));
  END IF;
  IF p_gonderi='eczanem' THEN
@@ -68,6 +72,8 @@ BEGIN
  WHERE sira>p_sayfa::bigint*50 AND sira<=(p_sayfa::bigint+1)*50),'[]'::jsonb),
  'devami_var',EXISTS(SELECT 1 FROM sirali WHERE sira>(p_sayfa::bigint+1)*50),
  'genel_toplam',coalesce((SELECT sum(token) FROM tum_satirlar),0),
+ 'yil_toplami',CASE WHEN p_yil IS NOT NULL THEN coalesce((SELECT sum(token) FROM tum_satirlar
+   WHERE tarih>=v_yil_baslangici AND tarih<v_yil_bitis),0) END,
  'ay_toplami',CASE WHEN p_ay IS NOT NULL THEN coalesce((SELECT sum(token) FROM secilen),0) END,
  'ay',to_char(p_ay,'YYYY-MM')) INTO v_sonuc;
  ELSE
@@ -147,13 +153,24 @@ BEGIN
  WHERE sira>p_sayfa::bigint*50 AND sira<=(p_sayfa::bigint+1)*50),'[]'::jsonb),
  'devami_var',EXISTS(SELECT 1 FROM sirali WHERE sira>(p_sayfa::bigint+1)*50),
  'genel_toplam',coalesce((SELECT sum(token) FROM tum_satirlar),0),
+ 'yil_toplami',CASE WHEN p_yil IS NOT NULL THEN coalesce((SELECT sum(token) FROM tum_satirlar
+   WHERE tarih>=v_yil_baslangici AND tarih<v_yil_bitis),0) END,
  'ay_toplami',CASE WHEN p_ay IS NOT NULL THEN coalesce((SELECT sum(token) FROM secilen),0) END,
  'ay',to_char(p_ay,'YYYY-MM')) INTO v_sonuc;
  END IF;
  RETURN v_sonuc;
 END $$;
+REVOKE ALL ON FUNCTION public.cogniti_token_utt_donem_detay_raporu(uuid,integer,text,text,text,date,integer) FROM PUBLIC,anon,authenticated;
+GRANT EXECUTE ON FUNCTION public.cogniti_token_utt_donem_detay_raporu(uuid,integer,text,text,text,date,integer) TO service_role;
+
+CREATE OR REPLACE FUNCTION public.cogniti_token_utt_ay_detay_raporu(
+ p_kullanici uuid,p_sayfa integer DEFAULT 0,p_gonderi text DEFAULT 'eclub',
+ p_arac text DEFAULT 'tumu',p_alici text DEFAULT 'eclub',p_ay date DEFAULT NULL
+) RETURNS jsonb LANGUAGE sql STABLE SECURITY DEFINER SET search_path='' AS $$
+ SELECT public.cogniti_token_utt_donem_detay_raporu(p_kullanici,p_sayfa,p_gonderi,p_arac,p_alici,p_ay,NULL)-'yil_toplami';
+$$;
 REVOKE ALL ON FUNCTION public.cogniti_token_utt_ay_detay_raporu(uuid,integer,text,text,text,date) FROM PUBLIC,anon,authenticated;
 GRANT EXECUTE ON FUNCTION public.cogniti_token_utt_ay_detay_raporu(uuid,integer,text,text,text,date) TO service_role;
 NOTIFY pgrst,'reload schema';
 COMMIT;
-SELECT true AS utt_token_ay_toplam_hazir;
+SELECT true AS utt_token_ytd_toplam_hazir;

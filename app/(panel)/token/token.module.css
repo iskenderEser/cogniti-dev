@@ -7,10 +7,44 @@
 .uttStats article:nth-child(2){border-left-color:var(--tema-yerel-ana-sayfa-islevsel-metin-07)}
 .uttStats article:nth-child(3){border-left-color:var(--tema-yerel-ana-sayfa-islevsel-metin-06)}
 .uttStats article:nth-child(4){border-left-color:var(--tema-yerel-ana-sayfa-islevsel-metin-04)}
-.uttStats span{display:block;margin-bottom:8px;color:var(--tema-yerel-ana-sayfa-yardimci-metin-01);font-size:12px;font-weight:700;letter-spacing:.025em;text-transform:uppercase}
+.uttStats span,.cuzdanKartlari .cuzdanKartBasligi{display:block;margin:0 0 8px;color:var(--tema-yerel-ana-sayfa-yardimci-metin-01);font-size:12px;font-weight:700;letter-spacing:.025em;text-transform:uppercase}
 .uttStats strong{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px;color:var(--tema-yerel-ana-sayfa-ana-metin-01);font-size:30px;font-weight:800;line-height:1}
 .uttStats .statUnit{font-size:14px;font-weight:700;font-style:normal;white-space:nowrap}
 .uttStats small{display:block;margin-top:6px;color:var(--tema-yerel-ana-sayfa-yardimci-metin-03);font-size:12px}
+.page .cuzdanBasligi {
+  grid-row: 1;
+  grid-column: 1 / -1;
+  margin: 0 0 4px;
+  font-family: inherit;
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: -.03em;
+  line-height: 1.4;
+}
+.cuzdanAlani{overflow-x:auto}
+.cuzdanSatinAlimTablosu {
+  overflow-x: auto;
+  margin-top: 12px;
+  border: 1px solid var(--tema-kontrol-cizgi);
+  border-radius: 12px;
+  background: var(--tema-kart-zemini, #fff);
+}
+.cuzdanSatinAlimTablosu table{min-width:640px}
+.cuzdanSatinAlimTablosu tbody tr + tr{border-top:1px solid var(--tema-kontrol-cizgi)}
+.uttStats.cuzdanKartlari{grid-template-columns:repeat(3,minmax(0,1fr));min-width:640px;margin:20px 0}
+.cuzdanKartlari > article {
+  display: flex;
+  flex-direction: column;
+  padding-block: 12px;
+}
+.cuzdanKartlari .cuzdanKartBasligi{margin-bottom:6px}
+.cuzdanDegerleri{display:flex;flex-wrap:wrap;gap:6px 16px;margin:0}
+.cuzdanDegerleri dt{color:var(--tema-yerel-ana-sayfa-yardimci-metin-01);font-size:12px}
+.cuzdanDegerleri dd,.cuzdanToplamKalan{margin:2px 0 0;font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.2}
+.cuzdanKartlari > article > small:last-child {
+  margin-top: auto;
+  padding-top: 6px;
+}
 .statNote{margin:0 0 25px;color:var(--tema-ikincil-metin);font-size:12px}
 @container token-sayfasi (max-width:900px){.uttStats{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @container token-sayfasi (max-width:480px){.uttStats article{padding:12px}.uttStats strong{font-size:24px}}

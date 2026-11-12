@@ -14,6 +14,7 @@ import type { TalepTuru } from "@/lib/uretici/yetenekler";
 
 const basliklar = ["Gönderim Tarihi", "Yayın Kodu", "Ürün Adı", "Yayın Aracı", "Alıcı", "Alıcı Sayısı", "Kullanılan Token"];
 const sayi = (deger: number | null) => deger == null ? "—" : deger.toLocaleString("tr-TR");
+const aylar = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
 
 function BosDurum() {
   return <div className={styles.bosDurum}>
@@ -29,7 +30,8 @@ export default function TokenKullanimTablosu({ aylikToplam = false, ay = "", yil
   const tabloBasliklari = vivaGorunumu ? ["Etkinlik Tarihi", "Etkinlik Adı", "Ürün Adı", "Yayın Aracı", "Davetliler", "Davetli Sayısı", "Katılım Sayısı", "Kullanılan Token"] : eczanem ? [...basliklar.slice(0, 4), "Gönderilen Eczane Sayısı", "İletilen Üye Sayısı", "Kullanılan Token"] : yayinAdiGoster ? [...basliklar.slice(0, 2), "Etkinlik Adı", ...basliklar.slice(2)] : basliklar;
   const sutunGenislikleri = eczanem ? [14, 17, 14, 12, 16, 14, 13] : vivaGorunumu ? [12, 19, 10, 9, 17, 11, 11, 11] : yayinAdiGoster ? [12, 15, 18, 12, 11, 10, 10, 12] : [15, 18, 15, 12, 13, 11, 16];
   const [satirlar, setSatirlar] = useState<TokenKullanimSatiri[]>([]);
-  const [toplamlar, setToplamlar] = useState<{ genel: number; ay: number | null } | null>(null);
+  const [toplamlar, setToplamlar] = useState<{ yil: number; ay: number | null } | null>(null);
+  const ayToplamBasligi = ay ? `${aylar[Number(ay.slice(5)) - 1]} Ayı Toplamı` : null;
   const [sayfa, setSayfa] = useState(0);
   const [devamiVar, setDevamiVar] = useState(false);
   const [yukleniyor, setYukleniyor] = useState(!bos);
@@ -49,7 +51,7 @@ export default function TokenKullanimTablosu({ aylikToplam = false, ay = "", yil
       setYukleniyor(true); setHata(""); setToplamlar(null);
       try {
         const sorgu = new URLSearchParams({ sayfa: String(sayfa) });
-        if (aylikToplam) { sorgu.set("toplam", "1"); if (ay) sorgu.set("ay", ay); }
+        if (aylikToplam) { sorgu.set("toplam", "1"); if (yil) sorgu.set("yil", yil); if (ay) sorgu.set("ay", ay); }
         if (oneri) sorgu.set("gonderi", "oneri");
         else if (gonderiTuru !== "tumu") sorgu.set("gonderi", gonderiTuru);
         if (egitimTuru) sorgu.set("egitim_turu",egitimTuru);
@@ -63,7 +65,7 @@ export default function TokenKullanimTablosu({ aylikToplam = false, ay = "", yil
         const detay = data as TokenDetayYaniti;
         setSatirlar(eski => sayfa === 0 ? detay.satirlar : [...new Map([...eski, ...detay.satirlar].map(satir => [satir.id, satir])).values()]);
         setDevamiVar(detay.devamiVar);
-        if (aylikToplam && typeof detay.genelToplam === "number") setToplamlar({ genel: detay.genelToplam, ay: detay.ayToplami ?? null });
+        if (aylikToplam && typeof detay.yilToplami === "number") setToplamlar({ yil: detay.yilToplami, ay: detay.ayToplami ?? null });
       } catch (error) {
         if (!controller.signal.aborted) setHata(error instanceof Error ? error.message : "Token kullanım detayları alınamadı.");
       } finally {
@@ -72,14 +74,14 @@ export default function TokenKullanimTablosu({ aylikToplam = false, ay = "", yil
     }
     void yukle();
     return () => controller.abort();
-  }, [aylikToplam, ay, sayfa, yenileme, oneri, aracTuru, gonderiTuru, bos, bm, tm, yonetici, tmId, bmId, uttId, aliciFiltresi, egitimTuru]);
+  }, [aylikToplam, ay, yil, sayfa, yenileme, oneri, aracTuru, gonderiTuru, bos, bm, tm, yonetici, tmId, bmId, uttId, aliciFiltresi, egitimTuru]);
 
   return <section className={styles.tabloAlani} aria-label="Token kullanım detayları">
     {aylikToplam && <div className={styles.ayFiltresi}>
       <div className={styles.zamanSecimi}><SadeTabloSecimi
         menuClassName={styles.zamanMenusu} etiket="Token kullanım ayı" placeholder="Ay seçin" aranabilir={false} deger={ay.slice(5)}
         disabled={!/^20(2[6-9]|3[0-6])$/.test(yil)}
-        secenekler={[{deger:"",etiket:"Ay seçin"}, ...["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"].map((ad,index)=>({deger:String(index+1).padStart(2,"0"),etiket:ad}))]}
+        secenekler={[{deger:"",etiket:"Ay seçin"}, ...aylar.map((ad,index)=>({deger:String(index+1).padStart(2,"0"),etiket:ad}))]}
         onDegistir={deger=>onAyDegistir?.(deger ? `${yil}-${deger}` : "")}
       /></div>
       <div className={styles.zamanSecimi}><SadeTabloSecimi
@@ -87,7 +89,6 @@ export default function TokenKullanimTablosu({ aylikToplam = false, ay = "", yil
         secenekler={Array.from({length:11},(_,index)=>({deger:String(2026+index),etiket:String(2026+index)}))}
         onDegistir={deger=>{onYilDegistir?.(deger);if(ay)onAyDegistir?.(`${deger}-${ay.slice(5)}`);}}
       /></div>
-      <Button type="button" variant="outline" size="sm" disabled={!ay} onClick={() => onAyDegistir?.("")}>Tüm tarihler</Button>
     </div>}
     {aylikToplam && yukleniyor && <p role="status" className={styles.detayDurumu}>Token kullanım detayları yükleniyor…</p>}
     {!aylikToplam && satirlar.length === 0 && yukleniyor ? <p role="status" className={styles.detayDurumu}>Token kullanım detayları yükleniyor…</p> : (aylikToplam || !(satirlar.length === 0 && hata)) && <><div className={styles.masaustuTablo}>
@@ -101,8 +102,8 @@ export default function TokenKullanimTablosu({ aylikToplam = false, ay = "", yil
           <TableCell className={styles.tokenHucre}>{sayi(satir.toplamToken)}</TableCell>
         </TableRow>) : <TableRow><TableCell colSpan={tabloBasliklari.length} className={styles.bosHucre}>{bosIcerik}</TableCell></TableRow>}</TableBody>
         {aylikToplam && <TableFooter className={styles.tokenToplamlari}>
-          <TableRow><TableCell colSpan={tabloBasliklari.length - 1}>Genel Toplam Token</TableCell><TableCell className={styles.tokenHucre}>{sayi(toplamlar?.genel ?? null)}</TableCell></TableRow>
-          {ay && <TableRow><TableCell colSpan={tabloBasliklari.length - 1}>Seçilen Ay Toplamı</TableCell><TableCell className={styles.tokenHucre}>{sayi(toplamlar?.ay ?? null)}</TableCell></TableRow>}
+          {ayToplamBasligi && <TableRow><TableCell colSpan={tabloBasliklari.length - 1}>{ayToplamBasligi}</TableCell><TableCell className={styles.tokenHucre}>{sayi(toplamlar?.ay ?? null)}</TableCell></TableRow>}
+          <TableRow><TableCell colSpan={tabloBasliklari.length - 1}>YTD Toplam</TableCell><TableCell className={styles.tokenHucre}>{sayi(toplamlar?.yil ?? null)}</TableCell></TableRow>
         </TableFooter>}
       </Table>
     </div>
@@ -123,8 +124,8 @@ export default function TokenKullanimTablosu({ aylikToplam = false, ay = "", yil
         </dl>
       </article>) : <div className={styles.kullanimKarti}>{bosIcerik}</div>}
       {aylikToplam && <dl className={styles.mobilTokenToplamlari}>
-        <div><dt>Genel Toplam Token</dt><dd>{sayi(toplamlar?.genel ?? null)}</dd></div>
-        {ay && <div><dt>Seçilen Ay Toplamı</dt><dd>{sayi(toplamlar?.ay ?? null)}</dd></div>}
+        {ayToplamBasligi && <div><dt>{ayToplamBasligi}</dt><dd>{sayi(toplamlar?.ay ?? null)}</dd></div>}
+        <div><dt>YTD Toplam</dt><dd>{sayi(toplamlar?.yil ?? null)}</dd></div>
       </dl>}
     </div></>}
     {hata && <div className={styles.detayHatasi}><p role="alert">{hata}</p><Button type="button" variant="outline" size="sm" onClick={() => setYenileme(n => n + 1)} disabled={yukleniyor}>Yeniden dene</Button></div>}
