@@ -221,8 +221,25 @@ Commit öncesi kontrol: `npm run typecheck:build` ve `git diff --check` başarı
 Durum: **BEKLİYOR — teknik borç**. Kullanıcı deployment'ı tamamladı; 126983 numaralı kontrol isteği HTTP 200, zaman aşımı yok ve güncel `tuketim` bölümüyle sıfır hata döndürdü. Çağrıda iş yoktu. Kalan iş: yeni gerçek yayın bittikten sonra manuel tetikleme olmadan üretim cron'unun kapanış ve tüketimi tamamlaması, pozitif tutarda doğru bakiyeden tek tüketim düşmesi ve sonraki çağrılarda tekrar düşmemesinin kanıtlanması. Yerel hedefli çalıştırmalar veya işsiz endpoint kontrolü bu kabulü tamamlamaz. Kullanıcı bu kontrolün teknik borç olarak tutulmasını istedi; test başlatılmadı. Ayrıntı ve kapanma koşulları: `docs/VIVA_TOKEN_KULLANIM_GECISI.md`, TB-VIVA-01.
 
 
+## Hatırlatma — üretici ekranlarında Eczanem token blokajı (12 Kasım 2026)
+
+Üretici rolünün **Tokenların Kullanımı** (`/token`) ve **Cüzdan** (`/cuzdan`) ekranlarına dönüldüğünde Eczanem için bloke edilen tokenların görünümünü kullanıcıyla değerlendir. Yayın Yönetimi → Eczanem Token Hesabı yayın bazında **Blokeli**, **Kullanılan** ve **Serbest kalan** tutarları gösterir. Cüzdan için kişisel ve ortak firma hesabında bloke edilen tutarın kullanılabilir bakiyenin yanında nasıl sunulacağı değerlendirilecek. Ortak bakiye özetindeki **Blokeli / Ayrılan** alanı Eczanem bloklarını ve planlı yayın rezervasyonlarını birlikte içerir.
+
 ## TB-ESNEK-01 — gerçek kullanıcıyla uçtan uca kabul
 
 **Durum: BEKLİYOR — teknik borç (9 Kasım 2026).** Kullanıcı gerçek kullanıcı testini teknik borca bırakmayı istedi. Açık yeni talimat olmadan gerçek sipariş, yayın veya gönderim testi başlatılmaz. Kapanma koşulu: yetkili üreticinin kişisel, yönetici/Firma Admininin firma hesabına sipariş vermesi; tek sipariş/tek yükleme; doğru navbar bakiyesi; seçilen hesapta gerçek gönderim tüketimi ve yetersiz bakiye engeli; satın alma/tüketim raporlarına doğru yansıma. Yerel testler ve SQL kurulumundaki true sonuçları bu kabulün yerine geçmez.
 
 **Rapor erişimi hakkında mevcut sınır:** Yeni kişisel/firma hesap raporu Admin → Firma → Abonelik Yönetimi → Token Kullanımı ekranına bağlandı. Firma Admini kendi firmasını, Cogniti Admini mevcut salt okuma yönetim yetkisiyle firma kaydını okuyabilir. Üretici/yönetici rollerin `/token` sayfası bu yeni Esnek rapora henüz bağlanmadı; navbar özetleri bağlıdır. Kullanıcıya yönelik rol kapsamlı rapor bağlantısı tamamlanmış sayılmaz. Bu not o bağlantıyı geliştirme veya erişim kapsamını genişletme onayı değildir.
+
+## TB-ICERIK-01 — İçerik Üretimi Alımı uçtan uca kabulü
+
+**Durum: BEKLİYOR — teknik borç (11 Kasım 2026).** Kullanıcı gerçek oturumla yürütülecek satın alma testini erteledi. Test, açık kullanıcı talimatıyla kontrollü ortamda başlatılır. Veritabanı ve SQL işlemlerini kullanıcı yürütür.
+
+Hizmet bedeli, tahsilat ve proforma SQL kurulumlarının başarı çıktıları kullanıcı tarafından doğrulandı. Tahsilat API’si, ödeme bekleyen katalog görünürlüğü ve yayın engeli için 21 yerel hedef test geçti. Gerçek tahsilat, HOYK’un tarayıcı görünümü ve proforma onayı henüz uçtan uca doğrulanmadı.
+
+Kapanma koşulları:
+
+- Son içerik onayından sonra **Hayır** seçildiğinde token düşmez. Yayın yalnız talep sahibinin **Sizin Yayınlarınız** sekmesinde çapraz mavi **Ödeme bekliyor** bandıyla görünür. Kart aynı bedelle sipariş modalını açar.
+- Yetersiz bakiye tahsilatı engeller. **Token Siparişi Ver** düğmesi `/fiyatlar` sayfasına gider ve yayın ödeme bekler.
+- Yeterli bakiye sağlanınca seçilen kişisel veya firma ortak hesabından tek tahsilat gerçekleşir. Tekrar deneme ikinci kesinti oluşturmaz. Ödeme bandı kalkar ve yayın normal akışına döner.
+- Admin ekranında firma ve tahsilat ayı için tek alım kaydı görünür. Proforma tahsilat anında kaydedilen KKÖ fiyatıyla hesaplanır. Firma admini kendi firması adına, Cogniti admini açıklamayla onaylayabilir. Onaylı belge ilgili listede görünür.

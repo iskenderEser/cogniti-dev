@@ -19,6 +19,13 @@ Beklenen sonuç: `eczanem_ortak_uretici_token_kuruldu = true`.
 - Süre dolunca yeni dağıtım kapanır. Kullanılmamış blok sorgu anında serbest sayılır; yeni yükleme/iade tokenı yaratılmaz. Yüklemenin kendi son kullanımı geçmişse kullanılabilir tokena dönmez. Bu davranış mevcut PM akışıyla aynıdır.
 - UTT ve eczane yayın kartları yeni Medikal yayınlarda kalan süreyi ve son dağıtım tarihini gösterir. Eczane token hesabı/bakiye bilgisi görmez.
 
+## Eczanem üyelerine gönderimde token tüketimi — 12 Kasım 2026
+
+- Üretici yayın için token hesabını seçer. 30 günlük dağıtım süresi yayının ilk gerçek açılışında başlar. UTT, yayının bu süre içinde eczaneye iletilmesini ve eczanenin danışanlara dağıtımını takip eder.
+- UTT yayını eczaneye ilk ilettiğinde, o anda uygun olan her danışan için üreticinin seçtiği hesaptan 1 token ayrılır. Tüketim, eczacı veya teknisyen yayını token ayrılan danışana başarıyla gönderdiğinde kaydedilir. Her gerçekleşen danışan gönderimi için ayrılan 1 token kullanılır.
+- İlk iletimde token ayrılan danışanlar yayın ve eczane bazında kaydedilir. Sonradan eklenen danışanlar o yayının ayrımına dahil edilmez.
+- Süre sonunda gönderilmeyen danışanlar için ayrılan tokenlar serbest kalır. Yüklemenin kullanım süresi devam ediyorsa bu tokenlar aynı hesapta yeniden kullanılabilir. Bu işlem firma ile Cogniti arasında hak devri oluşturmaz.
+
 ## Geçmiş Medikal yayınlar
 
 - Migration yayın tablosunu transaction süresince kilitler ve ilk kurulumda var olan Medikal Eczanem yayın/planlarının kimliklerini bir defa işaretler. Çıkış snapshotı varsa kaynak rolü o kayıttan alınır; çıkış olmamış planlarda mevcut üretici rolü kullanılır. PM hesap bağı bulunan yayın geçmiş Medikal kapsamına alınmaz.

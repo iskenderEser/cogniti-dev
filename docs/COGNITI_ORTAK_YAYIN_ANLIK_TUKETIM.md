@@ -20,6 +20,13 @@ Kod ve SQL hazır; yerel testler başarılı. **9 Kasım 2026: Kullanıcı `cogn
 - Üretici yayın açılışında E-Club üyelerine bildirim gönderilmez; yalnız ilgili firma UTTlerine yeni yayın bildirimi gider. Üye bildirimi mevcut gerçek UTT gönderiminde oluşur. E-Club kişi UUIDleri firma içi bildirim listesine verilmez.
 - Yeni planlı yayın da hesap seçimini kaydeder; plan kaydı tüketmez. Gerçek aktivasyon aynı açılış tetikleyicisini kullanır. Aktivasyon öncesinde mevcut alıcılar ve bakiye yeniden kontrol edilir. Cron'da bir hesabın yetersizliği yayını planlı bırakır; diğer yayınları durdurmaz. **Plan token rezervasyonu bu adımda kurulmadı; sonraki rezervasyon adımı ayrı kalır.**
 
+## E-Club üyelerine gönderimde token tüketimi — 12 Kasım 2026
+
+- Yayın gerçekten açıldığında, o anda yayın kapsamına giren her tekil E-Club üyesi için üreticinin yayın için seçtiği hesaptan 1 token düşer. Açılıştaki alıcılar ve toplam tüketim kaydedilir.
+- Yayını uygun üyelere iletmek UTT’nin sorumluluğundadır. UTT gönderiminde sistem üyenin güncel uygunluğunu kontrol eder. Gönderi üretici hesabında ek kesinti oluşturmaz.
+- Açılıştan sonra kapsama eklenen uygun üyelere yapılan ek gönderileri Cogniti karşılar. Örneğin 400 üyeyle açılan yayın, sonradan katılan 20 üyeye de iletilirse 420 gönderi gerçekleşir ve üreticinin tüketimi 400 token olarak kalır.
+- Açılıştan sonra üye sayısı azalırsa açılış tüketimi firmaya aittir. Otomatik iade yapılmaz. Olağan dışı azalmada Cogniti yönetimi durumu inceler ve hak kaybını gidermek için uygun çözümü belirler.
+
 ## Geçmiş ve kapsam sınırı
 
 - İlk kurulumda mevcut yayın kimlikleri bir defa işaretlenir. Tekrar kurulum yeni yayınları geçmişe katmaz. Geçmiş yayınlardan geriye dönük açılış ücreti alınmaz; önceki gönderim/token kayıtları silinmez veya iade edilmez.
