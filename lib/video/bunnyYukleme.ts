@@ -91,9 +91,10 @@ export function hazirVideoBaslik(urunAdi?: string | null, teknikAdi?: string | n
   return `${urunAdi || teknikAdi || "video"}_hazir`;
 }
 
-/** Kanonik embed/play adresinden Bunny video GUID'ini ayıklar (saf — smoke bununla). */
+/** Ham Bunny GUID’ini veya kanonik embed/play adresindeki GUID’i çözer. */
 export function embedUrlGuidCikar(url: string | null | undefined): string | null {
   if (!url) return null;
+  if (/^[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}$/.test(url)) return url;
   const eslesme = url.match(/mediadelivery\.net\/(?:embed|play)\/\d+\/([0-9a-fA-F-]{36})/);
   return eslesme ? eslesme[1] : null;
 }

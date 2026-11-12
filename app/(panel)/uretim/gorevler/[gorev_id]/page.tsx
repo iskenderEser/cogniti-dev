@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useAuth } from "@/app/providers/AuthProvider";
+import { IcerikUretimiSiparisOnayi, type IcerikUretimiSiparisi } from "@/components/satinAlma/IcerikUretimiSiparisOnayi";
 import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
 import { SoruIceAktar } from "@/components/SoruIceAktar";
 import { SoruSetiFormu } from "@/components/SoruSetiFormu";
@@ -41,6 +42,7 @@ export default function UretimGorevDetayPage() {
   const [gorev, setGorev] = useState<UretimGorevi | null>(null);
   const [loading, setLoading] = useState(true);
   const [islem, setIslem] = useState(false);
+  const [icerikSiparisi, setIcerikSiparisi] = useState<IcerikUretimiSiparisi | null>(null);
   const [senaryoMetni, setSenaryoMetni] = useState("");
   const [taslaklar, setTaslaklar] = useState<SoruTaslagi[]>([]);
   const [revizyonAcik, setRevizyonAcik] = useState(false);
@@ -460,6 +462,9 @@ export default function UretimGorevDetayPage() {
       const res = await fetch("/uretim/api/karar", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ gorev_id: gorev.gorev_id, karar, notlar, beklenen_surum: gorev.surum, islem_anahtari: crypto.randomUUID(), revizyonda_transkript_istendi: karar === "revizyon bekleniyor" ? revizyondaTranskriptIstendi : false }) });
       const veri = await res.json();
       if (!res.ok) return hata(veri.hata ?? "Karar kaydedilemedi.", veri.adim, veri.detay);
+      if (typeof veri.siparis_onayi?.talep_id === "string" && typeof veri.siparis_onayi.token === "number" && veri.siparis_onayi.token > 0) {
+        setIcerikSiparisi(veri.siparis_onayi);
+      }
       const olay: ToastOlay = karar === "onaylandi" ? { rol: "uretici", olay: "onay", asama: gorev.asama, revize: gorev.revizyon_sayisi > 0 } : karar === "revizyon bekleniyor" ? { rol: "uretici", olay: "revizyon", asama: gorev.asama } : { rol: "uretici", olay: "iptal", asama: gorev.asama };
       basari(uretimToast(olay, toastBaglam));
       if (karar === "onaylandi" && gorev.asama === "soru_seti") {
@@ -471,8 +476,9 @@ export default function UretimGorevDetayPage() {
     }
   };
 
+  const siparisOnayi = <IcerikUretimiSiparisOnayi siparis={icerikSiparisi} onKapat={() => setIcerikSiparisi(null)} onOdendi={(mesaj) => { basari(mesaj); bildirimRozetleriniYenile(); }} />;
   if (!kullanici || loading) return <div className="min-h-screen bg-[var(--tema-yerel-uretim-sayfa-zemini-01)] flex items-center justify-center"><div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--tema-yerel-uretim-cizgi-01)] border-t-[var(--tema-yerel-uretim-cizgi-04)]" /></div>;
-  if (!gorev || !asama) return <><div className="mx-auto max-w-3xl p-8 text-center text-sm text-[var(--tema-yerel-uretim-yardimci-metin-01)]">Görev bulunamadı veya erişim yetkiniz yok.</div><HataMesajiContainer mesajlar={mesajlar} /></>;
+  if (!gorev || !asama) return <><div className="mx-auto max-w-3xl p-8 text-center text-sm text-[var(--tema-yerel-uretim-yardimci-metin-01)]">Görev bulunamadı veya erişim yetkiniz yok.</div>{siparisOnayi}<HataMesajiContainer mesajlar={mesajlar} /></>;
 
   const icerik = gorev.icerik as UretimGorevIcerigi | null | undefined;
   return (
@@ -632,6 +638,7 @@ export default function UretimGorevDetayPage() {
           </div>
         </section>
       </div>
+      {siparisOnayi}
       <HataMesajiContainer mesajlar={mesajlar} />
     </>
   );

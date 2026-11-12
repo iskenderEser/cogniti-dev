@@ -1,3 +1,4 @@
+import { bunnyEmbedUrlUret } from "@/lib/ogrenmeAraci/yayinThumbnail";
 // app/talepler/api/detay/route.ts
 //
 // SEÇİLEN TALEBİN DERİN VERİSİ — üretici rol detay ucu.
@@ -224,7 +225,7 @@ export async function GET(request: NextRequest) {
         if (aracKaydi.arac_turu === "video") {
           video = {
             id: aracKaydi.arac_id,
-            video_url: aracKaydi.dosya_yolu ?? null,
+            video_url: bunnyEmbedUrlUret(aracKaydi.dosya_yolu),
             thumbnail_url: aracKaydi.kapak_yolu ?? null,
             ...durumOzeti((aracDurumlari as DurumSatiri[] | null) ?? []),
           };

@@ -1,3 +1,4 @@
+import { bunnyEmbedUrlUret } from "@/lib/ogrenmeAraci/yayinThumbnail";
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient, createClient } from "@/lib/supabase/server";
 import { sunucuHatasi, yetkiHatasi, rolHatasi, hataYaniti, validasyonHatasi } from "@/lib/utils/hataIsle";
@@ -118,7 +119,7 @@ export async function GET(request: NextRequest) {
         const gecmis = await adminSupabase.from("ogrenme_araci_durumu").select("durum, notlar, created_at").eq("arac_id", gorev.arac_id).order("created_at");
         if (gecmis.error) return hataYaniti("Dijital Broşür geçmişi alınamadı.", "Dijital Broşür görev geçmişi", gecmis.error);
         durumGecmisi = gecmis.data ?? [];
-      } else if (gorev.asama === "video" && gorev.arac_id) {
+      } else if (gorev.asama === "video" && gorev.arac_id && talepMap.get(gorev.talep_id)?.ogrenme_araci_turu === "podcast") {
         const { data: podcast, error } = await adminSupabase.from("ogrenme_araclari")
           .select("dosya_yolu, kapak_yolu, transkript_yolu, sure_saniye, metadata")
           .eq("arac_id", gorev.arac_id).eq("arac_turu", "podcast").maybeSingle();
@@ -160,13 +161,13 @@ export async function GET(request: NextRequest) {
         const gecmis = await adminSupabase.from("ogrenme_araci_durumu").select("durum, notlar, created_at").eq("arac_id", gorev.arac_id).order("created_at");
         if (gecmis.error) return hataYaniti("Podcast geçmişi alınamadı.", "podcast görev geçmişi", gecmis.error);
         durumGecmisi = gecmis.data ?? [];
-      } else if (gorev.asama === "video" && gorev.arac_id) {
+      } else if (gorev.asama === "video" && gorev.arac_id && talepMap.get(gorev.talep_id)?.ogrenme_araci_turu === "video") {
         const [icerik, gecmis] = await Promise.all([
           adminSupabase.from("ogrenme_araclari").select("dosya_yolu, kapak_yolu").eq("arac_id", gorev.arac_id).eq("arac_turu", "video").maybeSingle(),
           adminSupabase.from("ogrenme_araci_durumu").select("durum, notlar, created_at").eq("arac_id", gorev.arac_id).order("created_at"),
         ]);
         if (icerik.error || gecmis.error) return hataYaniti("Video detayı alınamadı.", "video görev detayı", icerik.error ?? gecmis.error);
-        detayIcerigi = { asama: "video", video_url: icerik.data?.dosya_yolu ?? null, thumbnail_url: icerik.data?.kapak_yolu ?? null };
+        detayIcerigi = { asama: "video", video_url: bunnyEmbedUrlUret(icerik.data?.dosya_yolu), thumbnail_url: icerik.data?.kapak_yolu ?? null };
         durumGecmisi = gecmis.data ?? [];
       } else if (gorev.asama === "soru_seti" && gorev.soru_seti_id) {
         const [icerik, gecmis] = await Promise.all([

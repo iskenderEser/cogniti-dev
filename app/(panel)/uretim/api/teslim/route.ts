@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient, createClient } from "@/lib/supabase/server";
-import { isKuraluHatasi, sunucuHatasi, yetkiHatasi, rolHatasi, validasyonHatasi } from "@/lib/utils/hataIsle";
+import { hataYaniti, isKuraluHatasi, sunucuHatasi, yetkiHatasi, rolHatasi, validasyonHatasi } from "@/lib/utils/hataIsle";
 import { IU_ROLU } from "@/lib/utils/roller";
 import { rolCozucu } from "@/lib/utils/rolCozucu";
 import { uuidGecerliMi, uretimRpcHataYaniti } from "@/lib/uretim/rpc";
@@ -35,11 +35,24 @@ export async function POST(request: NextRequest) {
       // TUS aktarımı tamamlandıktan sonra Bunny encode'u kullanıcıyı bekletmez.
       // Webhook ve mutabakat aynı teslimi GUID anahtarıyla idempotent tamamlar.
       const bunnyDurumu = await bunnyVideoDurumu(videoGuid);
-      if (!bunnyDurumu.ok) {
-        return NextResponse.json({ mesaj: "Video teslimi alındı.", isleniyor: true }, { status: 202 });
+      if (bunnyDurumu.ok && bunnyDurumu.hatali) {
+        return isKuraluHatasi("Video işlenemedi. Yeni bir video yükleyip yeniden gönderin.");
       }
-      if (bunnyDurumu.hatali) return isKuraluHatasi("Video işlenemedi. Yeni bir video yükleyip yeniden gönderin.");
-      if (!bunnyDurumu.hazir) {
+      if (!bunnyDurumu.ok || !bunnyDurumu.hazir) {
+        const { data: oturum, error: oturumHatasi } = await adminSupabase
+          .from("ogrenme_araci_video_yukleme_oturumlari")
+          .update({ durum: "dogrulama_bekliyor", updated_at: new Date().toISOString() })
+          .eq("gorev_id", gorev_id)
+          .eq("kullanici_id", user.id)
+          .eq("kaynak", "iu")
+          .eq("video_guid", videoGuid)
+          .in("durum", ["yukleme_bekliyor", "dogrulama_bekliyor"])
+          .select("yukleme_id")
+          .maybeSingle();
+        if (oturumHatasi) {
+          return hataYaniti("Video teslimi sıraya alınamadı.", "İÜ video teslim oturumu", oturumHatasi);
+        }
+        if (!oturum) return isKuraluHatasi("Bu göreve ait bekleyen video yüklemesi bulunamadı.");
         return NextResponse.json({ mesaj: "Video teslimi alındı.", isleniyor: true }, { status: 202 });
       }
 
