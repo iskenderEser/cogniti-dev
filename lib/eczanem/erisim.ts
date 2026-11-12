@@ -4,7 +4,7 @@
 // müşteri ise aktif üyelik→eczane→firma zincirinden doğrulanır.
 
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { ECLUB_TUKETICI_ROLLERI, MUSTERI_ROLU, TUKETICI_ROLLER } from "@/lib/utils/roller";
+import { ECLUB_TUKETICI_ROLLERI, MUSTERI_ROLU, TUKETICI_ROLLER, URETICI_ROLLER, YONETICI_ROLLER } from "@/lib/utils/roller";
 
 export const ECZANEM_KAPALI_MESAJI = "Eczanem bağlı olduğunuz firmalar için kapalıdır.";
 
@@ -171,7 +171,7 @@ export async function eczanemRolErisimi(
   authUserId: string,
   rol: string,
 ): Promise<EczanemErisimSonucu> {
-  if (TUKETICI_ROLLER.includes(rol) || rol === "bm" || rol === "tm") return uttEczanemErisimi(adminSupabase, authUserId);
+  if (TUKETICI_ROLLER.includes(rol) || rol === "bm" || rol === "tm" || URETICI_ROLLER.includes(rol) || YONETICI_ROLLER.includes(rol)) return uttEczanemErisimi(adminSupabase, authUserId);
   if (MUSTERI_ROLU === rol) return musteriEczanemErisimi(adminSupabase, authUserId);
   if (ECLUB_TUKETICI_ROLLERI.includes(rol)) {
     const { data: kisi, error: kisiError } = await adminSupabase

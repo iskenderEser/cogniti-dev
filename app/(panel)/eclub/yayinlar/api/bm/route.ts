@@ -57,11 +57,11 @@ export async function GET(request: NextRequest) {
       const ids = new Set<string>(tokenKapsami.data.ids);
       if (tokenYonetici && rol === "pm" && ids.size) {
         const { data: uttler, error: uttHatasi } = await admin.from("kullanicilar")
-          .select("kullanici_id, ad, soyad, rol").eq("firma_id", kullanici.firma_id).eq("aktif_mi", true)
+          .select("kullanici_id, ad, soyad, rol, bolge_id").eq("firma_id", kullanici.firma_id).eq("aktif_mi", true)
           .in("rol", ["utt", "kd_utt"]).in("kullanici_id", [...ids]);
         if (uttHatasi) return hataYaniti("Gönderim kapsamı alınamadı.", "PM token kart kapsamı", uttHatasi);
         kapsam.uttler = (uttler ?? []).map(utt => ({ utt_id: utt.kullanici_id, rol: utt.rol,
-          utt_adi: `${utt.ad ?? ""} ${utt.soyad ?? ""}`.trim(), takim_adi: "", bm_id: null, bm_adi: "", bolge_adi: "" }));
+          utt_adi: `${utt.ad ?? ""} ${utt.soyad ?? ""}`.trim(), takim_adi: "", bm_id: null, bm_adi: "", bolge_id: utt.bolge_id, bolge_adi: "" }));
       } else kapsam.uttler = kapsam.uttler.filter(utt => ids.has(utt.utt_id));
     }
     let seciliUtt = istenenUttId

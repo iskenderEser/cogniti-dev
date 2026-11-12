@@ -80,7 +80,7 @@ export default function PanelKabugu({ children, navbar, baglam, gruplar, badge, 
       />
       <div className="flex flex-1" style={{ minHeight: 0 }}>
         <SolListe {...baglam} gruplar={etkinGruplar} badge={etkinBadge} altAlan={renkAnahtari} />
-        <main className="flex-1 overflow-y-auto" style={{ minWidth: 0 }}>
+        <main className="flex-1 overflow-y-auto [&:has([data-eczanem-sabit-kaydirma])]:[scrollbar-gutter:stable]" style={{ minWidth: 0 }}>
           {children}
         </main>
         {kilavuzVar && <div aria-hidden="true" className="hidden w-[20px] shrink-0 sm:block" />}

@@ -12,9 +12,11 @@ export interface EclubKapsamUtt {
   utt_id: string;
   rol: string;
   utt_adi: string;
+  takim_id?: string | null;
   takim_adi: string;
   bm_id: string | null;
   bm_adi: string;
+  bolge_id: string | null;
   bolge_adi: string;
 }
 
@@ -56,6 +58,7 @@ export async function eclubYonetimKapsaminiGetir(
         takim_adi: "Takımım",
         bm_id: null,
         bm_adi: "—",
+        bolge_id: kullanici.bolge_id,
         bolge_adi: "—",
       }],
     };
@@ -129,9 +132,11 @@ export async function eclubYonetimKapsaminiGetir(
       utt_id: utt.kullanici_id,
       rol: (utt.rol ?? "").toLowerCase(),
       utt_adi: tamAd(utt),
+      takim_id: utt.takim_id,
       takim_adi: utt.takim_id ? takimAdlari.get(utt.takim_id) ?? "—" : "Takımsız",
       bm_id: bm?.kullanici_id ?? null,
       bm_adi: bm ? tamAd(bm) : "BM ataması bulunmuyor",
+      bolge_id: utt.bolge_id,
       bolge_adi: utt.bolge_id ? bolgeAdlari.get(utt.bolge_id) ?? "—" : "Bölgesiz",
     };
   }).sort((a, b) => a.utt_adi.localeCompare(b.utt_adi, "tr"));

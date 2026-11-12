@@ -3,9 +3,7 @@
 import { useEczanemGonderimSaati } from "@/components/eczanem/GonderimSuresi";
 import { eczanemGonderimSuresi } from "@/lib/eczanem/gonderimSuresi";
 
-import UttGonderimIncelemesi from "@/components/eclub/UttGonderimIncelemesi";
 import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
-import OgrenmeAraciOnizleme from "@/components/ogrenme-araci/OgrenmeAraciOnizleme";
 import type { YayinTuruFiltreDegeri } from "@/components/ogrenme-araci/YayinTuruFiltresi";
 import SayfaRehberi from "@/components/rehber/SayfaRehberi";
 import { Button } from "@/components/ui/button";
@@ -15,35 +13,24 @@ import { YenileButonu } from "@/components/ui/yenile-butonu";
 import MobilYayinAkisi from "@/components/yayin/MobilYayinAkisi";
 import { UttYayinTuruToggle } from "@/components/yayin/UttYayinListeOrtaklari";
 import { Building2, ChevronLeft, CircleAlert, Send, UsersRound } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
+import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { EczanemGonderimPaneli, type EczanemGonderimSonucu } from "./_components/EczanemGonderimPaneli";
 import { EczanemYayinGonderimKarti } from "./_components/EczanemYayinGonderimKarti";
 import type { UttEczanemGonderim, UttEczanemVeri, UttEczanemYayin } from "./_types";
-import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
+import { EczanemYayinDonemiSecimi, yayinDonemi } from "../_components/EczanemYayinDonemiSecimi";
+import { EczanemYayinSayfasi, OzetKarti, OzetKartlari } from "../_components/EczanemYayinSayfasi";
+
+const OgrenmeAraciOnizleme = dynamic(() => import("@/components/ogrenme-araci/OgrenmeAraciOnizleme"));
+const UttGonderimIncelemesi = dynamic(() => import("@/components/eclub/UttGonderimIncelemesi"));
 
 type GonderimFiltresi = "tumu" | "gonderilebilir" | "gonderilen";
 
-function OzetKarti({ ikon: Icon, etiket, deger, detay, renk, zemin }: {
-  ikon: typeof Building2;
-  etiket: string;
-  deger: number;
-  detay: string;
-  renk: string;
-  zemin: string;
-}) {
-  return (
-    <Card className="gap-0 border border-[var(--tema-yerel-eczanem-cizgi-06)] border-l-[3px] py-0 shadow-sm" style={{ borderLeftColor: renk }}>
-      <CardContent className="flex items-start justify-between gap-3 p-4 md:p-5">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-wide text-[var(--tema-yerel-eczanem-yardimci-metin-03)]">{etiket}</p>
-          <p className="mt-2 text-2xl font-extrabold leading-none text-[var(--tema-yerel-eczanem-ana-metin-02)] md:text-3xl">{deger.toLocaleString("tr-TR")}</p>
-          <p className="mt-1.5 text-[11px] leading-snug text-[var(--tema-yerel-eczanem-yardimci-metin-04)] md:text-xs">{detay}</p>
-        </div>
-        <span className="flex size-9 shrink-0 items-center justify-center rounded-xl" style={{ color: renk, background: zemin }}><Icon className="size-4.5" /></span>
-      </CardContent>
-    </Card>
-  );
-}
+const rafBasliklari: Record<GonderimFiltresi, string> = {
+  tumu: "Tüm Eczanem Yayınları",
+  gonderilebilir: "Gönderime Hazır Yayınlar",
+  gonderilen: "Eczanelere Gönderilen Yayınlar",
+};
 
 export default function EczanemYayinlariPage() {
   const { mesajlar, hata, basari, uyari } = useHataMesaji();
@@ -53,6 +40,8 @@ export default function EczanemYayinlariPage() {
   const [yenileniyor, setYenileniyor] = useState(false);
   const [veriHatasi, setVeriHatasi] = useState<string | null>(null);
   const [aktifVideo, setAktifVideo] = useState<UttEczanemYayin | null>(null);
+  const [bugununDonemi] = useState(() => yayinDonemi(new Date()));
+  const [secilenDonem, setSecilenDonem] = useState(bugununDonemi);
   const [gonderimFiltresi, setGonderimFiltresi] = useState<GonderimFiltresi>("tumu");
   const [aktifYayinTuru, setAktifYayinTuru] = useState<YayinTuruFiltreDegeri>("tumu");
   const [seciliYayinIdleri, setSeciliYayinIdleri] = useState<string[]>([]);
@@ -119,7 +108,16 @@ export default function EczanemYayinlariPage() {
     return () => { if (zamanlayici) window.clearTimeout(zamanlayici); };
   }, [veri?.aylikIstatistikler.sonrakiAyBaslangici, sayacCek]);
 
-  const yayinlar = veri?.yayinlar ?? [];
+  const tarihliYayinlar = useMemo(() => (veri?.yayinlar ?? []).flatMap((yayin) => {
+    const tarih = yayin.yayin_tarihi ? new Date(yayin.yayin_tarihi) : null;
+    return tarih && Number.isFinite(tarih.getTime()) ? [{ yayin, ...yayinDonemi(tarih) }] : [];
+  }), [veri?.yayinlar]);
+  const yilSecenekleri = Array.from(new Set([
+    bugununDonemi.yil, secilenDonem.yil, ...tarihliYayinlar.map(({ yil }) => yil),
+  ])).sort((a, b) => Number(b) - Number(a)).map((yil) => ({ deger: yil, etiket: yil }));
+  const yayinlar = tarihliYayinlar
+    .filter(({ yil, ay }) => yil === secilenDonem.yil && ay === secilenDonem.ay)
+    .map(({ yayin }) => yayin);
   const eczaneler = veri?.eczaneler ?? [];
   const esik = veri?.esik ?? 0;
   const hazirEczaneler = eczaneler.filter((eczane) => eczane.esik_uygun);
@@ -165,7 +163,6 @@ export default function EczanemYayinlariPage() {
       secili={seciliYayinIdleri.includes(yayin.yayin_id)}
       secilebilir={gonderilebilirIdler.has(yayin.yayin_id) && !topluGonderiliyor}
       gonderilecekGoster={gonderimFiltresi === "gonderilebilir" || (gonderimFiltresi === "tumu" && gonderilebilirYayinlar.some((kayit) => kayit.yayin_id === yayin.yayin_id))}
-      gonderimDetayiGoster={gonderimFiltresi === "gonderilen"}
       gonderimDetayiAcik={acikDetayYayinId === yayin.yayin_id}
       onSecim={() => yayinSecimiDegistir(yayin.yayin_id)}
       onOnizle={() => setAktifVideo(yayin)}
@@ -224,10 +221,6 @@ export default function EczanemYayinlariPage() {
     return sonuc;
   };
 
-  if (ilkYukleme) {
-    return <div className="flex min-h-full items-center justify-center bg-[var(--tema-yerel-eczanem-sayfa-zemini-05)]"><span className="size-6 animate-spin rounded-full border-2 border-[var(--tema-yerel-eczanem-cizgi-08)] border-t-[var(--tema-yerel-eczanem-cizgi-09)]" /></div>;
-  }
-
   if (aktifVideo) {
     return (
       <div className="mx-auto flex max-w-[1480px] flex-col gap-4 px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
@@ -239,26 +232,28 @@ export default function EczanemYayinlariPage() {
             <CardTitle className="text-base text-[var(--tema-yerel-eczanem-ana-metin-02)]">{aktifVideo.urun_adi}</CardTitle>
             <CardDescription className="mt-1">{aktifVideo.teknik_adi || "Eczanem öğrenme içeriği"}</CardDescription>
           </div>
-          {aktifVideo.gonderim_incelemesi_tamamlandi ? <OgrenmeAraciOnizleme
-            key={aktifVideo.yayin_id}
-            yayinId={aktifVideo.yayin_id}
-            aracId={aktifVideo.arac_id}
-            aracTuru={aktifVideo.arac_turu}
-            videoUrl={aktifVideo.video_url}
-            urunAdi={aktifVideo.urun_adi}
-            hata={hata}
-            onBitti={() => setAktifVideo(null)}
-          /> : <UttGonderimIncelemesi
-            key={aktifVideo.yayin_id}
-            yayinId={aktifVideo.yayin_id}
-            aracId={aktifVideo.arac_id}
-            aracTuru={aktifVideo.arac_turu}
-            videoUrl={aktifVideo.video_url}
-            urunAdi={aktifVideo.urun_adi}
-            kanal="eczanem"
-            hata={hata}
-            onTamamlandi={async () => { setAktifVideo(null); await veriCek(); }}
-          />}
+          <Suspense fallback={<p role="status" className="p-4 text-sm">Öğrenme içeriği yükleniyor…</p>}>
+            {aktifVideo.gonderim_incelemesi_tamamlandi ? <OgrenmeAraciOnizleme
+              key={aktifVideo.yayin_id}
+              yayinId={aktifVideo.yayin_id}
+              aracId={aktifVideo.arac_id}
+              aracTuru={aktifVideo.arac_turu}
+              videoUrl={aktifVideo.video_url}
+              urunAdi={aktifVideo.urun_adi}
+              hata={hata}
+              onBitti={() => setAktifVideo(null)}
+            /> : <UttGonderimIncelemesi
+              key={aktifVideo.yayin_id}
+              yayinId={aktifVideo.yayin_id}
+              aracId={aktifVideo.arac_id}
+              aracTuru={aktifVideo.arac_turu}
+              videoUrl={aktifVideo.video_url}
+              urunAdi={aktifVideo.urun_adi}
+              kanal="eczanem"
+              hata={hata}
+              onTamamlandi={async () => { setAktifVideo(null); await veriCek(); }}
+            />}
+          </Suspense>
         </Card>
         <HataMesajiContainer mesajlar={mesajlar} />
       </div>
@@ -266,20 +261,19 @@ export default function EczanemYayinlariPage() {
   }
 
   return (
-    <div className="min-h-full bg-[var(--tema-yerel-eczanem-sayfa-zemini-05)]" style={{ fontFamily: "'Nunito', sans-serif" }}>
-      <div className="mx-auto flex max-w-[1480px] flex-col gap-5 px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
-        <SayfaYenileBasligi className="flex flex-wrap items-end justify-between gap-4"
-          baslik={<div className="inline-flex items-center">
-            <h1 className="text-2xl font-extrabold tracking-[-0.025em] text-[var(--tema-yerel-eczanem-ana-metin-04)] md:text-[28px]">Eczanem Yayınları</h1>
-            <SayfaRehberi anahtar="eczanem-yayinlar" className="ml-1.5 -translate-y-1.5" />
-          </div>}
-
-          aciklama={<><p className="mt-1 max-w-3xl text-sm leading-5 text-[var(--tema-yerel-eczanem-yardimci-metin-07)]">Eczanem hedefli öğrenme içeriklerini inceleyin ve üyelik eşiğini tamamlayan eczanelerinize gönderin.</p></>}
-          aksiyon={<YenileButonu yenileniyor={yenileniyor} onYenile={() => veriCek()} />}
-
-        />
-
-        {veriHatasi && !veri ? (
+    <>
+      <EczanemYayinSayfasi
+        baslik="Eczaneye Gönderilen Yayınlar"
+        rehber={<SayfaRehberi anahtar="eczanem-yayinlar" className="ml-1.5 -translate-y-1.5" />}
+        aciklama="Eczaneler tarafından Eczanem Üyelerine gönderilecek yayınları görebilir, eczanelere gönderebilirsiniz"
+        aksiyon={<YenileButonu disabled={ilkYukleme} yenileniyor={yenileniyor} onYenile={() => veriCek()} />}
+      >
+        {ilkYukleme ? (
+          <div role="status" className="flex items-center gap-2 text-sm text-[var(--tema-yerel-eczanem-yardimci-metin-07)]">
+            <span aria-hidden="true" className="size-4 animate-spin rounded-full border-2 border-[var(--tema-yerel-eczanem-cizgi-08)] border-t-[var(--tema-yerel-eczanem-cizgi-09)]" />
+            Eczane ve yayın bilgileri yükleniyor…
+          </div>
+        ) : veriHatasi && !veri ? (
           <Card className="gap-3 border-[var(--tema-yerel-eczanem-islevsel-cizgi-01)] bg-[var(--tema-yerel-eczanem-islevsel-zemin-03)] py-8 text-center shadow-none">
             <CardContent className="flex flex-col items-center px-5">
               <span className="flex size-11 items-center justify-center rounded-2xl bg-[var(--tema-yerel-eczanem-islevsel-zemin-04)] text-[var(--tema-yerel-eczanem-islevsel-metin-01)]"><CircleAlert /></span>
@@ -290,11 +284,11 @@ export default function EczanemYayinlariPage() {
           </Card>
         ) : (
           <>
-            <section aria-label="Eczanem öğrenme içeriği özeti" className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3">
-              <OzetKarti ikon={Building2} etiket="Gönderilebilen Eczane Sayısı" deger={hazirEczaneler.length} detay={`Eclub takımınızda olan toplam eczane sayısı ${eczaneler.length}`} renk="var(--tema-yerel-eczanem-eylem-metin-01)" zemin="var(--tema-yerel-eczanem-secim-zemin-01)" />
-              <OzetKarti ikon={Send} etiket="Gönderilen Toplam Yayın" deger={veri?.aylikIstatistikler.uttGonderimSayisi ?? 0} detay="Bu ay içinde gönderdiğiniz toplam yayın adedi" renk="var(--tema-yerel-eczanem-islevsel-metin-02)" zemin="var(--tema-yerel-eczanem-islevsel-zemin-01)" />
-              <OzetKarti ikon={UsersRound} etiket="Eczanelerin Gönderdiği Toplam Yayın" deger={veri?.aylikIstatistikler.eczaneGonderimSayisi ?? 0} detay="Bu ay içinde eczanelerin gönderdiği toplam yayın adedi" renk="var(--tema-yerel-eczanem-islevsel-metin-03)" zemin="var(--tema-yerel-eczanem-islevsel-zemin-02)" />
-            </section>
+            <OzetKartlari>
+              <OzetKarti ikon={Building2} etiket="Gönderilebilen Eczane Sayısı" deger={hazirEczaneler.length} detay="Şu anda üyelik eşiğini karşılayan eczaneler" renk="var(--tema-yerel-eczanem-eylem-metin-01)" zemin="var(--tema-yerel-eczanem-secim-zemin-01)" />
+              <OzetKarti ikon={UsersRound} etiket="Gönderilen Eczane Sayısı" deger={veri?.aylikIstatistikler.gonderilenEczaneSayisi ?? 0} detay="Bu ay yayın gönderdiğiniz farklı eczaneler" renk="var(--tema-yerel-eczanem-islevsel-metin-02)" zemin="var(--tema-yerel-eczanem-islevsel-zemin-01)" />
+              <OzetKarti ikon={Send} etiket="Gönderi Sayısı" deger={veri?.aylikIstatistikler.uttGonderimSayisi ?? 0} detay="Bu ay eczanelere yaptığınız toplam gönderi" renk="var(--tema-yerel-eczanem-islevsel-metin-03)" zemin="var(--tema-yerel-eczanem-islevsel-zemin-02)" />
+            </OzetKartlari>
 
             <div className="flex flex-wrap items-center justify-between gap-3">
               <PeriyotButonlari<GonderimFiltresi>
@@ -311,21 +305,26 @@ export default function EczanemYayinlariPage() {
             </div>
 
             <section>
-              <div className="mb-3">
+              <div className="mb-3 flex items-center justify-between gap-2">
                 <UttYayinTuruToggle
                   yayinlar={durumFiltreliYayinlar}
                   deger={aktifYayinTuru}
                   onDegistir={(tur) => { setAktifYayinTuru(tur); secimSifirla(); }}
-                  className="w-fit flex-none"
+                  className="h-10 min-w-0 [scrollbar-width:none]"
+                />
+                <EczanemYayinDonemiSecimi
+                  donem={secilenDonem}
+                  yilSecenekleri={yilSecenekleri}
+                  onDegistir={(degisiklik) => { setSecilenDonem((donem) => ({ ...donem, ...degisiklik })); secimSifirla(); }}
                 />
               </div>
               <div className="mb-3">
-                <h2 className="text-base font-extrabold text-[var(--tema-yerel-eczanem-ana-metin-03)]">Eczanelere Gönderilecek Öğrenme İçerikleri</h2>
+                <h2 className="text-base font-extrabold text-[var(--tema-yerel-eczanem-ana-metin-03)]">{rafBasliklari[gonderimFiltresi]}</h2>
                 <p className="mt-0.5 text-[11px] font-semibold text-[var(--tema-yerel-eczanem-yardimci-metin-01)]">{gorunenYayinlar.length} yayın gösteriliyor</p>
               </div>
               {gorunenYayinlar.length === 0 ? (
                 <div className="rounded-2xl border border-[var(--tema-yerel-eczanem-cizgi-05)] bg-[var(--tema-yerel-eczanem-kart-01)] px-4 py-14 text-center text-sm font-semibold text-[var(--tema-yerel-eczanem-yardimci-metin-05)]">
-                  {aktifYayinTuru !== "tumu" ? "Seçilen yayın türünde bu listede yayın bulunmuyor." : gonderimFiltresi === "gonderilebilir" ? "Şu anda gönderime hazır yayın bulunmuyor." : gonderimFiltresi === "gonderilen" ? "Henüz eczaneye gönderilmiş yayın bulunmuyor." : "Dağıtıma hazır Eczanem öğrenme içeriği bulunmuyor."}
+                  {yayinlar.length === 0 ? "Seçilen ayda yayın bulunmuyor." : aktifYayinTuru !== "tumu" ? "Seçilen yayın türünde bu listede yayın bulunmuyor." : gonderimFiltresi === "gonderilebilir" ? "Şu anda gönderime hazır yayın bulunmuyor." : gonderimFiltresi === "gonderilen" ? "Henüz eczaneye gönderilmiş yayın bulunmuyor." : "Dağıtıma hazır Eczanem öğrenme içeriği bulunmuyor."}
                 </div>
               ) : (
                 <MobilYayinAkisi
@@ -333,7 +332,7 @@ export default function EczanemYayinlariPage() {
                   kayitAnahtari={(yayin) => yayin.yayin_id}
                   renderKart={yayinKarti}
                   sayacGoster={false}
-                  sifirlamaAnahtari={`${gonderimFiltresi}-${aktifYayinTuru}`}
+                  sifirlamaAnahtari={`${secilenDonem.yil}-${secilenDonem.ay}-${gonderimFiltresi}-${aktifYayinTuru}`}
                   masaustuIcerik={(
                     <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                       {gorunenYayinlar.map((yayin) => <div key={yayin.yayin_id} className="min-w-0">{yayinKarti(yayin)}</div>)}
@@ -345,7 +344,7 @@ export default function EczanemYayinlariPage() {
 
           </>
         )}
-      </div>
+      </EczanemYayinSayfasi>
       <EczanemGonderimPaneli
         yayinlar={seciliYayinlar}
         eczaneler={eczaneler}
@@ -357,6 +356,6 @@ export default function EczanemYayinlariPage() {
       />
       <HataMesajiContainer mesajlar={mesajlar} />
 
-    </div>
+    </>
   );
 }

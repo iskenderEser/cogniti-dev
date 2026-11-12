@@ -10,7 +10,6 @@ import { rolCozucu } from "@/lib/utils/rolCozucu";
 import { TUKETICI_ROLLER } from "@/lib/utils/roller";
 import { uttEczanemVerisi, uttEczanemAylikIstatistikleri, uttGonderimIncelemesiTamamlandi, eczaneyeGonder } from "@/lib/eczanem/gonderim";
 import { ECZANEM_KAPALI_MESAJI, uttEczanemErisimi } from "@/lib/eczanem/erisim";
-import { uttEczaneFirmaBaglari } from "@/lib/eclub/uttEczane";
 
 export async function GET(request: NextRequest) {
   try {
@@ -30,9 +29,7 @@ export async function GET(request: NextRequest) {
     const firmaId = erisim.firmaIdler[0];
     if (!firmaId) return hataYaniti("Firma kapsamı çözülemedi.", "Eczanem UTT firma kapsamı", null);
     if (request.nextUrl.searchParams.get("sayac") === "1") {
-      const baglar = await uttEczaneFirmaBaglari(adminSupabase, user.id);
-      const eczaneIdler = [...new Set(baglar.filter((bag) => bag.firmaId === firmaId).map((bag) => bag.eczaneId))];
-      const aylikIstatistikler = await uttEczanemAylikIstatistikleri(adminSupabase, user.id, eczaneIdler);
+      const aylikIstatistikler = await uttEczanemAylikIstatistikleri(adminSupabase, user.id);
       return NextResponse.json({ aylikIstatistikler }, { status: 200 });
     }
     const veri = await uttEczanemVerisi(adminSupabase, user.id, firmaId, erisim.takimId ?? null);

@@ -212,13 +212,13 @@ export interface UttEczanemVeri {
   esik: number;
   yayinlar: UttEczanemYayin[];
   eczaneler: UttEczanemEczane[];
-  gonderimler: Array<{ yayin_id: string; eczane_id: string; created_at: string }>;
+  gonderimler: Array<{ yayin_id: string; eczane_id: string; created_at: string; gonderen_utt_id?: string }>;
   aylikIstatistikler: UttEczanemAylikIstatistikler;
 }
 
 export interface UttEczanemAylikIstatistikler {
+  gonderilenEczaneSayisi: number;
   uttGonderimSayisi: number;
-  eczaneGonderimSayisi: number;
   sonrakiAyBaslangici: string;
 }
 
@@ -251,28 +251,30 @@ export function eczanemAylikSayacPenceresi(simdi: Date = new Date()) {
 export async function uttEczanemAylikIstatistikleri(
   adminSupabase: SupabaseClient,
   uttAuthId: string,
-  eczaneIdler: string[],
   simdi: Date = new Date(),
 ): Promise<UttEczanemAylikIstatistikler> {
   const { baslangic, bitisHaric } = eczanemAylikSayacPenceresi(simdi);
-  const [uttSonuc, eczaneSonuc] = await Promise.all([
-    adminSupabase.from("eczanem_eczane_gonderimleri")
-      .select("gonderim_id", { count: "exact", head: true })
+  const gonderilenEczaneler = new Set<string>();
+  let uttGonderimSayisi = 0;
+  let sonGonderimId: string | undefined;
+  for (;;) {
+    const sorgu = adminSupabase.from("eczanem_eczane_gonderimleri")
+      .select("gonderim_id, eczane_id")
       .eq("gonderen_utt_id", uttAuthId)
       .gte("created_at", baslangic)
-      .lt("created_at", bitisHaric),
-    eczaneIdler.length > 0
-      ? adminSupabase.from("eczanem_gonderimler")
-        .select("gonderim_id", { count: "exact", head: true })
-        .in("eczane_id", eczaneIdler)
-        .gte("created_at", baslangic)
-        .lt("created_at", bitisHaric)
-      : Promise.resolve({ count: 0, error: null }),
-  ]);
-  if (uttSonuc.error || eczaneSonuc.error) throw new Error("Eczanem aylık gönderim sayıları okunamadı.");
+      .lt("created_at", bitisHaric)
+      .order("gonderim_id")
+      .limit(1000);
+    const { data, error } = await (sonGonderimId ? sorgu.gt("gonderim_id", sonGonderimId) : sorgu);
+    if (error) throw new Error("Eczanem aylık gönderim sayıları okunamadı.");
+    if (!data?.length) break;
+    for (const gonderim of data) gonderilenEczaneler.add(gonderim.eczane_id);
+    uttGonderimSayisi += data.length;
+    sonGonderimId = data[data.length - 1].gonderim_id;
+  }
   return {
-    uttGonderimSayisi: uttSonuc.count ?? 0,
-    eczaneGonderimSayisi: eczaneSonuc.count ?? 0,
+    gonderilenEczaneSayisi: gonderilenEczaneler.size,
+    uttGonderimSayisi,
     sonrakiAyBaslangici: bitisHaric,
   };
 }
@@ -284,10 +286,9 @@ export async function uttEczanemVerisi(
   adminSupabase: SupabaseClient,
   uttAuthId: string,
   firmaId: string,
-  takimId: string | null
+  takimId: string | null,
+  gonderenBilgisi = false,
 ): Promise<UttEczanemVeri> {
-  const esik = await aktifUyeEsigi(adminSupabase);
-
   // 1. Eczanem yayınları (bu UTT'nin takımı, yayında)
   let yayinQuery = adminSupabase
     .from("v_yayin_detay")
@@ -300,14 +301,19 @@ export async function uttEczanemVerisi(
   yayinQuery = takimId
     ? yayinQuery.or(`takim_id.is.null,takim_id.eq.${takimId}`)
     : yayinQuery.is("takim_id", null);
-  const { data: yayinRaw, error: yayinError } = await yayinQuery;
+  const [{ data: yayinRaw, error: yayinError }, esik, uttBaglari, aylikIstatistikler] = await Promise.all([
+    yayinQuery,
+    aktifUyeEsigi(adminSupabase),
+    uttEczaneFirmaBaglari(adminSupabase, uttAuthId),
+    uttEczanemAylikIstatistikleri(adminSupabase, uttAuthId),
+  ]);
   if (yayinError) throw new Error("Eczanem yayınları okunamadı.");
 
-  const gorunenUrunIdleri = await yayinGorunenUrunIdHaritasi(
-    adminSupabase, (yayinRaw ?? []).map((yayin) => yayin.yayin_id),
-  );
-
-  const sureler = await eczanemGonderimBaslangiclari(adminSupabase,(yayinRaw ?? []).map(y => y.yayin_id));
+  const hamYayinIdleri = (yayinRaw ?? []).map((yayin) => yayin.yayin_id);
+  const [gorunenUrunIdleri, sureler] = await Promise.all([
+    yayinGorunenUrunIdHaritasi(adminSupabase, hamYayinIdleri),
+    eczanemGonderimBaslangiclari(adminSupabase, hamYayinIdleri),
+  ]);
 
   const yayinlar: UttEczanemYayin[] = ((yayinRaw as VYayinAdDetay[] | null) ?? []).filter((y) => Boolean(y.arac_id && y.arac_turu)).map(y => {
     const { thumbnail_url } = yayinThumbnailCevabi(y);
@@ -333,13 +339,14 @@ export async function uttEczanemVerisi(
 
   if (yayinlar.length > 0) {
     const yayinIdler = yayinlar.map((yayin) => yayin.yayin_id);
-    const turler = await gecerliTurBaslangiclari(adminSupabase, yayinIdler, true);
-    const { data: incelemeler, error: incelemeError } = await adminSupabase
-      .from("eclub_utt_yayin_incelemeleri")
-      .select("yayin_id, arac_id, tamamlandi_at")
-      .eq("utt_id", uttAuthId)
-      .in("yayin_id", yayinIdler)
-      .not("tamamlandi_at", "is", null);
+    const [turler, { data: incelemeler, error: incelemeError }] = await Promise.all([
+      gecerliTurBaslangiclari(adminSupabase, yayinIdler, true),
+      adminSupabase.from("eclub_utt_yayin_incelemeleri")
+        .select("yayin_id, arac_id, tamamlandi_at")
+        .eq("utt_id", uttAuthId)
+        .in("yayin_id", yayinIdler)
+        .not("tamamlandi_at", "is", null),
+    ]);
     if (incelemeError) throw new Error("Eczanem gönderim öncesi incelemeleri okunamadı.");
     const tamamlanan = new Set((incelemeler ?? []).filter((inceleme) => {
       const yayin = yayinlar.find((kayit) => kayit.yayin_id === inceleme.yayin_id);
@@ -351,14 +358,12 @@ export async function uttEczanemVerisi(
   }
 
   // 2. UTT'nin bağladığı aktif eczaneler
-  const uttBaglari = await uttEczaneFirmaBaglari(adminSupabase, uttAuthId);
   const eczaneIdler = [...new Set(
     uttBaglari.filter((bag) => bag.firmaId === firmaId).map((bag) => bag.eczaneId)
   )];
-  const [adMap, sayiMap, aylikIstatistikler, eczaciBaglari] = await Promise.all([
+  const [adMap, sayiMap, eczaciBaglari] = await Promise.all([
     eczaneAdMap(adminSupabase, eczaneIdler),
     aktifUyeSayilari(adminSupabase, eczaneIdler),
-    uttEczanemAylikIstatistikleri(adminSupabase, uttAuthId, eczaneIdler),
     eczaneIdler.length
       ? adminSupabase.from("eclub_kisi_eczane")
         .select("eczane_id, eclub_kisiler ( rol, ad, soyad )")
@@ -391,11 +396,11 @@ export async function uttEczanemVerisi(
     .sort((a, b) => a.eczane_adi.localeCompare(b.eczane_adi, "tr"));
 
   // 3. Zaten gönderilmiş (yayın,eczane) çiftleri — yalnız bu yayın/eczane kümesi
-  let gonderimler: Array<{ yayin_id: string; eczane_id: string; created_at: string }> = [];
+  let gonderimler: UttEczanemVeri["gonderimler"] = [];
   if (yayinlar.length && eczaneIdler.length) {
     const { data: gnd, error: gonderimError } = await adminSupabase
       .from("eczanem_eczane_gonderimleri")
-      .select("yayin_id, eczane_id, created_at")
+      .select("yayin_id, eczane_id, created_at, gonderen_utt_id")
       .in("yayin_id", yayinlar.map((y) => y.yayin_id))
       .in("eczane_id", eczaneIdler);
     if (gonderimError) throw new Error("Eczanem gönderim durumları okunamadı.");
@@ -403,6 +408,7 @@ export async function uttEczanemVerisi(
       yayin_id: gonderim.yayin_id,
       eczane_id: gonderim.eczane_id,
       created_at: gonderim.created_at,
+      ...(gonderenBilgisi ? { gonderen_utt_id: gonderim.gonderen_utt_id } : {}),
     }));
   }
 

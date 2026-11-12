@@ -29,9 +29,8 @@ test("mutlu: UTT yüzeyi panel kabuğunda, shadcn deseninde ve atomik gönderiml
   assert.match(page, /<EczanemYayinGonderimKarti/);
   assert.match(page, /<EczanemGonderimPaneli/);
   assert.match(page, /etiket="Gönderilebilen Eczane Sayısı" deger=\{hazirEczaneler\.length\}/);
-  assert.match(page, /Eclub takımınızda olan toplam eczane sayısı/);
-  assert.match(page, /etiket="Gönderilen Toplam Yayın" deger=\{veri\?\.aylikIstatistikler\.uttGonderimSayisi/);
-  assert.match(page, /etiket="Eczanelerin Gönderdiği Toplam Yayın" deger=\{veri\?\.aylikIstatistikler\.eczaneGonderimSayisi/);
+  assert.match(page, /etiket="Gönderilen Eczane Sayısı" deger=\{veri\?\.aylikIstatistikler\.gonderilenEczaneSayisi/);
+  assert.match(page, /etiket="Gönderi Sayısı" deger=\{veri\?\.aylikIstatistikler\.uttGonderimSayisi/);
   assert.match(page, /api\?sayac=1/);
   assert.match(page, /await veriCek\(\)/);
   assert.match(gonderimPaneli, /Uygun eczaneleri seçin/);
@@ -47,7 +46,7 @@ test("mutlu: UTT yüzeyi panel kabuğunda, shadcn deseninde ve atomik gönderiml
   assert.match(yayinKarti, /<YayinKarti/);
   assert.match(page, /<MobilYayinAkisi/);
   assert.match(page, /grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5/);
-  assert.match(page, /sifirlamaAnahtari=\{`\$\{gonderimFiltresi\}-\$\{aktifYayinTuru\}`\}/);
+  assert.match(page, /sifirlamaAnahtari=\{`\$\{secilenDonem\.yil\}-\$\{secilenDonem\.ay\}-\$\{gonderimFiltresi\}-\$\{aktifYayinTuru\}`\}/);
   assert.match(page, /<UttGonderimIncelemesi/);
   assert.match(page, /kanal="eczanem"/);
   assert.match(page, /yayin\.gonderim_incelemesi_tamamlandi && hazirEczaneler\.some/);
@@ -64,7 +63,7 @@ test("mutlu: UTT yüzeyi panel kabuğunda, shadcn deseninde ve atomik gönderiml
   assert.match(videoOnizleme, /seconds >= duration - 0\.5/);
   assert.match(videoOnizleme, /Video tamamlandı/);
   assert.doesNotMatch(videoOnizleme, /fetch\(|\/izle\/api\//);
-  assert.match(nav, /Eczanem Yayınları[\s\S]*?\/eczanem\/yayinlar/);
+  assert.match(nav, /etiket: "Eczaneye Gönderilen Yayınlar", path: "\/eczanem\/yayinlar"/);
   assert.match(route, /uttEczanemVerisi\(adminSupabase, user\.id, firmaId, erisim\.takimId/);
   assert.match(gonderim, /rpc\("eczanem_utt_eczaneye_gonder"/);
   assert.match(gonderim, /yayin_id, urun_adi, teknik_adi, firma_adi, talep_no, video_puani, icerik_turu, video_url, thumbnail_url, yayin_tarihi, arac_id, arac_turu, arac_kapak_yolu, arac_dosya_yolu, arac_metadata/);

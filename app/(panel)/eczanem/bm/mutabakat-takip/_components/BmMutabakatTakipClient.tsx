@@ -26,6 +26,7 @@ interface BmMutabakatUttOzeti {
   utt_id: string;
   utt_adi: string;
   takim_adi: string;
+  takim_id?: string | null;
   bm_id: string | null;
   bm_adi: string;
   bolge_adi: string;
@@ -43,6 +44,7 @@ interface BmMutabakatOzeti {
   toplam_puan: number;
   toplam_indirim_tl: number;
   uttler: BmMutabakatUttOzeti[];
+  tmAdlari?: Record<string, string>;
 }
 
 interface TmMutabakatBmOzeti {
@@ -89,7 +91,7 @@ function OzetKarti({ ikon: Icon, etiket, deger, detay, renk, zemin }: { ikon: Lu
   </Card>;
 }
 
-function UttPaneli({ utt, acik, donem, durum, yenileme, rol, endpoint, kayitGuncellemeleri, onKayitGuncelle, onAcKapat }: { utt: BmMutabakatUttOzeti; acik: boolean; donem: string; durum: UttMutabakatFiltresi; yenileme: number; rol: "bm" | "tm"; endpoint: string; kayitGuncellemeleri: Map<string, KayitGuncellemesi>; onKayitGuncelle: (mutabakatId: string, guncelleme: KayitGuncellemesi) => void; onAcKapat: () => void }) {
+function UttPaneli({ utt, acik, donem, durum, yenileme, rol, endpoint, kararYetkisi = true, kayitGuncellemeleri, onKayitGuncelle, onAcKapat }: { utt: BmMutabakatUttOzeti; acik: boolean; donem: string; durum: UttMutabakatFiltresi; yenileme: number; rol: "bm" | "tm"; endpoint: string; kararYetkisi?: boolean; kayitGuncellemeleri: Map<string, KayitGuncellemesi>; onKayitGuncelle: (mutabakatId: string, guncelleme: KayitGuncellemesi) => void; onAcKapat: () => void }) {
   const [veri, setVeri] = useState<UttMutabakatEczaneListesi | null>(null);
   const [yukleniyor, setYukleniyor] = useState(false);
   const [hata, setHata] = useState<string | null>(null);
@@ -306,7 +308,7 @@ function UttPaneli({ utt, acik, donem, durum, yenileme, rol, endpoint, kayitGunc
                 urunSecenekleri={detay.urun_secenekleri}
                 seciliUrunId={seciliUrunId}
                 onUrunDegistir={(urunId) => { setDetaylar((mevcut) => { const yeni = new Map(mevcut); yeni.delete(eczane.eczane_id); return yeni; }); setUrunFiltreleri((mevcut) => new Map(mevcut).set(eczane.eczane_id, urunId)); setDetaySayfalari((mevcut) => new Map(mevcut).set(eczane.eczane_id, 0)); }}
-                onKarar={(secili, karar) => { void (rol === "bm" ? bmKarariVer(secili, karar) : tmKarariVer(secili, karar)); }}
+                onKarar={kararYetkisi ? (secili, karar) => { void (rol === "bm" ? bmKarariVer(secili, karar) : tmKarariVer(secili, karar)); } : undefined}
                 onOnayaGonder={rol === "bm" ? (secili) => { void onayla(secili); } : undefined}
                 bosIcerik={<div className="px-4 py-6 text-center text-xs text-[var(--tema-yerel-eczanem-yardimci-metin-01)]"><p>{seciliUrunId ? "Bu ürün için gösterilecek işlem yok." : "Bu eczanede gösterilecek işlem yok."}</p>{seciliUrunId && <button type="button" onClick={() => { setDetaylar((mevcut) => { const yeni = new Map(mevcut); yeni.delete(eczane.eczane_id); return yeni; }); setUrunFiltreleri((mevcut) => new Map(mevcut).set(eczane.eczane_id, null)); setDetaySayfalari((mevcut) => new Map(mevcut).set(eczane.eczane_id, 0)); }} className="mt-2 font-bold text-[var(--tema-yerel-eczanem-eylem-metin-01)] underline">Tümünü göster</button>}</div>}
                 altIcerik={detay.toplam > UTT_MUTABAKAT_SAYFA_BOYUTU ? <nav aria-label={`${eczane.eczane_adi || "Eczane"} işlem sayfaları`} className="flex items-center justify-end gap-2 border-t border-[var(--tema-yerel-eczanem-cizgi-04)] px-3 py-2">
@@ -354,7 +356,23 @@ function tmBmGruplariniOlustur(uttler: BmMutabakatUttOzeti[]): TmMutabakatBmOzet
   return [...gruplar.values()].sort((a, b) => a.bm_adi.localeCompare(b.bm_adi, "tr"));
 }
 
-function BmPaneli({ bm, acik, acikUttler, donem, durum, yenileme, endpoint, kayitGuncellemeleri, onKayitGuncelle, onAcKapat, onUttAcKapat }: {
+function tmGruplariniOlustur(uttler: BmMutabakatUttOzeti[], tmAdlari: Record<string, string>) {
+  const takimlar = new Map<string, BmMutabakatUttOzeti[]>();
+  for (const utt of uttler) {
+    const id = utt.takim_id ?? "takimsiz";
+    const takim = takimlar.get(id) ?? [];
+    takim.push(utt);
+    takimlar.set(id, takim);
+  }
+  return [...takimlar].map(([id, takim]) => ({
+    id,
+    ad: tmAdlari[id] || "TM ataması bulunmuyor",
+    takimAdi: takim[0].takim_adi,
+    bmler: tmBmGruplariniOlustur(takim),
+  })).sort((a, b) => a.ad.localeCompare(b.ad, "tr"));
+}
+
+function BmPaneli({ bm, acik, acikUttler, donem, durum, yenileme, endpoint, kararYetkisi, kayitGuncellemeleri, onKayitGuncelle, onAcKapat, onUttAcKapat }: {
   bm: TmMutabakatBmOzeti;
   acik: boolean;
   acikUttler: Set<string>;
@@ -362,6 +380,7 @@ function BmPaneli({ bm, acik, acikUttler, donem, durum, yenileme, endpoint, kayi
   durum: UttMutabakatFiltresi;
   yenileme: number;
   endpoint: string;
+  kararYetkisi: boolean;
   kayitGuncellemeleri: Map<string, KayitGuncellemesi>;
   onKayitGuncelle: (mutabakatId: string, guncelleme: KayitGuncellemesi) => void;
   onAcKapat: () => void;
@@ -381,14 +400,14 @@ function BmPaneli({ bm, acik, acikUttler, donem, durum, yenileme, endpoint, kayi
     <div id={`tm-bm-mutabakat-${bm.bm_id}`} hidden={!acik} className="border-t border-[var(--tema-yerel-eczanem-cizgi-05)] bg-[var(--tema-yerel-eczanem-sayfa-zemini-03)] p-2 md:p-3">
       <div className="overflow-hidden rounded-xl border border-[var(--tema-yerel-eczanem-cizgi-05)] bg-[var(--tema-yerel-eczanem-kart-01)]">
         <div className="hidden grid-cols-[minmax(220px,2fr)_120px_140px_170px_190px_30px] gap-3 border-b border-[var(--tema-yerel-eczanem-cizgi-04)] bg-[var(--tema-yerel-eczanem-sayfa-zemini-04)] px-4 py-2 text-[11px] font-extrabold uppercase text-[var(--tema-yerel-eczanem-yardimci-metin-01)] lg:grid"><span>UTT Adı</span><span className="text-center">Eczane</span><span className="text-center">İşlem</span><span className="text-center">Onaylanan Puan</span><span className="text-center">İndirim Tutarı</span><span /></div>
-        {bm.uttler.map((utt) => <UttPaneli key={utt.utt_id} utt={utt} acik={acikUttler.has(utt.utt_id)} donem={donem} durum={durum} yenileme={yenileme} rol="tm" endpoint={endpoint} kayitGuncellemeleri={kayitGuncellemeleri} onKayitGuncelle={onKayitGuncelle} onAcKapat={() => onUttAcKapat(utt.utt_id)} />)}
+        {bm.uttler.map((utt) => <UttPaneli key={utt.utt_id} utt={utt} acik={acikUttler.has(utt.utt_id)} donem={donem} durum={durum} yenileme={yenileme} rol="tm" endpoint={endpoint} kararYetkisi={kararYetkisi} kayitGuncellemeleri={kayitGuncellemeleri} onKayitGuncelle={onKayitGuncelle} onAcKapat={() => onUttAcKapat(utt.utt_id)} />)}
       </div>
     </div>
   </div>;
 }
 
-export default function BmMutabakatTakipClient({ rol = "bm" }: { rol?: "bm" | "tm" }) {
-  const endpoint = `/eczanem/${rol}/api/mutabakat`;
+export default function BmMutabakatTakipClient({ rol = "bm", yoneticiGorunumu = false }: { rol?: "bm" | "tm"; yoneticiGorunumu?: boolean }) {
+  const endpoint = `/eczanem/${yoneticiGorunumu ? "yonetici" : rol}/api/mutabakat`;
   const [donem, setDonem] = useState(varsayilanUttMutabakatDonemi);
   const [durum, setDurum] = useState<UttMutabakatFiltresi>("tumu");
   const [veri, setVeri] = useState<BmMutabakatOzeti | null>(null);
@@ -398,12 +417,17 @@ export default function BmMutabakatTakipClient({ rol = "bm" }: { rol?: "bm" | "t
   const [duzIslemdeId, setDuzIslemdeId] = useState<string | null>(null);
   const [duzIslemHatasi, setDuzIslemHatasi] = useState<string | null>(null);
   const [kayitGuncellemeleri, setKayitGuncellemeleri] = useState<Map<string, KayitGuncellemesi>>(new Map());
+  const [acikTakimlar, setAcikTakimlar] = useState<Set<string> | null>(null);
   const [acikBmler, setAcikBmler] = useState<Set<string>>(new Set());
   const [acikUttler, setAcikUttler] = useState<Set<string>>(new Set());
   const [yukleniyor, setYukleniyor] = useState(true);
   const [hata, setHata] = useState<string | null>(null);
   const [yenileme, setYenileme] = useState(0);
   const bmGruplari = useMemo(() => rol === "tm" ? tmBmGruplariniOlustur(veri?.uttler ?? []) : [], [rol, veri?.uttler]);
+  const tmGruplari = useMemo(() => yoneticiGorunumu ? tmGruplariniOlustur(veri?.uttler ?? [], veri?.tmAdlari ?? {}) : [], [yoneticiGorunumu, veri]);
+  const ilkAcikTm = tmGruplari.find((tm) => tm.ad.toLocaleLowerCase("tr-TR") === "emre kaya")
+    ?? (tmGruplari.length === 1 ? tmGruplari[0] : undefined);
+  const gorunenTakimlar = acikTakimlar ?? new Set(ilkAcikTm ? [ilkAcikTm.id] : []);
   const duzUrunSecenekleri = useMemo(() => {
     const urunler = new Map<string, { urun_id: string; urun_adi: string; gorunen_urun_id: string | null }>();
     for (const kayit of duzVeri?.kayitlar ?? []) urunler.set(kayit.urun_id, { urun_id: kayit.urun_id, urun_adi: kayit.urun_adi, gorunen_urun_id: kayit.gorunen_urun_id ?? null });
@@ -416,10 +440,10 @@ export default function BmMutabakatTakipClient({ rol = "bm" }: { rol?: "bm" | "t
 
   useEffect(() => {
     try {
-      const kayitliGorunum = window.localStorage.getItem(`eczanem-${rol}-mutabakat-gorunumu`);
+      const kayitliGorunum = window.localStorage.getItem(`eczanem-${yoneticiGorunumu ? "yonetici" : rol}-mutabakat-gorunumu`);
       if (kayitliGorunum === "duz" || kayitliGorunum === "akordiyon") setGorunum(kayitliGorunum);
     } catch { /* Tarayıcı depolaması kapalıysa oturum varsayılan görünümle devam eder. */ }
-  }, [rol]);
+  }, [rol, yoneticiGorunumu]);
 
   useEffect(() => {
     const denetleyici = new AbortController();
@@ -439,11 +463,11 @@ export default function BmMutabakatTakipClient({ rol = "bm" }: { rol?: "bm" | "t
   }, [donem, durum, endpoint, yenileme]);
 
   const filtreDegistir = (sonrakiDonem: string, sonrakiDurum: UttMutabakatFiltresi) => {
-    setDonem(sonrakiDonem); setDurum(sonrakiDurum); setAcikBmler(new Set()); setAcikUttler(new Set()); setDuzUrunId(null); setKayitGuncellemeleri(new Map());
+    setDonem(sonrakiDonem); setDurum(sonrakiDurum); setAcikTakimlar(null); setAcikBmler(new Set()); setAcikUttler(new Set()); setDuzUrunId(null); setKayitGuncellemeleri(new Map());
   };
   const gorunumDegistir = (sonraki: "akordiyon" | "duz") => {
     setGorunum(sonraki);
-    try { window.localStorage.setItem(`eczanem-${rol}-mutabakat-gorunumu`, sonraki); } catch { /* Tercih yalnız bu oturumda korunur. */ }
+    try { window.localStorage.setItem(`eczanem-${yoneticiGorunumu ? "yonetici" : rol}-mutabakat-gorunumu`, sonraki); } catch { /* Tercih yalnız bu oturumda korunur. */ }
   };
   const kayitGuncelle = (mutabakatId: string, guncelleme: KayitGuncellemesi) => setKayitGuncellemeleri((mevcut) => {
     const yeni = new Map(mevcut);
@@ -485,12 +509,17 @@ export default function BmMutabakatTakipClient({ rol = "bm" }: { rol?: "bm" | "t
     return yeni;
   });
 
+  const bmTablosu = (gruplar: TmMutabakatBmOzeti[]) => <>
+            <div className="hidden grid-cols-[minmax(220px,2fr)_100px_110px_120px_160px_180px_30px] gap-3 border-b border-[var(--tema-yerel-eczanem-cizgi-04)] bg-[var(--tema-yerel-eczanem-sayfa-zemini-04)] px-4 py-2 text-[11px] font-extrabold uppercase text-[var(--tema-yerel-eczanem-yardimci-metin-01)] lg:grid"><span>BM Adı</span><span className="text-center">UTT</span><span className="text-center">Eczane</span><span className="text-center">İşlem</span><span className="text-center">Onaylanan Puan</span><span className="text-center">İndirim Tutarı</span><span /></div>
+            {gruplar.map((bm) => <BmPaneli key={bm.bm_id} bm={bm} acik={acikBmler.has(bm.bm_id)} acikUttler={acikUttler} donem={donem} durum={durum} yenileme={yenileme} endpoint={endpoint} kararYetkisi={!yoneticiGorunumu} kayitGuncellemeleri={kayitGuncellemeleri} onKayitGuncelle={kayitGuncelle} onAcKapat={() => bmAcKapat(bm.bm_id)} onUttAcKapat={uttAcKapat} />)}
+  </>;
+
   return <div className="min-h-full bg-[var(--tema-yerel-eczanem-sayfa-zemini-05)]" style={{ fontFamily: "'Nunito', sans-serif" }}>
     <div className="mx-auto flex max-w-[1480px] flex-col gap-5 px-3 py-4 md:px-6 md:py-5 lg:px-8 lg:py-7">
       <SayfaYenileBasligi className="flex flex-wrap items-end justify-between gap-4"
         baslik={<div className="inline-flex items-center"><h1 className="text-2xl font-extrabold tracking-[-0.025em] text-[var(--tema-yerel-eczanem-ana-metin-04)] md:text-[28px]">Mutabakat Takip</h1><SayfaRehberi anahtar={rol === "bm" ? "eczanem-bm-mutabakat-takip" : "eczanem-tm-mutabakat-takip"} className="ml-1.5 -translate-y-1.5" /></div>}
 
-        aciklama={<><p className="mt-1 max-w-3xl text-sm leading-5 text-[var(--tema-yerel-eczanem-yardimci-metin-07)]">{rol === "bm" ? "Bölgenizdeki" : "Takımınızdaki"} UTT&apos;lerin Eczanem indirim mutabakatlarını takip edin.</p></>}
+        aciklama={<><p className="mt-1 max-w-3xl text-sm leading-5 text-[var(--tema-yerel-eczanem-yardimci-metin-07)]">{yoneticiGorunumu ? "Firmanızdaki" : rol === "bm" ? "Bölgenizdeki" : "Takımınızdaki"} UTT&apos;lerin Eczanem indirim mutabakatlarını takip edin.</p></>}
         aksiyon={<YenileButonu yenileniyor={yukleniyor} onYenile={() => setYenileme((deger) => deger + 1)} />}
 
       />
@@ -509,7 +538,7 @@ export default function BmMutabakatTakipClient({ rol = "bm" }: { rol?: "bm" | "t
       {yukleniyor && <p role="status" className="rounded-2xl border border-[var(--tema-yerel-eczanem-cizgi-05)] bg-[var(--tema-yerel-eczanem-kart-01)] px-4 py-8 text-center text-sm font-semibold text-[var(--tema-yerel-eczanem-yardimci-metin-05)]">Mutabakat takip kayıtları yükleniyor…</p>}
       {hata && <Card role="alert" className="gap-3 border-[var(--tema-yerel-eczanem-islevsel-cizgi-01)] bg-[var(--tema-yerel-eczanem-islevsel-zemin-03)] py-8 text-center shadow-none"><CardContent className="flex flex-col items-center px-5"><span className="flex size-11 items-center justify-center rounded-2xl bg-[var(--tema-yerel-eczanem-islevsel-zemin-04)] text-[var(--tema-yerel-eczanem-islevsel-metin-01)]"><CircleAlert /></span><CardTitle className="mt-3 text-base text-[var(--tema-yerel-eczanem-islevsel-metin-04)]">Veriler yüklenemedi</CardTitle><CardDescription className="mt-1">{hata}</CardDescription><Button className="mt-4 bg-[var(--tema-yerel-eczanem-eylem-zemin-01)] hover:bg-[var(--tema-yerel-eczanem-eylem-zemin-02)]" onClick={() => setYenileme((deger) => deger + 1)}>Tekrar dene</Button></CardContent></Card>}
       {!yukleniyor && !hata && <section aria-label={rol === "tm" ? "BM mutabakatları" : "UTT mutabakatları"}>
-        <div className="mb-3 flex flex-wrap items-end justify-between gap-3"><div><h2 className="text-base font-extrabold text-[var(--tema-yerel-eczanem-ana-metin-03)]">İndirim Onay Tablosu</h2><p className="mt-0.5 text-[11px] font-semibold text-[var(--tema-yerel-eczanem-yardimci-metin-01)]">{rol === "tm" ? `${bmGruplari.length} BM · ` : ""}{veri?.uttler.length ?? 0} UTT gösteriliyor · {veri?.toplam ?? 0} indirim işlemi</p></div><div className="flex flex-wrap items-center justify-end gap-2"><PeriyotButonlari<"akordiyon" | "duz"> secenekler={[{ key: "akordiyon", label: "Akordiyon Tablo" }, { key: "duz", label: "Düz Tablo" }]} deger={gorunum} onDegistir={gorunumDegistir} ariaLabel="Mutabakat tablo görünümü" className="w-fit flex-none" /><MutabakatExcelButonu rol={rol} donem={donem} kayitlar={tumDuzKayitlar} />{gorunum === "akordiyon" && (acikBmler.size > 0 || acikUttler.size > 0) && <button type="button" onClick={() => { setAcikBmler(new Set()); setAcikUttler(new Set()); }} className="text-xs font-bold text-[var(--tema-yerel-eczanem-eylem-metin-01)] hover:underline">Tümünü kapat</button>}</div></div>
+        <div className="mb-3 flex flex-wrap items-end justify-between gap-3"><div><h2 className="text-base font-extrabold text-[var(--tema-yerel-eczanem-ana-metin-03)]">İndirim Onay Tablosu</h2><p className="mt-0.5 text-[11px] font-semibold text-[var(--tema-yerel-eczanem-yardimci-metin-01)]">{rol === "tm" ? `${bmGruplari.length} BM · ` : ""}{veri?.uttler.length ?? 0} UTT gösteriliyor · {veri?.toplam ?? 0} indirim işlemi</p></div><div className="flex flex-wrap items-center justify-end gap-2"><PeriyotButonlari<"akordiyon" | "duz"> secenekler={[{ key: "akordiyon", label: "Akordiyon Tablo" }, { key: "duz", label: "Düz Tablo" }]} deger={gorunum} onDegistir={gorunumDegistir} ariaLabel="Mutabakat tablo görünümü" className="w-fit flex-none" /><MutabakatExcelButonu rol={rol} donem={donem} kayitlar={tumDuzKayitlar} />{gorunum === "akordiyon" && (gorunenTakimlar.size > 0 || acikBmler.size > 0 || acikUttler.size > 0) && <button type="button" onClick={() => { setAcikTakimlar(new Set()); setAcikBmler(new Set()); setAcikUttler(new Set()); }} className="text-xs font-bold text-[var(--tema-yerel-eczanem-eylem-metin-01)] hover:underline">Tümünü kapat</button>}</div></div>
         {gorunum === "duz" ? <>
           {duzIslemHatasi && <p role="alert" className="mb-2 text-xs font-semibold text-[var(--tema-yerel-eczanem-islevsel-metin-01)]">{duzIslemHatasi}</p>}
           <MutabakatIslemTablosu
@@ -520,15 +549,32 @@ export default function BmMutabakatTakipClient({ rol = "bm" }: { rol?: "bm" | "t
             urunSecenekleri={duzUrunSecenekleri}
             seciliUrunId={duzUrunId}
             onUrunDegistir={setDuzUrunId}
-            onKarar={(kayit, karar) => { void duzKarariVer(kayit, karar); }}
+            onKarar={yoneticiGorunumu ? undefined : (kayit, karar) => { void duzKarariVer(kayit, karar); }}
             onOnayaGonder={rol === "bm" ? (kayit) => { void duzTmOnayinaGonder(kayit); } : undefined}
             bosIcerik={<div className="px-4 py-14 text-center text-sm font-semibold text-[var(--tema-yerel-eczanem-yardimci-metin-05)]">Bu dönem ve filtrede gösterilecek mutabakat işlemi yok.</div>}
           />
         </> : veri?.uttler.length === 0 ? <div className="rounded-2xl border border-[var(--tema-yerel-eczanem-cizgi-05)] bg-[var(--tema-yerel-eczanem-kart-01)] px-4 py-14 text-center text-sm font-semibold text-[var(--tema-yerel-eczanem-yardimci-metin-05)]">Bu dönem ve durumda bölgenizde mutabakat kaydı bulunan UTT yok.</div> : <div className="overflow-hidden rounded-2xl border border-[var(--tema-yerel-eczanem-cizgi-05)] bg-[var(--tema-yerel-eczanem-kart-01)] shadow-sm">
-          {rol === "tm" ? <>
-            <div className="hidden grid-cols-[minmax(220px,2fr)_100px_110px_120px_160px_180px_30px] gap-3 border-b border-[var(--tema-yerel-eczanem-cizgi-04)] bg-[var(--tema-yerel-eczanem-sayfa-zemini-04)] px-4 py-2 text-[11px] font-extrabold uppercase text-[var(--tema-yerel-eczanem-yardimci-metin-01)] lg:grid"><span>BM Adı</span><span className="text-center">UTT</span><span className="text-center">Eczane</span><span className="text-center">İşlem</span><span className="text-center">Onaylanan Puan</span><span className="text-center">İndirim Tutarı</span><span /></div>
-            {bmGruplari.map((bm) => <BmPaneli key={bm.bm_id} bm={bm} acik={acikBmler.has(bm.bm_id)} acikUttler={acikUttler} donem={donem} durum={durum} yenileme={yenileme} endpoint={endpoint} kayitGuncellemeleri={kayitGuncellemeleri} onKayitGuncelle={kayitGuncelle} onAcKapat={() => bmAcKapat(bm.bm_id)} onUttAcKapat={uttAcKapat} />)}
-          </> : <>
+          {yoneticiGorunumu ? tmGruplari.map((tm) => {
+            const acik = gorunenTakimlar.has(tm.id);
+            const panelId = `yonetici-tm-mutabakat-${tm.id}`;
+            return <div key={tm.id} className="border-b border-[var(--tema-yerel-eczanem-cizgi-04)] last:border-b-0">
+              <button type="button" aria-expanded={acik} aria-controls={panelId}
+                onClick={() => {
+                  const sonraki = new Set(gorunenTakimlar);
+                  if (acik) sonraki.delete(tm.id); else sonraki.add(tm.id);
+                  setAcikTakimlar(sonraki);
+                }}
+                className={`flex w-full items-center justify-between gap-3 px-4 py-3 text-left text-xs text-[var(--tema-yerel-eczanem-ana-metin-01)] focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--tema-yerel-eczanem-odak-01)] ${acik ? "bg-[var(--tema-yerel-eczanem-secim-zemin-03)]" : "bg-[var(--tema-yerel-eczanem-kart-01)] hover:bg-[var(--tema-yerel-eczanem-sayfa-zemini-03)]"}`}>
+                <span className="min-w-0"><strong className="block text-sm font-extrabold text-[var(--tema-yerel-eczanem-ana-metin-03)]">{tm.ad}</strong><span className="text-[10px] text-[var(--tema-yerel-eczanem-yardimci-metin-01)]">{tm.takimAdi}</span></span>
+                <ChevronDown className={`size-4 shrink-0 text-[var(--tema-yerel-eczanem-eylem-metin-01)] transition-transform ${acik ? "rotate-180" : ""}`} aria-hidden="true" />
+              </button>
+              <div id={panelId} hidden={!acik} className="border-t border-[var(--tema-yerel-eczanem-cizgi-05)] bg-[var(--tema-yerel-eczanem-sayfa-zemini-03)] p-2 md:p-3">
+                <div className="overflow-hidden rounded-xl border border-[var(--tema-yerel-eczanem-cizgi-05)] bg-[var(--tema-yerel-eczanem-kart-01)]">
+                  {bmTablosu(tm.bmler)}
+                </div>
+              </div>
+            </div>;
+          }) : rol === "tm" ? bmTablosu(bmGruplari) : <>
             <div className="hidden grid-cols-[minmax(220px,2fr)_120px_140px_170px_190px_30px] gap-3 border-b border-[var(--tema-yerel-eczanem-cizgi-04)] bg-[var(--tema-yerel-eczanem-sayfa-zemini-04)] px-4 py-2 text-[11px] font-extrabold uppercase text-[var(--tema-yerel-eczanem-yardimci-metin-01)] lg:grid"><span>UTT Adı</span><span className="text-center">Eczane</span><span className="text-center">İşlem</span><span className="text-center">Onaylanan Puan</span><span className="text-center">İndirim Tutarı</span><span /></div>
             {veri?.uttler.map((utt) => <UttPaneli key={utt.utt_id} utt={utt} acik={acikUttler.has(utt.utt_id)} donem={donem} durum={durum} yenileme={yenileme} rol="bm" endpoint={endpoint} kayitGuncellemeleri={kayitGuncellemeleri} onKayitGuncelle={kayitGuncelle} onAcKapat={() => uttAcKapat(utt.utt_id)} />)}
           </>}

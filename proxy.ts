@@ -3,7 +3,7 @@ import { panelBaslangici } from "@/lib/panel/baslangic";
 import { createServerClient } from "@supabase/ssr";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { NextResponse, type NextRequest } from "next/server";
-import { FIRMA_ADMIN_ROLU, ADMIN_ROLLER, ECLUB_TUKETICI_ROLLERI, MUSTERI_ROLU, TUKETICI_ROLLER, URETICI_ROLLER, YAYINDAKI_VIDEO_GORENLER } from "@/lib/utils/roller";
+import { FIRMA_ADMIN_ROLU, ADMIN_ROLLER, ECLUB_TUKETICI_ROLLERI, MUSTERI_ROLU, TUKETICI_ROLLER, URETICI_ROLLER, YAYINDAKI_VIDEO_GORENLER, YONETICI_ROLLER } from "@/lib/utils/roller";
 import { rolCozucu } from "@/lib/utils/rolCozucu";
 import { eclubFirmaRotasiKapsami } from "@/lib/eclub/firmaGezinme";
 import { eclubKisiErisimi } from "@/lib/eclub/kisiErisim";
@@ -432,9 +432,11 @@ export async function proxy(request: NextRequest) {
       const uttDali = pathname.startsWith("/eczanem/utt") || pathname.startsWith("/eczanem/yayinlar");
       const bmDali = pathname.startsWith("/eczanem/bm");
       const tmDali = pathname.startsWith("/eczanem/tm");
+      const ureticiYayinlari = ["/eczanem/uretici/yayinlar", "/eczanem/uretici/uyelere-gonderilen-yayinlar", "/eczanem/uretici/api/yayinlar"].includes(pathname);
+      const yoneticiMutabakat = pathname === "/eczanem/yonetici/mutabakat-takip" || pathname === "/eczanem/yonetici/api/mutabakat";
       // Üye ve iç kullanıcılar ortak giriş sayfasını (/login) kullanır.
       // Dal ayrımı oturumdan sonraki modül kapısında korunur.
-      const icUygulamaDali = eczaneDali || uttDali || bmDali || tmDali;
+      const icUygulamaDali = eczaneDali || uttDali || bmDali || tmDali || ureticiYayinlari || yoneticiMutabakat;
 
       if (!user) {
         if (apiYolu) {
@@ -482,6 +484,16 @@ export async function proxy(request: NextRequest) {
         if (rol !== "tm") {
           rolUygun = false;
           if (apiYolu) return NextResponse.json({ error: "Bu bölüm TM rolüne açıktır." }, { status: 403 });
+          return NextResponse.redirect(new URL(panelBaslangici(rol).yol, request.url));
+        }
+      } else if (ureticiYayinlari) {
+        if (!URETICI_ROLLER.includes(rol)) {
+          if (apiYolu) return NextResponse.json({ error: "Bu bölüm üretici rollerine açıktır." }, { status: 403 });
+          return NextResponse.redirect(new URL(panelBaslangici(rol).yol, request.url));
+        }
+      } else if (yoneticiMutabakat) {
+        if (!YONETICI_ROLLER.includes(rol)) {
+          if (apiYolu) return NextResponse.json({ error: "Bu bölüm yönetici rollerine açıktır." }, { status: 403 });
           return NextResponse.redirect(new URL(panelBaslangici(rol).yol, request.url));
         }
       } else if (rol !== MUSTERI_ROLU) {

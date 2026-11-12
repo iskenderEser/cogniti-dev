@@ -16,17 +16,19 @@ import {
 } from "@/lib/eczanem/uttMutabakat";
 import { eclubYonetimKapsaminiGetir, type EclubKapsamUtt } from "@/lib/eclub/yonetimKapsami";
 import { rolCozucu } from "@/lib/utils/rolCozucu";
-import { TUKETICI_ROLLER } from "@/lib/utils/roller";
+import { TUKETICI_ROLLER, YONETICI_ROLLER } from "@/lib/utils/roller";
 import { rolHatasi, sunucuHatasi, validasyonHatasi, yetkiHatasi } from "@/lib/utils/hataIsle";
 
-async function yetkiliTm() {
+async function yetkiliKapsam(yoneticiGorunumu = false) {
   const supabase = await createClient();
   const db = createAdminClient();
   const { data: { user }, error } = await supabase.auth.getUser();
   if (error || !user) return { hata: yetkiHatasi() };
 
   const rol = await rolCozucu(db, user.id);
-  if (rol !== "tm") return { hata: rolHatasi("Mutabakat Takip sayfasına yalnız TM erişebilir.") };
+  if (yoneticiGorunumu ? !YONETICI_ROLLER.includes(rol) : rol !== "tm") {
+    return { hata: rolHatasi("Mutabakat Takip sayfasına erişim yetkiniz yok.") };
+  }
 
   const erisim = await uttEczanemErisimi(db, user.id);
   if (!erisim.ok || !erisim.acik) return { hata: rolHatasi(erisim.hata ?? ECZANEM_KAPALI_MESAJI) };
@@ -36,17 +38,18 @@ async function yetkiliTm() {
     .select("kullanici_id, ad, soyad, rol, firma_id, takim_id, bolge_id")
     .eq("kullanici_id", user.id)
     .single();
-  if (kullaniciHatasi || !kullanici) throw new Error("TM organizasyon kapsamı alınamadı.");
+  if (kullaniciHatasi || !kullanici) throw new Error("Mutabakat organizasyon kapsamı alınamadı.");
 
   const kapsam = await eclubYonetimKapsaminiGetir(db, kullanici);
-  return { db, kullaniciId: user.id, uttler: kapsam.uttler.filter((utt) => TUKETICI_ROLLER.includes(utt.rol)) };
+  return { db, kullaniciId: user.id, firmaId: kullanici.firma_id, uttler: kapsam.uttler.filter((utt) => TUKETICI_ROLLER.includes(utt.rol)) };
 }
 
 const hedefUtt = (uttler: EclubKapsamUtt[], uttId: string) => uttler.find((utt) => utt.utt_id === uttId) ?? null;
 
 export async function GET(request: NextRequest) {
   try {
-    const yetki = await yetkiliTm();
+    const yoneticiGorunumu = request.nextUrl.pathname === "/eczanem/yonetici/api/mutabakat";
+    const yetki = await yetkiliKapsam(yoneticiGorunumu);
     if (yetki.hata) return yetki.hata;
 
     const donem = request.nextUrl.searchParams.get("donem") ?? varsayilanUttMutabakatDonemi();
@@ -92,6 +95,23 @@ export async function GET(request: NextRequest) {
       const liste = await uttMutabakatEczaneleriniListele(yetki.db!, utt.utt_id, donem, durum as UttMutabakatFiltresi, 0);
       return { ...utt, toplam_eczane: liste.toplam_eczane, toplam: liste.toplam, toplam_puan: liste.toplam_puan, toplam_indirim_tl: liste.toplam_indirim_tl };
     }));
+    const takimIdleri = [...new Set(uttOzetleri.map(({ takim_id }) => takim_id).filter((id): id is string => Boolean(id)))];
+    const tmAdlari = new Map<string, string>();
+    if (yoneticiGorunumu && takimIdleri.length) {
+      const { data: tmler, error } = await yetki.db!.from("kullanicilar")
+        .select("takim_id, ad, soyad")
+        .eq("firma_id", yetki.firmaId)
+        .eq("rol", "tm")
+        .eq("aktif_mi", true)
+        .in("takim_id", takimIdleri)
+        .order("kullanici_id");
+      if (error) throw error;
+      for (const tm of tmler ?? []) {
+        if (tm.takim_id && !tmAdlari.has(tm.takim_id)) {
+          tmAdlari.set(tm.takim_id, `${tm.ad ?? ""} ${tm.soyad ?? ""}`.trim());
+        }
+      }
+    }
 
     return NextResponse.json({
       donem,
@@ -101,6 +121,7 @@ export async function GET(request: NextRequest) {
       toplam_puan: uttOzetleri.reduce((toplam, utt) => toplam + utt.toplam_puan, 0),
       toplam_indirim_tl: uttOzetleri.reduce((toplam, utt) => toplam + utt.toplam_indirim_tl, 0),
       uttler: uttOzetleri,
+      ...(yoneticiGorunumu ? { tmAdlari: Object.fromEntries(tmAdlari) } : {}),
     }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     return sunucuHatasi(error, "GET /eczanem/tm/api/mutabakat");
@@ -109,7 +130,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const yetki = await yetkiliTm();
+    const yetki = await yetkiliKapsam();
     if (yetki.hata) return yetki.hata;
     let body: unknown;
     try { body = await request.json(); } catch { return validasyonHatasi("Geçerli mutabakat kararı gönderin.", ["mutabakat_id", "islem", "karar"]); }

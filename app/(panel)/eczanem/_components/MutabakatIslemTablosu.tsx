@@ -63,7 +63,7 @@ function MutabakatIslemSatiri({ kayit, rol, gorunum, kararPenceresiAcik, islemde
   urunSecenekleri: UttMutabakatEczaneIslemleri["urun_secenekleri"];
   seciliUrunId: string | null;
   onUrunDegistir: (urunId: string | null) => void;
-  onKarar: (kayit: UttMutabakatKaydi, karar: UttMutabakatKarari) => void;
+  onKarar?: (kayit: UttMutabakatKaydi, karar: UttMutabakatKarari) => void;
   onOnayaGonder?: (kayit: UttMutabakatKaydi) => void;
 }) {
 
@@ -95,7 +95,7 @@ function MutabakatIslemSatiri({ kayit, rol, gorunum, kararPenceresiAcik, islemde
         {KARARLAR.map(({ deger, etiket }) => {
           const secili = mevcutKarar === deger;
           return <Button key={deger} type="button" size="sm" variant="outline" aria-pressed={secili}
-            disabled={!kararAcik || secili || islemde} onClick={() => onKarar(kayit, deger)}
+            disabled={!onKarar || !kararAcik || secili || islemde} onClick={() => onKarar?.(kayit, deger)}
             className={`font-bold ${secili
               ? "border-[var(--tema-yerel-eczanem-cizgi-02)] bg-[var(--tema-yerel-eczanem-eylem-zemin-01)] text-[var(--tema-yerel-eczanem-ters-metin-01)] shadow-sm hover:bg-[var(--tema-yerel-eczanem-eylem-zemin-02)] hover:text-[var(--tema-yerel-eczanem-ters-metin-01)] disabled:opacity-100"
               : "border-[var(--tema-yerel-eczanem-cizgi-01)] bg-[var(--tema-yerel-eczanem-kart-01)] text-[var(--tema-yerel-eczanem-eylem-metin-01)] hover:border-[var(--tema-yerel-eczanem-cizgi-02)] hover:bg-[var(--tema-yerel-eczanem-secim-zemin-01)] hover:text-[var(--tema-yerel-eczanem-eylem-metin-02)] disabled:opacity-50"}`}>{etiket}</Button>;
@@ -119,7 +119,7 @@ export default function MutabakatIslemTablosu({ rol, gorunum = "akordiyon", kayi
   urunSecenekleri: UttMutabakatEczaneIslemleri["urun_secenekleri"];
   seciliUrunId: string | null;
   onUrunDegistir: (urunId: string | null) => void;
-  onKarar: (kayit: UttMutabakatKaydi, karar: UttMutabakatKarari) => void;
+  onKarar?: (kayit: UttMutabakatKaydi, karar: UttMutabakatKarari) => void;
   onOnayaGonder?: (kayit: UttMutabakatKaydi) => void;
   bosIcerik: ReactNode;
   altIcerik?: ReactNode;

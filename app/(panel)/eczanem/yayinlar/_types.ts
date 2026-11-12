@@ -40,8 +40,8 @@ export interface UttEczanemVeri {
   eczaneler: UttEczanemEczane[];
   gonderimler: UttEczanemGonderim[];
   aylikIstatistikler: {
+    gonderilenEczaneSayisi: number;
     uttGonderimSayisi: number;
-    eczaneGonderimSayisi: number;
     sonrakiAyBaslangici: string;
   };
 }
