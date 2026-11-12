@@ -92,6 +92,7 @@ export const FIYAT_KALEMLERI = [
     "ad": "Literatür Üretimi",
     "birim": "TL/adet"
   },
+  { anahtar: "uretim_soru_seti_tl", grup: "İçerik üretimi", ad: "Soru Seti Hazırlama", birim: "TL/Set" },
   {
     "anahtar": "banner_haftalik_token",
     "grup": "Banner",

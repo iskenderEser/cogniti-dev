@@ -143,13 +143,19 @@ export async function POST(request: NextRequest) {
     if (talepBilgisi.yayin_oncesi_silme_durumu) {
       return isKuraluHatasi("Silme işlemi başlatılmış yayın adayı yayına alınamaz.");
     }
-    const { data: talepTaslakKontrol } = await adminSupabase
+    const { data: talepTaslakKontrol, error: talepKontrolHatasi } = await adminSupabase
       .from("talepler")
-      .select("taslak_mi")
+      .select("taslak_mi, uretim_bedeli_token, uretim_bedeli_odendi_at")
       .eq("talep_id", talepBilgisi.talep_id)
       .maybeSingle();
-    if (talepTaslakKontrol?.taslak_mi) {
+    if (talepKontrolHatasi || !talepTaslakKontrol) {
+      return hataYaniti("Talep durumu doğrulanamadı.", "talepler SELECT — yayın kontrolü", talepKontrolHatasi);
+    }
+    if (talepTaslakKontrol.taslak_mi) {
       return isKuraluHatasi("Taslak talep yayına alınamaz.");
+    }
+    if ((talepTaslakKontrol.uretim_bedeli_token ?? 0) > 0 && !talepTaslakKontrol.uretim_bedeli_odendi_at) {
+      return isKuraluHatasi("Bu yayın içerik üretimi ödemesini bekliyor.");
     }
     const hedefRoller = talepBilgisi.hedef_roller;
     const puanAraliklari = await talepPuanAraliklariOku(adminSupabase, talepBilgisi.talep_id, user.id);

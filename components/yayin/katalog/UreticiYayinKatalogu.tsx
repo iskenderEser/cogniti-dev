@@ -20,9 +20,49 @@ import { yayin_kodu } from "@/lib/utils/yayinKodu";
 import { YAYIN_TURLERI } from "@/lib/ogrenmeAraci/turSunumu";
 import { YayinTuruFiltresi, type YayinTuruFiltreDegeri } from "@/components/ogrenme-araci/YayinTuruFiltresi";
 import { getKatalogOnbellek, setKatalogOnbellek } from "@/lib/video/katalogOnbellek";
+import { YayinKarti, type YayinKartiVerisi } from "@/components/yayin/YayinKarti";
+import { IcerikUretimiSiparisOnayi } from "@/components/satinAlma/IcerikUretimiSiparisOnayi";
 import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 
 type Kapsam = "benim" | "digerleri";
+
+type OdemeBekleyenYayin = YayinKartiVerisi & { talep_id: string; token: number };
+
+function OdemeBekleyenYayinlar({ yayinlar, onOdendi }: { yayinlar: OdemeBekleyenYayin[]; onOdendi: (talepId: string, mesaj: string) => void }) {
+  const [secili, setSecili] = useState<OdemeBekleyenYayin | null>(null);
+
+  return (
+    <section aria-labelledby="odeme-bekleyen-yayinlar">
+      <h2 id="odeme-bekleyen-yayinlar" className="mb-2.5 text-base font-extrabold md:text-lg">Ödeme Bekleyen Yayınlar</h2>
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+        {yayinlar.map((yayin) => (
+          <div key={yayin.talep_id} className="relative">
+            <YayinKarti
+              yayin={yayin}
+              durumGoster={false}
+              tarihGoster={false}
+              etkilesimGoster={false}
+              izlenmeGoster={false}
+              puanGoster={false}
+              hoverOverlay={
+                <span className="pointer-events-none absolute left-[-39px] top-[22px] z-10 w-[152px] -rotate-45 whitespace-nowrap bg-blue-700 py-0.5 text-center text-[10px] leading-3 font-bold text-white">
+                  Ödeme bekliyor
+                </span>
+              }
+            />
+            <button
+              type="button"
+              className="absolute inset-0 z-20 cursor-pointer rounded-xl bg-transparent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+              aria-label={`${yayin.urun_adi} · Ödeme bekliyor · Sipariş onayını aç`}
+              onClick={() => setSecili(yayin)}
+            />
+          </div>
+        ))}
+      </div>
+      <IcerikUretimiSiparisOnayi siparis={secili} onKapat={() => setSecili(null)} onOdendi={(mesaj) => { if (secili) onOdendi(secili.talep_id, mesaj); }} />
+    </section>
+  );
+}
 
 const ARAMA_HEDEF_KITLE_ADLARI: Record<YayinHedefGrubu, string> = {
   utt: "Temsilciler",
@@ -219,13 +259,18 @@ function DepartmanFiltreleri({ videolar, aktifDepartman, onSec }: {
 export default function UreticiYayinKatalogu({ kapsam }: Props) {
   const router = useRouter();
   const { kullanici, yukleniyor } = useAuth();
-  const { mesajlar, hata } = useHataMesaji();
+  const { mesajlar, hata, basari } = useHataMesaji();
   const hataRef = useRef(hata);
 
   const baslangicVideolar = getKatalogOnbellek(kapsam, kullanici?.id);
   const [videolar, setVideolar] = useState<YayindakiVideo[]>(() => baslangicVideolar ?? []);
   const [loading, setLoading] = useState(() => !baslangicVideolar);
   const [yenileniyor, setYenileniyor] = useState(false);
+  const [odemeListesi, setOdemeListesi] = useState<{ kullaniciId: string; yayinlar: OdemeBekleyenYayin[] } | null>(null);
+  const odemeBekleyenler = kapsam === "benim" && odemeListesi?.kullaniciId === kullanici?.id
+    ? odemeListesi?.yayinlar ?? []
+    : [];
+  const katalogIstegi = useRef<AbortController | null>(null);
   const [aktifVideo, setAktifVideo] = useState<YayindakiVideo | null>(null);
   const [aktifHedef, setAktifHedef] = useState<YayinHedefGrubu>(() => {
     if (kapsam === "benim" && baslangicVideolar) {
@@ -259,11 +304,15 @@ export default function UreticiYayinKatalogu({ kapsam }: Props) {
   }, [hata]);
 
   const veriCek = useCallback(async (ilkYukleme = false) => {
+    katalogIstegi.current?.abort();
+    const kontrol = new AbortController();
+    katalogIstegi.current = kontrol;
     if (ilkYukleme) setLoading(true);
     else setYenileniyor(true);
     try {
-      const res = await fetch(`/yayin-katalogu/api?kapsam=${kapsam}`);
+      const res = await fetch(`/yayin-katalogu/api?kapsam=${kapsam}`, { signal: kontrol.signal, cache: "no-store" });
       const data = await res.json();
+      if (kontrol.signal.aborted) return;
       if (!res.ok) {
         hataRef.current(data.hata ?? "Yayınlar yüklenemedi.", data.adim, data.detay);
         return;
@@ -272,6 +321,7 @@ export default function UreticiYayinKatalogu({ kapsam }: Props) {
       if (kullanici?.id) setKatalogOnbellek(kapsam, kullanici.id, gelen);
       setVideolar(gelen);
       if (kapsam === "benim") {
+        if (kullanici?.id) setOdemeListesi({ kullaniciId: kullanici.id, yayinlar: data.odemeBekleyenler ?? [] });
         setAktifHedef((mevcut) => gelen.some((video) => yayinHedefGrubuBelirle(video.hedef_roller) === mevcut)
           ? mevcut
           : YAYIN_HEDEF_GRUP_SIRASI.find((hedef) => gelen.some((video) => yayinHedefGrubuBelirle(video.hedef_roller) === hedef)) ?? "utt");
@@ -281,10 +331,12 @@ export default function UreticiYayinKatalogu({ kapsam }: Props) {
           : DEPARTMAN_SIRA.find((departman) => gelen.some((video) => departmanKey(video.ureten_rol) === departman)) ?? null);
       }
     } catch {
-      hataRef.current("Yayınlar yüklenemedi.");
+      if (!kontrol.signal.aborted) hataRef.current("Yayınlar yüklenemedi.");
     } finally {
-      if (ilkYukleme) setLoading(false);
-      else setYenileniyor(false);
+      if (!kontrol.signal.aborted) {
+        setLoading(false);
+        setYenileniyor(false);
+      }
     }
   }, [kapsam, kullanici?.id]);
 
@@ -307,6 +359,7 @@ export default function UreticiYayinKatalogu({ kapsam }: Props) {
       setLoading(true);
     }
     void veriCek(!onbellek);
+    return () => katalogIstegi.current?.abort();
   }, [kullanici, yukleniyor, router, veriCek]);
 
   useEffect(() => {
@@ -365,6 +418,12 @@ export default function UreticiYayinKatalogu({ kapsam }: Props) {
         />
 
         <YayinIstatistikleri videolar={videolar} yukleniyor={loading && videolar.length === 0} />
+
+        {odemeBekleyenler.length > 0 && <OdemeBekleyenYayinlar key={kullanici.id} yayinlar={odemeBekleyenler} onOdendi={(talepId, mesaj) => {
+          basari(mesaj);
+          setOdemeListesi((liste) => liste && { ...liste, yayinlar: liste.yayinlar.filter((yayin) => yayin.talep_id !== talepId) });
+          void veriCek();
+        }} />}
 
         {loading && videolar.length === 0 ? (
           <div className="flex flex-col gap-5">

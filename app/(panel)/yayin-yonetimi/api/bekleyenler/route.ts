@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
             soru_seti_id,
             arac_durum_id,
             sorular,
-            talepler!inner ( ${TALEP_ALANLARI} ),
+            talepler!inner ( ${TALEP_ALANLARI}, uretim_bedeli_token, uretim_bedeli_odendi_at ),
             ogrenme_araci_durumu (
               arac_durum_id,
               ogrenme_araci_puanlari ( arac_puan_id, arac_puani ),
@@ -97,8 +97,10 @@ export async function GET(request: NextRequest) {
       const a = (ad as { ogrenme_araclari?: unknown })?.ogrenme_araclari;
       const metadata = ((Array.isArray(a) ? a[0] : a) as { metadata?: Record<string, unknown> } | undefined)?.metadata;
       if (Boolean(metadata?.agora_siparis_id) !== (searchParams.get("kapsam") === "agora")) return false;
+      const talep = taleplerRaw as { yayin_oncesi_silme_durumu?: string; uretim_bedeli_token?: number | null; uretim_bedeli_odendi_at?: string | null };
       return !yayindakiIds.has(ss.soru_seti_durum_id)
-        && (taleplerRaw as { yayin_oncesi_silme_durumu?: string })?.yayin_oncesi_silme_durumu !== "tamamlandi";
+        && ((talep?.uretim_bedeli_token ?? 0) <= 0 || Boolean(talep?.uretim_bedeli_odendi_at))
+        && talep?.yayin_oncesi_silme_durumu !== "tamamlandi";
     });
 
     const bosHedefSayilari = Object.fromEntries(

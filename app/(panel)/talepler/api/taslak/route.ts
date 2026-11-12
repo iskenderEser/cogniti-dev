@@ -7,6 +7,7 @@
 // Taslak talep aktif operasyonlara girmez, görev veya yayın zinciri başlatmaz.
 
 import { NextRequest, NextResponse } from "next/server";
+import { yeniYayinHesapKontrolu } from "@/lib/satinAlma/yayinHesapKontrolu";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { hataYaniti, veriKontrol, sunucuHatasi, yetkiHatasi, rolHatasi, validasyonHatasi } from "@/lib/utils/hataIsle";
 import {
@@ -184,6 +185,8 @@ export async function POST(request: NextRequest) {
     // 1. Üretici rol doğrulaması
     const yetenek = ureticiYetenegi(rol);
     if (!yetenek) return rolHatasi("Sadece üretici roller podcast taslağı oluşturabilir.");
+    const hesapEngeli = await yeniYayinHesapKontrolu(adminSupabase, user.id);
+    if (hesapEngeli) return hesapEngeli;
 
     // 2. Firma sahipliği doğrulaması
     const { data: kullaniciKaydi, error: kullaniciError } = await adminSupabase

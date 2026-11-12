@@ -48,6 +48,8 @@ export async function GET(request: Request) {
             talepler!inner (
               uretici_id,
               hedef_roller,
+              uretim_bedeli_token,
+              uretim_bedeli_odendi_at,
               yayin_oncesi_silme_durumu
             )
           )
@@ -98,6 +100,8 @@ export async function GET(request: Request) {
       const a = Array.isArray(ad?.ogrenme_araclari) ? ad.ogrenme_araclari[0] : ad?.ogrenme_araclari;
       if (Boolean((a?.metadata as Record<string, unknown> | null)?.agora_siparis_id) !== agoraKapsami) continue;
       if (!talep || talep.yayin_oncesi_silme_durumu === "tamamlandi") continue;
+
+      if ((talep.uretim_bedeli_token ?? 0) > 0 && !talep.uretim_bedeli_odendi_at) continue;
 
       const grup = yayinHedefGrubuBelirle(talep.hedef_roller);
       if (grup && hedefOzetleri[grup]) {

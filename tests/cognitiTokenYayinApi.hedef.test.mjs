@@ -8,14 +8,14 @@ const points={};vm.runInNewContext(compile('../lib/uretici/puanAraliklari.ts'),{
 const helper={};vm.runInNewContext(compile('../lib/token/yayinHatasi.ts'),{exports:helper});
 const postCode=compile('../app/(panel)/yayin-yonetimi/api/yayinlar/route.ts');
 const putCode=compile('../app/(panel)/yayin-yonetimi/api/yayinlar/[yayin_id]/route.ts');
-function setup({insertError=null,rpcError=null,notificationError=false,put=false,rol="pm",hedefler=["utt"],saha=false}={}){
+function setup({insertError=null,rpcError=null,notificationError=false,put=false,uretimBedeliToken=null,uretimBedeliOdendiAt=null,rol="pm",hedefler=["utt"],saha=false}={}){
   const writes=[],notifications=[],tours=[],rpcCalls=[];
   const db={from(table){let inserted;
     const q={select(){return q;},eq(){return q;},single(){return q;},maybeSingle(){return q;},
       insert(data){inserted=data;writes.push({table,data});return q;},
       then(resolve,reject){let value;
         const fixtures={soru_seti_durumu:{soru_seti_durum_id:'ssd',soru_seti_id:'ss',durum:'onaylandi'},
-          soru_setleri:{soru_seti_id:'ss',arac_durum_id:'ad',sorular:[{}]},talepler:{taslak_mi:false,urun_id:"urun"},
+          soru_setleri:{soru_seti_id:'ss',arac_durum_id:'ad',sorular:[{}]},talepler:{taslak_mi:false,urun_id:"urun",uretim_bedeli_token:uretimBedeliToken,uretim_bedeli_odendi_at:uretimBedeliOdendiAt},
           ogrenme_araci_puanlari:{arac_puani:40},soru_seti_puanlari:[{soru_index:0,soru_puani:5}],
           ogrenme_araci_durumu:{arac_id:'arac',durum:'onaylandi',ogrenme_araclari:{arac_turu:'video'}},v_yayin_detay:{urun_adi:'İçerik'}};
         if(table==='yayin_yonetimi')value=inserted?{data:insertError?null:{yayin_id:'pub',durum:inserted.durum},error:insertError}:
@@ -62,6 +62,21 @@ for(const reason of ['bakiye_yetersiz','hesap_yok'])test(`Anlık açılış ${re
  const s=setup({insertError:{code:'P0001',message:`COGNITI_TOKEN:${reason}`}});const response=await s.post();
  assert.equal(response.status,422);assert.match((await response.json()).hata,/Yayın açılmadı/);
  assert.equal(s.tours.length,0);assert.equal(s.notifications.length,0);assert.equal(s.rpcCalls.length,0);
+});
+test('Ödeme bekleyen içerik için yayın kaydı veya plan oluşturulamaz', async () => {
+  for (const body of [{}, { yayin_gunu: "2099-01-01" }]) {
+    const s = setup({ uretimBedeliToken: 2700 });
+    const response = await s.post(body);
+    assert.equal(response.status, 422);
+    assert.match((await response.json()).hata, /içerik üretimi ödemesini bekliyor/);
+    assert.equal(s.writes.length, 0);
+    assert.equal(s.rpcCalls.length, 0);
+  }
+});
+test("Ödenmiş içerik normal yayın akışına devam eder", async () => {
+  const s = setup({ uretimBedeliToken: 2700, uretimBedeliOdendiAt: "2026-11-11T09:00:00Z" });
+  assert.equal((await s.post()).status, 201);
+  assert.equal(s.writes.length, 1);
 });
 test('Plan kaydı aktivasyon veya tüketim alıcı okuması başlatmaz',async()=>{
  const date=new Date();date.setUTCDate(date.getUTCDate()+3);const s=setup();

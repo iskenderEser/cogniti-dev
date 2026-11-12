@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
 
     const { data: gorevBilgisi } = await adminSupabase.from("uretim_gorevleri").select("asama, talep_id, arac_id").eq("gorev_id", gorev_id).maybeSingle();
     const { data: talepBilgisi } = gorevBilgisi
-      ? await adminSupabase.from("talepler").select("ogrenme_araci_turu, hazir_video, ogrenme_araci_tercihleri").eq("talep_id", gorevBilgisi.talep_id).maybeSingle()
+      ? await adminSupabase.from("talepler").select("ogrenme_araci_turu, hazir_video, ogrenme_araci_tercihleri, uretim_bedeli_turu, uretim_bedeli_token, uretim_bedeli_odendi_at").eq("talep_id", gorevBilgisi.talep_id).eq("uretici_id", user.id).maybeSingle()
       : { data: null };
     const aracTuru = talepBilgisi?.ogrenme_araci_turu;
 
@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
     }
     if (error) return uretimRpcHataYaniti("Üretici kararı kaydedilemedi.", `${rpcAdi} RPC`, error);
 
-    const sonucNesnesi = sonuc as { sonraki?: { atanan_iu_id?: string } | null } | null;
+    const sonucNesnesi = sonuc as { gorev_id?: string; sonraki?: { atanan_iu_id?: string; hazir_soru_seti_islendi?: boolean } | null } | null;
     let pushAlici: string | null = sonucNesnesi?.sonraki?.atanan_iu_id ?? null;
     if (!pushAlici && karar === "revizyon bekleniyor") {
       const { data: gorev } = await adminSupabase.from("uretim_gorevleri").select("atanan_iu_id").eq("gorev_id", gorev_id).maybeSingle();
@@ -99,7 +99,18 @@ export async function POST(request: NextRequest) {
     }
     if (pushAlici) pushYayinlaArkada(adminSupabase, "uretim_durum_gecisi", [pushAlici]);
 
-    return NextResponse.json({ mesaj: "Üretici kararı kaydedildi.", sonuc }, { status: 201 });
+    const sonOnay = karar === "onaylandi" && sonucNesnesi?.gorev_id === gorev_id
+      && (gorevBilgisi?.asama === "soru_seti"
+        || (gorevBilgisi?.asama === "video" && sonucNesnesi.sonraki?.hazir_soru_seti_islendi === true));
+    const token = talepBilgisi?.uretim_bedeli_token;
+    const odemeBekliyor = sonOnay && talepBilgisi?.uretim_bedeli_turu === "sabit" && !talepBilgisi.uretim_bedeli_odendi_at
+      && typeof token === "number" && token > 0;
+
+    return NextResponse.json({
+      mesaj: "Üretici kararı kaydedildi.",
+      sonuc,
+      ...(odemeBekliyor ? { siparis_onayi: { talep_id: gorevBilgisi?.talep_id, token } } : {}),
+    }, { status: 201 });
   } catch (err) {
     return sunucuHatasi(err, "POST /uretim/api/karar");
   }

@@ -1,5 +1,7 @@
+import { icerikUretimBedeli } from "@/lib/fiyat/icerikUretimi";
 // app/talepler/api/route.ts
 import { NextRequest, NextResponse } from "next/server";
+import { yeniYayinHesapKontrolu } from "@/lib/satinAlma/yayinHesapKontrolu";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { hataYaniti, veriKontrol, sunucuHatasi, yetkiHatasi, rolHatasi, validasyonHatasi } from "@/lib/utils/hataIsle";
 import {
@@ -34,6 +36,8 @@ export async function POST(request: NextRequest) {
     // Yetenek profili — talep oluşturma yetkisinin ve davranış kurallarının kaynağı.
     const yetenek = ureticiYetenegi(rol);
     if (!yetenek) return rolHatasi("Sadece üretici roller talep oluşturabilir.");
+    const hesapEngeli = await yeniYayinHesapKontrolu(adminSupabase, user.id);
+    if (hesapEngeli) return hesapEngeli;
 
     const { data: kullaniciKaydi, error: kullaniciError } = await adminSupabase
       .from("kullanicilar")
@@ -234,6 +238,8 @@ export async function POST(request: NextRequest) {
       video_basi_soru_sayisi: videoBasisSoruSayisi,
     };
 
+    const uretimBedeli = icerikUretimBedeli(ogrenme_araci_turu, hazir_video, hazir_soru_seti);
+
     let atomikKayit: { talep_id?: unknown; mevcut?: unknown; kesinlesmis?: unknown } | null = null;
 
     if (taslak_talep_id) {
@@ -279,6 +285,8 @@ export async function POST(request: NextRequest) {
         p_talep_id: taslak_talep_id,
         p_islem_anahtari: islem_anahtari,
         p_talep: atomikTalepVerisi,
+        p_uretim_bedeli_turu: uretimBedeli.tur,
+        p_uretim_bedeli_token: uretimBedeli.token,
       });
       if (kesinlesmeHatasi) {
         return uretimRpcHataYaniti("Taslak kesinleştirilemedi.", "podcast_taslak_atomik_kesinlestir RPC", kesinlesmeHatasi);
@@ -289,6 +297,8 @@ export async function POST(request: NextRequest) {
         p_uretici_id: user.id,
         p_islem_anahtari: islem_anahtari,
         p_talep: atomikTalepVerisi,
+        p_uretim_bedeli_turu: uretimBedeli.tur,
+        p_uretim_bedeli_token: uretimBedeli.token,
       });
       if (atomikHata) {
         return uretimRpcHataYaniti("Talep oluşturulamadı.", "talep_atomik_olustur RPC", atomikHata);

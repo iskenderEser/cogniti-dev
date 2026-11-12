@@ -5,15 +5,17 @@
 
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { URETICI_ROLLER } from "@/lib/utils/roller";
 import { UreticiRolGorunum } from "../talepler/_components/UreticiRolGorunum";
+import YeniYayinHesapKapisi from "@/components/token/YeniYayinHesapKapisi";
 
 export default function YayinTakipPage() {
   const router = useRouter();
   const { kullanici, yukleniyor } = useAuth();
+  const [yeniYayinAcik, setYeniYayinAcik] = useState(false);
 
   useEffect(() => {
     if (!yukleniyor && kullanici && !URETICI_ROLLER.includes((kullanici.rol ?? "").toLowerCase())) {
@@ -21,5 +23,7 @@ export default function YayinTakipPage() {
     }
   }, [kullanici, router, yukleniyor]);
 
-  return <UreticiRolGorunum />;
+  return <YeniYayinHesapKapisi key={kullanici?.id ?? "oturum"} etkin={yeniYayinAcik}>
+    <UreticiRolGorunum onYeniYayinAcikDegisti={setYeniYayinAcik} />
+  </YeniYayinHesapKapisi>;
 }

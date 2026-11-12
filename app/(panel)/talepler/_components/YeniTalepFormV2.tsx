@@ -10,6 +10,11 @@
 
 "use client";
 
+import { ArrowUpRight, X } from "lucide-react";
+import Link from "next/link";
+import { Dialog } from "radix-ui";
+import { useState } from "react";
+
 import { SadeFormSecimi, SadeIslemButonu, SadeKontrolButonu, SadeKontrolGrubu } from "@/components/kontrol/SadeKontroller";
 
 import { EkDosyaYukleme } from "@/app/(panel)/talepler/_components/EkDosyaYukleme";
@@ -87,6 +92,7 @@ function IkiliUretimSecimi({ baslik, hazir, hazirEtiketi, onDegistir, kapsulClas
 }
 
 export function YeniTalepFormV2({ formu }: Props) {
+  const [bilgiNotuAcik, setBilgiNotuAcik] = useState(false);
   const yetenek = formu.yetenek;
   if (!formu.isUretici || !yetenek) return null;
 
@@ -232,7 +238,11 @@ export function YeniTalepFormV2({ formu }: Props) {
                       name="hedef_roller_v2"
                       value={rolKey}
                       checked={secili}
-                      onChange={() => eclubSecenegi ? formu.eclubHedefDegistir(rolKey) : formu.setHedefRol(rolKey)}
+                      onChange={() => {
+                        if (!secili && formu.hedefRoller.length === 0) setBilgiNotuAcik(true);
+                        if (eclubSecenegi) formu.eclubHedefDegistir(rolKey);
+                        else formu.setHedefRol(rolKey);
+                      }}
                       className="cursor-pointer"
                       style={{ accentColor: tasarim.renk }}
                     />
@@ -246,6 +256,21 @@ export function YeniTalepFormV2({ formu }: Props) {
             <p className="mt-2 text-xs leading-4 text-[var(--tema-yerel-uretim-yardimci-metin-20)]">Sadece Eczacı ve Eczane Teknisyenlerini birlikte tercih edebilirsiniz.</p>
           </fieldset>
         </div>
+
+        <Dialog.Root modal={false} open={formAktif && bilgiNotuAcik} onOpenChange={setBilgiNotuAcik}>
+          <Dialog.Content className="relative w-full rounded-2xl border border-[var(--tema-kontrol-cizgi)] bg-[var(--tema-pencere-zemini)] px-4 py-3.5 shadow-sm">
+            <Dialog.Title className="pr-8 text-[0.65625rem] font-bold text-[var(--tema-kontrol-metin)]">Bilgi Notu</Dialog.Title>
+            <Dialog.Close type="button" aria-label="Bilgi notunu kapat" className="absolute right-2 top-2 grid size-8 place-items-center rounded-md text-[var(--tema-kontrol-metin)] hover:bg-[var(--tema-kontrol-hover)]">
+              <X size={12} aria-hidden="true" />
+            </Dialog.Close>
+            <Dialog.Description className="mt-2 text-[0.7546875rem] leading-relaxed text-[var(--tema-ikincil-metin)]">
+              İçerik ya da soru seti talebiniz olursa, üretim tutarı son onayınızdan sonra tercih edeceğiniz token hesabından tahsil edilecektir.
+            </Dialog.Description>
+            <Link href="/fiyatlar#icerik-uretimi" target="_blank" rel="noopener" className="mt-3 ml-auto flex w-fit items-center gap-1 text-[0.65625rem] text-[var(--tema-kontrol-eylem)] hover:underline">
+              Paketler, Hizmetler ve Fiyatlar <ArrowUpRight size={16} aria-hidden="true" />
+            </Link>
+          </Dialog.Content>
+        </Dialog.Root>
 
         <fieldset
           disabled={!formAktif}

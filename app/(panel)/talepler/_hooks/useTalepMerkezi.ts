@@ -11,6 +11,7 @@
 
 "use client";
 
+import type { IcerikUretimiSiparisi } from "@/components/satinAlma/IcerikUretimiSiparisOnayi";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useHataMesaji } from "@/components/HataMesaji";
@@ -223,6 +224,8 @@ export function useTalepMerkezi() {
    * hem sunucuda var — sunucu son sözü söyler, buradaki kapı kullanıcıyı boşuna
    * tıklatmamak içindir (kural girdide uygulanır).
    */
+  const [siparisOnayi, setSiparisOnayi] = useState<IcerikUretimiSiparisi | null>(null);
+
   const kararVer = useCallback(
     async (
       hedef: { asama: ToastAsama; id: string; surum: number; revizyonSayisi: number },
@@ -251,6 +254,10 @@ export function useTalepMerkezi() {
         if (!res.ok) {
           hata(d.hata ?? "İşlem gerçekleştirilemedi.", d.adim, d.detay);
           return;
+        }
+
+        if (d.siparis_onayi?.talep_id === talep.talep_id && typeof d.siparis_onayi.token === "number" && d.siparis_onayi.token > 0) {
+          setSiparisOnayi(d.siparis_onayi);
         }
 
         // Metin merkezden çözülür (26.07): sayfa cümle tutmaz, olayı ve varyantı verir.
@@ -480,6 +487,8 @@ export function useTalepMerkezi() {
     detay,
     detayYukleniyor,
     kararVer,
+    siparisOnayi,
+    setSiparisOnayi,
     kararYukleniyor,
     hazirVideoYukle,
     videoYuzdesi,
@@ -488,5 +497,6 @@ export function useTalepMerkezi() {
     talepOlusturuldu,
     mesajlar,
     hata,
+    basari,
   };
 }

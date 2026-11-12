@@ -11,7 +11,9 @@
 
 "use client";
 
+import { bildirimRozetleriniYenile } from "@/lib/bildirimler/rozet";
 import { useRef, useMemo } from "react";
+import { IcerikUretimiSiparisOnayi } from "@/components/satinAlma/IcerikUretimiSiparisOnayi";
 import { HataMesajiContainer } from "@/components/HataMesaji";
 import { YenileButonu } from "@/components/ui/yenile-butonu";
 import { useAuth } from "@/app/providers/AuthProvider";
@@ -24,7 +26,7 @@ import { IptalAkordiyonu } from "./IptalAkordiyonu";
 import SayfaRehberi from "@/components/rehber/SayfaRehberi";
 import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 
-export function UreticiRolGorunum() {
+export function UreticiRolGorunum({ onYeniYayinAcikDegisti }: { onYeniYayinAcikDegisti?: (acik: boolean) => void } = {}) {
   const { kullanici, yukleniyor: authYukleniyor } = useAuth();
   const merkez = useTalepMerkezi();
   const ilkYuklemeTamamlandiRef = useRef(false);
@@ -148,7 +150,7 @@ export function UreticiRolGorunum() {
           </div>
         </section>
 
-        <YeniTalepAkordiyonu onTalepOlusturuldu={merkez.talepOlusturuldu} />
+        <YeniTalepAkordiyonu onTalepOlusturuldu={merkez.talepOlusturuldu} onAcikDegisti={onYeniYayinAcikDegisti} />
 
         {/* İki kolon yalnız geniş masaüstünde açılır. Daha dar pencerelerde iş
             kuyruğu ile takip paneli tam genişlikte üst üste kalır. */}
@@ -187,6 +189,7 @@ export function UreticiRolGorunum() {
       </div>
       </div>
 
+      <IcerikUretimiSiparisOnayi siparis={merkez.siparisOnayi} onKapat={() => merkez.setSiparisOnayi(null)} onOdendi={(mesaj) => { merkez.basari(mesaj); bildirimRozetleriniYenile(); }} />
       <HataMesajiContainer mesajlar={merkez.mesajlar} />
     </>
   );

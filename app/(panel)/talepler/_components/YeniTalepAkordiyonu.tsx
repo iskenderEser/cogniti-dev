@@ -23,14 +23,16 @@ import { YeniTalepFormV2 } from "./YeniTalepFormV2";
 interface Props {
   /** Yeni talep açıldığında: v2 listesini tazele ve yeni talebi seç. */
   onTalepOlusturuldu: () => void;
+  onAcikDegisti?: (acik: boolean) => void;
 }
 
-export function YeniTalepAkordiyonu({ onTalepOlusturuldu }: Props) {
+export function YeniTalepAkordiyonu({ onTalepOlusturuldu, onAcikDegisti }: Props) {
   const [acik, setAcik] = useState(false);
   const talepOlustu = useCallback(async () => {
     setAcik(false);
+    onAcikDegisti?.(false);
     await onTalepOlusturuldu();
-  }, [onTalepOlusturuldu]);
+  }, [onTalepOlusturuldu, onAcikDegisti]);
   const formu = useTalepFormu(talepOlustu);
 
   if (!formu.isUretici) return null;
@@ -50,7 +52,10 @@ export function YeniTalepAkordiyonu({ onTalepOlusturuldu }: Props) {
         type="button"
         aria-expanded={acik}
         aria-controls="yeni-talep-formu"
-        onClick={() => setAcik((a) => !a)}
+        onClick={() => {
+          setAcik(!acik);
+          onAcikDegisti?.(!acik);
+        }}
         className="group flex w-full items-center justify-between gap-4 px-4 py-4 text-left transition-colors hover:bg-[var(--tema-yerel-uretim-sayfa-zemini-03)] md:px-5"
       >
         <span className="flex min-w-0 items-center gap-3">
