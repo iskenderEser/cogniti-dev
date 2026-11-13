@@ -212,6 +212,22 @@
 .partnerUyelikLogo { display: block; max-width: 100%; max-height: 100px; object-fit: contain; object-position: left center; }
 .partnerUyelikHata { color: var(--tema-bildirim-hata-metin); background: var(--tema-bildirim-hata-zemin); border-color: var(--tema-bildirim-hata-cizgi); }
 @media (max-width: 600px) { .partnerUyelikDetay { grid-template-columns: minmax(0, 1fr); } }
+.uyelikBasvuruDetay {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  margin: 0;
+}
+.uyelikBasvuruDetay > div {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  gap: 12px;
+  align-items: baseline;
+  padding: 10px 0;
+}
+.uyelikBasvuruDetay > div + div { border-top: 1px solid var(--tema-kontrol-cizgi); }
+.uyelikBasvuruDetay dd { margin: 0; }
+.uyelikBasvuruActions { justify-content: flex-end; }
+.uyelikBasvuruActions > [role="alert"] { flex-basis: 100%; text-align: right; }
 
 /* Partner bilgi kartlarında ilk alan satırları logo alanının altında aynı hizadadır. */
 .partnerBilgiLogoAlani { height:100px; display:flex; align-items:center; }

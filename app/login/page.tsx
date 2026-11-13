@@ -132,6 +132,11 @@ export default function LoginPage() {
       setLoading(false);
       return;
     }
+    if (giris.user?.app_metadata.cogniti_uyelik_adayi === true) {
+      beniHatirlaKaydet(beniHatirla);
+      window.location.replace("/uyelik-basvurusu?giris=1");
+      return;
+    }
     if (giris.user?.app_metadata.eclub_davet_bekliyor === true) {
       window.location.replace("/davet-bekliyor");
       return;

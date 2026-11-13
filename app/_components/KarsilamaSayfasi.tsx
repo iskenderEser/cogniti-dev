@@ -19,6 +19,7 @@ export default function KarsilamaSayfasi() {
           <CognitiLogo width={220} height={73} />
         </Link>
         <nav className={styles.welcomeActions} aria-label="Karşılama gezinmesi">
+          <Link className={styles.pricingNav} href="/uyelik-basvurusu">ÜYELİK BAŞVURUSU</Link>
           <Link className={styles.action} href="/login">
             <LogIn size={16} aria-hidden="true" />Giriş
           </Link>

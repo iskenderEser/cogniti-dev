@@ -36,7 +36,8 @@ export async function proxy(request: NextRequest) {
   if (request.nextUrl.pathname === "/api/viva/daily-webhook") return NextResponse.next({ request });
   if (["/marka/cogniti-blue.svg", "/marka/cogniti-green.svg"].includes(request.nextUrl.pathname)) return NextResponse.next({ request });
   // Karşılama adresleri herkese açıktır; oturuma göre panel içeriğine dönüşmez.
-  if (["/", "/welcome", "/api/musteri-talebi"].includes(request.nextUrl.pathname)) return NextResponse.next({ request });
+  if (["/", "/welcome", "/uyelik-basvurusu", "/kurumsal-uyelik", "/api/musteri-talebi"].includes(request.nextUrl.pathname)) return NextResponse.next({ request });
+  if (request.nextUrl.pathname === "/uyelik-basvurusu/api" && request.method === "POST") return NextResponse.next({ request });
   let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(
