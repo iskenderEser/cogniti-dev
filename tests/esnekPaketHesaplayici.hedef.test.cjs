@@ -7,7 +7,7 @@ let currentPath='/fiyatlar',bad=false,passed=0;const calls=[];
 const rows=JSON.parse(fs.readFileSync('tests/fixtures/esnekPaketLogaritmik.json','utf8')).map(h=>({...h,ay:0,katsayi:h.birim_fiyat/9.9}));
 const packages=[{id: 1, ad: 'Paket 1',token:5000,birim:5.9,aylik:29500},{id: 2, ad: 'Paket 2',token:10000,birim:4.85,aylik:48500},{id: 3, ad: 'Paket 3',token:15000,birim:3.9,aylik:58500},{id: 4, ad: 'Paket 4',token:25000,birim:2.9,aylik:72500}];
 const mocks={'@/components/ui/alert-dialog':{},'@/components/ui/button':{},'@/components/satinAlma/KkoSecimModali':{default:()=>null},'@/components/satinAlma/EsnekPaketSiparis':{default:()=>null},react:React,'react/jsx-runtime':require('react/jsx-runtime'),'next/navigation':{usePathname:()=>currentPath},'lucide-react':{ChevronDown:()=>null}};
-const cache=new Map();function load(file){if(cache.has(file))return cache.get(file);const result={};const code=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX,target:ts.ScriptTarget.ES2022}}).outputText;vm.runInNewContext(code,{exports:result,Intl,AbortController,fetch:async url=>{calls.push(url);return Response.json({sm2:bad?rows.slice(1):rows,paketler:packages});},require:n=>mocks[n]??(n.endsWith('.css')?{default:{}}:n.startsWith('@/')?load(n.slice(2)+'.ts'):n.startsWith('.')?load(require('node:path').join(require('node:path').dirname(file),n)+'.tsx'):require(n))});cache.set(file,result);return result;}
+const cache=new Map();function load(file){if(cache.has(file))return cache.get(file);const result={};const code=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX,target:ts.ScriptTarget.ES2022}}).outputText;vm.runInNewContext(code,{exports:result,Intl,AbortController,fetch:async url=>{calls.push(url);return Response.json({sm2:bad?rows.slice(1):rows,paketler:packages,kko:{birim:9.9}});},require:n=>mocks[n]??(n.endsWith('.css')?{default:{}}:n.startsWith('@/')?load(n.slice(2)+'.ts'):n.startsWith('.')?load(require('node:path').join(require('node:path').dirname(file),n)+'.tsx'):require(n))});cache.set(file,result);return result;}
 const Calculator=load('app/_components/EsnekPaketHesaplayici.tsx').default;
 const ok=v=>{assert.ok(v);passed++;};
 (async()=>{
@@ -45,12 +45,14 @@ const ok=v=>{assert.ok(v);passed++;};
   ok([...table.querySelectorAll('tbody tr')].map(r=>r.querySelector('td:last-child').textContent).join('|')==='29.500 TL|48.500 TL|58.500 TL|72.500 TL');
   ok(table.textContent.includes('4,85'));ok(host.textContent.includes('Tüketiminize uygun paketi seçin.'));
   const links=[...host.querySelectorAll('a')].filter(a=>a.textContent.includes('Planlama Aracı'));
-  ok(links.length===2);ok(links.every(a=>a.getAttribute('href')===(currentPath.startsWith('/partner')?'/partner/planlama-araci':'/planlama-araci')));
+  ok(links.length===1);
+  ok(links[0].previousElementSibling?.tagName==='H1');
+  ok(links[0].getAttribute('href')===(currentPath.startsWith('/partner')?'/partner/planlama-araci':'/planlama-araci'));
   const hizmet=document.querySelector('#icerik-uretimi');
   const hizmetSatirlari=[...hizmet.querySelectorAll('tbody tr')];
   ok(hizmetSatirlari.slice(0,3).map(satir=>[...satir.cells].map(hucre=>hucre.textContent).join('|')).join(';')==='Video|2.500|200|2.700;Podcast|1.500|200|1.700;Dijital Broşür|1.000|200|1.200');
   ok(hizmetSatirlari[3].cells.length===2&&hizmetSatirlari[3].cells[0].textContent==='Literatür'&&hizmetSatirlari[3].cells[1].colSpan===3&&hizmetSatirlari[3].cells[1].textContent==='Teklif Usulü');
-  ok(hizmet.querySelector('#icerik-uretimi-fiyat-notu').textContent==="1 Token KDV hariç 9,90 TL'den faturalanır.");
+  ok(hizmet.querySelector('#icerik-uretimi-fiyat-notu').textContent==="1 token KDV hariç 9,90 TL üzerinden faturalanır.");
   await React.act(async()=>pageRoot.unmount());host.remove();
  }
  bad=true;const el=document.createElement('div');document.body.append(el);const root=createRoot(el);await React.act(async()=>root.render(React.createElement(Calculator)));ok(el.textContent.includes('Fiyatlar okunamadı'));await React.act(async()=>root.unmount());await win.happyDOM.close();console.log(JSON.stringify({passed,scope:'Gerçek React hesaplayıcı; iç kullanıcı ve partner, sahte API. Tek seferde ödeme, fatura bölme kaldırılması, siparişte fatura açıklaması, peşin fiyatlar ve eksik liste.'}));

@@ -181,7 +181,6 @@ export default function PanelNavbar({
   const pathname = usePathname();
   const { kullanici } = useAuth();
   const fiyatlarAcik = fiyatlarGoster ?? fiyatlariGorebilir(kullanici?.rol);
-  const planlamaYolu = fiyatlarYolu.startsWith("/partner/") ? "/partner/planlama-araci" : "/planlama-araci";
   const [hover, setHover] = useState<string | null>(null);
 
   // Logo hedefini önceden hazırla; üreticilerde bu hedef Yayın Yönetimi'dir.
@@ -318,9 +317,6 @@ export default function PanelNavbar({
             ))}
           </div>}
 
-          {fiyatlarAcik && <button type="button" onClick={() => router.push(planlamaYolu)}
-            aria-current={pathname === planlamaYolu ? "page" : undefined}
-            className="mr-4 cursor-pointer whitespace-nowrap border-0 bg-transparent p-0 text-[11px] font-normal tracking-[1.8px] text-[var(--tema-kontrol-eylem)] hover:underline">PLANLAMA ARACI</button>}
           {fiyatlarAcik && <button type="button" onClick={() => { if (onFiyatlar) onFiyatlar(); else router.push(fiyatlarYolu); }}
             aria-current={pathname === fiyatlarYolu ? "page" : undefined}
             className="md:mr-6 lg:mr-8 cursor-pointer whitespace-nowrap border-0 bg-transparent p-0 text-[11px] font-normal tracking-[1.8px] text-[var(--tema-kontrol-eylem)] hover:underline">PAKETLER, HİZMETLER VE FİYATLAR</button>}
@@ -388,7 +384,7 @@ export default function PanelNavbar({
           </button>}
         </div>
       </div>
-      {fiyatlarAcik && <div className="flex md:hidden justify-end gap-4 pt-1"><button type="button" onClick={() => router.push(planlamaYolu)} aria-current={pathname === planlamaYolu ? "page" : undefined} className="cursor-pointer whitespace-nowrap border-0 bg-transparent p-0 text-[11px] font-normal tracking-[1.8px] text-[var(--tema-kontrol-eylem)] hover:underline">PLANLAMA ARACI</button><button type="button" onClick={() => { if (onFiyatlar) onFiyatlar(); else router.push(fiyatlarYolu); }}
+      {fiyatlarAcik && <div className="flex md:hidden justify-end gap-4 pt-1"><button type="button" onClick={() => { if (onFiyatlar) onFiyatlar(); else router.push(fiyatlarYolu); }}
         aria-current={pathname === fiyatlarYolu ? "page" : undefined} className="md:mr-6 lg:mr-8 cursor-pointer text-right border-0 bg-transparent p-0 text-[11px] font-normal tracking-[1.8px] text-[var(--tema-kontrol-eylem)] hover:underline">PAKETLER, HİZMETLER VE FİYATLAR</button></div>}
       {vivaGoster && <div className="absolute left-1/2 z-[51] flex h-4 sm:h-9 w-32 -translate-x-1/2 items-start justify-center pt-0.5 [&>button]:-translate-y-3 sm:[&>button]:translate-y-0" style={{ top: "calc(100% - 1px)" }}>
         <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 128 38" preserveAspectRatio="none" aria-hidden="true" style={{ filter: "drop-shadow(0 3px 3px color-mix(in srgb, var(--tema-metin) 5%, transparent))" }}>

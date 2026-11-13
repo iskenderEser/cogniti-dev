@@ -1,6 +1,6 @@
 .page { max-width:1440px; margin:auto; padding:40px 32px 56px; color:var(--tema-kontrol-metin); font-size:15px; line-height:1.5; }
 .page h1,.page h2,.page h3,.page p { margin:0; }
-.page h1 { font-size:14px; letter-spacing:1.8px; line-height:1.5; margin-bottom:28px; font-weight:400; color:var(--tema-kontrol-eylem); }
+.page h1 { font-size:14px; letter-spacing:1.8px; line-height:1.5; font-weight:400; color:var(--tema-kontrol-eylem); }
 .page h2 { font-size:22px; letter-spacing:-.04em; line-height:1.25; font-weight:700; }
 .page p { color:var(--tema-ikincil-metin); margin-top:8px; }
 .sheet { background:var(--tema-yuzey); border:1px solid var(--tema-kontrol-cizgi); border-radius:18px; overflow:hidden; }
@@ -108,8 +108,9 @@
 }
 
 .paketSagAlan { min-width:0; }
-.planlamaBaglantisiAlani { display:flex; justify-content:flex-end; margin-top:10px; }
-.planlamaBaglantisi { display:inline-flex; align-items:center; gap:5px; color:var(--tema-kontrol-eylem); font-size:11px; font-weight:400; text-decoration:none; }
+.sayfaBasligi { display:flex; align-items:center; justify-content:space-between; gap:12px 24px; margin-bottom:28px; }
+@media(max-width:700px){.sayfaBasligi{flex-direction:column;align-items:flex-start}}
+.planlamaBaglantisi { display:inline-flex; align-items:center; gap:6px; flex-shrink:0; padding:7px 12px; border:1px solid var(--tema-kontrol-cizgi); border-radius:8px; color:var(--tema-kontrol-eylem); font-size:13px; font-weight:600; text-decoration:none; }
 .planlamaBaglantisi:hover { text-decoration:underline; }
 
 .paketTablosu .teklifUsulu { text-align:center; }
