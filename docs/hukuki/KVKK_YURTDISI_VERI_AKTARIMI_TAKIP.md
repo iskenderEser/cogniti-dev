@@ -1,7 +1,7 @@
 # KVKK Yurt Dışı Veri Aktarımı Takibi
 
 **Durum:** BEKLEMEDE  
-**Son kontrol:** 30 Eylül 2026
+**Son kontrol:** 13 Kasım 2026
 
 ## Konu
 
@@ -43,6 +43,7 @@ Türkiye’de Supabase ile SS-2 imzalayıp Kuruma bildirdiğini sözleşme veya 
 | 3 Eylül 2026 | Yeni çalışma oturumunda süreç yeniden kontrol edildi; kullanıcı yeni bir gelişme olmadığını teyit etti. | Supabase’e yazılı başvuru yapılacak. |
 | 15 Eylül 2026 | Kullanıcı, Supabase ile KVKK Standart Sözleşme-2 sürecinde yeni bir gelişme olmadığını bildirdi. | Supabase’e yazılı başvuru yapılacak. |
 | 30 Eylül 2026 | Kullanıcı, Supabase ile KVKK Standart Sözleşme-2 sürecinde yeni bir gelişme olmadığını bildirdi. | Supabase’e yazılı başvuru yapılacak. |
+| 13 Kasım 2026 | Kullanıcı, Supabase ile KVKK Standart Sözleşme-2 sürecinde yeni bir gelişme olmadığını ve Cogniti’yi kendi alan adına taşımadan önce veritabanı işlerini tamamlamak istediğini bildirdi. | SS-2 süreci beklemede. |
 
 ## Tamamlanma ölçütü
 
