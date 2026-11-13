@@ -1,8 +1,8 @@
-import { Montserrat } from "next/font/google";
+import localFont from "next/font/local";
 
-export const montserrat = Montserrat({
-  subsets: ["latin", "latin-ext"],
-  weight: ["300", "400", "500", "600", "700", "800"],
+export const montserrat = localFont({
+  src: "./fonts/montserrat-variable.ttf",
+  weight: "300 800",
   display: "swap",
   variable: "--font-montserrat",
 });
