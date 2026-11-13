@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { AuthProvider } from "@/app/providers/AuthProvider";
 import { PushAbonelik } from "@/app/providers/PushAbonelik";
@@ -32,10 +33,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="tr" data-tema={VARSAYILAN_TEMA} suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: LOGIN_TEMA_BASLANGIC_BETIGI }} />
-      </head>
       <body className={`${nunito.variable}`} style={{ fontFamily: "var(--font-nunito), sans-serif" }}>
+        <Script id="cogniti-tema-baslangic" strategy="beforeInteractive">
+          {LOGIN_TEMA_BASLANGIC_BETIGI}
+        </Script>
         <AuthProvider>
           <TemaProvider>
             <VivaGorusmeSaglayici>{children}</VivaGorusmeSaglayici>
