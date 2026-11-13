@@ -38,6 +38,8 @@ export async function proxy(request: NextRequest) {
   // Karşılama adresleri herkese açıktır; oturuma göre panel içeriğine dönüşmez.
   if (["/", "/welcome", "/uyelik-basvurusu", "/kurumsal-uyelik", "/api/musteri-talebi"].includes(request.nextUrl.pathname)) return NextResponse.next({ request });
   if (request.nextUrl.pathname === "/uyelik-basvurusu/api" && request.method === "POST") return NextResponse.next({ request });
+  if (request.nextUrl.pathname === "/kurumsal-uyelik/api/rol-donusumleri" && request.method === "GET") return NextResponse.next({ request });
+  if (request.nextUrl.pathname === "/kurumsal-urun-listesi-sablonu.xlsx" && ["GET", "HEAD"].includes(request.method)) return NextResponse.next({ request });
   let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(

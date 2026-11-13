@@ -25,3 +25,26 @@
 @media(max-width:480px) { .locationGrid { grid-template-columns:1fr; } }
 
 @media(pointer:coarse) { .locationSelect.locationSelect { min-height:44px; font-size:16px; } }
+
+.kurumsalKart.kurumsalKart {
+  border-inline-start: 3px solid var(--tema-kontrol-eylem);
+  box-shadow: 0 8px 28px color-mix(in srgb, var(--tema-kontrol-metin) 8%, transparent);
+}
+
+.kurumsalKart .compactBody {
+  padding-inline: clamp(16px, 3vw, 32px);
+  padding-block: clamp(18px, 2.5vw, 28px);
+}
+
+.kurumsalKart .formLayout { gap: 20px; }
+.kurumsalKart .column { gap: 16px; }
+.kurumsalKart .detailsGrid { gap: 16px clamp(16px, 3vw, 32px); }
+
+.kurumsalKart .formLayout :is(input, textarea, button):focus-visible {
+  outline: 2px solid var(--tema-kontrol-odak);
+  outline-offset: 2px;
+}
+
+.kurumsalKart .logoField .uploadButton {
+  background: color-mix(in srgb, var(--tema-kontrol-eylem) 7%, var(--tema-yuzey));
+}

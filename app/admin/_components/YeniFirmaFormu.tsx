@@ -15,7 +15,7 @@ const BOS_FORM: YeniFirmaBilgileri = {
   sorumlu_ad_soyad: "", sorumlu_telefon: "", sorumlu_eposta: "", logo_url: "",
 };
 
-export default function YeniFirmaFormu({ onKaydet, ilkBilgiler, duzenleme = false, firmaId }: { onKaydet: (bilgiler: YeniFirmaBilgileri) => Promise<boolean>; ilkBilgiler?: YeniFirmaBilgileri; duzenleme?: boolean; firmaId?: string }) {
+export default function YeniFirmaFormu({ onKaydet, ilkBilgiler, duzenleme = false, firmaId, secimMenuClassName, kurumsalUyelik = false }: { onKaydet?: (bilgiler: YeniFirmaBilgileri) => Promise<boolean>; ilkBilgiler?: YeniFirmaBilgileri; duzenleme?: boolean; firmaId?: string; secimMenuClassName?: string; kurumsalUyelik?: boolean }) {
   const [bilgiler, setBilgiler] = useState({...BOS_FORM,...ilkBilgiler});
   const [kaydediliyor, setKaydediliyor] = useState(false);
   const [logoYukleniyor, setLogoYukleniyor] = useState(false);
@@ -41,9 +41,21 @@ export default function YeniFirmaFormu({ onKaydet, ilkBilgiler, duzenleme = fals
     kilit.current = true;
     setLogoYukleniyor(true);
     try {
+      const logo = await logoGorseliniOptimizeEt(dosya);
+      if (!onKaydet) {
+        const onizleme = await new Promise<string>((resolve, reject) => {
+          const okuyucu = new FileReader();
+          okuyucu.onload = () => resolve(String(okuyucu.result));
+          okuyucu.onerror = () => reject(okuyucu.error);
+          okuyucu.readAsDataURL(logo);
+        });
+        alanDegistir("logo_url", onizleme);
+        setLogoDosyaAdi(dosya.name);
+        return;
+      }
       const formData = new FormData();
       if (firmaId) formData.append("firma_id", firmaId);
-      formData.append("dosya", await logoGorseliniOptimizeEt(dosya));
+      formData.append("dosya", logo);
       const res = await fetch("/admin/api/firmalar/upload", { method: "POST", body: formData });
       const data = await res.json();
       if (!res.ok || typeof data.url !== "string" || !data.url.trim()) {
@@ -61,11 +73,11 @@ export default function YeniFirmaFormu({ onKaydet, ilkBilgiler, duzenleme = fals
     }
   }
 
-  return <section className={styles.card}>
-    <div className={`${styles.cardHeader} ${local.compactHeader}`}><h2>Firma Bilgileri</h2></div>
+  return <section className={kurumsalUyelik ? `${styles.card} ${local.kurumsalKart}` : styles.card}>
+    {!kurumsalUyelik && <div className={`${styles.cardHeader} ${local.compactHeader}`}><h2>Firma Bilgileri</h2></div>}
     <form className={`${styles.cardBody} ${local.compactBody}`} onSubmit={async e => {
       e.preventDefault();
-      if (kilit.current) return;
+      if (!onKaydet || kilit.current) return;
       if (!tumAlanlarDolu) { setHata("Logo dahil tüm alanları doldurun."); return; }
       kilit.current = true;
       setKaydediliyor(true);
@@ -122,18 +134,18 @@ export default function YeniFirmaFormu({ onKaydet, ilkBilgiler, duzenleme = fals
               <div className={`${styles.field} ${local.field}`}><span>Bulunduğu İl *</span>
                 <SadeSecim etiket="Firmanın bulunduğu il" placeholder="İl seçin" deger={bilgiler.il_id===null ? "" : String(bilgiler.il_id)} secenekler={ilSecenekleri}
                   onDegistir={deger=>setBilgiler(onceki=>({...onceki,il_id:Number(deger),ilce_id:null,vergi_dairesi_kodu:"",vergi_dairesi:""}))}
-                  disabled={mesgul} className={local.locationSelect} triggerProps={{"aria-required":true}} />
+                  disabled={mesgul} className={local.locationSelect} menuClassName={secimMenuClassName} triggerProps={{"aria-required":true}} />
               </div>
               <div className={`${styles.field} ${local.field}`}><span>İlçe *</span>
                 <SadeSecim etiket="Firmanın bulunduğu ilçe" placeholder="İlçe seçin" deger={bilgiler.ilce_id===null ? "" : String(bilgiler.ilce_id)} secenekler={ilinIlceleri(bilgiler.il_id)}
                   onDegistir={deger=>setBilgiler(onceki=>({...onceki,ilce_id:Number(deger)}))}
-                  disabled={mesgul || bilgiler.il_id===null} className={local.locationSelect} triggerProps={{"aria-required":true}} />
+                  disabled={mesgul || bilgiler.il_id===null} className={local.locationSelect} menuClassName={secimMenuClassName} triggerProps={{"aria-required":true}} />
               </div>
             </div>
             <div className={`${styles.field} ${local.field}`}><span>Vergi Dairesi *</span>
               <SadeSecim etiket="Vergi dairesi" placeholder="Vergi dairesi seçin" deger={bilgiler.vergi_dairesi_kodu} secenekler={ilinVergiDaireleri(bilgiler.il_id)}
                 onDegistir={deger=>setBilgiler(onceki=>({...onceki,vergi_dairesi_kodu:deger,vergi_dairesi:ilinVergiDaireleri(onceki.il_id).find(daire=>daire.deger===deger)?.etiket ?? ""}))}
-                disabled={mesgul || bilgiler.il_id===null} className={local.locationSelect} triggerProps={{"aria-required":true}} />
+                disabled={mesgul || bilgiler.il_id===null} className={local.locationSelect} menuClassName={secimMenuClassName} triggerProps={{"aria-required":true}} />
               {duzenleme && !bilgiler.vergi_dairesi_kodu && bilgiler.vergi_dairesi && <span className={local.fileHint}>Mevcut kayıt: {bilgiler.vergi_dairesi}</span>}
             </div>
             <label className={`${styles.field} ${local.field}`}>Vergi Numarası *
@@ -146,7 +158,7 @@ export default function YeniFirmaFormu({ onKaydet, ilkBilgiler, duzenleme = fals
         </div>
 
       </div>
-      <div className={styles.formActions} style={{ justifyContent: "flex-end" }}><button type="submit" className={`${styles.button} ${styles.primary}`} disabled={mesgul || !tumAlanlarDolu}>{kaydediliyor ? (duzenleme ? "Kaydediliyor…" : "Tanımlanıyor…") : duzenleme ? "Kaydet" : "Firmayı Tanımla"}</button></div>
+      {onKaydet && <div className={styles.formActions} style={{ justifyContent: "flex-end" }}><button type="submit" className={`${styles.button} ${styles.primary}`} disabled={mesgul || !tumAlanlarDolu}>{kaydediliyor ? (duzenleme ? "Kaydediliyor…" : "Tanımlanıyor…") : duzenleme ? "Kaydet" : "Firmayı Tanımla"}</button></div>}
     </form>
   </section>;
 }
