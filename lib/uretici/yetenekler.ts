@@ -310,29 +310,6 @@ export function uretciMi(rol: string): boolean {
 }
 
 /**
- * Verilen rol ürün master verisine yeni kayıt ekleyebilir mi?
- *
- * Mantık ("kullanan ekler" prensibi): Rol bir "ürün kullanan" talep türü
- * açabiliyorsa (TALEP_TURU_KURALLARI'nda urun = "zorunlu" veya "tercihli"),
- * ürün eklemesine de izin verilir.
- *
- * Sonuçlar:
- * - pm/jr_pm/kd_pm → true (urun_egitimi açar, urun=zorunlu)
- * - egt_md/egt_yrd_md/egt_yon/egt_uz → true (satis_teknikleri açar, urun=tercihli)
- * - med_md → true (urun_medikal_egitim açar, urun=zorunlu)
- * - ik_drk/ik_md/ik_yrd_md/ik_uz/ik_per → false (ik_egitimi açar, urun=yok)
- *
- * Üretici olmayan veya tanımsız rol için false döner.
- */
-export function urunEkleyebilirMi(rol: string): boolean {
-  const yetenek = ureticiYetenegi(rol);
-  if (!yetenek) return false;
-  return yetenek.acabilecegiTalepTurleri.some(
-    (tur) => TALEP_TURU_KURALLARI[tur].urun !== "yok"
-  );
-}
-
-/**
  * Verilen rol teknik master verisine yeni kayıt ekleyebilir mi?
  *
  * Mantık ("kullanan ekler" prensibi): Rol bir "teknik kullanan" talep türü

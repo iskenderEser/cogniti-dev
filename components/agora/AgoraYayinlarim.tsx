@@ -45,7 +45,7 @@ export default function AgoraYayinlarim(){
  const yenile=useCallback(async()=>{
  setYukleniyor(true);setHata("");try{
  const res=await fetch("/agora-yayinlari/api",{cache:"no-store"});const d=await res.json();if(!res.ok)throw Error(d.hata??"Yayınlar alınamadı.");setYayinlar(d.yayinlar);
- const qs=new URLSearchParams({firma_id:d.profil.firma_id});if(d.profil.takim_id)qs.set("takim_id",d.profil.takim_id);
+ const qs=new URLSearchParams({firma_id:d.profil.firma_id});
  const [u,t]=await Promise.all([fetch("/urunler/api?"+qs),fetch("/teknikler/api?firma_id="+encodeURIComponent(d.profil.firma_id))]);
  const [ud,td]=await Promise.all([u.json(),t.json()]);if(!u.ok||!t.ok)throw Error("Ürün veya teknik listesi alınamadı.");setUrunler(ud.urunler??[]);setTeknikler(td.teknikler??[]);
  }catch(e){setHata(e instanceof Error?e.message:"Yayınlar alınamadı.");}finally{setYukleniyor(false);}

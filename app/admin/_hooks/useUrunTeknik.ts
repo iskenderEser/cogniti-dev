@@ -13,6 +13,8 @@ interface Props {
 /** Firma anahtarıyla açılan çalışma alanı; mevcut ürün/teknik API'lerini kullanır. */
 export function useUrunTeknik({ seciliFirma, takimlar, hata, basari }:Props) {
   const [urunler,setUrunler]=useState<Urun[]>([]);
+  const [pmAdaylari, setPmAdaylari] = useState<{ kullanici_id: string; ad: string; soyad: string; takim_id: string | null }[]>([]);
+  const [pmKaydediliyor, setPmKaydediliyor] = useState(false);
   const [teknikler,setTeknikler]=useState<Teknik[]>([]);
   const [yeniUrunAdi,setYeniUrunAdi]=useState("");
   const [yeniUrunTakimId,setYeniUrunTakimId]=useState("");
@@ -38,6 +40,7 @@ export function useUrunTeknik({ seciliFirma, takimlar, hata, basari }:Props) {
       if(!aktif.current || signal?.aborted)return;
       if(!res.ok){setUrunHatasi(true);hata(data.hata ?? "Ürünler yüklenemedi.",data.adim,data.detay);return;}
       setUrunler(data.urunler ?? []);
+      setPmAdaylari(data.pmAdaylari ?? []);
     } catch(err) {
       if(!aktif.current || signal?.aborted)return;
       setUrunHatasi(true);hata("Ürünler yüklenemedi — bağlantı hatası.","ürün listesi",String(err));
@@ -81,6 +84,32 @@ export function useUrunTeknik({ seciliFirma, takimlar, hata, basari }:Props) {
     finally {islemKilidi.current=false;if(aktif.current)setUrunEkleLoading(false);}
   };
 
+  async function sorumluPmKaydet(urunId: string, sorumluId: string | null) {
+    if (islemKilidi.current) return;
+    islemKilidi.current = true;
+    setPmKaydediliyor(true);
+    try {
+      const yanit = await fetch(`/admin/api/firmalar/${firmaId}/urunler`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ urun_id: urunId, sorumlu_pm_id: sorumluId }),
+      });
+      const veri = await yanit.json();
+      if (!aktif.current) return;
+      if (!yanit.ok) {
+        hata(veri.hata ?? "Sorumlu PM kaydedilemedi.");
+        return;
+      }
+      basari("Ürün sorumlusu güncellendi.");
+      await urunleriCek();
+    } catch {
+      if (aktif.current) hata("Ürün sorumlusu kaydedilemedi. Listeyi yeniden yükleyin.");
+    } finally {
+      islemKilidi.current = false;
+      if (aktif.current) setPmKaydediliyor(false);
+    }
+  }
+
   const handleTeknikEkle=async(e:React.FormEvent)=>{
     e.preventDefault();
     if(!yeniTeknikAdi.trim() || islemKilidi.current)return;
@@ -122,7 +151,7 @@ export function useUrunTeknik({ seciliFirma, takimlar, hata, basari }:Props) {
   };
 
   const takimAdi=(id:string)=>takimlar.find(t=>t.takim_id===id)?.takim_adi ?? "—";
-  return { urunler,teknikler,yeniUrunAdi,setYeniUrunAdi,yeniUrunTakimId,setYeniUrunTakimId,yeniTeknikAdi,setYeniTeknikAdi,
+  return { urunler, pmAdaylari, pmKaydediliyor, sorumluPmKaydet, teknikler,yeniUrunAdi,setYeniUrunAdi,yeniUrunTakimId,setYeniUrunTakimId,yeniTeknikAdi,setYeniTeknikAdi,
     urunEkleLoading,teknikEkleLoading,urunSilLoading,teknikSilLoading,urunYukleniyor,teknikYukleniyor,urunHatasi,teknikHatasi,
     handleUrunEkle,handleTeknikEkle,handleUrunSil,handleTeknikSil,takimAdi,urunleriCek,teknikleriCek };
 }

@@ -3,7 +3,6 @@
 // Talepler sayfasının tek state otoritesi. Form alanları + listelemeler + submit pipeline'ı.
 // handleSubmit beş alt fonksiyona bölünmüştür: validateForm, submitTalep, uploadVideo,
 // uploadDosyalar, resetForm.
-// Madde 4 Aşama 2B: fetchTakimlar ve handleYeniUrunEkle(urun_adi, takim_id) burada.
 // Hazır soru seti yapısal form kartlarıyla girilir (Y-2 — lib/soru/taslak); useHataMesaji içeride composed.
 //
 // E-Club üretim düzenlemesi: hedef rol eczacı/eczane teknisyeni ise teknik seçimi
@@ -27,7 +26,6 @@ import { uretimToast, toastVaryant } from "@/lib/uretim/toastMesaj";
 import type {
   Urun,
   Teknik,
-  Takim,
   KullaniciBilgi,
   BekleyenDosya,
   HedefRol,
@@ -112,7 +110,6 @@ export function useTalepFormu(onTalepOlusturuldu?: () => void | Promise<void>) {
   const [seciliUrunId, setSeciliUrunId] = useState("");
   const [teknikler, setTeknikler] = useState<Teknik[]>([]);
   const [seciliTeknikId, setSeciliTeknikId] = useState("");
-  const [takimlar, setTakimlar] = useState<Takim[]>([]);
   const [soruSetiBuyuklugu, setSoruSetiBuyuklugu] = useState<number>(10);
   const [secenekSayisi, setSecenekSayisi] = useState<number>(2);
   const [videoBasiSoruSayisi, setVideoBasiSoruSayisi] = useState<number>(2);
@@ -176,7 +173,6 @@ export function useTalepFormu(onTalepOlusturuldu?: () => void | Promise<void>) {
   const teknikGosterilsin = turKurali.teknik !== "yok" && !eclubHedef && !eczanemHedef;
   // Ürün ve teknik ikisi de yoksa serbest ad alanı gösterilir (eczanem hariç: orada ürün zorunlu).
   const serbestAdGoster = turKurali.urun === "yok" && turKurali.teknik === "yok" && !eczanemHedef;
-  const kullaniciTakimId = kullaniciBilgi?.takim_id ?? null;
 
   // ============================================================================
   // Auth + rol kontrolü
@@ -223,22 +219,19 @@ export function useTalepFormu(onTalepOlusturuldu?: () => void | Promise<void>) {
     return data;
   }, [kullanici?.id, kullaniciBilgi]);
 
-  // Üretici için ürün, teknik, takım — Promise.all.
+  // Üretici için ürün ve teknik — Promise.all.
   const fetchUreticiVerileri = useCallback(
-    async (firma_id: string, takim_id: string | null) => {
-      const [urunRes, teknikRes, takimRes] = await Promise.all([
-        fetch(`/urunler/api?firma_id=${firma_id}${takim_id ? `&takim_id=${takim_id}` : ""}`),
+    async (firma_id: string) => {
+      const [urunRes, teknikRes] = await Promise.all([
+        fetch(`/urunler/api?firma_id=${firma_id}`),
         fetch(`/teknikler/api?firma_id=${firma_id}`),
-        fetch(`/takimlar/api?firma_id=${firma_id}`),
       ]);
-      const [urunData, teknikData, takimData] = await Promise.all([
+      const [urunData, teknikData] = await Promise.all([
         urunRes.json(),
         teknikRes.json(),
-        takimRes.json(),
       ]);
       if (urunRes.ok) setUrunler(urunData.urunler ?? []);
       if (teknikRes.ok) setTeknikler(teknikData.teknikler ?? []);
-      if (takimRes.ok) setTakimlar(takimData.takimlar ?? []);
     },
     []
   );
@@ -251,7 +244,7 @@ export function useTalepFormu(onTalepOlusturuldu?: () => void | Promise<void>) {
       setLoading(true);
       if (isUretici) {
         const data = await fetchKullaniciBilgi();
-        if (data?.firma_id) await fetchUreticiVerileri(data.firma_id, data.takim_id ?? null);
+        if (data?.firma_id) await fetchUreticiVerileri(data.firma_id);
       }
       if (aktif) setLoading(false);
     })();
@@ -591,32 +584,6 @@ export function useTalepFormu(onTalepOlusturuldu?: () => void | Promise<void>) {
     if (uyariMesaji) uyari(uyariMesaji);
   }, [soruSetiBuyuklugu, secenekSayisi, uyari]);
 
-  // Yeni ürün — Madde 4 Aşama 2B: takim_id parametresi.
-  const handleYeniUrunEkle = useCallback(
-    async (urun_adi: string, takim_id: string | null) => {
-      const kullaniciVeri = await fetchKullaniciBilgi();
-      if (!kullaniciVeri?.firma_id) {
-        hata("Firma bilgisi alınamadı.", "kullanicilar SELECT", undefined);
-        throw new Error("Firma bilgisi alınamadı.");
-      }
-      const res = await fetch("/urunler/api", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ firma_id: kullaniciVeri.firma_id, takim_id, urun_adi }),
-      });
-      const d = await res.json();
-      if (!res.ok) {
-        hata(d.hata ?? "Ürün eklenemedi.", d.adim, d.detay);
-        throw new Error(d.hata ?? "Ürün eklenemedi.");
-      }
-      // eslint-disable-next-line hapbilgi-mimari/toast-tek-kaynak -- master veri ekleme; üretim hattı akış mesajı değil.
-      basari(`"${urun_adi}" ürünü eklendi.`);
-      await fetchUreticiVerileri(kullaniciVeri.firma_id, kullaniciVeri.takim_id ?? null);
-      setSeciliUrunId(d.urun.urun_id);
-    },
-    [fetchKullaniciBilgi, fetchUreticiVerileri, hata, basari]
-  );
-
   const handleYeniTeknikEkle = useCallback(
     async (teknik_adi: string) => {
       const kullaniciVeri = await fetchKullaniciBilgi();
@@ -636,7 +603,7 @@ export function useTalepFormu(onTalepOlusturuldu?: () => void | Promise<void>) {
       }
       // eslint-disable-next-line hapbilgi-mimari/toast-tek-kaynak -- master veri ekleme; üretim hattı akış mesajı değil.
       basari(`"${teknik_adi}" tekniği eklendi.`);
-      await fetchUreticiVerileri(kullaniciVeri.firma_id, kullaniciVeri.takim_id ?? null);
+      await fetchUreticiVerileri(kullaniciVeri.firma_id);
       setSeciliTeknikId(d.teknik.teknik_id);
     },
     [fetchKullaniciBilgi, fetchUreticiVerileri, hata, basari]
@@ -1895,9 +1862,6 @@ export function useTalepFormu(onTalepOlusturuldu?: () => void | Promise<void>) {
     teknikler,
     seciliTeknikId,
     setSeciliTeknikId,
-    takimlar,
-    kullaniciTakimId,
-    handleYeniUrunEkle,
     handleYeniTeknikEkle,
 
     // form: soru seti ayarları

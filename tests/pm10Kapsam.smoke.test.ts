@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import { ureticiUrunListeKapsami, ureticiUrunYazmaKapsami } from "@/lib/uretici/urunKapsami";
+import { ureticiUrunListeKapsami } from "@/lib/uretici/urunKapsami";
 
 const pm = { rol: "pm", firma_id: "hepifarma", takim_id: "simsek", aktif_mi: true };
 const medikal = { rol: "med_md", firma_id: "hepifarma", takim_id: null, aktif_mi: true };
@@ -23,19 +23,18 @@ test("PM-10: firma kapsamlı üretici yalnız kendi firmasında takım seçebili
     firma_id: "hepifarma", takim_id: "simsek",
   });
   assert.equal(ureticiUrunListeKapsami(medikal, "mill", "simsek"), null);
-  assert.equal(ureticiUrunYazmaKapsami(medikal, "hepifarma", null), null);
-  assert.deepEqual(ureticiUrunYazmaKapsami(pm, "hepifarma", null), {
-    firma_id: "hepifarma", takim_id: "simsek",
+  assert.deepEqual(ureticiUrunListeKapsami(medikal, "hepifarma", null), {
+    firma_id: "hepifarma", takim_id: null,
   });
 });
 
-test("PM-10: ürün API'si sorgu ve yazımda doğrulanmış kapsamı kullanır", () => {
+test("PM-10: ürün API'si firma ve PM kapsamını uygular, katalog yazımına kapalıdır", () => {
   const route = readFileSync(new URL("../app/urunler/api/route.ts", import.meta.url), "utf8");
   assert.match(route, /ureticiUrunListeKapsami\(profil, firma_id, takim_id\)/);
   assert.match(route, /\.eq\("firma_id", kapsam\.firma_id\)/);
   assert.match(route, /query\.or\(`takim_id\.eq\.\$\{kapsam\.takim_id\},takim_id\.is\.null`\)/);
-  assert.match(route, /ureticiUrunYazmaKapsami\(profil, firma_id, takim_id \?\? null\)/);
-  assert.match(route, /\.insert\(\{ firma_id: kapsam\.firma_id, takim_id: kapsam\.takim_id/);
+  assert.match(route, /\.eq\("sorumlu_pm_id", user.id\)/);
+  assert.doesNotMatch(route, /export async function POST/);
 });
 
 test("PM-10: yayın kataloğu oturum sahibinin firma kapsamını sunucuda uygular", () => {

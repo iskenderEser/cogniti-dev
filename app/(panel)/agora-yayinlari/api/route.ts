@@ -28,7 +28,7 @@ export async function POST(request:Request){
  if(profilHata||!profil?.firma_id||(ureticiYetenegi(b.rol)?.takimZorunlu&&!profil.takim_id))return partnerYanit({hata:"Firma veya takım kaydınız eksik."},409);
  const urun=k.urunGoster?d.urun_id??null:null,teknik=k.teknikGoster?d.teknik_id??null:null;
  if((k.urunZorunlu&&!urun)||(k.teknikZorunlu&&!teknik))return partnerYanit({hata:k.urunZorunlu&&!urun?"Ürün seçimi zorunludur.":"Teknik seçimi zorunludur."},400);
- if(urun&&!(await urunFirmayaAitMi(b.db,urun as string,profil.firma_id)))return partnerYanit({hata:"Ürün firmanıza ait değil."},403);
+ if(urun&&!(await urunFirmayaAitMi(b.db,urun as string,profil.firma_id,{id:b.authId,rol:b.rol,takimId:profil.takim_id})))return partnerYanit({hata:"Ürün üretim kapsamınızda değil."},403);
  if(teknik&&!(await teknikFirmayaAitMi(b.db,teknik as string,profil.firma_id)))return partnerYanit({hata:"Teknik firmanıza ait değil."},403);
  const {data,error}=await b.db.rpc("agora_yayin_ayarla",{p_auth_id:b.authId,p_siparis_id:d.siparis_id,p_istek_id:d.istek_id,p_hedef:d.hedef,p_ayarlar:{egitim_turu:d.egitim_turu,urun_id:urun,teknik_id:teknik}});
  if(error)return partnerYanit({hata:error.code==="40001"?"Bu hazırlık yayımlanmış. Yeni bir yayına alma işlemi başlatın.":"Yayın ayarları kaydedilemedi."},error.code==="42501"?403:error.code==="40001"?409:503);

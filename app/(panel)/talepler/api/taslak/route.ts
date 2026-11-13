@@ -287,8 +287,8 @@ export async function POST(request: NextRequest) {
     if (insertTeknikId && !(await teknikFirmayaAitMi(adminSupabase, insertTeknikId, kullaniciKaydi.firma_id))) {
       return validasyonHatasi("Seçilen teknik firmanıza ait değil.", ["teknik_id"]);
     }
-    if (insertUrunId && !(await urunFirmayaAitMi(adminSupabase, insertUrunId, kullaniciKaydi.firma_id))) {
-      return validasyonHatasi("Seçilen ürün firmanıza ait değil.", ["urun_id"]);
+    if (insertUrunId && !(await urunFirmayaAitMi(adminSupabase, insertUrunId, kullaniciKaydi.firma_id, { id: user.id, rol, takimId: kullaniciKaydi.takim_id }))) {
+      return validasyonHatasi("Seçilen ürün üretim kapsamınızda değil.", ["urun_id"]);
     }
 
     const serbestTuru = turKurali.urun === "yok" && turKurali.teknik === "yok" && !eczanemHedefi;

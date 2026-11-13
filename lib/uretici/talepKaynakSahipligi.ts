@@ -1,3 +1,4 @@
+import { PM_AILESI_ROLLER } from "@/lib/utils/roller";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 /**
@@ -35,12 +36,17 @@ export async function urunFirmayaAitMi(
   db: SupabaseClient,
   urunId: string,
   firmaId: string,
+  uretici?: { id: string; rol: string; takimId: string | null },
 ): Promise<boolean> {
-  const { data } = await db
+  let sorgu = db
     .from("urunler")
     .select("urun_id")
     .eq("urun_id", urunId)
-    .eq("firma_id", firmaId)
-    .maybeSingle();
+    .eq("firma_id", firmaId);
+  if (uretici && PM_AILESI_ROLLER.includes(uretici.rol)) {
+    if (!uretici.takimId) return false;
+    sorgu = sorgu.eq("sorumlu_pm_id", uretici.id).eq("takim_id", uretici.takimId);
+  }
+  const { data } = await sorgu.maybeSingle();
   return Boolean(data);
 }

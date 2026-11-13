@@ -33,13 +33,3 @@ export function ureticiUrunListeKapsami(
 
   return { firma_id: profil.firma_id, takim_id: istenenTakimId };
 }
-
-/** Yeni ürün her zaman doğrulanmış firma içindeki somut bir takıma bağlanır. */
-export function ureticiUrunYazmaKapsami(
-  profil: UreticiUrunProfili,
-  istenenFirmaId: string,
-  istenenTakimId: string | null,
-): UreticiUrunKapsami | null {
-  const kapsam = ureticiUrunListeKapsami(profil, istenenFirmaId, istenenTakimId);
-  return kapsam?.takim_id ? kapsam : null;
-}

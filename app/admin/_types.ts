@@ -93,6 +93,7 @@ export interface Takim {
 }
 
 export interface Urun {
+  sorumlu_pm_id?: string | null;
   urun_id: string;
   urun_adi: string;
   takim_id: string;

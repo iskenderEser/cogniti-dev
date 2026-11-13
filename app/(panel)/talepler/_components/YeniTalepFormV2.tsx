@@ -181,8 +181,6 @@ export function YeniTalepFormV2({ formu }: Props) {
                   <UrunTeknikSecici
                     urunler={formu.urunler}
                     teknikler={formu.teknikler}
-                    takimlar={formu.takimlar}
-                    kullaniciTakimId={formu.kullaniciTakimId}
                     seciliUrunId={formu.seciliUrunId}
                     seciliTeknikId={formu.seciliTeknikId}
                     urunGosterilsin={formu.urunGosterilsin}
@@ -190,7 +188,6 @@ export function YeniTalepFormV2({ formu }: Props) {
                     turKurali={formu.turKurali}
                     onUrunSec={formu.setSeciliUrunId}
                     onTeknikSec={formu.setSeciliTeknikId}
-                    onUrunEkle={formu.handleYeniUrunEkle}
                     onTeknikEkle={formu.handleYeniTeknikEkle}
                   />
                   {formu.serbestAdGoster && (

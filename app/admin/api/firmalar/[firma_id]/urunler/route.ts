@@ -1,3 +1,5 @@
+import { PM_AILESI_ROLLER } from "@/lib/utils/roller";
+import { uuidGecerliMi } from "@/lib/uretim/rpcTemel";
 import { firmaYonetimIslemKontrol } from "@/lib/admin/firmaYonetimIslem";
 import { firmaYonetimOkumaKontrol } from "@/lib/admin/firmaYonetimOkuma";
 // app/admin/api/firmalar/[firma_id]/urunler/route.ts
@@ -24,7 +26,7 @@ export async function GET(
 
     let query = adminSupabase
       .from("urunler")
-      .select("urun_id, urun_adi, takim_id, created_at")
+      .select("urun_id, urun_adi, takim_id, created_at, sorumlu_pm_id")
       .eq("firma_id", firma_id)
       .order("urun_adi", { ascending: true });
 
@@ -34,7 +36,13 @@ export async function GET(
 
     if (error) return hataYaniti("Ürünler çekilemedi.", "urunler tablosu SELECT — firma_id filtresi", error);
 
-    return NextResponse.json({ urunler: urunler ?? [] }, { status: 200 });
+    const { data: pmAdaylari, error: adayHatasi } = await adminSupabase.from("kullanicilar")
+      .select("kullanici_id, ad, soyad, takim_id")
+      .eq("firma_id", firma_id).eq("aktif_mi", true).in("rol", PM_AILESI_ROLLER)
+      .order("ad").order("soyad");
+    if (adayHatasi) return hataYaniti("PM listesi alınamadı.", "Ürün sorumlusu adayları", adayHatasi);
+
+    return NextResponse.json({ urunler: urunler ?? [], pmAdaylari: pmAdaylari ?? [] });
   } catch (err) {
     return sunucuHatasi(err, "GET /admin/api/firmalar/[firma_id]/urunler");
   }
@@ -99,6 +107,37 @@ export async function POST(
     return NextResponse.json({ mesaj: "Ürün eklendi.", urun: yeniUrun }, { status: 201 });
   } catch (err) {
     return sunucuHatasi(err, "POST /admin/api/firmalar/[firma_id]/urunler");
+  }
+}
+
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ firma_id: string }> },
+) {
+  try {
+    const { firma_id } = await params;
+    const kontrol = await firmaYonetimIslemKontrol(firma_id);
+    if (!kontrol.gecerli) return kontrol.yanit;
+
+    const body = await request.json().catch(() => null);
+    const urunId = body?.urun_id;
+    const sorumluId = body?.sorumlu_pm_id;
+    if (!uuidGecerliMi(urunId) || (sorumluId !== null && !uuidGecerliMi(sorumluId))) {
+      return validasyonHatasi("Geçerli bir ürün ve sorumlu PM seçin.");
+    }
+
+    const { data, error } = await createAdminClient().from("urunler")
+      .update({ sorumlu_pm_id: sorumluId }).eq("urun_id", urunId).eq("firma_id", firma_id)
+      .select("urun_id").maybeSingle();
+    if (error?.code === "23514" || error?.code === "23503") {
+      return validasyonHatasi("Ürünle aynı firma ve takımda bulunan aktif bir PM seçin.");
+    }
+    if (error) return hataYaniti("Sorumlu PM kaydedilemedi.", "Ürün sorumlusu güncelleme", error);
+    if (!data) return hataYaniti("Ürün bulunamadı.", "Ürün sorumlusu güncelleme", null, 404);
+
+    return NextResponse.json({ mesaj: "Ürün sorumlusu güncellendi." });
+  } catch (error) {
+    return sunucuHatasi(error, "Ürün sorumlusu güncelleme");
   }
 }
 

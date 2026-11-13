@@ -1,22 +1,16 @@
 // app/talepler/_components/UrunTeknikSecici.tsx
 //
-// Ürün ve teknik için seçim dropdown'ları + yeni ekleme akışları.
-// Madde 4 Aşama 2B: kullaniciTakimId === null ise yeni ürün eklerken takım seçim dropdown'u görünür.
-// Lokal UI state'ler bileşende; ekleme başarılı olunca temizlenir, hata olursa korunur.
-
 "use client";
 
 import { SadeFormSecimi } from "@/components/kontrol/SadeKontroller";
 
 import { type TalepTuruKurali } from "@/lib/uretici/yetenekler";
 import { useState } from "react";
-import type { Takim, Teknik, Urun } from "../_types";
+import type { Teknik, Urun } from "../_types";
 
 interface UrunTeknikSeciciProps {
   urunler: Urun[];
   teknikler: Teknik[];
-  takimlar: Takim[];
-  kullaniciTakimId: string | null;
   seciliUrunId: string;
   seciliTeknikId: string;
   urunGosterilsin: boolean;
@@ -24,15 +18,12 @@ interface UrunTeknikSeciciProps {
   turKurali: TalepTuruKurali;
   onUrunSec: (id: string) => void;
   onTeknikSec: (id: string) => void;
-  onUrunEkle: (urun_adi: string, takim_id: string | null) => Promise<void>;
   onTeknikEkle: (teknik_adi: string) => Promise<void>;
 }
 
 export function UrunTeknikSecici({
   urunler,
   teknikler,
-  takimlar,
-  kullaniciTakimId,
   seciliUrunId,
   seciliTeknikId,
   urunGosterilsin,
@@ -40,33 +31,12 @@ export function UrunTeknikSecici({
   turKurali,
   onUrunSec,
   onTeknikSec,
-  onUrunEkle,
   onTeknikEkle,
 }: UrunTeknikSeciciProps) {
-  // İkisi de gösterilmiyorsa hiç render etme — parent koşullu sarmalamasın.
-  if (!urunGosterilsin && !teknikGosterilsin) return null;
-
-  // Yeni ürün ekleme — lokal UI durumları
-  const [yeniUrunGoster, setYeniUrunGoster] = useState(false);
-  const [yeniUrunAdi, setYeniUrunAdi] = useState("");
-  const [urunEkleniyor, setUrunEkleniyor] = useState(false);
-  const [seciliEkleTakimId, setSeciliEkleTakimId] = useState(""); // Madde 4 Aşama 2B
-
   // Yeni teknik ekleme — lokal UI durumları
   const [yeniTeknikGoster, setYeniTeknikGoster] = useState(false);
   const [yeniTeknikAdi, setYeniTeknikAdi] = useState("");
   const [teknikEkleniyor, setTeknikEkleniyor] = useState(false);
-
-  const handleUrunSelectChange = (deger: string) => {
-    if (deger === "yeni") {
-      setYeniUrunGoster(true);
-      onUrunSec("");
-    } else {
-      setYeniUrunGoster(false);
-      setYeniUrunAdi("");
-      onUrunSec(deger);
-    }
-  };
 
   const handleTeknikSelectChange = (deger: string) => {
     if (deger === "yeni") {
@@ -76,24 +46,6 @@ export function UrunTeknikSecici({
       setYeniTeknikGoster(false);
       setYeniTeknikAdi("");
       onTeknikSec(deger);
-    }
-  };
-
-  // Takım seçimi: kullanıcının kendi takım_id'si varsa o kullanılır; yoksa ekleme formundaki dropdown.
-  const takimZorunluAmaSecilmedi = kullaniciTakimId === null && !seciliEkleTakimId;
-
-  const handleUrunEkleClick = async () => {
-    if (!yeniUrunAdi.trim() || takimZorunluAmaSecilmedi) return;
-    const efektifTakimId = kullaniciTakimId ?? seciliEkleTakimId;
-    setUrunEkleniyor(true);
-    try {
-      await onUrunEkle(yeniUrunAdi.trim(), efektifTakimId);
-      // Başarılıysa UI sıfırla. Hata fırlarsa state korunur — kullanıcı düzeltsin.
-      setYeniUrunGoster(false);
-      setYeniUrunAdi("");
-      setSeciliEkleTakimId("");
-    } finally {
-      setUrunEkleniyor(false);
     }
   };
 
@@ -109,6 +61,8 @@ export function UrunTeknikSecici({
     }
   };
 
+  if (!urunGosterilsin && !teknikGosterilsin) return null;
+
   return (
     <div className="flex flex-col md:flex-row gap-3">
       {urunGosterilsin && (
@@ -119,60 +73,12 @@ export function UrunTeknikSecici({
               <span className="text-[var(--tema-yerel-uretim-yardimci-metin-02)] font-normal ml-1">(tercihli)</span>
             )}
           </label>
-          <SadeFormSecimi value={yeniUrunGoster ? "yeni" : seciliUrunId} onChange={(e) => handleUrunSelectChange(e.target.value)} aria-label="Ürün" className="w-full">
+          <SadeFormSecimi value={seciliUrunId} onChange={e => onUrunSec(e.target.value)} aria-label="Ürün" className="w-full">
             <option value="">Ürün seçin...</option>
             {urunler.map((u) => (
               <option key={u.urun_id} value={u.urun_id}>{u.urun_adi}</option>
             ))}
-            <option value="yeni">+ Yeni Ürün Ekle</option>
           </SadeFormSecimi>
-          {yeniUrunGoster && (
-            <div className="flex flex-col gap-1.5 mt-1.5">
-              {kullaniciTakimId === null && (
-                <SadeFormSecimi value={seciliEkleTakimId} onChange={(e) => setSeciliEkleTakimId(e.target.value)} required aria-label="Takım" className="w-full">
-                  <option value="" disabled>Takım seçin (ürün ekleme için)...</option>
-                  {takimlar.map((t) => (
-                    <option key={t.takim_id} value={t.takim_id}>{t.takim_adi}</option>
-                  ))}
-                </SadeFormSecimi>
-              )}
-              <div className="flex gap-1.5">
-                <input
-                  value={yeniUrunAdi}
-                  onChange={(e) => setYeniUrunAdi(e.target.value)}
-                  placeholder="Yeni ürün adı..."
-                  className="flex-1 border border-[var(--tema-yerel-uretim-cizgi-01)] rounded-lg px-2.5 py-1.5 text-xs outline-none"
-                  style={{ borderColor: "var(--tema-yerel-uretim-cizgi-04)", fontFamily: "'Nunito', sans-serif" }}
-                />
-                <button
-                  type="button"
-                  onClick={handleUrunEkleClick}
-                  disabled={!yeniUrunAdi.trim() || urunEkleniyor || takimZorunluAmaSecilmedi}
-                  className="text-[var(--tema-yerel-uretim-ters-metin-01)] border-none rounded-lg px-3 py-1.5 text-xs font-semibold cursor-pointer whitespace-nowrap"
-                  style={{
-                    background: "var(--tema-yerel-uretim-eylem-zemin-01)",
-                    opacity:
-                      !yeniUrunAdi.trim() || urunEkleniyor || takimZorunluAmaSecilmedi ? 0.6 : 1,
-                    fontFamily: "'Nunito', sans-serif",
-                  }}
-                >
-                  {urunEkleniyor ? "..." : "Ekle"}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setYeniUrunGoster(false);
-                    setYeniUrunAdi("");
-                    setSeciliEkleTakimId("");
-                  }}
-                  className="bg-transparent border border-[var(--tema-yerel-uretim-cizgi-01)] rounded-lg px-2.5 py-1.5 text-xs text-[var(--tema-yerel-uretim-yardimci-metin-01)] cursor-pointer"
-                  style={{ fontFamily: "'Nunito', sans-serif" }}
-                >
-                  İptal
-                </button>
-              </div>
-            </div>
-          )}
         </div>
       )}
 
