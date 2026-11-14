@@ -7,7 +7,7 @@
 // Üretici rol grupları (urun, egitim) lib/uretici/yetenekler.ts içindeki
 // URETICI_YETENEKLERI profillerinden türetilir; bu dosyada hardcoded liste tutulmaz.
 
-import { IcerikTuru, TUR_SIRA } from "./icerikTuru";
+import { type IcerikTuru, TUR_SIRA } from "./icerikTuru";
 import { URETICI_YETENEKLERI } from "@/lib/uretici/yetenekler";
 import { TUKETICI_ROLLER, YONETICI_ROLLER, YONLENDIRICI_ROLLER } from "@/lib/utils/roller";
 

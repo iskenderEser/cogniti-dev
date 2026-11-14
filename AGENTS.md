@@ -199,3 +199,7 @@ Askıya alma SQL'i: `scripts/sql/agora_partner_iban_test_kurali.sql`. SQL kullan
 ## Cogniti işlem uyarısı ve teyit standardı
 
 Kullanıcı kararı: İşlem uyarıları ve teyitleri tarayıcının `window.alert`, `window.confirm` veya `window.prompt` pencereleriyle gösterilmez. Cogniti'nin mevcut ortak modal bileşenleri kullanılır (`components/ui/alert-dialog.tsx` gibi). Eğitim silme teyidi de bu standarda bağlıdır. Başarılı işlemin kullanıcıya iletilmesi için istenen toast bildirimleri korunur.
+
+## Zorunlu hatırlatma: Diğer roller için bildirimler konusunun incelenmesi
+
+Cogniti genel rol taramaları tamamlandığında (tarama bitiminde), daha önce taranan üretici roller (`pm_*`, `med_md`, `egt_*`, `ik_*`) ve diğer roller için bildirim mekanizmasının (`app/bildirimler/api`, menü rozetleri, toast bildirimleri ve push bildirim akışları) rol bazlı kapsamı ve gereksinimleri detaylı olarak incelenecektir. Bu madde `AGENTS.md` dosyasından kullanıcı tarafından silinmediği sürece her yeni çalışma oturumunun başında kullanıcıya bir kez şu hatırlatma yapılacaktır: “Tüm rol taramaları bittiğinde diğer roller için bildirimler konusu incelenecektir.”

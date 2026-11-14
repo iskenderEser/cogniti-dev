@@ -1,6 +1,6 @@
 # 📘 HapBilgi — BLUEBOOK
 ### İş Modeli, Mimari, İş Kuralları ve Teknik Envanter Anayasası
-*Son genel inceleme: 28 Eylül 2026 | Asistan bölümü ve ilgili envanter güncellemesi: 9 Eylül 2026 | Ortak yayın arayüzü, mobil akış ve tanbur güncellemesi: 21 Eylül 2026 | E-Club iş modeli ve teknik kapanış güncellemesi: 28 Eylül 2026 | Depo tercihleri kod güncellemesi: 29 Eylül 2026; canlı yapısal kontrol: 5 Ekim 2026 (13/13) | Zorunlu Sade Kontrol Aileleri kararı: 8 Ekim 2026 | E-Club yeni gönderim ve planlama belgeleri: 13 Ekim 2026; canlı son doğrulama bekliyor | Görsel renk envanteri ve doğrulama kaydı: 17 Ekim 2026 | Agora partner, vitrin, satın alma ve üretici yayın alanı: 6 Kasım 2026 | Ticari gelir modeli ve haftalık banner kiralama: 6 Kasım 2026 | PM ailesi taraması ve rota temizliği: 14 Kasım 2026 | Medikal Müdür (med_md) taraması ve yetki sözleşmeleri: 14 Kasım 2026 | Eğitim Ailesi (egt_*) taraması ve yetki sözleşmeleri: 14 Kasım 2026 | İnsan Kaynakları Ailesi (ik_*) taraması ve yetki sözleşmeleri: 14 Kasım 2026*
+*Son genel inceleme: 28 Eylül 2026 | Asistan bölümü ve ilgili envanter güncellemesi: 9 Eylül 2026 | Ortak yayın arayüzü, mobil akış ve tanbur güncellemesi: 21 Eylül 2026 | E-Club iş modeli ve teknik kapanış güncellemesi: 28 Eylül 2026 | Depo tercihleri kod güncellemesi: 29 Eylül 2026; canlı yapısal kontrol: 5 Ekim 2026 (13/13) | Zorunlu Sade Kontrol Aileleri kararı: 8 Ekim 2026 | E-Club yeni gönderim ve planlama belgeleri: 13 Ekim 2026; canlı son doğrulama bekliyor | Görsel renk envanteri ve doğrulama kaydı: 17 Ekim 2026 | Agora partner, vitrin, satın alma ve üretici yayın alanı: 6 Kasım 2026 | Ticari gelir modeli ve haftalık banner kiralama: 6 Kasım 2026 | PM ailesi taraması ve rota temizliği: 14 Kasım 2026 | Medikal Müdür (med_md) taraması ve yetki sözleşmeleri: 14 Kasım 2026 | Eğitim Ailesi (egt_*) taraması ve yetki sözleşmeleri: 14 Kasım 2026 | İnsan Kaynakları Ailesi (ik_*) taraması ve yetki sözleşmeleri: 14 Kasım 2026 | Saha Grubu (utt, kd_utt) taraması ve yetki sözleşmeleri: 14 Kasım 2026*
 
 ---
 
@@ -564,6 +564,20 @@ Cogniti 14.11.2026 Tarama Adımları metodolojisi kapsamında İnsan Kaynakları
 6. **Token Satın Alma ve Tüketim:** İK rolleri esnek paket alımında yalnız `kisisel` bakiye türünü satın alabilir (`esnekPaketBakiyeTuru("ik_*") === "kisisel"`). Saha yayınlarında yayın anında token kesintisi yapılmaz.
 7. **Yazılım Testi Doğrulaması (Adım 7):**
    - 10 adet güvenlik ve yetki senaryosu (`SENARYO-IK-01` – `10`) `tests/ikYetkiSinirlari.hedef.test.ts` ile izole ortamda doğrulanmış (10/10 başarılı); PM, Medikal, Eğitim ve İK testleriyle birlikte toplam 40 üretici hedefli test sıfır hatayla geçmiştir.
+   - `npm run typecheck:build` (0 hata) ve `npm run lint:mimari` denetimleri tamamlanmıştır.
+
+### Saha Grubu (`utt`, `kd_utt`) tarama ve kesinleşen sözleşmeler (14 Kasım 2026)
+
+Cogniti 14.11.2026 Tarama Adımları metodolojisi kapsamında Saha Grubu (`utt`, `kd_utt`) rollerinin tüm görev, yetki, rota, RPC, trigger ve test doğrulamaları tamamlanmış ve şu kurallar kesinleştirilmiştir:
+
+1. **Özdeş Rol ve Tüketici Kimliği:** `utt` ve `kd_utt` kod mimarisinde (`TUKETICI_ROLLER`) yüzde 100 özdeştir; kıdem unvanı ayrımıdır (`kd_utt` hedef eşleniği `utt`'dir). Bölgeye ve takıma bağlıdır (`bolge_id` zorunludur).
+2. **İçerik Üretimi ve Yayınlama Yasağı:** Saha grubu üretici değildir (`uretciMi: false`); talep açamaz (`/talepler/api` 403) ve yayınlama işlemi yapamaz (`/yayin-yonetimi/api/yayinlar` 403).
+3. **Eczanem Tek Yetkili Gönderici:** Eczanelere indirimli kampanya yayını açma yetkisi yalnızca UTT ve KD_UTT'ye aittir (`/eczanem/yayinlar/api`). Temsilci yalnızca kendisine zimmetli eczanelere (`eczane_utt`), haftalık kota ve 15 günlük bekleme süresi dahilinde gönderim yapabilir.
+4. **Tam Tüketici Akışı ve İleri Sarma Koruması:** Yalnızca tüketici roller izleme tamamlandığında puan kazanır ve soru çözebilir (`tuketiciMi: true`). İleri sarma yapıldığında `eclub_ileri_sarma_kurali.sql` gereği oransal puan kesilir ve soru hakkı kilitlenir.
+5. **E-Club Saha Operasyonu:** Temsilci kendisine bağlı eczanelerin ecza deposu tercihlerini yönetir (`/e-club/depo-tercihleri`) ve eczacı hediye çeklerinin sahada teslimatını teyit eder (`/e-club/hediye-takip`, `CEK_TAKIP_ROLLERI`).
+6. **FirmaStore ve Token Kuralı:** Kazanılan puanlarla mağazadan hediye siparişi verebilir (`STORE_ALABILEN_ROLLER`); token satın alamaz (`esnekPaketBakiyeTuru: null`).
+7. **Yazılım Testi Doğrulaması (Adım 7):**
+   - 10 adet güvenlik ve yetki senaryosu (`SENARYO-SAHA-01` – `10`) `tests/sahaYetkiSinirlari.hedef.test.ts` ile izole ortamda doğrulanmış (10/10 başarılı); toplam 50 rol hedefli test sıfır hatayla geçmiştir.
    - `npm run typecheck:build` (0 hata) ve `npm run lint:mimari` denetimleri tamamlanmıştır.
 
 ### Yayın Raporları: Kapsam, Rol, Zaman ve Üç Kart
