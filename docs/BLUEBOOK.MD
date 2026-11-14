@@ -1,6 +1,6 @@
 # 📘 HapBilgi — BLUEBOOK
 ### İş Modeli, Mimari, İş Kuralları ve Teknik Envanter Anayasası
-*Son genel inceleme: 28 Eylül 2026 | Asistan bölümü ve ilgili envanter güncellemesi: 9 Eylül 2026 | Ortak yayın arayüzü, mobil akış ve tanbur güncellemesi: 21 Eylül 2026 | E-Club iş modeli ve teknik kapanış güncellemesi: 28 Eylül 2026 | Depo tercihleri kod güncellemesi: 29 Eylül 2026; canlı yapısal kontrol: 5 Ekim 2026 (13/13) | Zorunlu Sade Kontrol Aileleri kararı: 8 Ekim 2026 | E-Club yeni gönderim ve planlama belgeleri: 13 Ekim 2026; canlı son doğrulama bekliyor | Görsel renk envanteri ve doğrulama kaydı: 17 Ekim 2026 | Agora partner, vitrin, satın alma ve üretici yayın alanı: 6 Kasım 2026 | Ticari gelir modeli ve haftalık banner kiralama: 6 Kasım 2026 | PM ailesi taraması ve rota temizliği: 14 Kasım 2026*
+*Son genel inceleme: 28 Eylül 2026 | Asistan bölümü ve ilgili envanter güncellemesi: 9 Eylül 2026 | Ortak yayın arayüzü, mobil akış ve tanbur güncellemesi: 21 Eylül 2026 | E-Club iş modeli ve teknik kapanış güncellemesi: 28 Eylül 2026 | Depo tercihleri kod güncellemesi: 29 Eylül 2026; canlı yapısal kontrol: 5 Ekim 2026 (13/13) | Zorunlu Sade Kontrol Aileleri kararı: 8 Ekim 2026 | E-Club yeni gönderim ve planlama belgeleri: 13 Ekim 2026; canlı son doğrulama bekliyor | Görsel renk envanteri ve doğrulama kaydı: 17 Ekim 2026 | Agora partner, vitrin, satın alma ve üretici yayın alanı: 6 Kasım 2026 | Ticari gelir modeli ve haftalık banner kiralama: 6 Kasım 2026 | PM ailesi taraması ve rota temizliği: 14 Kasım 2026 | Medikal Müdür (med_md) taraması ve yetki sözleşmeleri: 14 Kasım 2026*
 
 ---
 
@@ -509,6 +509,23 @@ Cogniti 14.11.2026 Tarama Adımları metodolojisi kapsamında PM rol ailesinin (
    - `STORE_GENEL_GOREN_ROLLER` içinde üretici rollerinin bulunması onaylı tercih olarak korunmuş; `lib/video/gorunurluk.ts` (`kapsamGenisMi`) korunmuştur.
 6. **Yazılım Testi Doğrulaması (Adım 7):**
    - 10 adet güvenlik ve engelleme senaryosu (`SENARYO-YETKI-01` – `10`) `tests/pmYetkiSinirlari.hedef.test.ts` ile izole ortamda doğrulanmış (10/10 başarılı); toplam 34 PM hedefli test sıfır hatayla geçmiştir.
+   - `npm run typecheck:build` (0 hata) ve `npm run lint:mimari` denetimleri tamamlanmıştır.
+
+### Medikal Müdür (`med_md`) tarama ve kesinleşen sözleşmeler (14 Kasım 2026)
+
+Cogniti 14.11.2026 Tarama Adımları metodolojisi kapsamında Medikal Müdür (`med_md`) rolünün tüm görev, yetki, rota, RPC, trigger ve test doğrulamaları tamamlanmış ve şu kurallar kesinleştirilmiştir:
+
+1. **Firma Seviyesi ve Takım Serbestisi:** Medikal Müdür firma seviyesindedir; takım kaydı zorunlu değildir (`takimZorunlu: false`). Kendi firmasının tüm takımlarını kapsar (`raporScope: "firma"`).
+2. **Eğitim Türleri ve Ürün Kuralı:** Yalnız iki medikal eğitim türünde talep açabilir:
+   - `medikal_egitim`: Ürün ve teknik kapalıdır (`urun: "yok"`, `teknik: "yok"`). İstemciden ürün/teknik gelse dahi sunucuda `NULL` yapılır.
+   - `urun_medikal_egitim`: Ürün zorunludur (`urun: "zorunlu"`), teknik kapalıdır (`teknik: "yok"`). `talepler.icerik_turu` 'urun_medikal' olarak yazılır.
+   - Diğer eğitim türleri (`urun_egitimi`, `satis_teknikleri`, `ik_egitimi`, `yonetim_egitimi`) sunucuda 400 ile engellenir.
+3. **Ürün Sahipliği ve PM Bağımsızlığı:** PM'nin aksine, `med_md` için ürüne sorumlu PM atanmış olma şartı aranmaz. Ürünün `med_md`'nin firmasına ait olması (`urunler.firma_id == med_md.firma_id`) yeterlidir; firmanın atanmamış veya başka bir PM'ye atanmış tüm ürünleri medikal eğitime bağlanabilir.
+4. **Eczanem Hedefi:** `med_md`, `ECZANEM_TALEP_ACAN_ROLLER` içindedir. Eczanem hedefi seçildiğinde eğitim türünden bağımsız olarak ürün zorunludur; `eczanem_token_hesap_turu` seçimi şarttır.
+5. **Kayıt ve Yayın Sahipliği:** `med_md` yalnızca kendi açtığı talepleri (`/yayin-takip`), kendi görevlerini ve kendi yayınlarını (`/yayin-yonetimi`) yönetebilir. Başka üreticinin görev veya yayınına müdahale 403 ile engellenir. Puanlar ilk yayından veya planlamadan sonra kilitlenir.
+6. **Token Satın Alma:** `med_md` esnek paket satın alımında yalnız `kisisel` bakiye türünü kullanabilir (`esnekPaketBakiyeTuru("med_md") === "kisisel"`). Ortak firma bakiyesinden alım yapamaz.
+7. **Yazılım Testi Doğrulaması (Adım 7):**
+   - 10 adet güvenlik ve yetki senaryosu (`SENARYO-MED-01` – `10`) `tests/medYetkiSinirlari.hedef.test.ts` ile izole ortamda doğrulanmış (10/10 başarılı); PM ve ortak üretim testleriyle birlikte toplam 44 test sıfır hatayla geçmiştir.
    - `npm run typecheck:build` (0 hata) ve `npm run lint:mimari` denetimleri tamamlanmıştır.
 
 ### Yayın Raporları: Kapsam, Rol, Zaman ve Üç Kart
