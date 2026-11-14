@@ -580,6 +580,29 @@ Cogniti 14.11.2026 Tarama Adımları metodolojisi kapsamında Saha Grubu (`utt`,
    - 10 adet güvenlik ve yetki senaryosu (`SENARYO-SAHA-01` – `10`) `tests/sahaYetkiSinirlari.hedef.test.ts` ile izole ortamda doğrulanmış (10/10 başarılı); toplam 50 rol hedefli test sıfır hatayla geçmiştir.
    - `npm run typecheck:build` (0 hata) ve `npm run lint:mimari` denetimleri tamamlanmıştır.
 
+### Bölge Müdürü (`bm`) tarama ve kesinleşen sözleşmeler (14 Kasım 2026)
+
+Cogniti 14.11.2026 Tarama Adımları metodolojisi kapsamında Bölge Müdürü (`bm`) rolünün tüm görev, yetki, rota, RPC, trigger ve test doğrulamaları tamamlanmış ve şu kurallar kesinleştirilmiştir:
+
+1. **Yönlendirici Saha Rolü ve Kapsam:** `bm` yönlendirici saha rolüdür (`YONLENDIRICI_ROLLER = ["tm", "bm"]`); bölgeye (`bolge_id`) ve takıma (`takim_id`) bağlıdır. Doğrudan kendi bölgesindeki aktif temsilcileri (`utt`, `kd_utt`) yönetir ve yönlendirir.
+2. **T-Club Tek Yetkili Öneri Gönderici:** Sistemde UTT'lere eğitim yayını önerisi gönderebilen tek rol Bölge Müdürü'dür (`POST /oneriler/api`). Başka hiçbir rol öneri gönderemez (403 ile engellenir).
+3. **Öneri Kotaları ve Zaman Kuralı:**
+   - BM yalnızca kendi bölgesindeki ve firmasındaki aktif UTT'lere öneri gönderebilir.
+   - Alıcı UTT başına haftalık maksimum 3 öneri gönderilebilir (`MAKS_ALICI_HAFTA = 3`).
+   - BM'nin aylık öneri kotası bölgedeki aktif UTT sayısı × 12 adettir (`AYLIK_KOTA_KATSAYI = 12`).
+   - Öneriler en erken yarın başlayabilir ve bitiş başlangıçtan en az 1 gün sonra olmalıdır (`oneriTarihKurali`).
+4. **C-Club (Challenge Club) Katmanı:**
+   - BM ayda maksimum 3 adet meydan okuma (challenge) gönderebilir (`AYLIK_MAX_GONDERIM = 3`).
+   - Challenge alıcısı yalnızca aynı firmadaki diğer aktif Bölge Müdürleri olabilir (`uygunAliciListesi`).
+   - Hedefinde `"bm"` bulunan yayındaki videoları izleyebilir; izleme kayıtları `cc_izleme_kayitlari` tablosunda `bm_id` sahipliğiyle tutulur. Puan kazanımıyla C-Club Ligi'nde yarışır.
+5. **Eczanem İndirim Mutabakatı:** UTT'lerin başlattığı indirimli satış mutabakatlarında ilk onay merciidir (`eczanem_mutabakat_bm_karar_ver`). Onaylanan mutabakatlar üst yönetici (TM) onayına aktarılır (`eczanem_mutabakat_tm_onayina_gonder`).
+6. **Bölge Raporları ve Temsilci Karşılaştırma:** `/raporlar/bm` ekranında kendi bölgesindeki UTT'lerin öğrenme davranışlarını, öneri başarılarını ve net puanlarını izler (`getBmDavranis`); bölgesindeki iki temsilciyi yan yana karşılaştırabilir (`getBmKarsilastirma`). Başka bölgenin temsilcisini sorgulayamaz (`TemsilciKapsamHatasi` 403).
+7. **FirmaStore ve Token Kuralı:** Puan harcayarak FirmaStore'dan hediye siparişi verebilir (`STORE_ALABILEN_ROLLER`) ve bölgesindeki UTT'lerin mağaza siparişlerini izleyebilir (`STORE_GENEL_GOREN_ROLLER`). Token/paket satın alamaz (`esnekPaketBakiyeTuru("bm") === null`).
+8. **İçerik Üretimi Yasağı:** Üretici değildir (`URETICI_ROLLER` dışındadır); talep açamaz (`/talepler` 403) ve yayın yönetemez (`/yayin-yonetimi` 403).
+9. **Yazılım Testi Doğrulaması (Adım 7):**
+   - 10 adet güvenlik ve yetki senaryosu (`SENARYO-BM-01` – `10`) `tests/bmYetkiSinirlari.hedef.test.ts` ile izole ortamda doğrulanmış (10/10 başarılı); toplam 60 rol hedefli test sıfır hatayla geçmiştir.
+   - `npm run typecheck:build` (0 hata) denetimi tamamlanmıştır.
+
 ### Yayın Raporları: Kapsam, Rol, Zaman ve Üç Kart
 
 * **Rapor adresleri.** PM menüsündeki **Yayın Raporları** bağlantısı `/raporlar/yayin-raporlari`, **T-Club Raporları** bağlantısı `/raporlar/tclub-uretici` adresini açar. 14 Kasım 2026 kararıyla genel `/raporlar` kök sayfası, eski `/raporlar/uretici` sayfası ile API'si ve `next.config.ts` içindeki `/raporlar/uretim` ile `/raporlar/yayin-rapolari` yönlendirmeleri tamamen kaldırılmıştır (404 verir). PM ve üreticilerin tek resmi yayın raporu adresi `/raporlar/yayin-raporlari`'dır.
