@@ -1,6 +1,6 @@
 # 📘 HapBilgi — BLUEBOOK
 ### İş Modeli, Mimari, İş Kuralları ve Teknik Envanter Anayasası
-*Son genel inceleme: 28 Eylül 2026 | Asistan bölümü ve ilgili envanter güncellemesi: 9 Eylül 2026 | Ortak yayın arayüzü, mobil akış ve tanbur güncellemesi: 21 Eylül 2026 | E-Club iş modeli ve teknik kapanış güncellemesi: 28 Eylül 2026 | Depo tercihleri kod güncellemesi: 29 Eylül 2026; canlı yapısal kontrol: 5 Ekim 2026 (13/13) | Zorunlu Sade Kontrol Aileleri kararı: 8 Ekim 2026 | E-Club yeni gönderim ve planlama belgeleri: 13 Ekim 2026; canlı son doğrulama bekliyor | Görsel renk envanteri ve doğrulama kaydı: 17 Ekim 2026 | Agora partner, vitrin, satın alma ve üretici yayın alanı: 6 Kasım 2026 | Ticari gelir modeli ve haftalık banner kiralama: 6 Kasım 2026 | PM ailesi taraması ve rota temizliği: 14 Kasım 2026 | Medikal Müdür (med_md) taraması ve yetki sözleşmeleri: 14 Kasım 2026 | Eğitim Ailesi (egt_*) taraması ve yetki sözleşmeleri: 14 Kasım 2026*
+*Son genel inceleme: 28 Eylül 2026 | Asistan bölümü ve ilgili envanter güncellemesi: 9 Eylül 2026 | Ortak yayın arayüzü, mobil akış ve tanbur güncellemesi: 21 Eylül 2026 | E-Club iş modeli ve teknik kapanış güncellemesi: 28 Eylül 2026 | Depo tercihleri kod güncellemesi: 29 Eylül 2026; canlı yapısal kontrol: 5 Ekim 2026 (13/13) | Zorunlu Sade Kontrol Aileleri kararı: 8 Ekim 2026 | E-Club yeni gönderim ve planlama belgeleri: 13 Ekim 2026; canlı son doğrulama bekliyor | Görsel renk envanteri ve doğrulama kaydı: 17 Ekim 2026 | Agora partner, vitrin, satın alma ve üretici yayın alanı: 6 Kasım 2026 | Ticari gelir modeli ve haftalık banner kiralama: 6 Kasım 2026 | PM ailesi taraması ve rota temizliği: 14 Kasım 2026 | Medikal Müdür (med_md) taraması ve yetki sözleşmeleri: 14 Kasım 2026 | Eğitim Ailesi (egt_*) taraması ve yetki sözleşmeleri: 14 Kasım 2026 | İnsan Kaynakları Ailesi (ik_*) taraması ve yetki sözleşmeleri: 14 Kasım 2026*
 
 ---
 
@@ -544,6 +544,26 @@ Cogniti 14.11.2026 Tarama Adımları metodolojisi kapsamında Eğitim Ailesi (`e
 7. **Token Satın Alma:** Eğitim rolleri esnek paket alımında yalnız `kisisel` bakiye türünü satın alabilir (`esnekPaketBakiyeTuru("egt_*") === "kisisel"`).
 8. **Yazılım Testi Doğrulaması (Adım 7):**
    - 10 adet güvenlik ve yetki senaryosu (`SENARYO-EGT-01` – `10`) `tests/egtYetkiSinirlari.hedef.test.ts` ile izole ortamda doğrulanmış (10/10 başarılı); PM (`pmYetkiSinirlari`), Medikal (`medYetkiSinirlari`) ve Eğitim testleriyle birlikte toplam 30 üretici hedefli test sıfır hatayla geçmiştir.
+   - `npm run typecheck:build` (0 hata) ve `npm run lint:mimari` denetimleri tamamlanmıştır.
+
+### İnsan Kaynakları Ailesi (`ik_*`) tarama ve kesinleşen sözleşmeler (14 Kasım 2026)
+
+Cogniti 14.11.2026 Tarama Adımları metodolojisi kapsamında İnsan Kaynakları Ailesi (`ik_drk`, `ik_md`, `ik_yrd_md`, `ik_uz`, `ik_per`) rollerinin tüm görev, yetki, rota, RPC, trigger ve test doğrulamaları tamamlanmış ve şu kurallar kesinleştirilmiştir:
+
+1. **Özdeş Yetenek ve Firma Seviyesi:** Beş unvan (`ik_drk`, `ik_md`, `ik_yrd_md`, `ik_uz`, `ik_per`) kod mimarisinde (`lib/uretici/yetenekler.ts`) birebir aynı yetenek profiline sahiptir; aralarında dikey onay engeli yoktur. Takım kaydı zorunlu değildir (`takimZorunlu: false`); firma düzeyindedir ve tüm takımları kapsar (`raporScope: "firma"`). Kategori departmanı İK Müdürlüğü'dür (`icerikTuru: "ik"`).
+2. **Eğitim Türleri ve Kapalı Alanlar:** İK ailesi yalnızca iki eğitim türünde talep açabilir:
+   - `ik_egitimi`: Ürün ve teknik kapalıdır (`urun: "yok"`, `teknik: "yok"`). İstemciden gelse dahi sunucuda `NULL` yapılır.
+   - `yonetim_egitimi`: Ürün ve teknik kapalıdır (`urun: "yok"`, `teknik: "yok"`). İstemciden gelse dahi sunucuda `NULL` yapılır.
+   - Diğer eğitim türleri (`urun_egitimi`, `medikal_egitim`, `urun_medikal_egitim`, `satis_teknikleri`) sunucuda 403 ile engellenir.
+3. **Teknik Ekleyememe Kuralı:** İK ailesi teknik gerektiren herhangi bir talep türü açamadığı için satış tekniği master verisine ekleme yapamaz (`teknikEkleyebilirMi("ik_*") === false`). `POST /teknikler/api` rotası 403 ile engellenir.
+4. **Hedef Kitle Sınırı (Yalnızca Saha):** İK üreticileri şirket içi saha organizasyonuna (`utt`, `bm`) odaklıdır.
+   - E-Club hedeflerine (`eczaci`, `eczane_teknisyeni`, `eclub`) talep ve yayın açamaz (`hedefRolIkUreticisineAcikMi` false döner; 403 verilir).
+   - Eczanem hedefine talep ve yayın açamaz (`ECZANEM_TALEP_ACAN_ROLLER` dışındadır; 403 verilir).
+   - `/yayin-yonetimi` ekranında yalnızca Temsilci (`utt`) ve Bölge Müdürü (`bm`) sekmeleri açılır.
+5. **Kayıt ve Yayın Sahipliği:** İK üreticileri yalnızca kendi açtığı talepleri (`/yayin-takip`) ve kendi yayınlarını yönetebilir. Başka üreticinin görev veya yayınına müdahale 403 ile engellenir.
+6. **Token Satın Alma ve Tüketim:** İK rolleri esnek paket alımında yalnız `kisisel` bakiye türünü satın alabilir (`esnekPaketBakiyeTuru("ik_*") === "kisisel"`). Saha yayınlarında yayın anında token kesintisi yapılmaz.
+7. **Yazılım Testi Doğrulaması (Adım 7):**
+   - 10 adet güvenlik ve yetki senaryosu (`SENARYO-IK-01` – `10`) `tests/ikYetkiSinirlari.hedef.test.ts` ile izole ortamda doğrulanmış (10/10 başarılı); PM, Medikal, Eğitim ve İK testleriyle birlikte toplam 40 üretici hedefli test sıfır hatayla geçmiştir.
    - `npm run typecheck:build` (0 hata) ve `npm run lint:mimari` denetimleri tamamlanmıştır.
 
 ### Yayın Raporları: Kapsam, Rol, Zaman ve Üç Kart
