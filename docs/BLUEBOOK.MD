@@ -1,6 +1,6 @@
 # 📘 HapBilgi — BLUEBOOK
 ### İş Modeli, Mimari, İş Kuralları ve Teknik Envanter Anayasası
-*Son genel inceleme: 28 Eylül 2026 | Asistan bölümü ve ilgili envanter güncellemesi: 9 Eylül 2026 | Ortak yayın arayüzü, mobil akış ve tanbur güncellemesi: 21 Eylül 2026 | E-Club iş modeli ve teknik kapanış güncellemesi: 28 Eylül 2026 | Depo tercihleri kod güncellemesi: 29 Eylül 2026; canlı yapısal kontrol: 5 Ekim 2026 (13/13) | Zorunlu Sade Kontrol Aileleri kararı: 8 Ekim 2026 | E-Club yeni gönderim ve planlama belgeleri: 13 Ekim 2026; canlı son doğrulama bekliyor | Görsel renk envanteri ve doğrulama kaydı: 17 Ekim 2026 | Agora partner, vitrin, satın alma ve üretici yayın alanı: 6 Kasım 2026 | Ticari gelir modeli ve haftalık banner kiralama: 6 Kasım 2026 | PM ailesi taraması ve rota temizliği: 14 Kasım 2026 | Medikal Müdür (med_md) taraması ve yetki sözleşmeleri: 14 Kasım 2026*
+*Son genel inceleme: 28 Eylül 2026 | Asistan bölümü ve ilgili envanter güncellemesi: 9 Eylül 2026 | Ortak yayın arayüzü, mobil akış ve tanbur güncellemesi: 21 Eylül 2026 | E-Club iş modeli ve teknik kapanış güncellemesi: 28 Eylül 2026 | Depo tercihleri kod güncellemesi: 29 Eylül 2026; canlı yapısal kontrol: 5 Ekim 2026 (13/13) | Zorunlu Sade Kontrol Aileleri kararı: 8 Ekim 2026 | E-Club yeni gönderim ve planlama belgeleri: 13 Ekim 2026; canlı son doğrulama bekliyor | Görsel renk envanteri ve doğrulama kaydı: 17 Ekim 2026 | Agora partner, vitrin, satın alma ve üretici yayın alanı: 6 Kasım 2026 | Ticari gelir modeli ve haftalık banner kiralama: 6 Kasım 2026 | PM ailesi taraması ve rota temizliği: 14 Kasım 2026 | Medikal Müdür (med_md) taraması ve yetki sözleşmeleri: 14 Kasım 2026 | Eğitim Ailesi (egt_*) taraması ve yetki sözleşmeleri: 14 Kasım 2026*
 
 ---
 
@@ -526,6 +526,24 @@ Cogniti 14.11.2026 Tarama Adımları metodolojisi kapsamında Medikal Müdür (`
 6. **Token Satın Alma:** `med_md` esnek paket satın alımında yalnız `kisisel` bakiye türünü kullanabilir (`esnekPaketBakiyeTuru("med_md") === "kisisel"`). Ortak firma bakiyesinden alım yapamaz.
 7. **Yazılım Testi Doğrulaması (Adım 7):**
    - 10 adet güvenlik ve yetki senaryosu (`SENARYO-MED-01` – `10`) `tests/medYetkiSinirlari.hedef.test.ts` ile izole ortamda doğrulanmış (10/10 başarılı); PM ve ortak üretim testleriyle birlikte toplam 44 test sıfır hatayla geçmiştir.
+   - `npm run typecheck:build` (0 hata) ve `npm run lint:mimari` denetimleri tamamlanmıştır.
+
+### Eğitim Ailesi (`egt_*`) tarama ve kesinleşen sözleşmeler (14 Kasım 2026)
+
+Cogniti 14.11.2026 Tarama Adımları metodolojisi kapsamında Eğitim Ailesi (`egt_md`, `egt_yrd_md`, `egt_yon`, `egt_uz`) rollerinin tüm görev, yetki, rota, RPC, trigger ve test doğrulamaları tamamlanmış ve şu kurallar kesinleştirilmiştir:
+
+1. **Özdeş Yetenek ve Firma Seviyesi:** Dört unvan (`egt_md`, `egt_yrd_md`, `egt_yon`, `egt_uz`) kod mimarisinde (`lib/uretici/yetenekler.ts`) birebir aynı yetenek profiline sahiptir; aralarında dikey onay engeli yoktur. Takım kaydı zorunlu değildir (`takimZorunlu: false`); firma düzeyindedir ve tüm takımları kapsar (`raporScope: "firma"`). Kategori departmanı Eğitim Müdürlüğü'dür (`icerikTuru: "egitim"`).
+2. **Eğitim Türleri ve Zorunluluk Kuralları:** Eğitim ailesi yalnızca iki eğitim türünde talep açabilir:
+   - `satis_teknikleri`: Ürün seçimi tercihli/opsiyoneldir (`urun: "tercihli"`). Hedef kitle Saha (`utt`, `bm`) ise teknik seçimi zorunludur (`teknik: "zorunlu"`). Hedef kitle E-Club (`eczaci`, `eczane_teknisyeni`) ise teknik seçimi gizlenir ve sunucuda `NULL`'a çekilir (`tekniksizHedef`).
+   - `yonetim_egitimi`: Ürün ve teknik kapalıdır (`urun: "yok"`, `teknik: "yok"`). İstemciden gelse dahi sunucuda `NULL` yapılır.
+   - Diğer eğitim türleri (`urun_egitimi`, `medikal_egitim`, `urun_medikal_egitim`, `ik_egitimi`) sunucuda 403 ile engellenir.
+3. **Satış Tekniği Ekleme ve Tenant İzolasyonu:** Eğitim rolleri yeni satış tekniği master verisi ekleme yetkisine sahiptir (`teknikEkleyebilirMi: true`). `POST /teknikler/api` rotasında oturumdaki `kullanicilar.firma_id` ile eşleşme denetlenir; başka firma adına kayıt açılması 403 ile engellenir.
+4. **Ürün Sahipliği ve PM Bağımsızlığı:** `satis_teknikleri` talebinde ürün seçildiğinde, ürünün kullanıcının firmasına ait olması (`urunler.firma_id == user.firma_id`) yeterlidir. Ürünün sorumlu PM'i olma şartı aranmaz (`sorumlu_pm_id` kontrolü yoktur).
+5. **Eczanem Hedefi:** Eğitim ailesi `ECZANEM_TALEP_ACAN_ROLLER` içinde yer almaz; Eczanem hedefli talep veya yayın açamaz (403 ile engellenir). Ancak `/eczanem/uretici/yayinlar` ve `/eczanem/uretici/uyelere-gonderilen-yayinlar` ekranlarından firma ürünlerinin eczanem gönderim durumunu izleyebilir.
+6. **Kayıt ve Yayın Sahipliği:** Eğitim üreticileri yalnızca kendi açtığı talepleri (`/yayin-takip`) ve kendi yayınlarını yönetebilir. Başka üreticinin görev veya yayınına müdahale 403 ile engellenir.
+7. **Token Satın Alma:** Eğitim rolleri esnek paket alımında yalnız `kisisel` bakiye türünü satın alabilir (`esnekPaketBakiyeTuru("egt_*") === "kisisel"`).
+8. **Yazılım Testi Doğrulaması (Adım 7):**
+   - 10 adet güvenlik ve yetki senaryosu (`SENARYO-EGT-01` – `10`) `tests/egtYetkiSinirlari.hedef.test.ts` ile izole ortamda doğrulanmış (10/10 başarılı); PM (`pmYetkiSinirlari`), Medikal (`medYetkiSinirlari`) ve Eğitim testleriyle birlikte toplam 30 üretici hedefli test sıfır hatayla geçmiştir.
    - `npm run typecheck:build` (0 hata) ve `npm run lint:mimari` denetimleri tamamlanmıştır.
 
 ### Yayın Raporları: Kapsam, Rol, Zaman ve Üç Kart

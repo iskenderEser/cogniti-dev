@@ -65,6 +65,16 @@ export async function POST(request: NextRequest) {
     if (!firma_id) return validasyonHatasi("firma_id zorunludur.", ["firma_id"]);
     if (!teknik_adi || teknik_adi.trim().length === 0) return validasyonHatasi("Teknik adı zorunludur.", ["teknik_adi"]);
 
+    // Firma sahipliği: istemciden gelen firma_id kullanıcının kendi firması olmalı.
+    const { data: kullaniciKaydi } = await adminSupabase
+      .from("kullanicilar")
+      .select("firma_id")
+      .eq("kullanici_id", user.id)
+      .single();
+    if (!kullaniciKaydi?.firma_id || kullaniciKaydi.firma_id !== firma_id) {
+      return rolHatasi("Başka firma adına teknik ekleyemezsiniz.");
+    }
+
     // Aynı firmada aynı isimde teknik var mı?
     const { data: mevcutTeknik } = await adminSupabase
       .from("teknikler")
