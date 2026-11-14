@@ -14,6 +14,15 @@ This version has breaking changes — APIs, conventions, and file structure may 
 6. **Hazır sonucu geciktirmeden ilet.** Kullanıcı dosyayı istediğinde mevcut dosya bağlantısını hemen paylaş; test ve uygulanma durumunu açıkça belirt. Tamamlanmamış ek kontrolleri gizleme veya sonucu teslim etmek için ilgisiz işlerin bitmesini bekleme.
 7. **Tamamlanmamış işi tamamlandı diye bildirme.** Hazırlama, test ve veritabanında uygulama durumlarını ayrı raporla. Kullanıcının çalıştıracağını belirttiği SQL'i kendin veritabanında çalıştırma; başarı sonucu görülmeden uygulanmış kabul etme.
 
+## Zorunlu çalışma kuralı: Kanıta dayalı sonuçlar ve kullanıcı kararı
+
+1. **Varsayıma dayanarak sonuç iletme.** Kullanıcı açıkça talimat vermedikçe hiçbir koşulda varsayıma dayanarak sonuç iletme. Araştırma, inceleme ve benzeri tüm çalışmalarda sonuçlar yüzde 100 kanıta dayanmalıdır.
+2. **Talep edilmedikçe yorumlama yapma.** Kod yazarken, açıklama hazırlarken veya herhangi bir başka çalışmada kullanıcı talep etmedikçe yorumlayarak iş yapma. Yorumlama yapmak karar vermek anlamına gelir. Hiçbir konuda kendi başına karar verme. Tüm kararlar kullanıcıya aittir.
+
+## Zorunlu çalışma kuralı: Cogniti tarama adımlarında kullanıcı kararı ve onayı
+
+COGNITI 14.11.2026 TARAMA ADIMLARI adlı dosyadaki işleri yaparken codex olarak kendim karar vermeyeceğim. inisiyatif alıp kullanıcıya sormadan cogniti kodlarına eksiltme, ekleme, değiştirme ve bunun gibi her ne olursa olsun hiçbir müdahalede bulunmayacağım. Çalışma sırasında karar verilmesi gereken iki ya da daha fazla seçenek olursa kullanıcı kararı ve onayı olmadan asla işlem yapmayacağım.
+
 ## Zorunlu KVKK yurt dışı veri aktarımı kontrolü
 
 Her yeni çalışma oturumunun başında `docs/hukuki/KVKK_YURTDISI_VERI_AKTARIMI_TAKIP.md` dosyasını oku. Dosyadaki durum `TAMAMLANDI` değilse kullanıcıya bir kez şu soruyu yönelt: “Supabase ile Türkiye KVKK Standart Sözleşme-2 sürecinde yeni bir gelişme var mı?” Kullanıcının verdiği güncel bilgiyi takip dosyasına işle. İmzalı sözleşme ve KVKK bildirim kaydı görülmeden durumu `TAMAMLANDI` olarak değiştirme. Bu kontrol, kullanıcının asıl talebi üzerindeki çalışmayı engellemez.

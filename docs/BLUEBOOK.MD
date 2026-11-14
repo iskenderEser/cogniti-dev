@@ -1,6 +1,6 @@
 # 📘 HapBilgi — BLUEBOOK
 ### İş Modeli, Mimari, İş Kuralları ve Teknik Envanter Anayasası
-*Son genel inceleme: 28 Eylül 2026 | Asistan bölümü ve ilgili envanter güncellemesi: 9 Eylül 2026 | Ortak yayın arayüzü, mobil akış ve tanbur güncellemesi: 21 Eylül 2026 | E-Club iş modeli ve teknik kapanış güncellemesi: 28 Eylül 2026 | Depo tercihleri kod güncellemesi: 29 Eylül 2026; canlı yapısal kontrol: 5 Ekim 2026 (13/13) | Zorunlu Sade Kontrol Aileleri kararı: 8 Ekim 2026 | E-Club yeni gönderim ve planlama belgeleri: 13 Ekim 2026; canlı son doğrulama bekliyor | Görsel renk envanteri ve doğrulama kaydı: 17 Ekim 2026 | Agora partner, vitrin, satın alma ve üretici yayın alanı: 6 Kasım 2026 | Ticari gelir modeli ve haftalık banner kiralama: 6 Kasım 2026*
+*Son genel inceleme: 28 Eylül 2026 | Asistan bölümü ve ilgili envanter güncellemesi: 9 Eylül 2026 | Ortak yayın arayüzü, mobil akış ve tanbur güncellemesi: 21 Eylül 2026 | E-Club iş modeli ve teknik kapanış güncellemesi: 28 Eylül 2026 | Depo tercihleri kod güncellemesi: 29 Eylül 2026; canlı yapısal kontrol: 5 Ekim 2026 (13/13) | Zorunlu Sade Kontrol Aileleri kararı: 8 Ekim 2026 | E-Club yeni gönderim ve planlama belgeleri: 13 Ekim 2026; canlı son doğrulama bekliyor | Görsel renk envanteri ve doğrulama kaydı: 17 Ekim 2026 | Agora partner, vitrin, satın alma ve üretici yayın alanı: 6 Kasım 2026 | Ticari gelir modeli ve haftalık banner kiralama: 6 Kasım 2026 | PM ailesi taraması ve rota temizliği: 14 Kasım 2026*
 
 ---
 
@@ -197,7 +197,8 @@ Platform **Video** (`video`), **Podcast** (`podcast`), **Dijital Broşür** (`go
 * **FirmaStore Satın Alma Yetki Ayrımı:**
   * `STORE_ALABILEN_ROLLER`: `[utt, kd_utt, bm]` — Yalnız bu roller kendi harcanabilir puanlarıyla FirmaStore siparişi oluşturabilir ve kendi siparişlerini görebilir.
   * `STORE_GORENLERLER`: Sipariş veren roller ile hiyerarşik gözlem yetkisi bulunan TM, üretici, yönetici ve admin rollerini kapsar.
-  * `STORE_GENEL_GOREN_ROLLER`: BM'nin bölgesindeki, TM'nin takımındaki, üretici ve yöneticilerin firmasındaki, adminin ise tüm firmalardaki siparişleri `/store/ekip-magaza-siparisleri` üzerinden görme sınırını tanımlar.
+  * `/store/ekip-magaza-siparisleri` sayfası ve API'leri `STORE_GENEL_GOREN_ROLLER` listesini kullanır. Kodda BM bölge, TM takım, üretici ve yöneticiler firma, admin tüm firmalar kapsamında değerlendirilir.
+  * Ekip FirmaStore Siparişleri, PM ailesinin (`pm`, `jr_pm`, `kd_pm`) görev kapsamı dışındadır ve PM menüsünden çıkarılmıştır. Doğrudan sayfa ve API kontrollerindeki rol listesi (`STORE_GENEL_GOREN_ROLLER`), ileride PM ailesine FirmaStore siparişi açılabilmesi kolaylığı için kullanıcının 14 Kasım 2026 onaylı kararıyla PM ailesini içermeye devam eder. Menü kaynağı `components/panel/panelNav.config.ts`, rol listesinin kaynağı `lib/utils/roller.ts` dosyasıdır.
 * **Hedef Roller (`talepler.hedef_roller`):** Kişi rolü değil, içeriğin hedef kitlesidir: `utt`, `bm`, `eczaci`, `eczane_teknisyeni`, `eczanem`. Eczacı, ikinci eczacı ve yardımcı eczacı unvanları `eczaci`; eczane teknisyeni `eczane_teknisyeni` hedef kitlesine eşlenir. Yalnız `eczaci` ve `eczane_teknisyeni` hedefleri birlikte seçilebilir. Eczanem hedefli talebi **PM ailesi (`pm`, `jr_pm`, `kd_pm`) ve Medikal Müdür (`med_md`)** açabilir. Ortak kaynak `ECZANEM_TALEP_ACAN_ROLLER = [...PM_AILESI_ROLLER, "med_md"]` listesidir; talep formu, talep/taslak API doğrulamaları ve Yayın Yönetimi hedef görünürlüğü bu kaynağı kullanır. İzinli eğitim türleri ayrıca `lib/uretici/yetenekler.ts` üzerinden doğrulanır; Eczanem hedefli talepte ürün seçimi zorunludur.
 
 ### 4. Erişim ve Güvenlik Mimarisi (`proxy.ts` Middleware)
@@ -335,7 +336,7 @@ Bu kayıt canlı veritabanı doğrulaması değildir. `scripts/denetim/sema.json
 * **Kurumsal Eczane ve Liste Üyeliği:** `eclub_eczane_master` onaylı GLN kaynağıdır; `eclub_eczaneler` platform eczanesini, `eclub_eczane_firma` firma–eczane kurumsal bağını tutar. Bu bağdan `eclub_utt_eczane` ile UTT'nin kişisel liste üyeliği, `eclub_kisi_eczane` ile E-Club kullanıcısının eczane ilişkisi ayrılır. Eczane tek bir firmanın mülkiyetinde değildir. Aynı firmanın birden fazla UTT'si aynı kurumsal eczane bağında ayrı üyelikler kurabilir. Bir UTT'nin listeden çıkması diğer UTT üyeliklerini bozmaz; son aktif UTT de çıktığında firma–eczane bağı pasife alınır, eczane kimliği silinmez.
 * **Kişi–Eczane ve Puan Aidiyeti:** Çekli puan, kazanıldığı anda kişinin aktif olarak bağlı bulunduğu eczaneye sabitlenir. Kişinin daha sonra pasife alınması, başka bir eczaneye bağlanması veya önceki eczaneyle ilişkisinin sona ermesi, daha önce kazandığı puanın eczane aidiyetini değiştirmez.
 * **E-Club Yayın Ayarları:** E-Club; Video, Podcast, Dijital Broşür ve Literatür öğrenme araçlarını destekler. Yayın ile gerçek öğrenme aracı bağı `yayin_id`, `arac_id` ve `arac_turu` kimlikleriyle korunur. Üretici rol, E-Club yayınını yayına alırken puanı `Çekli Puan` veya `Çeksiz Puan` olarak belirler. Çekli Puan E-Club performansı, lig ve hediye çeki hesabına; Çeksiz Puan yalnız E-Club performansı ve lig hesabına katılır.
-* **Sipariş Şartı ve Çek Karşılığı:** Üretici rol, Çekli Puan yayınında siparişi zorunlu veya zorunlu değil olarak belirler; puan–TL dönüşümünü ve sipariş baremlerini tanımlar. Sipariş zorunluysa çek hakkı için tanımlanan ürün siparişi verilmelidir. Sipariş zorunlu değilse eczacı sipariş vermeden çek işlemini başlatabilir; sipariş verilirse çek tutarı üretici rolün belirlediği oran kadar artırılabilir.
+* **Çekli Puan yayınında** üretici sipariş modelini ve baremleri belirler. Puan–TL dönüşümünde firmanın merkezi E-Club tanımı (`eclub_firma_cek_tanimlari`) esas alınır. Sipariş zorunluysa çek hakkı için tanımlanan ürün siparişi verilmelidir. Sipariş zorunlu değilse eczacı sipariş vermeden çek işlemini başlatabilir. Siparişle artan çek modelinde artış oranını üretici belirler.
 * **Öneri ve Tüketim:** E-Club yayını bütün üyelere doğrudan dağıtılmaz. UTT/KD_UTT, kendi firma ve takım kapsamındaki, incelemesini tamamladığı yayını kişisel listesindeki uygun E-Club üyelerine gönderir veya planlar. Yayın mühürlüdür; `yayin_id` sabit kalırken öğrenme aracı değiştirilmez. `arac_id` ve `arac_turu` içerik ilişkisini korur; tekrar ve kota hesabının kimliği değildir. Yeni gerçek gönderimin puanlı ve sorulu geçerliliği, gerçek gönderim başlangıcından itibaren 15 gündür. Süresi geçmiş öneri tüketilebilir ancak puan ve soru hakkı vermez. Hafta sonu öğrenme engeli yoktur.
 * **Gönderim ve Plan Kotaları:** Haftalık hesap UTT + üye + `urun_id` üzerinden, Türkiye saatinde Pazartesi–Cuma için yapılır; gerçekleşmiş gönderimler ve bekleyen/işlenen planların toplamı en fazla 3'tür. Yeniden gönderim hesabı UTT + üye + `yayin_id` üzerindendir. İlk gönderim ayrı tutulur; Ocak–Şubat, Mart–Nisan, ... takvim dönemlerinde en fazla 2 yeniden gönderim bulunabilir. Önceki ve sonraki ilgili gönderim/planla en az 15 gün korunur; dönem değişmesi bu aralığı kaldırmaz. Eski 7 günlük süre ve araç kimliğine/bitişe bağlı 21 günlük bekleme kullanılmaz.
 * **Planlama Sınırları ve Gerçekleşme:** Plan için yalnız Türkiye takvim tarihi seçilir; saat seçimi veya varsayılan saat yoktur. Hedef Pazartesi–Cuma ve gelecekte olmalıdır. Haftalık planlama en fazla takip eden haftaya, dönem planlaması yalnız içinde bulunulan iki aylık döneme yapılır; iki sınır birlikte uygulanır. Hafta sonu plan oluşturulabilir, hafta sonuna gönderim hedefi verilemez. Plan ayrı `eclub_yayin_gonderim_planlari` tablosunda tutulur; plan kaydı üyeye yayın/bildirim iletmez veya tamamlama süresini başlatmaz. Dakikalık işleyici hedef günü geldiğinde uygunluğu tekrar doğrular; öneri ve plan sonucu aynı transactionda yazılır. Gerçekleşmiş plan ayrıca kota tüketmez. Günü geçmiş, yetkisi kalkmış veya yayını durmuş plan gerçekleşmez; nedeni saklanır, hedef başka güne kaydırılmaz. Aynı plan ikinci öneri oluşturmaz.
@@ -380,7 +381,7 @@ Bu kayıt canlı veritabanı doğrulaması değildir. `scripts/denetim/sema.json
 *Eczanem Uygulaması Üyeleri İçin Öğrenme İçeriği ve Eczane Bağlantılı Platform İşlemleri*
 
 
-**30 Ekim 2026 — İndirimli / İndirimsiz yayın seçimi:** Yayın Yönetimi'nde Eczanem hedefi için iki kazanım modeli açıkça seçilir. İndirimli modelde mevcut öğrenme/soru puanları, barkod, puan–TL karşılığı ve satış fiyatı zorunludur. İndirimsiz modelde puan veya tarife girişi istenmez; tamamlama ve doğru/yanlış cevaplar kaydedilir, puan kazanımı oluşmaz. Model yayın bazındaki yeni `yayin_yonetimi.eczanem_kazanim_modeli` alanında tutulur ve yayın oluşturulduktan sonra değişmez. Aynı ürünün diğer indirimli yayınlarının tarifesi, indirimsiz yayına puan hakkı vermez; indirimsiz yayın ürün tarifesini değiştirmez. Üye kartına “İndirimsiz” etiketi eklenmez; tamamlama ve doğru cevap puanı alanları gizlenir, soru sayısı korunur. Video, Podcast, Dijital Broşür ve Literatür aynı kazanım seçimini kullanır. Gönderim/token akışları mevcut kuralla sürer.
+**30 Ekim 2026 kararına göre** üretici, Yayın Yönetimi'nde Eczanem hedefi için İndirimli veya İndirimsiz modeli seçer. İndirimli modelde öğrenme ve soru puanları, ürün barkodu ve satış fiyatı zorunludur. Puan–TL karşılığı firmanın merkezi Eczanem tanımından (`eczanem_firma_cek_tanimlari`) alınır. İndirimsiz modelde puan veya tarife girişi istenmez. Tamamlama ve doğru/yanlış cevaplar kaydedilir, puan kazanımı oluşmaz. Model yayın bazındaki `yayin_yonetimi.eczanem_kazanim_modeli` alanında tutulur ve yayın oluşturulduktan sonra değişmez. Aynı ürünün diğer indirimli yayınlarının tarifesi, indirimsiz yayına puan hakkı vermez. İndirimsiz yayın ürün tarifesini değiştirmez. Üye kartına “İndirimsiz” etiketi eklenmez. Tamamlama ve doğru cevap puanı alanları gizlenir, soru sayısı korunur. Video, Podcast, Dijital Broşür ve Literatür aynı kazanım seçimini kullanır. Gönderim/token akışları mevcut kuralla sürer.
 
 **Kurulum durumu:** `scripts/sql/eczanem_indirimsiz_yayin.sql` hazırlanmıştır; kullanıcı tarafından canlı veritabanında uygulandığı henüz doğrulanmamıştır. SQL mevcut Eczanem yayınlarını indirimli olarak işaretler; kazanılmış puan, ürün tarifesi veya gönderim geçmişini değiştirmez. Ortak yayın görünümü indirimsiz yayının kayıtlı puanlarını sıfır sunar; tamamlama ve cevap çekirdeği ayrıca yayın modelini denetler. Mevcut kolon sırası, dört araç tamamlama kanıtı, sabit soru kümesi, tek cevap hakkı ve soru bazlı raporlama korunur. Kaynaklar: `lib/eczanem/kazanimModeli.ts`, `app/(panel)/yayin-yonetimi/`, `app/eczanem/api/videolar/`, üye kartı/oynatıcısı ve kurulum SQL'i.
 
@@ -452,6 +453,7 @@ Bu kayıt canlı veritabanı doğrulaması değildir. `scripts/denetim/sema.json
   * **Medikal Ailesi (`med_md`):** Firma seviyesindedir; `medikal_egitim` ve `urun_medikal_egitim` açar. Eczanem hedefli talep de açabilir; bu hedefte eğitim türünden bağımsız olarak ürün zorunludur.
   * **Eğitim Ailesi (`egt_*`):** Firma seviyesindedir; `satis_teknikleri` ve `yonetim_egitimi` açar. Satış teknikleri talebinde saha hedefleri için teknik zorunludur; E-Club hedeflerinde teknik seçimi kaldırılır.
   * **İK Ailesi (`ik_*`):** Firma seviyesindedir; `ik_egitimi` ve `yonetim_egitimi` açar; E-Club hedefli talep oluşturamaz.
+* **PM ürün sorumluluğu (14 Kasım 2026)** kapsamında Firma Admini, Ürün ve Teknik alanında kendi firmasının ürününü tanımlar, ürünü aynı firma ve takımdaki aktif bir PM ailesi üyesine atar ve atamayı kaldırabilir. Firma Admini özelliği kapalıysa bu yönetim işlemlerini aktif Cogniti Admini yapabilir. Üretim için ürün listesi, yeni talep, hazır podcast taslağı ve Agora yayın hazırlığı, PM'nin kendi firma ve takımında kendisine atanmış ürünlerle sınırlıdır. Kaynaklar `app/urunler/api/route.ts`, `lib/uretici/talepKaynakSahipligi.ts` ve `scripts/sql/cogniti_urun_pm_atamasi.sql` dosyalarıdır.
 * **Talep Sahipliği ve Hedef Sözleşmesi:** Her üretici yalnız kendi açtığı talepleri görür. Talebe bağlanan ürün ve teknik üreticinin firmasına ait olmalıdır. Hedef kitle `utt`, `bm`, `eczaci`, `eczane_teknisyeni` veya `eczanem` değerlerinden biridir; yalnız `eczaci` ile `eczane_teknisyeni` birlikte seçilebilir. Talep türünden türetilen içerik türü ile seçilen öğrenme aracı türü talep oluşturulduğunda sabitlenir. E-Club (`eczaci`, `eczane_teknisyeni`) ve Eczanem hedeflerinde teknik alanı gösterilmez ve sunucuda `teknik_id=NULL` yazılır. Eczanem hedefinde ürün her durumda zorunludur.
 * **Öğrenme Araçları:** Üretim omurgası **Video** (`video`), **Podcast** (`podcast`), **Dijital Broşür** (`gorsel`) ve **Literatür** (`flip_pdf`) araçlarını destekler. Her araç ayrı özellik bayrağıyla açılıp kapatılabilir. Tarihsel `video` aşaması ve `hazir_video` alanı ortak üretim anahtarı olarak korunur; kullanıcı arayüzünde seçilen aracın gerçek adı gösterilir.
 * **4 Üretim Varyantı:**
@@ -470,11 +472,48 @@ Bu kayıt canlı veritabanı doğrulaması değildir. `scripts/denetim/sema.json
 * **Hazır Videonun Asenkron İşlenmesi:** TUS aktarımının bitmesi Bunny kodlamasının bitmesi anlamına gelmez. `PUT /uretim/api/hazir-video`, videoyu talebe bağlar ve `hazirVideoTamamla` üzerinden üretim zincirini açabilir. Video henüz hazır değilse süre boş, `metadata_dogrulandi=false` kalır; üreticinin Yayın Yönetimi'ne geçmesi yayın açılabileceği anlamına gelmez. Bunny webhook'u veya `app/api/uretim/hazir-video-mutabakat/route.ts` arka plan akışı hazır durumu ve pozitif süreyi doğrulayarak kaydı tamamlar. Video hattı Bunny Stream TUS üzerinden yürür; Podcast/Dijital Broşür/Literatür için kullanılan Bunny Storage doğrulama hattıyla birleştirilmez. Beş dakikalık sınırlı işleme takibi, kodlamanın o sürede mutlaka tamamlanacağı garantisi değildir.
 * **Hazır Podcast Kalıcı Taslağı:** V2/V4 podcast'te `app/(panel)/talepler/api/taslak/route.ts`, nihai gönderimden önce aynı üretici ve oturum anahtarı için tekrar güvenli talep/araç taslağı oluşturur. Taslak yeniden açıldığında mevcut kayıt geri yüklenebilir. `talepler.taslak_mi` ve `ogrenme_araclari.taslak_mi` ile ayrılan kayıtlar aktif görev/yayın zincirini başlatmaz ve genel Yarım Kalan Yüklemeler listesine alınmaz. Kesinleştirme `podcast_taslak_atomik_kesinlestir`, açık iptal `podcast_taslak_iptal_et_atomik` üzerinden yapılır. `podcast_taslak_zaman_asimi_temizle_atomik` için temizleyicinin varsayılan eşiği 24 saattir; terk edilmiş taslaklar temizlenirken AI işleri iptal edilir ve kullanılmayan dosyalar depolama temizleme kuyruğuna aktarılır.
 * **Podcast Transkript ve Teslim Kapıları:** Transkript tercihi `ogrenme_araci_tercihleri.transkript_istendi` alanından çözülür; eski V1/V3 taleplerinde alan yoksa varsayılan `true`, açıkça `false` ise `false` kabul edilir. AI işleri kalıcı `ogrenme_araci_transkript_kuyrugu` üzerinden işlenir. İÜ tesliminde ses dosyası, pozitif süre ve metadata doğrulaması zorunludur. Transkript istenmişse AI metni onaylanmış, doğrulanmış ve güncel sesle eşleşmiş olmalıdır; başlamış fakat tamamlanmamış transkript işlemi teslimi engeller. V1/V3 podcast üretim revizyonunda, daha önce istenmemiş transkript istenebilir; bu karar hazır podcast'e veya başka üretim aşamasına uygulanmaz. V2/V4 taslağı transkript kararı tamamlanmadan kesinleştirilemez. Kapak isteğe bağlı olsa da başlatılmış kapak yüklemesi yarım veya doğrulanmamış bırakılamaz.
-* **Yayın Kapısı ve Puanlama:** Öğrenme aracı onaylanmadan, metadata doğrulaması tamamlanmadan, araç puanı ve bütün soru puanları tanımlanmadan yayın açılamaz. Saha yayınında Extra puan 5–10 arasındadır; E-Club ve Eczanem yayınında Extra puan bulunmaz. Eczanem hedefinde İndirimli / İndirimsiz modeli seçilir. İndirimli modelde öğrenme/soru puanları, barkod, Karşılık ve satış fiyatı zorunludur; indirimsiz modelde puan ve tarife zorunluluğu yoktur. İki modelde de soru seti korunur, tekrar periyodu bulunmaz ve ileri sarma kapalıdır. Araç puanı Eczanem'de 50–500 arasında 25'in katı, diğer hedeflerde 40–70 arasında 5'in katıdır. Soru puanı Eczanem'de 10–100 arasında 10'un katı, diğer hedeflerde 3–7 arasında tam sayıdır. Puanı yalnız talebin sahibi üretici, içerik ilk kez yayımlanmadan önce değiştirebilir. İlk yayından sonra öğrenme aracı ve doğru cevap puanları kilitlenir; yayın durdurulsa da değiştirilemez. Hemen yayın Tur-1'i açar; ileri tarihli yayın `planlandi` durumunda bekler. Depodaki pg_cron sözleşmesi tarihi gelen yayınları Türkiye saatiyle 07.00'de, güvenlik tekrarı olarak 07.10'da aktive eder.
+* **Yayın Kapısı ve Puanlama:** Öğrenme aracı onaylanmadan, metadata doğrulaması tamamlanmadan, araç puanı ve bütün soru puanları tanımlanmadan yayın açılamaz. Saha yayınında Extra puan 5–10 arasındadır; E-Club ve Eczanem yayınında Extra puan bulunmaz. Eczanem hedefinde İndirimli / İndirimsiz modeli seçilir. İndirimli modelde öğrenme ve soru puanları, barkod ve satış fiyatı zorunludur. Puan–TL karşılığı Bölüm 4'teki merkezi firma kuralından gelir. İndirimsiz modelde puan ve tarife zorunluluğu yoktur. İki modelde de soru seti korunur, tekrar periyodu bulunmaz ve ileri sarma kapalıdır. Araç puanı Eczanem'de 50–500 arasında 25'in katı, diğer hedeflerde 40–70 arasında 5'in katıdır. Soru puanı Eczanem'de 10–100 arasında 10'un katı, diğer hedeflerde 3–7 arasında tam sayıdır. Puanı yalnız talebin sahibi üretici, içerik ilk kez yayımlanmadan önce değiştirebilir. İlk yayından sonra öğrenme aracı ve doğru cevap puanları kilitlenir; yayın durdurulsa da değiştirilemez. Hemen yayın Tur-1'i açar; ileri tarihli yayın `planlandi` durumunda bekler. Depodaki pg_cron sözleşmesi tarihi gelen yayınları Türkiye saatiyle 07.00'de, güvenlik tekrarı olarak 07.10'da aktive eder.
 * **Planlı Yayın ve Durum Yönetimi:** Üretici yalnız kendi yayınını yönetir. `planlandi` durumunda `tarih_degistir`, `hemen_yayinla` veya `plan_iptal` işlemleri yapılabilir. Tarih değişikliğinde seçilen günün Türkiye saatiyle 07.00'i gelecekte olmalıdır. Hemen yayınlama `yayin_planlananlari_aktive` üzerinden Tur-1 ve bildirim zincirini çalıştırır. Plan iptali yayın yönetimi kaydını kaldırarak içeriği yayına bekleyenlere döndürür. Yayındaki içerik durdurulunca `durum='Durduruldu'` ve durdurma zamanı yazılır; yeniden başlatılınca durum `yayinda`, durdurma zamanı boş ve yayın tarihi yeniden başlatma zamanı olur.
 * **Mobil Yayın Akışı, Tanbur ve HOYK Entegrasyonu:** Yayındaki Videolar (`YayindakiVideoBolumu.tsx`), Üretici Yayın Katalogları (`UreticiYayinKatalogu.tsx`) ve Yayın Yönetimi aktif yayınlar listesi (`yayin-yonetimi/page.tsx`), mobilde `MobilYayinAkisi` (2+5 dikey akış) motoruna bağlanmıştır; masaüstünde tam liste ve filtreleme erişimi korunur. Yayın kartı sunumunda `YayinKarti` (HOYK) kanonik bileşeni kullanılır. Video puanı ve Extra puan bilgileri tüm rollerde kartta şeffaf gösterilir; ancak üretici veya yöneticiye puan kazanma yetkisi vermez. Yönetici (`YoneticiAnaSayfa.tsx`) ana sayfasındaki `HayaletTanburSecici`, `tanburBolumleri.length > 1` koşuluna bağlıdır. Üretici Ana Sayfa özeti ve listesi kaldırılmıştır; üreticiler Yayın Yönetimi ile başlar. Yayın raporlarında varyantlar sade sütun düzeniyle gösterilir; kapsayıcı daraldıkça dört sütundan ikiye, ardından bire iner ve varyant açıklama bağlantısı modalı açar. Konu performansı kartında dört özet değer ve ürün bazlı puan dağılımı vardır; ürün kulakçıkları mobilde tek satırda yatay kayar. YAPKA mobilde tek, tablette iki, masaüstünde dört eşit yükseklikli araç kartı kullanır. Rol sekmeleri mobilde yatay kaydırılır. Kartlar, metinler, çizgiler ve araç vurguları ortak tema değişkenlerine bağlıdır.
 
+### PM ailesinin giriş sonrası ekranları (14 Kasım 2026)
+
+`pm`, `jr_pm` ve `kd_pm` için normal girişin ve panel logosunun hedefi Yayın Yönetimi (`/yayin-yonetimi`) ekranıdır. Geçerli bir Viva davet dönüşü varsa giriş davete yönlenir. Masaüstündeki sol menü ve mobildeki açılır menü aynı rol ve modül koşullarını kullanır. Menü kaynakları `components/panel/panelNav.config.ts` ve `components/panel/PanelKabugu.tsx` dosyalarıdır.
+
+| Ekran | Adres ve işlev |
+|---|---|
+| Yayın Oluşturma ve Takip | `/yayin-takip` üzerinden PM atanmış ürünü ve hedef kitleyi seçer, talebi açar, hazır öğrenme aracını veya soru setini ekler ve kendi taleplerini izler. İnceleme bekleyen teslimi koşulları uygunsa onaylar, revizyon ister veya iptal eder. |
+| Yayın Yönetimi | `/yayin-yonetimi` üzerinden PM hazır içeriğini önizler, hedef kitleye göre yayın ayarlarını tamamlar, yayına alır veya planlar. Planlanan kayıt **Yayında** sekmesinde **Planlandı** rozetiyle görünür. Duruma göre plan tarihi değiştirme, hemen yayımlama, planı iptal etme, yayını durdurma ve yeniden başlatma işlemleri açılır. |
+| Sizin Yayınlarınız ve Tüm Yayınlar | `/sizin-yayinlariniz` PM'nin kendi yayındaki içeriklerini ve üretim ödemesi bekleyen kayıtlarını gösterir. `/tum-yayinlar` aynı firmadaki diğer üreticilerin yayındaki içeriklerini incelemeye açar. |
+| Yayın Raporları ve T-Club | Yayın Raporları `/raporlar/yayin-raporlari`, T-Club Ligi `/t-club-ligi`, T-Club Raporları `/raporlar/tclub-uretici` adresindedir. PM, T-Club'da saha ligi ile kendi yayınlarının sonuçlarını ve firma puanına katkısını izler. |
+| C-Club Ligi ve E-Club Ligi | `/c-club-ligi` C-Club açıkken bölge müdürlerinin, `/e-club-ligi` E-Club açıkken E-Club takımlarının sonuçlarını gösterir. |
+| Eczanem takip ekranları | **Eczaneye Gönderilen Yayınlar** (`/eczanem/uretici/yayinlar`) ve **Üyelere Gönderilen Yayınlar** (`/eczanem/uretici/uyelere-gonderilen-yayinlar`) aynı firmada E-Club ve Eczanem birlikte açıkken görünür. PM, kendi takımındaki UTT’lerin eczanelere ve bu eczanelerin üyelere yaptığı gönderimleri izler. |
+| Agora ve Viva | Üst menüdeki Agora (`/agora`) vitrini açar. Sol ve mobil menüdeki **Agora Yayınları** (`/agora-yayinlari`) satın alınan içeriklerin yayına hazırlandığı ekrandır. Üst menüdeki Viva (`/viva`) etkinlik oluşturmayı açar. Yayın listesi (`/viva/yayinlar`) üzerinden etkinlik detayına, durumuna göre düzenleme ve oda ekranlarına geçilir. **Yayın kayıtlarım** (`/viva/kayitlar`) düzenleyenin kayıtlarını gösterir. |
+| Token Cüzdanı ve Fiyatlar | **Token Cüzdanı** (`/token-cuzdani`) altında **Token Alımı** (`/cuzdan`) kişisel ve ortak firma bakiyeleri ile satın alım geçmişini, **Token Kullanımı** (`/token`) tüketim raporlarını gösterir. Üst menüdeki **Paketler, Hizmetler ve Fiyatlar** (`/fiyatlar`) ekranından **Planlama Aracı** (`/planlama-araci`) açılır. |
+| Profil ve rehber | Üst menüdeki **Profil** (`/profil`) fotoğraf ve şifre işlemlerini sunar. Üretici kullanım kılavuzu panel içinde, iş akışı haritaları `/rehber/uretici` adresinde açılır. |
+
+**Doğrudan açılan üretim adresleri.** `/talepler` ve `/talepler/[talep_id]` adresleri 14 Kasım 2026 kararıyla tamamen kaldırılmıştır (404 verir); tek resmi giriş ve takip adresi `/yayin-takip` ekranıdır. `/senaryolar`, `/ogrenme-araclari` ve `/soru-setleri` PM menüsünde görünmez. PM bu listelerden kendi taleplerine ait aşamaları ve `/uretim/gorevler/[gorev_id]` adresindeki ortak görev detayını inceleyebilir. Onay, revizyon ve iptal düğmeleri kendi talebindeki görev inceleme beklediğinde görünür.
+
+### PM ailesi (`pm`, `jr_pm`, `kd_pm`) tarama ve kesinleşen sözleşmeler (14 Kasım 2026)
+
+Cogniti 14.11.2026 Tarama Adımları metodolojisi kapsamında PM rol ailesinin (`pm`, `jr_pm`, `kd_pm`) tüm görev, yetki, rota, RPC, trigger ve test doğrulamaları tamamlanmış ve şu kurallar kesinleştirilmiştir:
+
+1. **Özdeş Rol ve Takım Zorunluluğu:** `pm`, `jr_pm` ve `kd_pm` sistem kuralları, yetenek profili (`lib/uretici/yetenekler.ts`) ve arayüz açısından yüzde 100 özdeştir; kıdem unvanı ayrımıdır. Takım kaydı zorunludur (`takimZorunlu: true`).
+2. **Eğitim Türü ve Ürün Kısıtı:** PM ailesi yalnızca `urun_egitimi` talebi açabilir; `medikal_egitim`, `satis_teknikleri`, `ik_egitimi` ve `yonetim_egitimi` talep türleri sunucuda engellenir. Ürün seçimi zorunludur; ürünün PM'nin firmasında, aynı takımında ve kendisine atanmış olması şarttır (`sorumlu_pm_id == pm.id`). Takım/firma uyumsuzluğunda `cogniti_urun_pm_atama_kontrolu` DB trigger'ı işlemi `23514` ile engeller.
+3. **Kayıt ve Yayın Sahipliği:** PM yalnızca kendi açtığı talepleri (`/yayin-takip`) ve kendi yayınlarını yönetebilir. Başka üreticinin yayınına müdahale (`/yayin-yonetimi/api/yayinlar/[yayin_id]`) 403 ile engellenir. İlk yayından veya planlamadan sonra araç ve soru puanları kalıcı olarak kilitlenir, değiştirilemez.
+4. **Token ve Satın Alma:** PM ailesi esnek paket satın alımında yalnız `kisisel` bakiye türünü kullanabilir; `firma_ortak` seçimi API ve DB (`cogniti_esnek_paket_siparis_olustur`) katmanında engellenir. Eczanem hedefli yayın açılışlarında `eczanem_token_hesap_turu` seçimi zorunludur.
+5. **Kaldırılan Yapılar ve Tekil Rotalar (Adım 6):**
+   - Eski `/raporlar` kök sayfası, `/raporlar/uretici` sayfası/stili, `api/uretici` ve `getUreticiData.ts` silinmiştir. PM ve üreticilerin tek yayın raporu adresi `/raporlar/yayin-raporlari`'dır.
+   - Eski `/talepler` ve `/talepler/[talep_id]` sayfaları kaldırılmıştır (404 verir); tek takip rotası `/yayin-takip`'tir.
+   - `next.config.ts` içindeki yönlendirmeler kaldırılmıştır.
+   - `STORE_GENEL_GOREN_ROLLER` içinde üretici rollerinin bulunması onaylı tercih olarak korunmuş; `lib/video/gorunurluk.ts` (`kapsamGenisMi`) korunmuştur.
+6. **Yazılım Testi Doğrulaması (Adım 7):**
+   - 10 adet güvenlik ve engelleme senaryosu (`SENARYO-YETKI-01` – `10`) `tests/pmYetkiSinirlari.hedef.test.ts` ile izole ortamda doğrulanmış (10/10 başarılı); toplam 34 PM hedefli test sıfır hatayla geçmiştir.
+   - `npm run typecheck:build` (0 hata) ve `npm run lint:mimari` denetimleri tamamlanmıştır.
+
 ### Yayın Raporları: Kapsam, Rol, Zaman ve Üç Kart
+
+* **Rapor adresleri.** PM menüsündeki **Yayın Raporları** bağlantısı `/raporlar/yayin-raporlari`, **T-Club Raporları** bağlantısı `/raporlar/tclub-uretici` adresini açar. 14 Kasım 2026 kararıyla genel `/raporlar` kök sayfası, eski `/raporlar/uretici` sayfası ile API'si ve `next.config.ts` içindeki `/raporlar/uretim` ile `/raporlar/yayin-rapolari` yönlendirmeleri tamamen kaldırılmıştır (404 verir). PM ve üreticilerin tek resmi yayın raporu adresi `/raporlar/yayin-raporlari`'dır.
 * **Rapor Sahipliği:** `uretimRaporKapsaminiCoz` üreticiye kendi kullanıcı kimliği ve yayınlarıyla `uretici`, yöneticiye firma düzeyinde `firma` kapsamı verir. Admin için mevcut firma yöneticisi çözümlemesi kullanılır. Çözülen `raporKimligi` tüm kartlara aktarılır. Üretici raporu firmanın bütün üreticilerinin portföyü değildir.
 * **Ortak Filtreler:** Tümü, Temsilci (`utt`), BM, Eczacı, Eczane Teknisyeni ve Eczanem Üyesi seçenekleri vardır. Zaman seçenekleri ortak `PERIYOTLAR` kaynağındaki Haftalık, Aylık, Dönemlik ve Yıllık'tır; başlangıç seçimi Aylık'tır. `rapor_rolu` API'de doğrulanır; hedef rol seçimi raporu açan kişinin yetki kapsamını genişletmez.
 * **1. Kart — Yayın Üretim Yöntemleri (Varyantlar) ve Dağılımları:** V1–V4 yayın sayıları ve dağılım yüzdeleri gösterilir. Tümü'nde üretici için `get_uretici_yayin_ana_ozet_v1`, yönetici için `get_yonetici_rapor_ana_ozet_v2` özeti kullanılır. Rol seçimlerinde `get_yayin_raporlari_varyant_ozeti_v1` ilgili hedefe açılan yayınları aynı üretici/firma ve dönem kapsamında sayar. Varyant ayrımı talebin `hazir_video` ve `hazir_soru_seti` alanlarından gelir.
@@ -666,7 +705,7 @@ Toplu kullanıcı yükleme işlemi insan tarafından okunabilir rol ve organizas
 
 | Rol grubu | Yetki ve kapsam | Üretim görevi |
 |---|---|---|
-| **Ürün ailesi** (`pm`, `jr_pm`, `kd_pm`) | Takım kapsamında ürün eğitimi oluşturur; ürün zorunlu, teknik tercihlidir. Eczanem hedefli talep açabilen roller bu aile ile Medikal Müdür'dür. E-Club/Eczanem hedefinde teknik seçilmez. | Dört üretim varyantında talep açar, teslimleri inceler, onay veya revizyon kararı verir ve yayını yönetir. |
+| **Ürün ailesi** (`pm`, `jr_pm`, `kd_pm`) | Bölüm 5'teki ürün sorumluluğu kapsamında Ürün Eğitimi talebi açar. Ürün zorunludur. Saha hedeflerinde teknik seçimi isteğe bağlıdır. Eczanem hedefli talep açabilen roller bu aile ile Medikal Müdür'dür. | Dört üretim varyantında talep açar, teslimleri inceler, onay veya revizyon kararı verir ve yayını yönetir. |
 | **Medikal** (`med_md`) | Firma kapsamında medikal eğitim ve ürün medikal eğitimi oluşturur; Eczanem hedefli talep de açabilir ve bu hedefte ürün zorunludur. | Kendi talebine bağlı senaryo, öğrenme aracı ve soru setini inceler. |
 | **Eğitim** (`egt_md`, `egt_yrd_md`, `egt_yon`, `egt_uz`) | Firma kapsamında satış teknikleri ve yönetim eğitimi oluşturur; satış tekniklerinde saha hedefleri için teknik seçimi zorunludur; E-Club hedeflerinde teknik seçilmez. | Kendi yetenek profiline uygun talep ve inceleme akışını yürütür. |
 | **İnsan Kaynakları** (`ik_drk`, `ik_md`, `ik_yrd_md`, `ik_uz`, `ik_per`) | Firma kapsamında İK ve yönetim eğitimi oluşturur; E-Club hedefli talep açamaz, Eczanem hedefi için yetkili rol listesinde yer almaz. | Kendi yetenek profiline uygun talep ve inceleme akışını yürütür. |
@@ -758,7 +797,7 @@ Kaldırılmış veya taşınmış yollar aktif dosya gibi listelenmez; mevcut es
 | `eslint.config.mjs` | Yapılandırma | Next.js ve TypeScript lint ayarlarıyla HapBilgi’ye özgü mimari bağımlılık kurallarını etkinleştirir. |
 | `instrumentation.ts` | TypeScript / Altyapı | Next.js instrumentation girişinde sunucu başlangıç kancalarını tanımlar. |
 | `next-env.d.ts` | TypeScript / Lib | Next.js tarafından üretilen TypeScript ortam ve tip başvurularını projeye tanıtır; elle düzenlenmez. |
-| `next.config.ts` | Yapılandırma | React Compiler ve bağımsız tip kontrolüyle bağlantılı derleme ayarlarını tanımlar; eski üretim raporu adreslerini /raporlar/yayin-raporlari yoluna yönlendirir. |
+| `next.config.ts` | Yapılandırma | React Compiler ve bağımsız tip kontrolüyle bağlantılı derleme ayarlarını tanımlar. |
 | `package-lock.json` | Bağımlılık Kilidi | NPM bağımlılık ağının kesin sürümlerini ve bütünlük özetlerini kilitler. |
 | `package.json` | JSON / Yapılandırma | Uygulamanın bağımlılıklarını ve geliştirme, test, tip kontrolü, derleme ile denetim komutlarını tanımlar. |
 | `postcss.config.mjs` | Yapılandırma | Tailwind CSS dönüşümünü Next.js derleme hattına bağlayan PostCSS yapılandırmasıdır. |
@@ -1682,13 +1721,13 @@ Kaldırılmış veya taşınmış yollar aktif dosya gibi listelenmez; mevcut es
 
 | Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
 |---|:---:|---|
-| `page.tsx` | UI / Sayfa | `(panel)/ogrenme-araclari` kapsamındaki sayfa girişini veya yönlendirmesini tanımlar. |
+| `page.tsx` | UI / Sayfa | Öğrenme aracı görevlerini listeler. PM kendi taleplerine ait görevleri ortak görev detayında açabilir. |
 
 ### 📁 app/(panel)/ogrenme-araclari/[senaryo_durum_id]/
 
 | Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
 |---|:---:|---|
-| `page.tsx` | UI / Sayfa | `(panel)/ogrenme-araclari/[senaryo_durum_id]` kapsamındaki sayfa girişini veya yönlendirmesini tanımlar. |
+| `page.tsx` | UI / Yönlendirme | Eski öğrenme aracı detay adresini `/ogrenme-araclari` listesine yönlendirir. |
 
 ### 📁 app/(panel)/ogrenme-araclari/api/bunny-durum/
 
@@ -1780,7 +1819,7 @@ Kaldırılmış veya taşınmış yollar aktif dosya gibi listelenmez; mevcut es
 
 | Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
 |---|:---:|---|
-| `page.tsx` | UI / React | `/raporlar` rotasında raporlama kapsamındaki raporlar arayüzünü sunan Next.js sayfa bileşenidir. |
+| *`page.tsx`* | *Kaldırıldı (14 Kasım 2026)* | Genel `/raporlar` giriş sayfası kaldırılmıştır; doğrudan 404 döner. Yayın raporları doğrudan `/raporlar/yayin-raporlari` adresindedir. |
 
 ### 📁 app/(panel)/raporlar/api/bm/
 
@@ -1804,7 +1843,7 @@ Kaldırılmış veya taşınmış yollar aktif dosya gibi listelenmez; mevcut es
 
 | Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
 |---|:---:|---|
-| `route.ts` | API / Route Handler | `/raporlar/api/uretici` uç noktasında GET isteklerini işler; üretim için raporlar üretici sürecini gerekli kimlik, yetki ve girdi doğrulamalarıyla yürütür. |
+| *`route.ts`* | *Kaldırıldı (14 Kasım 2026)* | Eski üretici raporu API uç noktası 14 Kasım 2026 kararıyla tamamen kaldırılmıştır. Güncel API `/raporlar/api/uretim` adresindedir. |
 
 ### 📁 app/(panel)/raporlar/api/uretim/
 
@@ -1842,7 +1881,7 @@ Kaldırılmış veya taşınmış yollar aktif dosya gibi listelenmez; mevcut es
 | Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
 |---|:---:|---|
 | `loading.tsx` | UI / Yükleme | app/(panel)/raporlar/tclub-uretici rotasının yükleme görünümünü sağlar. |
-| `page.tsx` | UI / React | `/raporlar/tclub-uretici` rotasında raporlama kapsamındaki tclub üretici arayüzünü sunan Next.js sayfa bileşenidir. |
+| `page.tsx` | UI / React | PM menüsündeki **T-Club Raporları** ekranını açar. Firma puanlarını ve PM’nin kendi yayınlarının katkısını gösterir. |
 
 ### 📁 app/(panel)/raporlar/tm/
 
@@ -1854,8 +1893,8 @@ Kaldırılmış veya taşınmış yollar aktif dosya gibi listelenmez; mevcut es
 
 | Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
 |---|:---:|---|
-| `page.tsx` | UI / React | Ürün ve Eğitim Müdürlerinin ürettikleri eğitimlerin izlenme oranlarını ve eğitim türü etkisini izlediği üretici raporu. |
-| `uretici-report.module.css` | Stil / CSS | üretim görünümünün yerleşim, renk, tipografi ve responsive davranışlarını tanımlayan stil dosyasıdır. |
+| *`page.tsx`* | *Kaldırıldı (14 Kasım 2026)* | Eski **Raporlarım** ekranı 14 Kasım 2026 kararıyla tamamen kaldırılmıştır (404 verir). |
+| *`uretici-report.module.css`* | *Kaldırıldı (14 Kasım 2026)* | Eski üretici raporu stil dosyası 14 Kasım 2026 kararıyla kaldırılmıştır. |
 
 ### 📁 app/(panel)/raporlar/utt/
 
@@ -1895,13 +1934,13 @@ Kaldırılmış veya taşınmış yollar aktif dosya gibi listelenmez; mevcut es
 
 | Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
 |---|:---:|---|
-| `page.tsx` | UI / React | İçerik Üreticisinden gelen senaryoların canlı görsel diff editörüyle incelendiği ve onaylandığı senaryo karar sayfası. |
+| `page.tsx` | UI / React | Senaryo görevlerini listeler. PM kendi taleplerine ait görevleri ortak görev detayında açabilir. |
 
 ### 📁 app/(panel)/senaryolar/[talep_id]/
 
 | Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
 |---|:---:|---|
-| `page.tsx` | UI / React | `/senaryolar/[talep_id]` rotasında Cogniti kapsamındaki [talep id] arayüzünü sunan Next.js sayfa bileşenidir. |
+| `page.tsx` | UI / Yönlendirme | Eski senaryo detay adresini `/senaryolar` listesine yönlendirir. |
 
 ### 📁 app/(panel)/sizin-yayinlariniz/
 
@@ -1913,13 +1952,13 @@ Kaldırılmış veya taşınmış yollar aktif dosya gibi listelenmez; mevcut es
 
 | Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
 |---|:---:|---|
-| `page.tsx` | UI / React | `/soru-setleri` rotasında Cogniti kapsamındaki soru setleri arayüzünü sunan Next.js sayfa bileşenidir. |
+| `page.tsx` | UI / React | Soru seti görevlerini listeler. PM kendi taleplerine ait görevleri ortak görev detayında açabilir. |
 
 ### 📁 app/(panel)/soru-setleri/[video_durum_id]/
 
 | Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
 |---|:---:|---|
-| `page.tsx` | UI / React | `/soru-setleri/[video_durum_id]` rotasında Cogniti kapsamındaki [video durum id] arayüzünü sunan Next.js sayfa bileşenidir. |
+| `page.tsx` | UI / Yönlendirme | Eski soru seti detay adresini `/soru-setleri` listesine yönlendirir. |
 
 ### 📁 app/(panel)/sozlesmeler/
 
@@ -2021,13 +2060,13 @@ Kaldırılmış veya taşınmış yollar aktif dosya gibi listelenmez; mevcut es
 |---|:---:|---|
 | `_types.ts` | TypeScript / Lib | HapBilgi alanında kullanılan `Talep`, `Urun`, `Teknik`, `Takim` veri tiplerini ve modüller arası sözleşmeleri tanımlar. |
 | `_ureticiRolTypes.ts` | TypeScript / Lib | HapBilgi alanında kullanılan `TalepSatiri`, `RevizyonNotu`, `SenaryoBlogu`, `VideoBlogu` veri tiplerini ve modüller arası sözleşmeleri tanımlar. |
-| `page.tsx` | UI / React | Ürün Müdürleri ve üretici rollerin yeni eğitim talebi oluşturduğu ve geçmiş talepleri listelediği talep yönetim arayüzü. |
+| *`page.tsx`* | *Kaldırıldı (14 Kasım 2026)* | Eski `/talepler` yönlendirme sayfası 14 Kasım 2026 kararıyla kaldırılmıştır (404 verir). Tek resmi sayfa `/yayin-takip` adresidir. |
 
 ### 📁 app/(panel)/talepler/[talep_id]/
 
 | Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
 |---|:---:|---|
-| `page.tsx` | UI / React | `/talepler/[talep_id]` rotasında Cogniti kapsamındaki [talep id] arayüzünü sunan Next.js sayfa bileşenidir. |
+| *`page.tsx`* | *Kaldırıldı (14 Kasım 2026)* | Eski `/talepler/[talep_id]` yönlendirme sayfası 14 Kasım 2026 kararıyla kaldırılmıştır (404 verir). |
 
 ### 📁 app/(panel)/talepler/_components/
 
@@ -2138,7 +2177,7 @@ Kaldırılmış veya taşınmış yollar aktif dosya gibi listelenmez; mevcut es
 
 | Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
 |---|:---:|---|
-| `page.tsx` | UI / React | `/uretim/gorevler/[gorev_id]` rotasında üretim kapsamındaki [gorev id] arayüzünü sunan Next.js sayfa bileşenidir. |
+| `page.tsx` | UI / React | Senaryo, öğrenme aracı ve soru seti için ortak görev detayıdır. PM, kendi talebine ait görev inceleme beklediğinde onay, revizyon veya iptal işlemlerini görür. |
 
 ### 📁 app/(panel)/yayin-katalogu/api/
 
@@ -2156,7 +2195,7 @@ Kaldırılmış veya taşınmış yollar aktif dosya gibi listelenmez; mevcut es
 
 | Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
 |---|:---:|---|
-| `page.tsx` | UI / Sayfa | `(panel)/yayin-takip` kapsamındaki sayfa girişini veya yönlendirmesini tanımlar. |
+| `page.tsx` | UI / Sayfa | **Yayın Oluşturma ve Takip** ekranını açar. PM yeni talep oluşturur ve kendi taleplerinin durumunu ve teslimlerini izler. |
 
 ### 📁 app/(panel)/yayin-yonetimi/
 
@@ -3006,7 +3045,7 @@ Kaldırılmış veya taşınmış yollar aktif dosya gibi listelenmez; mevcut es
 
 | Dosya Adı | Türü | İşlevi ve Fonksiyonel Görevi (1-2 Cümle) |
 |---|:---:|---|
-| `getUreticiData.ts` | TypeScript / Lib | üretim kapsamında `getUreticiData` işlev ve sabitlerini ve `UreticiSahaOzetSatiri`, `UreticiRaporOzet`, `UreticiData` veri sözleşmelerini sağlar; get üretici Data iş kurallarını tek modülde toplar. |
+| *`getUreticiData.ts`* | *Kaldırıldı (14 Kasım 2026)* | Eski üretici raporu veri modülü 14 Kasım 2026 kararıyla kaldırılmıştır. Güncel üretim raporları modülü `lib/rapor/uretim/` altındadır. |
 
 ### 📁 lib/rapor/uretim/
 
@@ -4897,6 +4936,7 @@ Kaldırılmış veya taşınmış yollar aktif dosya gibi listelenmez; mevcut es
 * **Sidebar:** **AGORA YAYINLARI** üretici sidebarının en üstünde bağımsız mor bağlantıdır; T-Club/E-Club başlıklarıyla aynı 12 px, 800 kalınlık ve harf aralığını kullanır. Altında sidebarı yatay kesen ince ayırıcı vardır; metin altı çizgisi değildir. Üreticide Yayınlar ve Raporlar grup başlığı gösterilmez, diğer yayın/rapor bağlantıları korunur. Mobil menü aynı sözleşmeye bağlıdır. Önceki geri alma kaydı güncel menü kararının yerine geçmez.
 * **Özet ve listeler:** Üç stat kişisel satın alma, yayımlanan farklı satın alınmış içerik ve toplam yayına alma sayısını gösterir. Agora Yayınlarım / Agora Yayın Yönetimi ikili kontrolü altında partnerler yatay filtrelenir; rozetler yalnız o kullanıcının satın alma adetleridir. Yeni Satın Aldıklarım henüz yayımlanmayan kaynakları, Yayınladıklarım en az bir yayın kaydı olan kaynakları gösterir.
 * **Hızlı yayına hazırlama:** HOYK altındaki Yayına Al kaynağı Agora Yayın Yönetimi’nde açar. Üretici hedef rol, izinli eğitim türü, ürün, gerektiğinde teknik/takım seçer; kaynağın hazır soru seti yeniden oluşturulmaz. Ürün/teknik gerekliliği yorumla değil `TALEP_TURU_KURALLARI` ve ortak rol yetenekleriyle çözülür: Ürün Eğitimi ve Ürün Medikal Eğitiminde ürün zorunlu; Eczanem hedefinde türden bağımsız ürün zorunlu; Satış Tekniklerinde ürün tercihlidir, saha hedefinde teknik gerekir. E-Club/Eczanem teknik alanı göstermez. PM ailesi ve Medikal Müdürün Eczanem yetkisi korunur.
+  PM ailesinin Agora ürün seçimine Bölüm 5'teki ürün sorumluluğu kuralı uygulanır.
 * **Ortak yayın araçları:** Ayarlar `agora_yayin_ayarla` üzerinden doğrulanır. Mevcut `BekleyenSatir`, `useYayinYonetimi` ve ortak modallar; puan, kazanım modeli, tekrar, tarih ve Yayınla işlemini yürütür. Yayın mevcut dağıtım/puan/rapor altyapısına girer. Eski hazırlanmış adaylar hedef/ürün ayarı tamamlanmadan yayımlanamaz; `agora_ayarlandi` bu ayrımı taşır. Agora’ya özel ayrı puanlama motoru yazılmaz.
 * **Geleneksel hattan ayrım:** Önceki Yayın Yönetimi içindeki Agora’dan Satın Aldığım Yayınlar kutusu kaldırılmıştır. Agora adayları/yayınları geleneksel liste ve özetten ayrı kapsamda okunur; ortak hook Agora kapsamında geleneksel özet önbelleğine yazmaz. Geleneksel silme API’si satın alınmış ortak medya kaynağını silemez. Kaynak kişisel havuzda kalır; başka yayın hazırlamak için yeniden satın alınmaz.
 * **Mobil sözleşmesi:** Vitrindeki her raf ile Yeni Satın Aldıklarım/Yayınladıklarım rafları mobilde ortak `MobilYayinAkisi` ile tek sütundur. Başlangıç iki kayıt, Daha Fazla Göster her seferinde beş kayıttır. Vitrinde partner/hedef/araç, kişisel listede partner değişince açıklık başlangıca döner; aynı kapsamda yenileme açıklığı korur. Masaüstü/tablette yatay raf ve ortak kenar okları korunur. Yerel DOM doğrulaması gerçek cihaz görsel kabulü yerine geçmez.
@@ -5947,7 +5987,7 @@ UTT/BM hedefli ve `cek_karsiligi_var_mi === true` yayınlarda HOYK’un thumbnai
 
 Cogniti Yönetimi → **FirmaStore Ürünleri**, anlaşmalı hediye çeklerinin görsel, ad, açıklama, kategori, minimum sipariş TL tutarı, stok ve aktifliğini yönetir. Merkezî Puan Fiyatı ve eski Firma Erişimi ekranı kaldırılmıştır. Firma → Modüller → **FirmaStore** içindeki çek tanımları, firmanın seçtiği çekleri ve her çek için pozitif tam sayı **Baz Puan** değerini yönetir. Seçilmemiş veya geçerli minimum TL/Baz Puan tanımı olmayan çekler UTT/KD_UTT/BM vitrinine çıkmaz. Örneğin 500 TL minimum tutarlı çek için firmanın Baz Puanı 1000 ise bir çek 1000 puan tüketir. Başka firma aynı çek için farklı Baz Puan belirleyebilir.
 
-Üreticinin UTT/BM hedefli yayın ekranında **Çek karşılıklı puan / Çeksiz puan** seçimi korunur; yayın başına sayısal puan–TL oranı girilmez. Sayısal oran E-Club'ın ayrı yayın koşullarından kaldırılmaz. Yeni saha yayını DB doğrulaması `firmastore_yayin_orani_kaldir.sql` ile kurulmuştur. HOYK çek simgesi açıkça `tl_karsilikli` seçilmiş, çek karşılığı true ve saha hedefli yayınlarda görünür; eski varsayılan bayrak tek başına simge üretmez. Bilgi notu hover/odak ve dokunma süresince açılır. Bu çalışma geçmiş kazanımların sınıfını veya tutarını değiştirmez.
+Üreticinin UTT/BM hedefli yayın ekranında **Çek karşılıklı puan / Çeksiz puan** seçimi korunur; yayın başına sayısal puan–TL oranı girilmez. E-Club çekli yayınlarında sayısal oran Bölüm 3'teki merkezi firma tanımından alınır. Yeni saha yayını DB doğrulaması `firmastore_yayin_orani_kaldir.sql` ile kurulmuştur. HOYK çek simgesi açıkça `tl_karsilikli` seçilmiş, çek karşılığı true ve saha hedefli yayınlarda görünür; eski varsayılan bayrak tek başına simge üretmez. Bilgi notu hover/odak ve dokunma süresince açılır. Bu çalışma geçmiş kazanımların sınıfını veya tutarını değiştirmez.
 
 Vitrin, detay ve sipariş onayı aynı firma Baz Puanını kullanır. `store_cek_siparis_olustur` firma/rol/modül, seçili çek, stok, bakiye ve takvimi doğrular; istemcinin gördüğü puan/TL değişmişse siparişi reddeder. Kullanıcı, ürün ve firma ayarları kilitlenir. Siparişte `firma_id`, `puan_birim_fiyat`, `toplam_puan`, `cek_birim_tl`, `toplam_tl` saklanır; sonradan tarife değişikliği geçmiş siparişi değiştirmez. İptalde siparişte kayıtlı puan iade edilir. Mevcut geçici test takvimi korunmuştur. Canlıda yeni test siparişi oluşturulmamıştır.
 
