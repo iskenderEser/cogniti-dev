@@ -603,6 +603,22 @@ Cogniti 14.11.2026 Tarama Adımları metodolojisi kapsamında Bölge Müdürü (
    - 10 adet güvenlik ve yetki senaryosu (`SENARYO-BM-01` – `10`) `tests/bmYetkiSinirlari.hedef.test.ts` ile izole ortamda doğrulanmış (10/10 başarılı); toplam 60 rol hedefli test sıfır hatayla geçmiştir.
    - `npm run typecheck:build` (0 hata) denetimi tamamlanmıştır.
 
+### Takım Müdürü (`tm`) tarama ve kesinleşen sözleşmeler (14 Kasım 2026)
+
+Cogniti 14.11.2026 Tarama Adımları metodolojisi kapsamında Takım Müdürü (`tm`) rolünün tüm görev, yetki, rota, RPC, trigger ve test doğrulamaları tamamlanmış ve şu kurallar kesinleştirilmiştir:
+
+1. **Takım Kapsamı ve Hiyerarşik Konum:** `tm` takım düzeyinde yönetim, onay ve izleme rolüdür; firma (`firma_id`) ve takım (`takim_id`) zorunludur, bölgeye atanmaz (`bolge_id` bağımsızdır). Takımındaki tüm Bölge Müdürlerini (`bm`) ve bu bölgelere bağlı tüm temsilcileri (`utt`, `kd_utt`) kapsar.
+2. **Öneri Gönderememe Kuralı:** TM öneri gönderemez; `POST /oneriler/api` rotası TM için 403 / rol hatası verir. Eğitim yayını önerisi oluşturma yetkisi sahada yalnız Bölge Müdürü'ne aittir.
+3. **Öneri ve Takım Akışı Takibi:** Takımındaki BM'lerin UTT'lere gönderdiği öneri durumlarını (`get_tm_oneri_durumu_v1`) ve BM'lerin öneri performanslarını (`get_tm_bm_performans_v1`) `/oneriler` ekranında izler (`TmOneriTakibi.tsx`).
+4. **Eczanem Mutabakatı Nihai Onay Mercii:** BM tarafından incelenip onaylanan ve `tm_onayinda` durumuna gelen indirimli mutabakatların kesin onaylayıcısıdır (`eczanem_mutabakat_tm_onayla`). İptal veya bekletme kararı verme yetkisine sahiptir (`eczanem_mutabakat_tm_karar_ver`).
+5. **Takım Raporu ve BM Karşılaştırma:** `/raporlar/tm` ekranında takımındaki UTT'lerin öğrenme katılımı ve net puan karnesini izler (`getTmDavranis`); takımındaki iki farklı Bölge Müdürünü yan yana karşılaştırabilir (`getTmKarsilastirma`). Başka takımın personeli sorgulanamaz (`TemsilciKapsamHatasi` 403).
+6. **Başlangıç Ekranı Çift Sekme Yapısı:** `/ana-sayfa` karşılama ekranında 4 takım stat kartının altında "T Club Yayınları" (temsilcilerin yayınları) ve "C Club Yayınları" (bölge müdürlerinin yayınları) olmak üzere iki sekme sunar; videoları gözlemci modunda (`tuketici=false`, puansız) inceler. "Yayın Öneriniz" butonu bulunmaz.
+7. **Agora Vitrini ve Ekip Sipariş İzni:** Agora vitrinini görüntüleme yetkisine sahiptir (`AGORA_GOREN_ROLLER`). Takımındaki personelin FirmaStore siparişlerini `/store/ekip-magaza-siparisleri` ekranında izleyebilir (`STORE_GENEL_GOREN_ROLLER`).
+8. **Kapalı İşlemler:** Puan harcayarak FirmaStore'dan hediye siparişi veremez (`STORE_ALABILEN_ROLLER` dışındadır); C-Club challenge gönderemez; içerik talebi ve yayını açamaz (`URETICI_ROLLER` dışındadır); token paketi satın alamaz (`esnekPaketBakiyeTuru` null).
+9. **Yazılım Testi Doğrulaması (Adım 7):**
+   - 10 adet güvenlik ve yetki senaryosu (`SENARYO-TM-01` – `10`) `tests/tmYetkiSinirlari.hedef.test.ts` ile izole ortamda doğrulanmış (10/10 başarılı); toplam 70 rol hedefli test sıfır hatayla geçmiştir.
+   - `npm run typecheck:build` (0 hata) denetimi tamamlanmıştır.
+
 ### Yayın Raporları: Kapsam, Rol, Zaman ve Üç Kart
 
 * **Rapor adresleri.** PM menüsündeki **Yayın Raporları** bağlantısı `/raporlar/yayin-raporlari`, **T-Club Raporları** bağlantısı `/raporlar/tclub-uretici` adresini açar. 14 Kasım 2026 kararıyla genel `/raporlar` kök sayfası, eski `/raporlar/uretici` sayfası ile API'si ve `next.config.ts` içindeki `/raporlar/uretim` ile `/raporlar/yayin-rapolari` yönlendirmeleri tamamen kaldırılmıştır (404 verir). PM ve üreticilerin tek resmi yayın raporu adresi `/raporlar/yayin-raporlari`'dır.
