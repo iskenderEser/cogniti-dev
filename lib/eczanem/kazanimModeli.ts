@@ -13,8 +13,8 @@ export function eczanemKazanimKosullariHatasi(
       ? "İndirimsiz yayında barkod, puan–TL karşılığı veya satış fiyatı gönderilemez."
       : null;
   }
-  if (typeof kosullar.barkod !== "string" || !kosullar.barkod.trim()) {
-    return "Eczanem yayınında barkod zorunludur.";
+  if (typeof kosullar.barkod !== "string" || !/^[0-9]{1,13}$/.test(kosullar.barkod)) {
+    return "Ürün kataloğunda 1–13 rakamdan oluşan bir barkod bulunmalıdır.";
   }
   if (kosullar.puan != null || kosullar.tl != null) {
     return "Eczanem puan–TL karşılığı merkezi firma tanımından alınır.";

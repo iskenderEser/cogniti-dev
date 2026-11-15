@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
             soru_seti_id,
             arac_durum_id,
             sorular,
-            talepler!inner ( ${TALEP_ALANLARI}, uretim_bedeli_token, uretim_bedeli_odendi_at ),
+            talepler!inner ( ${TALEP_ALANLARI}, firma_id, urun_barkod_kaynagi:urunler ( firma_id, barkod ), uretim_bedeli_token, uretim_bedeli_odendi_at ),
             ogrenme_araci_durumu (
               arac_durum_id,
               ogrenme_araci_puanlari ( arac_puan_id, arac_puani ),
@@ -161,6 +161,7 @@ export async function GET(request: NextRequest) {
       talep_no: number;
       firma_adi: string;
       urun_adi: string;
+      urun_barkodu: string | null;
       teknik_adi: string;
       turu_adi: string | null;
       egitim_turu: string;
@@ -197,6 +198,12 @@ export async function GET(request: NextRequest) {
 
       const egitimTuru = talep?.egitim_turu ?? "urun_egitimi";
       const hedefRoller = talep?.hedef_roller ?? ["utt"];
+      type BarkodKaynagi = { firma_id: string; barkod: string | null };
+      const kaynak = taleplerRaw as { firma_id: string; urun_barkod_kaynagi: BarkodKaynagi | BarkodKaynagi[] | null };
+      const urun = Array.isArray(kaynak.urun_barkod_kaynagi) ? kaynak.urun_barkod_kaynagi[0] : kaynak.urun_barkod_kaynagi;
+      const urunBarkodu = hedefRoller.includes("eczanem") && urun?.firma_id === kaynak.firma_id
+        ? urun?.barkod ?? null
+        : null;
 
       sonuc.push({
         talep_id: talep.talep_id,
@@ -217,6 +224,7 @@ export async function GET(request: NextRequest) {
         talep_no: talep?.talep_no ?? 0,
         firma_adi: talep?.firma_adi ?? "",
         urun_adi: talep?.urun_adi ?? "-",
+        urun_barkodu: urunBarkodu,
         teknik_adi: talep?.teknik_adi ?? "-",
         turu_adi: TALEP_TURU_KURALLARI[egitimTuru as TalepTuru]?.ad ?? null,
         egitim_turu: egitimTuru,

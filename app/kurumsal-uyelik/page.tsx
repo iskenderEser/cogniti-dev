@@ -18,7 +18,7 @@ export const metadata: Metadata = { title: "Kurumsal Üyelik | Cogniti" };
 const SOZLESME_DOSYASI = "kurumsal-uyelik-sozlesmesi.pdf";
 
 const KULLANICI_SUTUNLARI = ["Takım/Bölüm", "Bölge", "Unvan", "Ad Soyad", "E-posta", "Telefon Numarası"];
-const URUN_SUTUNLARI = ["Takım Adı", "Ürün Adı", "PM Adı Soyadı"];
+const URUN_SUTUNLARI = ["Takım Adı", "Barkod", "Ürün Adı", "PM Adı Soyadı"];
 
 export default async function KurumsalUyelikSayfasi() {
   if (!await adayOturumu()) redirect("/uyelik-basvurusu?giris=1");

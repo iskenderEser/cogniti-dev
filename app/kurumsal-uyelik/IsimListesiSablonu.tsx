@@ -8,6 +8,8 @@ import styles from "@/app/login/login.module.css";
 import { rolCoz, turkceKatla } from "@/lib/admin/kullaniciDogrulama";
 import { TUKETICI_ROLLER, URETICI_ROLLER, YONLENDIRICI_ROLLER, YONETICI_ROLLER } from "@/lib/utils/roller";
 
+import { BARKOD_BICIMI, BARKOD_DESENI } from "./barkod";
+
 const CEP_TELEFONU_BICIMI = "5[0-9]{9}";
 const CEP_TELEFONU_DESENI = new RegExp(`^${CEP_TELEFONU_BICIMI}$`);
 const EPOSTA_DESENI = /^[^\s@]+@[^\s@]+$/;
@@ -152,6 +154,11 @@ export default function IsimListesiSablonu({ sutunlar, urunListesi = false }: { 
       const XLSX = await import("xlsx");
       const kitap = XLSX.utils.book_new();
       const sayfa = XLSX.utils.aoa_to_sheet([sutunlar, ...indirilecekSatirlar]);
+      if (urunListesi) {
+        for (let satir = 2; satir <= indirilecekSatirlar.length + 1; satir++) {
+          sayfa[`B${satir}`].z = "@";
+        }
+      }
       XLSX.utils.book_append_sheet(kitap, sayfa, baslik);
       XLSX.writeFile(kitap, `${dosyaAdi}.xlsx`);
     } catch {
@@ -180,7 +187,8 @@ export default function IsimListesiSablonu({ sutunlar, urunListesi = false }: { 
             const eslesenler = basliklar.flatMap((baslik, indeks) => baslik.trim() === sutun ? [indeks] : []);
             return eslesenler.length === 1 ? eslesenler[0] : -1;
           });
-          return indeksler.every(indeks => indeks >= 0) ? [{ tablo, satirIndeksi, indeksler }] : [];
+          return indeksler.every((indeks, sutunIndeksi) => indeks >= 0
+            || (urunListesi && sutunIndeksi === 1 && !basliklar.some(baslik => baslik.trim() === "Barkod"))) ? [{ tablo, satirIndeksi, indeksler }] : [];
         });
       });
       if (eslesenler.length !== 1) {
@@ -256,21 +264,24 @@ export default function IsimListesiSablonu({ sutunlar, urunListesi = false }: { 
             const rol = FIRMA_LISTESI_ROLLERI.has(adayRol) ? adayRol : "";
             return <tr key={id}>{satir.map((deger, indeks) => {
               const sutun = sutunlar[indeks];
+              const barkodHucresi = urunListesi && indeks === 1;
+              const barkodGecersiz = barkodHucresi && deger !== "" && !BARKOD_DESENI.test(deger);
               const eksik = !deger.trim();
               const eslesmedi = indeks === 2 && rolDonusumleri !== null && Boolean(unvan) && !rol;
               const epostaHucresi = !urunListesi && indeks === 4;
               const epostaGecersiz = epostaHucresi && !eksik && !EPOSTA_DESENI.test(deger.trim());
               const telefonHucresi = !urunListesi && indeks === 5;
               const telefonGecersiz = telefonHucresi && Boolean(telefon) && !CEP_TELEFONU_DESENI.test(telefon);
-              const uyari = eslesmedi ? "Eşleştirme gerekli"
+              const uyari = barkodGecersiz ? "Barkod 1–13 rakamdan oluşmalıdır."
+                : eslesmedi ? "Eşleştirme gerekli"
                 : epostaGecersiz ? "@ işaretini ve iki yanındaki bilgileri kontrol edin."
                 : telefonGecersiz ? "5 ile başlayan 10 rakam girin." : null;
               const uyariId = `${listeKodu}-uyari-${sira}-${indeks}`;
               return <td key={sutun}>
                 <input className={styles.kurumsalUyelikListeHucresi} value={deger}
                   readOnly={gonderildi || islemSuruyor}
-                  inputMode={telefonHucresi ? "numeric" : epostaHucresi ? "email" : undefined}
-                  pattern={telefonHucresi ? CEP_TELEFONU_BICIMI : undefined}
+                  inputMode={barkodHucresi || telefonHucresi ? "numeric" : epostaHucresi ? "email" : undefined}
+                  pattern={barkodHucresi ? BARKOD_BICIMI : telefonHucresi ? CEP_TELEFONU_BICIMI : undefined}
                   required
                   aria-label={`${sira + 1}. satır, ${sutun}`} aria-invalid={eksik || Boolean(uyari) || undefined}
                   aria-describedby={uyari ? uyariId : undefined}

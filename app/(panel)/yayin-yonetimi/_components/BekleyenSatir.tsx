@@ -36,8 +36,6 @@ interface BekleyenSatirProps {
   setExtraPuanlar: React.Dispatch<React.SetStateAction<Record<string, number>>>;
   eczanemKazanimModelleri?: Record<string, EczanemKazanimModeli>;
   setEczanemKazanimModelleri?: React.Dispatch<React.SetStateAction<Record<string, EczanemKazanimModeli>>>;
-  barkodlar: Record<string, string>;
-  setBarkodlar: React.Dispatch<React.SetStateAction<Record<string, string>>>;
   satisFiyatlar: Record<string, number>;
   setSatisFiyatlar: React.Dispatch<React.SetStateAction<Record<string, number>>>;
   tekrarPeriyotlari: Record<string, number>;
@@ -69,7 +67,7 @@ export function BekleyenSatir({
   secimAlani, b, puanAraliklari, islemLoading, acikAkordiyon, setAcikAkordiyon,
   videoPuanlari, setVideoPuanlari, extraPuanlar, setExtraPuanlar,
   eczanemKazanimModelleri, setEczanemKazanimModelleri,
-  barkodlar, setBarkodlar, satisFiyatlar, setSatisFiyatlar,
+  satisFiyatlar, setSatisFiyatlar,
   sahaPuanModelleri, setSahaPuanModelleri,
   kazanimModelleri, setKazanimModelleri,
   katlamaOranlari, setKatlamaOranlari,
@@ -129,7 +127,7 @@ export function BekleyenSatir({
   
 
   // Eczanem durumları
-  const seciliBarkod = barkodlar[b.soru_seti_durum_id]?.trim();
+  const seciliBarkod = b.urun_barkodu;
   const seciliSatisFiyati = satisFiyatlar[b.soru_seti_durum_id];
 
   // Tarih alanı yalnız bu bölümdeki girişleri izler; alttaki kazanım modeli
@@ -336,8 +334,7 @@ export function BekleyenSatir({
                 </div>
                 {eczanemIndirimli && <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
                   <div className="w-[180px]">
-                    <input type="text" inputMode="numeric" value={barkodlar[b.soru_seti_durum_id] ?? ""}
-                      onChange={(e) => setBarkodlar(prev => ({ ...prev, [b.soru_seti_durum_id]: e.target.value }))}
+                    <input type="text" readOnly value={seciliBarkod ?? ""}
                       placeholder="Barkod"
                       aria-label={`${b.urun_adi} barkodu`}
                       className={`h-9 min-h-9 max-h-9 w-full box-border rounded-lg border px-2 text-xs transition outline-none ${
@@ -346,6 +343,7 @@ export function BekleyenSatir({
                           : "border-[var(--tema-yerel-uretim-cizgi-01)] bg-[var(--tema-yerel-uretim-kart-01)] font-medium text-[var(--tema-yerel-uretim-ana-metin-01)] hover:border-[var(--tema-yerel-uretim-cizgi-21)]"
                       }`}
                       style={{ fontFamily: "'Nunito', sans-serif" }} />
+                    {!seciliBarkod && <p className="mt-1 text-xs">Ürün kataloğuna barkod kaydedin.</p>}
                   </div>
                   <p className="text-xs text-[var(--tema-yerel-uretim-yardimci-metin-02)]">Puan–TL karşılığı merkezi firma tanımından alınır.</p>
                   <div>

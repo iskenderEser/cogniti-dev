@@ -306,7 +306,6 @@ function YayinYonetimiIcerik() {
                 videoPuanlari={yy.videoPuanlari} setVideoPuanlari={yy.setVideoPuanlari}
                 extraPuanlar={yy.extraPuanlar} setExtraPuanlar={yy.setExtraPuanlar}
                 eczanemKazanimModelleri={yy.eczanemKazanimModelleri} setEczanemKazanimModelleri={yy.setEczanemKazanimModelleri}
-                barkodlar={yy.barkodlar} setBarkodlar={yy.setBarkodlar}
                 satisFiyatlar={yy.satisFiyatlar} setSatisFiyatlar={yy.setSatisFiyatlar}
                 sahaPuanModelleri={yy.sahaPuanModelleri} setSahaPuanModelleri={yy.setSahaPuanModelleri}
                 kazanimModelleri={yy.kazanimModelleri} setKazanimModelleri={yy.setKazanimModelleri}

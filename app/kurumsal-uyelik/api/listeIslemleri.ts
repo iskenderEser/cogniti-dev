@@ -1,3 +1,4 @@
+import { BARKOD_DESENI } from "../barkod";
 import { createAdminClient, createClient } from "@/lib/supabase/server";
 import { rolHatasi, sunucuHatasi, validasyonHatasi, yetkiHatasi } from "@/lib/utils/hataIsle";
 
@@ -28,6 +29,13 @@ function satirlarGecerli(veri: unknown, sutunSayisi: number): veri is string[][]
   );
 }
 
+function urunSatirlariniTamamla(satirlar: unknown): unknown {
+  if (!Array.isArray(satirlar)) return satirlar;
+  return satirlar.map(satir => Array.isArray(satir) && satir.length === 3
+    ? [satir[0], "", satir[1], satir[2]]
+    : satir);
+}
+
 export function listeIslemleri(tur: "isim" | "urun") {
   const urunListesi = tur === "urun";
   const tablo = urunListesi ? "cogniti_kurumsal_urun_listesi" : "cogniti_kurumsal_isim_listesi";
@@ -42,7 +50,11 @@ export function listeIslemleri(tur: "isim" | "urun") {
         ? await sorgu.eq("firma_id", yetki.firmaId).maybeSingle()
         : await sorgu.not("gonderildi_at", "is", null).order("gonderildi_at", { ascending: false });
       if (error) throw error;
-      return Response.json(data, { headers });
+      if (!urunListesi || !data) return Response.json(data, { headers });
+      const liste = Array.isArray(data)
+        ? data.map(kayit => ({ ...kayit, satirlar: urunSatirlariniTamamla(kayit.satirlar) }))
+        : { ...data, satirlar: urunSatirlariniTamamla(data.satirlar) };
+      return Response.json(liste, { headers });
     } catch (error) {
       return sunucuHatasi(error, "Kurumsal liste okuma");
     }
@@ -54,10 +66,13 @@ export function listeIslemleri(tur: "isim" | "urun") {
       if (!yetki.gecerli) return yetki.yanit;
       if (!yetki.firmaId) return rolHatasi();
       const girdi = await istek.json().catch(() => null);
-      const satirlar: unknown = girdi?.satirlar;
+      const satirlar: unknown = urunListesi ? urunSatirlariniTamamla(girdi?.satirlar) : girdi?.satirlar;
       const gonder: unknown = girdi?.gonder;
-      if (!satirlarGecerli(satirlar, urunListesi ? 3 : 6) || typeof gonder !== "boolean") {
+      if (!satirlarGecerli(satirlar, urunListesi ? 4 : 6) || typeof gonder !== "boolean") {
         return validasyonHatasi("Geçerli bir liste girin.");
+      }
+      if (urunListesi && satirlar.some(satir => !BARKOD_DESENI.test(satir[1]))) {
+        return validasyonHatasi("Barkod 1–13 rakamdan oluşmalıdır.");
       }
       if (gonder && satirlar.some(satir => satir.some(hucre => !hucre.trim())
         || (!urunListesi && (!/^[^\s@]+@[^\s@]+$/.test(satir[4].trim()) || !/^5[0-9]{9}$/.test(satir[5].trim()))))) {
@@ -66,6 +81,7 @@ export function listeIslemleri(tur: "isim" | "urun") {
       const { data, error } = await yetki.db.rpc(rpc, {
         p_firma: yetki.firmaId, p_satirlar: satirlar, p_gonder: gonder,
       });
+      if (urunListesi && error?.code === "22023") return validasyonHatasi(error.message);
       if (error) throw error;
       if (!data) return Response.json({ hata: "Liste daha önce gönderildi." }, { status: 409, headers });
       return Response.json({ ok: true }, { headers });

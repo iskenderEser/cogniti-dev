@@ -93,7 +93,6 @@ export function useYayinYonetimi({ kapsam = "geleneksel", kullaniciId, aktifAnaS
   // Eczanem yayını: barkod + Karşılık (puan ↔ TL) ürün seviyesine yazılır (U5, K-E3).
   // Kazanım modeli açıkça seçilir; yalnız indirimli yayında ürün tarifesi yazılır.
   const [eczanemKazanimModelleri, setEczanemKazanimModelleri] = useState<Record<string, EczanemKazanimModeli>>({});
-  const [barkodlar, setBarkodlar] = useState<Record<string, string>>({});
   const [satisFiyatlar, setSatisFiyatlar] = useState<Record<string, number>>({});
 
   // Her UTT/BM yayını için seçim açıkça yapılır; varsayılan model yoktur.
@@ -320,7 +319,7 @@ export function useYayinYonetimi({ kapsam = "geleneksel", kullaniciId, aktifAnaS
       if (!model || b.sorular.length === 0) return false;
       if (model === "indirimsiz") return true;
       if (eczanemKazanimKosullariHatasi(model, {
-        barkod: barkodlar[id], satisFiyati: satisFiyatlar[id],
+        barkod: b.urun_barkodu, satisFiyati: satisFiyatlar[id],
       })) return false;
     }
     const vp = videoPuanlari[id] ?? b.video_puani;
@@ -397,7 +396,6 @@ export function useYayinYonetimi({ kapsam = "geleneksel", kullaniciId, aktifAnaS
               eczanem_token_hesap_turu: hesap,
               eczanem_kazanim_modeli: eczanemKazanimModelleri[b.soru_seti_durum_id],
               ...(!indirimsiz ? {
-                barkod: barkodlar[b.soru_seti_durum_id] ?? "",
                 satis_fiyati: satisFiyatlar[b.soru_seti_durum_id] ?? null,
               } : {}),
             }
@@ -493,7 +491,6 @@ export function useYayinYonetimi({ kapsam = "geleneksel", kullaniciId, aktifAnaS
     soruPuanlari,
     extraPuanlar, setExtraPuanlar,
     eczanemKazanimModelleri, setEczanemKazanimModelleri,
-    barkodlar, setBarkodlar,
     satisFiyatlar, setSatisFiyatlar,
     sahaPuanModelleri, setSahaPuanModelleri,
     kazanimModelleri, setKazanimModelleri,

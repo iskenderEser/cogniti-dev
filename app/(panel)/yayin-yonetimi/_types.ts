@@ -39,6 +39,7 @@ export interface Bekleyen {
   talep_no: number;
   firma_adi: string;
   urun_adi: string;
+  urun_barkodu?: string | null;
   teknik_adi: string;
   turu_adi: string | null; // içerik/eğitim türü etiketi ("Medikal Eğitim" vb.)
   hedef_roller: HedefRoller;
