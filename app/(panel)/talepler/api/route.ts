@@ -19,6 +19,7 @@ import { ogrenmeAraciAcikMi } from "@/lib/ogrenmeAraci/bayraklar";
 import { ogrenmeAraciTuruMu } from "@/lib/ogrenmeAraci/sozlesme";
 import { ogrenmeAraciUretimAkisi } from "@/lib/ogrenmeAraci/uretimAkisi";
 import { uretimRpcHataYaniti, uuidGecerliMi } from "@/lib/uretim/rpc";
+import { pushYayinlaArkada } from "@/lib/push/orkestrasyon";
 
 // Talep formu ve raporlarla ortak kanonik eğitim türü sırası.
 const GECERLI_TALEP_TURLERI = TALEP_TURU_SIRA;
@@ -307,6 +308,20 @@ export async function POST(request: NextRequest) {
     }
     if (!uuidGecerliMi(atomikKayit?.talep_id)) {
       return hataYaniti("Talep oluşturulamadı.", "talep_atomik_olustur RPC sonucu", { message: "Geçerli talep kimliği dönmedi." });
+    }
+
+    if (atomikKayit.mevcut !== true && atomikKayit.kesinlesmis !== true) {
+      const { data: ilkGorev } = await adminSupabase
+        .from("uretim_gorevleri")
+        .select("atanan_iu_id, asama")
+        .eq("talep_id", atomikKayit.talep_id)
+        .eq("durum", "hazirlaniyor")
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (ilkGorev?.atanan_iu_id) {
+        pushYayinlaArkada(adminSupabase, "uretim_durum_gecisi", [ilkGorev.atanan_iu_id], { asama: ilkGorev.asama });
+      }
     }
 
     const { data: yeniTalep, error } = await adminSupabase

@@ -165,11 +165,6 @@ export function useTalepMerkezi() {
         setDetay(null);
       } else {
         setDetay(data);
-          void fetch("/bildirimler/api", {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ talep_id: seciliTalepId }),
-          }).then((yanit) => { if (yanit.ok) bildirimRozetleriniYenile(); });
       }
       setDetayYukleniyor(false);
     })();
@@ -226,6 +221,18 @@ export function useTalepMerkezi() {
    */
   const [siparisOnayi, setSiparisOnayi] = useState<IcerikUretimiSiparisi | null>(null);
 
+  const talepBildiriminiKapat = useCallback((talepId: string) => {
+    void fetch("/bildirimler/api", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ talep_id: talepId }),
+    })
+      .catch(() => null)
+      .finally(() => {
+        bildirimRozetleriniYenile();
+      });
+  }, []);
+
   const kararVer = useCallback(
     async (
       hedef: { asama: ToastAsama; id: string; surum: number; revizyonSayisi: number },
@@ -275,9 +282,7 @@ export function useTalepMerkezi() {
           rolAdi: talep.uretici_rol_adi,
         }));
 
-        if (durum === "onaylandi" && hedef.asama === "soru_seti") {
-          bildirimRozetleriniYenile();
-        }
+        talepBildiriminiKapat(talep.talep_id);
 
         setDetayTetik((x) => x + 1);
         await veriCek();
@@ -285,7 +290,7 @@ export function useTalepMerkezi() {
         setKararYukleniyor(false);
       }
     },
-    [talepler, seciliTalepId, hata, basari, veriCek],
+    [talepler, seciliTalepId, hata, basari, veriCek, talepBildiriminiKapat],
   );
 
   /**
@@ -319,6 +324,7 @@ export function useTalepMerkezi() {
               ogrenmeAraciTuru: talep.ogrenme_araci_turu,
             },
           ));
+          talepBildiriminiKapat(talep.talep_id);
           setDetayTetik((x) => x + 1);
           await veriCek();
         } catch (err: unknown) {
@@ -346,6 +352,7 @@ export function useTalepMerkezi() {
               ogrenmeAraciTuru: talep.ogrenme_araci_turu,
             },
           ));
+          talepBildiriminiKapat(talep.talep_id);
           setDetayTetik((x) => x + 1);
           await veriCek();
         } catch (err: unknown) {
@@ -373,6 +380,7 @@ export function useTalepMerkezi() {
               ogrenmeAraciTuru: talep.ogrenme_araci_turu,
             },
           ));
+          talepBildiriminiKapat(talep.talep_id);
           setDetayTetik((x) => x + 1);
           await veriCek();
         } catch (err: unknown) {
@@ -443,8 +451,8 @@ export function useTalepMerkezi() {
             ogrenmeAraciTuru: talep.ogrenme_araci_turu,
           },
         ));
+        talepBildiriminiKapat(talep.talep_id);
         if (talep.hazir_soru_seti) {
-          bildirimRozetleriniYenile();
           router.push("/yayin-yonetimi");
         } else {
           setDetayTetik((x) => x + 1);
@@ -454,7 +462,7 @@ export function useTalepMerkezi() {
         setVideoYuzdesi(null);
       }
     },
-    [talepler, seciliTalepId, hata, basari, veriCek, router],
+    [talepler, seciliTalepId, hata, basari, veriCek, router, talepBildiriminiKapat],
   );
 
   // Biçim /talepler sayfasıyla AYNI (28.07 düzeltmesi): burada saat/dakika yoktu,

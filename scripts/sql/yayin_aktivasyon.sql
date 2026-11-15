@@ -68,12 +68,38 @@ BEGIN
     IF v_takim_id IS NOT NULL THEN
       INSERT INTO bildirimler (alici_id, gonderen_id, kayit_turu, kayit_id, mesaj, goruldu_mu)
       SELECT k.kullanici_id, y.uretici_id, 'yayin', y.yayin_id,
-             'Yeni video yayında: ' || v_urun_adi, false
+             'Yeni öğrenme içeriği yayında: ' || v_urun_adi, false
       FROM kullanicilar k
       JOIN bolgeler b ON b.bolge_id = k.bolge_id
       WHERE b.takim_id = v_takim_id
         AND (CASE WHEN k.rol = 'kd_utt' THEN 'utt' ELSE k.rol END) = ANY(COALESCE(y.hedef_roller, ARRAY['utt']))
-        AND k.aktif_mi = true;
+        AND k.aktif_mi = true
+      ON CONFLICT (alici_id, kayit_turu, kayit_id) DO NOTHING;
+
+      IF y.hedef_roller && ARRAY['utt','kd_utt'] THEN
+        INSERT INTO bildirimler (alici_id, gonderen_id, kayit_turu, kayit_id, mesaj, goruldu_mu)
+        SELECT k.kullanici_id, y.uretici_id, 'yayin', y.yayin_id,
+               'Ekibinize önerebileceğiniz yeni öğrenme içeriği yayında: ' || v_urun_adi, false
+        FROM kullanicilar k
+        WHERE k.takim_id = v_takim_id
+          AND k.rol = 'bm'
+          AND k.aktif_mi = true
+        ON CONFLICT (alici_id, kayit_turu, kayit_id) DO NOTHING;
+      END IF;
+    END IF;
+
+    IF p_yayin_id IS NULL AND y.uretici_id IS NOT NULL THEN
+      INSERT INTO bildirimler (alici_id, gonderen_id, kayit_turu, kayit_id, mesaj, goruldu_mu)
+      VALUES (
+        y.uretici_id,
+        y.uretici_id,
+        'yayin',
+        y.yayin_id,
+        COALESCE(NULLIF(v_urun_adi, '-'), 'Yayın') || ' adlı ' || y.yayin_id || ' nolu planlı yayınız, başarıyla yayınlanmıştır.',
+        false
+      )
+      ON CONFLICT (alici_id, kayit_turu, kayit_id) DO UPDATE
+        SET mesaj = EXCLUDED.mesaj, goruldu_mu = false, created_at = now();
     END IF;
 
     aktive_sayisi := aktive_sayisi + 1;

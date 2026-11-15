@@ -4,6 +4,7 @@ import {adminGirisKontrol} from "@/lib/utils/adminGirisKontrol";
 import {uuidGecerliMi} from "@/lib/uretim/rpcTemel";
 import {talepFiltreleriniOku,httpsBaglantiGecerli,type FirmaTalepKesiti} from "@/lib/tclub/store/adminTalepler";
 import {firmaStoreEpostalariniIsle,firmaStoreGonderici} from "@/lib/tclub/store/cekEposta";
+import {pushYayinlaArkada} from "@/lib/push/orkestrasyon";
 import * as XLSX from "xlsx";
 
 export const maxDuration=60;
@@ -45,6 +46,12 @@ export async function PATCH(request:NextRequest) {
   if(r.error)return dbHatasi(r.error);
   // Teslim kaydı e-posta hatasından bağımsızdır. Kuyruk sonraki cron'da tekrar alınır.
   if(["teslim","eposta_yeniden"].includes(b.action))try{await firmaStoreEpostalariniIsle(db,b.siparis_id,1);}catch{ /* İş lease süresi dolunca yeniden alınabilir; kodlar loglanmaz. */ }
+  if(["hazirla","teslim","iptal"].includes(b.action)){
+   const {data:siparis}=await db.from("store_siparisler").select("kullanici_id").eq("siparis_id",b.siparis_id).maybeSingle();
+   if(siparis?.kullanici_id){
+    pushYayinlaArkada(db,"store_siparis",[siparis.kullanici_id],{bagId:b.siparis_id,firmaId:b.firma_id});
+   }
+  }
   return NextResponse.json({ok:true},{headers:{"Cache-Control":"no-store"}});
  }catch{return NextResponse.json({hata:"Talep işlemi tamamlanamadı."},{status:500});}
 }

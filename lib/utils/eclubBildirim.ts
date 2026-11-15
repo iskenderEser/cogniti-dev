@@ -44,7 +44,8 @@ export async function eclubBildirimOlustur(params: EclubBildirimParams): Promise
     }
 
     // P6: kisi_id → auth_user_id köprüsü orkestrasyonda (NULL'lar elenir — K-P2).
-    pushYayinlaEclubKisilereArkada(adminSupabase, "eclub_oneri", [alici_kisi_id], { bagId: kayit_id, firmaId: firma_id });
+    const olay = kayit_turu === "cek" ? "eclub_cek_teslim" : "eclub_oneri";
+    pushYayinlaEclubKisilereArkada(adminSupabase, olay, [alici_kisi_id], { bagId: kayit_id, firmaId: firma_id });
   } catch (err) {
     console.error("[ECLUB BİLDİRİM] Beklenmeyen hata:", err);
   }
@@ -89,7 +90,8 @@ export async function eclubCokluBildirimOlustur(params: EclubCokluBildirimParams
       return; // in-app yazılamadıysa push da gitmez (K-P3)
     }
 
-    pushYayinlaEclubKisilereArkada(adminSupabase, "eclub_oneri", alici_kisi_idler, { bagId: kayit_id, firmaId: firma_id });
+    const olay = kayit_turu === "cek" ? "eclub_cek_teslim" : "eclub_oneri";
+    pushYayinlaEclubKisilereArkada(adminSupabase, olay, alici_kisi_idler, { bagId: kayit_id, firmaId: firma_id });
   } catch (err) {
     console.error("[ECLUB BİLDİRİM] Beklenmeyen hata:", err);
   }

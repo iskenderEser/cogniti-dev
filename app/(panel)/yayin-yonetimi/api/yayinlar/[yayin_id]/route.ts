@@ -3,8 +3,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { hataYaniti, veriKontrol, sunucuHatasi, yetkiHatasi, rolHatasi, validasyonHatasi, isKuraluHatasi } from "@/lib/utils/hataIsle";
 import { yayinTokenHatasi } from "@/lib/token/yayinHatasi";
-import { URETICI_ROLLER } from "@/lib/utils/roller";
+import { URETICI_ROLLER, hedefRolleriOku } from "@/lib/utils/roller";
 import { rolCozucu } from "@/lib/utils/rolCozucu";
+import { pushYayinlaArkada } from "@/lib/push/orkestrasyon";
+import { sahaHedefliMi } from "@/lib/uretici/sahaPuanModeli";
 
 export async function PUT(
   request: NextRequest,
@@ -54,6 +56,33 @@ export async function PUT(
           return hataYaniti("Yayın aktive edilemedi.", "yayin_planlananlari_aktive RPC", rpcError);
         }
         if (!aktiveSayisi) return isKuraluHatasi("Yayın açılamadı veya plan durumu değişti. Plan için kullanılmayan tokenlar serbest bırakılır; listeyi ve hesabınızı yenileyin.");
+        try {
+          const [{ data: alicilar }, { data: yayinDetay }] = await Promise.all([
+            adminSupabase.rpc("cogniti_token_yayin_gonderim_alicilari", { p_yayin_id: yayin_id }),
+            adminSupabase.from("v_yayin_detay").select("firma_id, takim_id, hedef_roller").eq("yayin_id", yayin_id).maybeSingle(),
+          ]);
+          const hedefIdler = (alicilar ?? []).map((k: { kullanici_id: string }) => k.kullanici_id);
+          let bmIdler: string[] = [];
+          if (yayinDetay?.firma_id && sahaHedefliMi(hedefRolleriOku(yayinDetay))) {
+            let bmSorgu = adminSupabase
+              .from("kullanicilar")
+              .select("kullanici_id")
+              .eq("firma_id", yayinDetay.firma_id)
+              .eq("rol", "bm")
+              .eq("aktif_mi", true);
+            if (yayinDetay.takim_id) {
+              bmSorgu = bmSorgu.eq("takim_id", yayinDetay.takim_id);
+            }
+            const { data: bmler } = await bmSorgu;
+            bmIdler = (bmler ?? []).map((k: { kullanici_id: string }) => k.kullanici_id);
+          }
+          const pushAlicilar = [...new Set([...hedefIdler, ...bmIdler])];
+          if (pushAlicilar.length > 0) {
+            pushYayinlaArkada(adminSupabase, "video_yayini", pushAlicilar, { yayinId: yayin_id });
+          }
+        } catch (pushHatasi) {
+          console.error("[UYARI] Hemen yayınla push bildirimleri gönderilemedi:", pushHatasi);
+        }
         return NextResponse.json({ mesaj: "Yayın hemen yayına alındı." }, { status: 200 });
       }
 

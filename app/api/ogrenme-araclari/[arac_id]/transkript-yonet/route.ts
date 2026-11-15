@@ -7,6 +7,7 @@ import { bunnyStorageNesneSil } from "@/lib/ogrenmeAraci/bunnyStorage";
 import { uuidGecerliMi } from "@/lib/uretim/rpc";
 import type { PodcastTranskriptMetadata } from "@/lib/ogrenmeAraci/tipler";
 import { ASGARI_TRANSKRIPT_KARAKTER, AZAMI_TRANSKRIPT_KARAKTER } from "@/lib/ogrenmeAraci/transkriptMetinCikarici";
+import { pushYayinlaArkada } from "@/lib/push/orkestrasyon";
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ arac_id: string }> }) {
   try {
@@ -143,10 +144,12 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
       // Kullanıcı onayladığında bekleyen V2/V4 soru zincirini veya yayın havuzunu aç
       if (yetki.kaynak === "hazir") {
-        await db.rpc("podcast_transkript_zincir_ac_atomik", {
+        const { data: zincirSonuc } = await db.rpc("podcast_transkript_zincir_ac_atomik", {
           p_arac_id: arac_id,
           p_kullanici_id: user.id,
         });
+        const alici = (zincirSonuc as { sonraki?: { atanan_iu_id?: string } | null } | null)?.sonraki?.atanan_iu_id;
+        if (alici) pushYayinlaArkada(db, "uretim_durum_gecisi", [alici], { asama: "soru_seti" });
       }
 
       return NextResponse.json({ ok: true, transkript: onayliTranskript });
@@ -203,10 +206,12 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
         .in("durum", ["bekliyor", "isleniyor"]);
 
       // Kullanıcı iptal ettiğinde de V2/V4 soru zincirini veya yayın havuzunu aç
-      await db.rpc("podcast_transkript_zincir_ac_atomik", {
+      const { data: zincirSonuc } = await db.rpc("podcast_transkript_zincir_ac_atomik", {
         p_arac_id: arac_id,
         p_kullanici_id: user.id,
       });
+      const alici = (zincirSonuc as { sonraki?: { atanan_iu_id?: string } | null } | null)?.sonraki?.atanan_iu_id;
+      if (alici) pushYayinlaArkada(db, "uretim_durum_gecisi", [alici], { asama: "soru_seti" });
 
       return NextResponse.json({ ok: true, transkript: iptalTranskript });
     }

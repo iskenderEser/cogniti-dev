@@ -7,9 +7,74 @@
 // API anahtarı, ses baytları veya transkript metni loglanmaz.
 
 import { partnerTranskriptIsle } from "@/lib/agora/partnerTranskriptIsleyici";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { createAdminClient } from "@/lib/supabase/server";
 import { bunnyStorageNesneIndir } from "@/lib/ogrenmeAraci/bunnyStorage";
 import { sesTranskriptiOlusturGemini } from "@/lib/ogrenmeAraci/geminiTranscribe";
+import { pushYayinlaArkada } from "@/lib/push/orkestrasyon";
+
+export async function podcastTranskriptSonucunuBildir(
+  db: SupabaseClient,
+  aracId: string,
+  talepId: string | null | undefined,
+  basarili: boolean,
+): Promise<void> {
+  try {
+    const { data: arac } = await db
+      .from("ogrenme_araclari")
+      .select("kaynak, talep_id")
+      .eq("arac_id", aracId)
+      .maybeSingle();
+
+    const efektifTalepId = talepId || arac?.talep_id;
+    if (!efektifTalepId || !arac?.kaynak) return;
+
+    let aliciId: string | null = null;
+    let gorevId: string | null = null;
+
+    if (arac.kaynak === "hazir") {
+      const { data: talep } = await db
+        .from("talepler")
+        .select("uretici_id")
+        .eq("talep_id", efektifTalepId)
+        .maybeSingle();
+      aliciId = talep?.uretici_id ?? null;
+    } else if (arac.kaynak === "iu") {
+      const { data: gorev } = await db
+        .from("uretim_gorevleri")
+        .select("atanan_iu_id, gorev_id")
+        .eq("talep_id", efektifTalepId)
+        .eq("asama", "video")
+        .maybeSingle();
+      aliciId = gorev?.atanan_iu_id ?? null;
+      gorevId = gorev?.gorev_id ?? null;
+    }
+
+    if (!aliciId) return;
+
+    const mesaj = basarili
+      ? "Podcast AI transkript taslağı hazırlandı. İnceleyip onaylayabilirsiniz."
+      : "Podcast AI transkript işlemi tamamlanamadı. Yeniden deneyebilir veya manuel transkript girebilirsiniz.";
+
+    await db.from("bildirimler").upsert(
+      {
+        alici_id: aliciId,
+        kayit_turu: "video",
+        kayit_id: efektifTalepId,
+        talep_id: efektifTalepId,
+        gorev_id: gorevId,
+        mesaj,
+        goruldu_mu: false,
+        created_at: new Date().toISOString(),
+      },
+      { onConflict: "alici_id,kayit_turu,kayit_id" },
+    );
+
+    pushYayinlaArkada(db, "uretim_durum_gecisi", [aliciId], { asama: "video" });
+  } catch (err) {
+    console.error("[transkriptKuyrukIsleyici] Bildirim gönderilemedi:", err);
+  }
+}
 
 export interface TranskriptKuyrukIsleyiciSonucu {
   islendi: boolean;
@@ -68,11 +133,14 @@ export async function transkriptKuyrukIsle(secenekler?: {
     // 2. Ses dosyasını Bunny Storage'dan indir (veritabanında ses saklanmaz)
     const sesBaytlari = await bunnyStorageNesneIndir(dosya_yolu);
     if (!sesBaytlari || sesBaytlari.length === 0) {
-      await db.rpc("podcast_transkript_ai_hata_atomik", {
+      const kaliciHata = await db.rpc("podcast_transkript_ai_hata_atomik", {
         p_arac_id: arac_id,
         p_girisim_id: ai_girisim_id,
         p_hata_kodu: "SES_INDIRILEMEDI",
       });
+      if (kaliciHata.data) {
+        await podcastTranskriptSonucunuBildir(db, arac_id, is.talep_id, false);
+      }
       return {
         islendi: true,
         basarili: false,
@@ -163,6 +231,8 @@ export async function transkriptKuyrukIsle(secenekler?: {
         };
       }
 
+      await podcastTranskriptSonucunuBildir(db, arac_id, is.talep_id, true);
+
       return {
         islendi: true,
         basarili: true,
@@ -176,11 +246,14 @@ export async function transkriptKuyrukIsle(secenekler?: {
 
     if (KALICI_HATALAR.has(hataKodu)) {
       // Kalıcı hata durumunda tekrar deneme yapma, doğrudan kalıcı hataya al
-      await db.rpc("podcast_transkript_ai_hata_atomik", {
+      const kaliciHata = await db.rpc("podcast_transkript_ai_hata_atomik", {
         p_arac_id: arac_id,
         p_girisim_id: ai_girisim_id,
         p_hata_kodu: hataKodu,
       });
+      if (kaliciHata.data) {
+        await podcastTranskriptSonucunuBildir(db, arac_id, is.talep_id, false);
+      }
 
       return {
         islendi: true,
@@ -195,11 +268,14 @@ export async function transkriptKuyrukIsle(secenekler?: {
     // Geçici hata: veritabanında 'bekliyor' durumuna al, lease'i temizle,
     // sonraki_deneme_tarihi'ni artan aralıkla (30s, 60s, 120s...) ileri ayarla
     const beklemeSaniye = Math.min(30 * Math.pow(2, Math.max(0, deneme_sayisi - 1)), 300);
-    await db.rpc("podcast_transkript_ai_gecici_hata_atomik", {
+    const geciciSonuc = await db.rpc("podcast_transkript_ai_gecici_hata_atomik", {
       p_is_id: is.is_id,
       p_hata_kodu: hataKodu,
       p_bekleme_saniye: beklemeSaniye,
     });
+    if (deneme_sayisi >= is.max_deneme && geciciSonuc.data === false) {
+      await podcastTranskriptSonucunuBildir(db, arac_id, is.talep_id, false);
+    }
 
     return {
       islendi: true,

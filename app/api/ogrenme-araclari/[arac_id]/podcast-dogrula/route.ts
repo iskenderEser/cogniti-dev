@@ -5,6 +5,7 @@ import { sunucuHatasi, validasyonHatasi, yetkiHatasi } from "@/lib/utils/hataIsl
 import { podcastTranskriptYetkisiDogrula } from "@/lib/ogrenmeAraci/yetki";
 import { podcastIuTeslimKapisiDogrula } from "@/lib/ogrenmeAraci/sozlesme";
 import { uuidGecerliMi, uretimRpcHataYaniti } from "@/lib/uretim/rpc";
+import { pushYayinlaArkada } from "@/lib/push/orkestrasyon";
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ arac_id: string }> }) {
   try {
@@ -92,6 +93,13 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       p_islem_anahtari: islemAnahtari,
     });
     if (error) return uretimRpcHataYaniti("Podcast doğrulanamadı.", "uretim_podcast_dogrula RPC", error);
+    if (yetki.kaynak === "hazir") {
+      const alici = (sonuc as { sonraki?: { atanan_iu_id?: string } | null } | null)?.sonraki?.atanan_iu_id;
+      if (alici) pushYayinlaArkada(db, "uretim_durum_gecisi", [alici], { asama: "soru_seti" });
+    } else if (yetki.kaynak === "iu") {
+      const { data: talep } = await db.from("talepler").select("uretici_id").eq("talep_id", arac.talep_id).maybeSingle();
+      if (talep?.uretici_id) pushYayinlaArkada(db, "uretim_durum_gecisi", [talep.uretici_id]);
+    }
     return NextResponse.json({ mesaj: "Podcast üretim zincirine alındı.", sonuc }, { status: 201 });
   } catch (error) {
     return sunucuHatasi(error, "POST podcast doğrula");

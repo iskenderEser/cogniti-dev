@@ -26,7 +26,8 @@ export async function POST(request: NextRequest) {
     });
     if (error) return uretimRpcHataYaniti("Görev devredilemedi.", "uretim_gorev_devret RPC", error);
 
-    pushYayinlaArkada(adminSupabase, "uretim_durum_gecisi", [body.yeni_iu_id]);
+    const { data: gorev } = await adminSupabase.from("uretim_gorevleri").select("asama").eq("gorev_id", body.gorev_id).maybeSingle();
+    pushYayinlaArkada(adminSupabase, "uretim_durum_gecisi", [body.yeni_iu_id], { asama: gorev?.asama ?? null });
     return NextResponse.json({ mesaj: "Görev devredildi.", sonuc }, { status: 200 });
   } catch (err) {
     return sunucuHatasi(err, "POST /admin/api/uretim/gorev-devret");

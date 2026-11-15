@@ -72,6 +72,18 @@ export default function UretimGorevDetayPage() {
     if (!kullanici) router.push("/login");
   }, [authYukleniyor, kullanici, router]);
 
+  const gorevBildiriminiKapat = useCallback((gorevId: string) => {
+    void fetch("/bildirimler/api", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ gorev_id: gorevId }),
+    })
+      .catch(() => null)
+      .finally(() => {
+        bildirimRozetleriniYenile();
+      });
+  }, []);
+
   const veriCek = useCallback(async () => {
     setLoading(true);
     try {
@@ -84,13 +96,6 @@ export default function UretimGorevDetayPage() {
         const gelen = (veri.gorevler?.[0] ?? null) as UretimGorevi | null;
         setGorev(gelen);
         if (gelen?.arac_id) setPodcastAracId(gelen.arac_id);
-        if (gelen) {
-          void fetch("/bildirimler/api", {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ gorev_id: gelen.gorev_id }),
-          }).then((yanit) => { if (yanit.ok) bildirimRozetleriniYenile(); });
-        }
         if (gelen?.icerik?.asama === "senaryo") setSenaryoMetni(gelen.icerik.senaryo_metni ?? "");
         if (gelen?.asama === "soru_seti") {
           const mevcut = gelen.icerik?.asama === "soru_seti" ? sorulardanTaslaklar(gelen.icerik.sorular) : [];
@@ -218,6 +223,7 @@ export default function UretimGorevDetayPage() {
         return "basarisiz";
       }
       basari(uretimToast({ rol: "iu", olay: "teslim", asama: gorev.asama, revize: gorev.durum === "revizyon_bekliyor" }, toastBaglam));
+      gorevBildiriminiKapat(gorev.gorev_id);
       if (res.status !== 202) await veriCek();
       return res.status === 202 ? "isleniyor" : "tamamlandi";
     } catch (err) {
@@ -413,6 +419,7 @@ export default function UretimGorevDetayPage() {
         }
       }
       basari("Podcast üretici incelemesine gönderildi.");
+      gorevBildiriminiKapat(gorev.gorev_id);
       setPodcastDosyalari({});
       await veriCek();
     } catch (err) {
@@ -430,6 +437,7 @@ export default function UretimGorevDetayPage() {
     try {
       await hazirGorselYukle({ talepId: gorev.talep_id, gorsel: gorselDosyasi, kaynak: "iu", gorevId: gorev.gorev_id, aracId: gorev.arac_id ?? undefined, kontrol });
       basari("Dijital Broşür üretici incelemesine gönderildi.");
+      gorevBildiriminiKapat(gorev.gorev_id);
       setGorselDosyasi(null);
       await veriCek();
     } catch (err) {
@@ -444,6 +452,7 @@ export default function UretimGorevDetayPage() {
     try {
       await hazirFlipPdfYukle({ talepId: gorev.talep_id, pdf: flipPdfDosyasi, kapak: flipPdfKapagi ?? undefined, kaynak: "iu", gorevId: gorev.gorev_id, aracId: gorev.arac_id ?? undefined, kontrol });
       basari("Literatür üretici incelemesine gönderildi.");
+      gorevBildiriminiKapat(gorev.gorev_id);
       setFlipPdfDosyasi(null);
       await veriCek();
     } catch (err) {
@@ -467,9 +476,7 @@ export default function UretimGorevDetayPage() {
       }
       const olay: ToastOlay = karar === "onaylandi" ? { rol: "uretici", olay: "onay", asama: gorev.asama, revize: gorev.revizyon_sayisi > 0 } : karar === "revizyon bekleniyor" ? { rol: "uretici", olay: "revizyon", asama: gorev.asama } : { rol: "uretici", olay: "iptal", asama: gorev.asama };
       basari(uretimToast(olay, toastBaglam));
-      if (karar === "onaylandi" && gorev.asama === "soru_seti") {
-        bildirimRozetleriniYenile();
-      }
+      gorevBildiriminiKapat(gorev.gorev_id);
       setRevizyonAcik(false); setRevizyonNotu(""); setRevizyondaTranskriptIstendi(false); await veriCek();
     } finally {
       setIslem(false);

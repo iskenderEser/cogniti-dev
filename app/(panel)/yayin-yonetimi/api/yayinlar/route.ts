@@ -12,7 +12,6 @@ import { talepBilgisiSoruSeti } from "@/lib/utils/talepZinciri";
 import { tekrarPeriyotSecenekleri } from "@/lib/tclub/tur/ayarlar";
 import { turKaydiAc } from "@/lib/tclub/tur/kayit";
 import { eczanemKazanimKosullariHatasi } from "@/lib/eczanem/kazanimModeli";
-import { tarifeVeBarkodYaz } from "@/lib/eczanem/tarife";
 import { rolCozucu } from "@/lib/utils/rolCozucu";
 import { yayinThumbnailCevabi, type YayinKapakGirdisi } from "@/lib/ogrenmeAraci/yayinThumbnail";
 import { kapakYayinKapisiDogrula } from "@/lib/ogrenmeAraci/sozlesme";
@@ -20,6 +19,7 @@ import { yayinTokenHatasi } from "@/lib/token/yayinHatasi";
 import { sahaHedefliMi, sahaMerkeziPuanKosullariHatasi } from "@/lib/uretici/sahaPuanModeli";
 import { firmaCekDegerleriGecerli } from "@/lib/eclub/store/firmaCekTanimi";
 import { baremTablosuDogrula } from "@/lib/eclub/store/eclubStoreTipler";
+import { pushYayinlaArkada } from "@/lib/push/orkestrasyon";
 
 const YAYIN_LISTE_ALANLARI = "yayin_id, arac_id, soru_seti_durum_id, durum, yayin_tarihi, durdurma_tarihi, urun_adi, teknik_adi, video_url, thumbnail_url, video_puani, soru_puani, sorular, hedef_roller, eczanem_kazanim_modeli, talep_no, firma_adi, egitim_turu, arac_turu, arac_kapak_yolu, arac_dosya_yolu, arac_metadata, video_suresi_saniye, arac_metadata_dogrulandi";
 const ECLUB_KOSUL_ALANLARI = "yayin_id, karsilik_puan, karsilik_tl, cek_karsiligi_var_mi, saha_puan_modeli, satis_sarti_tipi, gizli_sart_katlama_orani, barem_tablosu";
@@ -221,30 +221,30 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    let eczanemUrunId: string | null = null;
+    let kayitliBarkod: string | null = null;
     if (eczanemHedefi) {
-      const kosulHatasi = eczanemKazanimKosullariHatasi(eczanem_kazanim_modeli, {
-        barkod, puan: karsilik_puan, tl: karsilik_tl, satisFiyati: satis_fiyati,
-      });
-      if (kosulHatasi) return validasyonHatasi(kosulHatasi, ["eczanem_kazanim_modeli", "karsilik_puan", "karsilik_tl", "satis_fiyati"]);
       if (tekrar_periyot_gun !== undefined && tekrar_periyot_gun !== null) {
         return validasyonHatasi("Eczanem yayınında tekrar periyodu bulunmaz.", ["tekrar_periyot_gun"]);
       }
 
       const { data: talepUrun } = await adminSupabase
         .from("talepler")
-        .select("urun_id")
+        .select("urun_id, firma_id")
         .eq("talep_id", talepBilgisi.talep_id)
         .single();
-      eczanemUrunId = talepUrun?.urun_id ?? null;
-      if (!eczanemUrunId) return isKuraluHatasi("Eczanem yayınının ürünü bulunamadı.");
+      if (!talepUrun?.urun_id) return isKuraluHatasi("Eczanem yayınının ürünü bulunamadı.");
       if (!eczanemIndirimsiz) {
-        const { data: urunFirma, error: urunFirmaHatasi } = await adminSupabase.from("urunler").select("firma_id").eq("urun_id", eczanemUrunId).single();
+        const { data: urunFirma, error: urunFirmaHatasi } = await adminSupabase.from("urunler").select("firma_id, barkod").eq("urun_id", talepUrun.urun_id).eq("firma_id", talepUrun.firma_id).single();
         if (urunFirmaHatasi) return hataYaniti("Ürünün firması alınamadı.", "Eczanem ürün firması", urunFirmaHatasi);
+        kayitliBarkod = urunFirma.barkod;
         const { data: oran, error: oranHatasi } = await adminSupabase.from("eczanem_firma_cek_tanimlari").select("karsilik_puan,karsilik_tl").eq("firma_id", urunFirma.firma_id).maybeSingle();
         if (oranHatasi) return hataYaniti("Firma puan–TL tanımı alınamadı.", "Eczanem firma tanımı", oranHatasi);
         if (!oran || !firmaCekDegerleriGecerli(oran.karsilik_puan, oran.karsilik_tl)) return isKuraluHatasi("Bu firma için Eczanem Çek Yönetimi bölümünde puan–TL karşılığı tanımlanmalıdır.");
       }
+      const kosulHatasi = eczanemKazanimKosullariHatasi(eczanem_kazanim_modeli, {
+        barkod: eczanemIndirimsiz ? barkod : kayitliBarkod, puan: karsilik_puan, tl: karsilik_tl, satisFiyati: satis_fiyati,
+      });
+      if (kosulHatasi) return validasyonHatasi(kosulHatasi, ["eczanem_kazanim_modeli", "karsilik_puan", "karsilik_tl", "satis_fiyati"]);
     } else {
       // E-Club kişileri yalnız tam izleme + doğru cevap puanı kazanır; bu hedefte
       // extra puan sözleşmenin parçası değildir. Saha yayınlarında ise zorunludur.
@@ -359,45 +359,43 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Eczanem: barkod + Karşılık öğrenme aracı kaydı doğrulandıktan sonra yazılır.
-    if (eczanemHedefi && !eczanemIndirimsiz && eczanemUrunId) {
-      const tarifeSonuc = await tarifeVeBarkodYaz(adminSupabase, {
-        urun_id: eczanemUrunId,
-        barkod: (barkod as string).trim(),
-        satis_fiyati,
-        olusturan_id: user.id,
-      });
-      if (!tarifeSonuc.ok) return isKuraluHatasi(tarifeSonuc.hata ?? "Barkod/Karşılık yazılamadı.");
-    }
-
     const simdi = new Date().toISOString();
-    const { data: yeniYayin, error: yayinError } = await adminSupabase
-      .from("yayin_yonetimi")
-      .insert({
-        soru_seti_durum_id,
-        arac_durum_id: soruSeti.arac_durum_id ?? null,
-        uretici_id: user.id,
-        ...(eczanemHedefi ? { eczanem_token_hesap_turu: tokenHesabi } : {}),
-        ...(!eczanemHedefi ? { token_hesap_turu: yayinTokenHesabi } : {}),
-        eczanem_kazanim_modeli: eczanemHedefi ? eczanem_kazanim_modeli : null,
-        durum: planliTarih ? "planlandi" : "yayinda",
-        yayin_tarihi: planliTarih ? planliTarih.toISOString() : simdi,
-        // E-Club'da ileri sarma puan kayıplı olarak açıktır; Extra puan yoktur.
-        // Eczanem'de her ikisi de kapalı, saha yayınlarında mevcut karar korunur.
-        ileri_sarma_acik: eczanemHedefi ? false : eclubHedefi ? true : (ileri_sarma_acik ?? false),
-        extra_puan: eczanemHedefi || eclubHedefi ? null : extra_puan,
-        hedef_roller: hedefRoller,
-        tekrar_periyot_gun: eczanemHedefi ? null : (tekrar_periyot_gun ?? null),
-        satis_sarti_tipi: eclubHedefi && cek_karsiligi_var_mi ? (satis_sarti_tipi ?? "satis_sartli") : null,
-        gizli_sart_katlama_orani: eclubHedefi && cek_karsiligi_var_mi && satis_sarti_tipi === "serbest_siparis" ? (gizli_sart_katlama_orani ?? 20) : null,
-        barem_tablosu: eclubHedefi && cek_karsiligi_var_mi ? barem_tablosu : null,
-        karsilik_puan: null,
-        karsilik_tl: null,
-        cek_karsiligi_var_mi: eclubHedefi || sahaHedefi ? cek_karsiligi_var_mi : true,
-        saha_puan_modeli: sahaHedefi ? (cek_karsiligi_var_mi ? "tl_karsilikli" : "tlsiz") : null,
-      })
-      .select("yayin_id, durum, yayin_tarihi")
-      .single();
+    const yayinKaydi = {
+      soru_seti_durum_id,
+      arac_durum_id: soruSeti.arac_durum_id ?? null,
+      uretici_id: user.id,
+      ...(eczanemHedefi ? { eczanem_token_hesap_turu: tokenHesabi } : {}),
+      ...(!eczanemHedefi ? { token_hesap_turu: yayinTokenHesabi } : {}),
+      eczanem_kazanim_modeli: eczanemHedefi ? eczanem_kazanim_modeli : null,
+      durum: planliTarih ? "planlandi" : "yayinda",
+      yayin_tarihi: planliTarih ? planliTarih.toISOString() : simdi,
+      // E-Club'da ileri sarma puan kayıplı olarak açıktır; Extra puan yoktur.
+      // Eczanem'de her ikisi de kapalı, saha yayınlarında mevcut karar korunur.
+      ileri_sarma_acik: eczanemHedefi ? false : eclubHedefi ? true : (ileri_sarma_acik ?? false),
+      extra_puan: eczanemHedefi || eclubHedefi ? null : extra_puan,
+      hedef_roller: hedefRoller,
+      tekrar_periyot_gun: eczanemHedefi ? null : (tekrar_periyot_gun ?? null),
+      satis_sarti_tipi: eclubHedefi && cek_karsiligi_var_mi ? (satis_sarti_tipi ?? "satis_sartli") : null,
+      gizli_sart_katlama_orani: eclubHedefi && cek_karsiligi_var_mi && satis_sarti_tipi === "serbest_siparis" ? (gizli_sart_katlama_orani ?? 20) : null,
+      barem_tablosu: eclubHedefi && cek_karsiligi_var_mi ? barem_tablosu : null,
+      karsilik_puan: null,
+      karsilik_tl: null,
+      cek_karsiligi_var_mi: eclubHedefi || sahaHedefi ? cek_karsiligi_var_mi : true,
+      saha_puan_modeli: sahaHedefi ? (cek_karsiligi_var_mi ? "tl_karsilikli" : "tlsiz") : null,
+    };
+    const { data: yeniYayin, error: yayinError } = eczanemHedefi && !eczanemIndirimsiz
+      ? await adminSupabase.rpc("eczanem_indirimli_yayin_olustur", {
+          p_uretici_id: user.id,
+          p_soru_seti_durum_id: soru_seti_durum_id,
+          p_barkod: kayitliBarkod,
+          p_satis_fiyati: satis_fiyati,
+          p_hesap_turu: tokenHesabi,
+          p_planli_tarih: planliTarih?.toISOString() ?? null,
+        }).single<{ yayin_id: string; durum: string; yayin_tarihi: string }>()
+      : await adminSupabase.from("yayin_yonetimi")
+          .insert(yayinKaydi)
+          .select("yayin_id, durum, yayin_tarihi")
+          .single();
 
     if (yayinError) {
       const tokenHatasi = yayinTokenHatasi(yayinError);
@@ -434,7 +432,7 @@ export async function POST(request: NextRequest) {
     // başarısızlığı tüketimi geri almaz; alıcının içeriği açması beklenmez.
     try {
       const [{ data: yayinDetay }, { data: alicilar, error: aliciHatasi }] = await Promise.all([
-        adminSupabase.from("v_yayin_detay").select("urun_adi").eq("yayin_id", yeniYayin.yayin_id).single(),
+        adminSupabase.from("v_yayin_detay").select("urun_adi, firma_id, takim_id").eq("yayin_id", yeniYayin.yayin_id).single(),
         adminSupabase.rpc("cogniti_token_yayin_gonderim_alicilari", { p_yayin_id: yeniYayin.yayin_id }),
       ]);
       if (aliciHatasi) throw new Error("Yayın gönderim alıcıları okunamadı.");
@@ -445,6 +443,36 @@ export async function POST(request: NextRequest) {
           kayit_turu: "yayin", kayit_id: yeniYayin.yayin_id,
           mesaj: `Yeni öğrenme içeriği yayında: ${yayinDetay?.urun_adi ?? "-"}`,
         });
+      }
+
+      let bmIdler: string[] = [];
+      if (sahaHedefi && yayinDetay?.firma_id) {
+        let bmSorgu = adminSupabase
+          .from("kullanicilar")
+          .select("kullanici_id")
+          .eq("firma_id", yayinDetay.firma_id)
+          .eq("rol", "bm")
+          .eq("aktif_mi", true);
+        if (yayinDetay.takim_id) {
+          bmSorgu = bmSorgu.eq("takim_id", yayinDetay.takim_id);
+        }
+        const { data: bmler } = await bmSorgu;
+        bmIdler = (bmler ?? []).map((k: { kullanici_id: string }) => k.kullanici_id);
+        if (bmIdler.length > 0) {
+          await cokluBildirimOlustur({
+            adminSupabase,
+            alici_idler: bmIdler,
+            gonderen_id: user.id,
+            kayit_turu: "yayin",
+            kayit_id: yeniYayin.yayin_id,
+            mesaj: `Ekibinize önerebileceğiniz yeni öğrenme içeriği yayında: ${yayinDetay?.urun_adi ?? "-"}`,
+          });
+        }
+      }
+
+      const pushAlicilar = [...new Set([...hedefIdler, ...bmIdler])];
+      if (pushAlicilar.length > 0) {
+        pushYayinlaArkada(adminSupabase, "video_yayini", pushAlicilar, { yayinId: yeniYayin.yayin_id });
       }
     } catch (bildirimHatasi) {
       console.error("[UYARI] Yayın bildirimleri gönderilemedi:", bildirimHatasi);

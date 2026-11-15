@@ -6,6 +6,7 @@ import { iuOgrenmeAraciGorevYetkisiniDogrula, uretimAraciYetkisiniDogrula } from
 import { bunnyStorageNesneIndir } from "@/lib/ogrenmeAraci/bunnyStorage";
 import { uuidGecerliMi, uretimRpcHataYaniti } from "@/lib/uretim/rpc";
 import { pdfMetadatasiniBaytlardanCikar } from "@/lib/ogrenmeAraci/pdfMetadata";
+import { pushYayinlaArkada } from "@/lib/push/orkestrasyon";
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ arac_id: string }> }) {
   try {
@@ -65,6 +66,13 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       p_islem_anahtari: body.islem_anahtari,
     });
     if (rpcError) return uretimRpcHataYaniti("Literatür doğrulanamadı.", "uretim_flip_pdf_dogrula RPC", rpcError);
+    if (arac.kaynak === "hazir") {
+      const alici = (sonuc as { sonraki?: { atanan_iu_id?: string } | null } | null)?.sonraki?.atanan_iu_id;
+      if (alici) pushYayinlaArkada(db, "uretim_durum_gecisi", [alici], { asama: "soru_seti" });
+    } else if (arac.kaynak === "iu") {
+      const { data: talep } = await db.from("talepler").select("uretici_id").eq("talep_id", arac.talep_id).maybeSingle();
+      if (talep?.uretici_id) pushYayinlaArkada(db, "uretim_durum_gecisi", [talep.uretici_id]);
+    }
     return NextResponse.json({
       mesaj: "Literatür üretim zincirine alındı.",
       sonuc,

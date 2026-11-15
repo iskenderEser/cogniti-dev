@@ -87,7 +87,7 @@ export async function PUT(request: NextRequest) {
     }, videoSuresi);
 
     const alici = (sonuc as { sonraki?: { atanan_iu_id?: string } | null } | null)?.sonraki?.atanan_iu_id;
-    if (alici) pushYayinlaArkada(adminSupabase, "uretim_durum_gecisi", [alici]);
+    if (alici) pushYayinlaArkada(adminSupabase, "uretim_durum_gecisi", [alici], { asama: "soru_seti" });
     return NextResponse.json({
       mesaj: "Hazır video kaydedildi.",
       isleniyor: !bunnyDurumu.hazir,

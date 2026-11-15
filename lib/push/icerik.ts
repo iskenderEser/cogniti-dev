@@ -27,7 +27,15 @@ export function icerikUret(olayTuru: PushOlayTuru, aliciRol: string, baglam: Pus
   switch (olayTuru) {
     case "uretim_durum_gecisi":
       if (aliciRol === IU_ROLU) {
-        return icKullaniciYuku("Cogniti — Üretim Hattı", "Bir içerik sizden işlem bekliyor.", aliciRol);
+        const iuUrl =
+          baglam.asama === "senaryo"
+            ? "/senaryolar"
+            : baglam.asama === "video"
+            ? "/ogrenme-araclari"
+            : baglam.asama === "soru_seti"
+            ? "/soru-setleri"
+            : "/senaryolar";
+        return { baslik: "Cogniti — Üretim Hattı", govde: "Bir içerik sizden işlem bekliyor.", url: iuUrl };
       }
       if (URETICI_ROLLER.includes(aliciRol)) {
         return { baslik: "Cogniti — Üretim Hattı", govde: "Bir içeriğinizin durumu güncellendi.", url: "/yayin-takip" };
@@ -44,6 +52,12 @@ export function icerikUret(olayTuru: PushOlayTuru, aliciRol: string, baglam: Pus
     case "video_yayini":
       if (TUKETICI_ROLLER.includes(aliciRol)) {
         return { baslik: "Cogniti", govde: "Yeni bir öğrenme içeriği yayında.", url: baglam.yayinId ? `/ana-sayfa?yayin_id=${encodeURIComponent(baglam.yayinId)}` : "/ana-sayfa" };
+      }
+      if (aliciRol === "bm") {
+        return { baslik: "Cogniti — T-Club", govde: "Ekibinize önerebileceğiniz yeni bir öğrenme içeriği yayında.", url: "/egitim-yayinlari/urun-egitimleri" };
+      }
+      if (URETICI_ROLLER.includes(aliciRol)) {
+        return { baslik: "Cogniti — Yayın Yönetimi", govde: "Yayınınızın durumu güncellendi.", url: "/yayin-yonetimi" };
       }
       return null;
 

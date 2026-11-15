@@ -91,13 +91,15 @@ export async function POST(request: NextRequest) {
     }
     if (error) return uretimRpcHataYaniti("Üretici kararı kaydedilemedi.", `${rpcAdi} RPC`, error);
 
-    const sonucNesnesi = sonuc as { gorev_id?: string; sonraki?: { atanan_iu_id?: string; hazir_soru_seti_islendi?: boolean } | null } | null;
+    const sonucNesnesi = sonuc as { gorev_id?: string; sonraki?: { atanan_iu_id?: string; asama?: string; hazir_soru_seti_islendi?: boolean } | null } | null;
     let pushAlici: string | null = sonucNesnesi?.sonraki?.atanan_iu_id ?? null;
+    let pushAsama: string | null = sonucNesnesi?.sonraki?.asama ?? (gorevBilgisi?.asama === "senaryo" ? "video" : gorevBilgisi?.asama === "video" ? "soru_seti" : null);
     if (!pushAlici && karar === "revizyon bekleniyor") {
-      const { data: gorev } = await adminSupabase.from("uretim_gorevleri").select("atanan_iu_id").eq("gorev_id", gorev_id).maybeSingle();
+      const { data: gorev } = await adminSupabase.from("uretim_gorevleri").select("atanan_iu_id, asama").eq("gorev_id", gorev_id).maybeSingle();
       pushAlici = gorev?.atanan_iu_id ?? null;
+      pushAsama = gorev?.asama ?? gorevBilgisi?.asama ?? null;
     }
-    if (pushAlici) pushYayinlaArkada(adminSupabase, "uretim_durum_gecisi", [pushAlici]);
+    if (pushAlici) pushYayinlaArkada(adminSupabase, "uretim_durum_gecisi", [pushAlici], { asama: pushAsama });
 
     const sonOnay = karar === "onaylandi" && sonucNesnesi?.gorev_id === gorev_id
       && (gorevBilgisi?.asama === "soru_seti"

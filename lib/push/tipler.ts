@@ -55,6 +55,7 @@ export interface PushBaglami {
   firmaId?: string | null;
   yayinId?: string | null;
   bagId?: string | null;
+  asama?: "senaryo" | "video" | "soru_seti" | string | null;
 }
 
 // icerik.ts eşlemesinin imzası: (olay, gönderim anındaki rol) → yük (K-P10).
