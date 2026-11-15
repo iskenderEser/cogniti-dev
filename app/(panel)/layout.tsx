@@ -196,17 +196,15 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
     const handleVisibility = () => {
       if (document.visibilityState === "visible") badgelariCek();
     };
-    const zamanlayici = isEclubKisi
-      ? window.setInterval(() => {
-          if (document.visibilityState === "visible") bildirimRozetleriniYenile();
-        }, 30000)
-      : null;
+    const zamanlayici = window.setInterval(() => {
+      if (document.visibilityState === "visible") bildirimRozetleriniYenile();
+    }, 30000);
     window.addEventListener(BILDIRIM_ROZETLERI_DEGISTI, badgelariCek);
     document.addEventListener("visibilitychange", handleVisibility);
     return () => {
       aktif = false;
       if (oneriZamanlayici !== null) window.clearTimeout(oneriZamanlayici);
-      if (zamanlayici !== null) window.clearInterval(zamanlayici);
+      window.clearInterval(zamanlayici);
       window.removeEventListener(BILDIRIM_ROZETLERI_DEGISTI, badgelariCek);
       document.removeEventListener("visibilitychange", handleVisibility);
     };

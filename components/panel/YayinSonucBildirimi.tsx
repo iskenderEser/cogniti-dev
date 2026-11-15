@@ -11,40 +11,66 @@ type BildirimSatiri = {
   goruldu_mu: boolean;
 };
 
+const GOSTERILEN_TOAST_ANAHTARI = "cogniti_gosterilen_bildirim_toastlari";
+
+function oturumToastlariniOku(): Set<string> {
+  if (typeof window === "undefined") return new Set();
+  try {
+    const ham = window.sessionStorage.getItem(GOSTERILEN_TOAST_ANAHTARI);
+    if (!ham) return new Set();
+    const dizi = JSON.parse(ham);
+    return Array.isArray(dizi) ? new Set(dizi.filter((x): x is string => typeof x === "string")) : new Set();
+  } catch {
+    return new Set();
+  }
+}
+
+function oturumToastKaydet(kume: Set<string>) {
+  if (typeof window === "undefined") return;
+  try {
+    window.sessionStorage.setItem(GOSTERILEN_TOAST_ANAHTARI, JSON.stringify([...kume].slice(-200)));
+  } catch {}
+}
+
 export default function YayinSonucBildirimi() {
   const { mesajlar, basari, hata } = useHataMesaji();
   const islenenBildirimler = useRef<Set<string>>(new Set());
 
   const bildirimleriKontrolEt = useCallback(async () => {
     try {
+      const oturumKumesi = oturumToastlariniOku();
+      for (const id of oturumKumesi) islenenBildirimler.current.add(id);
+
       const res = await fetch("/bildirimler/api", { cache: "no-store" });
       if (!res.ok) return;
       const data = await res.json();
       const bildirimler = (data.bildirimler ?? []) as BildirimSatiri[];
 
       for (const b of bildirimler) {
-        if (b.kayit_turu === "cek") {
-          if (islenenBildirimler.current.has(b.bildirim_id)) continue;
-          islenenBildirimler.current.add(b.bildirim_id);
-          basari(b.mesaj);
-          continue;
-        }
-        if (b.kayit_turu !== "yayin") continue;
+        if (!b.bildirim_id || !b.mesaj) continue;
         if (islenenBildirimler.current.has(b.bildirim_id)) continue;
 
-        const basarili = b.mesaj.includes("başarıyla yayınlanmıştır");
-        const basarisiz = b.mesaj.includes("yayınlanamamıştır");
+        const yayinBasarisiz = b.kayit_turu === "yayin" && b.mesaj.includes("yayınlanamamıştır");
+        const transkriptBildirimi = b.kayit_turu === "video" && b.mesaj.includes("Podcast AI transkript");
+        const transkriptBasarisiz = transkriptBildirimi && b.mesaj.includes("tamamlanamadı");
 
-        if (basarili || basarisiz) {
-          islenenBildirimler.current.add(b.bildirim_id);
+        // İş kuyruğu rozetlerine bağlı bildirimler (talep, senaryo, video görevi, soru_seti, oneri, cek)
+        // canlı toast olarak 1 kez gösterilir ancak veritabanında okundu (goruldu_mu=true) yapılmaz;
+        // böylece kullanıcı işi tamamlayana kadar sol menü rozeti korunur.
+        // Yalnızca rozete bağlı olmayan tek seferlik sonuç/uyandırma bildirimleri (yayin ve Podcast AI transkript)
+        // gösterildikten sonra okundu işaretlenir.
+        const okunduIsaretlenecekMi = b.kayit_turu === "yayin" || transkriptBildirimi;
 
-          if (basarili) {
-            basari(b.mesaj);
-          } else {
-            hata(b.mesaj);
-          }
+        islenenBildirimler.current.add(b.bildirim_id);
+        oturumToastKaydet(islenenBildirimler.current);
 
-          // Bildirimi okundu olarak işaretle ki oturum/sayfa yenilendiğinde tekrar çıkmasın
+        if (yayinBasarisiz || transkriptBasarisiz) {
+          hata(b.mesaj);
+        } else {
+          basari(b.mesaj);
+        }
+
+        if (okunduIsaretlenecekMi) {
           try {
             await fetch("/bildirimler/api", {
               method: "PUT",

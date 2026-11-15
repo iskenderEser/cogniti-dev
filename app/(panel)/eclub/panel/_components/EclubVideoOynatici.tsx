@@ -17,6 +17,7 @@ import { IzlemeSoruFormu, IzlemeSoruSonuclari } from "@/components/soru/IzlemeSo
 import type { IzlemeCevapSonucu, IzlemeSorusu } from "@/lib/soru/izlemeTipleri";
 import { eclubHoykSureDurumu, eclubHoykUcRengi, sonrakiTurkiyeGeceYarisi } from "@/lib/eclub/hoykSureCercevesi";
 import { hesaplananRenk } from "@/lib/tema/cizimRenkleri";
+import { bildirimRozetleriniYenile } from "@/lib/bildirimler/rozet";
 
 interface OynaticiOneri {
   oneri_id: string;
@@ -262,6 +263,7 @@ export default function EclubVideoOynatici({ oneri, onKapat, onTamamlandi, hata,
       setIzlemeId(d.izleme.izleme_id);
       izlemeIdRef.current = d.izleme.izleme_id;
       tekrarIzlemeRef.current = d.tekrar_izleme === true;
+      bildirimRozetleriniYenile();
       player.setCurrentTime(0);
       player.play();
     } catch (err) {
@@ -418,6 +420,7 @@ export default function EclubVideoOynatici({ oneri, onKapat, onTamamlandi, hata,
     });
     izlemeIdRef.current = baslangic.izlemeId;
     setIzlemeId(baslangic.izlemeId);
+    bildirimRozetleriniYenile();
     return baslangic;
   };
 

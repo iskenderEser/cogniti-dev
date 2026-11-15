@@ -237,8 +237,10 @@ function EczanemPanelIcerik() {
   const seciliEczane = secim.tip === "tum" ? undefined : agac.find(eczane => eczane.eczane_id === secim.eczane_id);
   const seciliFirma = secim.tip === "tum" || secim.tip === "eczane" ? undefined : seciliEczane?.firmalar.find(firma => firma.firma_id === secim.firma_id);
 
+  const yeniIcerikSayisi = videolar.filter(video => !video.izleme_basladi).length;
+
   return (
-    <EczanemPanelBaglantisi gruplar={menuGruplari} gezinmeAgaci={agac} onAnaSayfa={anaSayfayiAc} anaSayfaSecili={secim.tip === "tum" && !tumIceriklerSecili} onHesapSil={() => setSilmeModalAcik(true)}>
+    <EczanemPanelBaglantisi gruplar={menuGruplari} gezinmeAgaci={agac} yeniIcerikSayisi={yeniIcerikSayisi} onAnaSayfa={anaSayfayiAc} anaSayfaSecili={secim.tip === "tum" && !tumIceriklerSecili} onHesapSil={() => setSilmeModalAcik(true)}>
       <HataMesajiContainer mesajlar={mesajlar} />
       <div className="min-h-full bg-[var(--tema-yerel-eclub-sayfa-zemini-03)] pb-20 md:pb-8">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-3 py-4 md:gap-5 md:px-6 md:py-6">
@@ -250,7 +252,7 @@ function EczanemPanelIcerik() {
           firmaId={seciliFirma?.firma_id}
           eczaneId={seciliEczane?.eczane_id}
           eczaneAdi={seciliEczane?.eczane_adi}
-          yeniIcerikler={videolar.filter(video => !video.izleme_basladi).length}
+          yeniIcerikler={yeniIcerikSayisi}
           tamamlananlar={videolar.filter(video => video.izlendi).length}
           iceriklerHazir={videoHazir}
           yenileniyor={videoYukleniyor || videoYenileniyor}
@@ -262,7 +264,7 @@ function EczanemPanelIcerik() {
         {videoYukleniyor && !videoHazir ? (
           <EczanemRaflarSkeleton />
         ) : !videoHazir ? null : seciliVideo ? (
-          <EczanemVideoOynatici video={seciliVideo} onKapat={() => { setSeciliVideo(null); router.push("/eczanem", { scroll: false }); void videolariCek(); }} onTamamlandi={() => { setUstBolumYenileme(deger => deger + 1); return videolariCek(); }} hata={hata} basari={basari} />
+          <EczanemVideoOynatici video={seciliVideo} onBasladi={() => { setVideolar(onceki => onceki.map(v => v.gonderim_id === seciliVideo.gonderim_id ? { ...v, izleme_basladi: true } : v)); }} onKapat={() => { setSeciliVideo(null); router.push("/eczanem", { scroll: false }); void videolariCek(); }} onTamamlandi={() => { setUstBolumYenileme(deger => deger + 1); return videolariCek(); }} hata={hata} basari={basari} />
         ) : (
           <div className="flex flex-col gap-6">
             {seciliFirma && seciliEczane && <EczanemUrunFiltresi key={JSON.stringify([seciliEczane.eczane_id, seciliFirma.firma_id])} eczaneId={seciliEczane.eczane_id} firma={seciliFirma} secim={secim} onSecim={setSecim} />}

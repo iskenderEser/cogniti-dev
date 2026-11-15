@@ -14,6 +14,7 @@ import TuketimOynaticisi from "@/components/ogrenme-araci/TuketimOynaticisi";
 import { ogrenmeAraciIzlemesiniBaslat } from "@/lib/ogrenmeAraci/izlemeIstemci";
 import { IzlemeSoruFormu, IzlemeSoruSonuclari } from "@/components/soru/IzlemeSoruPaneli";
 import type { IzlemeCevapSonucu, IzlemeSorusu } from "@/lib/soru/izlemeTipleri";
+import { bildirimRozetleriniYenile } from "@/lib/bildirimler/rozet";
 
 interface OynaticiVideo {
   eczanem_kazanim_modeli?: "indirimli" | "indirimsiz" | null;
@@ -32,13 +33,14 @@ interface CevapSonucu extends IzlemeCevapSonucu {
 }
 interface Props {
   video: OynaticiVideo;
+  onBasladi?: () => void;
   onKapat: () => void;
   onTamamlandi: () => void | Promise<void>;
   hata: (mesaj: string, adim?: string, detay?: string) => void;
   basari: (mesaj: string) => void;
 }
 
-export default function EczanemVideoOynatici({ video, onKapat, onTamamlandi, hata, basari }: Props) {
+export default function EczanemVideoOynatici({ video, onBasladi, onKapat, onTamamlandi, hata, basari }: Props) {
   const [izlemeId, setIzlemeId] = useState<string | null>(null);
   const [izlemeBasladi, setIzlemeBasladi] = useState(false);
   const [izlemeTamamlandi, setIzlemeTamamlandi] = useState(false);
@@ -227,6 +229,8 @@ export default function EczanemVideoOynatici({ video, onKapat, onTamamlandi, hat
       setIzlemeId(yeniIzlemeId);
       izlemeIdRef.current = yeniIzlemeId;
       setIzlemeBasladi(true);
+      onBasladi?.();
+      bildirimRozetleriniYenile();
       const kaldigiKonum = Math.max(0, Number(d.izleme?.son_konum_saniye ?? video.son_konum_saniye ?? 0));
       sonKonumRef.current = kaldigiKonum;
       sonGonderilenKonumRef.current = kaldigiKonum;
@@ -276,6 +280,8 @@ export default function EczanemVideoOynatici({ video, onKapat, onTamamlandi, hat
     izlemeIdRef.current = baslangic.izlemeId;
     setIzlemeId(baslangic.izlemeId);
     setIzlemeBasladi(true);
+    onBasladi?.();
+    bildirimRozetleriniYenile();
     return baslangic;
   };
 

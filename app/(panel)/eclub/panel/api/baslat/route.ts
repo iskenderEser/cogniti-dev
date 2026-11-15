@@ -134,6 +134,14 @@ export async function POST(request: NextRequest) {
     const izlemeKontrol = veriKontrol(yeniIzleme, "eclub_izleme_kayitlari INSERT — dönen veri", "İzleme başlatıldı ancak veri döndürülemedi.");
     if (!izlemeKontrol.gecerli) return izlemeKontrol.yanit;
 
+    await adminSupabase
+      .from("eclub_bildirimler")
+      .update({ goruldu_mu: true })
+      .eq("alici_kisi_id", kisi.kisi_id)
+      .eq("kayit_turu", "oneri")
+      .eq("kayit_id", oneri.oneri_id)
+      .eq("goruldu_mu", false);
+
     return NextResponse.json({ mesaj: "İzleme başlatıldı.", izleme: yeniIzleme, tekrar_izleme: false }, { status: 201 });
 
   } catch (err) {

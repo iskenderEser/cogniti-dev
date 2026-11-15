@@ -40,7 +40,7 @@ export function eczanemUyeMenusuOlustur(kapsam?: IcerikKapsami): NavGrup[] {
   const gruplar: NavGrup[] = [{
     baslik: "Eczanem",
     oglar: [
-      { ...kapsamOgesi("Tüm İçerikler", { tip: "tum" }), ...(kapsam?.tumIceriklerSecili !== undefined ? { secili: kapsam.tumIceriklerSecili && kapsam.secim?.tip === "tum" } : {}), path: "/eczanem", tamEslesme: true },
+      { ...kapsamOgesi("Tüm İçerikler", { tip: "tum" }), ...(kapsam?.tumIceriklerSecili !== undefined ? { secili: kapsam.tumIceriklerSecili && kapsam.secim?.tip === "tum" } : {}), path: "/eczanem", tamEslesme: true, badgeKey: "eczanem_yeni" },
       { anahtar: "eczanem-puanlarim", etiket: "Puanlarım", path: "/eczanem/puanlarim", gate: uyeGorur },
     ],
   }];

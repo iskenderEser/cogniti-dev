@@ -126,7 +126,6 @@ export const PANEL_NAV: NavGrup[] = [
       {
         etiket: "Öneri Takibi",
         path: "/oneriler",
-        badgeKey: "oneri",
         gate: (c) => c.rolKucu === "tm" || c.rolKucu === "bm",
       },
       {

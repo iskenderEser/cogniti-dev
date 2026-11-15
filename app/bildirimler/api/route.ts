@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { hataYaniti, sunucuHatasi, yetkiHatasi, validasyonHatasi } from "@/lib/utils/hataIsle";
 import { uuidGecerliMi } from "@/lib/uretim/rpc";
-import { ECLUB_HEDEF_ROLLER, TUKETICI_ROLLER, hedefRolleriOku } from "@/lib/utils/roller";
+import { ECLUB_HEDEF_ROLLER, TUKETICI_ROLLER, URETICI_ROLLER, hedefRolleriOku } from "@/lib/utils/roller";
 import { oneriIzlenebilirMi, sonrakiOneriZamanSiniri } from "@/lib/tclub/oneri/gorunurluk";
 
 const GECERLI_KAYIT_TURLERI = ["talep", "senaryo", "video", "soru_seti", "yayin", "oneri", "challenge", "cek"];
@@ -92,6 +92,32 @@ export async function GET() {
         if (firmaId) { const anahtar = `cek_firma_${firmaId}`; sayilar[anahtar] = (sayilar[anahtar] ?? 0) + 1; }
       }
     }
+    if (eclubKisi) {
+      const simdiIso = new Date(simdi).toISOString();
+      const [{ data: eclubAktifOneriler }, { data: eclubIzlemeler }] = await Promise.all([
+        adminSupabase
+          .from("eclub_oneri_kayitlari")
+          .select("oneri_id")
+          .eq("kisi_id", eclubKisi.kisi_id)
+          .eq("izlendi_mi", false)
+          .lte("oneri_baslangic", simdiIso)
+          .gt("oneri_bitis", simdiIso),
+        adminSupabase
+          .from("eclub_izleme_kayitlari")
+          .select("oneri_id")
+          .eq("kisi_id", eclubKisi.kisi_id),
+      ]);
+      const baslanmisOneriIdler = new Set(
+        (eclubIzlemeler ?? [])
+          .map((k) => k.oneri_id)
+          .filter((id): id is string => typeof id === "string" && id.length > 0),
+      );
+      const eclubYeniYayinSayisi = (eclubAktifOneriler ?? []).filter(
+        (o) => !baslanmisOneriIdler.has(o.oneri_id),
+      ).length;
+      sayilar.eclub_yeni_yayin = eclubYeniYayinSayisi;
+      sayilar.cek = (sayilar.cek ?? 0) + eclubYeniYayinSayisi;
+    }
     sayilar.oneri = (rozetOnerileri ?? []).filter((oneri) => oneriIzlenebilirMi(oneri, simdi)).length;
     sayilar.yayin = yayinBekleyenSayisi;
 
@@ -102,6 +128,14 @@ export async function GET() {
       .maybeSingle();
 
     if (kullaniciError) return hataYaniti("E-Club rozet kapsamı alınamadı.", "kullanicilar SELECT — E-Club rozeti", kullaniciError);
+
+    if (URETICI_ROLLER.includes(kullanici?.rol ?? "")) {
+      sayilar.talep =
+        (sayilar.talep ?? 0) +
+        (sayilar.senaryo ?? 0) +
+        (sayilar.video ?? 0) +
+        (sayilar.soru_seti ?? 0);
+    }
 
     if (kullanici?.firma_id && TUKETICI_ROLLER.includes(kullanici.rol ?? "")) {
       let eclubYayinQuery = adminSupabase
