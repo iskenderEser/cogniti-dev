@@ -28,8 +28,9 @@ export default function DavetDugmesi({ id, engel, onGonderildi }: { id?: string;
       beklet(false);
     }
   }
+  const pasif = Boolean(engel || !id || gonderildi || bekliyor);
   return <>
-    <button type="button" className={styles.button} aria-busy={bekliyor} onClick={() => void davetGonder()}>
+    <button type="button" className={styles.button} disabled={pasif} aria-busy={bekliyor} onClick={() => void davetGonder()}>
       Onayla ve Davet Gönder
     </button>
     {hata && <p role="alert">{hata}</p>}

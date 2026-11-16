@@ -24,7 +24,13 @@ const tarih = new Intl.DateTimeFormat("tr-TR", {
   dateStyle: "medium", timeStyle: "short", timeZone: "Europe/Istanbul",
 });
 
-export default function UyelikBasvuruPaneli() {
+export default function UyelikBasvuruPaneli({
+  mod = "bekleyen",
+  basari,
+}: {
+  mod?: "bekleyen" | "onaylanan";
+  basari?: (mesaj: string) => void;
+}) {
   const [basvurular, setBasvurular] = useState<Basvuru[] | null>(null);
   const [hata, setHata] = useState("");
   const [surum, setSurum] = useState(0);
@@ -73,6 +79,7 @@ export default function UyelikBasvuruPaneli() {
       setBasvurular(kayitlar => kayitlar?.filter(kayit => kayit.id !== id) ?? null);
       setSilinecekId(null);
       setBildirim("Başvuru silindi.");
+      basari?.("Başvuru silindi.");
       yenile();
     } catch {
       setSilmeHatasi("Başvuru silinemedi. Tekrar deneyin.");
@@ -86,7 +93,12 @@ export default function UyelikBasvuruPaneli() {
     <button type="button" className={styles.button} onClick={yenile}>Tekrar dene</button>
   </div>;
   if (!basvurular) return <p role="status">Başvurular yükleniyor…</p>;
-  const kartlar = basvurular.length ? basvurular : [null];
+  const suzulmus = basvurular.filter(aday => {
+    const davetGecerli = Boolean(aday.davet_bitis_at && Date.parse(aday.davet_bitis_at) > kontrolZamani);
+    const onaylandi = Boolean(aday.kabul_at || davetGecerli);
+    return mod === "onaylanan" ? onaylandi : !onaylandi;
+  });
+  const kartlar = suzulmus.length ? suzulmus : [null];
 
   return <div className={styles.stack}>
     <div role="status" hidden={!bildirim}>{bildirim}</div>
@@ -118,7 +130,14 @@ export default function UyelikBasvuruPaneli() {
           </div>
         </article>
         <div className={`${styles.formActions} ${styles.uyelikBasvuruActions}`}>
-          <DavetDugmesi id={aday?.id} engel={davetEngeli} onGonderildi={yenile} />
+          <DavetDugmesi
+            id={aday?.id}
+            engel={davetEngeli}
+            onGonderildi={() => {
+              basari?.("Üyelik talebini onayladınız ve davet gönderdiniz.");
+              yenile();
+            }}
+          />
           {aday && <AlertDialog
             open={silinecekId === aday.id}
             onOpenChange={acik => {
