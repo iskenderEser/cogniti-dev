@@ -1,4 +1,5 @@
 import { createAdminClient, createClient } from "@/lib/supabase/server";
+import { sifreKuralHatasi } from "@/lib/auth/sifreKurali";
 import { ayniKaynaktan, davetBicimiGecerli, davetOzeti, ON_BASVURU_TABLOSU } from "@/lib/firma/kurumsalBasvuru";
 import { BASVURU_ALINDI, DAVET_BILGISI } from "../basvuruMesaji";
 
@@ -45,10 +46,10 @@ export async function POST(istek: Request) {
       return hata("Firma adı, web sitesi, ad soyad ve geçerli bir cep telefonu girin.", 400);
     }
     if (KISISEL_ALANLAR.has(eposta.split("@")[1])) return hata("Kurumsal e-posta adresinizi girin.", 400);
-    if (typeof sifre !== "string" || [...sifre].length < 8 || Buffer.byteLength(sifre) > 72 ||
-        !/\p{Lu}/u.test(sifre) || !/\d/.test(sifre) || !/[\p{P}\p{S}]/u.test(sifre)) {
-      return hata("Şifre en az 8 karakter, bir büyük harf, bir rakam ve bir özel karakter içermelidir.", 400);
-    }
+    if (typeof sifre !== "string") return hata("Şifre 8–128 karakter olmalıdır.", 400);
+    const sifreHatasi = sifreKuralHatasi(sifre);
+    if (sifreHatasi) return hata(sifreHatasi, 400);
+    if (Buffer.byteLength(sifre) > 72) return hata("Şifre en fazla 72 karakter olmalıdır.", 400);
     const bilgiler = { firma_adi: firma, web_sitesi: web, ad_soyad: ad, eposta, cep_tel: telefon };
     const { data: mevcut, error: okumaHatasi } = await db.from(ON_BASVURU_TABLOSU)
       .select("id,aday_auth_id,davet_bitis_at,kabul_at").eq("eposta", eposta).maybeSingle();

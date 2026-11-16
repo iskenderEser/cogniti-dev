@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Mail } from "lucide-react";
 import CognitiLogo from "@/components/marka/CognitiLogo";
 import { montserrat } from "@/app/_components/montserrat";
 import styles from "@/app/login/login.module.css";
@@ -30,7 +31,17 @@ export default async function UyelikBasvurusu({
         {aday ? (
           <nav aria-label="Üyelik"><Link href="/kurumsal-uyelik">Kurumsal Üyelik Formu</Link></nav>
         ) : giris === "1" && !token ? (
-          <p className="text-center">Kurumsal üyelik formuna erişmek için e-postanızdaki daveti kabul edin.</p>
+          <div className="grid flex-1 place-items-center">
+            <section aria-labelledby="davet-uyari-basligi" className="w-full max-w-[520px] rounded-[22px] border border-(--tema-cizgi) bg-(--tema-yuzey) px-5 py-9 text-center shadow-[0_14px_40px_rgb(15_23_42/0.06)] sm:px-11 sm:py-14">
+              <div className="mx-auto mb-5 grid size-14 place-items-center rounded-full bg-(--tema-kontrol-eylem)/10 text-(--tema-kontrol-eylem)">
+                <Mail size={26} aria-hidden="true" />
+              </div>
+              <h1 id="davet-uyari-basligi" className="mb-4 text-xl text-(--tema-baslik) sm:text-2xl">Kurumsal Üyelik Daveti</h1>
+              <p className="leading-relaxed text-(--tema-ikincil-metin)">
+                Kurumsal üyelik formuna erişmek için e-postanızdaki daveti kabul edin.
+              </p>
+            </section>
+          </div>
         ) : (
           <>
             {token && (

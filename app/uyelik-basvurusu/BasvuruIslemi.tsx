@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { Check, Eye, EyeOff } from "lucide-react";
 import styles from "@/app/admin/admin.module.css";
+import { SIFRE_KURAL_ACIKLAMASI, sifreKuralHatasi } from "@/lib/auth/sifreKurali";
 import { BASVURU_ALINDI, DAVET_BILGISI } from "./basvuruMesaji";
 
 const FORM_BASLIGI = "Cogniti Üyelik Başvuru Formu";
@@ -17,6 +18,13 @@ export default function BasvuruIslemi({ token }: { token: string }) {
     event.preventDefault();
     const form = event.currentTarget;
     const alanlar = Object.fromEntries(new FormData(form));
+    if (!token) {
+      const sifreHatasi = sifreKuralHatasi(String(alanlar.sifre ?? ""));
+      if (sifreHatasi) {
+        hataYaz(sifreHatasi);
+        return;
+      }
+    }
     beklet(true);
     hataYaz("");
     try {
@@ -79,7 +87,7 @@ export default function BasvuruIslemi({ token }: { token: string }) {
             {sifreGoster ? <EyeOff size={17} aria-hidden="true" /> : <Eye size={17} aria-hidden="true" />}
           </button>
         </div>
-        {!token && <span className="text-[10px] font-normal">En az 8 karakter, bir büyük harf, bir rakam ve bir özel karakter.</span>}
+        {!token && <span className="text-[10px] font-normal">{SIFRE_KURAL_ACIKLAMASI}</span>}
       </div>
       {hata && <p role="alert">{hata}</p>}
       <div className={styles.formActions}>
