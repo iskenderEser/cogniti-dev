@@ -1,6 +1,7 @@
 import "server-only";
 import { createHash, randomBytes, randomUUID } from "node:crypto";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { sifreKuralHatasi } from "@/lib/auth/sifreKurali";
 
 export const davetHash = (token: string) => createHash("sha256").update(token).digest("hex");
 export const davetTokenGecerli = (v: unknown): v is string => typeof v === "string" && /^[A-Za-z0-9_-]{43}$/.test(v);
@@ -64,7 +65,9 @@ interface Davet { auth_user_id: string; davet_id: string; eposta: string; }
 
 export async function davetSifresiniKaydet(db: SupabaseClient, token: unknown, sifre: unknown, tekrar: unknown) {
   if (!davetTokenGecerli(token)) throw new Error("Davet bağlantısı geçersiz.");
-  if (typeof sifre !== "string" || sifre.length < 6 || sifre.length > 128) throw new Error("Şifre 6–128 karakter olmalıdır.");
+  if (typeof sifre !== "string") throw new Error("Şifre 8–128 karakter olmalıdır.");
+  const kuralHatasi = sifreKuralHatasi(sifre);
+  if (kuralHatasi) throw new Error(kuralHatasi);
   if (sifre !== tekrar) throw new Error("Şifreler eşleşmiyor.");
   const lease = randomUUID();
   const { data, error } = await db.rpc("eclub_davet_islem_al", { p_hash: davetHash(token), p_lease: lease });
