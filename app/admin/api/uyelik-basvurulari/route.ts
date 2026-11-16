@@ -5,6 +5,8 @@ import { davetSiteAdresi } from "@/lib/eclub/uyelikDaveti";
 import { ayniKaynaktan, davetOzeti, ON_BASVURU_TABLOSU } from "@/lib/firma/kurumsalBasvuru";
 
 const hata = (mesaj: string, status: number) => Response.json({ hata: mesaj }, { status });
+const kacir = (v: string) =>
+  v.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
 
 export async function GET() {
   const yetki = await adminGirisKontrol();
@@ -54,18 +56,36 @@ export async function POST(istek: Request) {
     .update({ davet_hash: hash, davet_bitis_at: new Date(simdi.getTime() + 48 * 3600_000).toISOString() })
     .eq("id", veri.id).is("kabul_at", null)
     .or(`davet_bitis_at.is.null,davet_bitis_at.lte.${simdi.toISOString()}`)
-    .select("eposta").maybeSingle();
+    .select("eposta,ad_soyad,firma_adi").maybeSingle();
   if (error) return hata("Davet oluşturulamadı.", 503);
   if (!aday) return hata("Başvuru bulunamadı veya geçerli bir daveti var.", 409);
   const link = new URL("/uyelik-basvurusu", adres);
   link.searchParams.set("davet", token);
+  const ad = String(aday.ad_soyad ?? "").trim();
+  const firma = String(aday.firma_adi ?? "").trim();
+  const hitap = ad ? `Merhaba ${ad},` : "Merhaba,";
+  const onayCumlesi = firma
+    ? `${firma} adına yaptığınız kurumsal üyelik ön başvurunuz onaylanmıştır.`
+    : "Kurumsal üyelik ön başvurunuz onaylanmıştır.";
   try {
     const yanit = await fetch("https://api.resend.com/emails", {
       method: "POST", signal: AbortSignal.timeout(10000),
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
       body: JSON.stringify({
         from, to: [aday.eposta], subject: "Cogniti kurumsal üyelik formu davetiniz",
-        text: `Ön başvurunuz onaylandı. Kurumsal üyelik formuna erişmek için davetinizi 48 saat içinde kabul edin:\n${link}`,
+        html:
+          `<p style="margin: 0 0 16px 0;">${kacir(hitap)}</p>` +
+          `<p style="margin: 0 0 16px 0;">${kacir(onayCumlesi)}</p>` +
+          `<p style="margin: 0 0 16px 0;">Kurumsal Üyelik Formu’na erişmek için <a href="${kacir(link.href)}">kurumsal üyelik daveti bağlantısını</a> kullanabilirsiniz.</p>` +
+          `<p style="margin: 0 0 16px 0;">Bu bağlantı 48 saat boyunca geçerlidir.</p>` +
+          `<p style="margin: 0 0 24px 0;">Cogniti’ye ilginiz için teşekkür ederiz.</p>` +
+          `<p style="margin: 0 0 4px 0;">Cogniti Müşteri İlişkileri</p>` +
+          `<p style="margin: 0;">Cogniti · bilgi taşır</p>`,
+        text:
+          `${hitap}\n\n${onayCumlesi}\n\n` +
+          `Kurumsal Üyelik Formu'na erişmek için aşağıdaki bağlantıyı kullanabilirsiniz:\n${link.href}\n\n` +
+          `Bu bağlantı 48 saat boyunca geçerlidir.\n\n` +
+          `Cogniti'ye ilginiz için teşekkür ederiz.\n\nCogniti Müşteri İlişkileri\nCogniti · bilgi taşır`,
       }),
     });
     if (!yanit.ok) throw new Error("E-posta gönderilemedi.");

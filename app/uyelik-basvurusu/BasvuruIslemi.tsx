@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { Check, Eye, EyeOff } from "lucide-react";
+import { Check, Eye, EyeOff, UserCheck } from "lucide-react";
 import styles from "@/app/admin/admin.module.css";
 import { SIFRE_KURAL_ACIKLAMASI, sifreKuralHatasi } from "@/lib/auth/sifreKurali";
 import { BASVURU_ALINDI, DAVET_BILGISI } from "./basvuruMesaji";
@@ -61,8 +61,7 @@ export default function BasvuruIslemi({ token }: { token: string }) {
     </div>
   );
 
-  return <>
-    {!token && <h1 className="mb-7 text-xl font-normal">{FORM_BASLIGI}</h1>}
+  const formIcerigi = (
     <form className="grid gap-4 [&_input::placeholder]:italic" onSubmit={gonder}>
       {!token && <>
         <label className={styles.field}><input className={styles.input} name="firma" aria-label="Firmanızın tam adı" placeholder="Firmanızın tam adı" autoComplete="organization" maxLength={150} required /></label>
@@ -89,12 +88,35 @@ export default function BasvuruIslemi({ token }: { token: string }) {
         </div>
         {!token && <span className="text-[10px] font-normal">{SIFRE_KURAL_ACIKLAMASI}</span>}
       </div>
-      {hata && <p role="alert">{hata}</p>}
-      <div className={styles.formActions}>
-        <button className={`${styles.button} ${styles.primary}`} disabled={bekliyor} type="submit">
-          {token ? "Daveti kabul et ve giriş yap" : "Başvuruyu gönder"}
+      {hata && <p role="alert" className={token ? "text-xs text-[var(--tema-hata)]" : undefined}>{hata}</p>}
+      <div className={token ? "mt-2" : styles.formActions}>
+        <button className={`${styles.button} ${styles.primary} ${token ? "w-full justify-center" : ""}`} disabled={bekliyor} type="submit">
+          {token ? "Daveti Kabul Et ve Giriş Yap" : "Başvuruyu gönder"}
         </button>
       </div>
     </form>
+  );
+
+  if (token) return (
+    <div className="grid flex-1 place-items-center">
+      <section aria-labelledby="davet-kabul-basligi" className="w-full max-w-[520px] rounded-[22px] border border-(--tema-cizgi) bg-(--tema-yuzey) px-5 py-9 shadow-[0_14px_40px_rgb(15_23_42/0.06)] sm:px-11 sm:py-12">
+        <div className="mx-auto mb-5 grid size-14 place-items-center rounded-full bg-(--tema-kontrol-eylem)/10 text-(--tema-kontrol-eylem)">
+          <UserCheck size={26} aria-hidden="true" />
+        </div>
+        <h1 id="davet-kabul-basligi" className="mb-3 text-center text-xl text-(--tema-baslik) sm:text-2xl">Cogniti’ye Hoş Geldiniz</h1>
+        <p className="mb-3 text-center text-sm leading-relaxed text-(--tema-ikincil-metin)">
+          Ön başvurunuz onaylandı. Kurumsal e-posta adresiniz ve ön başvuruda belirlediğiniz şifrenizle giriş yapabilirsiniz.
+        </p>
+        <p className="mb-7 text-center text-xs leading-relaxed text-(--tema-ikincil-metin)">
+          Girişin ardından firma bilgilerinizi, sözleşmelerinizi ve kurumsal listelerinizi tamamlayacağınız <strong className="font-semibold text-(--tema-baslik)">Kurumsal Üyelik Formu</strong> açılacaktır.
+        </p>
+        {formIcerigi}
+      </section>
+    </div>
+  );
+
+  return <>
+    <h1 className="mb-7 text-xl font-normal">{FORM_BASLIGI}</h1>
+    {formIcerigi}
   </>;
 }

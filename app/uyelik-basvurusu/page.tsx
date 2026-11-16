@@ -56,12 +56,7 @@ export default async function UyelikBasvurusu({
             </section>
           </div>
         ) : (
-          <>
-            {token && (
-              <p className="mb-7 text-xs leading-relaxed">Daveti kabul etmek için kurumsal e-posta adresiniz ve ön başvuruda belirlediğiniz şifreyle giriş yapın.</p>
-            )}
-            <BasvuruIslemi token={token} />
-          </>
+          <BasvuruIslemi token={token} />
         )}
       </main>
     </div>
