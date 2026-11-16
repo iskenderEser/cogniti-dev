@@ -1,6 +1,7 @@
 import { useId } from "react";
 import { BadgeCheck, BookOpen, FileImage, Headphones, MessageSquareText, Play, Radio, Trophy, UsersRound } from "lucide-react";
 import { YAYIN_TURU_SUNUMU } from "@/lib/ogrenmeAraci/turSunumu";
+import CognitiFaydaModali from "./CognitiFaydaModali";
 import styles from "./cogniti-hakkinda.module.css";
 
 const ARACLAR = [
@@ -70,7 +71,10 @@ export default function CognitiHakkinda() {
       <header className={styles.sahne}>
 
         <div className={styles.metin}>
-          <p className={styles.bolumEtiketi}>COGNITI NEDİR?</p>
+          <div className={styles.ustSatir}>
+            <p className={styles.bolumEtiketi}>COGNITI NEDİR?</p>
+            <CognitiFaydaModali />
+          </div>
           <h1 className={`${styles.bolumBasligi} ${styles.anaBaslik}`}>
             İlaç ve eczacılık sektörüne odaklı{" "}
             <span className={styles.anaBaslikAltSatir}>e-tanıtım ve e-öğrenme platformu</span>
