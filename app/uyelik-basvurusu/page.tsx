@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Mail } from "lucide-react";
+import { LogIn } from "lucide-react";
 import CognitiLogo from "@/components/marka/CognitiLogo";
 import { montserrat } from "@/app/_components/montserrat";
 import styles from "@/app/login/login.module.css";
@@ -34,12 +34,15 @@ export default async function UyelikBasvurusu({
           <div className="grid flex-1 place-items-center">
             <section aria-labelledby="davet-uyari-basligi" className="w-full max-w-[520px] rounded-[22px] border border-(--tema-cizgi) bg-(--tema-yuzey) px-5 py-9 text-center shadow-[0_14px_40px_rgb(15_23_42/0.06)] sm:px-11 sm:py-14">
               <div className="mx-auto mb-5 grid size-14 place-items-center rounded-full bg-(--tema-kontrol-eylem)/10 text-(--tema-kontrol-eylem)">
-                <Mail size={26} aria-hidden="true" />
+                <LogIn size={26} aria-hidden="true" />
               </div>
-              <h1 id="davet-uyari-basligi" className="mb-4 text-xl text-(--tema-baslik) sm:text-2xl">Kurumsal Üyelik Daveti</h1>
+              <h1 id="davet-uyari-basligi" className="mb-4 text-xl text-(--tema-baslik) sm:text-2xl">Kurumsal Üyelik Formu</h1>
               <p className="leading-relaxed text-(--tema-ikincil-metin)">
-                Kurumsal üyelik formuna erişmek için e-postanızdaki daveti kabul edin.
+                Kurumsal üyelik formuna erişmek için hesabınızla giriş yapın.
               </p>
+              <Link href="/login" className="mt-6 inline-flex items-center justify-center rounded-xl bg-(--tema-kontrol-eylem) px-6 py-2.5 text-sm font-bold text-(--tema-kontrol-eylem-metin) no-underline">
+                Giriş Yap
+              </Link>
             </section>
           </div>
         ) : (
