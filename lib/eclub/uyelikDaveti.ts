@@ -14,12 +14,12 @@ export async function davetAltyapisiKontrol(db: SupabaseClient) {
 const kacir = (v: string) => v.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
 
 export function davetSiteAdresi(origin: string): string {
-  const url = new URL(process.env.HAPBILGI_SITE_URL || origin);
+  const siteAdresi = process.env.COGNITI_SITE_URL;
+  if (process.env.NODE_ENV === "production" && !siteAdresi) throw new Error("COGNITI_SITE_URL eksik.");
+  const url = new URL(siteAdresi || origin);
   if (url.protocol !== "https:" && !(process.env.NODE_ENV !== "production" && url.protocol === "http:" && ["localhost", "127.0.0.1"].includes(url.hostname))) {
-    throw new Error("Davet için güvenli HAPBILGI_SITE_URL tanımlayın.");
+    throw new Error("Davet için güvenli COGNITI_SITE_URL tanımlayın.");
   }
-  // Üretimde Host başlığını e-posta bağlantısının kaynağı olarak kabul etmeyiz.
-  if (process.env.NODE_ENV === "production" && !process.env.HAPBILGI_SITE_URL) throw new Error("HAPBILGI_SITE_URL eksik.");
   return url.origin;
 }
 

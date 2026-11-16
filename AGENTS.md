@@ -199,3 +199,7 @@ Askıya alma SQL'i: `scripts/sql/agora_partner_iban_test_kurali.sql`. SQL kullan
 ## Cogniti işlem uyarısı ve teyit standardı
 
 Kullanıcı kararı: İşlem uyarıları ve teyitleri tarayıcının `window.alert`, `window.confirm` veya `window.prompt` pencereleriyle gösterilmez. Cogniti'nin mevcut ortak modal bileşenleri kullanılır (`components/ui/alert-dialog.tsx` gibi). Eğitim silme teyidi de bu standarda bağlıdır. Başarılı işlemin kullanıcıya iletilmesi için istenen toast bildirimleri korunur.
+
+## Şifremi Unuttum hatırlatması
+
+Her çalışma oturumu açıldığında ve oturum açık kaldığı sürece açılıştan itibaren her saat başı kullanıcıya şu notu hatırlat: “şifremi unuttum ekranında çıkan mesaj ve eposta şablonu düzeltilecek”

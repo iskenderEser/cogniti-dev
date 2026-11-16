@@ -10,7 +10,7 @@ Yerel `.env.local` ve Vercel ortamında:
 
 - `RESEND_API_KEY`: Resend anahtarı. Kaynak koda/sohbete eklenmez.
 - `ECLUB_DAVET_EMAIL_FROM`: Resend'de doğrulanmış gönderici; boşsa `ECLUB_CEK_EMAIL_FROM` kullanılır.
-- `HAPBILGI_SITE_URL`: Üretimin HTTPS kök adresi. Üretimde zorunlu; geliştirmede mevcut localhost adresi kullanılabilir.
+- `COGNITI_SITE_URL`: Üretimin HTTPS kök adresi (`https://cogniti.net`). Üretimde zorunludur. Geliştirmede mevcut localhost adresi kullanılabilir.
 
 Bu oturumda yerel Resend ayarları bulunmadığı için gerçek e-posta teslimatı doğrulanmamıştır. Ayarlar yoksa kişi kaydı korunur, kişi satırında gönderim bekliyor durumu ve yeniden gönderme işlemi görünür.
 
