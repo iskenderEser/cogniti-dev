@@ -134,7 +134,7 @@ export default function LoginPage() {
     }
     if (giris.user?.app_metadata.cogniti_uyelik_adayi === true) {
       beniHatirlaKaydet(beniHatirla);
-      window.location.replace("/uyelik-basvurusu?giris=1");
+      window.location.replace("/kurumsal-uyelik");
       return;
     }
     if (giris.user?.app_metadata.eclub_davet_bekliyor === true) {
@@ -154,16 +154,18 @@ export default function LoginPage() {
     e.preventDefault();
     setSifirlamaGonderiliyor(true);
     setSifirlamaMesaj("");
-    const supabase = createClient();
-    const { error } = await supabase.auth.resetPasswordForEmail(sifirlamaEmail.trim(), {
-      redirectTo: `${window.location.origin}/sifre-yenile`,
-    });
+    const hedefEposta = sifirlamaEmail.trim();
+    const res = await fetch("/api/auth/sifre-sifirla", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ eposta: hedefEposta }),
+    }).catch(() => null);
     setSifirlamaGonderiliyor(false);
-    if (error) {
+    if (!res?.ok) {
       setSifirlamaMesaj("Bağlantı gönderilemedi. Lütfen biraz sonra tekrar deneyin.");
       return;
     }
-    try { sessionStorage.setItem("cogniti_sifirlama_eposta", sifirlamaEmail.trim()); } catch {}
+    try { sessionStorage.setItem("cogniti_sifirlama_eposta", hedefEposta); } catch {}
     setSifirlamaMesaj(
       "E-posta adresiniz sistemde kayıtlıysa şifre sıfırlama bağlantısı gönderilecektir. Lütfen gelen ve spam (istenmeyen) kutunuzu kontrol ediniz."
     );

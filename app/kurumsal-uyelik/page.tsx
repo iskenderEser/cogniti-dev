@@ -26,7 +26,7 @@ export default async function KurumsalUyelikSayfasi() {
   return (
     <div className={`${styles.page} ${styles.kurumsalUyelikPage} ${montserrat.variable}`}>
       <header className={styles.header}>
-        <Link className={styles.brand} href="/welcome" aria-label="Cogniti ana sayfası">
+        <Link className={styles.brand} href="/kurumsal-uyelik" aria-label="Cogniti Kurumsal Üyelik">
           <CognitiLogo width={220} height={73} />
         </Link>
         <nav className={styles.welcomeActions} aria-label="Üyelik">

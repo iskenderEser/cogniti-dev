@@ -74,12 +74,13 @@ export default function SifreYenilePage() {
     if (!eposta.trim() || yenidenGonderiliyor) return;
     setYenidenGonderiliyor(true);
     setYenidenMesaj("");
-    const supabase = createClient();
-    const { error } = await supabase.auth.resetPasswordForEmail(eposta.trim(), {
-      redirectTo: `${window.location.origin}/sifre-yenile`,
-    });
+    const res = await fetch("/api/auth/sifre-sifirla", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ eposta: eposta.trim() }),
+    }).catch(() => null);
     setYenidenGonderiliyor(false);
-    if (error) {
+    if (!res?.ok) {
       setYenidenMesaj("Bağlantı gönderilemedi. Lütfen biraz sonra tekrar deneyin.");
       return;
     }
