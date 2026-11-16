@@ -45,10 +45,10 @@ Eczanem>İndirim Onayı sekmesindeki (F) veriler silinecek
 
 ## Hatırlatma: Cogniti marka dönüşümünde 5, 7 ve 9. adımlar
 
-Kullanıcı kararı: **5. e-posta kimliği**, **7. `cogniti.net` domain bağlantısı** ve **9. gerçek ortam son kontrolü** tek bir `cogniti.net` geçişi kapsamında birlikte ele alınacak. **6. dış platformlar adımı (6.1–6.7) tamamlandı.**
+Kullanıcı kararı: **5. e-posta kimliği**, **7. `cogniti.net` domain bağlantısı** ve **9. gerçek ortam son kontrolü** tek bir `cogniti.net` geçişi kapsamında birlikte ele alınacak. **5, 6 (6.1–6.7) ve 7. adımlar tamamlandı (16 Kasım 2026).**
 
-- **7 — Domain:** `cogniti.net` için DNS, Vercel/hosting bağlantısı ve HTTPS tamamlanacak. Yeni domaine bağlı Supabase Auth site/redirect adresleri, Bunny origin/domain izinleri ve uygulama/cron/ortam değişkeni değerleri bu geçişte gözden geçirilecek.
-- **5 — E-posta kimliği:** Resend gönderici adı/adresi ve domain doğrulaması; `RESEND_API_KEY`, `ECLUB_DAVET_EMAIL_FROM`, `ECLUB_CEK_EMAIL_FROM`, `HAPBILGI_SITE_URL` değerleri ile hosting ayarları kontrol edilecek. Supabase Auth şifre sıfırlama e-postasının göndericisi, SMTP/şablon ayarları ve dönüş adresleri doğrulanacak. Teknik değişken adları korunacak; gizli değerler belgeye veya sohbete yazılmayacak.
+- **7 — Domain (TAMAMLANDI):** `cogniti.net` için DNS, Vercel/hosting bağlantısı ve HTTPS tamamlandı. Supabase Auth site/redirect adresleri (`https://cogniti.net`, `https://cogniti.net/sifre-yenile`), Supabase Vault `hapbilgi_cron_base_url` (`https://cogniti.net`), Bunny Stream webhook (`https://cogniti.net/api/bunny/webhook`) ve Bunny `cogniti-upload` `ALLOWED_ORIGIN` (`https://cogniti.net`) doğrulandı.
+- **5 — E-posta kimliği (TAMAMLANDI):** Resend `cogniti.net` domain doğrulaması ve gönderici adresi (`Cogniti <bilgi@cogniti.net>`); Vercel'de `RESEND_API_KEY`, `ECLUB_DAVET_EMAIL_FROM`, `ECLUB_CEK_EMAIL_FROM`, `COGNITI_SITE_URL` (`https://cogniti.net`) ve `VIVA_EPOSTA_GONDERIM_AKTIF` (`true`) değerleri tanımlandı. Supabase Auth Custom SMTP (`bilgi@cogniti.net`) ve şifre sıfırlama e-posta şablonu doğrulandı.
 - **9 — Son kontrol:** Yeni domainde giriş, gerçek davet → e-posta → şifre oluşturma → giriş ve şifre sıfırlama; logo/banner, medya, e-posta ve bildirim kimliği doğrulanıp marka geçişi kaydedilecek. Kontrollü gerçek kayıt testlerinden önce test e-postası gönderme.
 - E-posta metin taslakları `docs/COGNITI_EPOSTA_SABLON_STOGU.md` ve BLUEBOOK içinde tutuluyor. Kullanıcı kapsamı **tüm sistem bildirimleri** olarak onayladı. Taslak hazırlamak, yeni otomatik gönderim veya alıcı kuralı ekleme yetkisi değildir; metin onayı ve gönderim entegrasyonu ayrı izlenecek. Çek metinlerinde sağlayıcı adı yerine **Hediye çeki** kullanılacak; şablon stoğu değişirse iki kayıt birlikte güncellenecek.
 
@@ -199,7 +199,3 @@ Askıya alma SQL'i: `scripts/sql/agora_partner_iban_test_kurali.sql`. SQL kullan
 ## Cogniti işlem uyarısı ve teyit standardı
 
 Kullanıcı kararı: İşlem uyarıları ve teyitleri tarayıcının `window.alert`, `window.confirm` veya `window.prompt` pencereleriyle gösterilmez. Cogniti'nin mevcut ortak modal bileşenleri kullanılır (`components/ui/alert-dialog.tsx` gibi). Eğitim silme teyidi de bu standarda bağlıdır. Başarılı işlemin kullanıcıya iletilmesi için istenen toast bildirimleri korunur.
-
-## Şifremi Unuttum hatırlatması
-
-Her çalışma oturumu açıldığında ve oturum açık kaldığı sürece açılıştan itibaren her saat başı kullanıcıya şu notu hatırlat: “şifremi unuttum ekranında çıkan mesaj ve eposta şablonu düzeltilecek”

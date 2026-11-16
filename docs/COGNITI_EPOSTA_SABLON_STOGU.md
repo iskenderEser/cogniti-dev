@@ -61,17 +61,23 @@ Gönderici adresi, yanıt adresi ve destek e-posta adresi henüz seçilmedi. Ça
 
 **Metin:**
 
-> Cogniti hesabınız için şifre sıfırlama isteği aldık.
+> Merhaba,
 >
-> **Yeni şifre belirle:** {{sifre_sifirlama_baglantisi}}
+> Cogniti hesabınız için şifre sıfırlama isteğinizi aldık.
 >
-> Bu isteği siz yapmadıysanız bu e-postayı dikkate almayabilirsiniz.
+> Yeni şifrenizi belirlemek için [şifre sıfırlama bağlantısını]({{sifre_sifirlama_baglantisi}}) kullanabilirsiniz.
+>
+> Eğer bu isteği siz yapmadıysanız, lütfen bu e-postayı dikkate almayınız.
+>
+> Cogniti’ye ilginiz için teşekkür ederiz.
+>
+> Cogniti Müşteri İlişkileri
 >
 > Cogniti · bilgi taşır
 
-**Mevcut veriler:** Supabase Auth tarafından üretilen işlem bağlantısı; uygulama dönüş yolu `/sifre-yenile`. Bağlantı süresi Supabase ayarından henüz doğrulanmadığı için taslağa bir süre yazılmadı. Kullanıcı adının sağlayıcı şablonunda bulunacağı varsayılmadı.
+**Mevcut veriler:** Supabase Auth tarafından üretilen işlem bağlantısı (`{{ .ConfirmationURL }}`); uygulama dönüş yolu `/sifre-yenile`. Supabase Auth panelinde şablon 16.11.2026 tarihinde bu içerikle güncellendi ve teslimatı doğrulandı.
 
-**Kaynak:** `app/login/page.tsx` içindeki `resetPasswordForEmail` çağrısı. Göndericinin gerçek şablonu Supabase panelinde kontrol edilecek.
+**Kaynak:** `app/login/page.tsx` içindeki `resetPasswordForEmail` çağrısı.
 
 ## E03 — Hediye çeki hazır
 

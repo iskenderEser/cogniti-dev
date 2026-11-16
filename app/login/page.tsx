@@ -164,7 +164,7 @@ export default function LoginPage() {
       return;
     }
     setSifirlamaMesaj(
-      "E-posta adresiniz sistemde kayıtlıysa şifre sıfırlama bağlantısı gönderilecektir. Gelen kutunuzu kontrol edin."
+      "E-posta adresiniz sistemde kayıtlıysa şifre sıfırlama bağlantısı gönderilecektir. Lütfen gelen ve spam (istenmeyen) kutunuzu kontrol ediniz."
     );
   };
 
@@ -187,7 +187,7 @@ export default function LoginPage() {
                     <label htmlFor="sifirlama-email">E-posta</label>
                     <input ref={sifirlamaRef} id="sifirlama-email" type="email" value={sifirlamaEmail} onChange={(e) => setSifirlamaEmail(e.target.value)} required autoComplete="email" placeholder="ornek@sirket.com" />
                   </div>
-                  {sifirlamaMesaj && <p className={styles.message} role="status">{sifirlamaMesaj}</p>}
+                  {sifirlamaMesaj && <p className={`${styles.message} ${styles.resetMessage}`} role="status">{sifirlamaMesaj}</p>}
                   <button type="submit" disabled={sifirlamaGonderiliyor} className={styles.submit}>
                     {sifirlamaGonderiliyor ? "Gönderiliyor..." : "Sıfırlama Bağlantısı Gönder"}
                   </button>

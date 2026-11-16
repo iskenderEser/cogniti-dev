@@ -30,6 +30,7 @@
 .resetDescription { margin: 0 0 22px; font-size: 13px; line-height: 1.7; color: var(--tema-ikincil-metin); }
 .backLogin { align-self: center; }
 .message { margin: 0; padding: 11px 13px; border: 1px solid var(--tema-cizgi); border-radius: 12px; background: var(--tema-zemin); font-size: 12px; line-height: 1.7; color: var(--tema-ikincil-metin); }
+.resetMessage { color: var(--tema-hata); font-weight: 300; }
 .error { color: var(--tema-yerel-giris-hata-metni); background: var(--tema-yerel-giris-islevsel-zemin-01); border-color: var(--tema-yerel-giris-islevsel-cizgi-01); }
 .back { display: block; margin: 30px auto 0; padding: 6px 0; border: 0; background: transparent; color: var(--tema-ikincil-metin); font-size: 12px; cursor: pointer; }
 .back:hover { color: var(--tema-kontrol-eylem); }
