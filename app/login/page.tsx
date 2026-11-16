@@ -163,6 +163,7 @@ export default function LoginPage() {
       setSifirlamaMesaj("Bağlantı gönderilemedi. Lütfen biraz sonra tekrar deneyin.");
       return;
     }
+    try { sessionStorage.setItem("cogniti_sifirlama_eposta", sifirlamaEmail.trim()); } catch {}
     setSifirlamaMesaj(
       "E-posta adresiniz sistemde kayıtlıysa şifre sıfırlama bağlantısı gönderilecektir. Lütfen gelen ve spam (istenmeyen) kutunuzu kontrol ediniz."
     );
