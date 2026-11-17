@@ -26,7 +26,7 @@ export default async function KurumsalUyelikSayfasi() {
   return (
     <div className={`${styles.page} ${styles.kurumsalUyelikPage} ${montserrat.variable}`}>
       <header className={styles.header}>
-        <Link className={styles.brand} href="/kurumsal-uyelik" aria-label="Cogniti Kurumsal Üyelik">
+        <Link className={styles.brand} href="/welcome" aria-label="Cogniti">
           <CognitiLogo width={220} height={73} />
         </Link>
         <nav className={styles.welcomeActions} aria-label="Üyelik">
@@ -34,7 +34,12 @@ export default async function KurumsalUyelikSayfasi() {
         </nav>
       </header>
       <main className="mx-auto w-full max-w-6xl px-6 py-10">
-        <h1 className={styles.heading}>Kurumsal Üyelik</h1>
+        <div className="relative mb-8 flex flex-col items-center justify-center gap-2 sm:flex-row">
+          <h1 className={styles.heading} style={{ marginBottom: 0 }}>Kurumsal Üyelik</h1>
+          <Link href="/welcome" prefetch={false} className={`${styles.back} sm:absolute sm:right-0`} style={{ margin: 0 }}>
+            ← Cogniti’yi tanıyın
+          </Link>
+        </div>
         <section aria-labelledby="firma-bilgileri-baslik">
           <h2 id="firma-bilgileri-baslik" className={styles.kurumsalUyelikAdimBasligi}>
             <span className={styles.kurumsalUyelikAdimNumarasi}>1</span> Firma Bilgileri
