@@ -22,6 +22,7 @@ test("Üyelik formu doğrulama, çift gönderim, hata sonrası tekrar ve başar�
   const modules:Record<string,unknown>={
     react:React,"react/jsx-runtime":jsx,
     "next/link":{default:passthrough},
+    "lucide-react":{FileText:()=>null,Upload:()=>null,X:()=>null},
     "@/components/marka/CognitiLogo":{default:()=>null},
     "@/components/ui/input":{Input:(props:React.ComponentProps<"input">)=>React.createElement("input",props)},
     "@/components/ui/button":{Button:(props:React.ComponentProps<"button">)=>React.createElement("button",props)},
@@ -31,8 +32,10 @@ test("Üyelik formu doğrulama, çift gönderim, hata sonrası tekrar ve başar�
   };
   const exports:{default?:React.ComponentType}={};
   const compiled=ts.transpileModule(readFileSync("app/partner/basvuru/PartnerBasvuruFormu.tsx","utf8"),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,jsx:ts.JsxEmit.ReactJSX}}).outputText;
-  vm.runInNewContext(compiled,{exports,AbortSignal,fetch:(url:string,init:RequestInit)=>{
-    assert.equal(url,"/partner/api/kayit");cagri++;bodies.push(JSON.parse(String(init.body)));
+  vm.runInNewContext(compiled,{exports,AbortSignal,FormData,fetch:(url:string,init:RequestInit)=>{
+    assert.equal(url,"/partner/api/kayit");cagri++;
+    const fd = init.body as FormData;
+    bodies.push(JSON.parse(String(fd.get("veri"))));
     return new Promise<Response>(resolve=>{tamamla=resolve;});
   },require:(id:string)=>{assert.ok(id in modules,id);return modules[id];}});
   assert.ok(exports.default);
@@ -64,12 +67,30 @@ test("Üyelik formu doğrulama, çift gönderim, hata sonrası tekrar ve başar�
       const ekle=[...dom.document.querySelectorAll("button")].find(b=>b.textContent==="Ekle")!;
       ekle.click();
     });
+    await yazAlan("partner-kayit-tanitim","İlaç ve eczacılık alanında 10 yıllık eğitim ve içerik deneyimine sahibim.");
+    await act(async()=>{
+      const cvInput=input("partner-kayit-cv");
+      const sahteDosya=new dom.File(["%PDF-1.4"],"ozgecmis.pdf",{type:"application/pdf"});
+      Object.defineProperty(cvInput,"files",{configurable:true,value:[sahteDosya]});
+      cvInput.dispatchEvent(new dom.Event("change",{bubbles:true}));
+    });
     await yaz("partner-kisisel-banka","Örnek Bankası");
     await yaz("partner-kisisel-hesap","Ayşe Öztürk");
     await yaz("partner-kisisel-iban","123456789012345678901234");
     await act(async()=>{submit();submit();});
     assert.equal(cagri,1);assert.equal(input("partner-kayit-ad").disabled,true);
-    assert.deepEqual(bodies,[{ad_soyad:"Ayşe Öztürk",eposta:"ayse@example.invalid",cep_telefonu:"5321234567"}]);
+    assert.deepEqual(bodies,[{
+      tur:"kisisel",
+      ad_soyad:"Ayşe Öztürk",
+      eposta:"ayse@example.invalid",
+      cep_telefonu:"5321234567",
+      tc_no:"12345678901",
+      uzmanliklar:["Medikal Eğitim"],
+      kendini_tanitma:"İlaç ve eczacılık alanında 10 yıllık eğitim ve içerik deneyimine sahibim.",
+      banka_adi:"Örnek Bankası",
+      iban:"TR123456789012345678901234",
+      hesap_adi:"Ayşe Öztürk",
+    }]);
     await act(async()=>tamamla(Response.json({hata:"Şu anda kayıt yapılamıyor."},{status:503})));
     assert.equal(input("partner-kayit-ad").disabled,false);
     assert.equal(input("partner-kayit-ad").value,"Ayşe Öztürk");

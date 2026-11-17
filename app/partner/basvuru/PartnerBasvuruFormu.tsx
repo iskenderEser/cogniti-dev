@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRef, useState, type FormEvent, type KeyboardEvent } from "react";
+import { Upload } from "lucide-react";
 import CognitiLogo from "@/components/marka/CognitiLogo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,6 +13,14 @@ import styles from "../partner.module.css";
 type PartnerTuru = "kisisel" | "kurumsal";
 
 const EN_FAZLA_UZMANLIK = 10;
+const EN_FAZLA_TANITIM_KELIME = 250;
+const EN_FAZLA_CV_BOYUTU = 5 * 1024 * 1024;
+const CV_UZANTILARI = ".pdf,.doc,.docx";
+
+function kelimeSayisi(metin: string) {
+  const temiz = metin.trim();
+  return temiz ? temiz.split(/\s+/).length : 0;
+}
 
 export default function PartnerBasvuruFormu() {
   const [tur, setTur] = useState<PartnerTuru>("kisisel");
@@ -29,12 +38,16 @@ export default function PartnerBasvuruFormu() {
   const [tcNo, setTcNo] = useState("");
   const [uzmanlikGirdisi, setUzmanlikGirdisi] = useState("");
   const [uzmanliklar, setUzmanliklar] = useState<string[]>([]);
+  const [kendiniTanitma, setKendiniTanitma] = useState("");
+  const [ozgecmisDosya, setOzgecmisDosya] = useState<File | null>(null);
+  const cvInputRef = useRef<HTMLInputElement>(null);
   const [kisiselBankaAdi, setKisiselBankaAdi] = useState("");
   const [kisiselIbanRakam, setKisiselIbanRakam] = useState("");
   const [kisiselHesapAdi, setKisiselHesapAdi] = useState("");
 
   // Kurumsal partnerlik alanları
   const [firmaAdi, setFirmaAdi] = useState("");
+  const [firmaWeb, setFirmaWeb] = useState("");
   const [vergiNo, setVergiNo] = useState("");
   const [vergiDairesi, setVergiDairesi] = useState("");
   const [adres, setAdres] = useState("");
@@ -43,6 +56,7 @@ export default function PartnerBasvuruFormu() {
   const [kurumsalHesapAdi, setKurumsalHesapAdi] = useState("");
 
   const kilitli = gonderiliyor || alindi;
+  const tanitimKelimeSayisi = kelimeSayisi(kendiniTanitma);
 
   function uzmanlikEkle(hamMetin = uzmanlikGirdisi) {
     if (kilitli) return;
@@ -81,64 +95,60 @@ export default function PartnerBasvuruFormu() {
     if (kilidi.current || alindi) return;
     setHata("");
 
-    const kontrol = partnerKaydiniDogrula({
-      ad_soyad: adSoyad,
-      eposta,
-      cep_telefonu: cepTelefonu,
-    });
+    const kontrol = partnerKaydiniDogrula(
+      tur === "kisisel"
+        ? {
+            tur,
+            ad_soyad: adSoyad,
+            eposta,
+            cep_telefonu: cepTelefonu,
+            tc_no: tcNo,
+            uzmanliklar,
+            kendini_tanitma: kendiniTanitma,
+            banka_adi: kisiselBankaAdi,
+            iban: `TR${kisiselIbanRakam}`,
+            hesap_adi: kisiselHesapAdi,
+          }
+        : {
+            tur,
+            ad_soyad: adSoyad,
+            eposta,
+            cep_telefonu: cepTelefonu,
+            firma_adi: firmaAdi,
+            web_adresi: firmaWeb,
+            vergi_no: vergiNo,
+            vergi_dairesi: vergiDairesi,
+            adres,
+            banka_adi: kurumsalBankaAdi,
+            iban: `TR${kurumsalIbanRakam}`,
+            hesap_adi: kurumsalHesapAdi,
+          },
+    );
     if (!kontrol.ok) {
       setHata(kontrol.hata);
       return;
     }
 
     if (tur === "kisisel") {
-      if (!/^\d{11}$/.test(tcNo)) {
-        setHata("Geçerli 11 haneli TC Kimlik Numaranızı girin.");
+      if (tanitimKelimeSayisi === 0 || tanitimKelimeSayisi > EN_FAZLA_TANITIM_KELIME) {
+        setHata(`Sizi Tanımak İsteriz alanını 1 ile ${EN_FAZLA_TANITIM_KELIME} kelime arasında doldurun.`);
         return;
       }
-      if (uzmanliklar.length === 0) {
-        setHata("En az bir uzmanlık alanı ekleyin.");
-        return;
-      }
-      if (kisiselBankaAdi.trim().length < 2) {
-        setHata("Banka adını girin.");
+      if (!ozgecmisDosya) {
+        setHata("Özgeçmiş (CV) dosyanızı yükleyin.");
         return;
       }
       if (!partnerIbanGecerli(`TR${kisiselIbanRakam}`)) {
         setHata("IBAN için TR’den sonra 24 rakam girin.");
         return;
       }
-      if (kisiselHesapAdi.trim().length < 2) {
-        setHata("Banka hesap adını girin.");
-        return;
-      }
     } else {
-      if (firmaAdi.trim().length < 2) {
-        setHata("Firma adını girin.");
-        return;
-      }
-      if (!/^\d{10}$/.test(vergiNo)) {
-        setHata("Vergi numarası 10 haneli olmalıdır.");
-        return;
-      }
-      if (vergiDairesi.trim().length < 2) {
-        setHata("Vergi dairesini girin.");
-        return;
-      }
       if (adres.trim().length < 10) {
         setHata("Fatura adresini en az 10 karakter olarak girin.");
         return;
       }
-      if (kurumsalBankaAdi.trim().length < 2) {
-        setHata("Banka adını girin.");
-        return;
-      }
       if (!partnerIbanGecerli(`TR${kurumsalIbanRakam}`)) {
         setHata("IBAN için TR’den sonra 24 rakam girin.");
-        return;
-      }
-      if (kurumsalHesapAdi.trim().length < 2) {
-        setHata("Banka hesap adını girin.");
         return;
       }
     }
@@ -146,10 +156,14 @@ export default function PartnerBasvuruFormu() {
     kilidi.current = true;
     setGonderiliyor(true);
     try {
+      const formData = new FormData();
+      formData.append("veri", JSON.stringify(kontrol.veri));
+      if (tur === "kisisel" && ozgecmisDosya) {
+        formData.append("ozgecmis", ozgecmisDosya);
+      }
       const response = await fetch("/partner/api/kayit", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(kontrol.veri),
+        body: formData,
         signal: AbortSignal.timeout(15000),
       });
       const data: unknown = await response.json();
@@ -355,6 +369,82 @@ export default function PartnerBasvuruFormu() {
                   </p>
                 </div>
 
+                <div className={styles.field}>
+                  <label htmlFor="partner-kayit-tanitim">
+                    Sizi Tanımak İsteriz * ({tanitimKelimeSayisi}/{EN_FAZLA_TANITIM_KELIME} kelime)
+                  </label>
+                  <textarea
+                    id="partner-kayit-tanitim"
+                    rows={4}
+                    placeholder="Deneyimlerinizi paylaşır mısınız?"
+                    value={kendiniTanitma}
+                    disabled={kilitli}
+                    onChange={(e) => setKendiniTanitma(e.target.value)}
+                  />
+                  {tanitimKelimeSayisi > EN_FAZLA_TANITIM_KELIME && (
+                    <p className={styles.alanHatasi} role="alert">
+                      En fazla {EN_FAZLA_TANITIM_KELIME} kelime girebilirsiniz.
+                    </p>
+                  )}
+                </div>
+
+                <div className={styles.cvSatir}>
+                  <input
+                    ref={cvInputRef}
+                    id="partner-kayit-cv"
+                    type="file"
+                    accept={CV_UZANTILARI}
+                    hidden
+                    aria-label="Özgeçmiş dosyası"
+                    disabled={kilitli}
+                    onChange={(e) => {
+                      const dosya = e.target.files?.[0] ?? null;
+                      if (dosya && dosya.size > EN_FAZLA_CV_BOYUTU) {
+                        setHata("Özgeçmiş dosyası en fazla 5 MB olabilir.");
+                        setOzgecmisDosya(null);
+                        if (cvInputRef.current) cvInputRef.current.value = "";
+                        return;
+                      }
+                      setHata("");
+                      setOzgecmisDosya(dosya);
+                    }}
+                  />
+                  {!ozgecmisDosya ? (
+                    <button
+                      type="button"
+                      className={styles.cvButon}
+                      disabled={kilitli}
+                      onClick={() => cvInputRef.current?.click()}
+                    >
+                      <Upload size={15} aria-hidden="true" />
+                      <span>Özgeçmişinizi Yükleyebilirsiniz *</span>
+                    </button>
+                  ) : (
+                    <>
+                      <span className={styles.cvDosyaAdi}>{ozgecmisDosya.name}</span>
+                      <button
+                        type="button"
+                        className={styles.cvAksiyonBaglanti}
+                        disabled={kilitli}
+                        onClick={() => cvInputRef.current?.click()}
+                      >
+                        Değiştir
+                      </button>
+                      <button
+                        type="button"
+                        className={`${styles.cvAksiyonBaglanti} ${styles.cvSilBaglanti}`}
+                        disabled={kilitli}
+                        onClick={() => {
+                          setOzgecmisDosya(null);
+                          if (cvInputRef.current) cvInputRef.current.value = "";
+                        }}
+                      >
+                        Kaldır
+                      </button>
+                    </>
+                  )}
+                </div>
+
                 <h2 className={styles.bolumAyrac}>Banka Bilgileri</h2>
                 <div className={styles.profilGrid}>
                   <div className={styles.field}>
@@ -457,6 +547,20 @@ export default function PartnerBasvuruFormu() {
                       value={firmaAdi}
                       disabled={kilitli}
                       onChange={(e) => setFirmaAdi(e.target.value)}
+                    />
+                  </div>
+                  <div className={`${styles.field} ${styles.tamSatir}`}>
+                    <label htmlFor="partner-firma-web">Web Adresi *</label>
+                    <Input
+                      id="partner-firma-web"
+                      type="url"
+                      inputMode="url"
+                      autoComplete="url"
+                      placeholder="https://ornekfirma.com"
+                      maxLength={500}
+                      value={firmaWeb}
+                      disabled={kilitli}
+                      onChange={(e) => setFirmaWeb(e.target.value)}
                     />
                   </div>
                   <div className={styles.field}>

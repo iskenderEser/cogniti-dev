@@ -475,6 +475,66 @@
   color: var(--tema-baslik);
 }
 
+.cvSatir {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.cvButon {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 6px 14px;
+  border: 1px solid var(--tema-kontrol-cizgi);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--tema-kontrol-eylem) 7%, var(--tema-yuzey));
+  color: var(--tema-hakkinda-baslik);
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.cvButon:hover:not(:disabled) {
+  border-color: var(--tema-kontrol-eylem);
+  background: color-mix(in srgb, var(--tema-kontrol-eylem) 12%, var(--tema-yuzey));
+}
+
+.cvButon:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.cvDosyaAdi {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--tema-hakkinda-baslik);
+  overflow-wrap: anywhere;
+}
+
+.cvAksiyonBaglanti {
+  border: 0;
+  padding: 2px 0;
+  background: transparent;
+  color: var(--tema-hakkinda-baslik);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cvAksiyonBaglanti:hover:not(:disabled) {
+  text-decoration: underline;
+}
+
+.cvSilBaglanti {
+  color: var(--tema-vurgu);
+}
+
 .modalKapat {
   display: inline-flex;
   align-items: center;

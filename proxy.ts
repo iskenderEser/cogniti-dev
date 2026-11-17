@@ -11,7 +11,7 @@ import { ECZANEM_KAPALI_MESAJI, eczanemRolErisimi } from "@/lib/eczanem/erisim";
 
 export async function proxy(request: NextRequest) {
   // Agora iş partnerlerinin açık tanıtım/kayıt sayfaları; alt panel yolları bu muafiyete dahil değildir.
-  if (request.nextUrl.pathname === "/partner" || request.nextUrl.pathname === "/partner/basvuru") return NextResponse.next({ request });
+  if (request.nextUrl.pathname === "/partner" || request.nextUrl.pathname === "/partner/basvuru" || request.nextUrl.pathname === "/partner/sifre-olustur") return NextResponse.next({ request });
   // Bu yolların partner kimliği kendi sunucu kapısında doğrulanır; iç kullanıcı oturumuna bağlanmaz.
   if (["/partner/profil", "/partner/egitimler", "/partner/egitimler/yeni", "/partner/hak-edisleri", "/partner/raporlar", "/partner/fiyatlar", "/partner/planlama-araci"].includes(request.nextUrl.pathname) && ["GET", "HEAD"].includes(request.method)) return NextResponse.next({ request });
   if (["/partner/api/giris", "/partner/api/cikis"].includes(request.nextUrl.pathname) && request.method === "POST") return NextResponse.next({ request });
@@ -30,6 +30,7 @@ export async function proxy(request: NextRequest) {
   if (request.nextUrl.pathname === "/partner/api/yayinla" && request.method === "POST") return NextResponse.next({ request });
   // Yalnız üyelik kaydı POST isteği açık; endpoint origin/girdi/DB kapılarını denetler.
   if (request.nextUrl.pathname === "/partner/api/kayit" && request.method === "POST") return NextResponse.next({ request });
+  if (request.nextUrl.pathname === "/partner/api/sifre-olustur" && ["GET", "POST"].includes(request.method)) return NextResponse.next({ request });
   // Bu endpoint kendi CRON_SECRET kontrolünü yapar; kullanıcı oturumu gerekmez.
   if (request.nextUrl.pathname === "/api/cron/firmastore-cek-eposta") return NextResponse.next({ request });
   // Daily başlangıç testi dahil HMAC kontrolü route içinde; oturum/DB çağrısı gerekmez.
