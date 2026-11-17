@@ -5,6 +5,7 @@ import { Check, Eye, EyeOff, UserCheck } from "lucide-react";
 import styles from "@/app/admin/admin.module.css";
 import { SIFRE_KURAL_ACIKLAMASI, sifreKuralHatasi } from "@/lib/auth/sifreKurali";
 import { BASVURU_ALINDI, DAVET_BILGISI } from "./basvuruMesaji";
+import SurecAdimlari from "./SurecAdimlari";
 
 const FORM_BASLIGI = "Cogniti Üyelik Başvuru Formu";
 
@@ -48,16 +49,19 @@ export default function BasvuruIslemi({ token }: { token: string }) {
 
   if (tamamlandi) return (
     <div className="grid flex-1 place-items-center">
-      <section aria-labelledby="basvuru-basligi" className="w-full max-w-[520px] rounded-[22px] border border-(--tema-cizgi) bg-(--tema-yuzey) px-5 py-9 text-center shadow-[0_14px_40px_rgb(15_23_42/0.06)] sm:px-11 sm:py-14">
-        <div className="mx-auto mb-5 grid size-14 place-items-center rounded-full bg-(--tema-kontrol-eylem)/10 text-(--tema-kontrol-eylem)">
-          <Check size={26} aria-hidden="true" />
-        </div>
-        <h1 id="basvuru-basligi" className="mb-4 text-xl text-(--tema-baslik) sm:text-2xl">{FORM_BASLIGI}</h1>
-        <p role="status" className="leading-relaxed text-(--tema-ikincil-metin)">
-          <strong className="mb-1 block text-(--tema-baslik)">{BASVURU_ALINDI}</strong>
-          {DAVET_BILGISI}
-        </p>
-      </section>
+      <div className="w-full max-w-[520px]">
+        <SurecAdimlari aktifAdim={2} />
+        <section aria-labelledby="basvuru-basligi" className="w-full rounded-[22px] border border-(--tema-cizgi) bg-(--tema-yuzey) px-5 py-9 text-center shadow-[0_14px_40px_rgb(15_23_42/0.06)] sm:px-11 sm:py-14">
+          <div className="mx-auto mb-5 grid size-14 place-items-center rounded-full bg-(--tema-kontrol-eylem)/10 text-(--tema-kontrol-eylem)">
+            <Check size={26} aria-hidden="true" />
+          </div>
+          <h1 id="basvuru-basligi" className="mb-4 text-xl text-(--tema-baslik) sm:text-2xl">{FORM_BASLIGI}</h1>
+          <p role="status" className="leading-relaxed text-(--tema-ikincil-metin)">
+            <strong className="mb-1 block text-(--tema-baslik)">{BASVURU_ALINDI}</strong>
+            {DAVET_BILGISI}
+          </p>
+        </section>
+      </div>
     </div>
   );
 
@@ -99,24 +103,31 @@ export default function BasvuruIslemi({ token }: { token: string }) {
 
   if (token) return (
     <div className="grid flex-1 place-items-center">
-      <section aria-labelledby="davet-kabul-basligi" className="w-full max-w-[520px] rounded-[22px] border border-(--tema-cizgi) bg-(--tema-yuzey) px-5 py-9 shadow-[0_14px_40px_rgb(15_23_42/0.06)] sm:px-11 sm:py-12">
-        <div className="mx-auto mb-5 grid size-14 place-items-center rounded-full bg-(--tema-kontrol-eylem)/10 text-(--tema-kontrol-eylem)">
-          <UserCheck size={26} aria-hidden="true" />
-        </div>
-        <h1 id="davet-kabul-basligi" className="mb-3 text-center text-xl text-(--tema-baslik) sm:text-2xl">Cogniti’ye Hoş Geldiniz</h1>
-        <p className="mb-3 text-center text-sm leading-relaxed text-(--tema-ikincil-metin)">
-          Ön başvurunuz onaylandı. Kurumsal e-posta adresiniz ve ön başvuruda belirlediğiniz şifrenizle giriş yapabilirsiniz.
-        </p>
-        <p className="mb-7 text-center text-xs leading-relaxed text-(--tema-ikincil-metin)">
-          Girişin ardından firma bilgilerinizi, sözleşmelerinizi ve kurumsal listelerinizi tamamlayacağınız <strong className="font-semibold text-(--tema-baslik)">Kurumsal Üyelik Formu</strong> açılacaktır.
-        </p>
-        {formIcerigi}
-      </section>
+      <div className="w-full max-w-[520px]">
+        <SurecAdimlari aktifAdim={3} />
+        <section aria-labelledby="davet-kabul-basligi" className="w-full rounded-[22px] border border-(--tema-cizgi) bg-(--tema-yuzey) px-5 py-9 shadow-[0_14px_40px_rgb(15_23_42/0.06)] sm:px-11 sm:py-12">
+          <div className="mx-auto mb-5 grid size-14 place-items-center rounded-full bg-(--tema-kontrol-eylem)/10 text-(--tema-kontrol-eylem)">
+            <UserCheck size={26} aria-hidden="true" />
+          </div>
+          <h1 id="davet-kabul-basligi" className="mb-3 text-center text-xl text-(--tema-baslik) sm:text-2xl">Cogniti’ye Hoş Geldiniz</h1>
+          <p className="mb-3 text-center text-sm leading-relaxed text-(--tema-ikincil-metin)">
+            Ön başvurunuz onaylandı. Kurumsal e-posta adresiniz ve ön başvuruda belirlediğiniz şifrenizle giriş yapabilirsiniz.
+          </p>
+          <p className="mb-7 text-center text-xs leading-relaxed text-(--tema-ikincil-metin)">
+            Girişin ardından firma bilgilerinizi, sözleşmelerinizi ve kurumsal listelerinizi tamamlayacağınız <strong className="font-semibold text-(--tema-baslik)">Kurumsal Üyelik Formu</strong> açılacaktır.
+          </p>
+          {formIcerigi}
+        </section>
+      </div>
     </div>
   );
 
   return <>
-    <h1 className="mb-7 text-xl font-normal">{FORM_BASLIGI}</h1>
+    <SurecAdimlari aktifAdim={1} />
+    <h1 className="mb-3 text-xl font-normal">{FORM_BASLIGI}</h1>
+    <p className="mb-7 text-sm leading-relaxed text-(--tema-ikincil-metin)">
+      Cogniti’ye ilginiz için teşekkür ederiz. Aşağıdaki bilgileri doldurup iletirseniz, kurumsal üyelik kaydı yapabilmenizi sağlayacak bağlantı adresini ileteceğiz. Bağlantı üzerinde Cogniti Kurumsal Üyelik Formuna ulaşabileceksiniz. Sayfadaki yönlendirmeleri takip ederek, üyeliğinizi oluşturabilirsiniz.
+    </p>
     {formIcerigi}
   </>;
 }

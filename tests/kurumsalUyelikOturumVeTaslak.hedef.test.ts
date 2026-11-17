@@ -48,6 +48,7 @@ test("aday oturumu varken /uyelik-basvurusu boş sayfa yerine doğrudan /kurumsa
     "@/lib/supabase/server": { createClient: async () => ({ auth: { getUser: async () => ({ data: { user: null } }) } }) },
     "@/lib/firma/kurumsalBasvuru": { adayOturumu: async () => ({ id: "aday-123" }) },
     "./BasvuruIslemi": { default: () => null },
+    "./SurecAdimlari": { default: () => null },
   };
 
   const exports: { default?: (props: { searchParams: Promise<Record<string, string>> }) => Promise<unknown> } = {};

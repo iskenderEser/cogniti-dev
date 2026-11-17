@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { montserrat } from "@/app/_components/montserrat";
 import PartnerGiris from "./PartnerGiris";
 
 export const metadata: Metadata = {
@@ -8,5 +9,5 @@ export const metadata: Metadata = {
 };
 
 export default function PartnerPage() {
-  return <PartnerGiris />;
+  return <div className={montserrat.variable}><PartnerGiris /></div>;
 }

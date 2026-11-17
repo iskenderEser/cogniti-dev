@@ -7,6 +7,7 @@ import styles from "@/app/login/login.module.css";
 import { createClient } from "@/lib/supabase/server";
 import { adayOturumu } from "@/lib/firma/kurumsalBasvuru";
 import BasvuruIslemi from "./BasvuruIslemi";
+import SurecAdimlari from "./SurecAdimlari";
 
 export const metadata = { title: "Üyelik Başvurusu | Cogniti", referrer: "no-referrer" as const };
 
@@ -36,7 +37,9 @@ export default async function UyelikBasvurusu({
       <main className="mx-auto flex w-full max-w-xl flex-1 flex-col px-6 py-10">
         {giris === "1" && !token ? (
           <div className="grid flex-1 place-items-center">
-            <section aria-labelledby="davet-uyari-basligi" className="w-full max-w-[520px] rounded-[22px] border border-(--tema-cizgi) bg-(--tema-yuzey) px-5 py-9 text-center shadow-[0_14px_40px_rgb(15_23_42/0.06)] sm:px-11 sm:py-14">
+            <div className="w-full max-w-[520px]">
+              {oturumVar && <SurecAdimlari aktifAdim={2} />}
+              <section aria-labelledby="davet-uyari-basligi" className="w-full rounded-[22px] border border-(--tema-cizgi) bg-(--tema-yuzey) px-5 py-9 text-center shadow-[0_14px_40px_rgb(15_23_42/0.06)] sm:px-11 sm:py-14">
               <div className="mx-auto mb-5 grid size-14 place-items-center rounded-full bg-(--tema-kontrol-eylem)/10 text-(--tema-kontrol-eylem)">
                 {oturumVar ? <Clock size={26} aria-hidden="true" /> : <LogIn size={26} aria-hidden="true" />}
               </div>
@@ -53,7 +56,8 @@ export default async function UyelikBasvurusu({
                   Giriş Yap
                 </Link>
               )}
-            </section>
+              </section>
+            </div>
           </div>
         ) : (
           <BasvuruIslemi token={token} />

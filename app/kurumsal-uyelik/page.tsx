@@ -8,6 +8,7 @@ import CognitiLogo from "@/components/marka/CognitiLogo";
 import { montserrat } from "@/app/_components/montserrat";
 import KurumsalOturumKoruyucu from "./KurumsalOturumKoruyucu";
 import KurumsalUyelikAkisi from "./KurumsalUyelikAkisi";
+import SurecAdimlari from "@/app/uyelik-basvurusu/SurecAdimlari";
 import styles from "@/app/login/login.module.css";
 
 export const metadata: Metadata = { title: "Kurumsal Üyelik | Cogniti" };
@@ -32,6 +33,7 @@ export default async function KurumsalUyelikSayfasi() {
         </nav>
       </header>
       <main className="mx-auto w-full max-w-6xl px-6 py-10">
+        <SurecAdimlari aktifAdim={3} className="mx-auto mb-6 max-w-xl" />
         <div className="relative mb-8 flex flex-col items-center justify-center gap-2 sm:flex-row">
           <h1 className={styles.heading} style={{ marginBottom: 0 }}>Kurumsal Üyelik</h1>
           <Link href="/welcome" prefetch={false} className={`${styles.back} sm:absolute sm:right-0`} style={{ margin: 0 }}>
