@@ -9,8 +9,8 @@ import { Window } from "happy-dom";
 import * as kontrol from "@/lib/agora/partnerKaydi";
 
 test("Üyelik formu doğrulama, çift gönderim, hata sonrası tekrar ve başarılı kayıt kilidini korur", async () => {
-  const dom = new Window({ url: "http://localhost/partner" });
-  for (const key of ["window","document","navigator","HTMLElement","Element","Node","Event","MouseEvent","HTMLInputElement"] as const) {
+  const dom = new Window({ url: "http://localhost/partner/basvuru" });
+  for (const key of ["window","document","navigator","HTMLElement","Element","Node","Event","MouseEvent","HTMLInputElement","HTMLTextAreaElement","KeyboardEvent"] as const) {
     Object.defineProperty(globalThis,key,{configurable:true,value:dom[key]});
   }
   Object.assign(globalThis,{IS_REACT_ACT_ENVIRONMENT:true});
@@ -22,16 +22,15 @@ test("Üyelik formu doğrulama, çift gönderim, hata sonrası tekrar ve başar�
   const modules:Record<string,unknown>={
     react:React,"react/jsx-runtime":jsx,
     "next/link":{default:passthrough},
-    "lucide-react":{Eye:()=>null,EyeOff:()=>null},
     "@/components/marka/CognitiLogo":{default:()=>null},
-    "@/components/kontrol/SadeKontroller":{SadeSekmeler:({secenekler}:{secenekler:{deger:string;icerik:React.ReactNode}[]})=>React.createElement("div",null,secenekler.map(s=>React.createElement("div",{key:s.deger},s.icerik)))},
     "@/components/ui/input":{Input:(props:React.ComponentProps<"input">)=>React.createElement("input",props)},
     "@/components/ui/button":{Button:(props:React.ComponentProps<"button">)=>React.createElement("button",props)},
     "@/lib/agora/partnerKaydi":kontrol,
-    "./partner.module.css":{default:new Proxy({},{get:(_,key)=>String(key)})},
+    "@/lib/agora/partnerProfil":{ partnerIbanGecerli: (iban: string) => /^TR\d{24}$/.test(iban) },
+    "../partner.module.css":{default:new Proxy({},{get:(_,key)=>String(key)})},
   };
   const exports:{default?:React.ComponentType}={};
-  const compiled=ts.transpileModule(readFileSync("app/partner/PartnerGiris.tsx","utf8"),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,jsx:ts.JsxEmit.ReactJSX}}).outputText;
+  const compiled=ts.transpileModule(readFileSync("app/partner/basvuru/PartnerBasvuruFormu.tsx","utf8"),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,jsx:ts.JsxEmit.ReactJSX}}).outputText;
   vm.runInNewContext(compiled,{exports,AbortSignal,fetch:(url:string,init:RequestInit)=>{
     assert.equal(url,"/partner/api/kayit");cagri++;bodies.push(JSON.parse(String(init.body)));
     return new Promise<Response>(resolve=>{tamamla=resolve;});
@@ -39,9 +38,14 @@ test("Üyelik formu doğrulama, çift gönderim, hata sonrası tekrar ve başar�
   assert.ok(exports.default);
   const root=createRoot(dom.document.body);
   const input=(id:string)=>dom.document.getElementById(id) as HTMLInputElement;
+  const textarea=(id:string)=>dom.document.getElementById(id) as HTMLTextAreaElement;
   const yaz=async(id:string,value:string)=>act(async()=>{
     Object.getOwnPropertyDescriptor(dom.HTMLInputElement.prototype,"value")!.set!.call(input(id),value);
     input(id).dispatchEvent(new dom.Event("input",{bubbles:true}));
+  });
+  const yazAlan=async(id:string,value:string)=>act(async()=>{
+    Object.getOwnPropertyDescriptor(dom.HTMLTextAreaElement.prototype,"value")!.set!.call(textarea(id),value);
+    textarea(id).dispatchEvent(new dom.Event("input",{bubbles:true}));
   });
   const submit=()=>{
     const form=dom.document.querySelector('form[aria-label="İş partneri üyelik formu"]')!;
@@ -52,8 +56,17 @@ test("Üyelik formu doğrulama, çift gönderim, hata sonrası tekrar ve başar�
     await act(async()=>submit());
     assert.equal(cagri,0);assert.ok(dom.document.querySelector('[role="alert"]'));
     await yaz("partner-kayit-ad","Ayşe Öztürk");
+    await yaz("partner-kayit-tc","12345678901");
     await yaz("partner-kayit-eposta","AYSE@example.invalid");
     await yaz("partner-kayit-telefon","0532 123 45 67");
+    await yazAlan("partner-kayit-uzmanlik","Medikal Eğitim");
+    await act(async()=>{
+      const ekle=[...dom.document.querySelectorAll("button")].find(b=>b.textContent==="Ekle")!;
+      ekle.click();
+    });
+    await yaz("partner-kisisel-banka","Örnek Bankası");
+    await yaz("partner-kisisel-hesap","Ayşe Öztürk");
+    await yaz("partner-kisisel-iban","123456789012345678901234");
     await act(async()=>{submit();submit();});
     assert.equal(cagri,1);assert.equal(input("partner-kayit-ad").disabled,true);
     assert.deepEqual(bodies,[{ad_soyad:"Ayşe Öztürk",eposta:"ayse@example.invalid",cep_telefonu:"5321234567"}]);
@@ -66,6 +79,5 @@ test("Üyelik formu doğrulama, çift gönderim, hata sonrası tekrar ve başar�
     assert.match(dom.document.querySelector('[role="status"]')!.textContent!,/alındı/);
     assert.equal(input("partner-kayit-ad").disabled,true);
     await act(async()=>submit());assert.equal(cagri,2);
-    assert.equal(dom.document.querySelector('form[aria-label="İş partneri giriş formu"] button[type="submit"]')?.hasAttribute("disabled"),false);
   } finally {await act(async()=>root.unmount());await dom.happyDOM.close();}
 });

@@ -22,7 +22,7 @@ export default function KarsilamaSayfasi() {
           <Link className={styles.action} href="/login">
             <LogIn size={16} aria-hidden="true" />Giriş
           </Link>
-          <Link className={`${styles.action} ${styles.partnerAction}`} href="/partner"><LogIn size={16} aria-hidden="true" />Partner Girişi</Link>
+          <Link className={`${styles.action} ${styles.partnerAction}`} href="/partner"><LogIn size={16} aria-hidden="true" />Cogniti İş Partnerliği</Link>
         </nav>
       </header>
       <main><CognitiHakkinda /></main>

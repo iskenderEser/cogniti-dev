@@ -10,8 +10,8 @@ import { eclubKisiErisimi } from "@/lib/eclub/kisiErisim";
 import { ECZANEM_KAPALI_MESAJI, eczanemRolErisimi } from "@/lib/eczanem/erisim";
 
 export async function proxy(request: NextRequest) {
-  // Agora iş partnerlerinin açık giriş/kayıt sayfası; alt yollar bu muafiyete dahil değildir.
-  if (request.nextUrl.pathname === "/partner") return NextResponse.next({ request });
+  // Agora iş partnerlerinin açık tanıtım/kayıt sayfaları; alt panel yolları bu muafiyete dahil değildir.
+  if (request.nextUrl.pathname === "/partner" || request.nextUrl.pathname === "/partner/basvuru") return NextResponse.next({ request });
   // Bu yolların partner kimliği kendi sunucu kapısında doğrulanır; iç kullanıcı oturumuna bağlanmaz.
   if (["/partner/profil", "/partner/egitimler", "/partner/egitimler/yeni", "/partner/hak-edisleri", "/partner/raporlar", "/partner/fiyatlar", "/partner/planlama-araci"].includes(request.nextUrl.pathname) && ["GET", "HEAD"].includes(request.method)) return NextResponse.next({ request });
   if (["/partner/api/giris", "/partner/api/cikis"].includes(request.nextUrl.pathname) && request.method === "POST") return NextResponse.next({ request });
