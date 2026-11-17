@@ -3,8 +3,9 @@
 import { ilSecenekleri, ilinIlceleri } from "@/lib/firma/konumReferansi";
 import { ilinVergiDaireleri } from "@/lib/firma/vergiDairesiReferansi";
 import { SadeSecim } from "@/components/kontrol/SadeKontroller";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { logoGorseliniOptimizeEt } from "@/lib/firma/logoOptimizasyonIstemci";
+import { TASLAK_FIRMA_ANAHTARI, taslakOku, taslakYaz } from "@/app/kurumsal-uyelik/kurumsalTaslak";
 import type { YeniFirmaBilgileri } from "../_types";
 import styles from "../admin.module.css";
 import local from "./yeni-firma-formu.module.css";
@@ -15,7 +16,7 @@ const BOS_FORM: YeniFirmaBilgileri = {
   sorumlu_ad_soyad: "", sorumlu_telefon: "", sorumlu_eposta: "", logo_url: "",
 };
 
-export default function YeniFirmaFormu({ onKaydet, ilkBilgiler, duzenleme = false, firmaId, secimMenuClassName, kurumsalUyelik = false }: { onKaydet?: (bilgiler: YeniFirmaBilgileri) => Promise<boolean>; ilkBilgiler?: YeniFirmaBilgileri; duzenleme?: boolean; firmaId?: string; secimMenuClassName?: string; kurumsalUyelik?: boolean }) {
+export default function YeniFirmaFormu({ onKaydet, ilkBilgiler, duzenleme = false, firmaId, secimMenuClassName, kurumsalUyelik = false, onDurumDegisimi }: { onKaydet?: (bilgiler: YeniFirmaBilgileri) => Promise<boolean>; ilkBilgiler?: YeniFirmaBilgileri; duzenleme?: boolean; firmaId?: string; secimMenuClassName?: string; kurumsalUyelik?: boolean; onDurumDegisimi?: (tamamlandi: boolean) => void }) {
   const [bilgiler, setBilgiler] = useState({...BOS_FORM,...ilkBilgiler});
   const [kaydediliyor, setKaydediliyor] = useState(false);
   const [logoYukleniyor, setLogoYukleniyor] = useState(false);
@@ -23,8 +24,31 @@ export default function YeniFirmaFormu({ onKaydet, ilkBilgiler, duzenleme = fals
   const [hata, setHata] = useState<string | null>(null);
   const dosyaRef = useRef<HTMLInputElement>(null);
   const kilit = useRef(false);
+  const taslakYuklendi = useRef(false);
   const mesgul = kaydediliyor || logoYukleniyor;
   const tumAlanlarDolu = Object.values(bilgiler).every(deger => typeof deger === "string" ? deger.trim().length > 0 : deger !== null);
+  const adimTamam = tumAlanlarDolu && /^\d{10}$/.test(bilgiler.vergi_numarasi);
+
+  useEffect(() => {
+    onDurumDegisimi?.(adimTamam);
+  }, [adimTamam, onDurumDegisimi]);
+
+  useEffect(() => {
+    if (!kurumsalUyelik) return;
+    const kayitli = taslakOku<{ bilgiler?: Partial<YeniFirmaBilgileri>; logoDosyaAdi?: string }>(TASLAK_FIRMA_ANAHTARI);
+    if (kayitli?.bilgiler) {
+      setBilgiler(onceki => ({ ...onceki, ...kayitli.bilgiler }));
+    }
+    if (typeof kayitli?.logoDosyaAdi === "string") {
+      setLogoDosyaAdi(kayitli.logoDosyaAdi);
+    }
+    taslakYuklendi.current = true;
+  }, [kurumsalUyelik]);
+
+  useEffect(() => {
+    if (!kurumsalUyelik || !taslakYuklendi.current) return;
+    taslakYaz(TASLAK_FIRMA_ANAHTARI, { bilgiler, logoDosyaAdi });
+  }, [kurumsalUyelik, bilgiler, logoDosyaAdi]);
 
   function alanDegistir(alan: Exclude<keyof YeniFirmaBilgileri,"il_id"|"ilce_id">, deger: string) {
     setBilgiler(onceki => ({ ...onceki, [alan]: deger }));

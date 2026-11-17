@@ -213,6 +213,33 @@
 .kurumsalUyelikIndirButonu:disabled { cursor: default; }
 .kurumsalUyelikMenu.kurumsalUyelikMenu,
 .kurumsalUyelikMenu.kurumsalUyelikMenu * { font-family: var(--font-montserrat), sans-serif; font-weight: 400; }
+.kurumsalUyelikAdimNotu {
+  margin: 0 0 14px;
+  padding-left: 38px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--tema-ikincil-metin);
+}
+.kurumsalUyelikAdimKilitNotu {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--tema-ikincil-metin);
+}
+.kurumsalUyelikAdimTamam {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 600;
+  color: #15803d;
+}
+.kurumsalUyelikKilitli {
+  opacity: .55;
+  pointer-events: none;
+  user-select: none;
+}
+@media (max-width: 560px) {
+  .kurumsalUyelikAdimNotu { padding-left: 0; }
+}
 .welcomePage main > * { font-family:inherit; }
 
 .welcomePage .action { font-family:var(--font-montserrat), sans-serif; font-weight:400; }

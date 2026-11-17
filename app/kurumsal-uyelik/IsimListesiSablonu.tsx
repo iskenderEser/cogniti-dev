@@ -9,6 +9,7 @@ import { rolCoz, turkceKatla } from "@/lib/admin/kullaniciDogrulama";
 import { TUKETICI_ROLLER, URETICI_ROLLER, YONLENDIRICI_ROLLER, YONETICI_ROLLER } from "@/lib/utils/roller";
 
 import { BARKOD_BICIMI, BARKOD_DESENI } from "./barkod";
+import { taslakOku, taslakSil, taslakYaz } from "./kurumsalTaslak";
 
 const CEP_TELEFONU_BICIMI = "5[0-9]{9}";
 const CEP_TELEFONU_DESENI = new RegExp(`^${CEP_TELEFONU_BICIMI}$`);
@@ -47,6 +48,7 @@ async function excelTablosu(dosya: File): Promise<string[][]> {
 
 export default function IsimListesiSablonu({ sutunlar, urunListesi = false }: { sutunlar: string[]; urunListesi?: boolean }) {
   const listeKodu = urunListesi ? "urun-listesi" : "isim-listesi";
+  const taslakAnahtari = `cogniti_kurumsal_taslak_liste_${listeKodu}`;
   const listeApi = `/kurumsal-uyelik/api/${listeKodu}`;
   const baslik = urunListesi ? "Ürün Listesi" : "İsim Listesi";
   const dosyaAdi = urunListesi ? "Cogniti Ürün Listesi" : "Cogniti Firma Listesi";
@@ -67,17 +69,26 @@ export default function IsimListesiSablonu({ sutunlar, urunListesi = false }: { 
   const satirSilDugmesi = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
+    const kayitliTaslak = taslakOku<string[][]>(taslakAnahtari);
+    if (Array.isArray(kayitliTaslak) && kayitliTaslak.length > 0) {
+      listeyeDokunuldu.current = true;
+      setSatirlar(kayitliTaslak.map((hucreler: string[]) => ({
+        id: sonrakiSatirId.current++, hucreler,
+      })));
+    }
     const kontrol = new AbortController();
     void (async () => {
       try {
         const yanit = await fetch(listeApi, { signal: kontrol.signal, cache: "no-store" });
         if (!yanit.ok) return;
         const liste = await yanit.json();
-        if (kontrol.signal.aborted || listeyeDokunuldu.current || !Array.isArray(liste?.satirlar)) return;
-        setSatirlar(liste.satirlar.map((hucreler: string[]) => ({
-          id: sonrakiSatirId.current++, hucreler,
-        })));
-        setGonderildi(Boolean(liste.gonderildi_at));
+        if (kontrol.signal.aborted) return;
+        setGonderildi(Boolean(liste?.gonderildi_at));
+        if (!listeyeDokunuldu.current && Array.isArray(liste?.satirlar)) {
+          setSatirlar(liste.satirlar.map((hucreler: string[]) => ({
+            id: sonrakiSatirId.current++, hucreler,
+          })));
+        }
         if (urunListesi) return;
         const donusumler = await rolDonusumleriniAl();
         if (!kontrol.signal.aborted) setRolDonusumleri(donusumler);
@@ -86,7 +97,16 @@ export default function IsimListesiSablonu({ sutunlar, urunListesi = false }: { 
       }
     })();
     return () => kontrol.abort();
-  }, [listeApi, urunListesi]);
+  }, [listeApi, taslakAnahtari, urunListesi]);
+
+  useEffect(() => {
+    if (!listeyeDokunuldu.current || gonderildi) return;
+    if (satirlar.length === 0) {
+      taslakSil(taslakAnahtari);
+    } else {
+      taslakYaz(taslakAnahtari, satirlar.map(satir => satir.hucreler));
+    }
+  }, [satirlar, gonderildi, taslakAnahtari]);
 
   useEffect(() => {
     if (modal !== "kaydedildi") return;
@@ -115,6 +135,7 @@ export default function IsimListesiSablonu({ sutunlar, urunListesi = false }: { 
       }
       if (islem === "sil") setSatirlar([]);
       if (islem === "gonder") setGonderildi(true);
+      taslakSil(taslakAnahtari);
       setModal(islem === "sil" ? null : islem === "kaydet" ? "kaydedildi" : "gonderildi");
     } catch (error) {
       setModal(null);

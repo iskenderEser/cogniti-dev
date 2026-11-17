@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { Clock, LogIn } from "lucide-react";
 import CognitiLogo from "@/components/marka/CognitiLogo";
 import { montserrat } from "@/app/_components/montserrat";
@@ -17,7 +18,8 @@ export default async function UyelikBasvurusu({
   const { davet, giris } = await searchParams;
   const token = typeof davet === "string" ? davet : "";
   const aday = await adayOturumu();
-  const oturumVar = !aday && giris === "1" && !token
+  if (aday) redirect("/kurumsal-uyelik");
+  const oturumVar = giris === "1" && !token
     ? Boolean((await (await createClient()).auth.getUser()).data.user)
     : false;
 
@@ -32,9 +34,7 @@ export default async function UyelikBasvurusu({
         </Link>
       </header>
       <main className="mx-auto flex w-full max-w-xl flex-1 flex-col px-6 py-10">
-        {aday ? (
-          <nav aria-label="Üyelik"><Link href="/kurumsal-uyelik">Kurumsal Üyelik Formu</Link></nav>
-        ) : giris === "1" && !token ? (
+        {giris === "1" && !token ? (
           <div className="grid flex-1 place-items-center">
             <section aria-labelledby="davet-uyari-basligi" className="w-full max-w-[520px] rounded-[22px] border border-(--tema-cizgi) bg-(--tema-yuzey) px-5 py-9 text-center shadow-[0_14px_40px_rgb(15_23_42/0.06)] sm:px-11 sm:py-14">
               <div className="mx-auto mb-5 grid size-14 place-items-center rounded-full bg-(--tema-kontrol-eylem)/10 text-(--tema-kontrol-eylem)">
