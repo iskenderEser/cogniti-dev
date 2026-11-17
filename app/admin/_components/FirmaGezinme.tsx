@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useSyncExternalStore } from "react";
-import { Handshake, Building2, CheckCircle2, ChevronDown, ChevronRight, ClipboardList, Factory, ImageIcon, Plus, Settings2, Store, Ticket, Trash2, X, LogOut } from "lucide-react";
+import { Handshake, Building2, ChevronDown, ChevronRight, ClipboardList, Factory, ImageIcon, Plus, Settings2, Store, Ticket, Trash2, X, LogOut } from "lucide-react";
 import { PARTNER_SAYFALARI, type PartnerSayfasi, type PartnerFirmaOzeti } from "@/lib/agora/partnerFirmaYonetimi";
 import type { Firma } from "../_types";
 import type { GlobalBolumId, ModulSekmeId } from "../_constants";
@@ -213,8 +213,7 @@ export default function FirmaGezinme(p: Props) {
       <div className={styles.navList}>
         <button type="button" className={styles.navButton} aria-current={p.globalBolum === "yeni-firma" ? "page" : undefined} onClick={() => { p.onKapat(); p.onGlobalSec("yeni-firma"); }}><Plus />Yeni Firma Kaydı</button>
         <div role="separator" style={{ borderTop: "1px solid var(--tema-kontrol-cizgi)", margin: "6px 0" }} />
-        <button type="button" className={styles.navButton} aria-current={p.globalBolum === "uyelik-basvurulari" ? "page" : undefined} onClick={() => { p.onKapat(); p.onGlobalSec("uyelik-basvurulari"); }}><ClipboardList aria-hidden="true" />Üyelik Başvuruları</button>
-        <button type="button" className={styles.navButton} aria-current={p.globalBolum === "basvurusu-onaylananlar" ? "page" : undefined} onClick={() => { p.onKapat(); p.onGlobalSec("basvurusu-onaylananlar"); }}><CheckCircle2 aria-hidden="true" />Başvurusu Onaylananlar</button>
+        <button type="button" className={styles.navButton} aria-current={p.globalBolum === "uyelik-basvurulari" ? "page" : undefined} onClick={() => { p.onKapat(); p.onGlobalSec("uyelik-basvurulari"); }}><ClipboardList aria-hidden="true" />Firma Üyelik Başvuruları</button>
         <button type="button" className={styles.navButton} aria-current={p.globalBolum === "uretim" ? "page" : undefined} onClick={() => { p.onKapat(); p.onGlobalSec("uretim"); }}><Factory />İçerik Üretimi</button>
         <button type="button" className={styles.navButton} aria-current={p.globalBolum === "sistem" ? "page" : undefined} onClick={() => { p.onKapat(); p.onGlobalSec("sistem"); }}><Settings2 />Sistem Ayarları</button>
         <button type="button" className={styles.navButton} aria-current={p.globalBolum === "hbstore" ? "page" : undefined} onClick={() => { p.onKapat(); p.onGlobalSec("hbstore"); }}><Store />FirmaStore Çek Yönetimi</button>

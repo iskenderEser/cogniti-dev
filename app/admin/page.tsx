@@ -83,7 +83,7 @@ function AdminPanelIcerigi() {
   const faturaSayfasi = faturaSayfasiBilgisi(seciliSekme);
   const bolumParametresi = aramaParametreleri.get("bolum")
     ?? (!firmaAdmin && !firmaId && !aramaParametreleri.has("sayfa") ? "yeni-firma" : null);
-  const globalBolum = bolumParametresi && (!["uyelik-basvurulari", "basvurusu-onaylananlar"].includes(bolumParametresi) || oturumKullanicisi?.rol === "admin") && ["partnerler", "bannerlar", "sistem", "hbstore", "eclubstore", "veri-sil", "uretim", "yeni-firma", "uyelik-basvurulari", "basvurusu-onaylananlar"].includes(bolumParametresi)
+  const globalBolum = bolumParametresi && (bolumParametresi !== "uyelik-basvurulari" || oturumKullanicisi?.rol === "admin") && ["partnerler", "bannerlar", "sistem", "hbstore", "eclubstore", "veri-sil", "uretim", "yeni-firma", "uyelik-basvurulari"].includes(bolumParametresi)
     ? bolumParametresi as GlobalBolumId | "yeni-firma" : null;
   const admin = useAdminPanel(firmaId);
   const partnerler = usePartnerFirmalari(!firmaAdmin && !!oturumKullanicisi);
@@ -125,7 +125,7 @@ function AdminPanelIcerigi() {
     konumuGuncelle(sekme, firma ?? admin.seciliFirma);
   };
   const handleGlobalSec = (bolum: GlobalBolumId | "yeni-firma") => {
-    konumuGuncelle(seciliSekme, (bolum === "partnerler" || bolum === "uyelik-basvurulari" || bolum === "basvurusu-onaylananlar") ? null : admin.seciliFirma, bolum);
+    konumuGuncelle(seciliSekme, (bolum === "partnerler" || bolum === "uyelik-basvurulari") ? null : admin.seciliFirma, bolum);
   };
 
   if (admin.yukleniyor || !admin.kullanici) return null;
@@ -135,7 +135,7 @@ function AdminPanelIcerigi() {
   const saltOkunur = !globalBolum && seciliSekme !== "firma-admin-yonetimi" && !firmaAdmin && f?.firma_admin_aktif === true;
   const platformSecili = !!f && platformBannerFirmasi(f.firma_id);
   const sayfa = yonetimSayfasiBilgisi(seciliSekme, platformSecili);
-  const globalBaslik = globalBolum ? ({ partnerler:"Cogniti Partner Yönetimi", bannerlar:"Cogniti Bannerları", sistem:"Sistem Ayarları", hbstore:"FirmaStore Çek Yönetimi", eclubstore:"E-Club Çek Teslimatı", "veri-sil":"Yayın Toplu/Tekil Silme", uretim:"İçerik Üretimi", "uyelik-basvurulari":"Üyelik Başvuruları", "basvurusu-onaylananlar":"Başvurusu Onaylananlar", "yeni-firma":"Yeni Firma Kayıt" }[globalBolum]) : null;
+  const globalBaslik = globalBolum ? ({ partnerler:"Cogniti Partner Yönetimi", bannerlar:"Cogniti Bannerları", sistem:"Sistem Ayarları", hbstore:"FirmaStore Çek Yönetimi", eclubstore:"E-Club Çek Teslimatı", "veri-sil":"Yayın Toplu/Tekil Silme", uretim:"İçerik Üretimi", "uyelik-basvurulari":"Firma Üyelik Başvuruları", "yeni-firma":"Yeni Firma Kayıt" }[globalBolum]) : null;
 
   return (
     <FirmaYonetimYetkisi value={saltOkunur}><div className={styles.shell}>
@@ -169,8 +169,8 @@ function AdminPanelIcerigi() {
             !firmaAdmin && (partnerId && partnerSayfasi === "firma-bilgileri" ? <PartnerFirmaBilgileri key={partnerId} partnerId={partnerId} /> : partnerId && partnerSayfasi === "yayinlar" ? <PartnerYayinlari key={partnerId} partnerId={partnerId} /> : partnerId ? <section className={styles.card} aria-label={PARTNER_SAYFALARI[partnerSayfasi]}>
               <div className={styles.cardBody}>{partnerler.yukleniyor ? <p role="status">Partner bilgisi yükleniyor…</p> : partnerler.hata ? <p role="alert">{partnerler.hata}</p> : !seciliPartner ? <p role="alert">Partner firma bulunamadı.</p> : partnerSayfasi === "hak-edisleri" ? <PartnerHakEdisleri key={partnerId} partnerId={partnerId} /> : partnerSayfasi === "raporlar" ? <PartnerRaporlari key={partnerId} partnerId={partnerId} /> : <p className={styles.empty}>Bu bölüm henüz kullanıma açılmadı.</p>}</div>
             </section> : <PartnerYonetimi />)
-          ) : globalBolum === "uyelik-basvurulari" || globalBolum === "basvurusu-onaylananlar" ? (
-            <UyelikBasvuruPaneli mod={globalBolum === "basvurusu-onaylananlar" ? "onaylanan" : "bekleyen"} basari={admin.basari} />
+          ) : globalBolum === "uyelik-basvurulari" ? (
+            <UyelikBasvuruPaneli basari={admin.basari} />
           ) : globalBolum === "yeni-firma" ? (
             <YeniFirmaFormu onKaydet={admin.handleFirmaEkle} />
           ) : globalBolum === "bannerlar" ? (
