@@ -4,12 +4,19 @@ import Link from "next/link";
 import { LogIn } from "lucide-react";
 import CognitiLogo from "@/components/marka/CognitiLogo";
 import CognitiHakkinda from "@/components/panel/bilgi/CognitiHakkinda";
+import CognitiIsSurecleri from "./CognitiIsSurecleri";
+import CognitiSunduklari from "./CognitiSunduklari";
 import { useTema } from "@/app/providers/TemaProvider";
 import GirisAltBilgileri from "@/app/login/_components/GirisAltBilgileri";
 import styles from "@/app/login/login.module.css";
 import switchStyles from "@/components/tema/tema-secici.module.css";
 
-export default function KarsilamaSayfasi() {
+interface Props {
+  bunnyLibraryId?: string;
+  bunnyPullZone?: string;
+}
+
+export default function KarsilamaSayfasi({ bunnyLibraryId = "707975", bunnyPullZone }: Props) {
   const { tema, temaDegistir } = useTema();
   return (
     <div className={`${styles.page} ${styles.welcomePage}`}>
@@ -26,6 +33,8 @@ export default function KarsilamaSayfasi() {
         </nav>
       </header>
       <main><CognitiHakkinda /></main>
+      <CognitiIsSurecleri />
+      <CognitiSunduklari bunnyLibraryId={bunnyLibraryId} bunnyPullZone={bunnyPullZone} />
       <GirisAltBilgileri gorunum={
         <div className={styles.appearance}><span>Görünüm</span>
           <div className={`${switchStyles.secici} ${styles.themeSwitch}`}>

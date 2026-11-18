@@ -43,15 +43,6 @@ Hediye Takibi görünüm testi için oluşturulan test verileri henüz silinmemi
 
 Eczanem>İndirim Onayı sekmesindeki (F) veriler silinecek
 
-## Hatırlatma: Cogniti marka dönüşümünde 5, 7 ve 9. adımlar
-
-Kullanıcı kararı: **5. e-posta kimliği**, **7. `cogniti.net` domain bağlantısı** ve **9. gerçek ortam son kontrolü** tek bir `cogniti.net` geçişi kapsamında birlikte ele alınacak. **5, 6 (6.1–6.7) ve 7. adımlar tamamlandı (16 Kasım 2026).**
-
-- **7 — Domain (TAMAMLANDI):** `cogniti.net` için DNS, Vercel/hosting bağlantısı ve HTTPS tamamlandı. Supabase Auth site/redirect adresleri (`https://cogniti.net`, `https://cogniti.net/sifre-yenile`), Supabase Vault `hapbilgi_cron_base_url` (`https://cogniti.net`), Bunny Stream webhook (`https://cogniti.net/api/bunny/webhook`) ve Bunny `cogniti-upload` `ALLOWED_ORIGIN` (`https://cogniti.net`) doğrulandı.
-- **5 — E-posta kimliği (TAMAMLANDI):** Resend `cogniti.net` domain doğrulaması ve gönderici adresi (`Cogniti <bilgi@cogniti.net>`); Vercel'de `RESEND_API_KEY`, `ECLUB_DAVET_EMAIL_FROM`, `ECLUB_CEK_EMAIL_FROM`, `COGNITI_SITE_URL` (`https://cogniti.net`) ve `VIVA_EPOSTA_GONDERIM_AKTIF` (`true`) değerleri tanımlandı. Supabase Auth Custom SMTP (`bilgi@cogniti.net`) ve şifre sıfırlama e-posta şablonu doğrulandı.
-- **9 — Son kontrol:** Yeni domainde giriş, gerçek davet → e-posta → şifre oluşturma → giriş ve şifre sıfırlama; logo/banner, medya, e-posta ve bildirim kimliği doğrulanıp marka geçişi kaydedilecek. Kontrollü gerçek kayıt testlerinden önce test e-postası gönderme.
-- E-posta metin taslakları `docs/COGNITI_EPOSTA_SABLON_STOGU.md` ve BLUEBOOK içinde tutuluyor. Kullanıcı kapsamı **tüm sistem bildirimleri** olarak onayladı. Taslak hazırlamak, yeni otomatik gönderim veya alıcı kuralı ekleme yetkisi değildir; metin onayı ve gönderim entegrasyonu ayrı izlenecek. Çek metinlerinde sağlayıcı adı yerine **Hediye çeki** kullanılacak; şablon stoğu değişirse iki kayıt birlikte güncellenecek.
-
 ## Üçüncü zorunlu kural: Video Mimarisi ve Öğrenme Araçları Ayrımı
 
 **Videoları ASLA diğer öğrenme araçları (PDF, Görsel, Podcast) ile aynı ortak yükleme/doğrulama paketine veya ara durum tablolarına sokma.**
@@ -180,7 +171,6 @@ Token sisteminin temel uygulaması ve SQL kurulumları yapılmıştır; aşağı
 
 - **TB-VIVA-01 — Viva otomatik kontör canlı kabulü bekliyor.** Deployment sonrası cron endpoint’i HTTP 200 ve güncel tüketim adımıyla doğrulandı; o çağrıda iş yoktu. Yeni gerçek yayın için manuel tetikleme olmadan zamanlanmış üretim cron’unun doğru tutarı tek kez düşürdüğünü doğrula. Kullanıcı bunu teknik borç olarak bıraktı; açık test talimatı olmadan gerçek yayın testi başlatma. Kapanma koşulları `docs/VIVA_TOKEN_KULLANIM_GECISI.md` içindedir.
 - Planlı yayının gerçek açılışında token tüketimini doğrula; plan kaydında tüketim olmadığını kullanıcı doğruladı.
-- 28 Ekim KKÖ kararına göre her ay 1.500 token yenilenir, kalan devretmez ve GM onayı kaldırılır. Kullanıcı beş SQL testinin başarılı olduğunu ve kurulum ile cron sonucunun true olduğunu iletti; gerçek ay başı yenilemesini ve tükenen bakiye davranışını doğrula.
 - Token ekranının firma rollerindeki görünümünü ve yetkilerini gerçek kullanıcılarla kontrol et; kullanıcıyla görsel düzenlemeleri ele al. Eczacılar ve eczane çalışanları token bilgisi görmez.
 - Eczanem tüketiminde gönderim anındaki bağlayan UTT, bölge ve takım bilgisini koruyacak tarihsel kapsamı ele al. Şu anda mevcut bağ ve organizasyon kullanıldığından geçmiş görünüm değişebilir.
 - Eş zamanlı işlem testi kullanıcı kararıyla geçildi; doğrulanmış kabul etme ve yeni bir yöntem için kullanıcı talimatını bekle.
