@@ -362,6 +362,8 @@
 
 .faydaModal {
   width: min(100%, 820px);
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
   border-radius: 20px;
   border: 1px solid var(--tema-hakkinda-cizgi);
   background: var(--tema-yuzey);
@@ -401,6 +403,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
   width: 34px;
   height: 34px;
   border-radius: 10px;
@@ -605,8 +608,12 @@
 }
 
 @media (max-width: 680px) {
+  .faydaArkaPlan {
+    padding: 16px;
+  }
   .faydaModal {
     padding: 20px 18px 18px;
+    gap: 14px;
   }
   .faydaSahne {
     padding: 18px 16px;

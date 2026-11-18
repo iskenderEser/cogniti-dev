@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import { createPortal } from "react-dom";
 import { Eye, EyeOff } from "lucide-react";
 import CognitiLogo from "@/components/marka/CognitiLogo";
 import { Input } from "@/components/ui/input";
@@ -345,7 +346,7 @@ export default function PartnerGiris() {
       </div>
 
       {/* Agora ve Ödeme Modeli Rehber Modalı */}
-      {rehberAcik && (
+      {rehberAcik && typeof document !== "undefined" && createPortal(
         <div
           className={styles.modalArkaPlan}
           role="dialog"
@@ -405,7 +406,8 @@ export default function PartnerGiris() {
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import styles from "./cogniti-hakkinda.module.css";
 
@@ -245,7 +246,7 @@ export default function CognitiFaydaModali() {
         </span>
       </button>
 
-      {acik && (
+      {acik && typeof document !== "undefined" && createPortal(
         <div
           className={styles.faydaArkaPlan}
           role="dialog"
@@ -364,7 +365,8 @@ export default function CognitiFaydaModali() {
               </div>
             </footer>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

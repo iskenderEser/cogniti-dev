@@ -557,6 +557,8 @@
 
 .rehberModal {
   width: min(100%, 780px);
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
   border-radius: 20px;
   border: 1px solid var(--tema-hakkinda-cizgi);
   background: var(--tema-yuzey);
@@ -667,16 +669,34 @@
 
 @media (max-width: 800px) {
   .topHeader { padding: 14px 28px; min-height: 84px; flex-wrap: wrap; }
+  .headerActions { flex-shrink: 1; flex-wrap: wrap; gap: 14px; }
   .metin, .icerik { padding-inline: 28px; }
   .yaklasimlar { grid-template-columns: 1fr; gap: 24px; }
   .adimlar { grid-template-columns: 1fr; gap: 24px; }
-  .rehberKartlar { grid-template-columns: 1fr; }
+  .rehberKartlar { grid-template-columns: 1fr; gap: 18px; }
+}
+
+@media (max-width: 640px) {
+  .topHeader { padding: 12px 16px; gap: 10px; min-height: auto; }
+  .brand img { width: 140px; height: auto; }
+  .headerActions { width: 100%; justify-content: space-between; gap: 8px; }
+  .applyNavBtn { font-size: 10px; letter-spacing: 0.6px; white-space: nowrap; }
+  .loginNavBtn { padding: 8px 14px; font-size: 12px; white-space: nowrap; }
+  .topBack { font-size: 11px; white-space: nowrap; }
+  .ustSatir { flex-wrap: nowrap; gap: 8px; }
+  .ustSatir .bolumEtiketi { font-size: 9.5px; letter-spacing: 0.8px; white-space: nowrap; }
+  .rehberTetikleyici { padding: 4px 10px 4px 6px; gap: 6px; font-size: 10px; letter-spacing: 0.2px; white-space: nowrap; flex-shrink: 0; }
+  .rehberLogoKapsul { width: 20px; height: 20px; }
+  .modalArkaPlan { padding: 16px; }
+  .rehberModal { padding: 20px 18px 18px; gap: 14px; }
+  .rehberUstBaslik { font-size: 18px; }
+  .rehberSekme { padding: 8px 10px; font-size: 12px; }
+  .rehberSahne { padding: 18px 16px; }
+  .rehberSlaytBaslik { margin: 8px 0 16px; }
 }
 
 @media (max-width: 480px) {
-  .topHeader { padding: 12px 20px; gap: 12px; }
-  .headerActions { gap: 12px; flex-wrap: wrap; }
-  .metin, .icerik { padding-inline: 20px; }
+  .metin, .icerik { padding-inline: 16px; }
   .card { padding: 20px; }
   .field input { font-size: 16px; }
 }
