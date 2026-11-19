@@ -44,7 +44,7 @@ export default function CognitiHakkinda() {
             <rect width="1600" height="1200" fill={`url(#${id}-kenar-akisi)`} />
           </mask>
         </defs>
-        <g mask={`url(#${id}-metin-korumasi)`} fill="none" stroke="#237ac8" strokeWidth="1" strokeLinecap="round">
+        <g mask={`url(#${id}-metin-korumasi)`} fill="none" stroke="var(--tema-hakkinda-vurgu)" strokeWidth="1" strokeLinecap="round">
           {[
             "M-120 65 C180 20 300 350 700 290 S1260 80 1720 190",
             "M-120 110 C200 60 340 420 760 340 S1320 130 1720 245",
@@ -83,12 +83,12 @@ export default function CognitiHakkinda() {
           <div className={styles.yaklasimlar}>
             <div className={styles.yaklasimBlok}>
               <div className={styles.yaklasim}>
-                <UsersRound className={styles.yaklasimIkon} aria-hidden="true" />
-                <p>Saha ekibiniz, <strong>Cogniti E-Promotion (CEP)</strong> uygulamasıyla eczacılara ve eczane teknisyenlerine e-tanıtımlar yaparken, her tanıtımın etkisini ölçebilirsiniz</p>
-              </div>
-              <div className={styles.yaklasim}>
                 <BadgeCheck className={styles.yaklasimIkon} aria-hidden="true" />
                 <p>Eczaneler <strong>Cogniti E-Promotion (CEP)</strong> ile danışanlara ürünleriniz hakkında kanıta dayalı bilgiler iletirken, ürünlerinizin eczanelerden alınmasını teşvik edebilirsiniz.</p>
+              </div>
+              <div className={styles.yaklasim}>
+                <UsersRound className={styles.yaklasimIkon} aria-hidden="true" />
+                <p>Saha ekibiniz, <strong>Cogniti E-Promotion (CEP)</strong> uygulamasıyla eczacılara ve eczane teknisyenlerine e-tanıtımlar yaparken, her tanıtımın etkisini ölçebilirsiniz</p>
               </div>
             </div>
             <div className={styles.yaklasimBlok}>
@@ -98,7 +98,7 @@ export default function CognitiHakkinda() {
               </div>
               <div className={styles.yaklasim}>
                 <MessageSquareText className={styles.yaklasimIkon} aria-hidden="true" />
-                <p>Bölge Müdürleri ikili çalışmalar sonrası temsilcilere <strong className={styles.celAdi}>Cogniti E-Learning (CEL)</strong> üzerinden öneriler iletebilir, gelişim için öğrenmenin sonuçlarını ölçebilirsiniz</p>
+                <p>Bölge Müdürleri ikili çalışmalar sonrası temsilcilere <strong className={styles.celAdi}>Cogniti E-Learning (CEL)</strong> üzerinden öneriler iletirken, gelişim için öğrenme sonuçlarını ölçebilirsiniz.</p>
               </div>
             </div>
           </div>

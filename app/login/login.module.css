@@ -103,6 +103,8 @@
 /* Agora iş partneri giriş bağlantısı. */
 .partnerAction { background: #00a8e7; border-color: #00a8e7; color: #ffffff; }
 .partnerAction:hover { background: #38bdf8; border-color: #38bdf8; }
+:global([data-tema="yesil"]) .partnerAction { background: #4d8b6b; border-color: #4d8b6b; color: #ffffff; }
+:global([data-tema="yesil"]) .partnerAction:hover { background: #5ca37e; border-color: #5ca37e; }
 /* Giriş bağlantıları birlikte kalır; tablet ve yarım pencerede başlık tek satırdır. */
 .welcomePage .header { flex-wrap: nowrap; }
 .welcomeActions { flex-wrap: nowrap; }

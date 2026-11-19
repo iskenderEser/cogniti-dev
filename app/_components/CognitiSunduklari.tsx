@@ -17,7 +17,7 @@ interface TanitimVideosu {
 const SUNDUKLARI_VIDEOLAR: readonly TanitimVideosu[] = [
   {
     id: "firmalar",
-    odak: "FİRMALAR",
+    odak: "FİRMALAR İÇİN",
     baslik: "Firmalar",
     altBaslik: "E-Tanıtım ve E-Öğrenme Platformu",
     sure: "52 sn",
@@ -25,7 +25,7 @@ const SUNDUKLARI_VIDEOLAR: readonly TanitimVideosu[] = [
   },
   {
     id: "temsilciler",
-    odak: "TEMSİLCİLER",
+    odak: "TEMSİLCİLER İÇİN",
     baslik: "Temsilciler",
     altBaslik: "Temsilcilerin asistanı",
     sure: "50 sn",
@@ -33,7 +33,7 @@ const SUNDUKLARI_VIDEOLAR: readonly TanitimVideosu[] = [
   },
   {
     id: "eczaneler",
-    odak: "ECZANELER",
+    odak: "ECZANELER İÇİN",
     baslik: "Eczaneler",
     altBaslik: "Kurumsal bilginin adresi",
     sure: "45 sn",
@@ -41,7 +41,7 @@ const SUNDUKLARI_VIDEOLAR: readonly TanitimVideosu[] = [
   },
   {
     id: "danisanlar",
-    odak: "DANIŞANLAR",
+    odak: "DANIŞANLAR İÇİN",
     baslik: "Danışanlar",
     altBaslik: "Güvenilir bilginin kapısı",
     sure: "41 sn",
@@ -49,7 +49,7 @@ const SUNDUKLARI_VIDEOLAR: readonly TanitimVideosu[] = [
   },
   {
     id: "partnerler",
-    odak: "İŞ PARTNERLERİ",
+    odak: "İŞ PARTNERLERİ İÇİN",
     baslik: "İş Partnerleri",
     altBaslik: "Uzmanlık platformu",
     sure: "40 sn",
@@ -104,12 +104,12 @@ export default function CognitiSunduklari({ bunnyLibraryId, bunnyPullZone }: Pro
           return (
             <div key={video.id} className="flex flex-col">
               <div className="mb-3">
-                <div className="text-[11px] font-medium leading-[1.5] tracking-[1.8px] text-[var(--tema-hakkinda-vurgu)]">
+                <div className="whitespace-nowrap text-[11px] font-medium leading-[1.5] tracking-[1.8px] text-[var(--tema-hakkinda-vurgu)] max-[640px]:text-[10px] max-[640px]:tracking-[1px]">
                   {video.odak}
                 </div>
                 <div
                   aria-hidden="true"
-                  className="mt-1.5 h-px w-1/2 bg-[var(--tema-hakkinda-vurgu)]/60"
+                  className="mt-1.5 h-[2px] w-7 rounded-full bg-[var(--tema-hakkinda-vurgu)]/75"
                 />
               </div>
 

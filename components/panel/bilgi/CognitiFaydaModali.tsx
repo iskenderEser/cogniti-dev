@@ -239,11 +239,12 @@ export default function CognitiFaydaModali() {
       >
         <span className={styles.faydaLogoKapsul} aria-hidden="true">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/marka/cogniti-icon.svg" alt="" width={18} height={18} />
+          <img src="/marka/cogniti-icon.svg" alt="" width={14} height={14} />
         </span>
         <span className={styles.faydaTetikleyiciMetin}>
           COGNITI DEĞER ZİNCİRİ
         </span>
+        <ChevronRight size={12} strokeWidth={2.2} className={styles.faydaTetikleyiciOk} aria-hidden="true" />
       </button>
 
       {acik && typeof document !== "undefined" && createPortal(

@@ -3,8 +3,12 @@
 import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { createPortal } from "react-dom";
-import { Eye, EyeOff } from "lucide-react";
+import { ChevronRight, Eye, EyeOff } from "lucide-react";
 import CognitiLogo from "@/components/marka/CognitiLogo";
+import { useTema } from "@/app/providers/TemaProvider";
+import GirisAltBilgileri from "@/app/login/_components/GirisAltBilgileri";
+import loginStyles from "@/app/login/login.module.css";
+import switchStyles from "@/components/tema/tema-secici.module.css";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import styles from "./partner.module.css";
@@ -98,6 +102,7 @@ export default function PartnerGiris() {
   }
 
   const aktifRehber = REHBER_SEKMELERI[rehberIndeks] ?? REHBER_SEKMELERI[0];
+  const { tema, temaDegistir } = useTema();
 
   return (
     <div className={styles.page}>
@@ -116,9 +121,6 @@ export default function PartnerGiris() {
           >
             Partner Girişi
           </button>
-          <Link href="/welcome" prefetch={false} className={styles.topBack}>
-            ← Cogniti’yi tanıyın
-          </Link>
         </nav>
       </header>
 
@@ -144,7 +146,7 @@ export default function PartnerGiris() {
               <rect width="1600" height="1200" fill="url(#partner-kenar-akisi)" />
             </mask>
           </defs>
-          <g mask="url(#partner-metin-korumasi)" fill="none" stroke="#237ac8" strokeWidth="1" strokeLinecap="round">
+          <g mask="url(#partner-metin-korumasi)" fill="none" stroke="var(--tema-hakkinda-vurgu)" strokeWidth="1" strokeLinecap="round">
             {[
               "M-120 65 C180 20 300 350 700 290 S1260 80 1720 190",
               "M-120 110 C200 60 340 420 760 340 S1320 130 1720 245",
@@ -161,6 +163,9 @@ export default function PartnerGiris() {
 
         <section className={styles.sahne} aria-labelledby="partner-baslik">
           <div className={styles.metin}>
+            <Link href="/welcome" prefetch={false} className={styles.topBack}>
+              ← Cogniti’yi tanıyın
+            </Link>
             <div className={styles.ustSatir}>
               <p className={styles.bolumEtiketi}>COGNITI İŞ PARTNERLİĞİ</p>
               <button
@@ -173,9 +178,10 @@ export default function PartnerGiris() {
               >
                 <span className={styles.rehberLogoKapsul} aria-hidden="true">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/marka/cogniti-icon.svg" alt="" width={18} height={18} />
+                  <img src="/marka/cogniti-icon.svg" alt="" width={14} height={14} />
                 </span>
                 <span>AGORA VE ÖDEME MODELİ</span>
+                <ChevronRight size={12} strokeWidth={2.2} className={styles.rehberTetikleyiciOk} aria-hidden="true" />
               </button>
             </div>
 
@@ -265,6 +271,16 @@ export default function PartnerGiris() {
           </section>
         </div>
       </main>
+
+      <GirisAltBilgileri gorunum={
+        <div className={loginStyles.appearance}><span>Görünüm</span>
+          <div className={`${switchStyles.secici} ${loginStyles.themeSwitch}`}>
+            <button type="button" role="switch" aria-label="Mavi ve yeşil görünüm arasında geçiş yap" aria-checked={tema === "mavi"} className={switchStyles[tema]} onClick={() => temaDegistir(tema === "mavi" ? "yesil" : "mavi")}>
+              <span className={switchStyles.anahtar} aria-hidden="true"><span className={switchStyles.topuz} /></span>
+            </button>
+          </div>
+        </div>
+      } />
 
       {/* Partner Girişi Modalı */}
       <div
