@@ -16,6 +16,7 @@ import { agoraRaflari,agoraTokenTutari,type AgoraYayini } from "@/lib/agora/vitr
 import { useAgoraVitrini } from "./AgoraVitrinBaglami";
 import { AgoraPodcastBilgisi } from "./AgoraPodcastBilgisi";
 import { AgoraSiparisModali } from "./AgoraSiparisModali";
+import { AgoraCanliYayinlar } from "./AgoraCanliYayinlar";
 import { HataMesajiContainer,useHataMesaji } from "@/components/HataMesaji";
 import styles from "./AgoraVitrini.module.css";
 import { AgoraRafOklari } from "./AgoraRafOklari";
@@ -69,11 +70,11 @@ export default function AgoraVitrini() {
  const agora=useAgoraVitrini();
  const {mesajlar,basari}=useHataMesaji();
  const [siparis,setSiparis]=useState<AgoraYayini|null>(null);
- const [hedef,setHedef]=useState<HedefRol|"">(""),[tur,setTur]=useState<"video"|"podcast">("video"),[incelenen,setIncelenen]=useState<AgoraYayini|null>(null);
+ const [hedef,setHedef]=useState<HedefRol|"">(""),[tur,setTur]=useState<"video"|"podcast"|"canli">("video"),[incelenen,setIncelenen]=useState<AgoraYayini|null>(null);
  if(!agora)return null;
  const {veri,hata,yukleniyor,seciliPartner}=agora;
  const partner=veri?.partnerler.find(p=>p.partner_id===seciliPartner);
- const raflar=agoraRaflari(veri?.yayinlar??[],partner?.partner_id??null,hedef,tur);
+ const raflar=tur==="canli"?[]:agoraRaflari(veri?.yayinlar??[],partner?.partner_id??null,hedef,tur);
  return <div className={styles.sayfa}>
   <div className={styles.baslik}><h1>{partner?.sirket_adi??"Agora"}</h1><YenileButonu yenileniyor={yukleniyor} onYenile={agora.yenile}/></div>
   <section className={styles.statlar} aria-label="Agora genel özeti">
@@ -86,9 +87,9 @@ export default function AgoraVitrini() {
     <SadeKontrolButonu aria-pressed={hedef===""} onClick={()=>setHedef("")}>Tüm Hedef Kitleler</SadeKontrolButonu>
     {TUM_HEDEF_ROLLER.map(r=><SadeKontrolButonu key={r} aria-pressed={hedef===r} onClick={()=>setHedef(r)}>{HEDEF_ROL_TASARIM[r].tamEtiket}</SadeKontrolButonu>)}
    </SadeKontrolGrubu></div>
-   <SadeKapsulFiltre etiket="Yayın aracı" secenekler={[{deger:"video",etiket:"Video"},{deger:"podcast",etiket:"Podcast"}]} deger={tur} onDegistir={setTur}/>
+   <SadeKapsulFiltre etiket="Yayın aracı" secenekler={[{deger:"video",etiket:"Video"},{deger:"podcast",etiket:"Podcast"},{deger:"canli",etiket:"Canlı Yayın (Viva)"}]} deger={tur} onDegistir={setTur}/>
   </div>
-  {yukleniyor&&!veri?<p role="status">Agora yükleniyor…</p>:raflar.map(r=><AgoraRafi key={r.baslik+seciliPartner+hedef+tur} {...r} onIncele={setIncelenen} onSiparis={setSiparis}/>)}
+  {tur==="canli"?<AgoraCanliYayinlar partnerId={partner?.partner_id??null} hedefRol={hedef} onBasari={basari}/>:yukleniyor&&!veri?<p role="status">Agora yükleniyor…</p>:raflar.map(r=><AgoraRafi key={r.baslik+seciliPartner+hedef+tur} {...r} onIncele={setIncelenen} onSiparis={setSiparis}/>)}
   <HataMesajiContainer mesajlar={mesajlar}/>
   {siparis&&<AgoraSiparisModali key={siparis.egitim_id} yayin={siparis} onKapat={()=>setSiparis(null)} onTamam={(mevcut,borc)=>{setSiparis(null);basari(mevcut?"Bu yayını daha önce satın aldınız.":"Yayın satın alındı ve yayın havuzunuza eklendi."+(borc>0?` ${borc.toLocaleString("tr-TR")} token borca yazıldı.`:""));void agora.yenile();}}/>}
   <Dialog.Root open={!!incelenen} onOpenChange={acik=>{if(!acik)setIncelenen(null);}}>

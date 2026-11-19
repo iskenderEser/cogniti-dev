@@ -7,7 +7,7 @@ import type { NavGrup } from "@/components/panel/panelNav.config";
 import PartnerNavbar from "./PartnerNavbar";
 
 const BAGLAM={rolKucu:"partner",kimlikTuru:"partner",storeAcik:false,ccAcik:false,eclubAcik:false,eczanemAcik:false};
-const SAYFALAR=[{etiket:"Yayınlarım",path:"/partner/egitimler"},{etiket:"Hak Edişlerim",path:"/partner/hak-edisleri"},{etiket:"Raporlarım",path:"/partner/raporlar"}];
+const SAYFALAR=[{etiket:"Yayınlarım",path:"/partner/egitimler"},{etiket:"Canlı Yayınlarım",path:"/partner/canli-yayinlar"},{etiket:"Hak Edişlerim",path:"/partner/hak-edisleri"},{etiket:"Raporlarım",path:"/partner/raporlar"}];
 
 export default function PartnerKabugu({firmaAdi,onCikis,onAnaSayfa,onGit,engelli=false,className,children}:{firmaAdi:string;onCikis:()=>void;onAnaSayfa:()=>void;onGit?:(yol:string)=>void;engelli?:boolean;className?:string;children:ReactNode}) {
   const router=useRouter();
