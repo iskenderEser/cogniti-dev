@@ -17,7 +17,7 @@ export function AgoraSiparisModali({yayin,onKapat,onTamam}:{yayin:AgoraYayini;on
  }
  return <AlertDialog open onOpenChange={acik=>{if(!acik&&!mesgul)onKapat();}}><AlertDialogContent>
   <AlertDialogHeader><AlertDialogTitle>Sipariş Onayı</AlertDialogTitle><AlertDialogDescription>
-   {yayin.sirket_adi} tarafından üretilen “{yayin.egitim_adi}” yayınını {agoraTokenTutari(yayin.fiyat_tl).toLocaleString("tr-TR")} token karşılığında satın almayı onaylıyor musunuz?
+   {yayin.sirket_adi} tarafından üretilen “{yayin.egitim_adi}” yayını için {agoraTokenTutari(yayin.fiyat_tl).toLocaleString("tr-TR")} token karşılığında sipariş vermeyi onaylıyor musunuz?
    Yayın, hazır soru setiyle birlikte sizin yayın havuzunuza eklenecektir.
   </AlertDialogDescription></AlertDialogHeader>
   <AgoraPodcastBilgisi yayin={yayin}/>

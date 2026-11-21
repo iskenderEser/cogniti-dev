@@ -99,12 +99,55 @@ const tokenKullanimi: NavOge = { etiket: "Token Kullanımı", path: "/token", ga
 export const PANEL_NAV: NavGrup[] = [
   {
     baslik: "Agora Yayınları",
-    baslikGoster: false,
-    oglar: [{ etiket: "AGORA YAYINLARI", path: "/agora-yayinlari", gate: (c) => URETICI_ROLLER.includes(c.rolKucu) }],
+    oglar: [
+      {
+        etiket: "Video ve Podcast Yayınlar",
+        anahtar: "/agora-yayinlari/vp",
+        gate: (c) => URETICI_ROLLER.includes(c.rolKucu),
+        altOglar: [
+          {
+            etiket: "Agora Video ve Podcast Yayınlar",
+            path: "/agora-yayinlari",
+            anahtar: "/agora-yayinlari",
+            tamEslesme: true,
+            gate: (c) => URETICI_ROLLER.includes(c.rolKucu),
+          },
+          {
+            etiket: "Yayın Yönetimi",
+            path: "/agora-yayinlari/yonetim",
+            anahtar: "/agora-yayinlari/yonetim",
+            tamEslesme: true,
+            gate: (c) => URETICI_ROLLER.includes(c.rolKucu),
+          },
+        ],
+      },
+      {
+        etiket: "Viva Canlı Yayınlar",
+        anahtar: "/agora-yayinlari/viva",
+        gate: (c) => URETICI_ROLLER.includes(c.rolKucu),
+        altOglar: [
+          {
+            etiket: "Agora Canlı Yayınlar",
+            path: "/agora-yayinlari/canli",
+            anahtar: "/agora-yayinlari/canli",
+            tamEslesme: true,
+            gate: (c) => URETICI_ROLLER.includes(c.rolKucu),
+          },
+          {
+            etiket: "Geçmiş Canlı Yayınlar",
+            path: "/agora-yayinlari/canli/gecmis",
+            anahtar: "/agora-yayinlari/canli/gecmis",
+            tamEslesme: true,
+            gate: (c) => URETICI_ROLLER.includes(c.rolKucu),
+          },
+        ],
+      },
+    ],
   },
   // ─── 1. YAYINLAR VE RAPORLAR (Üretici ve İçerik Üreticisi) ───────────────
   {
     baslik: "Yayınlar ve Raporlar",
+    ayirac: true,
     baslikGoster: (c) => !URETICI_ROLLER.includes(c.rolKucu),
     oglar: [
       { etiket: "Yayın Oluşturma ve Takip", path: "/yayin-takip", badgeKey: "talep", gate: (c) => URETICI_ROLLER.includes(c.rolKucu) },

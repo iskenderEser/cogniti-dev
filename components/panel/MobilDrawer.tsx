@@ -63,7 +63,7 @@ export default function MobilDrawer(props: MobilDrawerProps) {
     });
     return kapali;
   });
-  const [altOgeDurumlari, setAltOgeDurumlari] = useState<Map<string, { acik: boolean; secimIzi: string }>>(new Map());
+  const [altOgeDurumlari, setAltOgeDurumlari] = useState<Map<string, boolean>>(new Map());
 
   const grupToggle = (baslik: string) =>
     setKapaliGruplar((onceki) => {
@@ -72,24 +72,34 @@ export default function MobilDrawer(props: MobilDrawerProps) {
       return yeni;
     });
 
-  // Sayfa veya görünür gruplar değiştiğinde aktif sayfanın grubu açık kalsın.
+  // Sayfa değiştiğinde aktif sayfanın grubu veya alt menüsü kapalıysa aç; kullanıcının açtığı diğer sekmeleri kapatma.
   useEffect(() => {
-    const gorunurGruplar = gruplar.filter((g) => g.oglar.some((o) => o.gate(props)));
     const aktifGrup = gruplar.find((g) => grupAktifMi(g));
     setKapaliGruplar((onceki) => {
-      let degisti = false;
+      if (!aktifGrup || !onceki.has(aktifGrup.baslik)) return onceki;
       const yeni = new Set(onceki);
-      if (aktifGrup && yeni.has(aktifGrup.baslik)) {
-        yeni.delete(aktifGrup.baslik);
-        degisti = true;
-      }
-      gorunurGruplar.forEach((g, index) => {
-        if (index === 0 || grupAktifMi(g)) return;
-        if (!yeni.has(g.baslik)) {
-          yeni.add(g.baslik);
-          degisti = true;
+      yeni.delete(aktifGrup.baslik);
+      return yeni;
+    });
+    setAltOgeDurumlari((onceki) => {
+      let degisti = false;
+      const yeni = new Map(onceki);
+      const agaciGez = (oglar: NavOge[]) => {
+        for (const oge of oglar) {
+          const altOglar = (oge.altOglar ?? []).filter((alt) => alt.gate(props));
+          if (altOglar.length > 0) {
+            const anahtar = oge.anahtar ?? oge.etiket;
+            const altAktif = (Boolean(oge.onSecim) && navOgeAktifMi(oge, props, pathname))
+              || altOglar.some((alt) => navOgeVeyaAltiAktifMi(alt, props, pathname));
+            if (altAktif && yeni.get(anahtar) !== true) {
+              yeni.set(anahtar, true);
+              degisti = true;
+            }
+            agaciGez(altOglar);
+          }
         }
-      });
+      };
+      for (const g of gruplar) agaciGez(g.oglar);
       return degisti ? yeni : onceki;
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -118,10 +128,9 @@ export default function MobilDrawer(props: MobilDrawerProps) {
         className="w-full flex items-center justify-between rounded-lg cursor-pointer border-none text-left"
         style={{
           padding: girintili ? "10px 12px 10px 20px" : "10px 12px",
-          fontSize: yaziBoyutu ?? (path === "/agora-yayinlari" ? 12 : 14),
-          fontWeight: path === "/agora-yayinlari" ? 800 : (aktif || kalin) ? 700 : 600,
-          letterSpacing: path === "/agora-yayinlari" ? "0.06em" : undefined,
-          color: path === "/agora-yayinlari" ? "#6D28D9" : aktif ? "var(--tema-menu-secili-metin)" : path === "/token" && !girintili ? "var(--tema-kontrol-eylem)" : "var(--tema-gezinme-metin)",
+          fontSize: yaziBoyutu ?? 14,
+          fontWeight: (aktif || kalin) ? 700 : 600,
+          color: aktif ? "var(--tema-menu-secili-metin)" : path === "/token" && !girintili ? "var(--tema-kontrol-eylem)" : "var(--tema-gezinme-metin)",
           background: aktif ? "var(--tema-menu-secili-zemin)" : "transparent",
           fontFamily: "'Nunito', sans-serif",
           minHeight: "44px",
@@ -137,7 +146,6 @@ export default function MobilDrawer(props: MobilDrawerProps) {
           </span>
         ) : null}
       </button>
-      {path === "/agora-yayinlari" && <div role="separator" className="my-2 w-full border-t border-[var(--tema-cizgi)]" />}
       </>
     );
   };
@@ -148,11 +156,10 @@ export default function MobilDrawer(props: MobilDrawerProps) {
     const anahtar = oge.anahtar ?? oge.etiket;
     const altAktif = (Boolean(oge.onSecim) && navOgeAktifMi(oge, props, pathname))
       || altOglar.some(alt => navOgeVeyaAltiAktifMi(alt, props, pathname));
-    const kayit = altOgeDurumlari.get(anahtar);
-    const altAcik = oge.onSecim && altAktif && kayit?.secimIzi !== secimIzi ? true : kayit?.acik ?? altAktif;
+    const altAcik = altOgeDurumlari.get(anahtar) ?? altAktif;
     const dalDegistir = () => setAltOgeDurumlari(onceki => {
       const yeni = new Map(onceki);
-      yeni.set(anahtar, { acik: !altAcik, secimIzi });
+      yeni.set(anahtar, !altAcik);
       return yeni;
     });
     const sayi = rozetSayisi(oge);
@@ -250,6 +257,7 @@ export default function MobilDrawer(props: MobilDrawerProps) {
             }
 
             const acik = !kapaliGruplar.has(grup.baslik);
+            const baslikRengi = grup.baslik === "FirmaStore" ? "var(--tema-hbstore-vurgu)" : grup.baslik === "Agora Yayınları" ? "#6D28D9" : "var(--tema-baslik)";
             return (
               <div key={grup.baslik} className="flex flex-col gap-1">
                 <button
@@ -257,10 +265,10 @@ export default function MobilDrawer(props: MobilDrawerProps) {
                   aria-expanded={acik}
                   onClick={() => grupToggle(grup.baslik)}
                   className="flex w-full cursor-pointer items-center justify-between border-none bg-transparent"
-                  style={{ minHeight: "44px", fontSize: "12px", fontWeight: 800, color: grup.baslik === "FirmaStore" ? "var(--tema-hbstore-vurgu)" : "var(--tema-baslik)", textTransform: "uppercase", letterSpacing: "0.06em", padding: "2px 12px 4px", fontFamily: "'Nunito', sans-serif" }}
+                  style={{ minHeight: "44px", fontSize: "12px", fontWeight: 800, color: baslikRengi, textTransform: "uppercase", letterSpacing: "0.06em", padding: "2px 12px 4px", fontFamily: "'Nunito', sans-serif" }}
                 >
                   <span>{grup.baslik}</span>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--tema-baslik)" strokeWidth={2.5}
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={baslikRengi} strokeWidth={2.5}
                     style={{ transform: acik ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6" />
                   </svg>

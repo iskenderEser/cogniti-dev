@@ -87,7 +87,10 @@ try{
  await click(Array.from(a.querySelectorAll('button')).find(b=>b.textContent.includes('Tüm Partnerler')));
  check('Tüm partnerlere dönünce başlangıca döner',say(yayinlanan)===2);
  const al=[...mobil(yeni).querySelectorAll('button')].find(b=>b.textContent==='Yayına Al');await click(al);
- check('Mobil Yayına Al seçili yayının yönetimini açar',!!button('Yayın Ayarlarını Aç')&&a.textContent.includes('Mobil Yayın 0'));
+ check('Mobil Yayına Al seçili yayının yönetim sayfasına yönlendirir',gidilenYollar.at(-1)==='/agora-yayinlari/yonetim?siparis='+encodeURIComponent(uid(100)));
+ win.happyDOM.setURL('http://localhost'+gidilenYollar.at(-1));
+ await act(async()=>root.render(React.createElement(Page,{key:'yonetim',gorunum:'yonetim'})));await flush();
+ check('Yönetim sayfası seçili yayını açar',!!button('Yayın Ayarlarını Aç')&&a.textContent.includes('Mobil Yayın 0'));
  check('Mevcut zorunlu ürün kapısı korundu',button('Yayın Ayarlarını Aç').disabled);
  console.log(JSON.stringify({passed,scope:'HappyDOM gerçek Agora Yayınlarım, ortak MobilYayinAkisi ve HOYK; editör/auth/HTTP sahte. İki bağımsız 2+5 raf, partner sıfırlaması ve mobil Yayına Al bağlantısı.'}));
 }finally{await act(async()=>root.unmount());win.happyDOM.abort();}

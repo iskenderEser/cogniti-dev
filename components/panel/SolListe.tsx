@@ -32,6 +32,10 @@ type SolListeProps = NavContext & {
   gruplar?: NavGrup[];
 };
 
+// Modül düzeyinde bellek: sayfa geçişlerinde (PartnerKabugu yeniden mount olsa bile) kullanıcının açtığı/kapattığı sekmeler korunur.
+let kaliciKapaliGruplar: Set<string> | null = null;
+const kaliciAltOgeDurumlari = new Map<string, boolean>();
+
 export default function SolListe(props: SolListeProps) {
   const gruplar = props.gruplar ?? PANEL_NAV;
   const { kullanici } = useAuth();
@@ -46,6 +50,7 @@ export default function SolListe(props: SolListeProps) {
 
   const [hover, setHover] = useState<string | null>(null);
   const [kapaliGruplar, setKapaliGruplar] = useState<Set<string>>(() => {
+    if (kaliciKapaliGruplar) return new Set(kaliciKapaliGruplar);
     const gorunurGruplar = gruplar.filter((g) => g.oglar.some((o) => o.gate(props)));
     const kapali = new Set<string>();
     gorunurGruplar.forEach((g, index) => {
@@ -53,29 +58,41 @@ export default function SolListe(props: SolListeProps) {
       if (grupAktifMi(g)) return; // Aktif sayfanın grubu açık başlar
       kapali.add(g.baslik);
     });
+    kaliciKapaliGruplar = new Set(kapali);
     return kapali;
   });
-  const [altOgeDurumlari, setAltOgeDurumlari] = useState<Map<string, { acik: boolean; secimIzi: string }>>(new Map());
+  const [altOgeDurumlari, setAltOgeDurumlari] = useState<Map<string, boolean>>(() => new Map(kaliciAltOgeDurumlari));
 
-  // Sayfa veya görünür gruplar değiştiğinde aktif sayfanın grubu kapalıysa aç; yeni gruplar kapalı başlasın
+  // Sayfa değiştiğinde aktif sayfanın grubu veya alt menüsü kapalıysa aç; kullanıcının açtığı diğer sekmeleri kapatma
   useEffect(() => {
-    const gorunurGruplar = gruplar.filter((g) => g.oglar.some((o) => o.gate(props)));
     const aktifGrup = gruplar.find((g) => grupAktifMi(g));
     setKapaliGruplar((onceki) => {
-      let degisti = false;
+      if (!aktifGrup || !onceki.has(aktifGrup.baslik)) return onceki;
       const yeni = new Set(onceki);
-      if (aktifGrup && yeni.has(aktifGrup.baslik)) {
-        yeni.delete(aktifGrup.baslik);
-        degisti = true;
-      }
-      gorunurGruplar.forEach((g, index) => {
-        if (index === 0) return;
-        if (grupAktifMi(g)) return;
-        if (!yeni.has(g.baslik)) {
-          yeni.add(g.baslik);
-          degisti = true;
+      yeni.delete(aktifGrup.baslik);
+      kaliciKapaliGruplar = new Set(yeni);
+      return yeni;
+    });
+    setAltOgeDurumlari((onceki) => {
+      let degisti = false;
+      const yeni = new Map(onceki);
+      const agaciGez = (oglar: NavOge[]) => {
+        for (const oge of oglar) {
+          const altOglar = (oge.altOglar ?? []).filter((alt) => alt.gate(props));
+          if (altOglar.length > 0) {
+            const anahtar = oge.anahtar ?? oge.etiket;
+            const altAktif = (Boolean(oge.onSecim) && navOgeAktifMi(oge, props, pathname))
+              || altOglar.some((alt) => navOgeVeyaAltiAktifMi(alt, props, pathname));
+            if (altAktif && yeni.get(anahtar) !== true) {
+              yeni.set(anahtar, true);
+              kaliciAltOgeDurumlari.set(anahtar, true);
+              degisti = true;
+            }
+            agaciGez(altOglar);
+          }
         }
-      });
+      };
+      for (const g of gruplar) agaciGez(g.oglar);
       return degisti ? yeni : onceki;
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -85,6 +102,7 @@ export default function SolListe(props: SolListeProps) {
     setKapaliGruplar((onceki) => {
       const yeni = new Set(onceki);
       if (yeni.has(baslik)) yeni.delete(baslik); else yeni.add(baslik);
+      kaliciKapaliGruplar = new Set(yeni);
       return yeni;
     });
 
@@ -117,10 +135,9 @@ export default function SolListe(props: SolListeProps) {
         className="relative w-full flex items-center justify-between rounded-lg cursor-pointer border-none text-left transition-all duration-200"
         style={{
           padding: `7px 10px 7px ${10 + seviye * 8}px`,
-          fontSize: oge.yaziBoyutu ?? (path === "/agora-yayinlari" ? 12 : 14),
-          fontWeight: path === "/agora-yayinlari" ? 800 : (aktif || oge.kalin) ? 700 : 600,
-          letterSpacing: path === "/agora-yayinlari" ? "0.06em" : undefined,
-          color: path === "/agora-yayinlari" ? "#6D28D9" : aktif ? "var(--tema-menu-secili-metin)" : path === "/token" && seviye === 0 ? "var(--tema-kontrol-eylem)" : "var(--tema-gezinme-metin)",
+          fontSize: oge.yaziBoyutu ?? 14,
+          fontWeight: (aktif || oge.kalin) ? 700 : 600,
+          color: aktif ? "var(--tema-menu-secili-metin)" : path === "/token" && seviye === 0 ? "var(--tema-kontrol-eylem)" : "var(--tema-gezinme-metin)",
           background: aktif ? "var(--tema-menu-secili-zemin)" : isHover ? "var(--tema-menu-hover)" : "transparent",
           boxShadow: aktif ? "inset 0 0 0 1px var(--tema-menu-secili-halka)" : "none",
           fontFamily: "'Nunito', sans-serif",
@@ -136,7 +153,6 @@ export default function SolListe(props: SolListeProps) {
           </span>
         )}
       </button>
-      {path === "/agora-yayinlari" && <div role="separator" className="my-2 w-full border-t border-[var(--tema-cizgi)]" />}
       </>
     );
   };
@@ -147,11 +163,11 @@ export default function SolListe(props: SolListeProps) {
     const anahtar = oge.anahtar ?? oge.etiket;
     const altAktif = (Boolean(oge.onSecim) && navOgeAktifMi(oge, props, pathname))
       || altOglar.some(alt => navOgeVeyaAltiAktifMi(alt, props, pathname));
-    const kayit = altOgeDurumlari.get(anahtar);
-    const altAcik = oge.onSecim && altAktif && kayit?.secimIzi !== secimIzi ? true : kayit?.acik ?? altAktif;
+    const altAcik = altOgeDurumlari.get(anahtar) ?? altAktif;
     const dalDegistir = () => setAltOgeDurumlari(onceki => {
       const yeni = new Map(onceki);
-      yeni.set(anahtar, { acik: !altAcik, secimIzi });
+      yeni.set(anahtar, !altAcik);
+      kaliciAltOgeDurumlari.set(anahtar, !altAcik);
       return yeni;
     });
     const sayi = rozetSayisi(oge);
@@ -222,16 +238,17 @@ export default function SolListe(props: SolListeProps) {
           }
 
           const acik = !kapaliGruplar.has(grup.baslik);
+          const baslikRengi = grup.baslik === "Agora Yayınları" ? "#6D28D9" : "var(--tema-baslik)";
           return (
             <div key={grup.baslik} className="flex flex-col gap-1">
               <button
                 onClick={() => grupToggle(grup.baslik)}
                 aria-expanded={acik}
                 className="w-full flex items-center justify-between bg-transparent border-none cursor-pointer"
-                style={{ fontSize: "12px", fontWeight: 800, color: "var(--tema-baslik)", textTransform: "uppercase", letterSpacing: "0.06em", padding: "2px 10px 4px", fontFamily: "'Nunito', sans-serif" }}
+                style={{ fontSize: "12px", fontWeight: 800, color: baslikRengi, textTransform: "uppercase", letterSpacing: "0.06em", padding: "2px 10px 4px", fontFamily: "'Nunito', sans-serif" }}
               >
                 <span>{grup.baslik}</span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--tema-baslik)" strokeWidth={2.5}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={baslikRengi} strokeWidth={2.5}
                   style={{ transform: acik ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6" />
                 </svg>

@@ -43,7 +43,7 @@ export async function POST(request: Request) {
   try {
     const b = await agoraVitrinBaglami();
     if (!b || !URETICI_ROLLER.includes(b.rol)) {
-      return partnerYanit({ hata: "Yalnız üretici kullanıcılar canlı yayın satın alabilir." }, 403);
+      return partnerYanit({ hata: "Yalnız üretici kullanıcılar canlı yayın siparişi verebilir." }, 403);
     }
 
     const { data, error } = await b.db.rpc("agora_canli_oturum_satin_al", {

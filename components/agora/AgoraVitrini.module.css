@@ -2,17 +2,30 @@
 .baslik { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:20px; }
 .baslik h1 { margin:0; font-size:24px; font-weight:800; color:var(--tema-baslik); }
 .statlar { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-bottom:20px; }
+.statlarAgora { display:grid; grid-template-columns:minmax(0,1fr); gap:10px; margin-bottom:20px; }
+@media(min-width:540px) { .statlarAgora { grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; } }
 .stat { min-width:0; padding:20px; border:1px solid var(--tema-cizgi); border-left:3px solid #6D28D9; border-radius:12px; background:var(--tema-yuzey); }
 .stat span { display:block; margin-bottom:8px; font-size:12px; font-weight:700; color:var(--tema-ikincil-metin); }
-.stat strong { font-size:30px; font-weight:800; line-height:1; color:var(--tema-baslik); }
-.filtreler { display:flex; flex-direction:column; align-items:flex-start; gap:12px; min-width:0; margin-bottom:24px; }
+.stat strong { display:block; font-size:30px; font-weight:800; line-height:1; color:var(--tema-baslik); }
+.statAgora { display:flex; flex-direction:column; justify-content:space-between; min-width:0; padding:clamp(14px, 2vw, 20px); border:1px solid var(--tema-cizgi); border-left:3px solid #6D28D9; border-radius:12px; background:var(--tema-yuzey); }
+.statAgora span { display:block; margin-bottom:8px; font-size:clamp(11.5px, 1.1vw, 13px); font-weight:700; color:var(--tema-ikincil-metin); line-height:1.3; }
+.statAgora strong { display:block; font-size:clamp(24px, 2.4vw, 32px); font-weight:800; line-height:1.05; color:var(--tema-baslik); }
+.statAgora small { display:block; margin-top:8px; font-size:clamp(11px, 1vw, 12px); font-weight:500; color:var(--tema-ikincil-metin); line-height:1.35; }
+.filtreler { display:flex; flex-direction:column; align-items:stretch; gap:12px; min-width:0; margin-bottom:24px; }
+.altFiltreSatiri { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; width:100%; }
+.aramaKutusu { position:relative; display:flex; align-items:center; flex:0 1 210px; width:210px; max-width:210px; min-width:150px; }
+.aramaIkonu { position:absolute; left:12px; color:var(--tema-ikincil-metin); pointer-events:none; }
+.aramaGirdisi { width:100%; height:36px; padding:0 32px 0 36px; border:1px solid var(--tema-cizgi); border-radius:9999px; background:var(--tema-yuzey); color:var(--tema-metin); font-size:13px; outline:none; transition:border-color 150ms,box-shadow 150ms; }
+.aramaGirdisi:focus { border-color:#6D28D9; box-shadow:0 0 0 2px rgb(109 40 217 / 0.15); }
+.aramaTemizle { position:absolute; right:8px; display:flex; align-items:center; justify-content:center; width:22px; height:22px; border:0; border-radius:9999px; background:transparent; color:var(--tema-ikincil-metin); cursor:pointer; }
+.aramaTemizle:hover { background:var(--tema-zemin); color:var(--tema-metin); }
 .hedefler { max-width:100%; overflow-x:auto; padding:3px 0; }
 .hedefler > div { width:max-content; flex-wrap:nowrap; }
 .raf { margin-bottom:28px; min-width:0; }
 .rafBaslik { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; }
 .rafBaslik h2 { margin:0; color:var(--tema-baslik); font-size:18px; font-weight:800; }
 .rafAlani { position:relative; min-width:0; }
-.rafOku { position:absolute; top:0; bottom:0; z-index:10; display:flex; width:64px; align-items:center; border:0; border-radius:0; padding:0; color:var(--tema-baslik); opacity:0; transition:opacity 150ms; cursor:pointer; }
+.rafOku { position:absolute; top:0; bottom:0; z-index:10; display:flex; width:50px; align-items:center; border:0; border-radius:0; padding:0; color:var(--tema-baslik); opacity:0; transition:opacity 150ms; cursor:pointer; }
 .solOk { left:0; justify-content:flex-start; background:linear-gradient(to right,var(--tema-yerel-ortak-sayfa-sayfa-zemini-12),transparent); }
 .sagOk { right:0; justify-content:flex-end; background:linear-gradient(to left,var(--tema-yerel-ortak-sayfa-sayfa-zemini-12),transparent); }
 .rafAlani:hover .rafOku, .rafOku:focus-visible { opacity:1; }
@@ -39,4 +52,4 @@
  .rafBaslik h2 { font-size:16px; }
 }
 
-.satinAlindi { display:block; padding:4px 6px; background:#6D28D9; color:white; font-size:10px; line-height:1.3; max-width:150px; }
+.satinAlindi { position:absolute; top:12px; left:-42px; width:128px; padding:3px 0; background:#6D28D9; color:white; font-size:9.5px; font-weight:800; line-height:1.4; letter-spacing:0.03em; text-align:center; white-space:nowrap; transform:rotate(-45deg); box-shadow:0 2px 6px rgb(0 0 0 / 0.25); }

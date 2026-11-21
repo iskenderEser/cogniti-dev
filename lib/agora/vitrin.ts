@@ -11,20 +11,17 @@ export interface AgoraYayini {
  siparis_sayisi:number|null; surum?:number; satin_alindi?:boolean;
 }
 export interface AgoraVitrinVerisi {
- stat:{partner_sayisi:number;yayin_sayisi:number;siparis_sayisi:number|null;hafta:string};
+ stat:{partner_sayisi:number;yayin_sayisi:number;canli_yayin_sayisi?:number;siparis_sayisi:number|null;hafta:string};
  partnerler:AgoraPartner[]; yayinlar:AgoraYayini[];
 }
 export function agoraTokenTutari(fiyat:number):number {
  const kurus = Math.round(fiyat * 100), birim = Math.round(KKO_TOKEN_FIYATI * 100);
  return Math.floor((kurus + birim / 2) / birim);
 }
-export function agoraRaflari(yayinlar:AgoraYayini[],partnerId:string|null,hedef:string,tur:"video"|"podcast") {
- const kayitlar=yayinlar.filter(y=>(!partnerId||y.partner_id===partnerId)&&(!hedef||y.hedef_roller.includes(hedef as HedefRol))&&y.yayin_araci===tur);
+export function agoraRaflari(yayinlar:AgoraYayini[],partnerId:string|null,hedef:string,tur:"video"|"podcast",arama="") {
+ const sorgu=arama.trim().toLocaleLowerCase("tr-TR");
+ const kayitlar=yayinlar.filter(y=>(!partnerId||y.partner_id===partnerId)&&(!hedef||y.hedef_roller.includes(hedef as HedefRol))&&y.yayin_araci===tur&&(!sorgu||[y.egitim_adi,y.partner_egitim_id,y.sirket_adi,y.kategori,y.aciklama].some(alan=>(alan??"").toLocaleLowerCase("tr-TR").includes(sorgu))));
  const yeni=(a:AgoraYayini,b:AgoraYayini)=>b.yayinlandi_at.localeCompare(a.yayinlandi_at)||a.egitim_id.localeCompare(b.egitim_id);
- return [
-  {baslik:"Yeniler",yayinlar:[...kayitlar].sort(yeni)},
-  {baslik:"En Çok Sipariş Verilenler",yayinlar:kayitlar.filter(y=>(y.siparis_sayisi??0)>0).sort((a,b)=>b.siparis_sayisi!-a.siparis_sayisi!||yeni(a,b))},
-  {baslik:"En Çok Beğenilenler",yayinlar:kayitlar.filter(y=>y.begeni_sayisi>0).sort((a,b)=>b.begeni_sayisi-a.begeni_sayisi||yeni(a,b))},
-  {baslik:"En Çok Favorilenenler",yayinlar:kayitlar.filter(y=>y.favori_sayisi>0).sort((a,b)=>b.favori_sayisi-a.favori_sayisi||yeni(a,b))},
- ];
+ const baslik=tur==="podcast"?"En Son Yayınlanan Podcastlar":"En Son Yayınlanan Videolar";
+ return [{baslik,yayinlar:[...kayitlar].sort(yeni)}].filter(r=>r.yayinlar.length>0);
 }
