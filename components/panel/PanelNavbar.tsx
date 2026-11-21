@@ -256,11 +256,8 @@ export default function PanelNavbar({
     onClick={() => router.push("/bolis")}
     onMouseEnter={() => setHover("bolis")}
     onMouseLeave={() => setHover(null)}
-    className={`${pillClass(bolisAktif)} shrink-0 gap-1.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--tema-kontrol-odak)]`}
+    className={`${pillClass(bolisAktif)} shrink-0 gap-1.5 px-2 py-0.5 text-[13px] sm:px-2.5 sm:py-[3px] sm:text-[15.5px] leading-[18px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--tema-kontrol-odak)]`}
     style={{
-      padding: "3px 10px",
-      fontSize: "15.5px",
-      lineHeight: "18px",
       fontWeight: 800,
       letterSpacing: "0.06em",
       color: "#0F766E",
@@ -415,7 +412,7 @@ export default function PanelNavbar({
           </button>}
         </div>
       </div>
-      {fiyatlarAcik && <div className="flex md:hidden justify-end gap-4 pt-1"><button type="button" onClick={() => { if (onFiyatlar) onFiyatlar(); else router.push(fiyatlarYolu); }}
+      {fiyatlarAcik && <div className="flex md:hidden justify-end gap-4 pt-1 pb-1.5"><button type="button" onClick={() => { if (onFiyatlar) onFiyatlar(); else router.push(fiyatlarYolu); }}
         aria-current={pathname === fiyatlarYolu ? "page" : undefined} className="md:mr-6 lg:mr-8 cursor-pointer text-right border-0 bg-transparent p-0 text-[11px] font-normal tracking-[1.8px] text-[var(--tema-kontrol-eylem)] hover:underline">PAKETLER, HİZMETLER VE FİYATLAR</button></div>}
       {(vivaGoster || bolisGoster) && (
         <div
@@ -423,7 +420,7 @@ export default function PanelNavbar({
           style={{ top: "calc(100% - 1px)" }}
         >
           {vivaGoster && (
-            <div className="relative flex h-4 sm:h-9 w-32 items-start justify-center pt-0.5 [&>button]:-translate-y-3 sm:[&>button]:translate-y-0">
+            <div className="relative flex h-6 sm:h-9 w-28 sm:w-32 items-start justify-center pt-0.5 [&>button]:-translate-y-1 sm:[&>button]:translate-y-0">
               <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 128 38" preserveAspectRatio="none" aria-hidden="true" style={{ filter: "drop-shadow(0 3px 3px color-mix(in srgb, var(--tema-metin) 5%, transparent))" }}>
                 <path d="M0 1C8 1 10 5 14 17L16 24C19 33 23 37 31 37H97C105 37 109 33 112 24L114 17C118 5 120 1 128 1V-2H0Z" fill="var(--tema-ust-menu-zemin)" />
               </svg>
@@ -431,7 +428,7 @@ export default function PanelNavbar({
             </div>
           )}
           {bolisGoster && (
-            <div className="relative flex h-4 sm:h-9 w-32 items-start justify-center pt-0.5 [&>button]:-translate-y-3 sm:[&>button]:translate-y-0">
+            <div className="relative flex h-6 sm:h-9 w-28 sm:w-32 items-start justify-center pt-0.5 [&>button]:-translate-y-1 sm:[&>button]:translate-y-0">
               <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 128 38" preserveAspectRatio="none" aria-hidden="true" style={{ filter: "drop-shadow(0 3px 3px color-mix(in srgb, var(--tema-metin) 5%, transparent))" }}>
                 <path d="M0 1C8 1 10 5 14 17L16 24C19 33 23 37 31 37H97C105 37 109 33 112 24L114 17C118 5 120 1 128 1V-2H0Z" fill="var(--tema-ust-menu-zemin)" />
               </svg>
