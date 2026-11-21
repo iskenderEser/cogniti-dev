@@ -260,6 +260,7 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
         hbStoreGoster: !isEclubKisi && etkinFlags.storeAcik && STORE_ALABILEN_ROLLER.includes(rolKucu),
         agoraGoster: !isEclubKisi && AGORA_GOREN_ROLLER.includes(rolKucu),
         vivaGoster: isEclubKisi ? etkinFlags.eclubAcik && etkinFirmalar.length > 0 : TUM_ROLLER.includes(rolKucu),
+        bolisGoster: true,
         anaSayfaYolu,
         bilgiPilleri: !isEclubKisi && URETICI_ROLLER.includes(rolKucu) ? [] : undefined,
         eclubStorePuani: isEclubKisi && etkinFlags.eclubAcik ? etkinEclubStorePuani : null,

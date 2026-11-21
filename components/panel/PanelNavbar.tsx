@@ -72,6 +72,8 @@ export interface PanelNavbarProps {
   hbStoreGoster?: boolean;
   // Mevcut Viva gezinme yetkisi layout tarafından çözülür.
   vivaGoster?: boolean;
+  // BOLIS (Sınav Merkezi) kulakçığı tüm panel kullanıcılarında görünür.
+  bolisGoster?: boolean;
   fiyatlarGoster?: boolean;
   fiyatlarYolu?: string;
   onFiyatlar?: () => void;
@@ -160,6 +162,7 @@ export default function PanelNavbar({
   siparisPuaniGoster,
   hbStoreGoster,
   vivaGoster = false,
+  bolisGoster = false,
   fiyatlarGoster,
   fiyatlarYolu = "/fiyatlar",
   onFiyatlar,
@@ -242,6 +245,34 @@ export default function PanelNavbar({
     {/* SVG logo kendi vektör oranıyla gösterilir. */}
     {/* eslint-disable-next-line @next/next/no-img-element */}
     <img src="/marka/viva/viva-mavi-ribon-yatay.svg" alt="Viva" width={62} height={18} style={{ display: "block", objectFit: "contain" }} />
+  </button>;
+
+  const bolisAktif = pathname === "/bolis" || pathname.startsWith("/bolis/");
+  const bolisPill = () => bolisGoster && <button
+    type="button"
+    aria-label="BOLIS'i aç"
+    aria-current={bolisAktif ? "page" : undefined}
+    title="BOLIS — Bilgi Derinliği Ölçüm ve Sınav Merkezi"
+    onClick={() => router.push("/bolis")}
+    onMouseEnter={() => setHover("bolis")}
+    onMouseLeave={() => setHover(null)}
+    className={`${pillClass(bolisAktif)} shrink-0 gap-1.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--tema-kontrol-odak)]`}
+    style={{
+      padding: "3px 10px",
+      fontSize: "15.5px",
+      lineHeight: "18px",
+      fontWeight: 800,
+      letterSpacing: "0.06em",
+      color: "#0F766E",
+      background: bolisAktif
+        ? "rgb(15 118 110 / 0.11)"
+        : hover === "bolis"
+          ? "var(--tema-kontrol-hover)"
+          : "transparent",
+      fontFamily: "'Nunito', sans-serif",
+    }}
+  >
+    BOLIS
   </button>;
 
   const bashHarfler = adSoyad
@@ -386,12 +417,29 @@ export default function PanelNavbar({
       </div>
       {fiyatlarAcik && <div className="flex md:hidden justify-end gap-4 pt-1"><button type="button" onClick={() => { if (onFiyatlar) onFiyatlar(); else router.push(fiyatlarYolu); }}
         aria-current={pathname === fiyatlarYolu ? "page" : undefined} className="md:mr-6 lg:mr-8 cursor-pointer text-right border-0 bg-transparent p-0 text-[11px] font-normal tracking-[1.8px] text-[var(--tema-kontrol-eylem)] hover:underline">PAKETLER, HİZMETLER VE FİYATLAR</button></div>}
-      {vivaGoster && <div className="absolute left-1/2 z-[51] flex h-4 sm:h-9 w-32 -translate-x-1/2 items-start justify-center pt-0.5 [&>button]:-translate-y-3 sm:[&>button]:translate-y-0" style={{ top: "calc(100% - 1px)" }}>
-        <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 128 38" preserveAspectRatio="none" aria-hidden="true" style={{ filter: "drop-shadow(0 3px 3px color-mix(in srgb, var(--tema-metin) 5%, transparent))" }}>
-          <path d="M0 1C8 1 10 5 14 17L16 24C19 33 23 37 31 37H97C105 37 109 33 112 24L114 17C118 5 120 1 128 1V-2H0Z" fill="var(--tema-ust-menu-zemin)" />
-        </svg>
-        {vivaPill()}
-      </div>}
+      {(vivaGoster || bolisGoster) && (
+        <div
+          className="absolute left-1/2 z-[51] flex -translate-x-1/2 items-start gap-1"
+          style={{ top: "calc(100% - 1px)" }}
+        >
+          {vivaGoster && (
+            <div className="relative flex h-4 sm:h-9 w-32 items-start justify-center pt-0.5 [&>button]:-translate-y-3 sm:[&>button]:translate-y-0">
+              <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 128 38" preserveAspectRatio="none" aria-hidden="true" style={{ filter: "drop-shadow(0 3px 3px color-mix(in srgb, var(--tema-metin) 5%, transparent))" }}>
+                <path d="M0 1C8 1 10 5 14 17L16 24C19 33 23 37 31 37H97C105 37 109 33 112 24L114 17C118 5 120 1 128 1V-2H0Z" fill="var(--tema-ust-menu-zemin)" />
+              </svg>
+              {vivaPill()}
+            </div>
+          )}
+          {bolisGoster && (
+            <div className="relative flex h-4 sm:h-9 w-32 items-start justify-center pt-0.5 [&>button]:-translate-y-3 sm:[&>button]:translate-y-0">
+              <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 128 38" preserveAspectRatio="none" aria-hidden="true" style={{ filter: "drop-shadow(0 3px 3px color-mix(in srgb, var(--tema-metin) 5%, transparent))" }}>
+                <path d="M0 1C8 1 10 5 14 17L16 24C19 33 23 37 31 37H97C105 37 109 33 112 24L114 17C118 5 120 1 128 1V-2H0Z" fill="var(--tema-ust-menu-zemin)" />
+              </svg>
+              {bolisPill()}
+            </div>
+          )}
+        </div>
+      )}
     </nav>
   );
 }

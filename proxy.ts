@@ -23,6 +23,9 @@ export async function proxy(request: NextRequest) {
   // Medya uçları partner üyeliğini ve eğitim sahipliğini kendi sunucu kapısında doğrular.
   if (request.nextUrl.pathname === "/partner/api/medya/video" && ["GET", "POST", "PUT"].includes(request.method)) return NextResponse.next({ request });
   if (request.nextUrl.pathname === "/partner/api/medya/podcast" && ["GET", "POST", "PATCH", "PUT"].includes(request.method)) return NextResponse.next({ request });
+  // BOLIS harici sınav katılım sayfaları ve API'si kendi erişim kodu/oturum kontrolünü yapar.
+  if (/^\/bolis-sinav\/[a-zA-Z0-9_-]{6,32}$/.test(request.nextUrl.pathname) && ["GET", "HEAD"].includes(request.method)) return NextResponse.next({ request });
+  if (/^\/api\/bolis-sinav\/[a-zA-Z0-9_-]{6,32}$/.test(request.nextUrl.pathname) && ["GET", "POST"].includes(request.method)) return NextResponse.next({ request });
   // Deneme uyarısı kişisel veri veya eğitim içeriği içermez; partner çerezi bu yola gönderilmez.
   if (request.nextUrl.pathname === "/agora/kogniti-deneme-yayini.wav" && ["GET", "HEAD"].includes(request.method)) return NextResponse.next({ request });
   // Koruma önizlemesi ve ses akışı kendi partner oturumunu her istekte doğrular.

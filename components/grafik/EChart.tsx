@@ -13,7 +13,7 @@
 
 import { useEffect, useRef } from "react";
 import * as echarts from "echarts/core";
-import { BarChart, PieChart, LineChart, ScatterChart } from "echarts/charts";
+import { BarChart, PieChart, LineChart, ScatterChart, RadarChart } from "echarts/charts";
 import {
   GridComponent,
   MarkLineComponent,
@@ -21,6 +21,7 @@ import {
   LegendComponent,
   DatasetComponent,
   GraphicComponent,
+  RadarComponent,
 } from "echarts/components";
 import { LabelLayout, UniversalTransition } from "echarts/features";
 import { CanvasRenderer, SVGRenderer } from "echarts/renderers";
@@ -32,12 +33,14 @@ echarts.use([
   PieChart,
   LineChart,
   ScatterChart,
+  RadarChart,
   GridComponent,
   MarkLineComponent,
   TooltipComponent,
   LegendComponent,
   DatasetComponent,
   GraphicComponent,
+  RadarComponent,
   LabelLayout,
   UniversalTransition,
   CanvasRenderer,
