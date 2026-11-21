@@ -1,6 +1,8 @@
 import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { createVivaDailyApi, vivaDailyOdaAdi } from "@/lib/viva/daily";
+import { vivaDailyKisiKimligi } from "@/lib/viva/katilim";
+import { vivaDailyOdaHazirla } from "@/lib/viva/oda";
 
 const ERKEN_GIRIS_MS = 15 * 60_000;
 const BITIS_TOLERANS_MS = 10 * 60_000;
@@ -12,6 +14,8 @@ interface OdaBilgisi {
   durum: string;
   viva_oda_adi: string | null;
   viva_domain: string | null;
+  viva_etkinlik_id?: string | null;
+  alici_id?: string | null;
   kullanici_adi: string;
 }
 
@@ -45,11 +49,11 @@ export async function partnerCanliOdaVeTokenHazirla({
   }
 
   const oturum = data as OdaBilgisi;
-  if (oturum.durum !== "rezerve") {
+  if (oturum.durum !== "siparis_verildi") {
     return {
       ok: false,
       status: 409,
-      hata: "Canlı yayın odası yalnızca satın alınmış (rezerve) oturumlar için açılabilir.",
+      hata: "Canlı yayın odası yalnızca sipariş verilmiş oturumlar için açılabilir.",
     };
   }
 
@@ -68,9 +72,29 @@ export async function partnerCanliOdaVeTokenHazirla({
   }
 
   const daily = createVivaDailyApi();
-  const odaAdi = oturum.viva_oda_adi || vivaDailyOdaAdi(oturum.oturum_id, 1);
+  const odaAdi = oturum.viva_etkinlik_id
+    ? vivaDailyOdaAdi(oturum.viva_etkinlik_id, 1)
+    : oturum.viva_oda_adi || vivaDailyOdaAdi(oturum.oturum_id, 1);
   const nbfBas = new Date(Math.min(basMs - ERKEN_GIRIS_MS, simdi)).toISOString();
   const expBit = new Date(bitMs + BITIS_TOLERANS_MS).toISOString();
+
+  if (oturum.viva_etkinlik_id && oturum.alici_id) {
+    await vivaDailyOdaHazirla(
+      {
+        async islem(islem, veri = {}) {
+          const { data: odaYanit, error: odaHatasi } = await db.rpc("viva_daily_oda_islem", {
+            p_auth: oturum.alici_id,
+            p_etkinlik: oturum.viva_etkinlik_id,
+            p_islem: islem,
+            p_veri: veri,
+          });
+          if (odaHatasi) throw odaHatasi;
+          return odaYanit;
+        },
+      },
+      daily,
+    ).catch(() => undefined);
+  }
 
   await daily.odaHazirla({
     domain: daily.domain,
@@ -79,7 +103,7 @@ export async function partnerCanliOdaVeTokenHazirla({
     bitis: expBit,
   });
 
-  if (!oturum.viva_oda_adi || oturum.viva_domain !== daily.domain) {
+  if (oturum.viva_oda_adi !== odaAdi || oturum.viva_domain !== daily.domain) {
     await db.rpc("agora_canli_oda_kaydet", {
       p_oturum_id: oturum.oturum_id,
       p_oda_adi: odaAdi,
@@ -87,15 +111,19 @@ export async function partnerCanliOdaVeTokenHazirla({
     });
   }
 
+  const dailyUserId = partnerId
+    ? vivaDailyKisiKimligi(`partner:${partnerId}`)
+    : vivaDailyKisiKimligi(`uye:${authId ?? oturum.oturum_id}`);
+
   const token = await daily.tokenOlustur({
     room_name: odaAdi,
-    user_id: partnerId ?? authId ?? oturum.oturum_id,
+    user_id: dailyUserId,
     user_name: oturum.kullanici_adi.slice(0, 80) || (sunucuMu ? "İş Partneri" : "Katılımcı"),
-    is_owner: sunucuMu,
+    is_owner: true,
     nbf: Math.floor(Date.parse(nbfBas) / 1000),
     exp: Math.ceil(Date.parse(expBit) / 1000),
     eject_at_token_exp: true,
-    enable_screenshare: sunucuMu,
+    enable_screenshare: true,
     enable_prejoin_ui: false,
     enable_recording_ui: false,
     enable_recording: false,
@@ -109,7 +137,7 @@ export async function partnerCanliOdaVeTokenHazirla({
       hasPresence: true,
       canSend: true,
       canReceive: { base: true },
-      canAdmin: sunucuMu,
+      canAdmin: true,
     },
   });
 

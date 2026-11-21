@@ -90,8 +90,8 @@ BEGIN
            o.baslangic_at, o.bitis_at, o.durum,
            (v_firma IS NOT NULL AND o.satin_alan_firma_id = v_firma) AS kendi_firmam_rezerve
     FROM public.agora_partner_canli_oturumlar o
-    JOIN public.agora_partner_canli_egitimler e USING (canli_egitim_id)
-    JOIN public.agora_partner_profilleri p USING (partner_id)
+    JOIN public.agora_partner_canli_egitimler e ON e.canli_egitim_id = o.canli_egitim_id
+    JOIN public.agora_partner_profilleri p ON p.partner_id = o.partner_id
     WHERE e.aktif_mi
       AND o.bitis_at > now()
       AND (o.durum = 'musait' OR (v_firma IS NOT NULL AND o.durum = 'rezerve' AND o.satin_alan_firma_id = v_firma))

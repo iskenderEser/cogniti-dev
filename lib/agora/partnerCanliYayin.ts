@@ -2,6 +2,10 @@ import { TALEP_TURU_SIRA, TALEP_TURU_KURALLARI, type TalepTuru } from "@/lib/ure
 import { TUM_HEDEF_ROLLER, type HedefRol } from "@/lib/utils/roller";
 import { egitimAdiDogrula } from "@/lib/agora/partnerEgitimleri";
 import { partnerKelimeSayisi } from "@/lib/agora/partnerEgitimFormu";
+import {
+  VARSAYILAN_PARTNER_KOMISYON_ORANI,
+  partnerKomisyonOraniGecerli,
+} from "@/lib/agora/komisyon";
 
 export const CANLI_YAYIN_SURELERI = [45, 60, 120, 180] as const;
 export type CanliYayinSuresi = (typeof CANLI_YAYIN_SURELERI)[number];
@@ -11,10 +15,11 @@ export type CanliYayinKapasitesi = (typeof CANLI_YAYIN_KAPASITELERI)[number];
 
 /** Aynı partnerin art arda iki canlı yayını arasındaki zorunlu tampon süresi (dakika). */
 export const CANLI_YAYIN_TAMPON_DAKIKA = 30;
-export const AGORA_CANLI_HIZMET_ORANI = 0.15;
+export const AGORA_CANLI_HIZMET_ORANI = VARSAYILAN_PARTNER_KOMISYON_ORANI / 100;
 
 export interface CanliMaliyetOzeti {
   fiyatTl: number;
+  komisyonOrani: number;
   hizmetBedeliTl: number;
   netHakedisTl: number;
 }
@@ -29,11 +34,17 @@ export function canliKapasiteGecerliMi(deger: unknown): deger is CanliYayinKapas
   return typeof deger === "number" && (CANLI_YAYIN_KAPASITELERI as readonly number[]).includes(deger);
 }
 
-export function canliHakedisOzetiHesapla(fiyatTl: number): CanliMaliyetOzeti {
+export function canliHakedisOzetiHesapla(
+  fiyatTl: number,
+  komisyonOrani: number = VARSAYILAN_PARTNER_KOMISYON_ORANI,
+): CanliMaliyetOzeti {
+  const gecerliOran = partnerKomisyonOraniGecerli(komisyonOrani)
+    ? yuvarla2(komisyonOrani)
+    : VARSAYILAN_PARTNER_KOMISYON_ORANI;
   const yuvarliFiyat = yuvarla2(fiyatTl);
-  const hizmetBedeliTl = yuvarla2(yuvarliFiyat * AGORA_CANLI_HIZMET_ORANI);
+  const hizmetBedeliTl = yuvarla2((yuvarliFiyat * gecerliOran) / 100);
   const netHakedisTl = yuvarla2(yuvarliFiyat - hizmetBedeliTl);
-  return { fiyatTl: yuvarliFiyat, hizmetBedeliTl, netHakedisTl };
+  return { fiyatTl: yuvarliFiyat, komisyonOrani: gecerliOran, hizmetBedeliTl, netHakedisTl };
 }
 
 export interface CanliOturumAraligi {
@@ -58,6 +69,72 @@ export function canliOturumTamponCakisiyorMu(
     }
   }
   return false;
+}
+
+export const CANLI_YAYIN_SAAT_ADIMI_DAKIKA = 15;
+
+export const CANLI_YAYIN_SAATLERI: readonly string[] = Array.from(
+  { length: (24 * 60) / CANLI_YAYIN_SAAT_ADIMI_DAKIKA },
+  (_, i) => {
+    const toplamDakika = i * CANLI_YAYIN_SAAT_ADIMI_DAKIKA;
+    const saat = String(Math.floor(toplamDakika / 60)).padStart(2, "0");
+    const dakika = String(toplamDakika % 60).padStart(2, "0");
+    return `${saat}:${dakika}`;
+  },
+);
+
+export interface CanliSaatSecenegi {
+  saat: string;
+  baslangicMs: number;
+  gecmis: boolean;
+  cakisiyor: boolean;
+  musait: boolean;
+}
+
+/** Viva ile uyumlu 15 dakikalık sabit saat seçeneklerini ve çakışma/geçmiş durumunu hesaplar. */
+export function canliSaatSecenekleriniHesapla(
+  tarih: string,
+  sureDakika: number,
+  mevcutlar: readonly CanliOturumAraligi[],
+  simdiMs = Date.now(),
+): CanliSaatSecenegi[] {
+  const gecerliTarih = /^\d{4}-\d{2}-\d{2}$/.test(tarih);
+  return CANLI_YAYIN_SAATLERI.map((saat) => {
+    if (!gecerliTarih) {
+      return { saat, baslangicMs: NaN, gecmis: false, cakisiyor: false, musait: true };
+    }
+    const baslangicMs = Date.parse(`${tarih}T${saat}:00+03:00`);
+    if (!Number.isFinite(baslangicMs)) {
+      return { saat, baslangicMs: NaN, gecmis: true, cakisiyor: false, musait: false };
+    }
+    const gecmis = baslangicMs <= simdiMs;
+    const cakisiyor =
+      !gecmis && canliOturumTamponCakisiyorMu({ baslangicMs, sureDakika }, mevcutlar);
+    return {
+      saat,
+      baslangicMs,
+      gecmis,
+      cakisiyor,
+      musait: !gecmis && !cakisiyor,
+    };
+  });
+}
+
+/** Seçili saat müsaitse korur; değilse önce 09:00 ve sonrasından, olmazsa tüm günden ilk müsait saati seçer. */
+export function canliIlkMusaitSaatiSec(
+  secenekler: readonly CanliSaatSecenegi[],
+  mevcutSaat: string,
+): string {
+  if (mevcutSaat && secenekler.some((s) => s.saat === mevcutSaat && s.musait)) {
+    return mevcutSaat;
+  }
+  const baslangicSaati = mevcutSaat >= "09:00" ? mevcutSaat : "09:00";
+  const gunduzSonraki = secenekler.find((s) => s.saat >= baslangicSaati && s.musait);
+  if (gunduzSonraki) return gunduzSonraki.saat;
+  const gunduz = secenekler.find((s) => s.saat >= "09:00" && s.musait);
+  if (gunduz) return gunduz.saat;
+  const herhangi = secenekler.find((s) => s.musait);
+  return herhangi ? herhangi.saat : "";
 }
 
 export type CanliYayinKategoriKodu = TalepTuru | "kisisel_gelisim";
@@ -92,6 +169,7 @@ export interface PartnerCanliEgitimDogrulamaSonucu {
 
 export function partnerCanliEgitimDogrula(
   body: Record<string, unknown>,
+  komisyonOrani: number = VARSAYILAN_PARTNER_KOMISYON_ORANI,
 ): { ok: true; veri: PartnerCanliEgitimDogrulamaSonucu; ozet: CanliMaliyetOzeti } | { ok: false; hata: string } {
   const ad = egitimAdiDogrula(body.egitim_adi);
   if (!ad) return { ok: false, hata: "Yayın Adı 3–200 karakter olmalıdır." };
@@ -139,9 +217,9 @@ export function partnerCanliEgitimDogrula(
     return { ok: false, hata: "Fiyat geçersiz." };
   }
 
-  const ozet = canliHakedisOzetiHesapla(fiyat);
+  const ozet = canliHakedisOzetiHesapla(fiyat, komisyonOrani);
   if (ozet.netHakedisTl <= 0) {
-    return { ok: false, hata: "Yayın satış fiyatı sıfırdan büyük olmalıdır." };
+    return { ok: false, hata: "Yayın satış fiyatı komisyon sonrası sıfırdan büyük olmalıdır." };
   }
 
   return {
