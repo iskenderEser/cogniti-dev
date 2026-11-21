@@ -7,11 +7,22 @@ export interface PartnerEgitimi {
   yayin_araci: "video" | "podcast" | null; fiyat_tl: number | null;
   durum: PartnerEgitimDurumu; surum: number; olusturuldu_at: string; guncellendi_at: string;
 }
-export interface PartnerEgitimListesi { kayitlar: PartnerEgitimi[]; toplam: number }
+export interface PartnerEgitimListesi {
+  kayitlar: PartnerEgitimi[];
+  toplam: number;
+  video_sayisi?: number;
+  podcast_sayisi?: number;
+}
+const gecerliSayac = (deger: unknown) => Number.isSafeInteger(deger) && Number(deger) >= 0;
 export function partnerEgitimListesiGecerli(data: unknown): data is PartnerEgitimListesi {
   if (!data || typeof data !== "object") return false;
   const d = data as Record<string, unknown>;
-  if (!Number.isSafeInteger(d.toplam) || Number(d.toplam) < 0 || !Array.isArray(d.kayitlar)) return false;
+  if (
+    !gecerliSayac(d.toplam)
+    || (d.video_sayisi !== undefined && !gecerliSayac(d.video_sayisi))
+    || (d.podcast_sayisi !== undefined && !gecerliSayac(d.podcast_sayisi))
+    || !Array.isArray(d.kayitlar)
+  ) return false;
   return d.kayitlar.every((r: unknown) => {
     if (!r || typeof r !== "object") return false;
     const e = r as Record<string, unknown>;

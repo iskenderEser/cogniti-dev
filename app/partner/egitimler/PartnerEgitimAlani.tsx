@@ -4,13 +4,15 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import PartnerKabugu from "@/components/agora/PartnerKabugu";
 import { useRouter } from "next/navigation";
 import { Dialog } from "radix-ui";
-import { GraduationCap, Pencil, Plus, Send, Trash2, Film, X } from "lucide-react";
+import { GraduationCap, Pencil, Plus, Film, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PartnerEgitimFormu from "./PartnerEgitimFormu";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { SadeKapsulFiltre } from "@/components/kontrol/SadeKontroller";
+import { SadeKapsulFiltre, SadeKontrolButonu, SadeKontrolGrubu } from "@/components/kontrol/SadeKontroller";
 import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
 import { PartnerEgitimKarti } from "@/components/yayin/PartnerEgitimKarti";
+import { HEDEF_ROL_TASARIM } from "@/app/(panel)/talepler/_types";
+import { TUM_HEDEF_ROLLER, type HedefRol } from "@/lib/utils/roller";
 import { partnerEgitimListesiGecerli, type PartnerEgitimi, type PartnerEgitimDurumu, type PartnerEgitimListesi } from "@/lib/agora/partnerEgitimleri";
 import { YenileButonu } from "@/components/ui/yenile-butonu";
 import { DahaFazlaGoster } from "@/components/liste/DahaFazlaGoster";
@@ -19,12 +21,13 @@ import styles from "./egitimler.module.css";
 import { AgoraRafOklari } from "@/components/agora/AgoraRafOklari";
 import rafStyles from "@/components/agora/AgoraVitrini.module.css";
 
-export default function PartnerEgitimAlani({ sirketAdi, kaydedildi=false }: { sirketAdi: string; logoSurumu: number; kaydedildi?:boolean }) {
+export default function PartnerEgitimAlani({ sirketAdi, kaydedildi=false, baslangicDurumu="tumu" }: { sirketAdi: string; logoSurumu: number; kaydedildi?:boolean; baslangicDurumu?:PartnerEgitimDurumu|"tumu" }) {
   const router=useRouter();
   const raf=useRef<HTMLDivElement>(null);
   const bildirimGosterildi=useRef(false);
   const [liste, setListe] = useState<PartnerEgitimListesi | null>(null);
-  const [durum, setDurum] = useState<PartnerEgitimDurumu | "tumu">("tumu");
+  const [durum, setDurum] = useState<PartnerEgitimDurumu | "tumu">(baslangicDurumu);
+  const [hedef, setHedef] = useState<HedefRol | "">("");
   const [sayfa, setSayfa] = useState(1);
   const [aramaMetni,setAramaMetni]=useState(""),[arama,setArama]=useState(""),[aramaTekrari,setAramaTekrari]=useState(0);
   const [baslangic,setBaslangic]=useState(""),[bitis,setBitis]=useState("");
@@ -47,18 +50,18 @@ export default function PartnerEgitimAlani({ sirketAdi, kaydedildi=false }: { si
     const surum = ++kontrol.surum;
     setYukleniyor(true); setHata("");
     try {
-      const r = await fetch(`/partner/api/egitimler?${new URLSearchParams({ durum, sayfa: String(istenenSayfa), arama, baslangic, bitis })}`, { cache: "no-store", signal: AbortSignal.any([controller.signal, AbortSignal.timeout(15000)]) });
+      const r = await fetch(`/partner/api/egitimler?${new URLSearchParams({ durum, sayfa: String(istenenSayfa), arama, baslangic, bitis, hedef })}`, { cache: "no-store", signal: AbortSignal.any([controller.signal, AbortSignal.timeout(15000)]) });
       if (r.status === 401) { window.location.replace("/partner/profil"); return; }
       const data: unknown = await r.json();
       if (!r.ok || !partnerEgitimListesiGecerli(data)) throw new Error();
       if (surum === kontrol.surum) {
-        setListe(eski=>ekle&&eski?{toplam:data.toplam,kayitlar:[...eski.kayitlar,...data.kayitlar.filter(yeni=>!eski.kayitlar.some(k=>k.egitim_id===yeni.egitim_id))]}:data);
+        setListe(eski=>ekle&&eski?{toplam:data.toplam,video_sayisi:data.video_sayisi,podcast_sayisi:data.podcast_sayisi,kayitlar:[...eski.kayitlar,...data.kayitlar.filter(yeni=>!eski.kayitlar.some(k=>k.egitim_id===yeni.egitim_id))]}:data);
         setSayfa(istenenSayfa);
       }
     } catch {
       if (surum === kontrol.surum && !controller.signal.aborted) { if(!ekle)setListe(null); setHata("Yayınlarınız okunamadı. Yenile ile tekrar deneyin."); }
     } finally { if (surum === kontrol.surum) setYukleniyor(false); }
-  }, [durum, arama, baslangic, bitis]);
+  }, [durum, arama, baslangic, bitis, hedef]);
   useEffect(() => { const kontrol = istek.current; void oku(); return () => { kontrol.surum++; kontrol.controller?.abort(); }; }, [oku,aramaTekrari]);
 
   useEffect(()=>{
@@ -111,15 +114,25 @@ export default function PartnerEgitimAlani({ sirketAdi, kaydedildi=false }: { si
       window.location.replace("/partner");
     } catch { setCikiliyor(false); setHata("Çıkış tamamlanamadı. Yeniden deneyin."); }
   }
+  const pasifSayfa = baslangicDurumu === "pasif";
+  const gorunenKayitlar = liste
+    ? (pasifSayfa ? liste.kayitlar : liste.kayitlar.filter(e => e.durum !== "pasif"))
+    : [];
+  const gorunenToplam = liste
+    ? (pasifSayfa ? liste.toplam : Math.max(0, liste.toplam - (liste.kayitlar.length - gorunenKayitlar.length)))
+    : 0;
   const acik = !!liste && !yukleniyor && !kaydediliyor && !cikiliyor;
-  const kart=(e:PartnerEgitimi)=><PartnerEgitimKarti key={e.egitim_id} egitim={e} onIncele={()=>editorAc(e)} islemler={<div className={styles.kartIslemleri} data-islem-duzeni="yatay">
-    {e.durum==="taslak"&&<Button type="button" className={styles.yayimlaButonu} disabled={kaydediliyor||cikiliyor||!!editor} onClick={ev=>{ev.stopPropagation();setHata("");setYayinAdayi(e);}}><Send size={12} aria-hidden="true"/>Agora’da Yayımla</Button>}
-    <Button type="button" variant="outline" disabled={kaydediliyor||cikiliyor} onClick={ev=>{ev.stopPropagation();editorAc(e);}}><Pencil size={12} aria-hidden="true"/>İncele</Button>
-    <Button type="button" variant="outline" className={styles.silButonu} disabled={kaydediliyor||cikiliyor} onClick={ev=>{ev.stopPropagation();setHata("");setSilmeAdayi(e);}}><Trash2 size={12} aria-hidden="true"/>{silinenId===e.egitim_id?"Siliniyor…":"Yayını Sil"}</Button>
+  const statKartlari = [
+    { etiket: "Tüm Video ve Podcast", deger: liste?.toplam },
+    { etiket: "Video", deger: liste?.video_sayisi },
+    { etiket: "Podcast", deger: liste?.podcast_sayisi },
+  ];
+  const kart=(e:PartnerEgitimi)=><PartnerEgitimKarti key={e.egitim_id} egitim={e} onIncele={()=>router.push(`/partner/egitimler/yeni?egitim=${e.egitim_id}`)} islemler={<div>
+    <Button type="button" variant="outline" disabled={kaydediliyor||cikiliyor} onClick={ev=>{ev.stopPropagation();router.push(`/partner/egitimler/yeni?egitim=${e.egitim_id}`);}}><Pencil size={12} aria-hidden="true"/>Düzenle</Button>
   </div>}/>;
   const egitimFormu=editor?<PartnerEgitimFormu key={editor.istekId} egitim={editor.egitim} istekId={editor.istekId} saltOkunur baslikGoster={false} onKapat={()=>{if(!kilit.current)setEditor(null);}} onIslem={aktif => { kilit.current = aktif; setKaydediliyor(aktif); }} onKaydedildi={async () => {
         setEditor(null); basari("Yayın bilgileri kaydedildi.");
-        if (durum !== "tumu" || arama || baslangic || bitis) { setListe(null); setDurum("tumu"); setArama(""); setAramaMetni(""); setBaslangic(""); setBitis(""); } else await oku();
+        if (durum !== "tumu" || arama || baslangic || bitis || hedef) { setListe(null); setDurum("tumu"); setArama(""); setAramaMetni(""); setBaslangic(""); setBitis(""); setHedef(""); } else await oku();
       }} />:null;
   return <PartnerKabugu className={styles.page} firmaAdi={sirketAdi} onCikis={()=>void cikis()} onAnaSayfa={()=>router.push("/partner/egitimler")} engelli={kaydediliyor||cikiliyor}>
     <HataMesajiContainer mesajlar={mesajlar} />
@@ -144,7 +157,7 @@ export default function PartnerEgitimAlani({ sirketAdi, kaydedildi=false }: { si
       </AlertDialogContent>
     </AlertDialog>
     <div className={styles.icerik}>
-      <div className={styles.baslik}><div><h1>Yayınlarım</h1></div><Button type="button" className={styles.yeniButonu} disabled={!acik} onClick={() => editorAc(null)}><Plus size={18} aria-hidden="true" />Yeni Yayın</Button></div>
+      <div className={styles.baslik}><div><h1>{pasifSayfa ? "Pasif Yayınlar" : "Agora Video ve Podcast Yayınlar"}</h1></div>{!pasifSayfa && <Button type="button" className={styles.yeniButonu} disabled={!acik} onClick={() => editorAc(null)}><Plus size={18} aria-hidden="true" />Yeni Yayın</Button>}</div>
       {editor?.egitim?<Dialog.Root open onOpenChange={open=>{if(!open&&!kilit.current)setEditor(null);}}>
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 z-50 bg-[var(--tema-yayin-detay-ortu)] backdrop-blur-sm"/>
@@ -168,10 +181,28 @@ export default function PartnerEgitimAlani({ sirketAdi, kaydedildi=false }: { si
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>:null}
+      <section className={styles.statlar} aria-label="Video ve podcast yayın sayıları" aria-busy={yukleniyor}>
+        {statKartlari.map((k) => (
+          <article key={k.etiket} className={styles.stat}>
+            <span>{k.etiket}</span>
+            <strong>{k.deger == null ? "—" : k.deger.toLocaleString("tr-TR")}</strong>
+          </article>
+        ))}
+      </section>
+      <div className={styles.hedefFiltreleri}>
+        <SadeKontrolGrubu tur="sekme" aria-label="Hedef kitle">
+          <SadeKontrolButonu aria-pressed={hedef === ""} disabled={kaydediliyor || cikiliyor} onClick={() => { if (kilit.current || cikiliyor || hedef === "") return; setHedef(""); setListe(null); }}>Tüm Hedef Kitleler</SadeKontrolButonu>
+          {TUM_HEDEF_ROLLER.map((r) => (
+            <SadeKontrolButonu key={r} aria-pressed={hedef === r} disabled={kaydediliyor || cikiliyor} onClick={() => { if (kilit.current || cikiliyor || hedef === r) return; setHedef(r); setListe(null); }}>
+              {r === "eczanem" ? "Eczanem (Eczane Danışanı)" : HEDEF_ROL_TASARIM[r].tamEtiket}
+            </SadeKontrolButonu>
+          ))}
+        </SadeKontrolGrubu>
+      </div>
       <div className={styles.araclar}>
-        <div className={styles.durumAlani}><SadeKapsulFiltre etiket="Yayın Durumu" deger={durum} onDegistir={v=>{if(kilit.current||!["tumu","taslak","yayinda","pasif"].includes(v))return;setDurum(v as PartnerEgitimDurumu|"tumu");setListe(null);}} secenekler={[
-          {deger:"tumu",etiket:"Tümü"},{deger:"taslak",etiket:"Taslak"},{deger:"yayinda",etiket:"Yayında"},{deger:"pasif",etiket:"Pasif"},
-        ].map(x=>({...x,disabled:kaydediliyor||cikiliyor}))}/>{liste&&<span className={styles.sayac}>{liste.toplam} Yayın</span>}</div>
+        <div className={styles.durumAlani}>{!pasifSayfa && <SadeKapsulFiltre etiket="Yayın Durumu" deger={durum} onDegistir={v=>{if(kilit.current||!["tumu","taslak","yayinda"].includes(v))return;setDurum(v as PartnerEgitimDurumu|"tumu");setListe(null);}} secenekler={[
+          {deger:"tumu",etiket:"Tümü"},{deger:"yayinda",etiket:"Yayında"},{deger:"taslak",etiket:"Taslak"},
+        ].map(x=>({...x,disabled:kaydediliyor||cikiliyor}))}/>}{liste&&<span className={styles.sayac}>{gorunenToplam} Yayın</span>}</div>
         <div className={styles.eylemler}>
           <form role="search" aria-label="Yayın Arama" className={styles.arama} onSubmit={ev=>{ev.preventDefault();if(kilit.current||cikiliyor)return;setArama(aramaMetni.trim());setListe(null);setAramaTekrari(n=>n+1);}}>
             <label htmlFor="partner-egitim-arama" className="sr-only">Yayın Adı, PE Kodu veya Fiyat</label>
@@ -188,16 +219,16 @@ export default function PartnerEgitimAlani({ sirketAdi, kaydedildi=false }: { si
       </div>
       {hata && !silmeAdayi && !yayinAdayi && <p role="alert" className={styles.hata}>{hata}</p>}
       {yukleniyor && !liste && <p role="status" className={styles.bilgi}>Yayınlarınız yükleniyor…</p>}
-      {liste && liste.toplam === 0 && !arama && !baslangic && !bitis && <section className={styles.bos}>
-        <div className={styles.bosSimge}><GraduationCap size={36} aria-hidden="true" /></div><h2>{durum === "tumu" ? "İlk Yayınınızı Ekleyin" : "Bu Durumda Yayın Bulunmuyor"}</h2><p>{durum === "tumu" ? "Yayınlarınızı burada listeleyebilir ve yönetebilirsiniz." : "Diğer yayınlarınızı görmek için Tümü seçeneğine geçin."}</p>
-        {durum === "tumu" && <Button type="button" className={styles.yeniButonu} disabled={!acik} onClick={() => editorAc(null)}><Plus size={18} aria-hidden="true" />Yeni Yayın</Button>}
+      {liste && gorunenKayitlar.length === 0 && !arama && !baslangic && !bitis && !hedef && <section className={styles.bos}>
+        <div className={styles.bosSimge}><GraduationCap size={36} aria-hidden="true" /></div><h2>{pasifSayfa ? "Pasif Yayın Bulunmuyor" : durum === "tumu" ? "İlk Yayınınızı Ekleyin" : "Bu Durumda Yayın Bulunmuyor"}</h2><p>{pasifSayfa ? "Pasife aldığınız video veya podcast yayınlarınız burada listelenir." : durum === "tumu" ? "Yayınlarınızı burada listeleyebilir ve yönetebilirsiniz." : "Diğer yayınlarınızı görmek için Tümü seçeneğine geçin."}</p>
+        {!pasifSayfa && durum === "tumu" && <Button type="button" className={styles.yeniButonu} disabled={!acik} onClick={() => editorAc(null)}><Plus size={18} aria-hidden="true" />Yeni Yayın</Button>}
       </section>}
-      {liste && liste.toplam === 0 && !!(arama||baslangic||bitis) && <p className={styles.bilgi}>Arama ve filtrelere uygun yayın bulunamadı.</p>}
-      {liste && liste.kayitlar.length > 0 && <>
-        <MobilYayinAkisi<PartnerEgitimi> kayitlar={liste.kayitlar} kayitAnahtari={e=>e.egitim_id} renderKart={kart} sayacGoster={false}
-          sifirlamaAnahtari={`${durum}:${arama}:${baslangic}:${bitis}`}
-          masaustuIcerik={<div className={rafStyles.rafAlani}><AgoraRafOklari raf={raf} baslik="Yayınlarım"/><div key={`${durum}:${arama}:${baslangic}:${bitis}`} ref={raf} className={styles.kartlar}>{liste.kayitlar.map(e=><div key={e.egitim_id} className={styles.kart}>{kart(e)}</div>)}</div></div>}/>
-        {!yukleniyor&&<DahaFazlaGoster dahaVar={liste.kayitlar.length<liste.toplam} gorunenSayi={liste.kayitlar.length} toplam={liste.toplam} onGoster={()=>{if(!kilit.current&&!cikiliyor)void oku(sayfa+1,true);}}/>}
+      {liste && gorunenKayitlar.length === 0 && !!(arama||baslangic||bitis||hedef) && <p className={styles.bilgi}>Arama ve filtrelere uygun yayın bulunamadı.</p>}
+      {liste && gorunenKayitlar.length > 0 && <>
+        <MobilYayinAkisi<PartnerEgitimi> kayitlar={gorunenKayitlar} kayitAnahtari={e=>e.egitim_id} renderKart={kart} sayacGoster={false}
+          sifirlamaAnahtari={`${durum}:${arama}:${baslangic}:${bitis}:${hedef}`}
+          masaustuIcerik={<div className={rafStyles.rafAlani}><AgoraRafOklari raf={raf} baslik={pasifSayfa ? "Pasif Yayınlar" : "Agora Video ve Podcast Yayınlar"}/><div key={`${durum}:${arama}:${baslangic}:${bitis}:${hedef}`} ref={raf} className={styles.kartlar}>{gorunenKayitlar.map(e=><div key={e.egitim_id} className={styles.kart}>{kart(e)}</div>)}</div></div>}/>
+        {!yukleniyor&&<DahaFazlaGoster dahaVar={liste.kayitlar.length<liste.toplam} gorunenSayi={gorunenKayitlar.length} toplam={gorunenToplam} onGoster={()=>{if(!kilit.current&&!cikiliyor)void oku(sayfa+1,true);}}/>}
         {yukleniyor&&<p role="status" className={styles.bilgi}>Yayınlarınız yükleniyor…</p>}
       </>}
     </div>

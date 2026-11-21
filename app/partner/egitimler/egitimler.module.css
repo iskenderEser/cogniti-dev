@@ -86,6 +86,15 @@
 .icerik { padding-top:24px; }
 .baslik { margin-bottom:20px; gap:16px; }
 .baslik h1 { margin:0; font-size:24px; }
+.statlar { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-bottom:20px; }
+.stat { min-width:0; padding:18px 20px; border:1px solid var(--tema-cizgi); border-left:3px solid var(--tema-kontrol-eylem); border-radius:12px; background:var(--tema-yuzey); }
+.stat:nth-child(2) { border-left-color:var(--tema-yerel-ana-sayfa-islevsel-metin-06); }
+.stat:nth-child(3) { border-left-color:var(--tema-yerel-ana-sayfa-islevsel-metin-04); }
+.stat span { display:block; margin-bottom:8px; font-size:12px; font-weight:700; color:var(--tema-ikincil-metin); }
+.stat strong { display:block; font-size:30px; font-weight:800; line-height:1; font-variant-numeric:tabular-nums; color:var(--tema-baslik); }
+.hedefFiltreleri { max-width:100%; overflow-x:auto; padding:3px 0; margin-bottom:16px; scrollbar-width:none; }
+.hedefFiltreleri::-webkit-scrollbar { display:none; }
+.hedefFiltreleri > div { width:max-content; min-width:100%; flex-wrap:nowrap; }
 .page .yeniButonu, .page .araButonu { background:var(--tema-kontrol-eylem); color:#fff; border-color:var(--tema-kontrol-eylem); min-height:32px; height:32px; font-size:12px; }
 .araclar { gap:16px; margin-bottom:16px; }
 .durumAlani { display:flex; min-width:0; max-width:100%; flex-wrap:wrap; align-items:center; gap:12px; }
@@ -113,6 +122,10 @@
   .baslik { align-items:center; flex-direction:row; gap:12px; }
   .baslik h1 { font-size:22px; }
   .baslik > button { width:auto; padding-inline:10px; font-size:11px; }
+  .statlar { gap:8px; margin-bottom:16px; }
+  .stat { padding:12px 10px; }
+  .stat span { font-size:10px; line-height:1.3; }
+  .stat strong { font-size:24px; }
   .araclar { align-items:stretch; }
   .eylemler { width:100%; flex-wrap:nowrap; }
   .arama { flex:1; }

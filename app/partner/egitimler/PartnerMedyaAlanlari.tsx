@@ -12,7 +12,7 @@ import { PartnerYayinOynaticisi } from "@/components/agora/AgoraDenemeOynaticisi
 import PartnerPodcastEkleri from "./PartnerPodcastEkleri";
 import styles from "./egitimler.module.css";
 
-interface Medya { yukleme_id:string; rol?:string; dosya_adi:string; durum:string; izleme_url?:string|null; dinleme_url?:string|null; sure_saniye?:number|null }
+interface Medya { yukleme_id:string; video_guid?:string; rol?:string; dosya_adi:string; durum:string; izleme_url?:string|null; dinleme_url?:string|null; sure_saniye?:number|null }
 interface Taslak {egitim_id:string;surum:number}
 async function json(url:string,body:unknown,method="POST",headers:Record<string,string>={}) {
   const r=await fetch(url,{method,headers:{"Content-Type":"application/json",...headers},body:JSON.stringify(body),signal:AbortSignal.timeout(30000)});
@@ -31,7 +31,7 @@ export default function PartnerMedyaAlanlari({egitimId,egitimAdi,istekId,tur,dis
   egitimId:string|null;egitimAdi:string;istekId:string;tur:"video"|"podcast";disabled:boolean;
   onEkDegisiklik?:(n:boolean)=>void;
   onTurDegis:(tur:"video"|"podcast")=>void;
-  onHazirlik?:(durum:{egitimId:string|null;tur:"video"|"podcast";hazir:boolean})=>void;
+  onHazirlik?:(durum:{egitimId:string|null;tur:"video"|"podcast";hazir:boolean;videoGuid?:string|null})=>void;
   onTaslak:(t:Taslak)=>void;onIslem:(aktif:boolean)=>void;
 }) {
   const [eklerHazir,setEklerHazir]=useState(false);
@@ -40,7 +40,7 @@ export default function PartnerMedyaAlanlari({egitimId,egitimAdi,istekId,tur,dis
   const kilit=useRef(false),yasiyor=useRef(true),okumaSurumu=useRef(0);
   useEffect(() => {
     const dosya = tur === "video" ? videolar.find(v => v.rol === "egitim") : podcast;
-    onHazirlik?.({egitimId, tur, hazir: aktif === null && (tur!=="podcast"||eklerHazir) && (dosya?.durum === "hazir" || (tur === "video" && dosya?.durum === "isleniyor"))});
+    onHazirlik?.({egitimId, tur, hazir: aktif === null && (tur!=="podcast"||eklerHazir) && (dosya?.durum === "hazir" || (tur === "video" && dosya?.durum === "isleniyor")), videoGuid: tur === "video" ? (dosya?.video_guid ?? null) : null});
   }, [egitimId, tur, videolar, podcast, aktif, eklerHazir, onHazirlik]);
 
   useEffect(()=>{yasiyor.current=true;return()=>{yasiyor.current=false;};},[]);

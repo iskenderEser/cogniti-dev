@@ -13,9 +13,8 @@ export default async function PartnerYeniEgitimPage({searchParams}:{searchParams
     const {data,error}=await b.db.rpc("agora_partner_egitim_detay_oku",{p_token_ozeti:b.tokenOzeti,p_egitim_id:id});
     if(error)throw new Error("Yayın bilgileri okunamadı.");
     if(!data||data.egitim_id!==id)notFound();
-    if(data.durum!=="taslak")redirect("/partner/egitimler");
-    if(typeof data.egitim_adi!=="string"||!Number.isSafeInteger(data.surum)||data.surum<1)throw new Error("Yayın bilgileri doğrulanamadı.");
-    egitim={egitim_id:id,egitim_adi:data.egitim_adi,surum:data.surum,durum:"taslak",yayin_araci:data.yayin_araci==="podcast"?"podcast":"video"};
+    if(typeof data.egitim_adi!=="string"||!Number.isSafeInteger(data.surum)||data.surum<1||!["taslak","yayinda","pasif"].includes(data.durum))throw new Error("Yayın bilgileri doğrulanamadı.");
+    egitim={egitim_id:id,egitim_adi:data.egitim_adi,surum:data.surum,durum:data.durum,yayin_araci:data.yayin_araci==="podcast"?"podcast":"video"};
   }
   return <PartnerEgitimSayfasi key={id??"yeni"} sirketAdi={b.profil!.sirket_adi} logoSurumu={b.profil!.surum} egitim={egitim} istekId={crypto.randomUUID()}/>;
 }

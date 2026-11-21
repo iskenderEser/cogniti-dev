@@ -3,6 +3,7 @@ import { onayliPartnerBaglami } from "@/lib/agora/partnerProfilSunucu";
 import { partnerJsonOku, partnerYanit } from "@/lib/agora/partnerHttp";
 import { partnerEgitimFormDogrula } from "@/lib/agora/partnerEgitimFormu";
 import { egitimAdiDogrula, partnerEgitimListesiGecerli } from "@/lib/agora/partnerEgitimleri";
+import { TUM_HEDEF_ROLLER, type HedefRol } from "@/lib/utils/roller";
 
 export async function GET(request: Request) {
   try {
@@ -18,7 +19,7 @@ export async function GET(request: Request) {
     }
     const durum = params.get("durum") ?? "tumu", sayfa = Number(params.get("sayfa") ?? 1);
     if (!["tumu", "taslak", "yayinda", "pasif"].includes(durum) || !Number.isSafeInteger(sayfa) || sayfa < 1 || sayfa > 100000) return partnerYanit({ hata: "Geçersiz liste seçimi." }, 400);
-    const arama=(params.get("arama")??"").trim(),baslangic=params.get("baslangic")??"",bitis=params.get("bitis")??"";
+    const arama=(params.get("arama")??"").trim(),baslangic=params.get("baslangic")??"",bitis=params.get("bitis")??"",hedef=params.get("hedef")??"";
     const tarihGecerli=(v:string)=>{
       if(!v)return true;
       if(!/^\d{4}-\d{2}-\d{2}$/.test(v))return false;
@@ -26,9 +27,10 @@ export async function GET(request: Request) {
       return yil>=1900&&yil<=9998&&tarih.getUTCFullYear()===yil&&tarih.getUTCMonth()===ay-1&&tarih.getUTCDate()===gun;
     };
     if(arama.length>200)return partnerYanit({hata:"Arama en fazla 200 karakter olabilir."},400);
+    if(hedef&&!TUM_HEDEF_ROLLER.includes(hedef as HedefRol))return partnerYanit({hata:"Geçersiz hedef kitle seçimi."},400);
     if(!tarihGecerli(baslangic)||!tarihGecerli(bitis)||(baslangic&&bitis&&baslangic>bitis))return partnerYanit({hata:"Geçerli bir yayın tarihi aralığı seçin."},400);
-    const { data, error } = arama||baslangic||bitis
-      ? await b.db.rpc("agora_partner_egitimleri_filtrele",{p_token_ozeti:b.tokenOzeti,p_durum:durum,p_sayfa:sayfa,p_arama:arama,p_fiyat:partnerAramaFiyati(arama),p_baslangic:baslangic||null,p_bitis:bitis||null})
+    const { data, error } = arama||baslangic||bitis||hedef
+      ? await b.db.rpc("agora_partner_egitimleri_filtrele",{p_token_ozeti:b.tokenOzeti,p_durum:durum,p_sayfa:sayfa,p_arama:arama,p_fiyat:partnerAramaFiyati(arama),p_baslangic:baslangic||null,p_bitis:bitis||null,p_hedef_rol:hedef||null})
       : await b.db.rpc("agora_partner_egitimleri_oku", { p_token_ozeti: b.tokenOzeti, p_durum: durum, p_sayfa: sayfa });
     if (error) return partnerYanit({ hata: "Yayınlar okunamadı. Yeniden deneyin." }, 503);
     if (!data) return partnerYanit({ hata: "Üyelik onayınızı ve oturumunuzu kontrol edin." }, 401);
@@ -62,6 +64,44 @@ export async function POST(request: Request) {
     if (data !== "tamam") return partnerYanit({ hata: "Yayın değişmiş veya düzenlemeye kapalı. Güncel listeyi kontrol edin." }, 409);
     return partnerYanit({ mesaj: "Yayın taslağı kaydedildi." });
   } catch { return partnerYanit({ hata: "Yayın kaydedilemedi. Yeniden deneyin." }, 503); }
+}
+
+export async function PATCH(request: Request) {
+  const body = await partnerJsonOku(request); if (!body.ok) return body.yanit;
+  try {
+    const b = await onayliPartnerBaglami();
+    if (!b) return partnerYanit({ hata: "Oturumunuz veya üyelik onayınız doğrulanamadı." }, 401);
+    const d = body.veri;
+    if (typeof d.egitim_id !== "string" || !/^[a-f0-9]{8}-(?:[a-f0-9]{4}-){3}[a-f0-9]{12}$/i.test(d.egitim_id)
+      || !Number.isSafeInteger(d.surum) || Number(d.surum) < 1
+      || (d.durum !== "yayinda" && d.durum !== "pasif")) {
+      return partnerYanit({ hata: "Geçersiz yayın veya durum bilgisi." }, 400);
+    }
+    const { data, error } = await b.db.rpc("agora_partner_egitim_durum_degistir", {
+      p_token_ozeti: b.tokenOzeti,
+      p_egitim_id: d.egitim_id,
+      p_surum: d.surum,
+      p_durum: d.durum,
+    });
+    if (error) return partnerYanit({ hata: "Yayın durumu değiştirilemedi. Listeyi yenileyip kontrol edin." }, 503);
+    if (data === "yetkisiz") return partnerYanit({ hata: "Üyelik onayınızı ve oturumunuzu kontrol edin." }, 401);
+    if (data === "bulunamadi") return partnerYanit({ hata: "Yayın bulunamadı." }, 404);
+    if (data === "gecersiz") return partnerYanit({ hata: "Geçersiz yayın veya durum bilgisi." }, 400);
+    if (data !== "tamam") {
+      const mesajlar: Record<string, string> = {
+        cakisma: "Yayın değişmiş. Sayfayı yenileyip yeniden deneyin.",
+        taslak: "Taslak yayın önce Agora’da yayımlanmalıdır.",
+        dosya_eksik: "Yayın dosyası hazır olmadığı için aktife alınamadı.",
+        koruma_eksik: "Yayın koruma paketi hazır olmadığı için aktife alınamadı.",
+      };
+      return partnerYanit({ hata: mesajlar[String(data)] ?? "Yayın durumu değiştirilemedi." }, 409);
+    }
+    return partnerYanit({
+      mesaj: d.durum === "yayinda" ? "Yayın yeniden aktife alındı." : "Yayın pasife alındı.",
+      durum: d.durum,
+      surum: Number(d.surum) + 1,
+    });
+  } catch { return partnerYanit({ hata: "Yayın durumu değiştirilemedi. Yeniden deneyin." }, 503); }
 }
 
 export async function DELETE(request: Request) {
