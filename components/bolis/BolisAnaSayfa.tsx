@@ -113,7 +113,7 @@ export default function BolisAnaSayfa() {
   };
 
   return (
-    <div className="mx-auto max-w-6xl space-y-5 p-4 sm:p-6">
+    <div className="mx-auto max-w-6xl space-y-5 px-4 pb-4 pt-9 sm:px-6 sm:pb-6 sm:pt-11">
       {/* Üst Başlık */}
       <div className="flex flex-wrap items-end justify-between gap-4 border-b border-[var(--tema-cizgi)] pb-4">
         <div className="space-y-1">

@@ -261,11 +261,7 @@ export default function PanelNavbar({
       fontWeight: 800,
       letterSpacing: "0.06em",
       color: "#0F766E",
-      background: bolisAktif
-        ? "rgb(15 118 110 / 0.11)"
-        : hover === "bolis"
-          ? "var(--tema-kontrol-hover)"
-          : "transparent",
+      background: hover === "bolis" ? "var(--tema-kontrol-hover)" : "transparent",
       fontFamily: "'Nunito', sans-serif",
     }}
   >

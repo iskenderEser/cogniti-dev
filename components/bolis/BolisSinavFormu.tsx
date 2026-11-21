@@ -283,7 +283,7 @@ export default function BolisSinavFormu({ sinavId }: { sinavId?: string }) {
   }
 
   return (
-    <div className="mx-auto max-w-4xl space-y-6 p-4 sm:p-6">
+    <div className="mx-auto max-w-4xl space-y-6 px-4 pb-4 pt-9 sm:px-6 sm:pb-6 sm:pt-11">
       {/* Üst Başlık */}
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--tema-cizgi)] pb-4">
         <div className="space-y-1">
