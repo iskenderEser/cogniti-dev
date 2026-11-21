@@ -13,6 +13,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/server";
 import { hataYaniti, sunucuHatasi, validasyonHatasi } from "@/lib/utils/hataIsle";
 import { adminGirisKontrol } from "@/lib/utils/adminGirisKontrol";
+import { AGORA_PARTNER_KOMISYON_ANAHTARI, partnerKomisyonOraniGecerli } from "@/lib/agora/komisyon";
 import { ECLUB_EMEKLI_GONDERI_ANAHTARLARI, eclubGonderiAyariMi, eclubGonderiAyariDegeriGecerliMi } from "@/lib/eclub/gonderiAyarlari";
 
 async function adminKontrol(): Promise<NextResponse | null> {
@@ -71,6 +72,17 @@ export async function PUT(request: NextRequest) {
     if (eclubGonderiAyariMi(anahtar) && !eclubGonderiAyariDegeriGecerliMi(anahtar, deger)) {
       return validasyonHatasi("Yeni E-Club kurgusunda yayın tamamlama süresi 15 gündür.", ["deger"]);
     }
+    if (anahtar === AGORA_PARTNER_KOMISYON_ANAHTARI && !partnerKomisyonOraniGecerli(deger)) {
+      return validasyonHatasi(
+        "Partner komisyon oranı 0 ile 100 arasında (en fazla 2 ondalık basamaklı) bir sayı olmalıdır.",
+        ["deger"],
+      );
+    }
+
+    const kayitDegeri =
+      anahtar === AGORA_PARTNER_KOMISYON_ANAHTARI && typeof deger === "number"
+        ? Math.round(deger * 100) / 100
+        : deger;
 
     // Yalnızca mevcut anahtar güncellenir (yeni anahtar = migration işi).
     const { data: mevcut, error: mevcutError } = await adminSupabase
@@ -84,12 +96,12 @@ export async function PUT(request: NextRequest) {
 
     const { error: updateError } = await adminSupabase
       .from("sistem_ayarlari")
-      .update({ deger, updated_at: new Date().toISOString() })
+      .update({ deger: kayitDegeri, updated_at: new Date().toISOString() })
       .eq("anahtar", anahtar);
 
     if (updateError) return hataYaniti("Ayar güncellenemedi.", "sistem_ayarlari UPDATE — deger", updateError);
 
-    return NextResponse.json({ mesaj: "Ayar güncellendi.", anahtar, deger }, { status: 200 });
+    return NextResponse.json({ mesaj: "Ayar güncellendi.", anahtar, deger: kayitDegeri }, { status: 200 });
 
   } catch (err) {
     return sunucuHatasi(err, "PUT /admin/api/sistem-ayarlari");

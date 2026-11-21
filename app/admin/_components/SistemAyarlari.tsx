@@ -12,6 +12,7 @@ import FiyatTarifesi from "./FiyatTarifesi";
 import EclubTestEczaneleri from "../eclub/_components/EclubTestEczaneleri";
 import type { SistemAyari } from "../_types";
 import { RENK_BORDO, RENK_BORDO_KENAR, RENK_BORDO_ZEMIN } from "../_constants";
+import { AGORA_PARTNER_KOMISYON_ANAHTARI, partnerKomisyonOraniGecerli } from "@/lib/agora/komisyon";
 import {
   ECLUB_GONDERI_AYARLARI,
   ECLUB_GONDERI_AYAR_ANAHTARLARI,
@@ -84,6 +85,13 @@ export default function SistemAyarlari({ hata, basari }: SistemAyarlariProps) {
 
   // Metni deger'e çevirir: mevcut değer dizi ise virgüllü sayı dizisi, değilse tek sayı.
   const metniDegereCevir = (ayar: SistemAyari, metin: string): number | number[] | null => {
+    if (ayar.anahtar === AGORA_PARTNER_KOMISYON_ANAHTARI) {
+      const temiz = metin.trim().replace(",", ".");
+      if (!/^\d+(?:\.\d+)?$/.test(temiz)) return null;
+      const sayi = Number(temiz);
+      if (!partnerKomisyonOraniGecerli(sayi)) return null;
+      return Math.round(sayi * 100) / 100;
+    }
     if (Array.isArray(ayar.deger)) {
       const parcalar = metin.split(",").map((p) => Number(p.trim()));
       if (parcalar.length === 0 || parcalar.some((p) => !Number.isFinite(p) || p <= 0)) return null;
@@ -99,7 +107,11 @@ export default function SistemAyarlari({ hata, basari }: SistemAyarlariProps) {
     const metin = duzenlenen[ayar.anahtar] ?? "";
     const deger = metniDegereCevir(ayar, metin);
     if (deger === null) {
-      hata(`${ayar.anahtar}: değer pozitif sayı${Array.isArray(ayar.deger) ? "lar (virgülle ayrılmış)" : ""} olmalıdır.`);
+      hata(
+        ayar.anahtar === AGORA_PARTNER_KOMISYON_ANAHTARI
+          ? "Partner komisyon oranı 0 ile 100 arasında (en fazla 2 ondalık basamaklı) bir sayı olmalıdır."
+          : `${ayar.anahtar}: değer pozitif sayı${Array.isArray(ayar.deger) ? "lar (virgülle ayrılmış)" : ""} olmalıdır.`,
+      );
       return;
     }
 
@@ -114,7 +126,10 @@ export default function SistemAyarlari({ hata, basari }: SistemAyarlariProps) {
       hata(d.hata ?? "Ayar güncellenemedi.", d.adim, d.detay);
     } else {
       const eclubTanimi = ECLUB_GONDERI_AYARLARI.find((tanim) => tanim.anahtar === ayar.anahtar);
-      basari(`${eclubTanimi?.baslik ?? ayar.anahtar} güncellendi.`);
+      const etiket = ayar.anahtar === AGORA_PARTNER_KOMISYON_ANAHTARI
+        ? "Partner Komisyon Oranı"
+        : (eclubTanimi?.baslik ?? ayar.anahtar);
+      basari(`${etiket} güncellendi.`);
       await veriCek();
     }
     setKaydeden(null);
@@ -127,8 +142,11 @@ export default function SistemAyarlari({ hata, basari }: SistemAyarlariProps) {
   const eclubAyarlar = ECLUB_GONDERI_AYARLARI
     .map((tanim) => ({ tanim, ayar: ayarlar.find((ayar) => ayar.anahtar === tanim.anahtar) }))
     .filter((satir): satir is { tanim: typeof ECLUB_GONDERI_AYARLARI[number]; ayar: SistemAyari } => !!satir.ayar);
+  const komisyonAyari = ayarlar.find((ayar) => ayar.anahtar === AGORA_PARTNER_KOMISYON_ANAHTARI) ?? null;
   const genelAyarlar = ayarlar.filter((ayar) => !ECLUB_GONDERI_AYAR_ANAHTARLARI.has(ayar.anahtar)
-    && !ECLUB_EMEKLI_GONDERI_ANAHTARLARI.has(ayar.anahtar));
+    && !ECLUB_EMEKLI_GONDERI_ANAHTARLARI.has(ayar.anahtar)
+    && ayar.anahtar !== AGORA_PARTNER_KOMISYON_ANAHTARI);
+  const tabloAyarlari = komisyonAyari ? [...genelAyarlar, komisyonAyari] : genelAyarlar;
 
   return (
     <div>
@@ -267,34 +285,54 @@ export default function SistemAyarlari({ hata, basari }: SistemAyarlariProps) {
           <span>Değer</span>
           <span></span>
         </div>
-        {genelAyarlar.map((a) => (
-          <div key={a.anahtar}
-            style={{ display: "grid", gridTemplateColumns: "240px 1fr 180px 90px", alignItems: "center", padding: "10px 14px", borderTop: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)", fontSize: "12px" }}>
-            <span style={{ fontWeight: 700, color: "var(--tema-yerel-yonetim-ana-metin-01)", wordBreak: "break-all" }}>{a.anahtar}</span>
-            <span style={{ color: "var(--tema-yerel-yonetim-yardimci-metin-01)", paddingRight: "12px" }}>{a.aciklama ?? "-"}</span>
-            <input
-              value={duzenlenen[a.anahtar] ?? ""}
-              onChange={(e) => setDuzenlenen((prev) => ({ ...prev, [a.anahtar]: e.target.value }))}
-              style={{
-                border: "0.5px solid var(--tema-yerel-yonetim-cizgi-02)", borderRadius: "6px", padding: "6px 8px",
-                fontSize: "12px", color: "var(--tema-yerel-yonetim-ana-metin-01)", fontFamily: "'Nunito', sans-serif", width: "150px",
-              }}
-            />
-            <button
-              onClick={() => handleKaydet(a)}
-              disabled={kaydeden === a.anahtar || degerMetni(a.deger) === (duzenlenen[a.anahtar] ?? "")}
-              style={{
-                padding: "6px 12px", border: "none", borderRadius: "6px", fontSize: "12px", fontWeight: 600,
-                background: degerMetni(a.deger) === (duzenlenen[a.anahtar] ?? "") ? "var(--tema-yerel-yonetim-sayfa-zemini-04)" : RENK_BORDO,
-                color: degerMetni(a.deger) === (duzenlenen[a.anahtar] ?? "") ? "var(--tema-yerel-yonetim-yardimci-metin-04)" : "var(--tema-yerel-yonetim-ters-metin-01)",
-                cursor: degerMetni(a.deger) === (duzenlenen[a.anahtar] ?? "") ? "not-allowed" : "pointer",
-                fontFamily: "'Nunito', sans-serif",
-              }}
-            >
-              {kaydeden === a.anahtar ? "..." : "Kaydet"}
-            </button>
-          </div>
-        ))}
+        {tabloAyarlari.map((a) => {
+          const komisyonSatiriMi = a.anahtar === AGORA_PARTNER_KOMISYON_ANAHTARI;
+          return (
+            <div key={a.anahtar}
+              style={{ display: "grid", gridTemplateColumns: "240px 1fr 180px 90px", alignItems: "center", padding: "10px 14px", borderTop: "0.5px solid var(--tema-yerel-yonetim-cizgi-01)", fontSize: "12px" }}>
+              <div style={{ minWidth: 0 }}>
+                <span style={{ display: "block", fontWeight: 700, color: "var(--tema-yerel-yonetim-ana-metin-01)", wordBreak: "break-all" }}>
+                  {komisyonSatiriMi ? "Partner Komisyon Oranı (%)" : a.anahtar}
+                </span>
+                {komisyonSatiriMi && (
+                  <span style={{ display: "block", marginTop: "2px", fontSize: "10.5px", color: "var(--tema-yerel-yonetim-yardimci-metin-01)", wordBreak: "break-all" }}>
+                    {a.anahtar}
+                  </span>
+                )}
+              </div>
+              <span style={{ color: "var(--tema-yerel-yonetim-yardimci-metin-01)", paddingRight: "12px" }}>{a.aciklama ?? "-"}</span>
+              <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                <input
+                  aria-label={komisyonSatiriMi ? "Partner Komisyon Oranı (%)" : a.anahtar}
+                  inputMode={komisyonSatiriMi ? "decimal" : undefined}
+                  value={duzenlenen[a.anahtar] ?? ""}
+                  onChange={(e) => setDuzenlenen((prev) => ({ ...prev, [a.anahtar]: e.target.value }))}
+                  style={{
+                    border: "0.5px solid var(--tema-yerel-yonetim-cizgi-02)", borderRadius: "6px", padding: "6px 8px",
+                    fontSize: "12px", color: "var(--tema-yerel-yonetim-ana-metin-01)", fontFamily: "'Nunito', sans-serif",
+                    width: komisyonSatiriMi ? "128px" : "150px",
+                  }}
+                />
+                {komisyonSatiriMi && (
+                  <span style={{ fontSize: "12px", fontWeight: 700, color: "var(--tema-yerel-yonetim-yardimci-metin-01)" }}>%</span>
+                )}
+              </div>
+              <button
+                onClick={() => handleKaydet(a)}
+                disabled={kaydeden === a.anahtar || degerMetni(a.deger) === (duzenlenen[a.anahtar] ?? "")}
+                style={{
+                  padding: "6px 12px", border: "none", borderRadius: "6px", fontSize: "12px", fontWeight: 600,
+                  background: degerMetni(a.deger) === (duzenlenen[a.anahtar] ?? "") ? "var(--tema-yerel-yonetim-sayfa-zemini-04)" : RENK_BORDO,
+                  color: degerMetni(a.deger) === (duzenlenen[a.anahtar] ?? "") ? "var(--tema-yerel-yonetim-yardimci-metin-04)" : "var(--tema-yerel-yonetim-ters-metin-01)",
+                  cursor: degerMetni(a.deger) === (duzenlenen[a.anahtar] ?? "") ? "not-allowed" : "pointer",
+                  fontFamily: "'Nunito', sans-serif",
+                }}
+              >
+                {kaydeden === a.anahtar ? "..." : "Kaydet"}
+              </button>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

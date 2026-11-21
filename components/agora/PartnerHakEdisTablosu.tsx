@@ -7,9 +7,9 @@ import { Button } from "@/components/ui/button";
 import PartnerOdemeGunu from "./PartnerOdemeGunu";
 import styles from "./partner-ozet.module.css";
 
-const BASLIKLAR = [
+const BASLIKLAR: Array<[string, string]> = [
   ["ID", ""], ["Yayın Adı", ""], ["Sipariş Tarihi", ""],
-  ["Satış Bedeli", "KDV hariç"], ["Cogniti Payı", "%15"],
+  ["Satış Bedeli", "KDV hariç"], ["Cogniti Payı", ""],
   ["Hak Ediş", "KDV hariç"], ["KDV", "%20"],
   ["Ödenecek Tutar", "KDV dahil"], ["Planlanan Ödeme", ""], ["Ödenen Gün", ""],
 ];
@@ -77,9 +77,14 @@ export default function PartnerHakEdisTablosu({ partnerId, endpoint, anaBaslik =
     {hata && <p role="alert">{hata}</p>}
     <div className={styles.tabloAlani}><table className={styles.hakedisTablo} aria-label="Partner Hak Edişleri">
       <colgroup>{GENISLIKLER.map((genislik, i) => <col key={i} style={{ width: `${genislik}%` }} />)}</colgroup>
-      <thead><tr>{BASLIKLAR.map(([baslik, aciklama], i) => <th key={baslik} scope="col" className={i >= 3 && i <= 7 ? styles.hakedisPara : undefined}>
-        {baslik}{aciklama && <span className={styles.hakedisBaslikAciklama}>{aciklama}</span>}
-      </th>)}</tr></thead>
+      <thead><tr>{BASLIKLAR.map(([baslik, varsayilanAciklama], i) => {
+        const aciklama = baslik === "Cogniti Payı" && veri?.komisyon_orani !== undefined
+          ? `Güncel %${veri.komisyon_orani.toLocaleString("tr-TR")}`
+          : varsayilanAciklama;
+        return <th key={baslik} scope="col" className={i >= 3 && i <= 7 ? styles.hakedisPara : undefined}>
+          {baslik}{aciklama && <span className={styles.hakedisBaslikAciklama}>{aciklama}</span>}
+        </th>;
+      })}</tr></thead>
       <tbody>
         {yukleniyor ? <tr><td colSpan={10} role="status">Hak edişler yükleniyor…</td></tr>
           : hata ? <tr><td colSpan={10}>Yenile düğmesiyle tekrar deneyebilirsiniz.</td></tr>
@@ -87,7 +92,12 @@ export default function PartnerHakEdisTablosu({ partnerId, endpoint, anaBaslik =
           : veri.kayitlar.map(r => <tr key={r.siparis_id}>
             <td className={styles.hakedisKimlik}>{r.partner_egitim_id}</td><td className={styles.hakedisEgitim}>{r.egitim_adi}</td><td className={styles.hakedisTarih}>{gun(r.siparis_tarihi)}</td>
             <td className={styles.hakedisPara}>{para.format(r.satin_alma_bedeli)}</td>
-            <td className={styles.hakedisPara}>{para.format(r.hizmet_bedeli)}</td>
+            <td className={styles.hakedisPara}>
+              {para.format(r.hizmet_bedeli)}
+              {r.hizmet_orani !== undefined && (
+                <span className={styles.hakedisBaslikAciklama}>%{r.hizmet_orani.toLocaleString("tr-TR")}</span>
+              )}
+            </td>
             <td className={styles.hakedisPara}>{para.format(r.hak_edis)}</td>
             <td className={styles.hakedisPara}>{para.format(r.kdv_tutari)}</td>
             <td className={`${styles.hakedisPara} ${styles.hakedisToplam}`}>{para.format(r.kdvli_odenecek_tutar)}</td>

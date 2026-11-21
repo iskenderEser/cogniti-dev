@@ -1,4 +1,5 @@
 import { uuidGecerliMi } from "@/lib/uretim/rpcTemel";
+import { partnerKomisyonOraniGecerli } from "@/lib/agora/komisyon";
 
 export interface PartnerHakEdisKaydi {
   siparis_id: string;
@@ -6,6 +7,7 @@ export interface PartnerHakEdisKaydi {
   egitim_adi: string;
   siparis_tarihi: string;
   satin_alma_bedeli: number;
+  hizmet_orani?: number;
   hizmet_bedeli: number;
   hak_edis: number;
   kdv_tutari: number;
@@ -18,6 +20,7 @@ export type PartnerHakEdisToplamlari = Pick<PartnerHakEdisKaydi,
   "satin_alma_bedeli" | "hizmet_bedeli" | "hak_edis" | "kdv_tutari" | "kdvli_odenecek_tutar">;
 
 export interface PartnerHakEdisListesi {
+  komisyon_orani?: number;
   genel_toplam: PartnerHakEdisToplamlari;
   filtre_toplam: PartnerHakEdisToplamlari;
   partner_id: string;
@@ -49,6 +52,7 @@ function hakedisKaydiGecerli(deger: unknown): deger is PartnerHakEdisKaydi {
     && typeof r.egitim_adi === "string" && r.egitim_adi.length > 0
     && typeof r.siparis_tarihi === "string" && Number.isFinite(Date.parse(r.siparis_tarihi))
     && tutarlar.every(alan => { const tutar = r[alan]; return typeof tutar === "number" && Number.isFinite(tutar) && tutar >= 0; })
+    && (r.hizmet_orani === undefined || partnerKomisyonOraniGecerli(r.hizmet_orani))
     && odemeGunuGecerli(r.planlanan_odeme_gunu) && odemeGunuGecerli(r.odenen_gun);
 }
 
@@ -57,6 +61,7 @@ export function partnerHakEdisListesiGecerli(
 ): deger is PartnerHakEdisListesi {
   if (!deger || typeof deger !== "object" || Array.isArray(deger)) return false;
   const r = deger as Record<string, unknown>;
+  if (r.komisyon_orani !== undefined && !partnerKomisyonOraniGecerli(r.komisyon_orani)) return false;
   if (r.partner_id !== partnerId || !Number.isSafeInteger(r.toplam) || Number(r.toplam) < 0
     || r.sayfa !== sayfa || r.sayfa_boyutu !== 20 || !Array.isArray(r.kayitlar)
     || r.kayitlar.length > 20 || r.kayitlar.length > Number(r.toplam)) return false;
