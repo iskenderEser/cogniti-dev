@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { createAdminClient, createClient } from "@/lib/supabase/server";
 import { rolCozucu } from "@/lib/utils/rolCozucu";
 import { ECLUB_TUKETICI_ROLLERI } from "@/lib/utils/roller";
-import { vivaFormDogrula, vivaIcRolMu, vivaUuidMu, type VivaDetay, type VivaBaglam } from "./sozlesme";
+import { agoraKategoriVivaTuru, vivaFormDogrula, vivaIcRolMu, vivaUuidMu, type AgoraCanliSiparisBaglami, type VivaDetay, type VivaBaglam } from "./sozlesme";
 import { vivaDavetEpostalariDogrula } from "./eposta";
 
 export class VivaHatasi extends Error {
@@ -180,6 +180,7 @@ export async function vivaFirmaBolgeBilgileriniEkle(db: ReturnType<typeof create
 
 export async function vivaOku(islem: string, veri: Record<string, unknown>) {
   const { db, user } = await vivaKullanici();
+  const agoraSiparisId = vivaUuidMu(veri.agora_siparis_id) ? veri.agora_siparis_id : null;
   const { data, error } = islem === "baglam"
     ? await db.rpc("viva_davet_baglami", { p_auth: user.id })
     : islem === "detay"
@@ -189,11 +190,31 @@ export async function vivaOku(islem: string, veri: Record<string, unknown>) {
   if (islem === "baglam") {
     const baglam = await vivaFirmaBolgeBilgileriniEkle(db, data);
     if (!baglam.olusturabilir) return baglam;
-    const urunler = await db.rpc("viva_egitim_urunleri", { p_auth: user.id });
+    const [urunler, agoraSiparis] = await Promise.all([
+      db.rpc("viva_egitim_urunleri", { p_auth: user.id }),
+      agoraSiparisId
+        ? db.rpc("agora_canli_viva_siparis_baglami", { p_auth_id: user.id, p_siparis_id: agoraSiparisId, p_etkinlik_id: null })
+        : Promise.resolve({ data: null, error: null }),
+    ]);
     if (urunler.error) throw urunler.error;
-    return { ...baglam, urunler: urunler.data };
+    if (agoraSiparis.error) throw agoraSiparis.error;
+    return { ...baglam, urunler: urunler.data, ...(agoraSiparis.data ? { agora_siparis: agoraSiparis.data as AgoraCanliSiparisBaglami } : {}) };
   }
-  return islem === "detay" ? vivaKatilimciBilgileriniEkle(db, user.id, await vivaYayinZamanlariniEkle(db, data)) : data;
+  if (islem === "detay") {
+    const zenginDetay = await vivaKatilimciBilgileriniEkle(db, user.id, await vivaYayinZamanlariniEkle(db, data));
+    if (zenginDetay?.etkinlik?.sahip_id === user.id && vivaUuidMu(veri.etkinlik_id)) {
+      const agoraSiparis = await db.rpc("agora_canli_viva_siparis_baglami", {
+        p_auth_id: user.id,
+        p_siparis_id: agoraSiparisId,
+        p_etkinlik_id: veri.etkinlik_id,
+      });
+      if (!agoraSiparis.error && agoraSiparis.data) {
+        return { ...zenginDetay, agora_siparis: agoraSiparis.data as AgoraCanliSiparisBaglami };
+      }
+    }
+    return zenginDetay;
+  }
+  return data;
 }
 
 async function vivaDavetYetkisiniDogrula(db: ReturnType<typeof createAdminClient>, authId: string, etkinlikId: string, yeni: boolean) {
@@ -222,16 +243,52 @@ export async function vivaYaz(islem: string, veri: Record<string, unknown>) {
   if (!vivaIcRolMu(rol)) throw new VivaHatasi("Etkinlik yönetme yetkiniz yok.", 403);
   if (!["olustur", "kaydet", "iptal", "davet_ekle", "davet_iptal", "davet_yeniden_dene"].includes(islem) || !vivaUuidMu(veri.etkinlik_id)) throw new VivaHatasi("Geçersiz işlem.");
   if (islem !== "olustur" && (!Number.isInteger(veri.surum) || Number(veri.surum) < 1)) throw new VivaHatasi("Etkinliğin güncel halini açın.", 409);
+
+  let agoraSiparis: AgoraCanliSiparisBaglami | null = null;
+  const istekAgoraSiparisId = vivaUuidMu(veri.agora_siparis_id) ? veri.agora_siparis_id : null;
+  if (["olustur", "kaydet", "davet_ekle"].includes(islem) && (istekAgoraSiparisId || islem !== "olustur")) {
+    const { data: siparisData, error: siparisHatasi } = await db.rpc("agora_canli_viva_siparis_baglami", {
+      p_auth_id: user.id,
+      p_siparis_id: istekAgoraSiparisId,
+      p_etkinlik_id: islem === "olustur" ? null : veri.etkinlik_id,
+    });
+    if (siparisHatasi && istekAgoraSiparisId) throw siparisHatasi;
+    if (siparisData && typeof siparisData === "object") {
+      agoraSiparis = siparisData as AgoraCanliSiparisBaglami;
+    }
+  }
+
   const girdi = { ...veri };
+  if (agoraSiparis && ["olustur", "kaydet"].includes(islem)) {
+    if (islem === "olustur" && agoraSiparis.viva_etkinlik_id && agoraSiparis.viva_etkinlik_id !== veri.etkinlik_id) {
+      throw new VivaHatasi("Bu canlı yayın siparişi için zaten bir Viva daveti oluşturulmuş.", 409);
+    }
+    girdi.agora_siparis_id = agoraSiparis.siparis_id;
+    girdi.baslik = agoraSiparis.egitim_adi.slice(0, 160);
+    girdi.aciklama = (agoraSiparis.aciklama ?? "").slice(0, 4000);
+    girdi.egitim_turu = agoraKategoriVivaTuru(agoraSiparis.kategori_kodu);
+    girdi.yayin_turu = "planli";
+    girdi.durum = "planlandi";
+    girdi.baslangic = new Date(agoraSiparis.baslangic_at).toISOString();
+    girdi.bitis = new Date(agoraSiparis.bitis_at).toISOString();
+    delete girdi.sure_dakika;
+  }
+
   let epostaAdresleri: string[] = [];
   if (["olustur", "kaydet"].includes(islem)) {
-    if (veri.yayin_turu === "anlik" && islem !== "olustur") throw new VivaHatasi("Anlık yayın yalnız yeni oluşturulabilir.");
-    const hata = vivaFormDogrula(veri);
+    if (girdi.yayin_turu === "anlik" && islem !== "olustur") throw new VivaHatasi("Anlık yayın yalnız yeni oluşturulabilir.");
+    const hata = vivaFormDogrula(girdi);
     if (hata) throw new VivaHatasi(hata);
-    const epostalar = vivaDavetEpostalariDogrula(veri.davet_epostalari);
+    const epostalar = vivaDavetEpostalariDogrula(girdi.davet_epostalari);
     if (epostalar.hata) throw new VivaHatasi(epostalar.hata);
     epostaAdresleri = epostalar.adresler;
-    if (veri.davet_epostalari !== undefined) girdi.davet_epostalari = epostaAdresleri;
+    if (girdi.davet_epostalari !== undefined) girdi.davet_epostalari = epostaAdresleri;
+    if (agoraSiparis) {
+      const katilimciSayisi = Array.isArray(girdi.katilimcilar) ? girdi.katilimcilar.length : 0;
+      if (katilimciSayisi + epostaAdresleri.length > agoraSiparis.kapasite) {
+        throw new VivaHatasi(`Bu canlı yayının davetli kontenjanı (siz hariç) en fazla ${agoraSiparis.kapasite} kişidir.`, 422);
+      }
+    }
   }
   let token: string | undefined;
   if (islem === "davet_ekle") {
@@ -243,10 +300,10 @@ export async function vivaYaz(islem: string, veri: Record<string, unknown>) {
   }
   if (["davet_iptal", "davet_yeniden_dene"].includes(islem) && !vivaUuidMu(veri.davet_id)) throw new VivaHatasi("Geçersiz davet.");
   if (["davet_ekle", "davet_iptal", "davet_yeniden_dene"].includes(islem)
-    || (islem === "kaydet" && veri.davet_epostalari !== undefined) || epostaAdresleri.length > 0) {
+    || (islem === "kaydet" && girdi.davet_epostalari !== undefined) || epostaAdresleri.length > 0) {
     await vivaDavetYetkisiniDogrula(db, user.id, veri.etkinlik_id, islem === "olustur");
   }
-  if (["olustur", "kaydet"].includes(islem) && veri.davet_epostalari !== undefined) {
+  if (["olustur", "kaydet"].includes(islem) && girdi.davet_epostalari !== undefined) {
     // Adaylar ayrı parametredir: aynı oluşturma isteği yeniden denendiğinde form özeti değişmez.
     // SQL mevcut adresin kimliğini/bağlantısını korur; adayı yalnız yeni adres için kullanır.
     const adaylar = epostaAdresleri.map(eposta => {
@@ -257,6 +314,15 @@ export async function vivaYaz(islem: string, veri: Record<string, unknown>) {
       p_auth: user.id, p_islem: islem, p_veri: girdi, p_davetler: adaylar,
     });
     if (error) throw error;
+    if (agoraSiparis) {
+      const bag = await db.rpc("agora_canli_viva_etkinlik_bagla", {
+        p_auth_id: user.id,
+        p_siparis_id: agoraSiparis.siparis_id,
+        p_etkinlik_id: veri.etkinlik_id,
+      });
+      if (bag.error) throw bag.error;
+      return { ...data, agora_siparis: { ...agoraSiparis, viva_etkinlik_id: String(veri.etkinlik_id) } };
+    }
     return { ...data };
   }
   if (islem === "davet_yeniden_dene") {
@@ -271,7 +337,15 @@ export async function vivaYaz(islem: string, veri: Record<string, unknown>) {
   if (islem === "davet_ekle") { token = vivaToken(); girdi.hash = vivaHash(token); }
   const { data, error } = await db.rpc("viva_islem", { p_auth: user.id, p_islem: islem, p_veri: girdi });
   if (error) throw error;
-  return { ...data, ...(token ? { davet_yolu: `/viva/davet/${token}` } : {}) };
+  if (agoraSiparis && ["olustur", "kaydet", "davet_ekle"].includes(islem)) {
+    const bag = await db.rpc("agora_canli_viva_etkinlik_bagla", {
+      p_auth_id: user.id,
+      p_siparis_id: agoraSiparis.siparis_id,
+      p_etkinlik_id: veri.etkinlik_id,
+    });
+    if (bag.error) throw bag.error;
+  }
+  return { ...data, ...(agoraSiparis ? { agora_siparis: { ...agoraSiparis, viva_etkinlik_id: String(veri.etkinlik_id) } } : {}), ...(token ? { davet_yolu: `/viva/davet/${token}` } : {}) };
 }
 export async function vivaMisafirRpc(token: string, islem: string, veri: Record<string, unknown> = {}) {
   if (!vivaTokenGecerli(token)) throw new VivaHatasi("Davet geçersiz.", 403);

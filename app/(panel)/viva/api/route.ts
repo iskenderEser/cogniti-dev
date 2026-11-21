@@ -16,9 +16,11 @@ export async function GET(req: Request) {
     if (!["baglam", "liste", "detay"].includes(islem)) throw new VivaHatasi("Geçersiz işlem.");
     const id = q.get("etkinlik_id");
     if (islem === "detay" && !vivaUuidMu(id)) throw new VivaHatasi("Geçersiz etkinlik.");
+    const agoraSiparisId = q.get("agora_siparis");
+    if (agoraSiparisId !== null && !vivaUuidMu(agoraSiparisId)) throw new VivaHatasi("Geçersiz canlı yayın siparişi.");
     const offset = Number(q.get("offset") ?? 0);
     if (!Number.isSafeInteger(offset) || offset < 0) throw new VivaHatasi("Geçersiz sayfa.");
-    return vivaYanit(await vivaOku(islem, { etkinlik_id: id, offset }));
+    return vivaYanit(await vivaOku(islem, { etkinlik_id: id, agora_siparis_id: agoraSiparisId, offset }));
   } catch (err) { return vivaHata(err); }
 }
 export async function POST(req: Request) {

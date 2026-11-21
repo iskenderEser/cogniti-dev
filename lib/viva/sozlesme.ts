@@ -33,8 +33,30 @@ export interface VivaEpostaDaveti {
   davet_id: string; eposta: string; iptal: boolean; durum: VivaEpostaDavetDurumu;
   deneme_sayisi: number; son_deneme: string | null; gonderim_zamani: string | null; hata_kodu: string | null;
 }
-export interface VivaDetay { etkinlik: VivaEtkinlik; katilimcilar: VivaKisi[]; davetler: VivaDavet[]; eposta_davetleri?: VivaEpostaDaveti[] }
-export interface VivaBaglam { olusturabilir: boolean; kapsam: string; kisiler: VivaKisi[]; eclub_davet_edebilir?: boolean; davet_kurali_surumu?: number; urunler?: { urun_id: string; urun_adi: string }[] }
+export interface AgoraCanliSiparisBaglami {
+  siparis_id: string;
+  oturum_id: string;
+  canli_egitim_id: string;
+  partner_id: string;
+  sirket_adi: string;
+  partner_egitim_id: string;
+  egitim_adi: string;
+  kategori_kodu: string;
+  kategori: string;
+  aciklama: string;
+  baslangic_at: string;
+  bitis_at: string;
+  sure_dakika: number;
+  kapasite: number;
+  durum: string;
+  viva_etkinlik_id: string | null;
+}
+export function agoraKategoriVivaTuru(kategoriKodu: string): VivaEtkinlikTuru {
+  const bulunan = VIVA_EGITIM_SECENEKLERI.find(s => s.deger === kategoriKodu);
+  return bulunan ? (bulunan.deger as VivaEtkinlikTuru) : "genel";
+}
+export interface VivaDetay { etkinlik: VivaEtkinlik; katilimcilar: VivaKisi[]; davetler: VivaDavet[]; eposta_davetleri?: VivaEpostaDaveti[]; agora_siparis?: AgoraCanliSiparisBaglami | null }
+export interface VivaBaglam { olusturabilir: boolean; kapsam: string; kisiler: VivaKisi[]; eclub_davet_edebilir?: boolean; davet_kurali_surumu?: number; urunler?: { urun_id: string; urun_adi: string }[]; agora_siparis?: AgoraCanliSiparisBaglami | null }
 
 export const vivaIcRolMu = (rol: string) => TUM_ROLLER.includes(rol);
 export const vivaUuidMu = (v: unknown): v is string => typeof v === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(v);
@@ -59,21 +81,27 @@ export const vivaTarih = (utc: string) => new Intl.DateTimeFormat("tr-TR", {
 export const VIVA_SURE_ADIMI = 30;
 export const VIVA_AZAMI_SURE = 90;
 export const VIVA_SURE_HATASI = "Yayın süresi yalnızca 30, 60 veya 90 dakika olabilir.";
-export const vivaSureGecerliMi = (dakika: unknown): dakika is number => typeof dakika === "number"
-  && Number.isInteger(dakika) && dakika >= VIVA_SURE_ADIMI && dakika <= VIVA_AZAMI_SURE && dakika % VIVA_SURE_ADIMI === 0;
+export const AGORA_CANLI_SURELER = [45, 60, 120, 180] as const;
+export const vivaSureGecerliMi = (dakika: unknown, agoraCanliMi = false): dakika is number => typeof dakika === "number"
+  && Number.isInteger(dakika)
+  && (agoraCanliMi
+    ? (AGORA_CANLI_SURELER as readonly number[]).includes(dakika)
+    : dakika >= VIVA_SURE_ADIMI && dakika <= VIVA_AZAMI_SURE && dakika % VIVA_SURE_ADIMI === 0);
 
 export function vivaFormDogrula(v: Record<string, unknown>, simdi = Date.now()): string | null {
+  const agoraCanliMi = vivaUuidMu(v.agora_siparis_id);
   if (typeof v.baslik !== "string" || !v.baslik.trim() || v.baslik.trim().length > 160) return "Başlık 1–160 karakter olmalıdır.";
   if (typeof v.aciklama !== "string" || v.aciklama.length > 4000) return "Açıklama en fazla 4000 karakter olabilir.";
   if (v.yayin_turu !== undefined && !["anlik", "planli"].includes(String(v.yayin_turu))) return "Etkinlik türünü seçin.";
   if (v.yayin_turu === "anlik") {
+    if (agoraCanliMi) return "Agora canlı yayını yalnızca planlı etkinlik olabilir.";
     if (v.durum !== "planlandi" || v.baslangic !== undefined || v.bitis !== undefined) return "Anlık yayının başlangıcı sunucuda belirlenir.";
     if (!vivaSureGecerliMi(v.sure_dakika)) return VIVA_SURE_HATASI;
   } else {
   const bas = typeof v.baslangic === "string" ? Date.parse(v.baslangic) : NaN;
   const bit = typeof v.bitis === "string" ? Date.parse(v.bitis) : NaN;
   if (!Number.isFinite(bas) || !Number.isFinite(bit) || bit <= bas) return "Bitiş, başlangıçtan sonra olmalıdır.";
-  if (!vivaSureGecerliMi((bit - bas) / 60_000)) return VIVA_SURE_HATASI;
+  if (!vivaSureGecerliMi((bit - bas) / 60_000, agoraCanliMi)) return agoraCanliMi ? "Agora canlı yayın süresi 45, 60, 120 veya 180 dakika olmalıdır." : VIVA_SURE_HATASI;
   if (!['taslak', 'planlandi'].includes(String(v.durum))) return "Bu aşamada yalnız taslak veya planlanmış etkinlik kaydedilebilir.";
   if (v.durum === "planlandi" && bas <= simdi) return "Planlanan başlangıç gelecekte olmalıdır.";
   }

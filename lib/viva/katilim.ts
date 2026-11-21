@@ -8,7 +8,7 @@ export type VivaKatilimRolu = "sunucu" | "katilimci" | "izleyici";
 export interface VivaKatilimBaglami {
   etkinlik_id: string; surum: number; sahip_id: string; kimlik: string; ad: string;
   rol: VivaKatilimRolu; baslangic: string; bitis: string; oturum_bitis: string | null;
-  oda: VivaOdaDurumu | null; oturum_izi?: string | null;
+  oda: VivaOdaDurumu | null; oturum_izi?: string | null; partner_id?: string | null;
 }
 export interface VivaKatilimDeposu {
   oku: () => Promise<unknown>;
@@ -78,7 +78,13 @@ export async function vivaKatilimHazirla(depo: VivaKatilimDeposu, api: VivaDaily
     odaDogrula(d, api);
     if (!d.oda?.guncel || d.oda.islem_suruyor) return bekle("oda");
   }
-  if (d.rol !== "sunucu" && !await api.sunucuOdada(d.oda!.oda_adi, vivaDailyKisiKimligi(`uye:${d.sahip_id}`))) return bekle("sunucu");
+  if (d.rol !== "sunucu") {
+    const sahipOdada = await api.sunucuOdada(d.oda!.oda_adi, vivaDailyKisiKimligi(`uye:${d.sahip_id}`));
+    const partnerOdada = !sahipOdada && vivaUuidMu(d.partner_id)
+      ? await api.sunucuOdada(d.oda!.oda_adi, vivaDailyKisiKimligi(`partner:${d.partner_id}`))
+      : false;
+    if (!sahipOdada && !partnerOdada) return bekle("sunucu");
+  }
   const ayarlar = vivaDailyTokenAyarlari(d);
   await depo.erisimKaydet?.(d, ayarlar.user_id);
   const token = await api.tokenOlustur(ayarlar);

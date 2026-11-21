@@ -26,7 +26,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 import { SadeCokluAliciSecimi, SadeFormSecimi, SadeKapsulFiltre, SadeTarihAlani } from "@/components/kontrol/SadeKontroller";
-import { VIVA_EGITIM_SECENEKLERI, vivaUrunZorunlu } from "@/lib/viva/sozlesme";
+import { agoraKategoriVivaTuru, VIVA_EGITIM_SECENEKLERI, vivaUrunZorunlu } from "@/lib/viva/sozlesme";
 import { vivaGoogleTakvim, vivaOutlookTakvim } from "@/lib/viva/takvim";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { VIVA_SURE_HATASI, vivaSureGecerliMi, VIVA_DURUMLARI, vivaFormDogrula, vivaTarih, vivaTarihGirdisi, vivaYerelZamaniUtc, type VivaBaglam, type VivaDavetEpostaGirdisi, type VivaDetay, type VivaEtkinlik } from "@/lib/viva/sozlesme";
@@ -49,12 +49,18 @@ function Ozet({ e }: { e: VivaEtkinlik }) {
 }
 function EtkinlikFormu({ baglam, detay, onKaydet, ilkTur }: { ilkTur?: "anlik" | "planli"; baglam: VivaBaglam; detay: VivaDetay | null; onKaydet: (d: VivaDetay, anlik: boolean) => void }) {
   const e = detay?.etkinlik;
-  const [baslik, setBaslik] = useState(e?.baslik ?? "");
-  const [egitimTuru, setEgitimTuru] = useState<string>(e?.egitim_turu === "ik_egitimi" ? "" : e?.egitim_turu ?? "");
+  const agoraSiparis = detay?.agora_siparis ?? baglam.agora_siparis ?? null;
+  const agoraKilitli = Boolean(agoraSiparis);
+  const [baslik, setBaslik] = useState(agoraSiparis ? agoraSiparis.egitim_adi.slice(0, 160) : (e?.baslik ?? ""));
+  const [egitimTuru, setEgitimTuru] = useState<string>(
+    agoraSiparis
+      ? agoraKategoriVivaTuru(agoraSiparis.kategori_kodu)
+      : (e?.egitim_turu === "ik_egitimi" ? "" : e?.egitim_turu ?? ""),
+  );
   const [urunId, setUrunId] = useState(e?.urun_id ?? "");
   const urunler = baglam.urunler ?? [];
   const urunZorunlu = vivaUrunZorunlu(egitimTuru);
-  const [aciklama, setAciklama] = useState(e?.aciklama ?? "");
+  const [aciklama, setAciklama] = useState(agoraSiparis ? (agoraSiparis.aciklama ?? "").slice(0, 4000) : (e?.aciklama ?? ""));
   const aciklamaAlani = useRef<HTMLTextAreaElement>(null);
   useLayoutEffect(() => {
     function boyutla() {
@@ -67,10 +73,22 @@ function EtkinlikFormu({ baglam, detay, onKaydet, ilkTur }: { ilkTur?: "anlik" |
     window.addEventListener("resize", boyutla);
     return () => window.removeEventListener("resize", boyutla);
   }, [aciklama]);
-  const [tur, setTur] = useState(e ? "planli" : ilkTur ?? "");
-  const [tarih, setTarih] = useState(e ? vivaTarihGirdisi(e.baslangic).slice(0, 10) : "");
-  const [saat, setSaat] = useState(e ? vivaTarihGirdisi(e.baslangic).slice(11) : "");
-  const [sure, setSure] = useState(e ? String(Math.max(1, Math.round((Date.parse(e.bitis) - Date.parse(e.baslangic)) / 60_000))) : "60");
+  const [tur, setTur] = useState(agoraSiparis ? "planli" : (e ? "planli" : ilkTur ?? ""));
+  const [tarih, setTarih] = useState(
+    agoraSiparis
+      ? vivaTarihGirdisi(agoraSiparis.baslangic_at).slice(0, 10)
+      : (e ? vivaTarihGirdisi(e.baslangic).slice(0, 10) : ""),
+  );
+  const [saat, setSaat] = useState(
+    agoraSiparis
+      ? vivaTarihGirdisi(agoraSiparis.baslangic_at).slice(11)
+      : (e ? vivaTarihGirdisi(e.baslangic).slice(11) : ""),
+  );
+  const [sure, setSure] = useState(
+    agoraSiparis
+      ? String(agoraSiparis.sure_dakika)
+      : (e ? String(Math.max(1, Math.round((Date.parse(e.bitis) - Date.parse(e.baslangic)) / 60_000))) : "60"),
+  );
   const [secili, setSecili] = useState((detay?.katilimcilar ?? []).map(k => `${k.tur}:${k.id}`));
   const [davetEpostalari, setDavetEpostalari] = useState<string[]>(() =>
     (detay?.eposta_davetleri ?? []).filter(d => !d.iptal && d.durum !== "iptal").map(d => d.eposta));
@@ -88,26 +106,73 @@ function EtkinlikFormu({ baglam, detay, onKaydet, ilkTur }: { ilkTur?: "anlik" |
   const firmaSecili = secili.filter(k => k.startsWith("ic:"));
   const eclubSecili = secili.filter(k => k.startsWith("eclub:"));
   const eskiSecimler = secili.filter(k => !secenekler.some(s => s.deger === k));
+  const toplamDavetliSayisi = secili.length + davetEpostalari.length;
+
+  function katilimciSecimiGuncelle(onEk: "ic:" | "eclub:", yeniDegerler: string[]) {
+    const digerleri = secili.filter(k => !k.startsWith(onEk));
+    if (agoraSiparis && digerleri.length + yeniDegerler.length + davetEpostalari.length > agoraSiparis.kapasite) {
+      const izinliAdet = Math.max(0, agoraSiparis.kapasite - digerleri.length - davetEpostalari.length);
+      setHata(`Bu canlı yayının davetli kontenjanı (siz hariç) en fazla ${agoraSiparis.kapasite} kişidir.`);
+      setSecili([...digerleri, ...yeniDegerler.slice(0, izinliAdet)]);
+      return;
+    }
+    setHata("");
+    setSecili([...digerleri, ...yeniDegerler]);
+  }
+
+  function epostaAdresleriGuncelle(yeniAdresler: string[]) {
+    if (agoraSiparis && secili.length + yeniAdresler.length > agoraSiparis.kapasite) {
+      const izinliAdet = Math.max(0, agoraSiparis.kapasite - secili.length);
+      setHata(`Bu canlı yayının davetli kontenjanı (siz hariç) en fazla ${agoraSiparis.kapasite} kişidir.`);
+      setDavetEpostalari(yeniAdresler.slice(0, izinliAdet));
+      return;
+    }
+    setHata("");
+    setDavetEpostalari(yeniAdresler);
+  }
+
   async function kaydet(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (kilit.current) return;
     setHata("");
     try {
       const epostalar = vivaEpostalariAyir(epostaGirdisi, davetEpostalari, true);
+      if (agoraSiparis && secili.length + epostalar.adresler.length > agoraSiparis.kapasite) {
+        throw Error(`Bu canlı yayının davetli kontenjanı (siz hariç) en fazla ${agoraSiparis.kapasite} kişidir.`);
+      }
       setDavetEpostalari(epostalar.adresler);
       setEpostaGirdisi(epostalar.girdi);
       if (epostalar.hatali) throw Error("Hatalı veya tamamlanmamış e-posta adreslerini düzeltin.");
       if (!["anlik", "planli"].includes(tur)) throw Error("Anlık Etkinlik veya Planlı Etkinlik seçeneğini seçin.");
       const sureDakika = Number(sure);
-      if (!vivaSureGecerliMi(sureDakika)) throw Error(VIVA_SURE_HATASI);
-      const taslak = (event.nativeEvent as SubmitEvent).submitter?.getAttribute("value") === "taslak";
-      const anlik = tur === "anlik";
+      if (!vivaSureGecerliMi(sureDakika, agoraKilitli)) {
+        throw Error(agoraKilitli ? "Agora canlı yayın süresi 45, 60, 120 veya 180 dakika olmalıdır." : VIVA_SURE_HATASI);
+      }
+      const taslak = !agoraKilitli && (event.nativeEvent as SubmitEvent).submitter?.getAttribute("value") === "taslak";
+      const anlik = !agoraKilitli && tur === "anlik";
       if (anlik && taslak) throw Error("Taslak için Planlı Etkinlik seçeneğini kullanın.");
-      const baslangic = anlik ? null : vivaYerelZamaniUtc(`${tarih}T${saat}`);
-      const v: Record<string, unknown> & VivaDavetEpostaGirdisi = { baslik, aciklama, egitim_turu: egitimTuru, urun_id: urunId || null, yayin_turu: tur, durum: taslak ? "taslak" : "planlandi",
-        ...(baslangic ? { baslangic, bitis: new Date(Date.parse(baslangic) + sureDakika * 60_000).toISOString() } : { sure_dakika: sureDakika }),
+      const baslangic = agoraSiparis
+        ? new Date(agoraSiparis.baslangic_at).toISOString()
+        : anlik
+          ? null
+          : vivaYerelZamaniUtc(`${tarih}T${saat}`);
+      const bitis = agoraSiparis
+        ? new Date(agoraSiparis.bitis_at).toISOString()
+        : baslangic
+          ? new Date(Date.parse(baslangic) + sureDakika * 60_000).toISOString()
+          : null;
+      const v: Record<string, unknown> & VivaDavetEpostaGirdisi = {
+        baslik,
+        aciklama,
+        egitim_turu: egitimTuru,
+        urun_id: urunId || null,
+        yayin_turu: tur,
+        durum: taslak ? "taslak" : "planlandi",
+        ...(agoraSiparis ? { agora_siparis_id: agoraSiparis.siparis_id } : {}),
+        ...(baslangic && bitis ? { baslangic, bitis } : { sure_dakika: sureDakika }),
         davet_epostalari: epostalar.adresler,
-        katilimcilar: secili.map(k => { const [tur, id] = k.split(":"); return { tur, id }; }) };
+        katilimcilar: secili.map(k => { const [tur, id] = k.split(":"); return { tur, id }; }),
+      };
       const mesaj = vivaFormDogrula(v);
       if (mesaj) throw new Error(mesaj);
       if (eskiSecimler.length) throw new Error("Artık kapsamınızda olmayan seçimleri kaldırın.");
@@ -124,16 +189,31 @@ function EtkinlikFormu({ baglam, detay, onKaydet, ilkTur }: { ilkTur?: "anlik" |
   return <div className={formStyles.layout}>
       <form onSubmit={kaydet} aria-label="Viva etkinlik formu" aria-busy={busy}>
         <fieldset disabled={busy} className={formStyles.fields}>
+          {agoraSiparis && (
+            <div className="mb-4 rounded-xl border border-sky-200 bg-sky-50/80 p-4 text-sm text-slate-800">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <strong className="font-semibold text-sky-950">
+                  Canlı Agora Yayını · {agoraSiparis.partner_egitim_id} · {agoraSiparis.sirket_adi}
+                </strong>
+                <span className="rounded-full bg-sky-900 px-3 py-0.5 text-xs font-semibold text-white">
+                  Kontenjan: {toplamDavetliSayisi} / {agoraSiparis.kapasite} Davetli (Siz hariç)
+                </span>
+              </div>
+              <p className="mt-1.5 text-xs text-slate-600">
+                Etkinlik adı, türü, açıklaması, tarihi, saati ve süresi Agora canlı yayın siparişinizden otomatik doldurulmuştur. Firmanız, E-Club Üyeleri ve E-posta ile davet araçlarını kullanarak toplamda en fazla {agoraSiparis.kapasite} davetli ekleyebilirsiniz.
+              </p>
+            </div>
+          )}
           <div className={tur ? formStyles.detailsGrid : undefined}>
           <section className={formStyles.section} aria-labelledby="viva-bilgi-baslik">
             <h2 id="viva-bilgi-baslik"><span aria-hidden="true">01</span>Etkinlik Bilgileri</h2>
-            {!e && <div className={formStyles.field}><p className={formStyles.legend}>Etkinlik Türü *</p><SadeKapsulFiltre etiket="Etkinlik Türü" deger={tur} onDegistir={setTur} secenekler={[
+            {!e && !agoraKilitli && <div className={formStyles.field}><p className={formStyles.legend}>Etkinlik Türü *</p><SadeKapsulFiltre etiket="Etkinlik Türü" deger={tur} onDegistir={setTur} secenekler={[
               { deger: "anlik", etiket: "Anlık Etkinlik" }, { deger: "planli", etiket: "Planlı Etkinlik" },
             ]} /></div>}
             {e?.durum === "taslak" && <p className={formStyles.draftNote}>Taslak · Yalnız size görünür</p>}
-            <div className={formStyles.field}><Label htmlFor="viva-baslik">Etkinlik Adı *</Label><Input id="viva-baslik" required maxLength={160} value={baslik} onChange={x => setBaslik(x.target.value)} placeholder="Örn: Yayınların izlenmesi" /></div>
+            <div className={formStyles.field}><Label htmlFor="viva-baslik">Etkinlik Adı *</Label><Input id="viva-baslik" required maxLength={160} value={baslik} readOnly={agoraKilitli} disabled={agoraKilitli} onChange={x => setBaslik(x.target.value)} placeholder="Örn: Yayınların izlenmesi" /></div>
             <div className={formStyles.educationGrid}>
-              <div className={formStyles.field}><Label htmlFor="viva-egitim-turu">Etkinlik Türü *</Label><SadeFormSecimi id="viva-egitim-turu" required value={egitimTuru} onChange={event => setEgitimTuru(event.target.value)}>
+              <div className={formStyles.field}><Label htmlFor="viva-egitim-turu">Etkinlik Türü *</Label><SadeFormSecimi id="viva-egitim-turu" required value={egitimTuru} disabled={agoraKilitli} onChange={event => setEgitimTuru(event.target.value)}>
                 <option value="">Etkinlik türünü seçin</option>{VIVA_EGITIM_SECENEKLERI.map(secenek => <option key={secenek.deger} value={secenek.deger}>{secenek.etiket}</option>)}
               </SadeFormSecimi></div>
               <div className={formStyles.field}><Label htmlFor="viva-urun">İlgili Ürün{urunZorunlu ? " *" : ""}</Label><SadeFormSecimi id="viva-urun" required={urunZorunlu} value={urunId} onChange={event => setUrunId(event.target.value)}>
@@ -142,25 +222,32 @@ function EtkinlikFormu({ baglam, detay, onKaydet, ilkTur }: { ilkTur?: "anlik" |
                 {urunler.map(urun => <option key={urun.urun_id} value={urun.urun_id}>{urun.urun_adi}</option>)}
               </SadeFormSecimi></div>
             </div>
-            <div className={formStyles.field}><Label htmlFor="viva-aciklama">Açıklama</Label><textarea ref={aciklamaAlani} id="viva-aciklama" maxLength={4000} value={aciklama} onChange={x => setAciklama(x.target.value)} placeholder="Yayın hakkında kısa bilgi verebilirsiniz." aria-describedby="viva-aciklama-yardim" /><p id="viva-aciklama-yardim" className={formStyles.help}>Katılımcılar etkinlik detayında bu açıklamayı görür.</p></div>
+            <div className={formStyles.field}><Label htmlFor="viva-aciklama">Açıklama</Label><textarea ref={aciklamaAlani} id="viva-aciklama" maxLength={4000} value={aciklama} readOnly={agoraKilitli} disabled={agoraKilitli} onChange={x => setAciklama(x.target.value)} placeholder="Yayın hakkında kısa bilgi verebilirsiniz." aria-describedby="viva-aciklama-yardim" /><p id="viva-aciklama-yardim" className={formStyles.help}>Katılımcılar etkinlik detayında bu açıklamayı görür.</p></div>
           </section>
           {tur && <section className={formStyles.section} aria-labelledby="viva-zaman-baslik">
             <h2 id="viva-zaman-baslik"><span aria-hidden="true">02</span>{tur === "anlik" ? "Yayın süresi" : "Tarih ve saat"}</h2>
             <div className={formStyles.timeGrid}>
               {tur === "planli" && <>
-                <div className={`${formStyles.field} ${formStyles.dateField}`}><Label htmlFor="viva-tarih">Başlangıç tarihi *</Label><SadeTarihAlani id="viva-tarih" required value={tarih} onChange={x => setTarih(x.target.value)} /></div>
-                <div className={formStyles.field}><Label htmlFor="viva-saat">Başlangıç saati *</Label><VivaSaatSecimi id="viva-saat" value={saat} onChange={setSaat} disabled={busy} /></div>
+                <div className={`${formStyles.field} ${formStyles.dateField}`}><Label htmlFor="viva-tarih">Başlangıç tarihi *</Label>{agoraKilitli ? <Input id="viva-tarih" value={tarih} readOnly disabled /> : <SadeTarihAlani id="viva-tarih" required value={tarih} onChange={x => setTarih(x.target.value)} />}</div>
+                <div className={formStyles.field}><Label htmlFor="viva-saat">Başlangıç saati *</Label>{agoraKilitli ? <Input id="viva-saat" value={saat} readOnly disabled /> : <VivaSaatSecimi id="viva-saat" value={saat} onChange={setSaat} disabled={busy} />}</div>
               </>}
-              <div className={formStyles.field}><Label htmlFor="viva-sure">Süre (dakika) *</Label><VivaSureSecimi id="viva-sure" value={sure} onChange={setSure} disabled={busy} /></div>
+              <div className={formStyles.field}><Label htmlFor="viva-sure">Süre (dakika) *</Label>{agoraKilitli ? <Input id="viva-sure" value={`${sure} dakika`} readOnly disabled /> : <VivaSureSecimi id="viva-sure" value={sure} onChange={setSure} disabled={busy} />}</div>
             </div>
           </section>}
           </div>
           <section className={formStyles.section} aria-labelledby="viva-katilimci-baslik">
-            <h2 id="viva-katilimci-baslik"><span aria-hidden="true">{tur ? "03" : "02"}</span>Davetliler</h2>
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h2 id="viva-katilimci-baslik"><span aria-hidden="true">{tur ? "03" : "02"}</span>Davetliler</h2>
+              {agoraSiparis && (
+                <span className="text-xs font-semibold text-slate-600">
+                  Seçilen Davetli: {toplamDavetliSayisi} / {agoraSiparis.kapasite} (Siz hariç)
+                </span>
+              )}
+            </div>
             <div className={formStyles.inviteSelectionLayout}>
             <div className={formStyles.inviteSelectors}>
-              <SadeCokluAliciSecimi gruplar={firmaGruplari} secenekler={firmaSecenekleri} degerler={firmaSecili} onDegistir={degerler => setSecili(onceki => [...onceki.filter(k => !k.startsWith("ic:")), ...degerler])} etiket="Firmanız" aliciAdi="davetli" placeholder="Firmanız" className="w-full min-w-0" disabled={busy} />
-              {eclubDavetEdilebilir && <SadeCokluAliciSecimi secenekler={eclubSecenekleri} degerler={eclubSecili} onDegistir={degerler => setSecili(onceki => [...onceki.filter(k => !k.startsWith("eclub:")), ...degerler])} etiket="E-Club Üyeleri" aliciAdi="davetli" placeholder="E-Club Üyeleri" className="w-full min-w-0" disabled={busy} />}
+              <SadeCokluAliciSecimi gruplar={firmaGruplari} secenekler={firmaSecenekleri} degerler={firmaSecili} onDegistir={degerler => katilimciSecimiGuncelle("ic:", degerler)} etiket="Firmanız" aliciAdi="davetli" placeholder="Firmanız" className="w-full min-w-0" disabled={busy} />
+              {eclubDavetEdilebilir && <SadeCokluAliciSecimi secenekler={eclubSecenekleri} degerler={eclubSecili} onDegistir={degerler => katilimciSecimiGuncelle("eclub:", degerler)} etiket="E-Club Üyeleri" aliciAdi="davetli" placeholder="E-Club Üyeleri" className="w-full min-w-0" disabled={busy} />}
             </div>
             <div className={formStyles.selectedBox} role="group" aria-label="Seçilen davetliler">
               {secili.length > 0 ? <ul className={formStyles.selectedChips} aria-label="Seçili katılımcılar">{secili.map(k => {
@@ -171,14 +258,14 @@ function EtkinlikFormu({ baglam, detay, onKaydet, ilkTur }: { ilkTur?: "anlik" |
             </div>
             </div>
             {eskiSecimler.length > 0 && <div role="alert" className={formStyles.invalidSelection}><p>{eskiSecimler.length} seçim artık kapsamınızda bulunmuyor.</p><Button type="button" variant="outline" onClick={() => setSecili(x => x.filter(k => !eskiSecimler.includes(k)))}>Geçersiz seçimleri kaldır</Button></div>}
-            <VivaEpostaAlani adresler={davetEpostalari} girdi={epostaGirdisi} onAdresler={setDavetEpostalari} onGirdi={setEpostaGirdisi} disabled={busy} />
+            <VivaEpostaAlani adresler={davetEpostalari} girdi={epostaGirdisi} onAdresler={epostaAdresleriGuncelle} onGirdi={setEpostaGirdisi} disabled={busy} />
           </section>
         </fieldset>
         {hata && <p role="alert" className={formStyles.formError}>{hata}</p>}
         <div className={formStyles.formActions}>
-          <Button asChild variant="outline"><Link href={e ? `/viva/${e.etkinlik_id}` : "/viva/yayinlar"}>Vazgeç</Link></Button>
-          {tur === "planli" && e?.durum !== "planlandi" && <Button type="submit" value="taslak" variant="outline" disabled={busy} className={formStyles.push}>Taslak olarak kaydet</Button>}
-          <Button type="submit" disabled={busy || !tur} className={tur !== "planli" || e?.durum === "planlandi" ? formStyles.push : undefined}>{busy ? "Kaydediliyor…" : e && e.durum !== "taslak" ? "Değişiklikleri kaydet" : tur === "anlik" ? "Yayını başlat" : "Etkinliği planla"}<ArrowRight aria-hidden="true" /></Button>
+          <Button asChild variant="outline"><Link href={agoraSiparis ? "/agora-yayinlari/canli" : (e ? `/viva/${e.etkinlik_id}` : "/viva/yayinlar")}>Vazgeç</Link></Button>
+          {!agoraKilitli && tur === "planli" && e?.durum !== "planlandi" && <Button type="submit" value="taslak" variant="outline" disabled={busy} className={formStyles.push}>Taslak olarak kaydet</Button>}
+          <Button type="submit" disabled={busy || !tur} className={agoraKilitli || tur !== "planli" || e?.durum === "planlandi" ? formStyles.push : undefined}>{busy ? "Kaydediliyor…" : e && e.durum !== "taslak" ? "Değişiklikleri kaydet" : agoraKilitli ? "Yayın Davetini Gönder" : tur === "anlik" ? "Yayını başlat" : "Etkinliği planla"}<ArrowRight aria-hidden="true" /></Button>
         </div>
       </form>
   </div>;
@@ -206,6 +293,9 @@ function DavetYonetimi({ detay, onDegis }: { detay: VivaDetay; onDegis: (d: Viva
   const [busy, setBusy] = useState(false); const kilit = useRef(false);
   const [davetAcik, setDavetAcik] = useState(false);
   const e = detay.etkinlik;
+  const agoraSiparis = detay.agora_siparis ?? null;
+  const aktifDavetliSayisi = detay.katilimcilar.length + detay.davetler.filter(d => !d.iptal).length;
+  const kontenjanDolu = Boolean(agoraSiparis && aktifDavetliSayisi >= agoraSiparis.kapasite);
   const sorgu = arama.trim().toLocaleLowerCase("tr-TR");
   const davetler = detay.davetler.filter(d => [d.ad, d.kurum_adi ?? ""].some(ad => ad.toLocaleLowerCase("tr-TR").includes(sorgu)));
   async function islem(islem: string, ek: Record<string, unknown>) {
@@ -213,7 +303,7 @@ function DavetYonetimi({ detay, onDegis }: { detay: VivaDetay; onDegis: (d: Viva
     kilit.current = true; setBusy(true); setHata(""); setMesaj(""); setLink("");
     try {
       const d = await vivaIstek<VivaDetay & { davet_yolu?: string; uyari?: string }>("/viva/api", { method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ islem, etkinlik_id: e.etkinlik_id, surum: e.surum, ...ek }) });
+        body: JSON.stringify({ islem, etkinlik_id: e.etkinlik_id, surum: e.surum, ...(agoraSiparis ? { agora_siparis_id: agoraSiparis.siparis_id } : {}), ...ek }) });
       onDegis(d.eposta_davetleri ? d : { ...d, eposta_davetleri: detay.eposta_davetleri });
       if (d.davet_yolu) { setLink(`${window.location.origin}${d.davet_yolu}`); setAd(""); setEposta(""); }
       else setMesaj(d.uyari ?? (islem === "davet_yeniden_dene" ? "Davet yeniden gönderim kuyruğuna alındı." : "Davet iptal edildi."));
@@ -223,7 +313,7 @@ function DavetYonetimi({ detay, onDegis }: { detay: VivaDetay; onDegis: (d: Viva
   return <section className={detayStyles.invites} aria-labelledby="viva-davet-baslik">
     <div className={`${detayStyles.paneHead} ${detayStyles.participantHead}`}><div className={detayStyles.participantHeading}><h2 id="viva-davet-baslik">Özel davetliler <span>({detay.davetler.length})</span></h2>
       {e.durum === "planlandi" && e.oda_acik && <Dialog.Root open={davetAcik} onOpenChange={acik => { if (!busy) { setDavetAcik(acik); if (!acik) setLink(""); } }}>
-        <Dialog.Trigger asChild><Button variant="ghost" disabled={busy}><Plus aria-hidden="true" />Özel davetli ekle</Button></Dialog.Trigger>
+        <Dialog.Trigger asChild><Button variant="ghost" disabled={busy || kontenjanDolu} title={kontenjanDolu ? `Canlı yayın kontenjanı (${agoraSiparis?.kapasite} davetli) dolu.` : undefined}><Plus aria-hidden="true" />Özel davetli ekle</Button></Dialog.Trigger>
         <Dialog.Portal><Dialog.Overlay className={detayStyles.inviteOverlay} /><Dialog.Content className={detayStyles.inviteDialog}>
           <Dialog.Title className={detayStyles.inviteDialogTitle}>Özel davetli ekle</Dialog.Title>
           <Dialog.Description className={detayStyles.inviteDialogDescription}>Ad ve e-posta bilgileriyle bu etkinliğe özel bir davet bağlantısı oluşturun.</Dialog.Description>
@@ -252,7 +342,7 @@ function DavetYonetimi({ detay, onDegis }: { detay: VivaDetay; onDegis: (d: Viva
   </section>;
 }
 
-export default function VivaEkrani({ gorunum, etkinlikId, onizleme = false, anlikBaslat = false, ilkTur, ilkBolum = "katilimcilar", listeKaynagi = null }: { ilkBolum?: VivaDetayBolumu; listeKaynagi?: VivaListeKaynagi | null; ilkTur?: "anlik" | "planli"; gorunum: VivaGorunum; etkinlikId?: string; onizleme?: boolean; anlikBaslat?: boolean }) {
+export default function VivaEkrani({ gorunum, etkinlikId, onizleme = false, anlikBaslat = false, ilkTur, ilkBolum = "katilimcilar", listeKaynagi = null, agoraSiparisId }: { ilkBolum?: VivaDetayBolumu; listeKaynagi?: VivaListeKaynagi | null; ilkTur?: "anlik" | "planli"; gorunum: VivaGorunum; etkinlikId?: string; onizleme?: boolean; anlikBaslat?: boolean; agoraSiparisId?: string }) {
   const router = useRouter();
   const [okunuyor, setOkunuyor] = useState(true);
   const [bolum, setBolum] = useState(vivaDetayBolumu(ilkBolum));
@@ -261,17 +351,22 @@ export default function VivaEkrani({ gorunum, etkinlikId, onizleme = false, anli
   const [uyari, setUyari] = useState("");
   const [hata, setHata] = useState(""); const [busy, setBusy] = useState(false); const [yenileme, setYenileme] = useState(0);
   const yukle = useCallback(async (signal: AbortSignal) => {
+    const agoraEk = agoraSiparisId ? `&agora_siparis=${encodeURIComponent(agoraSiparisId)}` : "";
     const [baglam, sonuc] = await Promise.all([
-      vivaIstek<VivaBaglam>("/viva/api?islem=baglam", { signal }),
+      vivaIstek<VivaBaglam>(`/viva/api?islem=baglam${agoraEk}`, { signal }),
       gorunum === "yeni" ? Promise.resolve(null) : etkinlikId
-        ? vivaIstek<VivaDetay>(`/viva/api?islem=detay&etkinlik_id=${encodeURIComponent(etkinlikId)}`, { signal })
+        ? vivaIstek<VivaDetay>(`/viva/api?islem=detay&etkinlik_id=${encodeURIComponent(etkinlikId)}${agoraEk}`, { signal })
         : vivaIstek<{ etkinlikler: VivaEtkinlik[]; devam_var: boolean }>("/viva/api", { signal }),
     ]);
     if (signal.aborted) return;
+    if (gorunum === "yeni" && baglam.agora_siparis?.viva_etkinlik_id) {
+      router.replace(`/viva/${baglam.agora_siparis.viva_etkinlik_id}/duzenle?agora_siparis=${encodeURIComponent(baglam.agora_siparis.siparis_id)}`);
+      return;
+    }
     const detay = sonuc && "etkinlik" in sonuc ? sonuc : null;
     const liste = sonuc && "etkinlikler" in sonuc ? sonuc : null;
     setData({ baglam, detay, etkinlikler: liste?.etkinlikler ?? [], devam: liste?.devam_var ?? false }); setHata("");
-  }, [etkinlikId, gorunum]);
+  }, [agoraSiparisId, etkinlikId, gorunum, router]);
   useEffect(() => {
     const kontrol = new AbortController(); setOkunuyor(true);
     void yukle(kontrol.signal).catch(e => { if (!kontrol.signal.aborted) { setData(null); setHata(e instanceof Error ? e.message : "Viva açılamadı."); } }).finally(() => { if (!kontrol.signal.aborted) setOkunuyor(false); });
