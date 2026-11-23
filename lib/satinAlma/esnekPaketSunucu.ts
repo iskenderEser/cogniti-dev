@@ -2,6 +2,7 @@ import "server-only";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { rolCozucu } from "@/lib/utils/rolCozucu";
 import { esnekPaketBakiyeTuru, esnekPaketSiparisIstegiGecerli, type BakiyeTuru } from "./esnekPaket";
+import { esnekPaketYuklendiEpostasiGonder } from "./satinAlmaEposta";
 import { uuidGecerliMi } from "@/lib/uretim/rpcTemel";
 
 /** Hesap sahibi ve firma oturumdan belirlenir; beklenen hesap yalnız onay kontrolüdür. */
@@ -32,6 +33,15 @@ export async function esnekPaketSiparisiOlustur(istek: unknown, beklenenHesap?: 
     const veri = sonuc.data;
     if (!veri || !uuidGecerliMi(veri.siparis_id) || typeof veri.yeniden_deneme !== "boolean") {
       return { ok: false as const, status: 503, hata: "Sipariş sonucu doğrulanamadı. Aynı işlemle yeniden deneyin." };
+    }
+    if (!veri.yeniden_deneme) {
+      await esnekPaketYuklendiEpostasiGonder(db, {
+        kullaniciId: user.id,
+        siparisId: veri.siparis_id as string,
+        hesapTuru: esnekPaketBakiyeTuru(rol)!,
+        tokenAdedi: istek.tokenAdedi,
+        birimFiyat: istek.birimFiyat,
+      });
     }
     return { ok: true as const, siparisId: veri.siparis_id as string, yenidenDeneme: veri.yeniden_deneme as boolean };
   } catch {

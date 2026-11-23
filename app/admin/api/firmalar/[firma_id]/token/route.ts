@@ -1,4 +1,3 @@
-import { firmaYonetimIslemKontrol } from "@/lib/admin/firmaYonetimIslem";
 import { firmaYonetimOkumaKontrol } from "@/lib/admin/firmaYonetimOkuma";
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/server";
@@ -55,31 +54,4 @@ export async function GET(request: NextRequest, { params }: Context) {
     if (error) return hataYaniti("Token bilgileri alınamadı.", "admin token GET", error);
     return NextResponse.json({ hesap: account.data, bakiye: balance.data?.[0] ?? null, yuklemeler: loads.data ?? [], tuketimler: usage.data ?? [], kullanicilar: users.data ?? [] });
   } catch (error) { return sunucuHatasi(error, "admin token GET"); }
-}
-
-export async function POST(request: NextRequest, { params }: Context) {
-  try {
-    const { firma_id } = await params;
-    const auth = await firmaYonetimIslemKontrol(firma_id);
-    if (!auth.gecerli) return auth.yanit;
-    if (auth.firmaAdmin) return NextResponse.json({ hata: "Token hesap ve yükleme işlemlerini Cogniti yönetir." }, { status: 403 });
-    if (!UUID.test(firma_id)) return validasyonHatasi("Geçersiz firma.", ["firma_id"]);
-    const body = await request.json();
-    const db = createAdminClient();
-    if (typeof body.anahtar !== "string" || !UUID.test(body.anahtar)) return validasyonHatasi("İşlem anahtarı geçersiz.", ["anahtar"]);
-    if (body.islem === "hesap_ac") {
-      if (!["aylik", "kullandigin_kadar_ode"].includes(body.paket)) return validasyonHatasi("Paket seçin.", ["paket"]);
-      if (body.paket === "aylik" && ![10000, 30000, 75000].includes(body.miktar)) return validasyonHatasi("Aylık paket seçin.", ["miktar"]);
-      const result = await db.rpc("cogniti_token_hesap_olustur", { p_firma: firma_id, p_paket: body.paket, p_aylik_miktar: body.paket === "aylik" ? body.miktar : null, p_admin: auth.kullaniciId, p_anahtar: body.anahtar });
-      if (result.error) return hataYaniti("Token hesabı açılamadı.", "admin token hesap", result.error);
-      return NextResponse.json({ ok: true });
-    }
-    if (body.islem === "yukle") {
-      if (!Number.isSafeInteger(body.miktar) || body.miktar < 1 || body.miktar > 10000000 || typeof body.aciklama !== "string" || !body.aciklama.trim() || body.aciklama.length > 500) return validasyonHatasi("Geçerli miktar ve açıklama girin.", ["miktar", "aciklama"]);
-      const result = await db.rpc("cogniti_token_yukle", { p_firma: firma_id, p_tur: "admin_duzeltme", p_miktar: body.miktar, p_anahtar: body.anahtar, p_yil: null, p_ay: null, p_olusturan: auth.kullaniciId, p_aciklama: body.aciklama.trim() });
-      if (result.error) return hataYaniti("Token yüklenemedi.", "admin token yükle", result.error);
-      return NextResponse.json({ ok: true });
-    }
-    return validasyonHatasi("Geçersiz işlem.", ["islem"]);
-  } catch (error) { return sunucuHatasi(error, "admin token POST"); }
 }

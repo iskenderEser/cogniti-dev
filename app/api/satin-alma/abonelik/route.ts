@@ -1,4 +1,5 @@
 import { partnerJsonOku, partnerYanit } from "@/lib/agora/partnerHttp";
+import { abonelikBaslatildiEpostasiGonder } from "@/lib/satinAlma/satinAlmaEposta";
 import { createAdminClient, createClient } from "@/lib/supabase/server";
 import { uuidGecerliMi } from "@/lib/uretim/rpcTemel";
 
@@ -22,7 +23,8 @@ export async function POST(request: Request) {
     const { data: { user }, error: oturumHatasi } = await oturum.auth.getUser();
     if (oturumHatasi || !user) return partnerYanit({ hata: "Oturum açmanız gerekiyor." }, 401);
 
-    const { data, error } = await createAdminClient(AbortSignal.timeout(10000)).rpc("cogniti_abonelik_siparisi_kaydet", {
+    const db = createAdminClient(AbortSignal.timeout(10000));
+    const { data, error } = await db.rpc("cogniti_abonelik_siparisi_kaydet", {
       p_auth_id: user.id,
       p_hesap_turu: hesapTuru,
       p_paket_no: paketNo,
@@ -35,6 +37,12 @@ export async function POST(request: Request) {
     if (error && ["22023", "22007", "22008"].includes(error.code)) return partnerYanit({ hata: "Abonelik siparişi bilgileri doğrulanamadı." }, 400);
     if (error?.code === "P0001") return partnerYanit({ hata: "Paket artık satışta olmayabilir, fiyatı veya ilk dönem tarihi değişmiş olabilir. Sayfayı yenileyin." }, 409);
     if (error || !uuidGecerliMi(data?.siparis_id)) return belirsizSonuc();
+
+    await abonelikBaslatildiEpostasiGonder(db, {
+      kullaniciId: user.id,
+      siparisId: data.siparis_id,
+      hesapTuru,
+    });
 
     return partnerYanit({ ok: true, siparisId: data.siparis_id });
   } catch {

@@ -1,6 +1,7 @@
 import { partnerJsonOku, partnerYanit } from "@/lib/agora/partnerHttp";
 import { kkoSecimIstegiGecerli } from "@/lib/satinAlma/kkoSecimi";
 import { kkoYetkiliHesabiOku } from "@/lib/satinAlma/kkoYetkisiSunucu";
+import { kkoBaslatildiEpostasiGonder } from "@/lib/satinAlma/satinAlmaEposta";
 import { createAdminClient } from "@/lib/supabase/server";
 import { uuidGecerliMi } from "@/lib/uretim/rpcTemel";
 
@@ -11,7 +12,8 @@ export async function POST(request: Request) {
   try {
     const yetki = await kkoYetkiliHesabiOku(body.veri.hesapTuru);
     if (!yetki.ok) return partnerYanit(yetki, yetki.status);
-    const { data, error } = await createAdminClient(AbortSignal.timeout(10000)).rpc("cogniti_kko_secimini_kaydet", {
+    const db = createAdminClient(AbortSignal.timeout(10000));
+    const { data, error } = await db.rpc("cogniti_kko_secimini_kaydet", {
       p_auth_id: yetki.kullaniciId, p_hesap: body.veri.hesapTuru, p_birim_fiyat: body.veri.birimFiyat, p_anahtar: body.veri.islemAnahtari,
     });
     if (error?.code === "42501") return partnerYanit({ hata: "Bu hesap için KKÖ seçme yetkiniz bulunmuyor." }, 403);
@@ -24,6 +26,14 @@ export async function POST(request: Request) {
     if (error?.code === "22023") return partnerYanit({ hata: "KKÖ seçim bilgileri doğrulanamadı." }, 400);
     if (error || !data || !uuidGecerliMi(data.bakiye_id) || typeof data.yeniden_deneme !== "boolean") {
       return partnerYanit({ hata: "KKÖ seçiminin sonucu doğrulanamadı. Aynı işlemle yeniden deneyin." }, 503);
+    }
+    if (!data.yeniden_deneme) {
+      await kkoBaslatildiEpostasiGonder(db, {
+        kullaniciId: yetki.kullaniciId,
+        hesapTuru: body.veri.hesapTuru,
+        birimFiyat: body.veri.birimFiyat,
+        islemAnahtari: body.veri.islemAnahtari,
+      });
     }
     return partnerYanit({ ok: true, hesapId: data.bakiye_id, yenidenDeneme: data.yeniden_deneme });
   } catch { return partnerYanit({ hata: "KKÖ seçiminin sonucu doğrulanamadı. Aynı işlemle yeniden deneyin." }, 503); }

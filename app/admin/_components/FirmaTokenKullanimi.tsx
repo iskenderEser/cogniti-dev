@@ -51,6 +51,6 @@ export default function FirmaTokenKullanimi({ firmaId }: { firmaId: string }) {
       </MobilUyumluTablo></div>
       {veri.kayit_sayisi > 50 && <div className={local.pagination}><span>Sayfa {filtre.sayfa + 1} / {Math.ceil(veri.kayit_sayisi / 50)}</span><div><Button variant="outline" disabled={!filtre.sayfa} onClick={() => setFiltre(v => ({ ...v, sayfa: v.sayfa - 1 }))}>Önceki</Button><Button variant="outline" disabled={(filtre.sayfa + 1) * 50 >= veri.kayit_sayisi} onClick={() => setFiltre(v => ({ ...v, sayfa: v.sayfa + 1 }))}>Sonraki</Button></div></div>}
     </section>}
-    <details className={styles.card} onToggle={e => setEskiAcik(e.currentTarget.open)}><summary className={styles.cardHeader}>KKÖ ve Önceki Token Kayıtları</summary>{eskiAcik && <div className={styles.cardBody}><TokenYonetimi firmaId={firmaId} gorunum="kullanim" /></div>}</details>
+    <details className={styles.card} onToggle={e => setEskiAcik(e.currentTarget.open)}><summary className={styles.cardHeader}>KKÖ ve Önceki Token Kayıtları</summary>{eskiAcik && <div className={styles.cardBody}><TokenYonetimi firmaId={firmaId} /></div>}</details>
   </div>;
 }
