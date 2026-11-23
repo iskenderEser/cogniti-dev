@@ -77,7 +77,7 @@ export function useTekilForm({ seciliFirma, takimlar, refreshKullanicilar, hata,
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ad: tekilAd, soyad: tekilSoyad, rol: tekilRol, eposta: tekilEposta, telefon: tekilTelefon, sifre: tekilSifre,
+          ad: tekilAd, soyad: tekilSoyad, rol: tekilRol, eposta: tekilEposta, telefon: tekilTelefon,
           takim_id: tekilTakimId || undefined, takim_adi: tekilTakimAdi || undefined,
           bolge_id: tekilBolgeId || undefined, bolge_adi: tekilBolgeAdi || undefined,
           yetki_kullanici_yonetim: tekilYetkiKullanici,

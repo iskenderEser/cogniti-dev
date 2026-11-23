@@ -4,8 +4,15 @@ import { firmaYonetimOkumaKontrol } from "@/lib/admin/firmaYonetimOkuma";
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/server";
 import { hataYaniti, veriKontrol, sunucuHatasi, validasyonHatasi } from "@/lib/utils/hataIsle";
-import { TUM_ROLLER } from "@/lib/utils/roller";
-import { firmaYapisiYukle, kullaniciEksikMi, kullaniciSatirDogrula, rolCoz, rolGecisiCoz, telefonNormalize } from "@/lib/admin/kullaniciDogrulama";
+import { FIRMA_ADMIN_ROLU, ROL_ADLARI, TUM_ROLLER } from "@/lib/utils/roller";
+import { eksikAlanHataMesaji, firmaYapisiYukle, kullaniciEksikMi, kullaniciSatirDogrula, rolCoz, rolGecisiCoz, telefonNormalize } from "@/lib/admin/kullaniciDogrulama";
+import { kayitSonrasiFirmaDavetiGonder, rastgeleBaslangicSifresi } from "@/lib/admin/kullaniciDaveti";
+import {
+  kullaniciAktifEdildiEpostasiGonder,
+  kullaniciPasifeAlindiEpostasiGonder,
+  kullaniciRolDegistiEpostasiGonder,
+} from "@/lib/admin/kullaniciDurumEposta";
+import { davetSiteAdresi } from "@/lib/eclub/uyelikDaveti";
 import { adSoyadBicimle } from "@/lib/utils/adSoyadBicimle";
 
 export async function GET(
@@ -24,7 +31,7 @@ export async function GET(
 
     const { data: firma, error: firmaError } = await adminSupabase
       .from("firmalar")
-      .select("firma_id")
+      .select("firma_id, firma_adi")
       .eq("firma_id", firma_id)
       .single();
 
@@ -63,7 +70,21 @@ export async function GET(
       bolgeler?: { bolge_adi?: string | null } | Array<{ bolge_adi?: string | null }> | null;
     }
 
-    const sonuc = ((kullanicilar as unknown as AdminKullaniciRow[] | null) ?? []).map(k => {
+    const kullaniciSatirlari = (kullanicilar as unknown as AdminKullaniciRow[] | null) ?? [];
+    const kullaniciIdler = kullaniciSatirlari.map(k => k.kullanici_id);
+    const davetBekleyenSet = new Set<string>();
+    if (kullaniciIdler.length > 0) {
+      const { data: davetler } = await adminSupabase
+        .from("cogniti_kullanici_davetleri")
+        .select("kullanici_id")
+        .in("kullanici_id", kullaniciIdler)
+        .neq("durum", "tamamlandi");
+      for (const d of davetler ?? []) {
+        if (d.kullanici_id) davetBekleyenSet.add(d.kullanici_id as string);
+      }
+    }
+
+    const sonuc = kullaniciSatirlari.map(k => {
       const takimObj = Array.isArray(k.takimlar) ? k.takimlar[0] : k.takimlar;
       const bolgeObj = Array.isArray(k.bolgeler) ? k.bolgeler[0] : k.bolgeler;
       return {
@@ -77,6 +98,7 @@ export async function GET(
         takim_id: k.takim_id,
         bolge_id: k.bolge_id,
         aktif_mi: k.aktif_mi,
+        davet_bekliyor: davetBekleyenSet.has(k.kullanici_id),
         yetki_kullanici_yonetim: k.yetki_kullanici_yonetim,
         yetki_aktif_pasif: k.yetki_aktif_pasif,
         created_at: k.created_at,
@@ -108,7 +130,7 @@ export async function POST(
 
     const { data: firma, error: firmaError } = await adminSupabase
       .from("firmalar")
-      .select("firma_id")
+      .select("firma_id, firma_adi")
       .eq("firma_id", firma_id)
       .single();
 
@@ -128,13 +150,31 @@ export async function POST(
     if (!dogrulama.ok) return validasyonHatasi(dogrulama.hata, dogrulama.alanlar);
     const kayit = dogrulama.kayit;
     if (kontrol.firmaAdmin && kayit.rol === "admin") return validasyonHatasi("Cogniti admin rolü atanamaz.", ["rol"]);
-    // K-A6 — eksik kabul: takım/bölge çözülememişse kayıt yine açılır,
-    // eksiklik yanıtta görünür şekilde raporlanır.
-    const eksikMi = dogrulama.eksikAlanlar.length > 0;
+    if (dogrulama.eksikAlanlar.length > 0) {
+      const alanlar = dogrulama.eksikAlanlar.map((a) => (a === "takim" ? "takim_id" : a === "bolge" ? "bolge_id" : a));
+      return validasyonHatasi(eksikAlanHataMesaji(dogrulama.eksikAlanlar, dogrulama.uyari), alanlar);
+    }
+
+    if (kayit.rol === FIRMA_ADMIN_ROLU) {
+      const { count: mevcutAdminSayisi, error: adminSayimHatasi } = await adminSupabase
+        .from("kullanicilar")
+        .select("kullanici_id", { count: "exact", head: true })
+        .eq("firma_id", firma_id)
+        .eq("rol", FIRMA_ADMIN_ROLU)
+        .eq("aktif_mi", true);
+      if (adminSayimHatasi) {
+        return hataYaniti("Firma Admini kontrolü yapılamadı.", "kullanicilar tablosu SELECT — firma_admin tekillik", adminSayimHatasi);
+      }
+      if ((mevcutAdminSayisi ?? 0) > 0) {
+        return validasyonHatasi("Her firmada yalnızca 1 aktif Firma Admini bulunabilir. Önce mevcut Firma Admininin rolünü değiştirin veya pasife alın.", ["rol"]);
+      }
+    }
 
     const { data: authData, error: authError } = await adminSupabase.auth.admin.createUser({
       email: kayit.eposta,
-      password: kayit.sifre,
+      password: rastgeleBaslangicSifresi(),
+      ban_duration: "876000h",
+      app_metadata: { cogniti_davet_bekliyor: true },
       user_metadata: { rol: kayit.rol, ad: kayit.ad, soyad: kayit.soyad },
       email_confirm: true,
     });
@@ -153,8 +193,7 @@ export async function POST(
         firma_id,
         takim_id: kayit.takim_id,
         bolge_id: kayit.bolge_id,
-        // T-7: eksik bilgili kullanıcı PASİF doğar; eksiği kapanınca otomatik aktifleşir.
-        aktif_mi: !eksikMi,
+        aktif_mi: true,
         yetki_kullanici_yonetim: yetki_kullanici_yonetim === true,
         yetki_aktif_pasif: yetki_aktif_pasif === true,
       });
@@ -165,15 +204,24 @@ export async function POST(
       if (insertError.code === "23505" && insertError.message.includes("telefon")) {
         return validasyonHatasi(`Bu telefon numarası başka bir kullanıcıda kayıtlı (${kayit.telefon}).`, ["telefon"]);
       }
+      if (insertError.code === "23505" && insertError.message.includes("uq_kullanicilar_firma_tek_aktif_firma_admin")) {
+        return validasyonHatasi("Her firmada yalnızca 1 aktif Firma Admini bulunabilir. Önce mevcut Firma Admininin rolünü değiştirin veya pasife alın.", ["rol"]);
+      }
       return hataYaniti("Kullanıcı veritabanına kaydedilemedi.", "kullanicilar tablosu INSERT", insertError);
     }
 
+    const davetSonuc = await kayitSonrasiFirmaDavetiGonder(
+      adminSupabase,
+      authData.user.id,
+      firma!.firma_adi,
+      new URL(request.url).origin
+    );
+
     return NextResponse.json({
-      mesaj: eksikMi
-        ? `Kullanıcı eklendi — EKSİK BİLGİLİ (${dogrulama.eksikAlanlar.join(", ")} atanmadı), PASİF doğdu; eksiği tamamlanınca aktifleşir.${dogrulama.uyari ? ` ${dogrulama.uyari}` : ""}`
-        : "Kullanıcı başarıyla eklendi.",
-      eksik: eksikMi,
-      eksikAlanlar: dogrulama.eksikAlanlar,
+      mesaj: davetSonuc.mesaj,
+      davet_gonderildi: davetSonuc.gonderildi,
+      eksik: false,
+      eksikAlanlar: [],
     }, { status: 201 });
 
   } catch (err) {
@@ -297,32 +345,6 @@ export async function PUT(
       guncellenecek.eposta = yeniEposta;
     }
 
-    const yeniSifre = body.sifre !== undefined && String(body.sifre).length > 0 ? String(body.sifre) : undefined;
-    if (yeniSifre !== undefined && yeniSifre.length < 6) {
-      return validasyonHatasi("Şifre en az 6 karakter olmalıdır.", ["sifre"]);
-    }
-
-    // E-posta giriş kimliğidir: Auth ile tablo ayrışırsa kullanıcı giremez.
-    // Bu yüzden ÖNCE Auth güncellenir — başarısızsa tabloya hiç dokunulmaz.
-    const epostaDegisti = yeniEposta !== undefined && yeniEposta !== (kullanici!.eposta ?? "").toLowerCase();
-    if (epostaDegisti || yeniSifre !== undefined || body.ad !== undefined || body.soyad !== undefined) {
-      const { error: authError } = await adminSupabase.auth.admin.updateUserById(kullanici_id, {
-        ...(epostaDegisti ? { email: yeniEposta, email_confirm: true } : {}),
-        ...(yeniSifre !== undefined ? { password: yeniSifre } : {}),
-        user_metadata: {
-          rol: (guncellenecek.rol as string | undefined) ?? kullanici!.rol,
-          ad: (guncellenecek.ad as string | undefined) ?? kullanici!.ad,
-          soyad: (guncellenecek.soyad as string | undefined) ?? kullanici!.soyad,
-        },
-      });
-      if (authError) {
-        const mesaj = /already|registered|exists/i.test(authError.message)
-          ? `Bu e-posta başka bir kullanıcıda kayıtlı (${yeniEposta}).`
-          : "Giriş bilgileri güncellenemedi.";
-        return validasyonHatasi(mesaj, epostaDegisti ? ["eposta"] : ["sifre"]);
-      }
-    }
-
     if (aktif_mi !== undefined) guncellenecek.aktif_mi = aktif_mi;
     if (yetki_kullanici_yonetim !== undefined) guncellenecek.yetki_kullanici_yonetim = yetki_kullanici_yonetim;
     if (yetki_aktif_pasif !== undefined) guncellenecek.yetki_aktif_pasif = yetki_aktif_pasif;
@@ -344,6 +366,44 @@ export async function PUT(
       }
     }
 
+    const hedefRol = ((guncellenecek.rol as string | undefined) ?? kullanici!.rol).toLowerCase();
+    const hedefAktif = (guncellenecek.aktif_mi as boolean | undefined) ?? kullanici!.aktif_mi;
+    if (hedefRol === FIRMA_ADMIN_ROLU && hedefAktif === true) {
+      const { count: baskaAdminSayisi, error: baskaAdminHatasi } = await adminSupabase
+        .from("kullanicilar")
+        .select("kullanici_id", { count: "exact", head: true })
+        .eq("firma_id", firma_id)
+        .eq("rol", FIRMA_ADMIN_ROLU)
+        .eq("aktif_mi", true)
+        .neq("kullanici_id", kullanici_id);
+      if (baskaAdminHatasi) {
+        return hataYaniti("Firma Admini kontrolü yapılamadı.", "kullanicilar tablosu SELECT — firma_admin tekillik", baskaAdminHatasi);
+      }
+      if ((baskaAdminSayisi ?? 0) > 0) {
+        return validasyonHatasi("Her firmada yalnızca 1 aktif Firma Admini bulunabilir. Önce mevcut Firma Admininin rolünü değiştirin veya pasife alın.", ["rol"]);
+      }
+    }
+
+    // E-posta giriş kimliğidir: Auth ile tablo ayrışırsa kullanıcı giremez.
+    // Bu yüzden ÖNCE Auth güncellenir — başarısızsa tabloya hiç dokunulmaz.
+    const epostaDegisti = yeniEposta !== undefined && yeniEposta !== (kullanici!.eposta ?? "").toLowerCase();
+    if (epostaDegisti || body.ad !== undefined || body.soyad !== undefined) {
+      const { error: authError } = await adminSupabase.auth.admin.updateUserById(kullanici_id, {
+        ...(epostaDegisti ? { email: yeniEposta, email_confirm: true } : {}),
+        user_metadata: {
+          rol: (guncellenecek.rol as string | undefined) ?? kullanici!.rol,
+          ad: (guncellenecek.ad as string | undefined) ?? kullanici!.ad,
+          soyad: (guncellenecek.soyad as string | undefined) ?? kullanici!.soyad,
+        },
+      });
+      if (authError) {
+        const mesaj = /already|registered|exists/i.test(authError.message)
+          ? `Bu e-posta başka bir kullanıcıda kayıtlı (${yeniEposta}).`
+          : "Giriş bilgileri güncellenemedi.";
+        return validasyonHatasi(mesaj, ["eposta"]);
+      }
+    }
+
     const { error: updateError } = await adminSupabase
       .from("kullanicilar")
       .update(guncellenecek)
@@ -362,7 +422,66 @@ export async function PUT(
       if (updateError.code === "23505" && updateError.message.includes("eposta")) {
         return validasyonHatasi(`Bu e-posta başka bir kullanıcıda kayıtlı (${guncellenecek.eposta}).`, ["eposta"]);
       }
+      if (updateError.code === "23505" && updateError.message.includes("uq_kullanicilar_firma_tek_aktif_firma_admin")) {
+        return validasyonHatasi("Her firmada yalnızca 1 aktif Firma Admini bulunabilir. Önce mevcut Firma Admininin rolünü değiştirin veya pasife alın.", ["rol"]);
+      }
       return hataYaniti("Kullanıcı güncellenemedi.", "kullanicilar tablosu UPDATE", updateError);
+    }
+
+    const rolDegisti = hedefRol !== (kullanici!.rol ?? "").toLowerCase();
+    const pasifeAlindi = kullanici!.aktif_mi === true && hedefAktif === false;
+    const aktifEdildi = kullanici!.aktif_mi === false && hedefAktif === true;
+    const sonEposta = ((guncellenecek.eposta as string | undefined) ?? kullanici!.eposta ?? "").trim();
+
+    if ((rolDegisti || pasifeAlindi || aktifEdildi) && sonEposta) {
+      const { data: firmaKaydi } = await adminSupabase
+        .from("firmalar")
+        .select("firma_adi")
+        .eq("firma_id", firma_id)
+        .maybeSingle();
+      const firmaAdi = firmaKaydi?.firma_adi || "Firmanız";
+      const sonAdSoyad = [
+        (guncellenecek.ad as string | undefined) ?? kullanici!.ad,
+        (guncellenecek.soyad as string | undefined) ?? kullanici!.soyad,
+      ].filter(Boolean).join(" ").trim();
+      let siteAdresi = "https://cogniti.net";
+      try {
+        siteAdresi = davetSiteAdresi(new URL(request.url).origin);
+      } catch {
+        // Varsayılan üretim adresi kullanılır.
+      }
+      const girisLinki = new URL("/login", siteAdresi).href;
+      const epostaIsleri: Promise<void>[] = [];
+      if (rolDegisti) {
+        epostaIsleri.push(
+          kullaniciRolDegistiEpostasiGonder({
+            eposta: sonEposta,
+            adSoyad: sonAdSoyad,
+            firmaAdi,
+            yeniRolAdi: ROL_ADLARI[hedefRol] ?? hedefRol,
+            girisLinki,
+          })
+        );
+      }
+      if (pasifeAlindi) {
+        epostaIsleri.push(
+          kullaniciPasifeAlindiEpostasiGonder({
+            eposta: sonEposta,
+            adSoyad: sonAdSoyad,
+            firmaAdi,
+          })
+        );
+      } else if (aktifEdildi) {
+        epostaIsleri.push(
+          kullaniciAktifEdildiEpostasiGonder({
+            eposta: sonEposta,
+            adSoyad: sonAdSoyad,
+            firmaAdi,
+            girisLinki,
+          })
+        );
+      }
+      await Promise.allSettled(epostaIsleri);
     }
 
     return NextResponse.json({

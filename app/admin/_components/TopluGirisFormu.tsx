@@ -47,8 +47,8 @@ const tarz_td: React.CSSProperties = {
 async function sablonIndir() {
   const XLSX = await import("xlsx");
   const sayfa = XLSX.utils.aoa_to_sheet([
-    ["Ad", "Soyad", "E-posta", "Telefon", "Şifre", "Rol", "Takım", "Bölge"],
-    ["Ali", "Veli", "ali.veli@ornek.com", "0532 123 45 67", "gizli123", "Ürün Tanıtım Temsilcisi", "Kardiyoloji", "Kadıköy"],
+    ["Ad", "Soyad", "E-posta", "Telefon", "Rol", "Takım", "Bölge"],
+    ["Ali", "Veli", "ali.veli@ornek.com", "0532 123 45 67", "Ürün Tanıtım Temsilcisi", "Kardiyoloji", "Kadıköy"],
   ]);
   const kitap = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(kitap, sayfa, "Kullanicilar");

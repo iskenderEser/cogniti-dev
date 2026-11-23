@@ -2,18 +2,20 @@
 import { saltOkunurAlan } from "@/app/admin/_components/FirmaYonetimYetkisi";
 
 import { useEffect, useRef, useState } from "react";
-import { Pencil, Save } from "lucide-react";
+import { Mail, Pencil, Save } from "lucide-react";
 import type { Kullanici, Takim } from "../_types";
 import KullaniciFormAlanlari, { type KullaniciFormVerisi } from "./KullaniciFormAlanlari";
 import styles from "../admin.module.css";
 
 interface Props {
   kullanici: Kullanici; takimlar: Takim[]; firmaAdi: string; loading: boolean;
+  davetLoading?: boolean;
+  onDavetYenidenGonder?: () => void;
   onKapat: () => void; onKaydet: (veri: Record<string, unknown>) => void;
 }
-function KullaniciDuzenleme({ kullanici:k, takimlar, firmaAdi, loading, onKapat, onKaydet }: Props) {
+function KullaniciDuzenleme({ kullanici:k, takimlar, firmaAdi, loading, davetLoading = false, onDavetYenidenGonder, onKapat, onKaydet }: Props) {
   const [veri, setVeri] = useState<KullaniciFormVerisi>({
-    ad:k.ad, soyad:k.soyad, rol:k.rol, eposta:k.eposta, telefon:k.telefon ?? "", sifre:"",
+    ad:k.ad, soyad:k.soyad, rol:k.rol, eposta:k.eposta, telefon:k.telefon ?? "",
     takim_id:k.takim_id ?? "", bolge_id:k.bolge_id ?? "",
     yetki_kullanici_yonetim:k.yetki_kullanici_yonetim, yetki_aktif_pasif:k.yetki_aktif_pasif,
   });
@@ -26,11 +28,17 @@ function KullaniciDuzenleme({ kullanici:k, takimlar, firmaAdi, loading, onKapat,
       <KullaniciFormAlanlari veri={veri} degistir={patch => { setVeri(v => ({ ...v, ...patch })); setOnay(false); }} takimlar={takimlar} duzenleme disabled={loading} />
       {onay ? <div className={styles.notice} role="status"><p><strong>{firmaAdi} / {k.ad} {k.soyad}</strong> kaydı güncellenecek. Kullanıcının puan ve içerik kayıtları korunacak.{veri.eposta.trim().toLowerCase() !== k.eposta.toLowerCase() && " Kullanıcı yeni e-posta adresiyle giriş yapacak."}</p><div className={styles.formActions}>
         <button type="button" className={`${styles.button} ${styles.primary}`} disabled={loading} onClick={() => {
-          const { sifre, ...alanlar } = veri;
-          onKaydet({ ...alanlar, telefon:veri.telefon.replace(/\D/g,""), takim_id:veri.takim_id || null, bolge_id:veri.bolge_id || null, ...(sifre ? { sifre } : {}) });
+          onKaydet({ ...veri, telefon:veri.telefon.replace(/\D/g,""), takim_id:veri.takim_id || null, bolge_id:veri.bolge_id || null });
         }}>{loading ? "Kaydediliyor…" : "Onayla ve kaydet"}</button>
         <button type="button" className={styles.button} disabled={loading} onClick={() => setOnay(false)}>Düzenlemeye dön</button>
-      </div></div> : <div className={styles.formActions}><button type="submit" className={`${styles.button} ${styles.primary}`} disabled={loading}><Save />Değişiklikleri kaydet</button></div>}
+      </div></div> : <div className={styles.formActions}>
+        <button type="submit" className={`${styles.button} ${styles.primary}`} disabled={loading}><Save />Değişiklikleri kaydet</button>
+        {k.davet_bekliyor && k.aktif_mi && onDavetYenidenGonder && (
+          <button type="button" className={styles.button} disabled={loading || davetLoading} onClick={onDavetYenidenGonder}>
+            <Mail />{davetLoading ? "Gönderiliyor…" : "Daveti Yeniden Gönder"}
+          </button>
+        )}
+      </div>}
     </form>
   </section>;
 }

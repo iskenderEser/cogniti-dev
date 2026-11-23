@@ -2,7 +2,7 @@
 import MobilUyumluTablo from "./MobilUyumluTablo";
 import { useFirmaSaltOkunur } from "@/app/admin/_components/FirmaYonetimYetkisi";
 
-import { Users, UserPlus, Upload, Pencil, Trash2, Search } from "lucide-react";
+import { Users, UserPlus, Upload, Pencil, Trash2, Search, Mail } from "lucide-react";
 import { kullaniciEksikMi } from "@/lib/admin/kullaniciDogrulama";
 import { telefonBicimle } from "@/lib/admin/telefonBicim";
 import { ROL_ADLARI } from "@/lib/utils/roller";
@@ -35,6 +35,7 @@ interface KullaniciListesiProps {
   setTopluSilOnay: (v: boolean) => void;
   topluIslemLoading: boolean;
   yetkiLoading: string | null;
+  davetLoading: string | null;
 
   // K-A6: tamamlama akışı için firmanın tam takım/bölge yapısı
   takimlar: Takim[];
@@ -46,6 +47,7 @@ interface KullaniciListesiProps {
   setDuzenlenenId: (v: string | null) => void;
   duzenleLoading: boolean;
   handleKullaniciGuncelle: (kullanici_id: string, veri: Record<string, unknown>) => void;
+  handleDavetYenidenGonder: (kullanici_id: string) => void;
 
   handleRolDegistir: (kullanici_id: string, yeniRol: string) => void;
   handleAktifToggle: (kullanici_id: string, mevcutDurum: boolean) => void;
@@ -81,14 +83,14 @@ export default function KullaniciListesi(p: KullaniciListesiProps) {
         const adSoyad = `${k.ad} ${k.soyad}`;
         const eksik = kullaniciEksikMi(k.rol, k.takim_id ?? null, k.bolge_id ?? null, k.telefon ?? null);
         return <tr key={k.kullanici_id} data-selected={p.seciliKullanicilar.has(k.kullanici_id)}>
-          <td><span className={styles.name}>{adSoyad}</span>{eksik.eksik && <span className={styles.subtext}>Eksik bilgi</span>}</td>
+          <td><span className={styles.name}>{adSoyad}</span>{eksik.eksik && <span className={styles.subtext}>Eksik bilgi</span>}{k.davet_bekliyor && <span className={styles.subtext}>Davet bekliyor</span>}</td>
           <td>{p.acikRolId === k.kullanici_id ? <select className={styles.input} aria-label={`${adSoyad} rolü`} value={k.rol} onChange={e => p.handleRolDegistir(k.kullanici_id,e.target.value)} onBlur={() => p.setAcikRolId(null)}>{!ROLLER.includes(k.rol) && <option value={k.rol}>{ROL_ADLARI[k.rol] ?? k.rol}</option>}{ROLLER.map(r => <option key={r} value={r}>{ROL_ADLARI[r] ?? r}</option>)}</select> : <button type="button" className={styles.roleButton} disabled={saltOkunur || islemVar || !!p.rolDegistirLoading} onClick={() => p.setAcikRolId(k.kullanici_id)} aria-label={`${adSoyad} rolünü değiştir`}>{p.rolDegistirLoading === k.kullanici_id ? "Kaydediliyor…" : ROL_ADLARI[k.rol] ?? k.rol}</button>}</td>
           <td>{k.eposta}</td>
           <td>{k.telefon ? telefonBicimle(k.telefon) : "Telefon eksik"}</td>
           <td>{k.takim_adi ?? "—"}</td>
           <td>{k.bolge_adi ?? "—"}</td>
           <td><button type="button" aria-label={`${adSoyad} durumunu değiştir: ${k.aktif_mi ? "Aktif" : "Pasif"}`} className={`${styles.status} ${k.aktif_mi ? styles.statusActive : ""}`} disabled={saltOkunur || islemVar || p.aktifToggleLoading === k.kullanici_id} onClick={() => p.handleAktifToggle(k.kullanici_id,k.aktif_mi)}>{p.aktifToggleLoading === k.kullanici_id ? "…" : k.aktif_mi ? "Aktif" : "Pasif"}</button></td>
-          <td><div className={styles.rowActions}><button type="button" className={styles.button} disabled={saltOkunur || islemVar} onClick={() => p.setDuzenlenenId(k.kullanici_id)} aria-label={`${adSoyad} düzenle`}><Pencil />Düzenle</button>
+          <td><div className={styles.rowActions}>{k.davet_bekliyor && k.aktif_mi && <button type="button" className={styles.button} disabled={saltOkunur || islemVar || p.davetLoading === k.kullanici_id} onClick={() => p.handleDavetYenidenGonder(k.kullanici_id)} aria-label={`${adSoyad} daveti yeniden gönder`} title="Şifre oluşturma davetini yeniden gönder"><Mail />{p.davetLoading === k.kullanici_id ? "…" : "Davet"}</button>}<button type="button" className={styles.button} disabled={saltOkunur || islemVar} onClick={() => p.setDuzenlenenId(k.kullanici_id)} aria-label={`${adSoyad} düzenle`}><Pencil />Düzenle</button>
           {p.silOnayId === k.kullanici_id ? <><button type="button" className={`${styles.button} ${styles.danger}`} disabled={saltOkunur || islemVar || p.silLoading === k.kullanici_id} onClick={() => p.handleSil(k.kullanici_id)}>Onayla, sil</button><button type="button" className={styles.button} disabled={saltOkunur || islemVar} onClick={() => p.setSilOnayId(null)}>Vazgeç</button></> : <button type="button" className={`${styles.button} ${styles.danger}`} disabled={saltOkunur || islemVar || p.silLoading === k.kullanici_id} onClick={() => p.setSilOnayId(k.kullanici_id)} aria-label={`${adSoyad} sil`}><Trash2 /></button>}
           </div></td>
         </tr>;

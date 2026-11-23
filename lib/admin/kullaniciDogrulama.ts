@@ -111,6 +111,27 @@ export interface DogrulanmisKullanici {
 // telefonsuz giremez; kolon öncesi mevcut kayıtlar için eksik alanı sayılır.
 export type EksikAlan = "takim" | "bolge" | "telefon";
 
+export function rolTakimBolgeGereksinimi(rolHam: string): {
+  takimGoster: boolean;
+  takimZorunlu: boolean;
+  bolgeZorunlu: boolean;
+} {
+  const rol = rolHam.trim().toLowerCase();
+  if (!rol) return { takimGoster: false, takimZorunlu: false, bolgeZorunlu: false };
+  const bolgeZorunlu = rol === "bm" || TUKETICI_ROLLER.includes(rol);
+  const yetenek = ureticiYetenegi(rol);
+  const takimZorunlu = bolgeZorunlu || rol === "tm" || Boolean(yetenek?.takimZorunlu);
+  const takimGoster = takimZorunlu || Boolean(yetenek);
+  return { takimGoster, takimZorunlu, bolgeZorunlu };
+}
+
+export function eksikAlanHataMesaji(eksikAlanlar: EksikAlan[], uyari?: string): string {
+  if (eksikAlanlar.includes("bolge")) return uyari || "Bu rol için Takım ve Bölge seçimi zorunludur.";
+  if (eksikAlanlar.includes("takim")) return uyari || "Bu rol için Takım seçimi zorunludur.";
+  if (eksikAlanlar.includes("telefon")) return "Cep telefonu zorunludur.";
+  return uyari || "Zorunlu alanlar eksiksiz doldurulmalıdır.";
+}
+
 export type SatirDogrulamaSonucu =
   | { ok: true; kayit: DogrulanmisKullanici; eksikAlanlar: EksikAlan[]; uyari?: string }
   | { ok: false; hata: string; alanlar?: string[] };
@@ -259,7 +280,7 @@ export function kullaniciSatirDogrula(
   girdi: KullaniciGirdisi,
   secenekler?: { sifreZorunlu?: boolean }
 ): SatirDogrulamaSonucu {
-  const sifreZorunlu = secenekler?.sifreZorunlu ?? true;
+  const sifreZorunlu = secenekler?.sifreZorunlu ?? false;
   // Ad/Soyad kuralı (İskender talimatı, 21.07): girdi nasıl gelirse gelsin
   // her kelime İlk Harf Büyük'e çevrilir — tekil ve toplu aynı kapıdan geçer.
   const ad = adSoyadBicimle(metinAl(girdi.ad));
@@ -556,9 +577,6 @@ export function satirUpsertPlani(
 
   const mevcut = epostaEs ?? telefonEs;
   if (!mevcut) {
-    if (!kayit.sifre) {
-      return { islem: "hata", hata: "Satır hiçbir kayıtla eşleşmedi — yeni kullanıcı için şifre zorunludur." };
-    }
     return { islem: "yeni" };
   }
 

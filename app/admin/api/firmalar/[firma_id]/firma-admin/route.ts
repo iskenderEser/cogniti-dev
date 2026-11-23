@@ -4,6 +4,8 @@ import { createAdminClient } from "@/lib/supabase/server";
 import { FIRMA_ADMIN_ROLU } from "@/lib/utils/roller";
 import { uuidGecerliMi } from "@/lib/uretim/rpcTemel";
 import { platformBannerFirmasi } from "@/lib/eclub/banner";
+import { firmaAdminYetkiEpostasiGonder } from "@/lib/admin/firmaAdminEposta";
+import { davetSiteAdresi } from "@/lib/eclub/uyelikDaveti";
 import { hataYaniti, sunucuHatasi, validasyonHatasi } from "@/lib/utils/hataIsle";
 
 type Context = { params: Promise<{ firma_id: string }> };
@@ -35,10 +37,34 @@ export async function PUT(request: NextRequest, { params }: Context) {
     let body;
     try { body = await request.json(); } catch { return validasyonHatasi("Geçerli firma admini ayarı gönderin.", ["aktif"]); }
     if (!uuidGecerliMi(firma_id) || platformBannerFirmasi(firma_id) || typeof body?.aktif !== "boolean" || typeof body?.beklenen_aktif !== "boolean") return validasyonHatasi("Geçerli firma ve aç/kapat değeri gönderin.", ["firma_id", "aktif"]);
-    const { data, error } = await createAdminClient().rpc("cogniti_firma_admin_durum_degistir", {
+    const db = createAdminClient();
+    const { data, error } = await db.rpc("cogniti_firma_admin_durum_degistir", {
       p_admin_id: auth.kullaniciId, p_firma_id: firma_id, p_aktif: body.aktif, p_beklenen_aktif: body.beklenen_aktif,
     });
     if (error) return dbHatasi(error);
+
+    if (data === true && body.beklenen_aktif === false) {
+      const [firmaSonuc, adminSonuc] = await Promise.all([
+        db.from("firmalar").select("firma_adi").eq("firma_id", firma_id).maybeSingle(),
+        db.from("kullanicilar").select("ad,soyad,eposta").eq("firma_id", firma_id).eq("rol", FIRMA_ADMIN_ROLU).eq("aktif_mi", true).maybeSingle(),
+      ]);
+      const yetkili = adminSonuc.data;
+      if (yetkili?.eposta) {
+        let siteAdresi = "https://cogniti.net";
+        try {
+          siteAdresi = davetSiteAdresi(new URL(request.url).origin);
+        } catch {
+          // Varsayılan üretim adresi kullanılır.
+        }
+        await firmaAdminYetkiEpostasiGonder({
+          eposta: yetkili.eposta,
+          adSoyad: [yetkili.ad, yetkili.soyad].filter(Boolean).join(" ").trim(),
+          firmaAdi: firmaSonuc.data?.firma_adi || "Firmanız",
+          girisLinki: new URL("/login", siteAdresi).href,
+        });
+      }
+    }
+
     return NextResponse.json({ aktif: data }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) { return sunucuHatasi(error, "Firma admini PUT"); }
 }

@@ -5,6 +5,7 @@ import { createAdminClient } from "@/lib/supabase/server";
 import { hataYaniti, sunucuHatasi, validasyonHatasi } from "@/lib/utils/hataIsle";
 import {
   adKatla,
+  eksikAlanHataMesaji,
   rolCoz,
   firmaYapisiYukle,
   kullaniciSatirDogrula,
@@ -17,6 +18,8 @@ import {
 } from "@/lib/admin/kullaniciDogrulama";
 import { hiyerarsiAdiBicimle, tekillikIhlaliMi } from "@/lib/admin/hiyerarsiTekillik";
 import { topluPaketHatalari } from "@/lib/admin/topluPaketButunlugu";
+import { kayitSonrasiFirmaDavetiGonder, rastgeleBaslangicSifresi } from "@/lib/admin/kullaniciDaveti";
+import { FIRMA_ADMIN_ROLU } from "@/lib/utils/roller";
 import * as XLSX from "xlsx";
 
 export async function POST(
@@ -35,7 +38,7 @@ export async function POST(
 
     const { data: firma, error: firmaError } = await adminSupabase
       .from("firmalar")
-      .select("firma_id")
+      .select("firma_id, firma_adi")
       .eq("firma_id", firma_id)
       .single();
 
@@ -182,6 +185,12 @@ export async function POST(
     const gorulenTelefonlar = new Map<string, number>();
     const gorulenEpostalar = new Map<string, number>();
     const eslesenKullanicilar = new Map<string, number>();
+    const mevcutAktifFirmaAdminleri = new Set(
+      mevcutlar
+        .filter((m) => m.rol?.toLowerCase() === FIRMA_ADMIN_ROLU && m.aktif_mi === true)
+        .map((m) => m.kullanici_id)
+    );
+    let gorulenFirmaAdminSatiri: number | null = null;
 
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i];
@@ -238,6 +247,27 @@ export async function POST(
         }
         eslesenKullanicilar.set(plan.kullanici_id, i + 1);
       }
+      if (kayit.rol === FIRMA_ADMIN_ROLU && dogrulama.eksikAlanlar.length === 0) {
+        const hedefId = plan.islem === "yeni" ? null : plan.kullanici_id;
+        const baskaMevcutAdminVar = Array.from(mevcutAktifFirmaAdminleri).some((id) => id !== hedefId);
+        if (gorulenFirmaAdminSatiri !== null) {
+          satirSonuclari.push({
+            ...satirBase,
+            durum: "hatali",
+            hata_mesaji: `Her firmada yalnızca 1 aktif Firma Admini bulunabilir — satır ${gorulenFirmaAdminSatiri} zaten Firma Admini olarak belirlenmiş.`,
+          });
+          continue;
+        }
+        if (baskaMevcutAdminVar) {
+          satirSonuclari.push({
+            ...satirBase,
+            durum: "hatali",
+            hata_mesaji: "Her firmada yalnızca 1 aktif Firma Admini bulunabilir. Önce mevcut Firma Admininin rolünü değiştirin veya pasife alın.",
+          });
+          continue;
+        }
+        gorulenFirmaAdminSatiri = i + 1;
+      }
       gorulenTelefonlar.set(kayit.telefon, i + 1);
       gorulenEpostalar.set(kayit.eposta, i + 1);
 
@@ -268,9 +298,17 @@ export async function POST(
       };
 
       if (plan.islem === "yeni") {
+        if (dogrulama.eksikAlanlar.length > 0) {
+          satirSonuclari.push({
+            ...ortak,
+            durum: "hatali",
+            hata_mesaji: eksikAlanHataMesaji(dogrulama.eksikAlanlar, dogrulama.uyari),
+          });
+          continue;
+        }
         satirSonuclari.push({
           ...ortak,
-          durum: dogrulama.eksikAlanlar.length > 0 ? "eksik" : "hazir",
+          durum: "hazir",
           islem: "yeni",
           takim_id: kayit.takim_id,
           bolge_id: kayit.bolge_id,
@@ -511,12 +549,11 @@ export async function POST(
       }
 
       // islem === "yeni"
-      const row = rows[satir.index - 1];
-      const sifre = String(row["sifre"] ?? "").trim();
-
       const { data: authData, error: authError } = await adminSupabase.auth.admin.createUser({
         email: satir.eposta,
-        password: sifre,
+        password: rastgeleBaslangicSifresi(),
+        ban_duration: "876000h",
+        app_metadata: { cogniti_davet_bekliyor: true },
         user_metadata: { rol: satir.rol, ad: satir.ad, soyad: satir.soyad },
         email_confirm: true,
       });
@@ -538,9 +575,7 @@ export async function POST(
           firma_id,
           takim_id: satir.takim_id ?? null,
           bolge_id: satir.bolge_id ?? null,
-          // T-7: eksik bilgili kullanıcı PASİF doğar; eksiği kapanınca
-          // otomatik aktifleşir (satirUpsertPlani / PUT aynı kural).
-          aktif_mi: satir.durum !== "eksik",
+          aktif_mi: true,
         });
 
       if (insertError) {
@@ -555,10 +590,27 @@ export async function POST(
       if (satir.durum === "eksik") eksikli++;
     }
 
+    let davetGonderilen = 0;
+    let davetBasarisiz = 0;
+    if (olusturulanKullaniciIdler.length > 0) {
+      const origin = new URL(request.url).origin;
+      const davetSonuclari = await Promise.all(
+        olusturulanKullaniciIdler.map((id) =>
+          kayitSonrasiFirmaDavetiGonder(adminSupabase, id, firma.firma_adi, origin)
+        )
+      );
+      for (const sonuc of davetSonuclari) {
+        if (sonuc.gonderildi) davetGonderilen++;
+        else davetBasarisiz++;
+      }
+    }
+
     const ozet = [
       ...(olusturulanTakim > 0 ? [`${olusturulanTakim} takım oluşturuldu`] : []),
       ...(olusturulanBolge > 0 ? [`${olusturulanBolge} bölge oluşturuldu`] : []),
       `${eklenen} eklendi`,
+      ...(davetGonderilen > 0 ? [`${davetGonderilen} şifre daveti gönderildi`] : []),
+      ...(davetBasarisiz > 0 ? [`${davetBasarisiz} davet gönderilemedi`] : []),
       `${guncellenen} güncellendi`,
       ...(degismeyen > 0 ? [`${degismeyen} değişiklik yok`] : []),
       ...(eksikli > 0 ? [`${eksikli} eksik bilgili`] : []),

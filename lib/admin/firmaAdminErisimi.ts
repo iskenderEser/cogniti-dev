@@ -41,7 +41,7 @@ export function firmaAdminIstegiIzinliMi(pathname: string, method: string, param
   if (pathname === "/admin/api/firma-oturum" || pathname === "/admin/api/firmalar") return okuma;
   if (pathname === "/admin") return okuma && params.getAll("firma").length === 1 && params.get("firma") === firmaId
     && !params.has("bolum") && params.getAll("sayfa").length === 1 && FIRMA_YONETIM_SAYFALARI.has(params.get("sayfa") ?? "");
-  const firmaRotasi = pathname.match(/^\/admin\/api\/firmalar\/([^/]+)(?:\/(kullanicilar|takimlar|urunler|teknikler|puan-yonetimi|token|firmastore|export|toplu-yukle|eclub\/uyeler|eczanem\/uyeler|takimlar\/[^/]+(?:\/bolgeler(?:\/[^/]+)?)?))?$/);
+  const firmaRotasi = pathname.match(/^\/admin\/api\/firmalar\/([^/]+)(?:\/(kullanicilar(?:\/davet)?|takimlar|urunler|teknikler|puan-yonetimi|token|firmastore|export|toplu-yukle|eclub\/uyeler|eczanem\/uyeler|takimlar\/[^/]+(?:\/bolgeler(?:\/[^/]+)?)?))?$/);
   if (firmaRotasi) return firmaRotasi[1] === firmaId && !(method === "DELETE" && !firmaRotasi[2]) && ["GET", "HEAD", "POST", "PUT", "PATCH", "DELETE"].includes(method);
   if (pathname === "/admin/api/eclub/banner-takvim") {
     if (method === "POST") return true; // FormData kapsamı route ve SQL'de doğrulanır.

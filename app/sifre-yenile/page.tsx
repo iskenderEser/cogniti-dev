@@ -65,6 +65,7 @@ export default function SifreYenilePage() {
       return;
     }
     setTamamlandi(true);
+    await fetch("/api/auth/sifre-degisti-bildir", { method: "POST" }).catch(() => {});
     await guvenliCikisYap(supabase);
     window.location.replace("/login");
   };

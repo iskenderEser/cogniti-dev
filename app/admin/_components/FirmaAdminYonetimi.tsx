@@ -43,7 +43,7 @@ export default function FirmaAdminYonetimi({ firmaId, onDegisti }: { firmaId: st
       <button type="button" className={local.refresh} disabled={bekliyor} onClick={() => setYenileme(n => n + 1)} aria-label="Firma admini durumunu yenile"><RefreshCw aria-hidden="true" /><span>Yenile</span></button>
     </div>
     <div className={local.access}>
-      <div className={local.description}><h3>Firma admini erişimi</h3><p id="firma-admin-aciklama">Açıldığında atanan firma adminleri kendi firma ekranlarını yönetebilir.</p></div>
+      <div className={local.description}><h3>Firma admini erişimi</h3><p id="firma-admin-aciklama">Açıldığında atanan Firma Admini kendi firma ekranlarını yönetebilir.</p></div>
       {durum && <button type="button" role="switch" aria-checked={durum.aktif} aria-label="Firma admini erişimi" aria-describedby="firma-admin-aciklama" className={controls.toggle} disabled={bekliyor || (!durum.aktif && durum.aktif_admin_sayisi === 0)} onClick={() => void degistir()}>
         <span className={controls.toggleTrack} aria-hidden="true"><span className={controls.toggleThumb} /></span><span className={controls.toggleText}>{bekliyor ? "Kaydediliyor…" : durum.aktif ? "Açık" : "Kapalı"}</span>
       </button>}
@@ -51,7 +51,7 @@ export default function FirmaAdminYonetimi({ firmaId, onDegisti }: { firmaId: st
     {!durum && !hata && <p className={local.loading} role="status">Yükleniyor…</p>}
     {hata && <p role="alert" className={`${styles.notice} ${local.error}`}>{hata}</p>}
     {durum && <div className={local.details}>
-      <div className={local.metric}><Users aria-hidden="true" /><div><span>Atanmış aktif admin</span><strong>{durum.aktif_admin_sayisi} <small>kişi</small></strong></div></div>
+      <div className={local.metric}><Users aria-hidden="true" /><div><span>Firma Admini</span><strong>{durum.aktif_admin_sayisi > 0 ? "Atandı" : "Atanmadı"}</strong></div></div>
       <div className={local.ownership}><span>Yönetim yetkisi</span><strong>{durum.aktif ? "Firma admininde" : "Cogniti’de"}</strong><p>{durum.aktif ? "Cogniti firma ekranlarını yalnız görüntüler." : "Firma işlemlerini Cogniti yönetir."}</p></div>
     </div>}
     <div className={local.footer}><p>{durum?.aktif_admin_sayisi === 0 ? "Erişimi açmak için önce Kullanıcılar sayfasından bir kişiye Firma Admini rolü atayın." : "Admin atamalarını Kullanıcılar sayfasından yapabilirsiniz."}</p><span>Bu erişimi yalnız Cogniti değiştirir.</span></div>

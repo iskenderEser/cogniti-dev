@@ -55,6 +55,7 @@ export function useKullaniciListesi({ seciliFirma, kullanicilar, refreshKullanic
   const [topluSilOnay, setTopluSilOnay] = useState(false);
   const [topluIslemLoading, setTopluIslemLoading] = useState(false);
   const [yetkiLoading, setYetkiLoading] = useState<string | null>(null);
+  const [davetLoading, setDavetLoading] = useState<string | null>(null);
 
   const sutunSecenekleri = useMemo(() => Object.fromEntries(KULLANICI_SUTUNLARI.map(([sutun]) => {
     const tekil = new Map(kullanicilar.map(k => { const s = sutunSecenegi(k, sutun); return [s.deger, s] as const; }));
@@ -303,6 +304,29 @@ export function useKullaniciListesi({ seciliFirma, kullanicilar, refreshKullanic
     );
   };
 
+  const handleDavetYenidenGonder = async (kullanici_id: string) => {
+    if (!seciliFirma || davetLoading) return;
+    setDavetLoading(kullanici_id);
+    try {
+      const res = await fetch(`/admin/api/firmalar/${seciliFirma.firma_id}/kullanicilar/davet`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ kullanici_id }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        hata(data.hata ?? "Davet gönderilemedi.", "handleDavetYenidenGonder", undefined);
+      } else {
+        basari(data.mesaj ?? "24 saatlik şifre oluşturma daveti yeniden gönderildi.");
+        refreshKullanicilar();
+      }
+    } catch (err) {
+      hata("Davet gönderilemedi — bağlantı hatası.", "handleDavetYenidenGonder", String(err));
+    } finally {
+      setDavetLoading(null);
+    }
+  };
+
   const toggleSecim = (kullanici_id: string, secildi: boolean) => {
     const yeni = new Set(seciliKullanicilar);
     secildi ? yeni.add(kullanici_id) : yeni.delete(kullanici_id);
@@ -335,6 +359,7 @@ export function useKullaniciListesi({ seciliFirma, kullanicilar, refreshKullanic
     topluSilOnay, setTopluSilOnay,
     topluIslemLoading,
     yetkiLoading,
+    davetLoading,
 
     // Handler'lar
     eksikTamamlaLoading,
@@ -344,6 +369,7 @@ export function useKullaniciListesi({ seciliFirma, kullanicilar, refreshKullanic
     duzenlenenId, setDuzenlenenId,
     duzenleLoading,
     handleKullaniciGuncelle,
+    handleDavetYenidenGonder,
     handleRolDegistir,
     handleAktifToggle,
     handleYetkiDegistir,

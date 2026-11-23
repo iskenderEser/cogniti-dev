@@ -41,6 +41,7 @@ export interface Kullanici {
   telefon: string | null;
   rol: string;
   aktif_mi: boolean;
+  davet_bekliyor?: boolean;
   yetki_kullanici_yonetim: boolean;
   yetki_aktif_pasif: boolean;
   takim_id?: string | null;

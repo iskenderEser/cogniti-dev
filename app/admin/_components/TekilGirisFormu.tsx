@@ -9,6 +9,7 @@
 import { SadeFormSecimi } from "@/components/kontrol/SadeKontroller";
 
 import { telefonBicimle, telefonRakam } from "@/lib/admin/telefonBicim";
+import { rolTakimBolgeGereksinimi } from "@/lib/admin/kullaniciDogrulama";
 import { adSoyadCanliBicimle } from "@/lib/utils/adSoyadBicimle";
 import { ROL_ADLARI } from "@/lib/utils/roller";
 import { btnBase, inputStyle, labelStyle, RENK_BORDO, ROLLER, rowStyle } from "../_constants";
@@ -42,6 +43,7 @@ interface TekilGirisFormuProps {
 }
 
 export default function TekilGirisFormu(p: TekilGirisFormuProps) {
+  const gereksinim = rolTakimBolgeGereksinimi(p.tekilRol);
   return (
     <form onSubmit={p.handleTekilKaydet} style={{ maxWidth: "600px" }}>
       {/* Ad/Soyad kuralı (İskender talimatı, 21.07): nasıl yazılırsa yazılsın
@@ -83,25 +85,21 @@ export default function TekilGirisFormu(p: TekilGirisFormuProps) {
           style={inputStyle} required placeholder="542 000 0000" maxLength={12} />
       </div>
 
-      <div style={rowStyle}>
-        <span style={labelStyle}>Şifre</span>
-        <input type="password" value={p.tekilSifre} onChange={(e) => p.setTekilSifre(e.target.value)}
-          style={inputStyle} required minLength={6} />
-      </div>
-
-      <div style={rowStyle}>
-        <span style={labelStyle}>Takım</span>
-        <SadeFormSecimi value={p.tekilTakimId} onChange={(e) => p.handleTakimSec(e.target.value)} aria-label="Takım" className="w-full">
-          <option value="">Takım seçin...</option>
-          {p.takimlar.map(t => <option key={t.takim_id} value={t.takim_id}>{t.takim_adi}</option>)}
-        </SadeFormSecimi>
-      </div>
-
-      {p.tekilTakimId && p.seciliTakimBolgeleri.length > 0 && (
+      {gereksinim.takimGoster && (
         <div style={rowStyle}>
-          <span style={labelStyle}>Bölge</span>
-          <SadeFormSecimi value={p.tekilBolgeId} onChange={(e) => p.handleBolgeSec(e.target.value)} aria-label="Bölge" className="w-full">
-            <option value="">Bölge seçin...</option>
+          <span style={labelStyle}>{gereksinim.takimZorunlu ? "Takım *" : "Takım"}</span>
+          <SadeFormSecimi value={p.tekilTakimId} onChange={(e) => p.handleTakimSec(e.target.value)} required={gereksinim.takimZorunlu} aria-label="Takım" className="w-full">
+            <option value="">Takım seçin...</option>
+            {p.takimlar.map(t => <option key={t.takim_id} value={t.takim_id}>{t.takim_adi}</option>)}
+          </SadeFormSecimi>
+        </div>
+      )}
+
+      {gereksinim.bolgeZorunlu && p.tekilTakimId && (
+        <div style={rowStyle}>
+          <span style={labelStyle}>Bölge *</span>
+          <SadeFormSecimi value={p.tekilBolgeId} onChange={(e) => p.handleBolgeSec(e.target.value)} required aria-label="Bölge" className="w-full">
+            <option value="">{p.seciliTakimBolgeleri.length > 0 ? "Bölge seçin..." : "Bu takımda bölge yok"}</option>
             {p.seciliTakimBolgeleri.map(b => <option key={b.bolge_id} value={b.bolge_id}>{b.bolge_adi}</option>)}
           </SadeFormSecimi>
         </div>
