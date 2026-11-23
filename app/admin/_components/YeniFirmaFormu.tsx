@@ -16,16 +16,42 @@ const BOS_FORM: YeniFirmaBilgileri = {
   sorumlu_ad_soyad: "", sorumlu_telefon: "", sorumlu_eposta: "", logo_url: "",
 };
 
-export default function YeniFirmaFormu({ onKaydet, ilkBilgiler, duzenleme = false, firmaId, secimMenuClassName, kurumsalUyelik = false, onDurumDegisimi }: { onKaydet?: (bilgiler: YeniFirmaBilgileri) => Promise<boolean>; ilkBilgiler?: YeniFirmaBilgileri; duzenleme?: boolean; firmaId?: string; secimMenuClassName?: string; kurumsalUyelik?: boolean; onDurumDegisimi?: (tamamlandi: boolean) => void }) {
-  const [bilgiler, setBilgiler] = useState({...BOS_FORM,...ilkBilgiler});
+export default function YeniFirmaFormu({
+  onKaydet,
+  ilkBilgiler,
+  ilkLogoDosyaAdi = "",
+  duzenleme = false,
+  firmaId,
+  secimMenuClassName,
+  kurumsalUyelik = false,
+  kilitli = false,
+  onDurumDegisimi,
+  onBilgiDegisimi,
+  onLogoYukle,
+  onLogoKaldir,
+}: {
+  onKaydet?: (bilgiler: YeniFirmaBilgileri) => Promise<boolean>;
+  ilkBilgiler?: Partial<YeniFirmaBilgileri>;
+  ilkLogoDosyaAdi?: string;
+  duzenleme?: boolean;
+  firmaId?: string;
+  secimMenuClassName?: string;
+  kurumsalUyelik?: boolean;
+  kilitli?: boolean;
+  onDurumDegisimi?: (tamamlandi: boolean) => void;
+  onBilgiDegisimi?: (bilgiler: YeniFirmaBilgileri, logoDosyaAdi: string) => void;
+  onLogoYukle?: (dosya: File) => Promise<{ url: string; dosyaAdi: string } | { hata: string }>;
+  onLogoKaldir?: () => Promise<void>;
+}) {
+  const [bilgiler, setBilgiler] = useState<YeniFirmaBilgileri>({ ...BOS_FORM, ...ilkBilgiler });
   const [kaydediliyor, setKaydediliyor] = useState(false);
   const [logoYukleniyor, setLogoYukleniyor] = useState(false);
-  const [logoDosyaAdi, setLogoDosyaAdi] = useState("");
+  const [logoDosyaAdi, setLogoDosyaAdi] = useState(ilkLogoDosyaAdi);
   const [hata, setHata] = useState<string | null>(null);
   const dosyaRef = useRef<HTMLInputElement>(null);
   const kilit = useRef(false);
   const taslakYuklendi = useRef(false);
-  const mesgul = kaydediliyor || logoYukleniyor;
+  const mesgul = kaydediliyor || logoYukleniyor || kilitli;
   const tumAlanlarDolu = Object.values(bilgiler).every(deger => typeof deger === "string" ? deger.trim().length > 0 : deger !== null);
   const adimTamam = tumAlanlarDolu && /^\d{10}$/.test(bilgiler.vergi_numarasi);
 
@@ -34,7 +60,7 @@ export default function YeniFirmaFormu({ onKaydet, ilkBilgiler, duzenleme = fals
   }, [adimTamam, onDurumDegisimi]);
 
   useEffect(() => {
-    if (!kurumsalUyelik) return;
+    if (!kurumsalUyelik || onBilgiDegisimi) return;
     const kayitli = taslakOku<{ bilgiler?: Partial<YeniFirmaBilgileri>; logoDosyaAdi?: string }>(TASLAK_FIRMA_ANAHTARI);
     if (kayitli?.bilgiler) {
       setBilgiler(onceki => ({ ...onceki, ...kayitli.bilgiler }));
@@ -43,19 +69,24 @@ export default function YeniFirmaFormu({ onKaydet, ilkBilgiler, duzenleme = fals
       setLogoDosyaAdi(kayitli.logoDosyaAdi);
     }
     taslakYuklendi.current = true;
-  }, [kurumsalUyelik]);
+  }, [kurumsalUyelik, onBilgiDegisimi]);
 
   useEffect(() => {
-    if (!kurumsalUyelik || !taslakYuklendi.current) return;
+    if (!kurumsalUyelik) return;
+    if (onBilgiDegisimi) {
+      onBilgiDegisimi(bilgiler, logoDosyaAdi);
+      return;
+    }
+    if (!taslakYuklendi.current) return;
     taslakYaz(TASLAK_FIRMA_ANAHTARI, { bilgiler, logoDosyaAdi });
-  }, [kurumsalUyelik, bilgiler, logoDosyaAdi]);
+  }, [kurumsalUyelik, bilgiler, logoDosyaAdi, onBilgiDegisimi]);
 
   function alanDegistir(alan: Exclude<keyof YeniFirmaBilgileri,"il_id"|"ilce_id">, deger: string) {
     setBilgiler(onceki => ({ ...onceki, [alan]: deger }));
   }
 
   async function logoYukle(dosya?: File) {
-    if (!dosya || kilit.current) return;
+    if (!dosya || kilit.current || kilitli) return;
     setHata(null);
     if (dosya.size > 5 * 1024 * 1024 || !["image/png", "image/jpeg", "image/svg+xml", "image/webp"].includes(dosya.type)) {
       setHata("Logo PNG, JPEG, SVG veya WebP biçiminde ve en fazla 5 MB olmalıdır.");
@@ -66,6 +97,16 @@ export default function YeniFirmaFormu({ onKaydet, ilkBilgiler, duzenleme = fals
     setLogoYukleniyor(true);
     try {
       const logo = await logoGorseliniOptimizeEt(dosya);
+      if (onLogoYukle) {
+        const sonuc = await onLogoYukle(logo);
+        if ("hata" in sonuc) {
+          setHata(sonuc.hata);
+          return;
+        }
+        alanDegistir("logo_url", sonuc.url);
+        setLogoDosyaAdi(sonuc.dosyaAdi);
+        return;
+      }
       if (!onKaydet) {
         const onizleme = await new Promise<string>((resolve, reject) => {
           const okuyucu = new FileReader();
@@ -146,7 +187,12 @@ export default function YeniFirmaFormu({ onKaydet, ilkBilgiler, duzenleme = fals
                   {bilgiler.logo_url && <span className={local.fileName}>{logoDosyaAdi}</span>}
                   <div className={local.logoActions}>
                     <button type="button" className={`${styles.button} ${bilgiler.logo_url ? local.logoAction : local.uploadButton}`} disabled={mesgul} aria-describedby="yeni-firma-logo-yardim" onClick={() => dosyaRef.current?.click()}>{logoYukleniyor ? "Yükleniyor…" : bilgiler.logo_url ? "Değiştir" : "Logo Yükle"}</button>
-                    {bilgiler.logo_url && <button type="button" className={`${styles.button} ${local.logoAction} ${local.removeAction}`} disabled={mesgul} onClick={() => { alanDegistir("logo_url", ""); setLogoDosyaAdi(""); setHata(null); }}>Kaldır</button>}
+                    {bilgiler.logo_url && <button type="button" className={`${styles.button} ${local.logoAction} ${local.removeAction}`} disabled={mesgul} onClick={() => {
+                      if (onLogoKaldir) void onLogoKaldir();
+                      alanDegistir("logo_url", "");
+                      setLogoDosyaAdi("");
+                      setHata(null);
+                    }}>Kaldır</button>}
                   </div>
                 </div>
               </div>

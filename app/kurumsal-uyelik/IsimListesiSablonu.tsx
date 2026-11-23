@@ -46,7 +46,23 @@ async function excelTablosu(dosya: File): Promise<string[][]> {
   return sayfa ? XLSX.utils.sheet_to_json<string[]>(sayfa, { header: 1, defval: "", raw: false, blankrows: false }) : [];
 }
 
-export default function IsimListesiSablonu({ sutunlar, urunListesi = false }: { sutunlar: string[]; urunListesi?: boolean }) {
+export default function IsimListesiSablonu({
+  sutunlar,
+  urunListesi = false,
+  kurumsalBasvuru = false,
+  ilkSatirlar,
+  kilitli = false,
+  onSatirlarDegisti,
+  onTaslakKaydet,
+}: {
+  sutunlar: string[];
+  urunListesi?: boolean;
+  kurumsalBasvuru?: boolean;
+  ilkSatirlar?: string[][];
+  kilitli?: boolean;
+  onSatirlarDegisti?: (satirlar: string[][]) => void;
+  onTaslakKaydet?: (satirlar: string[][]) => Promise<{ ok: true } | { ok: false; hata: string }>;
+}) {
   const listeKodu = urunListesi ? "urun-listesi" : "isim-listesi";
   const taslakAnahtari = `cogniti_kurumsal_taslak_liste_${listeKodu}`;
   const listeApi = `/kurumsal-uyelik/api/${listeKodu}`;
@@ -55,20 +71,49 @@ export default function IsimListesiSablonu({ sutunlar, urunListesi = false }: { 
   const [hazirlaniyor, setHazirlaniyor] = useState(false);
   const [yukleniyor, setYukleniyor] = useState(false);
   const [hata, setHata] = useState("");
-  const [satirlar, setSatirlar] = useState<ListeSatiri[]>([]);
+  const [satirlar, setSatirlar] = useState<ListeSatiri[]>(() =>
+    kurumsalBasvuru && Array.isArray(ilkSatirlar)
+      ? ilkSatirlar.map((hucreler, idx) => ({ id: idx, hucreler }))
+      : []
+  );
   const [silinecekSatirId, setSilinecekSatirId] = useState<number | null>(null);
   const [rolDonusumleri, setRolDonusumleri] = useState<Map<string, string> | null>(null);
   const [eslesmelerYukleniyor, setEslesmelerYukleniyor] = useState(false);
   const [modal, setModal] = useState<"vazgec" | "gonder" | "kaydedildi" | "gonderildi" | null>(null);
   const [islemSuruyor, setIslemSuruyor] = useState(false);
-  const [gonderildi, setGonderildi] = useState(false);
+  const [gonderildi, setGonderildi] = useState(kilitli);
   const dosyaAlani = useRef<HTMLInputElement>(null);
   const listeyeDokunuldu = useRef(false);
-  const sonrakiSatirId = useRef(0);
+  const sonrakiSatirId = useRef(kurumsalBasvuru && Array.isArray(ilkSatirlar) ? ilkSatirlar.length : 0);
   const satirEkleDugmesi = useRef<HTMLButtonElement>(null);
   const satirSilDugmesi = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
+    if (kurumsalBasvuru) {
+      setGonderildi(kilitli);
+    }
+  }, [kurumsalBasvuru, kilitli]);
+
+  useEffect(() => {
+    if (kurumsalBasvuru) {
+      onSatirlarDegisti?.(satirlar.map(satir => satir.hucreler));
+    }
+  }, [kurumsalBasvuru, satirlar, onSatirlarDegisti]);
+
+  useEffect(() => {
+    if (kurumsalBasvuru) {
+      if (urunListesi) return;
+      const kontrol = new AbortController();
+      void (async () => {
+        try {
+          const donusumler = await rolDonusumleriniAl();
+          if (!kontrol.signal.aborted) setRolDonusumleri(donusumler);
+        } catch {
+          if (!kontrol.signal.aborted) setHata("Unvan eşleştirmeleri alınamadı.");
+        }
+      })();
+      return () => kontrol.abort();
+    }
     const kayitliTaslak = taslakOku<string[][]>(taslakAnahtari);
     if (Array.isArray(kayitliTaslak) && kayitliTaslak.length > 0) {
       listeyeDokunuldu.current = true;
@@ -97,16 +142,16 @@ export default function IsimListesiSablonu({ sutunlar, urunListesi = false }: { 
       }
     })();
     return () => kontrol.abort();
-  }, [listeApi, taslakAnahtari, urunListesi]);
+  }, [kurumsalBasvuru, listeApi, taslakAnahtari, urunListesi]);
 
   useEffect(() => {
-    if (!listeyeDokunuldu.current || gonderildi) return;
+    if (kurumsalBasvuru || !listeyeDokunuldu.current || gonderildi) return;
     if (satirlar.length === 0) {
       taslakSil(taslakAnahtari);
     } else {
       taslakYaz(taslakAnahtari, satirlar.map(satir => satir.hucreler));
     }
-  }, [satirlar, gonderildi, taslakAnahtari]);
+  }, [kurumsalBasvuru, satirlar, gonderildi, taslakAnahtari]);
 
   useEffect(() => {
     if (modal !== "kaydedildi") return;
@@ -125,6 +170,15 @@ export default function IsimListesiSablonu({ sutunlar, urunListesi = false }: { 
     setIslemSuruyor(true);
     setHata("");
     try {
+      if (kurumsalBasvuru && onTaslakKaydet) {
+        const gonderilecek = islem === "sil" ? [] : satirlar.map(satir => satir.hucreler);
+        const sonuc = await onTaslakKaydet(gonderilecek);
+        if (!sonuc.ok) throw new Error(sonuc.hata);
+        if (islem === "sil") setSatirlar([]);
+        taslakSil(taslakAnahtari);
+        setModal(islem === "sil" ? null : "kaydedildi");
+        return;
+      }
       const yanit = await fetch(listeApi, islem === "sil" ? { method: "DELETE" } : {
         method: "PUT", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ satirlar: satirlar.map(satir => satir.hucreler), gonder: islem === "gonder" }),
@@ -339,7 +393,9 @@ export default function IsimListesiSablonu({ sutunlar, urunListesi = false }: { 
       <div className="mt-4 flex flex-wrap justify-end gap-2">
         <button type="button" className={adminStyles.button} disabled={gonderildi || islemSuruyor || yukleniyor} onClick={() => setModal("vazgec")}>Vazgeç</button>
         <button type="button" className={adminStyles.button} disabled={gonderildi || islemSuruyor || yukleniyor} onClick={() => void listeIsle("kaydet")}>Kaydet</button>
-        <button type="button" className={`${adminStyles.button} ${adminStyles.primary}`} disabled={gonderildi || islemSuruyor || yukleniyor} onClick={() => setModal("gonder")}>Gönder</button>
+        {!kurumsalBasvuru && (
+          <button type="button" className={`${adminStyles.button} ${adminStyles.primary}`} disabled={gonderildi || islemSuruyor || yukleniyor} onClick={() => setModal("gonder")}>Gönder</button>
+        )}
       </div>
       <AlertDialog open={silinecekSatirId !== null} onOpenChange={acik => { if (!acik) setSilinecekSatirId(null); }}>
         <AlertDialogContent onCloseAutoFocus={olay => {

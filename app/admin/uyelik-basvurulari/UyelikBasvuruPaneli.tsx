@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import styles from "../admin.module.css";
 import DavetDugmesi from "./DavetDugmesi";
+import KurumsalBasvuruInceleme from "./KurumsalBasvuruInceleme";
 
 type Basvuru = {
   id: string;
@@ -30,7 +31,7 @@ export default function UyelikBasvuruPaneli({
 }: {
   basari?: (mesaj: string) => void;
 }) {
-  const [mod, setMod] = useState<"bekleyen" | "onaylanan">("bekleyen");
+  const [mod, setMod] = useState<"bekleyen" | "onaylanan" | "kurumsal">("bekleyen");
   const [basvurular, setBasvurular] = useState<Basvuru[] | null>(null);
   const [hata, setHata] = useState("");
   const [surum, setSurum] = useState(0);
@@ -198,6 +199,7 @@ export default function UyelikBasvuruPaneli({
         secenekler={[
           { deger: "bekleyen", etiket: "Bekleyen Başvurular", icerik: listeIcerigi },
           { deger: "onaylanan", etiket: "Başvurusu Onaylananlar", icerik: listeIcerigi },
+          { deger: "kurumsal", etiket: "Kurumsal Üyelik İnceleme", icerik: <KurumsalBasvuruInceleme basari={basari} /> },
         ]}
       />
     </section>

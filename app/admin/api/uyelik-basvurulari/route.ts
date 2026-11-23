@@ -78,14 +78,13 @@ export async function POST(istek: Request) {
           `<p style="margin: 0 0 16px 0;">${kacir(onayCumlesi)}</p>` +
           `<p style="margin: 0 0 16px 0;">Kurumsal Üyelik Formu’na erişmek için <a href="${kacir(link.href)}">kurumsal üyelik daveti bağlantısını</a> kullanabilirsiniz.</p>` +
           `<p style="margin: 0 0 16px 0;">Bu bağlantı 48 saat boyunca geçerlidir.</p>` +
-          `<p style="margin: 0 0 24px 0;">Cogniti’ye ilginiz için teşekkür ederiz.</p>` +
-          `<p style="margin: 0 0 4px 0;">Cogniti Müşteri İlişkileri</p>` +
+          `<p style="margin: 0 0 16px 0;">Cogniti’ye ilginiz için teşekkür ederiz.</p>` +
           `<p style="margin: 0;">Cogniti · bilgi taşır</p>`,
         text:
           `${hitap}\n\n${onayCumlesi}\n\n` +
           `Kurumsal Üyelik Formu'na erişmek için aşağıdaki bağlantıyı kullanabilirsiniz:\n${link.href}\n\n` +
           `Bu bağlantı 48 saat boyunca geçerlidir.\n\n` +
-          `Cogniti'ye ilginiz için teşekkür ederiz.\n\nCogniti Müşteri İlişkileri\nCogniti · bilgi taşır`,
+          `Cogniti'ye ilginiz için teşekkür ederiz.\n\nCogniti · bilgi taşır`,
       }),
     });
     if (!yanit.ok) throw new Error("E-posta gönderilemedi.");
