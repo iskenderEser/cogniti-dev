@@ -40,7 +40,7 @@ export async function proxy(request: NextRequest) {
   if (request.nextUrl.pathname === "/api/viva/daily-webhook") return NextResponse.next({ request });
   if (["/marka/cogniti-blue.svg", "/marka/cogniti-green.svg"].includes(request.nextUrl.pathname)) return NextResponse.next({ request });
   // Karşılama adresleri herkese açıktır; oturuma göre panel içeriğine dönüşmez.
-  if (["/", "/welcome", "/uyelik-basvurusu", "/kurumsal-uyelik", "/api/musteri-talebi"].includes(request.nextUrl.pathname)) return NextResponse.next({ request });
+  if (["/", "/welcome", "/uyelik-basvurusu", "/kurumsal-uyelik"].includes(request.nextUrl.pathname)) return NextResponse.next({ request });
   if (request.nextUrl.pathname === "/uyelik-basvurusu/api" && request.method === "POST") return NextResponse.next({ request });
   if (request.nextUrl.pathname === "/api/auth/sifre-degisti-bildir" && request.method === "POST") return NextResponse.next({ request });
   if (request.nextUrl.pathname === "/kurumsal-uyelik/api/rol-donusumleri" && request.method === "GET") return NextResponse.next({ request });
