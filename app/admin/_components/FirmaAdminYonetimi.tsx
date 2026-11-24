@@ -2,14 +2,25 @@
 
 import { useEffect, useRef, useState } from "react";
 import { RefreshCw, ShieldCheck, Users } from "lucide-react";
+import { SUREC2_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import styles from "../admin.module.css";
 import local from "./firma-admin-yonetimi.module.css";
 import controls from "./firma-ayarlari.module.css";
 
 type Durum = { aktif: boolean; aktif_admin_sayisi: number };
-export default function FirmaAdminYonetimi({ firmaId, onDegisti }: { firmaId: string; onDegisti?: (aktif: boolean) => void }) {
+export default function FirmaAdminYonetimi({
+  firmaId,
+  onDegisti,
+  basari,
+  hata: hataToast,
+}: {
+  firmaId: string;
+  onDegisti?: (aktif: boolean) => void;
+  basari?: (mesaj: string) => void;
+  hata?: (mesaj: string) => void;
+}) {
   const [durum, setDurum] = useState<Durum | null>(null);
-  const [hata, setHata] = useState("");
+  const [okumaHatasi, setOkumaHatasi] = useState(false);
   const [bekliyor, setBekliyor] = useState(false);
   const [yenileme, setYenileme] = useState(0);
   const kilit = useRef(false), canli = useRef(true);
@@ -17,24 +28,33 @@ export default function FirmaAdminYonetimi({ firmaId, onDegisti }: { firmaId: st
   useEffect(() => {
     canli.current = true;
     const c = new AbortController();
-    setDurum(null); setHata("");
+    setDurum(null); setOkumaHatasi(false);
     void (async () => {
       try {
         const r = await fetch(url, { cache: "no-store", signal: c.signal });
         const d = await r.json(); if (!r.ok) throw new Error(d.hata || "Firma admini ayarı alınamadı.");
         if (!c.signal.aborted) setDurum(d);
-      } catch (e) { if (!c.signal.aborted) setHata(e instanceof Error ? e.message : "Firma admini ayarı alınamadı."); }
+      } catch (e) {
+        if (!c.signal.aborted) {
+          setOkumaHatasi(true);
+          hataToast?.(e instanceof Error ? e.message : "Firma admini ayarı alınamadı.");
+        }
+      }
     })();
     return () => { canli.current = false; c.abort(); };
-  }, [url, yenileme]);
+  }, [hataToast, url, yenileme]);
   async function degistir() {
     if (kilit.current || !durum) return;
-    kilit.current = true; setBekliyor(true); setHata("");
+    kilit.current = true; setBekliyor(true);
     try {
       const r = await fetch(url, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ aktif: !durum.aktif, beklenen_aktif: durum.aktif }) });
       const d = await r.json(); if (!r.ok) throw new Error(d.hata || "Firma admini ayarı kaydedilemedi.");
-      if (canli.current) { setDurum({ ...durum, aktif: d.aktif }); onDegisti?.(d.aktif); }
-    } catch (e) { if (canli.current) setHata(e instanceof Error ? e.message : "Firma admini ayarı kaydedilemedi."); }
+      if (canli.current) {
+        setDurum({ ...durum, aktif: d.aktif });
+        onDegisti?.(d.aktif);
+        basari?.(d.aktif ? SUREC2_TOAST.firmaAdminAcildi : SUREC2_TOAST.firmaAdminKapatildi);
+      }
+    } catch (e) { if (canli.current) hataToast?.(e instanceof Error ? e.message : "Firma admini ayarı kaydedilemedi."); }
     finally { kilit.current = false; if (canli.current) setBekliyor(false); }
   }
   return <section className={`${styles.card} ${local.panel}`} aria-labelledby="firma-admin-baslik" aria-busy={bekliyor}>
@@ -48,8 +68,7 @@ export default function FirmaAdminYonetimi({ firmaId, onDegisti }: { firmaId: st
         <span className={controls.toggleTrack} aria-hidden="true"><span className={controls.toggleThumb} /></span><span className={controls.toggleText}>{bekliyor ? "Kaydediliyor…" : durum.aktif ? "Açık" : "Kapalı"}</span>
       </button>}
     </div>
-    {!durum && !hata && <p className={local.loading} role="status">Yükleniyor…</p>}
-    {hata && <p role="alert" className={`${styles.notice} ${local.error}`}>{hata}</p>}
+    {!durum && !okumaHatasi && <p className={local.loading} role="status">Yükleniyor…</p>}
     {durum && <div className={local.details}>
       <div className={local.metric}><Users aria-hidden="true" /><div><span>Firma Admini</span><strong>{durum.aktif_admin_sayisi > 0 ? "Atandı" : "Atanmadı"}</strong></div></div>
       <div className={local.ownership}><span>Yönetim yetkisi</span><strong>{durum.aktif ? "Firma admininde" : "Cogniti’de"}</strong><p>{durum.aktif ? "Cogniti firma ekranlarını yalnız görüntüler." : "Firma işlemlerini Cogniti yönetir."}</p></div>

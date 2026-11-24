@@ -7,6 +7,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { SUREC2_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import type { Firma, Takim, Bolge } from "../_types";
 
 interface UseTekilFormProps {
@@ -86,8 +87,14 @@ export function useTekilForm({ seciliFirma, takimlar, refreshKullanicilar, hata,
       });
       const data = await res.json();
       if (!res.ok) { hata(data.hata ?? "Kullanıcı eklenemedi.", data.adim, data.detay); }
-      // K-A6: eksik bilgili eklemede route'un uyarılı mesajı olduğu gibi gösterilir.
-      else { basari(data.mesaj ?? "Ekleme başarılı."); sifirlaTekilForm(); refreshKullanicilar(); }
+      else {
+        const adSoyad = `${tekilAd.trim()} ${tekilSoyad.trim()}`.trim();
+        basari(data.davet_gonderildi === false && typeof data.mesaj === "string"
+          ? data.mesaj
+          : SUREC2_TOAST.kullaniciEklendi(adSoyad));
+        sifirlaTekilForm();
+        refreshKullanicilar();
+      }
     } catch (err) {
       // B-32: ağ hatasında yükleme durumu takılı kalmaz.
       hata("Kullanıcı eklenemedi — bağlantı hatası.", "handleTekilKaydet", String(err));

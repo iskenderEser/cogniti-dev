@@ -9,6 +9,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import type { Firma, Kullanici } from "../_types";
+import { SUREC2_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import { ROL_ADLARI } from "@/lib/utils/roller";
 import { telefonBicimle } from "@/lib/admin/telefonBicim";
 
@@ -97,13 +98,19 @@ export function useKullaniciListesi({ seciliFirma, kullanicilar, refreshKullanic
     if (!seciliFirma) return;
     setDuzenleLoading(true);
     try {
+      const mevcut = kullanicilar.find(x => x.kullanici_id === kullanici_id);
+      const rolDegisti = typeof veri.rol === "string" && mevcut && veri.rol !== mevcut.rol;
       const res = await fetch(`/admin/api/firmalar/${seciliFirma.firma_id}/kullanicilar`, {
         method: "PUT", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ kullanici_id, ...veri }),
       });
       const data = await res.json();
       if (!res.ok) { hata(data.hata ?? "Kullanıcı güncellenemedi.", data.adim, data.detay); }
-      else { basari(data.mesaj ?? "Kullanıcı güncellendi."); setDuzenlenenId(null); refreshKullanicilar(); }
+      else {
+        basari(rolDegisti ? SUREC2_TOAST.rolGuncellendi : SUREC2_TOAST.kullaniciGuncellendi);
+        setDuzenlenenId(null);
+        refreshKullanicilar();
+      }
     } catch (err) {
       hata("Kullanıcı güncellenemedi — bağlantı hatası.", "handleKullaniciGuncelle", String(err));
     } finally {
@@ -122,7 +129,7 @@ export function useKullaniciListesi({ seciliFirma, kullanicilar, refreshKullanic
       });
       const data = await res.json();
       if (!res.ok) { hata(data.hata ?? "Rol güncellenemedi.", data.adim, data.detay); }
-      else { basari("Rol güncellendi."); refreshKullanicilar(); }
+      else { basari(SUREC2_TOAST.rolGuncellendi); refreshKullanicilar(); }
     } catch (err) {
       // B-32: ağ hatasında yükleme durumu takılı kalmaz.
       hata("Rol güncellenemedi — bağlantı hatası.", "handleRolDegistir", String(err));
@@ -141,7 +148,7 @@ export function useKullaniciListesi({ seciliFirma, kullanicilar, refreshKullanic
       });
       const data = await res.json();
       if (!res.ok) { hata(data.hata ?? "Durum güncellenemedi.", data.adim, data.detay); }
-      else { basari(mevcutDurum ? "Pasife alındı." : "Aktif edildi."); refreshKullanicilar(); }
+      else { basari(mevcutDurum ? SUREC2_TOAST.kullaniciPasifeAlindi : SUREC2_TOAST.kullaniciAktifEdildi); refreshKullanicilar(); }
     } catch (err) {
       hata("Durum güncellenemedi — bağlantı hatası.", "handleAktifToggle", String(err));
     } finally {
@@ -159,7 +166,7 @@ export function useKullaniciListesi({ seciliFirma, kullanicilar, refreshKullanic
       });
       const data = await res.json();
       if (!res.ok) { hata(data.hata ?? "Yetki güncellenemedi.", data.adim, data.detay); }
-      else { basari(mevcutDeger ? "Yetki kaldırıldı." : "Yetki tanımlandı."); refreshKullanicilar(); }
+      else { basari(SUREC2_TOAST.yetkiGuncellendi); refreshKullanicilar(); }
     } catch (err) {
       hata("Yetki güncellenemedi — bağlantı hatası.", "handleYetkiDegistir", String(err));
     } finally {
@@ -180,7 +187,7 @@ export function useKullaniciListesi({ seciliFirma, kullanicilar, refreshKullanic
       });
       const data = await res.json();
       if (!res.ok) { hata(data.hata ?? "Atama yapılamadı.", data.adim, data.detay); }
-      else { basari("Eksik bilgi tamamlandı."); refreshKullanicilar(); }
+      else { basari(SUREC2_TOAST.eksikBilgiTamamlandi); refreshKullanicilar(); }
     } catch (err) {
       hata("Atama yapılamadı — bağlantı hatası.", "handleEksikTamamla", String(err));
     } finally {
@@ -203,7 +210,7 @@ export function useKullaniciListesi({ seciliFirma, kullanicilar, refreshKullanic
       });
       const data = await res.json();
       if (!res.ok) { hata(data.hata ?? "Telefon kaydedilemedi.", data.adim, data.detay); }
-      else { basari("Telefon kaydedildi."); refreshKullanicilar(); }
+      else { basari(SUREC2_TOAST.telefonKaydedildi); refreshKullanicilar(); }
     } catch (err) {
       hata("Telefon kaydedilemedi — bağlantı hatası.", "handleTelefonEkle", String(err));
     } finally {
@@ -222,7 +229,7 @@ export function useKullaniciListesi({ seciliFirma, kullanicilar, refreshKullanic
       });
       const data = await res.json();
       if (!res.ok) { hata(data.hata ?? "Kullanıcı silinemedi.", data.adim, data.detay); }
-      else { basari("Silme işlemi başarılı."); refreshKullanicilar(); }
+      else { basari(SUREC2_TOAST.kullaniciSilindi); refreshKullanicilar(); }
     } catch (err) {
       hata("Kullanıcı silinemedi — bağlantı hatası.", "handleSil", String(err));
     } finally {
@@ -286,7 +293,7 @@ export function useKullaniciListesi({ seciliFirma, kullanicilar, refreshKullanic
         method: "PUT", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ kullanici_id, aktif_mi: false }),
       }),
-      (adet) => `${adet} kullanıcı pasife alındı.`,
+      (adet) => SUREC2_TOAST.topluPasifeAlindi(adet),
       "Pasife alma"
     );
   };
@@ -299,7 +306,7 @@ export function useKullaniciListesi({ seciliFirma, kullanicilar, refreshKullanic
         method: "DELETE", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ kullanici_id }),
       }),
-      (adet) => `${adet} kullanıcı silindi.`,
+      (adet) => SUREC2_TOAST.topluSilindi(adet),
       "Silme"
     );
   };
@@ -317,7 +324,7 @@ export function useKullaniciListesi({ seciliFirma, kullanicilar, refreshKullanic
       if (!res.ok) {
         hata(data.hata ?? "Davet gönderilemedi.", "handleDavetYenidenGonder", undefined);
       } else {
-        basari(data.mesaj ?? "24 saatlik şifre oluşturma daveti yeniden gönderildi.");
+        basari(SUREC2_TOAST.davetYenidenGonderildi);
         refreshKullanicilar();
       }
     } catch (err) {

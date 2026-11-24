@@ -9,18 +9,19 @@
 "use client";
 
 import CognitiLogo from "@/components/marka/CognitiLogo";
+import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
 import { SifreBelirlemeFormu } from "@/components/auth/SifreBelirlemeFormu";
 import { createClient } from "@/lib/supabase/client";
 import { guvenliCikisYap } from "@/lib/auth/guvenliCikis";
+import { sonrakiSayfaToastYaz, SUREC2_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import { useEffect, useState } from "react";
 
 export default function SifreYenilePage() {
-  const [tamamlandi, setTamamlandi] = useState(false);
   // null: oturum çözülüyor; false: bağlantı geçersiz/süresi dolmuş; true: hazır.
   const [oturumHazir, setOturumHazir] = useState<boolean | null>(null);
   const [eposta, setEposta] = useState("");
   const [yenidenGonderiliyor, setYenidenGonderiliyor] = useState(false);
-  const [yenidenMesaj, setYenidenMesaj] = useState("");
+  const { mesajlar, basari, hata } = useHataMesaji();
 
   useEffect(() => {
     try {
@@ -64,9 +65,9 @@ export default function SifreYenilePage() {
       setOturumHazir(false);
       return;
     }
-    setTamamlandi(true);
     await fetch("/api/auth/sifre-degisti-bildir", { method: "POST" }).catch(() => {});
     await guvenliCikisYap(supabase);
+    sonrakiSayfaToastYaz(SUREC2_TOAST.sifreGuncellendi);
     window.location.replace("/login");
   };
 
@@ -74,7 +75,6 @@ export default function SifreYenilePage() {
     e.preventDefault();
     if (!eposta.trim() || yenidenGonderiliyor) return;
     setYenidenGonderiliyor(true);
-    setYenidenMesaj("");
     const res = await fetch("/api/auth/sifre-sifirla", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -82,12 +82,10 @@ export default function SifreYenilePage() {
     }).catch(() => null);
     setYenidenGonderiliyor(false);
     if (!res?.ok) {
-      setYenidenMesaj("Bağlantı gönderilemedi. Lütfen biraz sonra tekrar deneyin.");
+      hata("Bağlantı gönderilemedi. Lütfen biraz sonra tekrar deneyin.");
       return;
     }
-    setYenidenMesaj(
-      "E-posta adresiniz sistemde kayıtlıysa şifre sıfırlama bağlantısı gönderilecektir. Lütfen gelen ve spam (istenmeyen) kutunuzu kontrol ediniz."
-    );
+    basari(SUREC2_TOAST.sifreSifirlamaIstendi);
   };
 
   return (
@@ -95,6 +93,7 @@ export default function SifreYenilePage() {
       className="min-h-screen bg-[var(--tema-yerel-giris-kart-01)] flex flex-col items-center justify-center px-6 py-10"
       style={{ fontFamily: "'Nunito', sans-serif" }}
     >
+      <HataMesajiContainer mesajlar={mesajlar} />
       <div className="w-full max-w-sm">
         <CognitiLogo className="object-contain mx-auto mb-8" style={{ width: 144, height: 144 }} />
 
@@ -120,11 +119,6 @@ export default function SifreYenilePage() {
                 className="mt-1.5 w-full rounded-xl border border-[var(--tema-yerel-giris-cizgi-03)] bg-[var(--tema-yerel-giris-kart-01)] px-3.5 py-2.5 text-sm text-[var(--tema-yerel-giris-ana-metin-03)] outline-none focus:border-[var(--tema-kontrol-odak)]"
               />
             </label>
-            {yenidenMesaj && (
-              <p role="status" className="m-0 rounded-xl border border-[var(--tema-cizgi)] bg-[var(--tema-zemin)] px-3.5 py-2.5 text-xs font-light leading-relaxed text-[var(--tema-hata)]">
-                {yenidenMesaj}
-              </p>
-            )}
             <button
               type="submit"
               disabled={yenidenGonderiliyor}
@@ -135,15 +129,7 @@ export default function SifreYenilePage() {
           </form>
         )}
 
-        {oturumHazir === true && tamamlandi && (
-          <div className="bg-[var(--tema-yerel-giris-islevsel-zemin-02)] border border-[var(--tema-yerel-giris-islevsel-cizgi-02)] rounded-xl px-4 py-3">
-            <p className="text-sm text-[var(--tema-yerel-giris-islevsel-metin-01)] m-0">
-              Şifreniz güncellendi. Giriş sayfasına yönlendiriliyorsunuz...
-            </p>
-          </div>
-        )}
-
-        {oturumHazir === true && !tamamlandi && (
+        {oturumHazir === true && (
           <SifreBelirlemeFormu baslik="Yeni Şifre Belirle" buton="Şifreyi Güncelle" onKaydet={handleKaydet} />
         )}
       </div>

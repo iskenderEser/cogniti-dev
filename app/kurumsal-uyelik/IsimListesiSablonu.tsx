@@ -1,11 +1,12 @@
 "use client";
 
-import { Download, Plus, Trash2, Upload, X } from "lucide-react";
+import { Download, Plus, Trash2, Upload } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import adminStyles from "@/app/admin/admin.module.css";
 import styles from "@/app/login/login.module.css";
 import { rolCoz, turkceKatla } from "@/lib/admin/kullaniciDogrulama";
+import { SUREC1_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import { TUKETICI_ROLLER, URETICI_ROLLER, YONLENDIRICI_ROLLER, YONETICI_ROLLER } from "@/lib/utils/roller";
 
 import { BARKOD_BICIMI, BARKOD_DESENI } from "./barkod";
@@ -54,6 +55,8 @@ export default function IsimListesiSablonu({
   kilitli = false,
   onSatirlarDegisti,
   onTaslakKaydet,
+  onBasari,
+  onHata,
 }: {
   sutunlar: string[];
   urunListesi?: boolean;
@@ -62,6 +65,8 @@ export default function IsimListesiSablonu({
   kilitli?: boolean;
   onSatirlarDegisti?: (satirlar: string[][]) => void;
   onTaslakKaydet?: (satirlar: string[][]) => Promise<{ ok: true } | { ok: false; hata: string }>;
+  onBasari?: (mesaj: string) => void;
+  onHata?: (mesaj: string) => void;
 }) {
   const listeKodu = urunListesi ? "urun-listesi" : "isim-listesi";
   const taslakAnahtari = `cogniti_kurumsal_taslak_liste_${listeKodu}`;
@@ -70,7 +75,6 @@ export default function IsimListesiSablonu({
   const dosyaAdi = urunListesi ? "Cogniti Ürün Listesi" : "Cogniti Firma Listesi";
   const [hazirlaniyor, setHazirlaniyor] = useState(false);
   const [yukleniyor, setYukleniyor] = useState(false);
-  const [hata, setHata] = useState("");
   const [satirlar, setSatirlar] = useState<ListeSatiri[]>(() =>
     kurumsalBasvuru && Array.isArray(ilkSatirlar)
       ? ilkSatirlar.map((hucreler, idx) => ({ id: idx, hucreler }))
@@ -79,7 +83,7 @@ export default function IsimListesiSablonu({
   const [silinecekSatirId, setSilinecekSatirId] = useState<number | null>(null);
   const [rolDonusumleri, setRolDonusumleri] = useState<Map<string, string> | null>(null);
   const [eslesmelerYukleniyor, setEslesmelerYukleniyor] = useState(false);
-  const [modal, setModal] = useState<"vazgec" | "gonder" | "kaydedildi" | "gonderildi" | null>(null);
+  const [modal, setModal] = useState<"vazgec" | "gonder" | null>(null);
   const [islemSuruyor, setIslemSuruyor] = useState(false);
   const [gonderildi, setGonderildi] = useState(kilitli);
   const dosyaAlani = useRef<HTMLInputElement>(null);
@@ -87,6 +91,9 @@ export default function IsimListesiSablonu({
   const sonrakiSatirId = useRef(kurumsalBasvuru && Array.isArray(ilkSatirlar) ? ilkSatirlar.length : 0);
   const satirEkleDugmesi = useRef<HTMLButtonElement>(null);
   const satirSilDugmesi = useRef<HTMLButtonElement | null>(null);
+  const hataBildir = (mesaj: string) => {
+    if (mesaj) onHata?.(mesaj);
+  };
 
   useEffect(() => {
     if (kurumsalBasvuru) {
@@ -109,7 +116,7 @@ export default function IsimListesiSablonu({
           const donusumler = await rolDonusumleriniAl();
           if (!kontrol.signal.aborted) setRolDonusumleri(donusumler);
         } catch {
-          if (!kontrol.signal.aborted) setHata("Unvan eşleştirmeleri alınamadı.");
+          if (!kontrol.signal.aborted) onHata?.("Unvan eşleştirmeleri alınamadı.");
         }
       })();
       return () => kontrol.abort();
@@ -138,11 +145,11 @@ export default function IsimListesiSablonu({
         const donusumler = await rolDonusumleriniAl();
         if (!kontrol.signal.aborted) setRolDonusumleri(donusumler);
       } catch {
-        if (!kontrol.signal.aborted) setHata("Kayıtlı liste veya unvan eşleştirmeleri alınamadı.");
+        if (!kontrol.signal.aborted) onHata?.("Kayıtlı liste veya unvan eşleştirmeleri alınamadı.");
       }
     })();
     return () => kontrol.abort();
-  }, [kurumsalBasvuru, listeApi, taslakAnahtari, urunListesi]);
+  }, [kurumsalBasvuru, listeApi, onHata, taslakAnahtari, urunListesi]);
 
   useEffect(() => {
     if (kurumsalBasvuru || !listeyeDokunuldu.current || gonderildi) return;
@@ -153,22 +160,15 @@ export default function IsimListesiSablonu({
     }
   }, [kurumsalBasvuru, satirlar, gonderildi, taslakAnahtari]);
 
-  useEffect(() => {
-    if (modal !== "kaydedildi") return;
-    const zamanlayici = window.setTimeout(() => setModal(null), 10_000);
-    return () => window.clearTimeout(zamanlayici);
-  }, [modal]);
-
   async function listeIsle(islem: "sil" | "kaydet" | "gonder") {
     if (islemSuruyor) return;
     if (islem !== "sil" && !satirlar.some(satir => satir.hucreler.some(hucre => hucre.trim()))) {
       setModal(null);
-      setHata("Önce listeye en az bir kayıt ekleyin.");
+      hataBildir("Önce listeye en az bir kayıt ekleyin.");
       return;
     }
     listeyeDokunuldu.current = true;
     setIslemSuruyor(true);
-    setHata("");
     try {
       if (kurumsalBasvuru && onTaslakKaydet) {
         const gonderilecek = islem === "sil" ? [] : satirlar.map(satir => satir.hucreler);
@@ -176,7 +176,12 @@ export default function IsimListesiSablonu({
         if (!sonuc.ok) throw new Error(sonuc.hata);
         if (islem === "sil") setSatirlar([]);
         taslakSil(taslakAnahtari);
-        setModal(islem === "sil" ? null : "kaydedildi");
+        setModal(null);
+        onBasari?.(
+          islem === "sil"
+            ? SUREC1_TOAST.listeSilindi(urunListesi)
+            : SUREC1_TOAST.listeTaslakKaydedildi(urunListesi)
+        );
         return;
       }
       const yanit = await fetch(listeApi, islem === "sil" ? { method: "DELETE" } : {
@@ -190,10 +195,15 @@ export default function IsimListesiSablonu({
       if (islem === "sil") setSatirlar([]);
       if (islem === "gonder") setGonderildi(true);
       taslakSil(taslakAnahtari);
-      setModal(islem === "sil" ? null : islem === "kaydet" ? "kaydedildi" : "gonderildi");
+      setModal(null);
+      onBasari?.(
+        islem === "sil"
+          ? SUREC1_TOAST.listeSilindi(urunListesi)
+          : SUREC1_TOAST.listeTaslakKaydedildi(urunListesi)
+      );
     } catch (error) {
       setModal(null);
-      setHata(error instanceof Error && error.message ? error.message : "Liste işlemi tamamlanamadı.");
+      hataBildir(error instanceof Error && error.message ? error.message : "Liste işlemi tamamlanamadı.");
     } finally {
       setIslemSuruyor(false);
     }
@@ -206,11 +216,10 @@ export default function IsimListesiSablonu({
     if (urunListesi || rolDonusumleri || eslesmelerYukleniyor) return;
 
     setEslesmelerYukleniyor(true);
-    setHata("");
     try {
       setRolDonusumleri(await rolDonusumleriniAl());
     } catch {
-      setHata("Unvan eşleştirmeleri alınamadı.");
+      hataBildir("Unvan eşleştirmeleri alınamadı.");
     } finally {
       setEslesmelerYukleniyor(false);
     }
@@ -224,7 +233,6 @@ export default function IsimListesiSablonu({
 
   async function excelIndir() {
     setHazirlaniyor(true);
-    setHata("");
     try {
       const XLSX = await import("xlsx");
       const kitap = XLSX.utils.book_new();
@@ -237,7 +245,7 @@ export default function IsimListesiSablonu({
       XLSX.utils.book_append_sheet(kitap, sayfa, baslik);
       XLSX.writeFile(kitap, `${dosyaAdi}.xlsx`);
     } catch {
-      setHata("Excel dosyası indirilemedi. Tekrar deneyin.");
+      hataBildir("Excel dosyası indirilemedi. Tekrar deneyin.");
     } finally {
       setHazirlaniyor(false);
     }
@@ -246,11 +254,10 @@ export default function IsimListesiSablonu({
   async function listeYukle(dosya: File) {
     listeyeDokunuldu.current = true;
     setYukleniyor(true);
-    setHata("");
     try {
       const word = /\.docx$/i.test(dosya.name);
       if (!word && !/\.xlsx?$/i.test(dosya.name)) {
-        setHata("Bir Excel (.xlsx, .xls) veya Word (.docx) dosyası seçin.");
+        hataBildir("Bir Excel (.xlsx, .xls) veya Word (.docx) dosyası seçin.");
         return;
       }
       const tablolar = word ? await wordTablolari(dosya) : [await excelTablosu(dosya)];
@@ -267,27 +274,27 @@ export default function IsimListesiSablonu({
         });
       });
       if (eslesenler.length !== 1) {
-        setHata(word ? "Word dosyasında şablon başlıklarını içeren tek bir tablo olmalıdır." : "Excel sütun başlıkları şablonla eşleşmiyor.");
+        hataBildir(word ? "Word dosyasında şablon başlıklarını içeren tek bir tablo olmalıdır." : "Excel sütun başlıkları şablonla eşleşmiyor.");
         return;
       }
       const { tablo, satirIndeksi, indeksler } = eslesenler[0];
       const liste = tablo.slice(satirIndeksi + 1).map(satir => indeksler.map(indeks => (satir[indeks] ?? "").trim()))
         .filter(satir => satir.some(Boolean));
       if (liste.length === 0) {
-        setHata("Dosyada doldurulmuş satır bulunamadı.");
+        hataBildir("Dosyada doldurulmuş satır bulunamadı.");
         return;
       }
       try {
         if (!urunListesi) setRolDonusumleri(await rolDonusumleriniAl());
       } catch {
-        setHata("Unvan eşleştirmeleri alınamadı. Dosyayı tekrar yükleyin.");
+        hataBildir("Unvan eşleştirmeleri alınamadı. Dosyayı tekrar yükleyin.");
         return;
       }
       setSatirlar(liste.map(hucreler => ({
         id: sonrakiSatirId.current++, hucreler,
       })));
     } catch {
-      setHata("Dosya okunamadı. Tekrar deneyin.");
+      hataBildir("Dosya okunamadı. Tekrar deneyin.");
     } finally {
       setYukleniyor(false);
     }
@@ -324,7 +331,6 @@ export default function IsimListesiSablonu({
           }} />
         </div>
       </div>
-      {hata && <p role="alert" className={adminStyles.notice}>{hata}</p>}
       <div className={adminStyles.tableWrap}>
         <table className={`${adminStyles.table} ${styles.kurumsalUyelikListeTablosu}`} aria-labelledby={`${listeKodu}-baslik`}>
           <thead><tr>
@@ -416,19 +422,17 @@ export default function IsimListesiSablonu({
       <AlertDialog open={modal !== null} onOpenChange={acik => { if (!acik && !islemSuruyor) setModal(null); }}>
         <AlertDialogContent>
           <AlertDialogTitle>
-            {modal === "vazgec" ? "Listeden vazgeç" : modal === "gonder" ? "Listeyi gönder" : modal === "kaydedildi" ? "Liste kaydedildi" : "Liste gönderildi"}
+            {modal === "vazgec" ? "Listeden vazgeç" : "Listeyi gönder"}
           </AlertDialogTitle>
           <AlertDialogDescription>
-            {modal === "vazgec" ? "Oluşturduğunuz liste tamamen silinecektir. Dilerseniz kaydedebilir ve daha sonra çalışmaya devam edebilirsiniz."
-              : modal === "gonder" ? `Firmanızın ${urunListesi ? "ürün" : "kullanıcı"} listesi Cogniti’ye iletilecektir. Onaylıyor musunuz?`
-              : modal === "kaydedildi" ? "Çalışma Listeniz başarıyla kayıt edilmiştir" : `Firmanızın ${urunListesi ? "ürün" : "kullanıcı"} listesi Cogniti’ye iletildi.`}
+            {modal === "vazgec"
+              ? "Oluşturduğunuz liste tamamen silinecektir. Dilerseniz kaydedebilir ve daha sonra çalışmaya devam edebilirsiniz."
+              : `Firmanızın ${urunListesi ? "ürün" : "kullanıcı"} listesi Cogniti’ye iletilecektir. Onaylıyor musunuz?`}
           </AlertDialogDescription>
           <AlertDialogFooter>
-            {modal === "vazgec" || modal === "gonder" ? <>
-              {modal === "vazgec" && <AlertDialogCancel disabled={islemSuruyor}>Vazgeç</AlertDialogCancel>}
-              <button type="button" className={adminStyles.button} disabled={islemSuruyor} onClick={() => void listeIsle(modal === "vazgec" ? "sil" : "kaydet")}>{modal === "vazgec" ? "Sil" : "Hayır"}</button>
-              <button type="button" className={`${adminStyles.button} ${adminStyles.primary}`} disabled={islemSuruyor} onClick={() => void listeIsle(modal === "vazgec" ? "kaydet" : "gonder")}>{modal === "vazgec" ? "Kaydet" : "Evet"}</button>
-            </> : <button type="button" className="absolute right-4 top-4 cursor-pointer" aria-label="Kapat" onClick={() => setModal(null)}><X className="size-5" aria-hidden="true" /></button>}
+            {modal === "vazgec" && <AlertDialogCancel disabled={islemSuruyor}>Vazgeç</AlertDialogCancel>}
+            <button type="button" className={adminStyles.button} disabled={islemSuruyor} onClick={() => void listeIsle(modal === "vazgec" ? "sil" : "kaydet")}>{modal === "vazgec" ? "Sil" : "Hayır"}</button>
+            <button type="button" className={`${adminStyles.button} ${adminStyles.primary}`} disabled={islemSuruyor} onClick={() => void listeIsle(modal === "vazgec" ? "kaydet" : "gonder")}>{modal === "vazgec" ? "Kaydet" : "Evet"}</button>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

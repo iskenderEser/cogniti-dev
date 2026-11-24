@@ -33,8 +33,8 @@ function load(path) {
   const exports = {};
   vm.runInNewContext(ts.transpileModule(fs.readFileSync(path, 'utf8'), {
     compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX, target: ts.ScriptTarget.ES2022 },
-  }).outputText, { exports, require: n => mocks[n] ?? (n.endsWith('.css') ? { default: {} } : n.startsWith('@/') ? load(n.slice(2) + '.ts') : require(n)),
-    sessionStorage: win.sessionStorage, crypto: globalThis.crypto, AbortSignal, window: win, Event: win.Event,
+  }).outputText, { exports, require: n => mocks[n] ?? (n.endsWith('.css') ? { default: {} } : n.startsWith('@/') ? load(fs.existsSync(n.slice(2) + '.ts') ? n.slice(2) + '.ts' : n.slice(2) + '.tsx') : require(n)),
+    sessionStorage: win.sessionStorage, crypto: globalThis.crypto, AbortSignal, window: win, Event: win.Event, setTimeout, clearTimeout,
     fetch: async (url, options) => {
       assert.equal(url, '/api/satin-alma/abonelik');
       calls.push(JSON.parse(options.body));
@@ -76,7 +76,7 @@ async function mount(rol) {
   status = 0;
   await pm.click('Onayla');
   assert.match(pm.el.querySelector('[role=alert]').textContent, /doğrulanamadı/);
-  assert.equal(pm.el.querySelector('[role=status]').textContent, '');
+  assert.equal(pm.el.querySelector('[role=status]'), null);
   status = 202;
   const onay = pm.button('Onayla');
   await React.act(async () => { onay.click(); onay.click(); });
@@ -85,7 +85,7 @@ async function mount(rol) {
   assert.equal(calls[0].paketNo, 7);
   assert.equal(calls[0].baslangic, '2026-11-28');
   await React.act(async () => resolveRequest());
-  assert.match(pm.el.querySelector('[role=status]').textContent, /Paket 2 · Kişisel Token Hesabı/);
+  assert.match(pm.el.querySelector('[role=status]').textContent, /Aylık abonelik paketi tanımlandı\. 1\.000 token kişisel hesabınıza yüklendi\./);
   assert.equal(pm.el.querySelector('[role=alertdialog]'), null);
   await pm.close();
 
@@ -95,10 +95,10 @@ async function mount(rol) {
   status = 403;
   await firma.click('Onayla');
   assert.match(firma.el.querySelector('[role=alert]').textContent, /yetkiniz yok/);
-  assert.equal(firma.el.querySelector('[role=status]').textContent, '');
+  assert.equal(firma.el.querySelector('[role=status]'), null);
   status = 200;
   await firma.click('Onayla');
-  assert.match(firma.el.querySelector('[role=status]').textContent, /Paket 1 · Firma Token Hesabı/);
+  assert.match(firma.el.querySelector('[role=status]').textContent, /Aylık abonelik paketi tanımlandı\. 500 token firma ortak hesabına yüklendi\./);
   assert.equal(calls.at(-1).hesapTuru, 'firma_ortak');
   await firma.close();
 
@@ -108,7 +108,7 @@ async function mount(rol) {
   status = 409;
   await gm.click('Onayla');
   assert.equal(gm.button('Onayla').disabled, true);
-  assert.equal(gm.el.querySelector('[role=status]').textContent, '');
+  assert.equal(gm.el.querySelector('[role=status]'), null);
   await gm.click('Vazgeç');
   await gm.click('Siparişi Tamamla');
   assert.match(gm.el.querySelector('[role=alert]').textContent, /Paket bilgileri değişti/);

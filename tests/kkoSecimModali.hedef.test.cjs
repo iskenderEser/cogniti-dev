@@ -31,8 +31,8 @@ function load(path) {
   const exports = {};
   vm.runInNewContext(ts.transpileModule(fs.readFileSync(path, 'utf8'), {
     compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX, target: ts.ScriptTarget.ES2022 },
-  }).outputText, { exports, require: n => mocks[n] ?? (n.startsWith('@/') ? load(n.slice(2) + '.ts') : require(n)),
-    sessionStorage: win.sessionStorage, crypto: globalThis.crypto, AbortSignal, window: win, Event: win.Event,
+  }).outputText, { exports, require: n => mocks[n] ?? (n.startsWith('@/') ? load(fs.existsSync(n.slice(2) + '.ts') ? n.slice(2) + '.ts' : n.slice(2) + '.tsx') : require(n)),
+    sessionStorage: win.sessionStorage, crypto: globalThis.crypto, AbortSignal, window: win, Event: win.Event, setTimeout, clearTimeout,
     fetch: async (url, options) => { calls.push({ url, body: JSON.parse(options.body) }); if (mode === 'lost') throw Error('network'); if (mode === 'wait') await new Promise(r => resolveRequest = r); if (mode === 'conflict') return Response.json({hata:'Kullanılabilir paket tokenı varken KKÖ seçilemez.'},{status:409}); return Response.json({ok:true,hesapId:'00000000-0000-4000-8000-000000000001'}); } });
   cache.set(path, exports); return exports;
 }
@@ -66,7 +66,7 @@ async function click(s, text) {
     const approve = [...s.el.querySelectorAll('button')].find(b => b.textContent === 'Onayla');
     ok(!approve.disabled);
     await click(s, 'Onayla'); ok(!s.el.querySelector('[role=alertdialog]'));
-    ok(s.el.textContent.includes('etkinleştirildi'));
+    ok(s.el.textContent.includes(URETICI_ROLLER.includes(rol) ? 'Kullandığın Kadar Öde (KKÖ) paketi kişisel hesabınız için tanımlandı.' : 'Kullandığın Kadar Öde (KKÖ) paketi firma ortak hesabı için tanımlandı.'));
     ok(calls.at(-1).body.hesapTuru === (URETICI_ROLLER.includes(rol) ? 'kisisel' : 'firma_ortak'));
     await click(s, 'Siparişi Tamamla'); await click(s, 'Vazgeç'); ok(!s.el.querySelector('[role=alertdialog]'));
     await s.close();

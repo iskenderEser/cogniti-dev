@@ -11,6 +11,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { useHataMesaji } from "@/components/HataMesaji";
+import { SUREC2_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import type { Firma, Kullanici, Takim, GirisSecimi, YeniFirmaBilgileri } from "../_types";
 import { ADMIN_ROLLER, FIRMA_ADMIN_ROLU } from "@/lib/utils/roller";
 
@@ -106,7 +107,7 @@ export function useAdminPanel(istenenFirmaId: string | null = null) {
     });
     const data = await res.json();
     if (!res.ok) { hata(data.hata ?? "Firma eklenemedi.", data.adim, data.detay); return false; }
-    basari("Firma oluşturuldu.");
+    basari(SUREC2_TOAST.firmaOlusturuldu);
     await firmalariCek();
     return true;
     } catch (err) {
@@ -261,7 +262,7 @@ export function useAdminPanel(istenenFirmaId: string | null = null) {
       hata(data.hata ?? "Firma durumu güncellenemedi.", data.adim, data.detay);
       return;
     }
-    basari(yeniDurum ? "Firma aktifleştirildi." : "Firma pasifleştirildi.");
+    basari(yeniDurum ? SUREC2_TOAST.firmaAktiflestirildi : SUREC2_TOAST.firmaPasiflestirildi);
     setFirmalar(prev =>
       prev.map(x => (x.firma_id === f.firma_id ? { ...x, aktif: yeniDurum } : x))
     );
@@ -294,7 +295,7 @@ export function useAdminPanel(istenenFirmaId: string | null = null) {
         hata(data.hata ?? "Logo ve kimlik ayarları güncellenemedi.", data.adim, data.detay);
         return false;
       }
-      basari(data.mesaj ?? "Logo ve kimlik ayarları güncellendi.");
+      basari(SUREC2_TOAST.logoKimlikGuncellendi);
       setFirmalar(prev =>
         prev.map(x =>
           x.firma_id === f.firma_id

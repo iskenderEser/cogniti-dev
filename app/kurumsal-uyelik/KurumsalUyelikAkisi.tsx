@@ -8,6 +8,7 @@ import type { YeniFirmaBilgileri } from "@/app/admin/_types";
 import adminStyles from "@/app/admin/admin.module.css";
 import formStyles from "@/app/admin/_components/yeni-firma-formu.module.css";
 import styles from "@/app/login/login.module.css";
+import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -16,6 +17,7 @@ import {
   AlertDialogFooter,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { sonrakiSayfaToastOku, SUREC1_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import IsimListesiSablonu from "./IsimListesiSablonu";
 import SozlesmeBelgeleri, { type YukluBelgeDurumu } from "./SozlesmeBelgeleri";
 
@@ -55,14 +57,21 @@ export default function KurumsalUyelikAkisi({
   const [adim2Tamam, setAdim2Tamam] = useState(false);
   const [gonderOnayAcik, setGonderOnayAcik] = useState(false);
   const [gonderiliyor, setGonderiliyor] = useState(false);
-  const [gonderimHatasi, setGonderimHatasi] = useState("");
-  const [taslakKayitMesaji, setTaslakKayitMesaji] = useState("");
+  const { mesajlar, basari, hata } = useHataMesaji();
 
   const firmaBilgisiRef = useRef<Partial<YeniFirmaBilgileri>>({});
   const isimListesiRef = useRef<string[][]>([]);
   const urunListesiRef = useRef<string[][]>([]);
   const ilkYuklemeBittiRef = useRef(false);
   const taslakZamanlayici = useRef<number | null>(null);
+
+  useEffect(() => {
+    const bekleyen = sonrakiSayfaToastOku();
+    if (bekleyen) {
+      if (bekleyen.tur === "hata") hata(bekleyen.mesaj);
+      else basari(bekleyen.mesaj);
+    }
+  }, [basari, hata]);
 
   useEffect(() => {
     const kontrol = new AbortController();
@@ -116,10 +125,10 @@ export default function KurumsalUyelikAkisi({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ firma_bilgileri: firmaAlani }),
       }).then((yanit) => {
-        if (yanit.ok) setTaslakKayitMesaji("Firma bilgileri taslak olarak kaydedildi.");
+        if (yanit.ok) basari(SUREC1_TOAST.firmaBilgisiTaslakKaydedildi);
       }).catch(() => {});
     }, 800);
-  }, [kilitliForm]);
+  }, [basari, kilitliForm]);
 
   const logoYukle = useCallback(async (dosya: File): Promise<{ url: string; dosyaAdi: string } | { hata: string }> => {
     const formData = new FormData();
@@ -132,13 +141,18 @@ export default function KurumsalUyelikAkisi({
       });
       const veri = await yanit.json().catch(() => null);
       if (!yanit.ok || typeof veri?.url !== "string") {
-        return { hata: veri?.hata || "Logo yüklenemedi." };
+        const hataMetni = veri?.hata || "Logo yüklenemedi.";
+        hata(hataMetni);
+        return { hata: hataMetni };
       }
+      basari(SUREC1_TOAST.belgeYuklendi("Firma logosu"));
       return { url: veri.url, dosyaAdi: typeof veri.dosya_adi === "string" ? veri.dosya_adi : dosya.name };
     } catch {
-      return { hata: "Logo yüklenemedi. Bağlantınızı kontrol edin." };
+      const hataMetni = "Logo yüklenemedi. Bağlantınızı kontrol edin.";
+      hata(hataMetni);
+      return { hata: hataMetni };
     }
-  }, []);
+  }, [basari, hata]);
 
   const logoKaldir = useCallback(async () => {
     try {
@@ -189,7 +203,6 @@ export default function KurumsalUyelikAkisi({
   async function basvuruyuGonder() {
     if (gonderiliyor || kilitliForm) return;
     setGonderiliyor(true);
-    setGonderimHatasi("");
     try {
       const { logo_url: _logo, ...firmaAlani } = firmaBilgisiRef.current;
       void _logo;
@@ -204,7 +217,7 @@ export default function KurumsalUyelikAkisi({
       });
       const veri = await yanit.json().catch(() => null);
       if (!yanit.ok) {
-        setGonderimHatasi(veri?.hata || "Başvuru gönderilemedi. Eksik alanları kontrol edin.");
+        hata(veri?.hata || "Başvuru gönderilemedi. Eksik alanları kontrol edin.");
         setGonderOnayAcik(false);
         return;
       }
@@ -215,9 +228,10 @@ export default function KurumsalUyelikAkisi({
         karar_notu: null,
       } : onceki);
       setGonderOnayAcik(false);
+      basari(SUREC1_TOAST.kurumsalBasvuruGonderildi);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch {
-      setGonderimHatasi("Başvuru gönderilemedi. Bağlantınızı kontrol edip tekrar deneyin.");
+      hata("Başvuru gönderilemedi. Bağlantınızı kontrol edip tekrar deneyin.");
       setGonderOnayAcik(false);
     } finally {
       setGonderiliyor(false);
@@ -240,6 +254,7 @@ export default function KurumsalUyelikAkisi({
 
   return (
     <>
+      <HataMesajiContainer mesajlar={mesajlar} />
       {basvuru.durum === "reddedildi" && (
         <div role="alert" className="mb-6 rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-950">
           <div className="mb-1.5 flex items-center gap-2 font-semibold">
@@ -292,7 +307,6 @@ export default function KurumsalUyelikAkisi({
         </h2>
         <p className={styles.kurumsalUyelikAdimNotu}>
           Kurumsal hesabınızın tanımlanması ve sözleşme süreçleri için firmanıza ait resmi bilgileri ve kurumsal logonuzu eksiksiz doldurun. (Logo: PNG, JPEG, SVG veya WebP, en fazla 5 MB)
-          {taslakKayitMesaji && !kilitliForm && <span className="ml-2 text-xs text-emerald-700">{taslakKayitMesaji}</span>}
         </p>
         <YeniFirmaFormu
           kurumsalUyelik
@@ -335,6 +349,8 @@ export default function KurumsalUyelikAkisi({
           saltOkunur={kilitliForm}
           ilkBelgeler={ilkBelgeler}
           onDurumDegisimi={setAdim2Tamam}
+          onBasari={basari}
+          onHata={hata}
         />
       </section>
 
@@ -366,6 +382,8 @@ export default function KurumsalUyelikAkisi({
                 kilitli={kilitliForm}
                 onSatirlarDegisti={isimSatirlariDegisti}
                 onTaslakKaydet={isimTaslakKaydet}
+                onBasari={basari}
+                onHata={hata}
               />
             </div>
           </div>
@@ -379,23 +397,19 @@ export default function KurumsalUyelikAkisi({
                 kilitli={kilitliForm}
                 onSatirlarDegisti={urunSatirlariDegisti}
                 onTaslakKaydet={urunTaslakKaydet}
+                onBasari={basari}
+                onHata={hata}
               />
             </div>
           </div>
 
           {!kilitliForm && (
             <div className="mt-6 flex flex-col items-end gap-3">
-              {gonderimHatasi && (
-                <p role="alert" className={`${adminStyles.notice} w-full`}>
-                  {gonderimHatasi}
-                </p>
-              )}
               <button
                 type="button"
                 className={`${adminStyles.button} ${adminStyles.primary} inline-flex items-center gap-2 px-6 py-2.5`}
                 disabled={gonderiliyor || !adim1Tamam || !adim2Tamam}
                 onClick={() => {
-                  setGonderimHatasi("");
                   setGonderOnayAcik(true);
                 }}
               >

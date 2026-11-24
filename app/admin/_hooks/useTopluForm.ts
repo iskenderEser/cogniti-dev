@@ -7,6 +7,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { SUREC2_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import type { Firma, OnizlemeKurulum, OnizlemeSatir } from "../_types";
 
 interface UseTopluFormProps {
@@ -96,15 +97,22 @@ export function useTopluForm({ seciliFirma, refreshKullanicilar, refreshTakimlar
           olusturulanBolge: data.olusturulanBolge ?? 0,
           hatalar: data.hatalar ?? [],
         };
-        setKaydetSonucu(sonuc);
         // K-A8: takım/bölge açıldıysa organizasyon görünümü tazelenir.
         if (sonuc.olusturulanTakim > 0 || sonuc.olusturulanBolge > 0) refreshTakimlar();
         if (sonuc.hatali === 0) {
-          basari(data.mesaj ?? "Toplu yükleme tamamlandı.");
+          basari(SUREC2_TOAST.topluYuklemeTamamlandi({
+            eklenen: sonuc.eklenen,
+            guncellenen: sonuc.guncellenen,
+            degismeyen: sonuc.degismeyen,
+          }));
+          setKaydetSonucu(null);
           setTopluDosya(null);
           setOnizlemeSatirlari(null);
           setOnizlemeKurulum(null);
-        } else hata("Paket bütünlüğü korunamadı; hiçbir kayıt oluşturulmadı.", "toplu kaydet");
+        } else {
+          setKaydetSonucu(sonuc);
+          hata("Paket bütünlüğü korunamadı; hiçbir kayıt oluşturulmadı.", "toplu kaydet");
+        }
         refreshKullanicilar();
       }
     } catch (err) {

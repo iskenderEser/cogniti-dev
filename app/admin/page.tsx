@@ -170,7 +170,7 @@ function AdminPanelIcerigi() {
               <div className={styles.cardBody}>{partnerler.yukleniyor ? <p role="status">Partner bilgisi yükleniyor…</p> : partnerler.hata ? <p role="alert">{partnerler.hata}</p> : !seciliPartner ? <p role="alert">Partner firma bulunamadı.</p> : partnerSayfasi === "hak-edisleri" ? <PartnerHakEdisleri key={partnerId} partnerId={partnerId} /> : partnerSayfasi === "raporlar" ? <PartnerRaporlari key={partnerId} partnerId={partnerId} /> : <p className={styles.empty}>Bu bölüm henüz kullanıma açılmadı.</p>}</div>
             </section> : <PartnerYonetimi />)
           ) : globalBolum === "uyelik-basvurulari" ? (
-            <UyelikBasvuruPaneli basari={admin.basari} />
+            <UyelikBasvuruPaneli basari={admin.basari} hata={admin.hata} />
           ) : globalBolum === "yeni-firma" ? (
             <YeniFirmaFormu onKaydet={admin.handleFirmaEkle} />
           ) : globalBolum === "bannerlar" ? (
@@ -194,7 +194,7 @@ function AdminPanelIcerigi() {
                 <KullaniciYonetimi key={f.firma_id} firma={f} kullanicilar={admin.kullanicilar} takimlar={admin.takimlar}
                   refreshKullanicilar={admin.refreshKullanicilar} refreshTakimlar={admin.refreshTakimlar} hata={admin.hata} basari={admin.basari} />
               ))}
-              {seciliSekme === "firma-admin-yonetimi" && !firmaAdmin && !platformSecili && <FirmaAdminYonetimi key={f.firma_id} firmaId={f.firma_id} onDegisti={aktif => admin.firmaBilgileriniYansit({ ...f, firma_admin_aktif: aktif })} />}
+              {seciliSekme === "firma-admin-yonetimi" && !firmaAdmin && !platformSecili && <FirmaAdminYonetimi key={f.firma_id} firmaId={f.firma_id} basari={admin.basari} hata={admin.hata} onDegisti={aktif => admin.firmaBilgileriniYansit({ ...f, firma_admin_aktif: aktif })} />}
               {(seciliSekme === "firmaayarlar" || seciliSekme === "firmaislemler") && <FirmaYonetimIslemleri key={`${f.firma_id}-${seciliSekme}`} firma={f} admin={admin} firmaAdmin={firmaAdmin} islemler={seciliSekme === "firmaislemler"} />}
 
               {(seciliSekme === "faturalar" || seciliSekme === "proforma-fatura" || faturaSayfasi) && !firmaAdmin && !platformSecili &&

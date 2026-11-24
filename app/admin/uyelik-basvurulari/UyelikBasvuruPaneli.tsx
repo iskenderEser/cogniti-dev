@@ -6,6 +6,7 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { SUREC1_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import styles from "../admin.module.css";
 import DavetDugmesi from "./DavetDugmesi";
 import KurumsalBasvuruInceleme from "./KurumsalBasvuruInceleme";
@@ -28,8 +29,10 @@ const tarih = new Intl.DateTimeFormat("tr-TR", {
 
 export default function UyelikBasvuruPaneli({
   basari,
+  hata: hataToast,
 }: {
   basari?: (mesaj: string) => void;
+  hata?: (mesaj: string) => void;
 }) {
   const [mod, setMod] = useState<"bekleyen" | "onaylanan" | "kurumsal">("bekleyen");
   const [basvurular, setBasvurular] = useState<Basvuru[] | null>(null);
@@ -38,8 +41,6 @@ export default function UyelikBasvuruPaneli({
   const [kontrolZamani, setKontrolZamani] = useState(0);
   const [silinecekId, setSilinecekId] = useState<string | null>(null);
   const [siliniyor, setSiliniyor] = useState(false);
-  const [silmeHatasi, setSilmeHatasi] = useState("");
-  const [bildirim, setBildirim] = useState("");
 
   useEffect(() => {
     const istek = new AbortController();
@@ -65,7 +66,6 @@ export default function UyelikBasvuruPaneli({
   async function basvuruyuSil(id: string) {
     if (siliniyor) return;
     setSiliniyor(true);
-    setSilmeHatasi("");
     try {
       const yanit = await fetch("/admin/api/uyelik-basvurulari", {
         method: "DELETE",
@@ -74,16 +74,15 @@ export default function UyelikBasvuruPaneli({
       });
       if (!yanit.ok) {
         const veri = await yanit.json().catch(() => null);
-        setSilmeHatasi(veri?.hata || "Başvuru silinemedi. Tekrar deneyin.");
+        hataToast?.(veri?.hata || "Başvuru silinemedi. Tekrar deneyin.");
         return;
       }
       setBasvurular(kayitlar => kayitlar?.filter(kayit => kayit.id !== id) ?? null);
       setSilinecekId(null);
-      setBildirim("Başvuru silindi.");
-      basari?.("Başvuru silindi.");
+      basari?.(SUREC1_TOAST.onBasvuruSilindi);
       yenile();
     } catch {
-      setSilmeHatasi("Başvuru silinemedi. Tekrar deneyin.");
+      hataToast?.("Başvuru silinemedi. Tekrar deneyin.");
     } finally {
       setSiliniyor(false);
     }
@@ -102,7 +101,6 @@ export default function UyelikBasvuruPaneli({
   const kartlar = suzulmus.length ? suzulmus : [null];
   const listeIcerigi = (
     <div className={styles.stack}>
-      <div role="status" hidden={!bildirim}>{bildirim}</div>
       {kartlar.map(aday => {
         const davetGecerli = Boolean(aday?.davet_bitis_at && Date.parse(aday.davet_bitis_at) > kontrolZamani);
         const durum = aday?.kabul_at ? "Davet kabul edildi" : davetGecerli ? "Davet gönderildi"
@@ -135,17 +133,16 @@ export default function UyelikBasvuruPaneli({
               id={aday?.id}
               engel={davetEngeli}
               onGonderildi={() => {
-                basari?.("Üyelik talebini onayladınız ve davet gönderdiniz.");
+                basari?.(SUREC1_TOAST.onBasvuruOnaylandi);
                 yenile();
               }}
+              onHata={hataToast}
             />
             {aday && <AlertDialog
               open={silinecekId === aday.id}
               onOpenChange={acik => {
                 if (siliniyor) return;
                 setSilinecekId(acik ? aday.id : null);
-                setSilmeHatasi("");
-                if (acik) setBildirim("");
               }}
             >
               <AlertDialogTrigger asChild>
@@ -158,7 +155,6 @@ export default function UyelikBasvuruPaneli({
                     {aday.firma_adi} firmasının başvurusu kalıcı olarak silinecek.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
-                {silmeHatasi && <p role="alert">{silmeHatasi}</p>}
                 <AlertDialogFooter>
                   <AlertDialogCancel disabled={siliniyor}>Vazgeç</AlertDialogCancel>
                   <AlertDialogAction disabled={siliniyor} onClick={olay => {
@@ -199,7 +195,7 @@ export default function UyelikBasvuruPaneli({
         secenekler={[
           { deger: "bekleyen", etiket: "Bekleyen Başvurular", icerik: listeIcerigi },
           { deger: "onaylanan", etiket: "Başvurusu Onaylananlar", icerik: listeIcerigi },
-          { deger: "kurumsal", etiket: "Kurumsal Üyelik İnceleme", icerik: <KurumsalBasvuruInceleme basari={basari} /> },
+          { deger: "kurumsal", etiket: "Kurumsal Üyelik İnceleme", icerik: <KurumsalBasvuruInceleme basari={basari} hata={hataToast} /> },
         ]}
       />
     </section>

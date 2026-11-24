@@ -6,9 +6,11 @@ import { FIRMA_ADMIN_ROLU } from "@/lib/utils/roller";
 import { firmaAdminBaslangicYolu } from "@/lib/admin/firmaAdminErisimi";
 import Link from "next/link";
 import CognitiLogo from "@/components/marka/CognitiLogo";
+import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
 import { createClient } from "@/lib/supabase/client";
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/app/providers/AuthProvider";
+import { sonrakiSayfaToastOku, SUREC2_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import { beniHatirlaKaydet } from "@/lib/utils/beniHatirla";
 import { useTema } from "@/app/providers/TemaProvider";
 import { Eye, EyeOff } from "lucide-react";
@@ -21,20 +23,27 @@ export default function LoginPage() {
   const [sifre, setSifre] = useState("");
   const [sifreGoster, setSifreGoster] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [hata, setHata] = useState("");
   // F-03/B: Beni hatırla — işaretsizse oturum tarayıcı kapanınca düşer.
   const [beniHatirla, setBeniHatirla] = useState(true);
   // F-03/A: Şifremi unuttum — giriş formuyla yer değiştiren sıfırlama görünümü.
   const [sifirlamaAcik, setSifirlamaAcik] = useState(false);
   const [sifirlamaEmail, setSifirlamaEmail] = useState("");
   const [sifirlamaGonderiliyor, setSifirlamaGonderiliyor] = useState(false);
-  const [sifirlamaMesaj, setSifirlamaMesaj] = useState("");
   const { kullanici, yukleniyor, cikisYap } = useAuth();
+  const { mesajlar, basari, hata } = useHataMesaji();
 
   const kimlikRef = useRef<HTMLInputElement>(null);
   const karsilamayaDonuluyor = useRef(false);
   const sifirlamaRef = useRef<HTMLInputElement>(null);
   const { tema, temaDegistir } = useTema();
+
+  useEffect(() => {
+    const bekleyen = sonrakiSayfaToastOku();
+    if (bekleyen) {
+      if (bekleyen.tur === "hata") hata(bekleyen.mesaj);
+      else basari(bekleyen.mesaj);
+    }
+  }, [basari, hata]);
 
   useEffect(() => {
     if (yukleniyor || karsilamayaDonuluyor.current) return;
@@ -65,7 +74,7 @@ export default function LoginPage() {
           if (!r.ok) throw new Error(d.hata || "Firma yönetimine erişiminiz kapalıdır.");
           if (!iptalEdildi && !karsilamayaDonuluyor.current) window.location.replace(firmaAdminBaslangicYolu(d.firma.firma_id));
         } catch (error) {
-          if (!iptalEdildi) setHata(error instanceof Error ? error.message : "Firma yönetimi erişimi doğrulanamadı.");
+          if (!iptalEdildi) hata(error instanceof Error ? error.message : "Firma yönetimi erişimi doğrulanamadı.");
         }
         return;
       }
@@ -84,7 +93,7 @@ export default function LoginPage() {
         if (iptalEdildi || karsilamayaDonuluyor.current) return;
         if (firma && firma.aktif === false) {
           await cikisYap();
-          setHata("Firmanızın sisteme erişimi şu anda kapalıdır. Lütfen yöneticinizle görüşün.");
+          hata("Firmanızın sisteme erişimi şu anda kapalıdır. Lütfen yöneticinizle görüşün.");
           return;
         }
       }
@@ -93,12 +102,11 @@ export default function LoginPage() {
     };
     yonlendir();
     return () => { iptalEdildi = true; };
-  }, [cikisYap, kullanici, yukleniyor]);
+  }, [cikisYap, hata, kullanici, yukleniyor]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setHata("");
 
     // Kimlik alanı e-posta VEYA cep telefonu kabul eder. Telefon (yalın rakam,
     // '@' yok) girildiyse sunucu ucu üç kimlik düzleminde telefonu tek bir Auth
@@ -114,12 +122,12 @@ export default function LoginPage() {
           body: JSON.stringify({ telefon: kimlik, sifre }),
         });
         const data = await res.json();
-        if (!res.ok) { setHata(data.hata ?? "Telefon veya şifre hatalı."); setLoading(false); return; }
+        if (!res.ok) { hata(data.hata ?? "Telefon veya şifre hatalı."); setLoading(false); return; }
         beniHatirlaKaydet(beniHatirla);
         // Tam sayfa geçiş: AuthProvider yeni oturumu temiz durumla yüklesin.
         window.location.href = vivaDonusYolu(window.location.search) ?? data.yonlendir ?? "/login";
       } catch {
-        setHata("Giriş yapılamadı; yeniden deneyin.");
+        hata("Giriş yapılamadı; yeniden deneyin.");
         setLoading(false);
       }
       return;
@@ -128,7 +136,7 @@ export default function LoginPage() {
     const supabase = createClient();
     const { data: giris, error } = await supabase.auth.signInWithPassword({ email: kimlik, password: sifre });
     if (error) {
-      setHata("E-posta veya şifre hatalı.");
+      hata("E-posta veya şifre hatalı.");
       setLoading(false);
       return;
     }
@@ -153,7 +161,6 @@ export default function LoginPage() {
   const handleSifirlamaGonder = async (e: React.FormEvent) => {
     e.preventDefault();
     setSifirlamaGonderiliyor(true);
-    setSifirlamaMesaj("");
     const hedefEposta = sifirlamaEmail.trim();
     const res = await fetch("/api/auth/sifre-sifirla", {
       method: "POST",
@@ -162,13 +169,11 @@ export default function LoginPage() {
     }).catch(() => null);
     setSifirlamaGonderiliyor(false);
     if (!res?.ok) {
-      setSifirlamaMesaj("Bağlantı gönderilemedi. Lütfen biraz sonra tekrar deneyin.");
+      hata("Bağlantı gönderilemedi. Lütfen biraz sonra tekrar deneyin.");
       return;
     }
     try { sessionStorage.setItem("cogniti_sifirlama_eposta", hedefEposta); } catch {}
-    setSifirlamaMesaj(
-      "E-posta adresiniz sistemde kayıtlıysa şifre sıfırlama bağlantısı gönderilecektir. Lütfen gelen ve spam (istenmeyen) kutunuzu kontrol ediniz."
-    );
+    basari(SUREC2_TOAST.sifreSifirlamaIstendi);
   };
 
   useEffect(() => {
@@ -177,6 +182,7 @@ export default function LoginPage() {
 
   return (
     <div className={styles.page}>
+      <HataMesajiContainer mesajlar={mesajlar} />
       <main>
         <section id="giris-alani" className={styles.authPage} aria-labelledby="giris-basligi">
           <div className={styles.authContent}>
@@ -190,11 +196,10 @@ export default function LoginPage() {
                     <label htmlFor="sifirlama-email">E-posta</label>
                     <input ref={sifirlamaRef} id="sifirlama-email" type="email" value={sifirlamaEmail} onChange={(e) => setSifirlamaEmail(e.target.value)} required autoComplete="email" placeholder="ornek@sirket.com" />
                   </div>
-                  {sifirlamaMesaj && <p className={`${styles.message} ${styles.resetMessage}`} role="status">{sifirlamaMesaj}</p>}
                   <button type="submit" disabled={sifirlamaGonderiliyor} className={styles.submit}>
                     {sifirlamaGonderiliyor ? "Gönderiliyor..." : "Sıfırlama Bağlantısı Gönder"}
                   </button>
-                  <button type="button" className={`${styles.link} ${styles.backLogin}`} onClick={() => { setSifirlamaAcik(false); setSifirlamaMesaj(""); }}>← Girişe dön</button>
+                  <button type="button" className={`${styles.link} ${styles.backLogin}`} onClick={() => setSifirlamaAcik(false)}>← Girişe dön</button>
                 </form>
               </>
             ) : (
@@ -214,9 +219,8 @@ export default function LoginPage() {
                 </div>
                 <div className={styles.options}>
                   <label className={styles.remember}><input type="checkbox" checked={beniHatirla} onChange={(e) => setBeniHatirla(e.target.checked)} />Beni hatırla</label>
-                  <button type="button" className={styles.link} onClick={() => { setSifirlamaEmail(email.includes("@") ? email : ""); setSifirlamaMesaj(""); setSifirlamaAcik(true); }}>Şifremi unuttum</button>
+                  <button type="button" className={styles.link} onClick={() => { setSifirlamaEmail(email.includes("@") ? email : ""); setSifirlamaAcik(true); }}>Şifremi unuttum</button>
                 </div>
-                {hata && <p className={`${styles.message} ${styles.error}`} role="alert">{hata}</p>}
                 <button type="submit" disabled={loading} className={styles.submit}>{loading ? "Giriş yapılıyor..." : "Giriş Yap"}</button>
               </form>
             )}

@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { SUREC3_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import { esnekPaketBakiyeTuru, esnekPaketSiparisIstegiGecerli, type EsnekPaketSiparisIstegi } from "@/lib/satinAlma/esnekPaket";
 
 type Teklif = { tokenAdedi: number; tarifeSurumu: number; birimFiyat: number };
@@ -16,9 +18,9 @@ export default function EsnekPaketSiparis({ rol, kullaniciId, teklif, fiyatYenil
   const [siparis, setSiparis] = useState<EsnekPaketSiparisIstegi | null>(null);
   const [bekliyor, setBekliyor] = useState(false);
   const [belirsiz, setBelirsiz] = useState(false);
-  const [mesaj, setMesaj] = useState("");
   const [hazir, setHazir] = useState(false);
   const kilit = useRef(false);
+  const { mesajlar, basari, hata, bilgi } = useHataMesaji();
   const kayitAnahtari = `cogniti-esnek-siparis:${kullaniciId}:${hesapTuru}`;
 
   useEffect(() => {
@@ -28,29 +30,29 @@ export default function EsnekPaketSiparis({ rol, kullaniciId, teklif, fiyatYenil
         const veri: unknown = JSON.parse(kayit);
         if (esnekPaketSiparisIstegiGecerli(veri)) {
           setSiparis(veri); setBelirsiz(true);
-          setMesaj("Önceki siparişin sonucu doğrulanmadı. Aynı siparişi yeniden deneyin.");
+          bilgi("Önceki siparişin sonucu doğrulanmadı. Aynı siparişi yeniden deneyin.");
         } else sessionStorage.removeItem(kayitAnahtari);
       }
       setHazir(true);
-    } catch { setMesaj("Sipariş kaydı okunamadı. Tarayıcının oturum depolamasına izin verin."); }
-  }, [kayitAnahtari]);
+    } catch { hata("Sipariş kaydı okunamadı. Tarayıcının oturum depolamasına izin verin."); }
+  }, [bilgi, hata, kayitAnahtari]);
 
   if (!hesapTuru || !kullaniciId) return null;
   const hesapAdi = hesapTuru === "kisisel" ? "Kişisel Token Hesabı" : "Firma Token Hesabı";
   const paketTutariKurus = siparis ? Math.round(siparis.birimFiyat * 100) * siparis.tokenAdedi : 0;
   const kdvKurus = Math.round(paketTutariKurus * 20 / 100);
   function ac() {
-    setMesaj(belirsiz ? "Önceki siparişin sonucunu aynı işlemle doğrulayacağız." : "");
+    if (belirsiz) bilgi("Önceki siparişin sonucunu aynı işlemle doğrulayacağız.");
     if (!belirsiz && teklif) setSiparis({ ...teklif, islemAnahtari: crypto.randomUUID() });
     setAcik(true);
   }
   async function onayla() {
-    if (!siparis || kilit.current) return;
-    kilit.current = true; setBekliyor(true); setMesaj("");
+    if (!hesapTuru || !siparis || kilit.current) return;
+    kilit.current = true; setBekliyor(true);
     // Yanıt kaybolursa sayfa yenilense bile aynı işlem anahtarı ile devam edilir.
     try { sessionStorage.setItem(kayitAnahtari, JSON.stringify(siparis)); }
     catch {
-      setMesaj("Sipariş kaydı saklanamadı. Tarayıcının oturum depolamasına izin verin.");
+      hata("Sipariş kaydı saklanamadı. Tarayıcının oturum depolamasına izin verin.");
       kilit.current = false; setBekliyor(false); return;
     }
     try {
@@ -60,25 +62,26 @@ export default function EsnekPaketSiparis({ rol, kullaniciId, teklif, fiyatYenil
       });
       const veri = await yanit.json();
       if (yanit.ok && veri.ok === true && typeof veri.siparisId === "string") {
+        const yuklenenToken = siparis.tokenAdedi;
         sessionStorage.removeItem(kayitAnahtari); setBelirsiz(false); setSiparis(null); setAcik(false);
-        setMesaj(`Siparişiniz kaydedildi. Tokenlar ${hesapAdi}na yüklendi.`);
+        basari(SUREC3_TOAST.esnekPaketTanimlandi(hesapTuru, yuklenenToken));
         window.dispatchEvent(new Event("cogniti-token-bakiye-yenile"));
       } else if ([400, 401, 403, 409].includes(yanit.status)) {
         sessionStorage.removeItem(kayitAnahtari); setBelirsiz(false); setSiparis(null); setAcik(false);
-        setMesaj(typeof veri.hata === "string" ? veri.hata : "Sipariş onaylanamadı.");
+        hata(typeof veri.hata === "string" ? veri.hata : "Sipariş onaylanamadı.");
         if (yanit.status === 409) fiyatYenile();
       } else {
-        setBelirsiz(true); setMesaj("Sipariş sonucu doğrulanamadı. Aynı siparişi yeniden deneyin.");
+        setBelirsiz(true); hata("Sipariş sonucu doğrulanamadı. Aynı siparişi yeniden deneyin.");
       }
     } catch {
-      setBelirsiz(true); setMesaj("Sipariş sonucu doğrulanamadı. Aynı siparişi yeniden deneyin.");
+      setBelirsiz(true); hata("Sipariş sonucu doğrulanamadı. Aynı siparişi yeniden deneyin.");
     } finally { kilit.current = false; setBekliyor(false); }
   }
   return <div className="mt-4 flex flex-col items-end gap-2">
+    <HataMesajiContainer mesajlar={mesajlar} />
     <Button type="button" disabled={!hazir || (!teklif && !belirsiz)} onClick={ac}>
       {belirsiz ? "Sipariş sonucunu kontrol et" : "Siparişi tamamla"}
     </Button>
-    {!acik && mesaj && <p role="status" className="text-sm text-muted-foreground">{mesaj}</p>}
     <AlertDialog open={acik} onOpenChange={v => { if (!kilit.current) setAcik(v); }}>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -93,7 +96,6 @@ export default function EsnekPaketSiparis({ rol, kullaniciId, teklif, fiyatYenil
           <dt className="font-semibold">KDV Dahil Paket Toplamı</dt>
           <dd className="text-right font-semibold">{para((paketTutariKurus + kdvKurus) / 100)} TL</dd>
         </dl>}
-        {mesaj && <p role="alert" className="text-sm">{mesaj}</p>}
         <AlertDialogFooter>
           <AlertDialogCancel disabled={bekliyor}>{belirsiz ? "Kapat" : "Vazgeç"}</AlertDialogCancel>
           <Button type="button" disabled={bekliyor || !siparis} onClick={() => void onayla()}>

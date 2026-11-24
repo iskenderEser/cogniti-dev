@@ -5,6 +5,7 @@ import { Check } from "lucide-react";
 import adminStyles from "@/app/admin/admin.module.css";
 import formStyles from "@/app/admin/_components/yeni-firma-formu.module.css";
 import styles from "@/app/login/login.module.css";
+import { SUREC1_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import { TASLAK_SOZLESME_ANAHTARI, taslakOku, taslakYaz } from "./kurumsalTaslak";
 
 export type ResmiBelgeTuru = "sozlesme" | "ticaret_sicil" | "vergi_levhasi";
@@ -25,6 +26,8 @@ export default function SozlesmeBelgeleri({
   ilkBelgeler,
   onDurumDegisimi,
   onBelgeGuncellendi,
+  onBasari,
+  onHata,
 }: {
   sozlesmeYolu: string | null;
   kilitli?: boolean;
@@ -32,11 +35,13 @@ export default function SozlesmeBelgeleri({
   ilkBelgeler?: YukluBelgeDurumu;
   onDurumDegisimi?: (tamamlandi: boolean) => void;
   onBelgeGuncellendi?: (belgeler: YukluBelgeDurumu) => void;
+  onBasari?: (mesaj: string) => void;
+  onHata?: (mesaj: string) => void;
 }) {
   const herhangiYuklu = Boolean(
     ilkBelgeler && BELGELER.some(({ tur }) => ilkBelgeler[tur]?.yuklu)
   );
-  const [indirmeDurumu, setIndirmeDurumu] = useState<"hazir" | "indiriliyor" | "basladi" | "hata">(
+  const [indirmeDurumu, setIndirmeDurumu] = useState<"hazir" | "indiriliyor" | "basladi">(
     herhangiYuklu ? "basladi" : "hazir"
   );
   const [belgeDurumu, setBelgeDurumu] = useState<YukluBelgeDurumu>(
@@ -47,7 +52,6 @@ export default function SozlesmeBelgeleri({
     }
   );
   const [yuklenenTur, setYuklenenTur] = useState<ResmiBelgeTuru | null>(null);
-  const [yuklemeHatasi, setYuklemeHatasi] = useState("");
 
   useEffect(() => {
     if (herhangiYuklu) {
@@ -71,7 +75,7 @@ export default function SozlesmeBelgeleri({
   async function sozlesmeyiIndir() {
     if (kilitli || indirmeDurumu === "indiriliyor") return;
     if (!sozlesmeYolu) {
-      setIndirmeDurumu("hata");
+      onHata?.("Üyelik sözleşmesi henüz eklenmedi.");
       return;
     }
     setIndirmeDurumu("indiriliyor");
@@ -89,14 +93,15 @@ export default function SozlesmeBelgeleri({
       setIndirmeDurumu("basladi");
       taslakYaz(TASLAK_SOZLESME_ANAHTARI, { indirmeBasladi: true });
     } catch {
-      setIndirmeDurumu("hata");
+      setIndirmeDurumu("hazir");
+      onHata?.("Sözleşme indirilemedi. Tekrar deneyin.");
     }
   }
 
   async function belgeYukle(tur: ResmiBelgeTuru, dosya: File) {
     if (kilitli || saltOkunur || yuklenenTur) return;
     setYuklenenTur(tur);
-    setYuklemeHatasi("");
+    const etiket = BELGELER.find((b) => b.tur === tur)?.etiket ?? "Belge";
     try {
       const formData = new FormData();
       formData.append("tur", tur);
@@ -107,7 +112,7 @@ export default function SozlesmeBelgeleri({
       });
       const veri = await yanit.json().catch(() => null);
       if (!yanit.ok) {
-        setYuklemeHatasi(veri?.hata || "Belge yüklenemedi. Tekrar deneyin.");
+        onHata?.(veri?.hata || "Belge yüklenemedi. Tekrar deneyin.");
         return;
       }
       setBelgeDurumu((onceki) => {
@@ -118,8 +123,9 @@ export default function SozlesmeBelgeleri({
         onBelgeGuncellendi?.(guncel);
         return guncel;
       });
+      onBasari?.(SUREC1_TOAST.belgeYuklendi(etiket));
     } catch {
-      setYuklemeHatasi("Belge yüklenemedi. Bağlantınızı kontrol edip tekrar deneyin.");
+      onHata?.("Belge yüklenemedi. Bağlantınızı kontrol edip tekrar deneyin.");
     } finally {
       setYuklenenTur(null);
     }
@@ -178,16 +184,6 @@ export default function SozlesmeBelgeleri({
             );
           })}
         </div>
-        {indirmeDurumu === "hata" && (
-          <p role="alert" className={adminStyles.notice}>
-            {sozlesmeYolu ? "Sözleşme indirilemedi. Tekrar deneyin." : "Üyelik sözleşmesi henüz eklenmedi."}
-          </p>
-        )}
-        {yuklemeHatasi && (
-          <p role="alert" className={adminStyles.notice}>
-            {yuklemeHatasi}
-          </p>
-        )}
       </div>
     </div>
   );

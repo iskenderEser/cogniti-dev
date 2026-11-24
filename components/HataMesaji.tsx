@@ -46,7 +46,7 @@ export default function HataMesaji({
   if (!gorunsun) return null;
 
   return (
-    <div style={{
+    <div role={tur === "hata" ? "alert" : "status"} style={{
       background: ayar.bg,
       border: `0.5px solid ${ayar.border}`,
       borderRadius: "10px",

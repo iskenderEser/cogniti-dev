@@ -13,6 +13,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { SUREC1_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import { ilSecenekleri, ilinIlceleri } from "@/lib/firma/konumReferansi";
 import styles from "../admin.module.css";
 
@@ -73,15 +74,15 @@ function tarihYaz(deger: string | null) {
 
 export default function KurumsalBasvuruInceleme({
   basari,
+  hata: hataToast,
 }: {
   basari?: (mesaj: string) => void;
+  hata?: (mesaj: string) => void;
 }) {
   const [durum, setDurum] = useState<FiltreDurumu>("incelemede");
   const [kayitlar, setKayitlar] = useState<KurumsalBasvuruKaydi[] | null>(null);
   const [secili, setSecili] = useState<KurumsalBasvuruKaydi | null>(null);
   const [yukleniyor, setYukleniyor] = useState(true);
-  const [hata, setHata] = useState("");
-  const [islemMesaji, setIslemMesaji] = useState("");
   const [onayModalAcik, setOnayModalAcik] = useState(false);
   const [redModalAcik, setRedModalAcik] = useState(false);
   const [redAciklama, setRedAciklama] = useState("");
@@ -89,7 +90,6 @@ export default function KurumsalBasvuruInceleme({
 
   const yukle = useCallback(async () => {
     setYukleniyor(true);
-    setHata("");
     try {
       const yanit = await fetch(`/admin/api/kurumsal-basvurular?durum=${encodeURIComponent(durum)}`, {
         cache: "no-store",
@@ -99,11 +99,11 @@ export default function KurumsalBasvuruInceleme({
       setKayitlar(veri);
       setSecili((onceki) => (onceki ? veri.find((k) => k.on_basvuru_id === onceki.on_basvuru_id) ?? null : null));
     } catch {
-      setHata("Kurumsal üyelik başvuruları alınamadı.");
+      hataToast?.("Kurumsal üyelik başvuruları alınamadı.");
     } finally {
       setYukleniyor(false);
     }
-  }, [durum]);
+  }, [durum, hataToast]);
 
   useEffect(() => {
     void yukle();
@@ -112,12 +112,10 @@ export default function KurumsalBasvuruInceleme({
   async function kararVer(karar: "onayla" | "reddet") {
     if (!secili || kararSuruyor) return;
     if (karar === "reddet" && redAciklama.trim().length < 3) {
-      setHata("Reddetmek için eksik veya hatalı alanları açıklayın.");
+      hataToast?.("Reddetmek için eksik veya hatalı alanları açıklayın.");
       return;
     }
     setKararSuruyor(true);
-    setHata("");
-    setIslemMesaji("");
     try {
       const yanit = await fetch("/admin/api/kurumsal-basvurular", {
         method: "POST",
@@ -130,27 +128,26 @@ export default function KurumsalBasvuruInceleme({
       });
       const veri = await yanit.json().catch(() => null);
       if (!yanit.ok) {
-        setHata(veri?.hata || "İşlem tamamlanamadı.");
+        hataToast?.(veri?.hata || "İşlem tamamlanamadı.");
         return;
       }
+      const firmaAdi = veri?.firma_adi || secili.firma_bilgileri.firma_adi || secili.on_basvuru?.firma_adi || "Firma";
       if (karar === "onayla") {
-        const mesaj = `${veri?.firma_adi || secili.firma_bilgileri.firma_adi || "Firma"} onaylandı; firma kaydı, listeleri ve Firma Admini hesabı oluşturuldu.`;
-        setIslemMesaji(mesaj);
-        basari?.(mesaj);
+        basari?.(SUREC1_TOAST.kurumsalBasvuruOnaylandi(firmaAdi));
         setOnayModalAcik(false);
       } else {
-        const mesaj = veri?.eposta_gonderildi
-          ? "Başvuru reddedildi ve düzeltme e-postası başvurana gönderildi."
-          : `Başvuru reddedildi ancak e-posta gönderilemedi: ${veri?.eposta_uyari || "bilinmeyen hata"}`;
-        setIslemMesaji(mesaj);
-        if (veri?.eposta_gonderildi) basari?.(mesaj);
+        if (veri?.eposta_gonderildi) {
+          basari?.(SUREC1_TOAST.kurumsalBasvuruReddedildi(firmaAdi));
+        } else {
+          hataToast?.(`Başvuru reddedildi ancak e-posta gönderilemedi: ${veri?.eposta_uyari || "bilinmeyen hata"}`);
+        }
         setRedModalAcik(false);
         setRedAciklama("");
       }
       setSecili(null);
       await yukle();
     } catch {
-      setHata("İşlem sırasında bağlantı hatası oluştu.");
+      hataToast?.("İşlem sırasında bağlantı hatası oluştu.");
     } finally {
       setKararSuruyor(false);
     }
@@ -177,7 +174,6 @@ export default function KurumsalBasvuruInceleme({
               if (kararSuruyor) return;
               setDurum(v);
               setSecili(null);
-              setIslemMesaji("");
             }}
             secenekler={[
               { deger: "incelemede", etiket: "İncelemede", disabled: kararSuruyor },
@@ -187,8 +183,6 @@ export default function KurumsalBasvuruInceleme({
             ]}
           />
         </div>
-        {hata && <p role="alert" className={styles.notice}>{hata}</p>}
-        {islemMesaji && <p role="status" className={styles.notice}>{islemMesaji}</p>}
         {yukleniyor && !kayitlar && <p className={styles.empty} role="status">Kurumsal başvurular yükleniyor…</p>}
         {kayitlar && (
           <div className={styles.tableWrap}>
@@ -218,8 +212,6 @@ export default function KurumsalBasvuruInceleme({
                         disabled={kararSuruyor}
                         onClick={() => {
                           setSecili(k);
-                          setHata("");
-                          setIslemMesaji("");
                         }}
                       >
                         İncele

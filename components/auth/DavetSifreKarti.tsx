@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { SifreBelirlemeFormu } from "@/components/auth/SifreBelirlemeFormu";
 import { createClient } from "@/lib/supabase/client";
 import { guvenliCikisYap } from "@/lib/auth/guvenliCikis";
+import { sonrakiSayfaToastYaz, SUREC2_TOAST } from "@/lib/bildirimler/toastMesajlari";
 
 export function DavetSifreKarti({ token }: { token: string | null }) {
   useEffect(() => {
@@ -19,6 +20,7 @@ export function DavetSifreKarti({ token }: { token: string | null }) {
         const d = await r.json();
         if (!r.ok || !d.tamamlandi) throw new Error(d.hata ?? "Kayıt tamamlanamadı.");
         await guvenliCikisYap(createClient());
+        sonrakiSayfaToastYaz(SUREC2_TOAST.sifreOlusturuldu);
         window.location.replace("/login");
       }} />}
     </div>

@@ -3,7 +3,9 @@
 import { useState, type FormEvent } from "react";
 import { Check, Eye, EyeOff, UserCheck } from "lucide-react";
 import styles from "@/app/admin/admin.module.css";
+import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
 import { SIFRE_KURAL_ACIKLAMASI, sifreKuralHatasi } from "@/lib/auth/sifreKurali";
+import { sonrakiSayfaToastYaz, SUREC1_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import { BASVURU_ALINDI, DAVET_BILGISI } from "./basvuruMesaji";
 import SurecAdimlari from "./SurecAdimlari";
 
@@ -11,9 +13,9 @@ const FORM_BASLIGI = "Cogniti Üyelik Başvuru Formu";
 
 export default function BasvuruIslemi({ token }: { token: string }) {
   const [tamamlandi, tamamlandiYaz] = useState(false);
-  const [hata, hataYaz] = useState("");
   const [bekliyor, beklet] = useState(false);
   const [sifreGoster, setSifreGoster] = useState(false);
+  const { mesajlar, basari, hata } = useHataMesaji();
 
   async function gonder(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -22,12 +24,11 @@ export default function BasvuruIslemi({ token }: { token: string }) {
     if (!token) {
       const sifreHatasi = sifreKuralHatasi(String(alanlar.sifre ?? ""));
       if (sifreHatasi) {
-        hataYaz(sifreHatasi);
+        hata(sifreHatasi);
         return;
       }
     }
     beklet(true);
-    hataYaz("");
     try {
       const yanit = await fetch("/uyelik-basvurusu/api", {
         method: "POST", headers: { "Content-Type": "application/json" },
@@ -35,13 +36,16 @@ export default function BasvuruIslemi({ token }: { token: string }) {
       });
       const sonuc = await yanit.json();
       if (!yanit.ok) throw new Error(sonuc.hata);
-      if (token) window.location.replace("/kurumsal-uyelik");
-      else {
+      if (token) {
+        sonrakiSayfaToastYaz(SUREC1_TOAST.davetDogrulandi);
+        window.location.replace("/kurumsal-uyelik");
+      } else {
         form.reset();
         tamamlandiYaz(true);
+        basari(SUREC1_TOAST.onBasvuruAlindi);
       }
     } catch (error) {
-      hataYaz(error instanceof Error ? error.message : "İşlem tamamlanamadı.");
+      hata(error instanceof Error ? error.message : "İşlem tamamlanamadı.");
     } finally {
       beklet(false);
     }
@@ -49,6 +53,7 @@ export default function BasvuruIslemi({ token }: { token: string }) {
 
   if (tamamlandi) return (
     <div className="grid flex-1 place-items-center">
+      <HataMesajiContainer mesajlar={mesajlar} />
       <div className="w-full max-w-[520px]">
         <SurecAdimlari aktifAdim={2} />
         <section aria-labelledby="basvuru-basligi" className="w-full rounded-[22px] border border-(--tema-cizgi) bg-(--tema-yuzey) px-5 py-9 text-center shadow-[0_14px_40px_rgb(15_23_42/0.06)] sm:px-11 sm:py-14">
@@ -92,7 +97,6 @@ export default function BasvuruIslemi({ token }: { token: string }) {
         </div>
         {!token && <span className="text-[10px] font-normal">{SIFRE_KURAL_ACIKLAMASI}</span>}
       </div>
-      {hata && <p role="alert" className={token ? "text-xs text-[var(--tema-hata)]" : undefined}>{hata}</p>}
       <div className={token ? "mt-2" : styles.formActions}>
         <button className={`${styles.button} ${styles.primary} ${token ? "w-full justify-center" : ""}`} disabled={bekliyor} type="submit">
           {token ? "Daveti Kabul Et ve Giriş Yap" : "Başvuruyu gönder"}
@@ -103,6 +107,7 @@ export default function BasvuruIslemi({ token }: { token: string }) {
 
   if (token) return (
     <div className="grid flex-1 place-items-center">
+      <HataMesajiContainer mesajlar={mesajlar} />
       <div className="w-full max-w-[520px]">
         <SurecAdimlari aktifAdim={3} />
         <section aria-labelledby="davet-kabul-basligi" className="w-full rounded-[22px] border border-(--tema-cizgi) bg-(--tema-yuzey) px-5 py-9 shadow-[0_14px_40px_rgb(15_23_42/0.06)] sm:px-11 sm:py-12">
@@ -123,6 +128,7 @@ export default function BasvuruIslemi({ token }: { token: string }) {
   );
 
   return <>
+    <HataMesajiContainer mesajlar={mesajlar} />
     <SurecAdimlari aktifAdim={1} />
     <h1 className="mb-3 text-xl font-normal">{FORM_BASLIGI}</h1>
     <p className="mb-7 text-sm leading-relaxed text-(--tema-ikincil-metin)">

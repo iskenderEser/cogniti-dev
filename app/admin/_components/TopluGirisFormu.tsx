@@ -216,8 +216,8 @@ function TopluGirisFormu(p: TopluGirisFormuProps) {
         </p>
       )}
 
-      {/* Kaydet sonucu — atomik paket başarılıysa özetlenir. */}
-      {p.kaydetSonucu && (
+      {/* Yalnızca hatalı satırlar varsa satır bazlı hata listesi gösterilir; başarı özeti toast ile iletilir. */}
+      {p.kaydetSonucu && p.kaydetSonucu.hatali > 0 && (
         <div
           style={{
             marginTop: "16px",
