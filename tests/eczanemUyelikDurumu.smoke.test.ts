@@ -6,7 +6,7 @@ const route = readFileSync("app/(panel)/eczanem/eczane/api/musteriler/route.ts",
 const sql = readFileSync("scripts/sql/eczanem_eczane_yonetim_paketi.sql", "utf8");
 
 test("mutlu: müşteri durumu eczaneye özel üyelik bağında okunur ve yazılır", () => {
-  assert.match(route, /from\("v_eczanem_musteri_liste_admin"\)[\s\S]*?select\("musteri_id, ad_soyad, telefon, eposta, aktif_mi, created_at"/);
+  assert.match(route, /from\("v_eczanem_musteri_liste_admin"\)[\s\S]*?select\("musteri_id, ad_soyad, telefon, eposta, aktif_mi, created_at(?:, [^"]+)?"/);
   assert.match(route, /rpc\("eczanem_musteri_durum_degistir"/);
   assert.match(sql, /UPDATE public\.eczanem_uyelikler[\s\S]*SET aktif_mi = p_aktif_mi/);
   assert.match(route, /aktif_mi: kayit\.aktif_mi/);

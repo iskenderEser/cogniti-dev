@@ -7,6 +7,7 @@ import * as jsx from "react/jsx-runtime";
 import ts from "typescript";
 import { Window } from "happy-dom";
 import * as kontrol from "@/lib/agora/partnerKaydi";
+import * as toastMesajlari from "@/lib/bildirimler/toastMesajlari";
 
 test("Üyelik formu doğrulama, çift gönderim, hata sonrası tekrar ve başarılı kayıt kilidini korur", async () => {
   const dom = new Window({ url: "http://localhost/partner/basvuru" });
@@ -27,6 +28,7 @@ test("Üyelik formu doğrulama, çift gönderim, hata sonrası tekrar ve başar�
     "@/components/ui/input":{Input:(props:React.ComponentProps<"input">)=>React.createElement("input",props)},
     "@/components/ui/button":{Button:(props:React.ComponentProps<"button">)=>React.createElement("button",props)},
     "@/lib/agora/partnerKaydi":kontrol,
+    "@/lib/bildirimler/toastMesajlari":toastMesajlari,
     "@/lib/agora/partnerProfil":{ partnerIbanGecerli: (iban: string) => /^TR\d{24}$/.test(iban) },
     "../partner.module.css":{default:new Proxy({},{get:(_,key)=>String(key)})},
   };

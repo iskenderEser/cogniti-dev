@@ -268,7 +268,7 @@ export async function kurumsalBasvuruGonderildiEpostalariGonder(params: {
       {
         from,
         to: [params.eposta],
-        subject: "Cogniti kurumsal üyelik başvurunuz alındı",
+        subject: "Cogniti Kurumsal Üyelik Başvurunuz Alındı",
         html:
           `<p style="margin: 0 0 16px 0;">${kacir(hitap)}</p>` +
           `<p style="margin: 0 0 16px 0;">${kacir(`${params.firmaAdi} adına yaptığınız kurumsal üyelik başvurunuz alınmıştır.`)}</p>` +
@@ -294,7 +294,7 @@ export async function kurumsalBasvuruGonderildiEpostalariGonder(params: {
           from,
           to: [adminEposta],
           reply_to: params.eposta,
-          subject: `Kurumsal üyelik başvurusu incelemesi — ${params.firmaAdi}`,
+          subject: `Kurumsal Üyelik Başvurusu İncelemesi — ${params.firmaAdi}`,
           html:
             `<p style="margin: 0 0 16px 0;">Yeni bir kurumsal üyelik başvurusu incelemeye gönderildi:</p>` +
             `<ul style="margin: 0; padding-left: 20px;">` +
@@ -345,7 +345,7 @@ export async function kurumsalBasvuruOnayEpostasiGonder(params: {
       body: JSON.stringify({
         from,
         to: [params.eposta],
-        subject: "Cogniti kurumsal üyeliğiniz onaylandı",
+        subject: "Cogniti Kurumsal Üyeliğiniz Onaylandı",
         html:
           `<p style="margin: 0 0 16px 0;">${kacir(hitap)}</p>` +
           `<p style="margin: 0 0 16px 0;">${kacir(`${params.firmaAdi} adına yaptığınız kurumsal üyelik başvurunuz onaylanmıştır.`)}</p>` +
@@ -391,7 +391,7 @@ export async function kurumsalBasvuruRedEpostasiGonder(params: {
       body: JSON.stringify({
         from,
         to: [params.eposta],
-        subject: "Cogniti kurumsal üyelik başvurunuz hakkında",
+        subject: "Cogniti Kurumsal Üyelik Başvurunuz Hakkında",
         html:
           `<p style="margin: 0 0 16px 0;">${kacir(hitap)}</p>` +
           `<p style="margin: 0 0 16px 0;">Kurumsal üyelik başvurunuzun tamamlanabilmesi için aşağıdaki eksik veya hatalı bilgilerin eklenmesi/düzeltilerek Cogniti platformu üzerinden yeniden yüklenmesi gerekmektedir:</p>` +

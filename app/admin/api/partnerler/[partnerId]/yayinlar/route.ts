@@ -1,11 +1,13 @@
 import { adminGirisKontrol } from "@/lib/utils/adminGirisKontrol";
 import { createAdminClient } from "@/lib/supabase/server";
+import { partnerAdminYayinDurumEpostasiGonder } from "@/lib/agora/partnerEposta";
 import { partnerJsonOku,partnerYanit } from "@/lib/agora/partnerHttp";
 import { partnerEgitimListesiGecerli } from "@/lib/agora/partnerEgitimleri";
 import { medyaUuid,partnerVideoSonucunuIsle } from "@/lib/agora/partnerMedyaSunucu";
 import { bunnyVideoDurumu } from "@/lib/video/bunnyYukleme";
 import { bunnyCdnImzaliUrl } from "@/lib/ogrenmeAraci/bunnyStorage";
 import { partnerAramaFiyati } from "@/lib/agora/yayinArama";
+import { SUREC14_TOAST } from "@/lib/bildirimler/toastMesajlari";
 type Context={params:Promise<{partnerId:string}>};
 interface Dosya {yukleme_id:string;rol?:string;video_guid?:string;dosya_yolu?:string;dosya_adi:string;durum:string;sure_saniye?:number|null}
 function dosyalar(d:{egitim:{durum:string;yayin_tanitim_video_id:string|null;yayin_egitim_video_id:string|null;yayin_podcast_id:string|null};videolar:Dosya[];podcastler:Dosya[]}) {
@@ -52,9 +54,9 @@ export async function POST(r:Request,c:Context) {
   const {partnerId}=await c.params,d=body.veri;
   if(!medyaUuid(partnerId)||!medyaUuid(d.egitim_id)||!["aktif","pasif","sil"].includes(String(d.islem))||!Number.isSafeInteger(d.surum)||Number(d.surum)<1)return partnerYanit({hata:"Geçersiz yayın işlemi."},400);
   const db=createAdminClient(AbortSignal.timeout(25000));
+  const {data:detay,error:detayHatasi}=await db.rpc("agora_partner_admin_yayin_detayi",{p_admin_id:auth.kullaniciId,p_partner_id:partnerId,p_egitim_id:d.egitim_id});
   if(d.islem==="aktif"){
-   const {data:detay,error}=await db.rpc("agora_partner_admin_yayin_detayi",{p_admin_id:auth.kullaniciId,p_partner_id:partnerId,p_egitim_id:d.egitim_id});
-   if(error)throw new Error("Yayın dosyaları doğrulanamadı.");if(!detay)return partnerYanit({hata:"Yayın bulunamadı."},404);
+   if(detayHatasi)throw new Error("Yayın dosyaları doğrulanamadı.");if(!detay)return partnerYanit({hata:"Yayın bulunamadı."},404);
    if(detay.egitim.durum==="taslak")return partnerYanit({hata:"Taslak yayını önce partner Agora’da yayımlamalıdır."},409);
    const m=dosyalar(detay),videolar=detay.egitim.yayin_araci==="video"?[m.egitimVideo]:[];
    for(const v of videolar){
@@ -68,6 +70,9 @@ export async function POST(r:Request,c:Context) {
   if(error)throw new Error("İşlem sonucu doğrulanamadı. Listeyi yenileyin.");
   const hatalar:Record<string,string>={bulunamadi:"Yayın bulunamadı.",cakisma:"Yayın değişmiş. Listeyi yenileyin.",taslak:"Taslak yayını önce partner Agora’da yayımlamalıdır.",onay_eksik:"Partnerin üyelik onayı tamamlanmalıdır.",dosya_eksik:"Yayın dosyaları tamamlanmamış."};
   if(data!=="tamam")return partnerYanit({hata:hatalar[String(data)]??"Yayın işlemi tamamlanamadı."},data==="bulunamadi"?404:409);
-  return partnerYanit({mesaj:d.islem==="aktif"?"Yayın aktife alındı.":d.islem==="pasif"?"Yayın pasife alındı.":"Yayın silindi."});
+  if(detay?.egitim?.egitim_adi){
+   try{await partnerAdminYayinDurumEpostasiGonder({db,adminId:auth.kullaniciId,partnerId,egitimId:String(d.egitim_id),egitimAdi:String(detay.egitim.egitim_adi),partnerEgitimId:detay.egitim.partner_egitim_id?String(detay.egitim.partner_egitim_id):null,islem:d.islem as "aktif"|"pasif"|"sil",surum:Number(d.surum)});}catch{/* İşlem kaydı e-posta hatasından bağımsızdır. */}
+  }
+  return partnerYanit({mesaj:d.islem==="aktif"?SUREC14_TOAST.adminYayinAktif:d.islem==="pasif"?SUREC14_TOAST.adminYayinPasif:SUREC14_TOAST.adminYayinSilindi});
  }catch(e){return partnerYanit({hata:e instanceof Error?e.message:"Yayın işlemi tamamlanamadı."},503);}
 }

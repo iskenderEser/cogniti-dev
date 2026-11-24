@@ -135,7 +135,7 @@ export async function abonelikBaslatildiEpostasiGonder(
     await resendSatinAlmaGonder({
       to: alici.eposta,
       cc: alici.ccEposta,
-      subject: "Cogniti abonelik paketiniz başlatıldı",
+      subject: "Cogniti Abonelik Paketiniz Başlatıldı",
       html:
         `<p style="margin: 0 0 16px 0;">${kacir(hitap)}</p>` +
         `<p style="margin: 0 0 16px 0;">${kacir(`${hesap} için abonelik paketiniz başlatılmış ve bu ayın token bakiyesi hesabınıza yüklenmiştir.`)}</p>` +
@@ -185,7 +185,7 @@ export async function esnekPaketYuklendiEpostasiGonder(
     await resendSatinAlmaGonder({
       to: alici.eposta,
       cc: alici.ccEposta,
-      subject: "Cogniti esnek paketiniz hesabınıza yüklendi",
+      subject: "Cogniti Esnek Paketiniz Yüklendi",
       html:
         `<p style="margin: 0 0 16px 0;">${kacir(hitap)}</p>` +
         `<p style="margin: 0 0 16px 0;">${kacir(`${hesap} için esnek paket alımınız tamamlanmış ve token bakiyeniz hesabınıza yüklenmiştir.`)}</p>` +
@@ -230,7 +230,7 @@ export async function kkoBaslatildiEpostasiGonder(
     await resendSatinAlmaGonder({
       to: alici.eposta,
       cc: alici.ccEposta,
-      subject: "Cogniti Kullandığın Kadar Öde (KKÖ) kullanımınız başlatıldı",
+      subject: "Cogniti Kullandığın Kadar Öde Paketi Başlatıldı",
       html:
         `<p style="margin: 0 0 16px 0;">${kacir(hitap)}</p>` +
         `<p style="margin: 0 0 16px 0;">${kacir(`${hesap} için Kullandığın Kadar Öde (KKÖ) kullanımınız aktif edilmiştir.`)}</p>` +
@@ -296,7 +296,7 @@ export async function icerikUretimiOnaylandiEpostasiGonder(
     await resendSatinAlmaGonder({
       to: alici.eposta,
       cc: alici.ccEposta,
-      subject: "Cogniti içerik üretimi siparişiniz onaylandı",
+      subject: "Cogniti İçerik Üretimi Siparişiniz Onaylandı",
       html:
         `<p style="margin: 0 0 16px 0;">${kacir(hitap)}</p>` +
         `<p style="margin: 0 0 16px 0;">${kacir(`${hesap} üzerinden içerik üretimi siparişiniz onaylanmış ve ilgili token tutarı hesabınızdan tahsil edilmiştir.`)}</p>` +

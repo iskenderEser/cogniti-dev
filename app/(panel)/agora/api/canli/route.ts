@@ -1,4 +1,6 @@
 import { agoraVitrinBaglami } from "@/lib/agora/vitrinSunucu";
+import { aliciCanliSiparisiEpostalariGonder } from "@/lib/agora/aliciEposta";
+import { partnerCanliSiparisiEpostasiGonder } from "@/lib/agora/partnerEposta";
 import { partnerJsonOku, partnerYanit } from "@/lib/agora/partnerHttp";
 import { medyaUuid } from "@/lib/agora/partnerMedyaSunucu";
 import { URETICI_ROLLER } from "@/lib/utils/roller";
@@ -66,6 +68,17 @@ export async function POST(request: Request) {
     if (!data?.siparis_id) {
       return partnerYanit({ hata: "Sipariş sonucu doğrulanamadı." }, 503);
     }
+
+    const siparisId = String(data.siparis_id);
+    await Promise.allSettled([
+      partnerCanliSiparisiEpostasiGonder(b.db, siparisId),
+      aliciCanliSiparisiEpostalariGonder({
+        db: b.db,
+        siparisId,
+        aliciId: b.authId,
+        borcaYazilanToken: Number(data.borca_yazilan_token ?? 0),
+      }),
+    ]);
 
     return partnerYanit(data);
   } catch {

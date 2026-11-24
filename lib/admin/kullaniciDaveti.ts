@@ -77,7 +77,7 @@ export async function firmaKullaniciDavetiGonder(
       body: JSON.stringify({
         from,
         to: [eposta],
-        subject: "Cogniti hesabınız oluşturuldu — şifrenizi belirleyin",
+        subject: "Cogniti Hesabınız Açıldı Şifrenizi Belirleyin",
         html:
           `<p style="margin: 0 0 16px 0;">${kacir(hitap)}</p>` +
           `<p style="margin: 0 0 16px 0;">${kacir(`${firmaAdi} bünyesinde Cogniti hesabınız oluşturulmuştur.`)}</p>` +

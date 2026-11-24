@@ -94,7 +94,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL(panelBaslangici(rol).yol, request.url));
   };
   const eclubFirmaRotasi = pathname.match(/^\/eclub\/firma\/([^/]+)\/(yayinlar|yayin-tamamlama-performansi|hediye-ceki-talebi|hediye-ceki-takibi|performans|hediye-cekleri|cek-talepleri)(?:\/|$)/);
-  if (user?.app_metadata.eclub_davet_bekliyor === true && ![
+  if ((user?.app_metadata.eclub_davet_bekliyor === true || user?.app_metadata.eczanem_davet_bekliyor === true) && ![
     "/login", "/sifre-olustur", "/sifre-olustur/api", "/sifre-yenile", "/davet-bekliyor",
   ].includes(pathname)) {
     if (pathname.startsWith("/api/") || pathname.includes("/api/")) {
@@ -431,14 +431,12 @@ export async function proxy(request: NextRequest) {
   // İki dal — sıralama kritiktir (/eclub/store dersi): önce özel prefix
   // /eczanem/eczane (eczacı/teknisyen, E-Club oturumu), /eczanem/utt ve
   // /eczanem/bm ve /eczanem/tm (iç uygulama), sonra genel /eczanem
-  // (müşteri). Girişsiz istisnalar: müşteri giriş sayfası/API'leri ve davet
-  // kabulü — bunlar oturum ÖNCESİ akışlardır, koruma OTP mekanizmasındadır.
+  // (üye). Girişsiz istisnalar: telefon + şifre giriş API'si (üyelik
+  // davetleri ortak /sifre-olustur akışından yürür).
   if (pathname.startsWith("/eczanem")) {
     const girissizYol =
       pathname.startsWith("/eczanem/giris") ||
-      pathname.startsWith("/eczanem/api/giris") ||
-      pathname.startsWith("/eczanem/davet") ||
-      pathname.startsWith("/eczanem/api/davet-kabul");
+      pathname.startsWith("/eczanem/api/giris");
 
     if (!girissizYol) {
       const apiYolu = pathname.includes("/api/") || pathname.endsWith("/api");
@@ -525,6 +523,7 @@ export async function proxy(request: NextRequest) {
       const modulKapisiMuaf =
         pathname.startsWith("/eczanem/api/hesabimi-sil") ||
         pathname.startsWith("/eczanem/api/eclub-gecisi") ||
+        pathname.startsWith("/eczanem/api/baglama-talepleri") ||
         pathname.startsWith("/eczanem/kapali");
       if (rolUygun && !modulKapisiMuaf) {
         const erisim = await eczanemRolErisimi(eczanemSupabase, user.id, rol);

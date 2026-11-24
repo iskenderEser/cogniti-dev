@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { createAdminClient } from "@/lib/supabase/server";
 import { partnerJsonOku, partnerYanit } from "@/lib/agora/partnerHttp";
 import { partnerSifreOzeti, partnerTestSifresiGecerli } from "@/lib/agora/partnerSifre";
+import { SUREC14_TOAST } from "@/lib/bildirimler/toastMesajlari";
 
 function davetOzeti(token: string): string {
   return createHash("sha256").update(token).digest("hex");
@@ -57,7 +58,7 @@ export async function POST(request: Request) {
     if (data !== true) {
       return partnerYanit({ hata: "Davet bağlantısının süresi dolmuş veya daha önce kullanılmış." }, 410);
     }
-    return partnerYanit({ mesaj: "Şifreniz oluşturuldu. Partner girişi sayfasından giriş yapabilirsiniz." });
+    return partnerYanit({ mesaj: SUREC14_TOAST.sifreOlusturuldu });
   } catch {
     return partnerYanit({ hata: "Şifre kaydedilemedi. Lütfen tekrar deneyin." }, 503);
   }

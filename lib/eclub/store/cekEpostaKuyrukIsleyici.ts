@@ -44,7 +44,7 @@ export async function eclubCekEpostaKuyrugunuTuket(maxIsSayisi = 10) {
         body: JSON.stringify({
           from,
           to: [is.alici_eposta],
-          subject: "Hediye çekiniz hazır",
+          subject: "E-Club Hediye Çekiniz Hazır",
           html:
             `<p style="margin: 0 0 16px 0;">${hitapHtml}</p>` +
             `<p style="margin: 0 0 16px 0;"><strong>${htmlKacir(is.cek_tutari_tl)} TL</strong> değerindeki hediye çekiniz hazırdır.</p>` +

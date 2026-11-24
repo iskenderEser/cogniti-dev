@@ -44,7 +44,7 @@ export async function uyelikDavetiGonder(db: SupabaseClient, authId: string, ori
     const r = await fetch("https://api.resend.com/emails", {
       method: "POST", signal: AbortSignal.timeout(10000),
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json", "Idempotency-Key": `eclub-davet/${davetId}` },
-      body: JSON.stringify({ from, to: [data.user.email], subject: "Cogniti E-Club üyelik davetiniz",
+      body: JSON.stringify({ from, to: [data.user.email], subject: "Cogniti E-Club Üyelik Davetiniz",
         html:
           `<p style="margin: 0 0 16px 0;">${kacir(hitap)}</p>` +
           `<p style="margin: 0 0 16px 0;">E-Club üyeliğinizi tamamlamak için aşağıdaki bağlantıdan şifrenizi oluşturabilirsiniz.</p>` +

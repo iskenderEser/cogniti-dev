@@ -3,9 +3,10 @@
 "use client";
 
 import { panelBaslangici } from "@/lib/panel/baslangic";
+import Link from "next/link";
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Layers } from "lucide-react";
+import { CircleAlert, Layers } from "lucide-react";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
@@ -14,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { MUSTERI_ROLU } from "@/lib/utils/roller";
 import { adSoyadBicimle } from "@/lib/utils/adSoyadBicimle";
 import EclubGecisKarti from "./_components/EclubGecisKarti";
+import EczaneBaglamaTalepleriKarti from "./_components/EczaneBaglamaTalepleriKarti";
 import EczanemAnaSayfaSkeleton, { EczanemRaflarSkeleton } from "./_components/EczanemAnaSayfaSkeleton";
 import EczanemAnaSayfaUstBolum from "./_components/EczanemAnaSayfaUstBolum";
 import EczanemPanelBaglantisi from "./_components/EczanemPanelBaglantisi";
@@ -24,6 +26,7 @@ import EczanemVideoRafi from "./_components/EczanemVideoRafi";
 import EczanemUrunFiltresi from "./_components/EczanemUrunFiltresi";
 import type {
   EczanemMusteriVideo,
+  EczanemPasifUyelikOzeti,
   EczanemSidebarAgaci,
   EczanemSidebarSecim,
   EczanemVideoRaflari,
@@ -49,6 +52,7 @@ function EczanemPanelIcerik() {
   const musteri = !!kullanici && kullanici.kimlik_turu === MUSTERI_ROLU;
   const [videolar, setVideolar] = useState<EczanemMusteriVideo[]>([]);
   const [agac, setAgac] = useState<EczanemSidebarAgaci>(() => eczanemGezinmeAgaciniOku(kullanici?.id) ?? []);
+  const [pasifUyelikler, setPasifUyelikler] = useState<EczanemPasifUyelikOzeti[]>([]);
   const [secim, setSecim] = useState<EczanemSidebarSecim>({ tip: "tum" });
   const [aktifYayinTuru, setAktifYayinTuru] = useState<YayinTuruFiltreDegeri>("tumu");
   const [videoYukleniyor, setVideoYukleniyor] = useState(true);
@@ -91,7 +95,7 @@ function EczanemPanelIcerik() {
         setVideoHatasi(mesaj); hata(mesaj, errData.adim ?? "öğrenme içerikleri"); return;
       }
       if (kullanici?.id) eczanemGezinmeAgaciniYaz(kullanici.id, data.agac ?? []);
-      setVideolar(data.videolar ?? []); setAgac(data.agac ?? []); setVideoHazir(true); setVideoHatasi(null);
+      setVideolar(data.videolar ?? []); setAgac(data.agac ?? []); setPasifUyelikler(data.pasif_uyelikler ?? []); setVideoHazir(true); setVideoHatasi(null);
     } catch (error) {
       if (!controller.signal.aborted && videoIstegiRef.current === controller && !(error instanceof DOMException && error.name === "AbortError")) { setVideoHatasi("Öğrenme içerikleri yüklenemedi."); hata("Öğrenme içerikleri yüklenemedi.", "öğrenme içerikleri");
       }
@@ -260,6 +264,28 @@ function EczanemPanelIcerik() {
           onYenile={() => { setUstBolumYenileme(deger => deger + 1); return videolariCek(true); }}
         />
         <EclubGecisKarti hata={hata} basari={basari} />
+        <EczaneBaglamaTalepleriKarti hata={hata} basari={basari} onOnaylandi={() => { setUstBolumYenileme(deger => deger + 1); void videolariCek(true); }} />
+        {pasifUyelikler.length > 0 && (
+          <section
+            aria-label="Pasife alınan eczane üyelikleri"
+            className="flex flex-col gap-2 rounded-2xl border border-[var(--tema-yerel-eczanem-islevsel-cizgi-19)] bg-[var(--tema-yerel-eczanem-islevsel-zemin-15)] px-4 py-3 text-xs font-semibold text-[var(--tema-yerel-eczanem-islevsel-metin-10)]"
+          >
+            {pasifUyelikler.map((pasif) => (
+              <div key={pasif.eczane_id} className="flex flex-wrap items-center justify-between gap-2">
+                <span className="flex items-center gap-2">
+                  <CircleAlert className="size-4 shrink-0" />
+                  <span>
+                    <strong>{pasif.eczane_adi}</strong> üyeliğiniz pasife alındı. Mevcut puanlarınızı{" "}
+                    <strong>{pasif.kalan_gun} gün</strong> içinde kullanabilirsiniz.
+                  </span>
+                </span>
+                <Link href="/eczanem/puanlarim" className="font-extrabold underline underline-offset-2">
+                  Puanlarımı görüntüle
+                </Link>
+              </div>
+            ))}
+          </section>
+        )}
         {videoHatasi && <div role="alert" className="rounded-2xl border border-[var(--tema-yerel-eczanem-islevsel-cizgi-17)] bg-[var(--tema-yerel-eczanem-islevsel-zemin-10)] px-4 py-3 text-xs font-bold text-[var(--tema-yerel-eczanem-islevsel-metin-08)]">{videoHatasi}{videoHazir ? " · Son başarılı içerik akışı gösteriliyor." : ""}<button type="button" disabled={videoYenileniyor} onClick={() => { void videolariCek(true); }} className="ml-3 underline underline-offset-2 disabled:opacity-50">{videoYenileniyor ? "Yenileniyor…" : "Tekrar dene"}</button></div>}
         {videoYukleniyor && !videoHazir ? (
           <EczanemRaflarSkeleton />

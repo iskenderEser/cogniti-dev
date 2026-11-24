@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { vivaTarih } from "@/lib/viva/sozlesme";
+import { SUREC13_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import VivaOdaAlani from "./VivaOdaAlani";
 import VivaDurumAlani from "./VivaDurumAlani";
 import styles from "./viva-yardimci.module.css";
@@ -85,8 +86,8 @@ function MisafirIcerigi({ token }: { token: string }) {
       if (tur === "dogrula") {
         const dogrulanan = bilgiOku(b);
         if (!dogrulanan.dogrulandi) throw new Error("E-posta doğrulanamadı. Kodu kontrol ederek yeniden deneyin.");
-        setBilgi(dogrulanan); setKod(""); setMesaj("E-posta adresiniz doğrulandı.");
-      } else { setKodAdimi(true); setKod(""); setMesaj(b.mesaj ?? "Doğrulama kodu davetteki e-posta adresine gönderildi."); }
+        setBilgi(dogrulanan); setKod(""); setMesaj(SUREC13_TOAST.epostaDogrulandi);
+      } else { setKodAdimi(true); setKod(""); setMesaj(b.mesaj ?? SUREC13_TOAST.dogrulamaKoduGonderildi); }
     } catch (err) {
       if (!kontrol.signal.aborted) {
         setIslemHatasi(err instanceof DavetIstekHatasi ? err.message : "İşlem tamamlanamadı. Bağlantınızı kontrol ederek yeniden deneyin.");

@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { createAdminClient } from "@/lib/supabase/server";
+import { partnerBasvuruAlindiEpostalariGonder } from "@/lib/agora/partnerEposta";
 import { partnerKayitIsleyicisi } from "@/lib/agora/partnerKayitApi";
 
 const PARTNER_CV_BUCKET = "agora-partner-cvleri";
@@ -49,6 +50,12 @@ export const POST = partnerKayitIsleyicisi(async (veri, ozgecmis) => {
       await db.rpc("agora_partner_basvuru_geri_al", { p_partner_id: partnerId });
       return false;
     }
+  }
+
+  try {
+    await partnerBasvuruAlindiEpostalariGonder(partnerId, veri);
+  } catch {
+    // Başvuru kaydı e-posta hatasından bağımsızdır.
   }
 
   return true;

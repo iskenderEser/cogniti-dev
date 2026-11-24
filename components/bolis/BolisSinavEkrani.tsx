@@ -92,6 +92,8 @@ export default function BolisSinavEkrani({ kod }: { kod: string }) {
   const [baslatiliyor, setBaslatiliyor] = useState(false);
   const [teslimEdiliyor, setTeslimEdiliyor] = useState(false);
   const [teslimOnayAcik, setTeslimOnayAcik] = useState(false);
+  const [davetKodu, setDavetKodu] = useState("");
+  const [davetliEtiketi, setDavetliEtiketi] = useState<string | null>(null);
 
   // Kayıt formu alanları
   const [ad, setAd] = useState("");
@@ -109,7 +111,13 @@ export default function BolisSinavEkrani({ kod }: { kod: string }) {
     let aktif = true;
     setYukleniyor(true);
     setHata("");
-    void fetch(`/api/bolis-sinav/${encodeURIComponent(kod)}`, { cache: "no-store" })
+    const urlDavet =
+      typeof window !== "undefined"
+        ? (new URLSearchParams(window.location.search).get("davet")?.trim() ?? "")
+        : "";
+    setDavetKodu(urlDavet);
+    const sorgu = urlDavet ? `?davet=${encodeURIComponent(urlDavet)}` : "";
+    void fetch(`/api/bolis-sinav/${encodeURIComponent(kod)}${sorgu}`, { cache: "no-store" })
       .then(async (r) => {
         const d = await r.json();
         if (!aktif) return;
@@ -119,6 +127,7 @@ export default function BolisSinavEkrani({ kod }: { kod: string }) {
         }
         setSinav(d.sinav);
         setZaman(d.zaman ?? { henuzBaslamadi: false, suresiDoldu: false });
+        setDavetliEtiketi(typeof d.davetli_etiketi === "string" ? d.davetli_etiketi : null);
         if (d.sinav?.hedef_roller?.length > 0) {
           setRolGrubu(d.sinav.hedef_roller[0]);
         }
@@ -192,6 +201,7 @@ export default function BolisSinavEkrani({ kod }: { kod: string }) {
     try {
       const payload: Record<string, unknown> = { islem: "baslat" };
       if (sinav.kayit_tipi === "hazir_liste") {
+        if (davetKodu) payload.davet_kodu = davetKodu;
         payload.eposta = eposta;
         payload.telefon = telefon;
       } else if (sinav.kayit_tipi === "kendi_kaydi") {
@@ -608,25 +618,33 @@ export default function BolisSinavEkrani({ kod }: { kod: string }) {
             <div className="mt-5 flex flex-col gap-4 border-t border-[var(--tema-cizgi)] pt-4">
               {sinav.kayit_tipi === "hazir_liste" && (
                 <div className="space-y-3">
-                  <p className="m-0 text-xs text-[var(--tema-ikincil-metin)]">
-                    Davetli listedeki kaydınızı doğrulamak için e-posta veya telefon numaranızı girin.
-                  </p>
-                  <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-                    <input
-                      type="email"
-                      placeholder="E-posta adresiniz"
-                      value={eposta}
-                      onChange={(e) => setEposta(e.target.value)}
-                      className="h-9 rounded-lg border border-[var(--tema-kontrol-cizgi)] bg-[var(--tema-zemin)] px-3 text-xs text-[var(--tema-metin)]"
-                    />
-                    <input
-                      type="tel"
-                      placeholder="Telefon numaranız"
-                      value={telefon}
-                      onChange={(e) => setTelefon(e.target.value)}
-                      className="h-9 rounded-lg border border-[var(--tema-kontrol-cizgi)] bg-[var(--tema-zemin)] px-3 text-xs text-[var(--tema-metin)]"
-                    />
-                  </div>
+                  {davetliEtiketi ? (
+                    <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-900">
+                      Davetli kaydınız doğrulandı: <strong>{davetliEtiketi}</strong>. Doğrudan sınava başlayabilirsiniz.
+                    </div>
+                  ) : (
+                    <>
+                      <p className="m-0 text-xs text-[var(--tema-ikincil-metin)]">
+                        Davetli listedeki kaydınızı doğrulamak için e-posta veya telefon numaranızı girin.
+                      </p>
+                      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+                        <input
+                          type="email"
+                          placeholder="E-posta adresiniz"
+                          value={eposta}
+                          onChange={(e) => setEposta(e.target.value)}
+                          className="h-9 rounded-lg border border-[var(--tema-kontrol-cizgi)] bg-[var(--tema-zemin)] px-3 text-xs text-[var(--tema-metin)]"
+                        />
+                        <input
+                          type="tel"
+                          placeholder="Telefon numaranız"
+                          value={telefon}
+                          onChange={(e) => setTelefon(e.target.value)}
+                          className="h-9 rounded-lg border border-[var(--tema-kontrol-cizgi)] bg-[var(--tema-zemin)] px-3 text-xs text-[var(--tema-metin)]"
+                        />
+                      </div>
+                    </>
+                  )}
                 </div>
               )}
 

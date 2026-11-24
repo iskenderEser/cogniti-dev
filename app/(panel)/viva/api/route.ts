@@ -1,3 +1,9 @@
+import { createAdminClient } from "@/lib/supabase/server";
+import { vivaEpostaKuyrugunuIsle } from "@/lib/viva/epostaGonderimSunucu";
+import {
+  vivaEtkinlikIptalEpostalariGonder,
+  vivaKatilimciDavetEpostalariGonder,
+} from "@/lib/viva/katilimciEposta";
 import { vivaListeSorgusu } from "@/lib/viva/liste";
 import { vivaListeEkraniOku } from "@/lib/viva/listeSunucu";
 import { vivaGirdi, vivaHata, vivaOku, vivaYanit, vivaYaz, VivaHatasi } from "@/lib/viva/sunucu";
@@ -26,8 +32,34 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const { islem, ...veri } = await vivaGirdi(req);
-    const sonuc = await vivaYaz(String(islem), veri);
-    if (["kaydet", "iptal", "davet_iptal", "davet_ekle"].includes(String(islem)) && vivaUuidMu(veri.etkinlik_id)) {
+    const islemAdi = String(islem);
+    const sonuc = await vivaYaz(islemAdi, veri);
+    if (vivaUuidMu(veri.etkinlik_id)) {
+      const origin = new URL(req.url).origin;
+      if (["olustur", "kaydet", "davet_yeniden_dene"].includes(islemAdi)) {
+        const db = createAdminClient();
+        try {
+          await vivaEpostaKuyrugunuIsle(db, origin, Date.now() + 8000);
+        } catch {
+          // Kuyruk cron tarafından yeniden işlenir.
+        }
+        if (["olustur", "kaydet"].includes(islemAdi)) {
+          try {
+            await vivaKatilimciDavetEpostalariGonder(db, String(veri.etkinlik_id), origin);
+          } catch {
+            // Kayıt işlemi e-posta hatasından bağımsızdır.
+          }
+        }
+      } else if (islemAdi === "iptal") {
+        const db = createAdminClient();
+        try {
+          await vivaEtkinlikIptalEpostalariGonder(db, String(veri.etkinlik_id));
+        } catch {
+          // İptal kaydı e-posta hatasından bağımsızdır.
+        }
+      }
+    }
+    if (["kaydet", "iptal", "davet_iptal", "davet_ekle"].includes(islemAdi) && vivaUuidMu(veri.etkinlik_id)) {
       try { await vivaSunucuMutabakat(veri.etkinlik_id); }
       catch { return vivaYanit({ ...sonuc, uyari: "Değişiklik kaydedildi; Daily erişim işlemi sunucuda yeniden denenecek." }, 202); }
     }

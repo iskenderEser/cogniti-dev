@@ -15,6 +15,7 @@ import rafStyles from "@/components/agora/AgoraVitrini.module.css";
 import { Button } from "@/components/ui/button";
 import MobilYayinAkisi from "@/components/yayin/MobilYayinAkisi";
 import { agoraTokenTutari } from "@/lib/agora/vitrin";
+import { SUREC15_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import { URETICI_ROLLER, type HedefRol } from "@/lib/utils/roller";
 
 export interface AgoraCanliOturumu {
@@ -225,12 +226,11 @@ export function AgoraCanliYayinlar({
         setHata(d.hata ?? "Canlı yayın siparişi tamamlanamadı.");
         return;
       }
-      const borcNotu =
-        Number(d.borca_yazilan_token) > 0
-          ? ` ${Number(d.borca_yazilan_token).toLocaleString("tr-TR")} token borca yazıldı.`
-          : "";
       onBasari(
-        `“${onayOturumu.egitim_adi}” canlı yayın oturumu için siparişiniz oluşturuldu.${borcNotu}`,
+        SUREC15_TOAST.canliSiparisTamamlandi(
+          onayOturumu.egitim_adi,
+          Number(d.borca_yazilan_token) || 0,
+        ),
       );
       setOnayOturumu(null);
       await yukle();

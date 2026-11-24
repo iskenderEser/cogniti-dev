@@ -8,11 +8,11 @@ const baglamaBaslangici = route.indexOf('if (islem === "bagla")');
 const yeniKayitBaslangici = route.indexOf("if (mevcut) {", baglamaBaslangici);
 const baglamaBlogu = route.slice(baglamaBaslangici, yeniKayitBaslangici);
 
-test("mutlu: kayıtlı müşteri kimliği değiştirilmeden ikinci eczaneye bağlanır", () => {
+test("mutlu: kayıtlı müşteri kimliği değiştirilmeden ikinci eczaneye onay talebiyle bağlanır", () => {
   assert.match(route, /if \(islem === "sorgula"\)/);
   assert.match(route, /durum: uyelik\?\.aktif_mi \? "zaten_bagli" : "kayitli"/);
   assert.match(route, /if \(islem === "bagla"\)/);
-  assert.match(route, /rpc\("eczanem_musteri_bagla_atomik"/);
+  assert.match(route, /rpc\("eczanem_baglama_talebi_olustur"/);
   assert.match(sql, /ON CONFLICT \(musteri_id, eczane_id\) DO UPDATE/);
   assert.ok(baglamaBaslangici >= 0 && yeniKayitBaslangici > baglamaBaslangici);
   assert.doesNotMatch(baglamaBlogu, /auth\.admin\.(createUser|updateUserById)/);

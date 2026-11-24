@@ -5,9 +5,11 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 export const ECLUB_UYESI_MUSTERI_OLAMAZ_MESAJI =
-  "Cogniti'de E-Club üyesi olduğunuz için müşteri olarak kayıt olmazsınız";
+  "Bu kişi Cogniti'de E-Club üyesi olduğu için Eczanem üyesi olarak kaydedilemez.";
 export const ECZANEM_MUSTERISI_ECLUB_UYESI_OLAMAZ_MESAJI =
   "Bu kişi Cogniti'de Eczanem müşterisi olduğu için E-Club üyesi olarak kaydedilemez.";
+export const DIGER_KIMLIK_MUSTERI_OLAMAZ_MESAJI =
+  "Bu telefon numarası başka bir Cogniti hesabına kayıtlı olduğu için Eczanem üyesi olarak kaydedilemez.";
 
 /** Eczanem'in 10 haneli kanonik telefonunu sistemdeki tarihsel yazımlara açar. */
 export function eclubTelefonVaryantlari(telefon: string): string[] {
@@ -26,6 +28,32 @@ export async function eclubUyesiTelefonMu(
 
   if (error) return { ok: false, uyeMi: false, hata: error };
   return { ok: true, uyeMi: (data?.length ?? 0) > 0 };
+}
+
+/** Kurumsal kullanıcı (kullanicilar) ve iş partneri (agora_is_partnerleri) telefon çakışmasını doğrular. */
+export async function digerKimlikTelefonuMu(
+  adminSupabase: SupabaseClient,
+  telefon: string,
+): Promise<{
+  ok: boolean;
+  cakismaVar: boolean;
+  kimlikTuru?: string | null;
+  mesaj?: string | null;
+  hata?: unknown;
+}> {
+  const { data, error } = await adminSupabase.rpc("eczanem_telefon_baska_kimlik_kontrol", {
+    p_telefon: telefon,
+  });
+  if (error) return { ok: false, cakismaVar: false, hata: error };
+  const satir = (Array.isArray(data) ? data[0] : data) as
+    | { cakisma_var?: boolean; kimlik_turu?: string | null; mesaj?: string | null }
+    | undefined;
+  return {
+    ok: true,
+    cakismaVar: Boolean(satir?.cakisma_var),
+    kimlikTuru: satir?.kimlik_turu ?? null,
+    mesaj: satir?.mesaj ?? null,
+  };
 }
 
 /** E-Club tarafındaki herhangi bir telefon yazımını Eczanem kanoniğiyle arar. */

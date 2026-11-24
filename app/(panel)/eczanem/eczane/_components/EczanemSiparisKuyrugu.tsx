@@ -6,6 +6,7 @@ import { SadeKontrolButonu, SadeKontrolGrubu } from "@/components/kontrol/SadeKo
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { SUREC11_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { bildirimRozetleriniYenile } from "@/lib/bildirimler/rozet";
@@ -140,7 +141,7 @@ export default function EczanemSiparisKuyrugu({ hata, basari, gorunumTesti = fal
       const res = await fetch("/eczanem/eczane/api/siparisler", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ siparis_id: siparis.siparis_id, aksiyon }) });
       const data = await res.json();
       if (!res.ok) { hata(data.hata ?? "Sipariş işlemi tamamlanamadı.", "sipariş"); return; }
-      basari(aksiyon === "onayla" ? `Sipariş onaylandı — ${paraYaz(Number(data.indirim_tl))} indirim (${data.islem_kodu}).` : "İndirim talebi iptal edildi.");
+      basari(aksiyon === "onayla" ? SUREC11_TOAST.siparisOnaylandi(paraYaz(Number(data.indirim_tl)), String(data.islem_kodu)) : SUREC11_TOAST.siparisReddedildi);
       await cek(true);
       bildirimRozetleriniYenile();
     } catch { hata("Sipariş işlemi tamamlanamadı.", "sipariş"); }

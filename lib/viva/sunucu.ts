@@ -362,12 +362,39 @@ export async function vivaKodGonder(token: string) {
   const kod = String(randomInt(100000, 1000000));
   const kodHash = vivaKodHash(token, kod);
   const kisi = await vivaMisafirRpc(token, "kod_ayir", { kod_hash: kodHash });
+  const kacir = (v: unknown) =>
+    String(v ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#39;");
+  const adTemiz = String(kisi.ad ?? "").trim();
+  const hitap = adTemiz && adTemiz !== "Davetli" ? `Sayın ${adTemiz},` : "Sayın Katılımcımız,";
+  const baslikTemiz = String(kisi.baslik ?? "Viva").trim();
   try {
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST", signal: AbortSignal.timeout(15_000),
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json", "Idempotency-Key": `viva/${kisi.davet_id}/${kodHash}` },
-      body: JSON.stringify({ from, to: [kisi.eposta], subject: "Viva katılım doğrulama kodunuz",
-        text: `Merhaba ${kisi.ad},\n\n${kisi.baslik} etkinliği için doğrulama kodunuz: ${kod}\n\nKod 10 dakika boyunca, etkinlik erişim süresini aşmadan geçerlidir. Bu işlemi siz başlatmadıysanız kodu paylaşmayın.\n\nCogniti · Viva` }),
+      body: JSON.stringify({
+        from,
+        to: [kisi.eposta],
+        subject: "Viva Katılım Doğrulama Kodunuz",
+        html:
+          `<p style="margin: 0 0 16px 0;">${kacir(hitap)}</p>` +
+          `<p style="margin: 0 0 16px 0;"><strong>${kacir(baslikTemiz)}</strong> canlı yayınına katılım için tek kullanımlık doğrulama kodunuz aşağıdadır:</p>` +
+          `<ul style="margin: 0 0 16px 0; padding-left: 20px;">` +
+          `<li style="margin: 0;"><strong>Doğrulama kodunuz:</strong> <strong>${kacir(kod)}</strong></li>` +
+          `</ul>` +
+          `<p style="margin: 0 0 16px 0;">Bu kod 10 dakika boyunca (yayın erişim süresini aşmadan) geçerlidir. Bu işlemi siz başlatmadıysanız kodu kimseyle paylaşmayın.</p>` +
+          `<p style="margin: 0;">Cogniti · bilgi taşır</p>`,
+        text:
+          `${hitap}\n\n` +
+          `${baslikTemiz} canlı yayınına katılım için tek kullanımlık doğrulama kodunuz aşağıdadır:\n\n` +
+          `- Doğrulama kodunuz: ${kod}\n\n` +
+          `Bu kod 10 dakika boyunca (yayın erişim süresini aşmadan) geçerlidir. Bu işlemi siz başlatmadıysanız kodu kimseyle paylaşmayın.\n\n` +
+          `Cogniti · bilgi taşır`,
+      }),
     });
     if (!res.ok) throw new Error("eposta");
     const gonderim: unknown = await res.json();

@@ -36,7 +36,7 @@ export async function kullaniciRolDegistiEpostasiGonder(params: {
   await resendGonder(
     {
       to: [params.eposta],
-      subject: "Cogniti rolünüz güncellendi",
+      subject: "Cogniti Kullanıcı Rolünüz Güncellendi",
       html:
         `<p style="margin: 0 0 16px 0;">${kacir(hitap)}</p>` +
         `<p style="margin: 0 0 16px 0;">${kacir(params.firmaAdi)} bünyesindeki Cogniti rolünüz <strong>${kacir(params.yeniRolAdi)}</strong> olarak güncellenmiştir.</p>` +
@@ -61,7 +61,7 @@ export async function kullaniciPasifeAlindiEpostasiGonder(params: {
   await resendGonder(
     {
       to: [params.eposta],
-      subject: "Cogniti hesabınız pasife alındı",
+      subject: "Cogniti Hesabınız Pasife Alındı",
       html:
         `<p style="margin: 0 0 16px 0;">${kacir(hitap)}</p>` +
         `<p style="margin: 0 0 16px 0;">${kacir(params.firmaAdi)} bünyesindeki Cogniti hesabınız pasife alınmıştır.</p>` +
@@ -87,7 +87,7 @@ export async function kullaniciAktifEdildiEpostasiGonder(params: {
   await resendGonder(
     {
       to: [params.eposta],
-      subject: "Cogniti hesabınız aktif edildi",
+      subject: "Cogniti Hesabınız Aktif Edildi",
       html:
         `<p style="margin: 0 0 16px 0;">${kacir(hitap)}</p>` +
         `<p style="margin: 0 0 16px 0;">${kacir(params.firmaAdi)} bünyesindeki Cogniti hesabınız yeniden aktif edilmiştir.</p>` +

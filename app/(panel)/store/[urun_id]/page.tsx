@@ -9,6 +9,7 @@ import { panelBaslangici } from "@/lib/panel/baslangic";
 
 import { useAuth } from "@/app/providers/AuthProvider";
 import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
+import { SUREC12_TOAST, sonrakiSayfaToastYaz } from "@/lib/bildirimler/toastMesajlari";
 import { useHbstoreTakvim } from "@/hooks/useHbstoreTakvim";
 import { hbstoreBakiyesiDegistiBildir } from "@/lib/tclub/store/olay";
 import { STOK_AZ_ESIK } from "@/lib/tclub/store/sabitler";
@@ -144,7 +145,8 @@ export default function UrunDetayPage() {
         return;
       }
 
-      basari("Siparişiniz başarıyla alındı.");
+      basari(SUREC12_TOAST.cekTalebiAlindi);
+      sonrakiSayfaToastYaz(SUREC12_TOAST.cekTalebiAlindi);
       hbstoreBakiyesiDegistiBildir();
       router.push("/store/siparislerim");
     } catch (err) {

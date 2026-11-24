@@ -59,7 +59,7 @@ BEGIN
 
  UPDATE viva_eposta_gonderimleri g SET
   icerik=coalesce(g.icerik,(SELECT jsonb_build_object(
-   'from',p_gonderici,'to',d.eposta,'subject','Cogniti Viva yayın daveti',
+   'from',p_gonderici,'to',d.eposta,'subject','Cogniti Viva Canlı Yayın Davetiniz',
    'baslik',e.baslik,'baslangic',e.baslangic,'site',p_site)
    FROM viva_davetler d JOIN viva_etkinlikler e ON e.etkinlik_id=d.etkinlik_id
    WHERE d.davet_id=v_id)),

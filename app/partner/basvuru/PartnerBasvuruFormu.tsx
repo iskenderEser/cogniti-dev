@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { partnerKaydiniDogrula } from "@/lib/agora/partnerKaydi";
 import { partnerIbanGecerli } from "@/lib/agora/partnerProfil";
+import { SUREC14_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import styles from "../partner.module.css";
 
 type PartnerTuru = "kisisel" | "kurumsal";
@@ -647,7 +648,7 @@ export default function PartnerBasvuruFormu() {
             )}
             {alindi && (
               <p className={styles.notice} role="status">
-                Başvurunuz alındı. İlk girişiniz için admin onayı bekleniyor.
+                {SUREC14_TOAST.basvuruAlindi}
               </p>
             )}
             <Button type="submit" disabled={kilitli}>

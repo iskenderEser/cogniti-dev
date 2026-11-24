@@ -53,7 +53,7 @@ async function onBasvuruEpostalariniGonder(bilgiler: OnBasvuruBilgileri) {
       {
         from,
         to: [bilgiler.eposta],
-        subject: "Cogniti kurumsal üyelik ön başvurunuz alındı",
+        subject: "Kurumsal Üyelik Ön Başvurunuz Alındı",
         html:
           `<p style="margin: 0 0 16px 0;">${kacir(`Merhaba ${bilgiler.ad_soyad},`)}</p>` +
           `<p style="margin: 0 0 16px 0;">${kacir(`${bilgiler.firma_adi} adına yaptığınız kurumsal üyelik ön başvurunuz alınmıştır.`)}</p>` +
@@ -80,7 +80,7 @@ async function onBasvuruEpostalariniGonder(bilgiler: OnBasvuruBilgileri) {
           from,
           to: [adminEposta],
           reply_to: bilgiler.eposta,
-          subject: `Yeni kurumsal üyelik ön başvurusu — ${bilgiler.firma_adi}`,
+          subject: `Yeni Kurumsal Üyelik Başvurusu — ${bilgiler.firma_adi}`,
           html:
             `<p style="margin: 0 0 16px 0;">Yeni bir kurumsal üyelik ön başvurusu alındı:</p>` +
             `<ul style="margin: 0; padding-left: 20px;">` +

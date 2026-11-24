@@ -61,7 +61,7 @@ test("eclubCekIptalEpostasiGonder ana eczacıya iptal ve puan iadesi e-postası 
     await eclubCekIptalEpostasiGonder(mockDb, "talep-100");
     assert.equal(gidenler.length, 1);
     assert.deepEqual(gidenler[0].body.to, ["ayse@eczane.com"]);
-    assert.equal(gidenler[0].body.subject, "E-Club hediye çeki talebiniz iptal edildi");
+    assert.equal(gidenler[0].body.subject, "E-Club Çek Talebiniz İptal Edildi");
     assert.equal(gidenler[0].headers["Idempotency-Key"], "eclub-cek-iptal/talep-100");
     assert.match(String(gidenler[0].body.text), /Sayın Ayşe Kaya,/);
     assert.match(String(gidenler[0].body.text), /500 TL tutarındaki E-Club hediye çeki talebiniz iptal edilmiştir/);

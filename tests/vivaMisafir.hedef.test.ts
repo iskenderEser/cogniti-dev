@@ -12,6 +12,7 @@ import * as inputs from '@/components/ui/input';
 import * as labels from '@/components/ui/label';
 import * as icons from 'lucide-react';
 import * as sozlesme from '@/lib/viva/sozlesme';
+import * as toastMesajlari from '@/lib/bildirimler/toastMesajlari';
 
 const id='00000000-0000-4000-8000-000000000001', other='00000000-0000-4000-8000-000000000002';
 const bilgi={baslik:'Gerçek etkinlik',aciklama:'Uzun açıklama',baslangic:'2027-01-01T10:00:00Z',bitis:'2027-01-01T11:00:00Z',ad:'Deniz Test',eposta_maskeli:'d***@example.test',dogrulandi:false};
@@ -25,7 +26,7 @@ async function ortam(handler:(url:string,init:RequestInit)=>Cevap|Promise<Cevap>
  const fetcher=async(url:string,init:RequestInit)=>{calls.push({url,init});const r=await handler(url,init);return{ok:!r.status||r.status<400,status:r.status??200,json:async()=>r.data};};
  let roomUnmounted=0;function Oda(props:Record<string,unknown>){React.useEffect(()=>()=>{roomUnmounted++;},[]);return React.createElement('section',{'aria-label':'Test yayın alanı','data-props':JSON.stringify(props)},'Oda');}
  const modules:Record<string,unknown>={react:React,'react/jsx-runtime':jsxRuntime,'lucide-react':icons,'@/components/ui/button':buttons,'@/components/ui/input':inputs,'@/components/ui/label':labels,'@/lib/viva/sozlesme':sozlesme,'@/components/marka/CognitiLogo':{default:()=>React.createElement('span',null,'Cogniti')},'./viva-yardimci.module.css':{default:new Proxy({},{get:(_,k)=>String(k)})},'./VivaOdaAlani':{default:Oda}};
- const timers=new Map<number,()=>void>();let timerId=0;
+ const timers=new Map<number,()=>void>();let timerId=0;modules['@/lib/bildirimler/toastMesajlari']=toastMesajlari;
  dom.setInterval=((fn:()=>void)=>{const n=++timerId;timers.set(n,fn);return n;}) as typeof dom.setInterval;dom.clearInterval=((n:number)=>{timers.delete(n);}) as typeof dom.clearInterval;
  function yukle(path:string){const exports:Record<string,React.ComponentType<Record<string,unknown>>>={};const code=ts.transpileModule(readFileSync(path,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX,target:ts.ScriptTarget.ES2022}}).outputText;vm.runInNewContext(code,{exports,require:(n:string)=>{assert.ok(n in modules,n);return modules[n];},fetch:fetcher,window:dom,document:dom.document,AbortController,Error,Date,encodeURIComponent});return exports;}
  modules['./VivaDurumAlani']=yukle('components/viva/VivaDurumAlani.tsx');const misafir=yukle('components/viva/VivaMisafir.tsx').default,onizleme=yukle('components/viva/VivaEntegrasyonOnizleme.tsx').default;

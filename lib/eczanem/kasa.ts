@@ -272,6 +272,16 @@ export async function siparisReddet(
     });
     if (error) return { ok: false, hata: "Sipariş reddi veritabanında tamamlanamadı." };
     const sonuc = Array.isArray(data) ? data[0] : data;
+    if (sonuc?.ok) {
+      const { data: siparis } = await adminSupabase
+        .from("eczanem_siparisler")
+        .select("musteri_id")
+        .eq("siparis_id", siparisId)
+        .maybeSingle();
+      if (siparis?.musteri_id) {
+        pushYayinlaEczanemMusterilereArkada(adminSupabase, "eczanem_siparis", [siparis.musteri_id]);
+      }
+    }
     return { ok: Boolean(sonuc?.ok), hata: sonuc?.hata ?? undefined };
   }
 

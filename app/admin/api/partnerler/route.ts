@@ -2,8 +2,10 @@ import { createHash, randomBytes } from "node:crypto";
 import { adminGirisKontrol } from "@/lib/utils/adminGirisKontrol";
 import { createAdminClient } from "@/lib/supabase/server";
 import { davetSiteAdresi } from "@/lib/eclub/uyelikDaveti";
+import { partnerBasvuruRetEpostasiGonder, partnerEpostaGonderici } from "@/lib/agora/partnerEposta";
 import { partnerJsonOku, partnerYanit } from "@/lib/agora/partnerHttp";
 import { partnerListesiGecerli } from "@/lib/agora/partnerOnayTipleri";
+import { SUREC14_TOAST } from "@/lib/bildirimler/toastMesajlari";
 
 const kacir = (v: string) =>
   v
@@ -79,11 +81,23 @@ export async function POST(request: Request) {
       if (data.durum !== "tamam") {
         return partnerYanit({ hata: "Karar kaydedilemedi." }, 503);
       }
-      return partnerYanit({ mesaj: "Başvuru reddedildi; partner girişi kapatıldı." });
+      if (typeof data.eposta === "string") {
+        try {
+          await partnerBasvuruRetEpostasiGonder({
+            partnerId: d.partner_id,
+            eposta: data.eposta,
+            adSoyad: typeof data.ad_soyad === "string" ? data.ad_soyad : "",
+            surum: Number(data.giris_surum ?? d.giris_surum),
+          });
+        } catch {
+          // Ret kararı e-posta hatasından bağımsızdır.
+        }
+      }
+      return partnerYanit({ mesaj: SUREC14_TOAST.basvuruReddedildi });
     }
 
     const apiKey = process.env.RESEND_API_KEY;
-    const from = process.env.COGNITI_UYELIK_EMAIL_FROM || process.env.ECLUB_DAVET_EMAIL_FROM;
+    const from = partnerEpostaGonderici();
     if (!apiKey || !from) {
       return partnerYanit({ hata: "Davet e-postası ayarları eksik." }, 503);
     }
@@ -121,7 +135,7 @@ export async function POST(request: Request) {
     link.searchParams.set("davet", token);
     const ad = typeof data.ad_soyad === "string" ? data.ad_soyad.trim() : "";
     const firma = typeof data.firma_adi === "string" ? data.firma_adi.trim() : "";
-    const hitap = ad ? `Merhaba ${ad},` : "Merhaba,";
+    const hitap = ad ? `Sayın ${ad},` : "Sayın İş Partnerimiz,";
     const onayCumlesi =
       data.basvuru_turu === "kurumsal" && firma
         ? `${firma} adına yaptığınız Cogniti İş Partnerliği başvurunuz onaylanmıştır.`
@@ -134,28 +148,29 @@ export async function POST(request: Request) {
         headers: {
           Authorization: `Bearer ${apiKey}`,
           "Content-Type": "application/json",
+          "Idempotency-Key": `agora-partner-onay/${d.partner_id}/v${data.giris_surum ?? d.giris_surum}`,
         },
         body: JSON.stringify({
           from,
           to: [data.eposta],
-          subject: "Cogniti İş Partnerliği başvurunuz onaylandı",
+          subject: "Cogniti İş Partnerliği Başvurunuz Onaylandı",
           html:
             `<p style="margin: 0 0 16px 0;">${kacir(hitap)}</p>` +
-            `<p style="margin: 0 0 16px 0;">${kacir(onayCumlesi)}</p>` +
-            `<p style="margin: 0 0 16px 0;">Partner panelinize giriş yapabilmek için <a href="${kacir(link.href)}">şifre oluşturma bağlantısını</a> kullanarak şifrenizi belirleyebilirsiniz.</p>` +
+            `<p style="margin: 0 0 16px 0;">${kacir(onayCumlesi)} Partner panelinize giriş yapabilmek için aşağıdaki bağlantıdan şifrenizi oluşturabilirsiniz.</p>` +
+            `<ul style="margin: 0 0 16px 0; padding-left: 20px;">` +
+            `<li style="margin: 0;"><strong>Şifre oluşturma bağlantısı:</strong> <a href="${kacir(link.href)}" style="color: #0b63ce; font-weight: 700; text-decoration: underline;">Şifremi oluştur</a> (${kacir(link.href)})</li>` +
+            `</ul>` +
             `<p style="margin: 0 0 16px 0;">Bu bağlantı 48 saat boyunca geçerlidir.</p>` +
-            `<p style="margin: 0 0 24px 0;">Cogniti’ye hoş geldiniz.</p>` +
-            `<p style="margin: 0 0 4px 0;">Cogniti İş Partnerliği Ekibi</p>` +
             `<p style="margin: 0;">Cogniti · bilgi taşır</p>`,
           text:
-            `${hitap}\n\n${onayCumlesi}\n\n` +
-            `Partner panelinize giriş yapabilmek için aşağıdaki bağlantıyı kullanarak şifrenizi belirleyebilirsiniz:\n${link.href}\n\n` +
+            `${hitap}\n\n${onayCumlesi} Partner panelinize giriş yapabilmek için aşağıdaki bağlantıdan şifrenizi oluşturabilirsiniz.\n\n` +
+            `- Şifre oluşturma bağlantısı: ${link.href}\n\n` +
             `Bu bağlantı 48 saat boyunca geçerlidir.\n\n` +
-            `Cogniti'ye hoş geldiniz.\n\nCogniti İş Partnerliği Ekibi\nCogniti · bilgi taşır`,
+            `Cogniti · bilgi taşır`,
         }),
       });
       if (!yanit.ok) throw new Error("E-posta gönderilemedi.");
-      return partnerYanit({ mesaj: "Başvuru onaylandı ve partnere şifre oluşturma daveti gönderildi." });
+      return partnerYanit({ mesaj: SUREC14_TOAST.basvuruOnaylandi });
     } catch {
       await db.rpc("agora_partner_davet_iptal", {
         p_admin_id: auth.kullaniciId,

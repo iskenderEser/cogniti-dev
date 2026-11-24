@@ -12,6 +12,10 @@ import {
   davetKoduUret,
   erisimKoduUret,
 } from "@/lib/bolis/sunucu";
+import {
+  bolisHazirListeDavetEpostalariGonder,
+  bolisSiteAdresiCoz,
+} from "@/lib/bolis/eposta";
 
 function tabloEksikMi(error: { code?: string; message?: string } | null): boolean {
   if (!error) return false;
@@ -283,6 +287,18 @@ export async function POST(request: NextRequest) {
       if (davetHata) {
         await b.db.from("bolis_sinavlari").delete().eq("sinav_id", sinavId);
         return NextResponse.json({ hata: "Davetli listesi kaydedilemedi." }, { status: 503 });
+      }
+    }
+
+    if (v.durum === "yayinda" && v.kayit_tipi === "hazir_liste") {
+      try {
+        await bolisHazirListeDavetEpostalariGonder(
+          b.db,
+          sinavId,
+          bolisSiteAdresiCoz(new URL(request.url).origin),
+        );
+      } catch {
+        // Sınav kaydı e-posta hatasından bağımsızdır.
       }
     }
 

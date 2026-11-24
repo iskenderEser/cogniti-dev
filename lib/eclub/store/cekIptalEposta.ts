@@ -58,7 +58,7 @@ export async function eclubCekIptalEpostasiGonder(db: SupabaseClient, talepId: s
       body: JSON.stringify({
         from,
         to: [eposta],
-        subject: "E-Club hediye çeki talebiniz iptal edildi",
+        subject: "E-Club Çek Talebiniz İptal Edildi",
         html:
           `<p style="margin: 0 0 16px 0;">${kacir(hitap)}</p>` +
           `<p style="margin: 0 0 16px 0;"><strong>${kacir(tutarMetni)}</strong> tutarındaki E-Club hediye çeki talebiniz iptal edilmiştir. Talebe bağlı puan kullanımınız hesabınıza geri açılmıştır.</p>` +

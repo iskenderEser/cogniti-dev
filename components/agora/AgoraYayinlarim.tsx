@@ -16,6 +16,7 @@ import {
 import { TALEP_TURU_KURALLARI, ureticiYetenegi, type TalepTuru } from "@/lib/uretici/yetenekler";
 import { ureticiYayinHedefGruplari, type YayinHedefGrubu } from "@/lib/utils/roller";
 import { agoraYayinKurali } from "@/lib/agora/yayinAyarlari";
+import { SUREC15_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import { AgoraYayinEditoru } from "./AgoraYayinEditoru";
 import styles from "./AgoraVitrini.module.css";
 import { AgoraRafOklari } from "./AgoraRafOklari";
@@ -243,6 +244,7 @@ export default function AgoraYayinlarim({
       const d = await res.json();
       if (!res.ok) throw Error(d.hata ?? "Ayarlar kaydedilemedi.");
       setTalep(d.talep_id);
+      basari(SUREC15_TOAST.yayinAyarlariKaydedildi);
       void yenile();
     } catch (e) {
       setHata(e instanceof Error ? e.message : "Ayarlar kaydedilemedi.");
@@ -453,7 +455,7 @@ export default function AgoraYayinlarim({
                 talepId={talep}
                 onYayinlandi={() => {
                   secimiKapat();
-                  basari("Agora yayını yayın yönetimine eklendi.");
+                  basari(SUREC15_TOAST.yayinYonetimineEklendi);
                   void yenile();
                 }}
               />

@@ -29,6 +29,7 @@ import {
   type BolisSinavDurumu,
   type BolisYayinAraci,
 } from "@/lib/bolis/tipler";
+import { SUREC16_TOAST, sonrakiSayfaToastYaz } from "@/lib/bildirimler/toastMesajlari";
 import { BolisDavetliAlani, type BolisDavetliSatiri } from "./BolisDavetliAlani";
 import { BolisMedyaYukleyici } from "./BolisMedyaYukleyici";
 import {
@@ -239,11 +240,14 @@ export default function BolisSinavFormu({ sinavId }: { sinavId?: string }) {
         return;
       }
 
-      setBasari(
+      const toastMesaj =
         hedefDurum === "yayinda"
-          ? "BOLIS sınavı başarıyla yayınlandı."
-          : "BOLIS sınavı taslak olarak kaydedildi.",
-      );
+          ? kayitTipi === "hazir_liste"
+            ? SUREC16_TOAST.hazirListeYayinlandi
+            : SUREC16_TOAST.sinavYayinlandi
+          : SUREC16_TOAST.taslakKaydedildi;
+      setBasari(toastMesaj);
+      sonrakiSayfaToastYaz(toastMesaj, "basari");
       router.push("/bolis");
       router.refresh();
     } catch {
@@ -264,6 +268,7 @@ export default function BolisSinavFormu({ sinavId }: { sinavId?: string }) {
         setHata(d.hata ?? "Sınav silinemedi.");
         return;
       }
+      sonrakiSayfaToastYaz(SUREC16_TOAST.sinavSilindi, "basari");
       router.push("/bolis");
       router.refresh();
     } catch {

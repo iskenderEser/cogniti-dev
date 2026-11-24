@@ -15,6 +15,14 @@ type Sonuc = "gonderildi" | "hata" | "kontrol";
 const enFazlaDeneme = 5;
 const beklemeSaniyesi = (n: number) => Math.min(3600, 60 * 2 ** Math.max(0, n - 1));
 
+const kacir = (v: unknown) =>
+  String(v ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+
 /** Gönderilen gövde ilk denemede SQL'de dondurulan bilgilerden kurulur; token veritabanına yazılmaz. */
 export function vivaDavetEpostaGovdesi(is: DavetIsi, token: string) {
   const { from, to, subject, baslik, baslangic, site } = is.icerik;
@@ -25,8 +33,28 @@ export function vivaDavetEpostaGovdesi(is: DavetIsi, token: string) {
     timeZone: "Europe/Istanbul", day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit",
   }).format(new Date(baslangic));
   const link = `${site}/viva/davet/${token}`;
-  return { from, to: [to], subject,
-    text: `Merhaba,\n\n${baslik} Viva yayınına davet edildiniz.\n\nYayın zamanı: ${zaman} (Türkiye saati)\nKatılım bağlantısı: ${link}\n\nBağlantıyı açtığınızda e-posta doğrulamasıyla yayına katılabilirsiniz.\n\nCogniti · Viva` };
+  const konu = subject === "Cogniti Viva yayın daveti" ? "Cogniti Viva Canlı Yayın Davetiniz" : subject;
+  return {
+    from,
+    to: [to],
+    subject: konu,
+    html:
+      `<p style="margin: 0 0 16px 0;">Sayın Katılımcımız,</p>` +
+      `<p style="margin: 0 0 16px 0;"><strong>${kacir(baslik)}</strong> Viva canlı yayınına davet edildiniz.</p>` +
+      `<ul style="margin: 0 0 16px 0; padding-left: 20px;">` +
+      `<li style="margin: 0 0 6px 0;"><strong>Yayın zamanı:</strong> ${kacir(zaman)} (Türkiye saati)</li>` +
+      `<li style="margin: 0;"><strong>Katılım bağlantısı:</strong> <a href="${kacir(link)}" style="color: #0b63ce; font-weight: 700; text-decoration: underline;">Canlı yayına katıl</a> (${kacir(link)})</li>` +
+      `</ul>` +
+      `<p style="margin: 0 0 16px 0;">Bağlantıyı açtığınızda e-posta adresinize gönderilecek tek kullanımlık doğrulama koduyla yayına katılabilirsiniz.</p>` +
+      `<p style="margin: 0;">Cogniti · bilgi taşır</p>`,
+    text:
+      `Sayın Katılımcımız,\n\n` +
+      `${baslik} Viva canlı yayınına davet edildiniz.\n\n` +
+      `- Yayın zamanı: ${zaman} (Türkiye saati)\n` +
+      `- Katılım bağlantısı: ${link}\n\n` +
+      `Bağlantıyı açtığınızda e-posta adresinize gönderilecek tek kullanımlık doğrulama koduyla yayına katılabilirsiniz.\n\n` +
+      `Cogniti · bilgi taşır`,
+  };
 }
 
 async function bitir(db: SupabaseClient, is: DavetIsi, sonuc: Sonuc, kod: string | null, saglayiciId: string | null, bekleme: number) {

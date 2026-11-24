@@ -5,6 +5,10 @@ import {
   firmaKullaniciDavetSifresiniKaydet,
   firmaKullaniciDavetTokeniMi,
 } from "@/lib/admin/kullaniciDaveti";
+import {
+  eczanemDavetSifresiniKaydet,
+  eczanemDavetTokeniMi,
+} from "@/lib/eczanem/uyelikDaveti";
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,6 +16,8 @@ export async function POST(request: NextRequest) {
     const db = createAdminClient(AbortSignal.timeout(15000));
     if (await firmaKullaniciDavetTokeniMi(db, body.token)) {
       await firmaKullaniciDavetSifresiniKaydet(db, body.token, body.sifre, body.tekrar);
+    } else if (await eczanemDavetTokeniMi(db, body.token)) {
+      await eczanemDavetSifresiniKaydet(db, body.token, body.sifre, body.tekrar, body.kvkk_onay);
     } else {
       await davetSifresiniKaydet(db, body.token, body.sifre, body.tekrar);
     }

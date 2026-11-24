@@ -24,6 +24,7 @@ import * as heading from "@/components/ui/sayfa-yenile-basligi";
 import * as refresh from "@/components/ui/yenile-butonu";
 import * as detayHelper from "@/lib/viva/detay";
 import * as roles from "@/lib/utils/roller";
+import * as toastMesajlari from "@/lib/bildirimler/toastMesajlari";
 import * as radix from "radix-ui";
 
 const id="00000000-0000-4000-8000-000000000001";
@@ -49,7 +50,7 @@ async function ortam(handler:(url:string,init?:RequestInit)=>{status?:number;dat
  modules['./VivaDurumAlani']=yukle('components/viva/VivaDurumAlani.tsx');
  modules['./VivaKaydirilabilirTablo']=yukle('components/viva/VivaKaydirilabilirTablo.tsx');
  modules['./VivaDetayIcerigi']=yukle('components/viva/VivaDetayIcerigi.tsx');
- modules['@/lib/viva/eposta']=eposta;modules['@/lib/viva/davetSecimi']=davetSecimi;
+ modules['@/lib/viva/eposta']=eposta;modules['@/lib/viva/davetSecimi']=davetSecimi;modules['@/lib/bildirimler/toastMesajlari']=toastMesajlari;
  modules['./viva-eposta.module.css']={default:new Proxy({},{get:(_,k)=>String(k)})};
  modules['./VivaEpostaAlani']=yukle('components/viva/VivaEpostaAlani.tsx');
  modules['./viva-saat.module.css']={default:new Proxy({},{get:(_,k)=>String(k)})};
@@ -155,7 +156,7 @@ test('otomatik davetlerin gönderim durumu görünür; yalnız bekleyen ve hatal
   assert.match(o.c.textContent!,/Gönderildi/);assert.match(o.c.textContent!,/Gönderim kontrolü gerekli/);
   assert.equal([...o.c.querySelectorAll('button')].filter(x=>x.textContent==='Yeniden dene').length,2);
   await o.click('Yeniden dene');assert.deepEqual(istekler,[{islem:'davet_yeniden_dene',etkinlik_id:id,surum:1,davet_id:kayitlar[0].davet_id}]);
-  assert.match(o.c.textContent!,/yeniden gönderim kuyruğuna alındı/);
+  assert.match(o.c.textContent!,/Davet e-postası yeniden gönderildi/);
  }finally{await o.close();}
 });
 test('yetkisiz kullanıcı düzenleme formunu ve yönetim bağlantılarını göremez',async()=>{

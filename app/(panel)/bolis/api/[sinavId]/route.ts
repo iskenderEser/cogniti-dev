@@ -5,6 +5,10 @@ import {
   davetKoduUret,
   uuidGecerliMi,
 } from "@/lib/bolis/sunucu";
+import {
+  bolisHazirListeDavetEpostalariGonder,
+  bolisSiteAdresiCoz,
+} from "@/lib/bolis/eposta";
 import { BOLIS_DURUMLARI, type BolisSinavDurumu } from "@/lib/bolis/tipler";
 
 export async function GET(
@@ -173,6 +177,18 @@ export async function PUT(
       }
     }
 
+    if (v.durum === "yayinda" && v.kayit_tipi === "hazir_liste") {
+      try {
+        await bolisHazirListeDavetEpostalariGonder(
+          b.db,
+          sinavId,
+          bolisSiteAdresiCoz(new URL(request.url).origin),
+        );
+      } catch {
+        // Sınav güncellemesi e-posta hatasından bağımsızdır.
+      }
+    }
+
     return NextResponse.json({
       sinav_id: sinavId,
       erisim_kodu: mevcut.erisim_kodu,
@@ -207,6 +223,17 @@ export async function PATCH(
       return NextResponse.json({ hata: "Geçersiz sınav durumu." }, { status: 400 });
     }
 
+    const { data: mevcut } = await b.db
+      .from("bolis_sinavlari")
+      .select("sinav_id, kayit_tipi")
+      .eq("sinav_id", sinavId)
+      .eq("firma_id", b.firmaId)
+      .maybeSingle();
+
+    if (!mevcut) {
+      return NextResponse.json({ hata: "Sınav bulunamadı." }, { status: 404 });
+    }
+
     if (durum === "yayinda") {
       const { count: soruSayisi } = await b.db
         .from("bolis_sorulari")
@@ -217,6 +244,18 @@ export async function PATCH(
           { hata: "Sınavı yayınlamak için en az 1 soru eklemelisiniz." },
           { status: 400 },
         );
+      }
+      if (mevcut.kayit_tipi === "hazir_liste") {
+        const { count: davetliSayisi } = await b.db
+          .from("bolis_davetlileri")
+          .select("davetli_id", { count: "exact", head: true })
+          .eq("sinav_id", sinavId);
+        if ((davetliSayisi ?? 0) === 0) {
+          return NextResponse.json(
+            { hata: "Hazır liste modunda sınavı yayınlamak için en az 1 katılımcı eklemelisiniz." },
+            { status: 400 },
+          );
+        }
       }
     }
 
@@ -230,7 +269,19 @@ export async function PATCH(
       return NextResponse.json({ hata: "Sınav durumu güncellenemedi." }, { status: 503 });
     }
 
-    return NextResponse.json({ sinav_id: sinavId, durum });
+    if (durum === "yayinda" && mevcut.kayit_tipi === "hazir_liste") {
+      try {
+        await bolisHazirListeDavetEpostalariGonder(
+          b.db,
+          sinavId,
+          bolisSiteAdresiCoz(new URL(request.url).origin),
+        );
+      } catch {
+        // Sınav durum güncellemesi e-posta hatasından bağımsızdır.
+      }
+    }
+
+    return NextResponse.json({ sinav_id: sinavId, durum, kayit_tipi: mevcut.kayit_tipi });
   } catch {
     return NextResponse.json({ hata: "Sınav durumu güncellenemedi." }, { status: 503 });
   }

@@ -52,7 +52,7 @@ export async function POST(istek: Request) {
       body: JSON.stringify({
         from,
         to: [user.email],
-        subject: "Cogniti şifreniz güncellendi",
+        subject: "Cogniti Hesap Şifreniz Güncellendi",
         html:
           `<p style="margin: 0 0 16px 0;">${kacir(hitap)}</p>` +
           `<p style="margin: 0 0 16px 0;">Cogniti hesabınızın şifresi güncellenmiştir.</p>` +

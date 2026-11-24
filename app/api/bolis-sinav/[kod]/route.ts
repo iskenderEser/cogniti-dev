@@ -9,6 +9,7 @@ import {
   type BolisYayinAraci,
 } from "@/lib/bolis/tipler";
 import { uuidGecerliMi } from "@/lib/bolis/sunucu";
+import { bolisSinavSonucEpostasiGonder } from "@/lib/bolis/eposta";
 
 function cerezAdi(sinavId: string): string {
   return `bolis_oturum_${sinavId.replace(/-/g, "")}`;
@@ -102,6 +103,24 @@ export async function GET(
       if (o) mevcutOturum = o;
     }
 
+    const davetKodu = request.nextUrl.searchParams.get("davet")?.trim() ?? "";
+    let davetliEtiketi: string | null = null;
+    if (
+      !mevcutOturum &&
+      sinav.kayit_tipi === "hazir_liste" &&
+      /^[a-zA-Z0-9_-]{8,64}$/.test(davetKodu)
+    ) {
+      const { data: d } = await db
+        .from("bolis_davetlileri")
+        .select("ad, soyad")
+        .eq("sinav_id", sinav.sinav_id)
+        .eq("davet_kodu", davetKodu)
+        .maybeSingle();
+      if (d) {
+        davetliEtiketi = `${String(d.ad ?? "").trim()} ${String(d.soyad ?? "").trim()}`.trim();
+      }
+    }
+
     return NextResponse.json({
       sinav: {
         sinav_id: sinav.sinav_id,
@@ -123,6 +142,7 @@ export async function GET(
         henuzBaslamadi,
         suresiDoldu,
       },
+      davetli_etiketi: davetliEtiketi,
       oturum: mevcutOturum,
       medya_url:
         mevcutOturum && mevcutOturum.durum === "devam"
@@ -236,9 +256,10 @@ export async function POST(
       let eczaneAdi: string | null = null;
 
       if (sinav.kayit_tipi === "hazir_liste") {
+        const girilenDavetKodu = metinTemizle(body?.davet_kodu, 64);
         const girilenEposta = metinTemizle(body?.eposta, 200).toLowerCase();
         const girilenTel = metinTemizle(body?.telefon, 40).replace(/\s+/g, "");
-        if (!girilenEposta && !girilenTel) {
+        if (!girilenDavetKodu && !girilenEposta && !girilenTel) {
           return NextResponse.json(
             { hata: "Hazır listede doğrulama için e-posta veya telefon numaranızı girin." },
             { status: 400 },
@@ -247,10 +268,12 @@ export async function POST(
 
         const { data: liste } = await db
           .from("bolis_davetlileri")
-          .select("davetli_id, ad, soyad, eposta, telefon, rol_grubu, takim_adi, bolge_adi, eczane_adi")
+          .select("davetli_id, davet_kodu, ad, soyad, eposta, telefon, rol_grubu, takim_adi, bolge_adi, eczane_adi")
           .eq("sinav_id", sinavId);
 
         const eslesen = (liste ?? []).find((d) => {
+          const dKod = (d.davet_kodu as string | null)?.trim() ?? "";
+          if (girilenDavetKodu && dKod && dKod === girilenDavetKodu) return true;
           const dEposta = (d.eposta as string | null)?.trim().toLowerCase() ?? "";
           const dTel = (d.telefon as string | null)?.replace(/\s+/g, "") ?? "";
           return (
@@ -411,7 +434,7 @@ export async function POST(
       const { data: oturum } = await db
         .from("bolis_oturumlari")
         .select(
-          "oturum_id, katilimci_etiketi, durum, toplam_puan, maksimum_puan, dogru_sayisi, yanlis_sayisi, bos_sayisi, teslim_at",
+          "oturum_id, katilimci_etiketi, ad, soyad, eposta, durum, toplam_puan, maksimum_puan, dogru_sayisi, yanlis_sayisi, bos_sayisi, teslim_at",
         )
         .eq("oturum_id", oturumId)
         .eq("sinav_id", sinavId)
@@ -422,7 +445,11 @@ export async function POST(
       }
 
       if (oturum.durum === "tamamlandi") {
-        return NextResponse.json({ oturum });
+        const { ad: _ad, soyad: _soyad, eposta: _eposta, ...disOturum } = oturum;
+        void _ad;
+        void _soyad;
+        void _eposta;
+        return NextResponse.json({ oturum: disOturum });
       }
 
       const { data: sorular } = await db
@@ -503,6 +530,25 @@ export async function POST(
 
       if (teslimHata || !guncelOturum) {
         return NextResponse.json({ hata: "Sınav sonucu kaydedilemedi." }, { status: 503 });
+      }
+
+      if (sinav.kayit_tipi !== "anonim" && typeof oturum.eposta === "string" && oturum.eposta.trim()) {
+        const tamAd = `${String(oturum.ad ?? "").trim()} ${String(oturum.soyad ?? "").trim()}`.trim();
+        try {
+          await bolisSinavSonucEpostasiGonder({
+            oturumId,
+            sinavBaslik: String(sinav.baslik ?? ""),
+            adSoyad: tamAd || String(oturum.katilimci_etiketi ?? ""),
+            eposta: oturum.eposta.trim(),
+            toplamPuan: Number(guncelOturum.toplam_puan ?? 0),
+            maksimumPuan: Number(guncelOturum.maksimum_puan ?? 0),
+            dogruSayisi: Number(guncelOturum.dogru_sayisi ?? 0),
+            yanlisSayisi: Number(guncelOturum.yanlis_sayisi ?? 0),
+            bosSayisi: Number(guncelOturum.bos_sayisi ?? 0),
+          });
+        } catch {
+          // Sınav sonucu kaydı e-posta hatasından bağımsızdır.
+        }
       }
 
       return NextResponse.json({ oturum: guncelOturum });

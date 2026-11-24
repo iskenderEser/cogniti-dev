@@ -19,6 +19,7 @@ import { AgoraPodcastBilgisi } from "./AgoraPodcastBilgisi";
 import { AgoraSiparisModali } from "./AgoraSiparisModali";
 import { AgoraCanliYayinlar } from "./AgoraCanliYayinlar";
 import { HataMesajiContainer,useHataMesaji } from "@/components/HataMesaji";
+import { SUREC15_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import styles from "./AgoraVitrini.module.css";
 import { AgoraRafOklari } from "./AgoraRafOklari";
 import MobilYayinAkisi from "@/components/yayin/MobilYayinAkisi";
@@ -111,7 +112,7 @@ export default function AgoraVitrini() {
   </div>
   {tur==="canli"?<AgoraCanliYayinlar partnerId={partner?.partner_id??null} hedefRol={hedef} arama={arama} onBasari={mesaj=>{basari(mesaj);void agora.yenile();}}/>:yukleniyor&&!veri?<p role="status">Agora yükleniyor…</p>:raflar.length===0?<p className={styles.bos}>Seçili kriterlere uygun yayın bulunmuyor.</p>:raflar.map(r=><AgoraRafi key={r.baslik+seciliPartner+hedef+tur+arama} {...r} onIncele={setIncelenen} onSiparis={setSiparis}/>)}
   <HataMesajiContainer mesajlar={mesajlar}/>
-  {siparis&&<AgoraSiparisModali key={siparis.egitim_id} yayin={siparis} onKapat={()=>setSiparis(null)} onTamam={(mevcut,borc)=>{setSiparis(null);basari(mevcut?"Bu yayın için daha önce sipariş verdiniz.":"Yayın siparişiniz tamamlandı ve yayın havuzunuza eklendi."+(borc>0?` ${borc.toLocaleString("tr-TR")} token borca yazıldı.`:""));void agora.yenile();}}/>}
+  {siparis&&<AgoraSiparisModali key={siparis.egitim_id} yayin={siparis} onKapat={()=>setSiparis(null)} onTamam={(mevcut,borc)=>{setSiparis(null);basari(mevcut?SUREC15_TOAST.yayinSiparisMevcut:SUREC15_TOAST.yayinSiparisTamamlandi(borc));void agora.yenile();}}/>}
   <Dialog.Root open={!!incelenen} onOpenChange={acik=>{if(!acik)setIncelenen(null);}}>
    <Dialog.Portal><Dialog.Overlay className={styles.ortu}/><Dialog.Content className={styles.modal}>
     <div className={styles.modalBaslik}><Dialog.Title className="text-lg font-bold">{incelenen?.egitim_adi}</Dialog.Title><Dialog.Close asChild><Button variant="outline" aria-label="İncelemeyi kapat"><X size={16}/></Button></Dialog.Close></div>

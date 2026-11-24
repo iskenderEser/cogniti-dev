@@ -36,7 +36,7 @@ async function yayinVideoHataEpostasiGonder(
       body: JSON.stringify({
         from,
         to: [eposta],
-        subject: "Yayınınız video işleme hatası nedeniyle durduruldu",
+        subject: "Yayınınız Video Hatası Nedeniyle Durduruldu",
         html:
           `<p style="margin: 0 0 16px 0;">${kacir(hitap)}</p>` +
           `<p style="margin: 0 0 16px 0;">${kacir(`${params.urunAdi} adlı yayınınızın video dosyası işlenemediği için yayınınız otomatik olarak durdurulmuştur.`)}</p>` +

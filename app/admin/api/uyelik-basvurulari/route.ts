@@ -72,7 +72,7 @@ export async function POST(istek: Request) {
       method: "POST", signal: AbortSignal.timeout(10000),
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
       body: JSON.stringify({
-        from, to: [aday.eposta], subject: "Cogniti kurumsal üyelik formu davetiniz",
+        from, to: [aday.eposta], subject: "Cogniti Kurumsal Üyelik Formu Davetiniz",
         html:
           `<p style="margin: 0 0 16px 0;">${kacir(hitap)}</p>` +
           `<p style="margin: 0 0 16px 0;">${kacir(onayCumlesi)}</p>` +

@@ -7,6 +7,7 @@ import * as jsx from "react/jsx-runtime";
 import ts from "typescript";
 import { Window } from "happy-dom";
 import * as tipler from "@/lib/agora/partnerOnayTipleri";
+import * as toastMesajlari from "@/lib/bildirimler/toastMesajlari";
 import { partnerSifreOzeti, partnerSifreDogrula } from "@/lib/agora/partnerSifre";
 import { partnerJsonOku } from "@/lib/agora/partnerHttp";
 
@@ -94,6 +95,7 @@ test("Admin listesi başvuruyu gösterir, çift karar göndermez ve başarıdan 
     "react/jsx-runtime": jsx,
     "lucide-react": { Download: () => null },
     "@/lib/agora/partnerOnayTipleri": tipler,
+    "@/lib/bildirimler/toastMesajlari": toastMesajlari,
     "@/components/HataMesaji": {
       HataMesajiContainer: () => null,
       useHataMesaji: () => ({ mesajlar: [], basari: (m: string) => basarilar.push(m) }),

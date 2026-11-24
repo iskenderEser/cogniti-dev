@@ -1,4 +1,6 @@
 import { agoraVitrinBaglami } from "@/lib/agora/vitrinSunucu";
+import { aliciYayinSiparisiEpostalariGonder } from "@/lib/agora/aliciEposta";
+import { partnerYayinSiparisiEpostasiGonder } from "@/lib/agora/partnerEposta";
 import { partnerJsonOku,partnerYanit } from "@/lib/agora/partnerHttp";
 import { medyaUuid } from "@/lib/agora/partnerMedyaSunucu";
 import { URETICI_ROLLER } from "@/lib/utils/roller";
@@ -13,6 +15,13 @@ export async function POST(request:Request) {
   const {data,error}=await b.db.rpc("agora_satin_al",{p_auth_id:b.authId,p_egitim_id:d.egitim_id,p_surum:d.surum,p_fiyat:d.fiyat_tl,p_kko_birim:KKO_TOKEN_FIYATI});
   if(error)return partnerYanit({hata:error.code==="40001"?"Yayın veya fiyat değişti. Agora’yı yenileyip tekrar onaylayın.":error.code==="42501"?"Sipariş verme yetkiniz bulunmuyor.":"Sipariş tamamlanamadı. Yeniden deneyebilirsiniz."},error.code==="40001"?409:error.code==="42501"?403:503);
   if(!data?.siparis_id)return partnerYanit({hata:"Sipariş sonucu doğrulanamadı."},503);
+  if(data.mevcut===false){
+   const siparisId=String(data.siparis_id);
+   await Promise.allSettled([
+    partnerYayinSiparisiEpostasiGonder(b.db,siparisId),
+    aliciYayinSiparisiEpostalariGonder({db:b.db,siparisId,aliciId:b.authId,borcaYazilanToken:Number(data.borca_yazilan_token??0)}),
+   ]);
+  }
   return partnerYanit(data);
  }catch{return partnerYanit({hata:"Sipariş sonucu alınamadı. Yeniden denemeniz ikinci kez token düşürmez."},503);}
 }

@@ -25,7 +25,7 @@ test("red: E-Club üyesi yeni kayıt ve mevcut müşteri bağından önce kesin 
   assert.ok(kontrolSirasi >= 0 && islemSirasi > kontrolSirasi);
   assert.equal(
     ECLUB_UYESI_MUSTERI_OLAMAZ_MESAJI,
-    "Cogniti'de E-Club üyesi olduğunuz için müşteri olarak kayıt olmazsınız",
+    "Bu kişi Cogniti'de E-Club üyesi olduğu için Eczanem üyesi olarak kaydedilemez.",
   );
   assert.match(route, /isKuraluHatasi\(ECLUB_UYESI_MUSTERI_OLAMAZ_MESAJI\)/);
 });

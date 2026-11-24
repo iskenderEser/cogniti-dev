@@ -231,7 +231,7 @@ test("video kodlaması başarısız olduğunda Resend ayarlıysa üreticiye e-po
     assert.equal(gidenler[0].url, "https://api.resend.com/emails");
     assert.equal(gidenler[0].headers["Idempotency-Key"], "yayin-video-hatasi/yayin-123");
     assert.deepEqual(gidenler[0].body.to, ["mehmet@hepifarma.com"]);
-    assert.equal(gidenler[0].body.subject, "Yayınınız video işleme hatası nedeniyle durduruldu");
+    assert.equal(gidenler[0].body.subject, "Yayınınız Video Hatası Nedeniyle Durduruldu");
     assert.match(String(gidenler[0].body.text), /Sayın Mehmet Kaya,/);
     assert.match(String(gidenler[0].body.text), /Aspirin Plus adlı yayınınızın video dosyası işlenemediği/);
     assert.match(String(gidenler[0].body.text), /Cogniti · bilgi taşır$/);

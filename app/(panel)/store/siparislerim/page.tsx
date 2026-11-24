@@ -17,6 +17,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
+import { SUREC12_TOAST, sonrakiSayfaToastOku } from "@/lib/bildirimler/toastMesajlari";
 import { STORE_ALABILEN_ROLLER } from "@/lib/utils/roller";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { YenileButonu } from "@/components/ui/yenile-butonu";
@@ -120,12 +121,16 @@ export default function SiparislerimPage() {
 
   useEffect(() => {
     if (!yetkiKontrolEdildi) return;
+    const bekleyenToast = sonrakiSayfaToastOku();
+    if (bekleyenToast) {
+      basari(bekleyenToast.mesaj);
+    }
     void siparisleriYukle();
     const yenile = () => { if (document.visibilityState === "visible") void siparisleriYukle(true); };
     const timer = window.setInterval(yenile, 30_000);
     window.addEventListener("focus", yenile);
     return () => { window.clearInterval(timer); window.removeEventListener("focus", yenile); };
-  }, [yetkiKontrolEdildi, siparisleriYukle]);
+  }, [yetkiKontrolEdildi, siparisleriYukle, basari]);
 
   const handleIptalOnayla = async () => {
     if (!iptalEdilecek || iptalKilidi.current) return;
@@ -151,7 +156,7 @@ export default function SiparislerimPage() {
         return;
       }
 
-      basari("Talebiniz iptal edildi ve puanınız iade edildi.");
+      basari(SUREC12_TOAST.kullaniciTalepIptalEdildi);
       setIptalEdilecek(null);
       setIptalIslemi(false);
       hbstoreBakiyesiDegistiBildir();
@@ -353,6 +358,11 @@ export default function SiparislerimPage() {
 
                   <div className="flex flex-col gap-2 border-t border-[var(--tema-yerel-magaza-cizgi-09)] bg-[var(--tema-yerel-magaza-sayfa-zemini-02)] px-4 py-3 text-xs sm:flex-row sm:items-center sm:justify-between md:px-5">
                     {s.durum === "iptal" && s.admin_aktarildi === false && <p className="font-semibold">Talebiniz iptal edildi; admine aktarılmadı.</p>}
+                    {s.durum === "iptal" && s.iptal_sebebi && (
+                      <p className="font-semibold text-[var(--tema-yerel-magaza-ana-metin-02)]">
+                        <strong>İptal nedeni:</strong> {s.iptal_sebebi}
+                      </p>
+                    )}
                     {s.durum === "beklemede" && <p className="font-semibold">
                       {iptalUygun ? `Talebiniz henüz admine aktarılmadı. ${s.iptal_son_at ? tarihFormatla(s.iptal_son_at) : ""} tarihine kadar iptal edebilirsiniz.` : "12 saatlik iptal süresi doldu; talebiniz admin işlemine aktarıldı."}
                     </p>}

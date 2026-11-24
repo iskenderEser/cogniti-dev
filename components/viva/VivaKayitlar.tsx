@@ -7,6 +7,7 @@ import { YenileButonu } from "@/components/ui/yenile-butonu";
 import { SayfaYenileBasligi } from "@/components/ui/sayfa-yenile-basligi";
 import { vivaIndirmeAcik } from "@/lib/viva/indirme";
 import { vivaTarih } from "@/lib/viva/sozlesme";
+import { SUREC13_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import styles from "./viva-detay.module.css";
 type Kayit = { anahtar: string; id: string | null; baslangic: string | null; sure: number | null; durum: string };
 const ADLAR: Record<string, string> = { kaydediliyor: "Kayıt başladı", hazirlaniyor: "Dosya hazırlanıyor", hazir: "Kayıt hazır", hata: "Kayıt hatası" };
@@ -50,7 +51,7 @@ export default function VivaKayitlar({ etkinlikId, canli, detayTasarimi = false,
     if (islemKilitli.current) return;
     islemKilitli.current = true; const signal = eylemKontrolu.current?.signal;
     setBusy(true); setBilgi("");
-    try { const r = await fetch("/viva/api/kayit", { method: "POST", headers: { "Content-Type": "application/json" }, signal, body: JSON.stringify({ etkinlik_id: etkinlikId, islem: "yenile" }) }); const d = await r.json(); if (!r.ok) throw Error(d.hata); if (signal?.aborted) return; setHata(""); setBilgi("Kayıt kontrolü sıraya alındı. Sonuçlar otomatik güncellenecek."); setYenileme(n => n + 1); }
+    try { const r = await fetch("/viva/api/kayit", { method: "POST", headers: { "Content-Type": "application/json" }, signal, body: JSON.stringify({ etkinlik_id: etkinlikId, islem: "yenile" }) }); const d = await r.json(); if (!r.ok) throw Error(d.hata); if (signal?.aborted) return; setHata(""); setBilgi(SUREC13_TOAST.kayitKontrolSirada); setYenileme(n => n + 1); }
     catch { if (!signal?.aborted) setHata("Kayıt kontrolü başlatılamadı."); } finally { islemKilitli.current = false; if (!signal?.aborted) setBusy(false); }
   }
   async function indir(id: string, tur: "video" | "sohbet") {

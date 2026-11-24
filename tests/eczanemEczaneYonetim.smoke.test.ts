@@ -19,9 +19,9 @@ test("mutlu: personel izi ve ayrılmış sipariş kuyruğu ortak arayüzle kurul
   assert.match(siparisRoute, /\.eq\("durum", "bekliyor"\)[\s\S]*\.range\(/);
   assert.match(gonderim, /rpc\("eczanem_musterilere_video_gonder"/);
   assert.match(ortakArayuz, /max-w-\[1480px\]/);
-  assert.match(musterilerim, /Müşteriyi sorgula/);
-  assert.match(musterilerim, /Eczaneme bağla/);
-  assert.match(musterilerim, /Yeni müşteri kaydı oluştur/);
+  assert.match(musterilerim, /Üyeyi sorgula/);
+  assert.match(musterilerim, /Onay talebi gönder/);
+  assert.match(musterilerim, /Yeni üye kaydı oluştur/);
   assert.match(musterilerim, /aria-label="Bilgilendirmeyi kapat"/);
 });
 

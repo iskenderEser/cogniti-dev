@@ -25,6 +25,7 @@ import * as calendar from '@/lib/viva/takvim';
 import * as download from '@/lib/viva/indirme';
 import * as eposta from '@/lib/viva/eposta';
 import * as davetSecimi from '@/lib/viva/davetSecimi';
+import * as toastMesajlari from '@/lib/bildirimler/toastMesajlari';
 const id=(n=1)=>`00000000-0000-4000-8000-${String(n).padStart(12,'0')}`;
 const e={etkinlik_id:id(),baslik:'Buluşma',aciklama:'Açıklama',baslangic:'2027-01-01T21:30:00Z',bitis:'2027-01-01T22:00:00Z',durum:'planlandi',surum:3,sahip_id:id(),sahip_adi:'Düzenleyen',firma_adi:'Firma',yonetebilir:true,oda_acik:true,yayin_turu:'planli'};
 const kisi={id:id(2),tur:'ic',ad:'İlker Test',alt:'utt',eposta:'ilker@example.invalid'};
@@ -46,7 +47,7 @@ async function ortam(handler:(url:string,init?:RequestInit)=>ResponseData|Promis
  const fetcher=async(url:string,init?:RequestInit)=>{requests.push({url:String(url),init});const r=await handler(String(url),init);return{ok:!r.status||r.status<400,status:r.status??200,json:async()=>r.data}};
  const style={default:new Proxy({},{get:(_,k)=>String(k)})};
  const modules:Record<string,unknown>={react:React,'react/jsx-runtime':jsxRuntime,'next/image':{default:({alt,...props}:React.ComponentProps<'img'>)=>React.createElement('img',{...props,alt})},'next/link':{default:({children,...p}:React.ComponentProps<'a'>)=>React.createElement('a',p,children)},'next/navigation':{useRouter:()=>({push:(p:string)=>paths.push(p),replace:(p:string)=>paths.push(p)})},'lucide-react':icons,'radix-ui':radix,'@/components/ui/button':buttons,'@/components/ui/card':cards,'@/components/ui/input':inputs,'@/components/ui/label':labels,'@/components/kontrol/SadeKontroller':controls,'@/components/ui/alert-dialog':dialogs,'@/components/ui/sayfa-yenile-basligi':heading,'@/components/ui/yenile-butonu':refresh,'@/lib/viva/sozlesme':contract,'@/lib/viva/eposta':eposta,'@/lib/viva/davetSecimi':davetSecimi,'@/lib/viva/detay':detail,'@/lib/utils/roller':roles,'@/lib/viva/takvim':calendar,'@/lib/viva/indirme':download,'./viva.module.css':style,'./viva-oda.module.css':{default:new Proxy({},{get:(_,k)=>String(k)})},'./viva-form.module.css':style,'./viva-detay.module.css':style,'./VivaGorusmeSaglayici':{VivaKaliciOdaYeri:()=>null},'./VivaEpostaAlani':{default:()=>null},'./VivaSaatSecimi':{default:()=>null},'./VivaSureSecimi':{default:()=>null}};
- const context={fetch:fetcher,window:dom,document:dom.document,navigator:dom.navigator};
+ const context={fetch:fetcher,window:dom,document:dom.document,navigator:dom.navigator};modules['@/lib/bildirimler/toastMesajlari']=toastMesajlari;
  const kaydirma=load('components/viva/VivaKaydirilabilirTablo.tsx',modules,context);modules['./VivaKaydirilabilirTablo']=kaydirma;
  const kayit=load('components/viva/VivaKayitlar.tsx',modules,context);
  modules['./VivaKayitlar']=kayit;modules['./VivaDetayIcerigi']=load('components/viva/VivaDetayIcerigi.tsx',modules,context);

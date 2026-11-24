@@ -24,6 +24,7 @@ import {
   type PartnerBasvurusu,
   type PartnerIlkGirisDurumu,
 } from "@/lib/agora/partnerOnayTipleri";
+import { SUREC14_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import styles from "../admin.module.css";
 
 function erisimDurumuMetni(k: PartnerBasvurusu): string {
@@ -118,8 +119,8 @@ export default function PartnerYonetimi() {
       }
       const bildirimMetni =
         karar === "onaylandi"
-          ? `${secili.ad_soyad} başvurusu onaylandı; şifre oluşturma daveti gönderildi.`
-          : `${secili.ad_soyad} başvurusu reddedildi.`;
+          ? SUREC14_TOAST.basvuruOnaylandiAdli(secili.ad_soyad)
+          : SUREC14_TOAST.basvuruReddedildiAdli(secili.ad_soyad);
       basari(bildirimMetni);
       setRetOnayiAcik(false);
       setSecili(null);

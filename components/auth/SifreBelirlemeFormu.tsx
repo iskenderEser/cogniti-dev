@@ -1,12 +1,14 @@
 "use client";
 
 import { Eye, EyeOff } from "lucide-react";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { SIFRE_KURAL_ACIKLAMASI, sifreKuralHatasi } from "@/lib/auth/sifreKurali";
 
-export function SifreBelirlemeFormu({ baslik, buton, onKaydet }: {
+export function SifreBelirlemeFormu({ baslik, buton, onKaydet, ekIcerik, ekKontrol }: {
   baslik: string; buton: string;
   onKaydet: (sifre: string, tekrar: string) => Promise<void>;
+  ekIcerik?: ReactNode;
+  ekKontrol?: () => string | null;
 }) {
   const [sifre, setSifre] = useState("");
   const [tekrar, setTekrar] = useState("");
@@ -20,6 +22,8 @@ export function SifreBelirlemeFormu({ baslik, buton, onKaydet }: {
     const kuralHatasi = sifreKuralHatasi(sifre);
     if (kuralHatasi) { setHata(kuralHatasi); return; }
     if (sifre !== tekrar) { setHata("Şifreler eşleşmiyor."); return; }
+    const ekHata = ekKontrol?.();
+    if (ekHata) { setHata(ekHata); return; }
     setIslem(true);
     try { await onKaydet(sifre, tekrar); }
     catch (e) { setHata(e instanceof Error ? e.message : "Şifre kaydedilemedi."); }
@@ -40,6 +44,7 @@ export function SifreBelirlemeFormu({ baslik, buton, onKaydet }: {
         </div>
       </label>
     ))}
+    {ekIcerik}
     {hata && <p role="alert" className="rounded-xl border border-[var(--tema-yerel-giris-islevsel-cizgi-01)] bg-[var(--tema-yerel-giris-islevsel-zemin-01)] px-3 py-2 text-xs text-[var(--tema-yerel-giris-islevsel-metin-02)]">{hata}</p>}
     <button type="submit" disabled={islem} className="w-full rounded-xl bg-[var(--tema-kontrol-eylem)] py-3 text-sm font-bold text-[var(--tema-kontrol-eylem-metin)] cursor-pointer disabled:opacity-60">{islem ? "Kaydediliyor…" : buton}</button>
   </form>;

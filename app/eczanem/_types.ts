@@ -81,7 +81,14 @@ export interface EczanemVideoRaflari {
   en_cok_favorilenenler: EczanemMusteriVideo[];
 }
 
+export interface EczanemPasifUyelikOzeti {
+  eczane_id: string;
+  eczane_adi: string;
+  kalan_gun: number;
+}
+
 export interface EczanemVideolarYaniti {
   videolar: EczanemMusteriVideo[];
   agac: EczanemSidebarAgaci;
+  pasif_uyelikler?: EczanemPasifUyelikOzeti[];
 }

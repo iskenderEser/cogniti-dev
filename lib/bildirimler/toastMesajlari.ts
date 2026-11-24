@@ -213,3 +213,89 @@ export const SUREC10_TOAST = {
   uttSiparisOnaylandi: "Sipariş onaylandı ve BM onayına gönderildi.",
   bmSiparisOnaylandi: "Sipariş BM tarafından onaylandı.",
 } as const;
+
+export const SUREC11_TOAST = {
+  uyeDavetiGonderildi: "Üye kaydedildi; 24 saat geçerli şifre oluşturma daveti e-postasına gönderildi.",
+  uyeDavetiGonderilemedi: "Üye kaydedildi ancak davet e-postası gönderilemedi.",
+  davetYenidenGonderildi: "Şifre oluşturma daveti yeniden gönderildi.",
+  davetGuncellendi: "Bekleyen davet bilgileri güncellendi ve yeni davet gönderildi.",
+  davetIptalEdildi: "Bekleyen davet iptal edildi.",
+  baglamaTalebiGonderildi: "Bağlantı onay talebi üyeye gönderildi.",
+  baglamaOnaylandi: "Eczane bağlantısı onaylandı.",
+  baglamaReddedildi: "Eczane bağlantı talebi reddedildi.",
+  uyeDurumGuncellendi: "Üye durumu güncellendi.",
+  uyeListedenSilindi: "Üye eczane listenizden silindi.",
+  indirimTalebiGonderildi: "İndirim talebiniz eczanenizin onayına gönderildi.",
+  indirimTalebiIptalEdildi: "İndirim talebi iptal edildi; puanınız değişmedi.",
+  siparisOnaylandi: (indirimMetni: string, islemKodu: string) =>
+    `Sipariş onaylandı — ${indirimMetni} indirim (${islemKodu}).`,
+  siparisReddedildi: "İndirim talebi reddedildi.",
+} as const;
+
+export const SUREC12_TOAST = {
+  cekTalebiAlindi: "Çek talebiniz alındı.",
+  kullaniciTalepIptalEdildi: "Talebiniz iptal edildi ve puanınız iade edildi.",
+  adminTalepHazirlaniyor: "Talep hazırlamaya alındı.",
+  adminCekTeslimEdildi: "Çek kodları teslim edildi ve e-posta gönderimi başlatıldı.",
+  adminTalepIptalEdildi: "Talep iptal edildi ve puan kullanıcıya iade edildi.",
+  adminEpostaYenidenKuyrukta: "Hediye çeki e-postası yeniden gönderim kuyruğuna alındı.",
+} as const;
+
+export const SUREC13_TOAST = {
+  taslakKaydedildi: "Etkinlik taslak olarak kaydedildi.",
+  yayinPlanlandi: "Viva canlı yayını planlandı ve davetler gönderildi.",
+  anlikYayinOlusturuldu: "Canlı yayın oluşturuldu; yayın odasına yönlendiriliyorsunuz.",
+  etkinlikGuncellendi: "Etkinlik bilgileri güncellendi.",
+  etkinlikIptalEdildi: "Etkinlik iptal edildi ve katılımcılara bilgilendirme e-postası gönderildi.",
+  ozelDavetOlusturuldu: "Özel davet bağlantısı oluşturuldu.",
+  davetYenidenGonderildi: "Davet e-postası yeniden gönderildi.",
+  davetIptalEdildi: "Davet iptal edildi.",
+  baglantiKopyalandi: "Bağlantı kopyalandı.",
+  katilimciCikarildi: "Katılımcı çıkarıldı.",
+  gorusmeBitirildi: "Görüşme herkes için bitirildi.",
+  kayitKontrolSirada: "Kayıt kontrolü sıraya alındı. Sonuçlar otomatik güncellenecek.",
+  dogrulamaKoduGonderildi: "Doğrulama kodu davetteki e-posta adresine gönderildi.",
+  epostaDogrulandi: "E-posta adresiniz doğrulandı.",
+} as const;
+
+export const SUREC14_TOAST = {
+  basvuruAlindi: "İş partnerliği başvurunuz alındı. Bilgilendirme e-postası adresinize gönderildi.",
+  basvuruOnaylandi: "Başvuru onaylandı ve partnere şifre oluşturma daveti gönderildi.",
+  basvuruOnaylandiAdli: (adSoyad: string) =>
+    `${adSoyad} başvurusu onaylandı; şifre oluşturma daveti gönderildi.`,
+  basvuruReddedildi: "Başvuru reddedildi ve bilgilendirme e-postası gönderildi.",
+  basvuruReddedildiAdli: (adSoyad: string) =>
+    `${adSoyad} başvurusu reddedildi ve bilgilendirme e-postası gönderildi.`,
+  sifreOlusturuldu: "Şifreniz oluşturuldu. Partner girişi sayfasından giriş yapabilirsiniz.",
+  erisimAcildi: "Partner erişimi açıldı ve bilgilendirme e-postası gönderildi.",
+  erisimKapatildi: "Partner erişimi kapatıldı ve bilgilendirme e-postası gönderildi.",
+  adminYayinAktif: "Yayın aktife alındı ve partnere bilgi verildi.",
+  adminYayinPasif: "Yayın pasife alındı ve partnere bilgi verildi.",
+  adminYayinSilindi: "Yayın silindi ve partnere bilgi verildi.",
+} as const;
+
+export const SUREC15_TOAST = {
+  yayinSiparisMevcut: "Bu yayın için daha önce sipariş verdiniz.",
+  yayinSiparisTamamlandi: (borcToken = 0) =>
+    "Yayın siparişiniz tamamlandı ve yayın havuzunuza eklendi." +
+    (borcToken > 0 ? ` ${borcToken.toLocaleString("tr-TR")} token borca yazıldı.` : ""),
+  canliSiparisTamamlandi: (egitimAdi: string, borcToken = 0) =>
+    `“${egitimAdi}” canlı yayın oturumu için siparişiniz oluşturuldu.` +
+    (borcToken > 0 ? ` ${borcToken.toLocaleString("tr-TR")} token borca yazıldı.` : ""),
+  yayinAyarlariKaydedildi: "Yayın ayarları kaydedildi; puan ve tarih seçerek yayına alabilirsiniz.",
+  yayinYonetimineEklendi: "Agora yayını yayın yönetimine eklendi.",
+} as const;
+
+export const SUREC16_TOAST = {
+  taslakKaydedildi: "Sınav taslak olarak kaydedildi.",
+  hazirListeYayinlandi:
+    "Sınav yayınlandı ve hazır listedeki katılımcılara davet e-postası gönderildi.",
+  sinavYayinlandi: "Sınav yayınlandı.",
+  sinavKapatildi: "Sınav katılıma kapatıldı.",
+  sinavSilindi: "Sınav silindi.",
+  baglantiKopyalandi: "Sınav katılım bağlantısı panoya kopyalandı.",
+  raporIndirildi: "Sınav raporu Excel olarak indirildi.",
+} as const;
+
+
+

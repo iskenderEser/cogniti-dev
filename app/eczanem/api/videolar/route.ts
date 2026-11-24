@@ -73,6 +73,15 @@ export async function GET() {
     const kimlik = await musteriKimligi(adminSupabase, user.id);
     if (!kimlik.ok) return rolHatasi(kimlik.hata ?? "Müşteri doğrulanamadı.");
     const musteriId = kimlik.musteriId!;
+    const pasifListesi = kimlik.pasifPuanEczaneleri ?? [];
+    const pasifAdMap = pasifListesi.length > 0
+      ? await eczaneAdMap(adminSupabase, pasifListesi.map((p) => p.eczane_id))
+      : new Map<string, string>();
+    const pasifUyelikler = pasifListesi.map((p) => ({
+      eczane_id: p.eczane_id,
+      eczane_adi: pasifAdMap.get(p.eczane_id) ?? "Eczane",
+      kalan_gun: p.kalan_gun,
+    }));
 
     // Yalnız hâlen aktif üyeliğin bulunduğu eczanelerin gönderimleri görünür.
     const { data: uyelikler, error: uyelikError } = await adminSupabase
@@ -85,7 +94,7 @@ export async function GET() {
 
     const aktifEczaneIdler = [...new Set((uyelikler ?? []).map((u) => u.eczane_id))];
     if (aktifEczaneIdler.length === 0) {
-      const bosYanit: EczanemVideolarYaniti = { videolar: [], agac: [] };
+      const bosYanit: EczanemVideolarYaniti = { videolar: [], agac: [], pasif_uyelikler: pasifUyelikler };
       return NextResponse.json(bosYanit, { status: 200 });
     }
 
@@ -363,7 +372,7 @@ export async function GET() {
       }))
       .sort((a, b) => a.eczane_adi.localeCompare(b.eczane_adi, "tr"));
 
-    const yanit: EczanemVideolarYaniti = { videolar, agac };
+    const yanit: EczanemVideolarYaniti = { videolar, agac, pasif_uyelikler: pasifUyelikler };
     return NextResponse.json(yanit, { status: 200 });
   } catch (err) {
     return sunucuHatasi(err, "GET /eczanem/api/videolar");

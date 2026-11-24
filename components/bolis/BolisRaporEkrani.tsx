@@ -6,8 +6,10 @@ import * as XLSX from "xlsx";
 import { ArrowLeft, Compass, Download } from "lucide-react";
 import type { EChartsCoreOption } from "echarts/core";
 import EChart from "@/components/grafik/EChart";
+import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
 import { Button } from "@/components/ui/button";
 import { YenileButonu } from "@/components/ui/yenile-butonu";
+import { SUREC16_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import {
   BOLIS_HEDEF_ROL_ETIKETLERI,
   BOLIS_KAYIT_TIPI_ETIKETLERI,
@@ -58,6 +60,7 @@ const TARIH_SAAT_BICIMI = new Intl.DateTimeFormat("tr-TR", {
 
 export default function BolisRaporEkrani({ sinavId }: { sinavId: string }) {
   const router = useRouter();
+  const { mesajlar, basari: toastBasari } = useHataMesaji();
   const [yukleniyor, setYukleniyor] = useState(true);
   const [hata, setHata] = useState("");
   const [veri, setVeri] = useState<RaporYaniti | null>(null);
@@ -306,6 +309,7 @@ export default function BolisRaporEkrani({ sinavId }: { sinavId: string }) {
       .replace(/^-+|-+$/g, "")
       .slice(0, 40);
     XLSX.writeFile(wb, `bolis-rapor-${temizAd || "sinav"}.xlsx`);
+    toastBasari(SUREC16_TOAST.raporIndirildi);
   };
 
   if (yukleniyor) {
@@ -660,6 +664,7 @@ export default function BolisRaporEkrani({ sinavId }: { sinavId: string }) {
           </div>
         )}
       </section>
+      <HataMesajiContainer mesajlar={mesajlar} />
     </div>
   );
 }

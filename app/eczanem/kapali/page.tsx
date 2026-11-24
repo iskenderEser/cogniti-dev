@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useAuth } from "@/app/providers/AuthProvider";
 import EclubGecisKarti from "../_components/EclubGecisKarti";
+import EczaneBaglamaTalepleriKarti from "../_components/EczaneBaglamaTalepleriKarti";
 
 export default function EczanemKapaliPage() {
   const { cikisYap } = useAuth();
@@ -39,6 +40,13 @@ export default function EczanemKapaliPage() {
     <main className="min-h-screen bg-[var(--tema-yerel-eczanem-sayfa-zemini-05)] px-4 py-16">
       <div className="mx-auto max-w-md">
       <EclubGecisKarti hata={(mesaj) => setHata(mesaj)} basari={(mesaj) => setBilgi(mesaj)} />
+      <div className="mb-3">
+        <EczaneBaglamaTalepleriKarti
+          hata={(mesaj) => setHata(mesaj)}
+          basari={(mesaj) => setBilgi(mesaj)}
+          onOnaylandi={() => window.location.assign("/eczanem")}
+        />
+      </div>
       {bilgi && <p className="mb-3 rounded-xl border border-[var(--tema-yerel-eczanem-islevsel-cizgi-13)] bg-[var(--tema-yerel-eczanem-islevsel-zemin-27)] px-4 py-3 text-xs font-semibold text-[var(--tema-yerel-eczanem-islevsel-metin-27)]">{bilgi}</p>}
       <section className="rounded-2xl border border-[var(--tema-yerel-eczanem-cizgi-06)] bg-[var(--tema-yerel-eczanem-kart-01)] p-6 shadow-sm">
         <h1 className="text-lg font-bold text-[var(--tema-yerel-eczanem-ana-metin-02)]">Eczanem şu anda kapalı</h1>

@@ -6,6 +6,8 @@ const producers=['pm','jr_pm','kd_pm','med_md','egt_md','egt_yrd_md','egt_yon','
 const mocks={
  '@/lib/agora/vitrinSunucu':{agoraVitrinBaglami:async()=>auth?{authId:uid,rol:role,db:{rpc:async(name,args)=>{calls.push({name,args});return {data:{siparis_id:uid},error:rpcError};}}}:null},
  '@/lib/agora/partnerHttp':{partnerJsonOku:async r=>({ok:true,veri:await r.json()}),partnerYanit:(d,status=200)=>Response.json(d,{status})},
+ '@/lib/agora/aliciEposta':{aliciYayinSiparisiEpostalariGonder:async()=>{}},
+ '@/lib/agora/partnerEposta':{partnerYayinSiparisiEpostasiGonder:async()=>{}},
  '@/lib/agora/partnerMedyaSunucu':{medyaUuid:v=>typeof v==='string'&&/^[0-9a-f-]{36}$/.test(v)},
  '@/lib/utils/roller':{URETICI_ROLLER:producers},'@/lib/token/fiyatlandirma':{KKO_TOKEN_FIYATI:9.9}
 };

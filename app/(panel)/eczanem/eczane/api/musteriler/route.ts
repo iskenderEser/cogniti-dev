@@ -14,6 +14,8 @@ import { ECLUB_TUKETICI_ROLLERI } from "@/lib/utils/roller";
 import { eczaciAktifEczanesi } from "@/lib/eczanem/eczaci";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { ayBaslangici } from "@/lib/zaman/kontrol";
+import { baglamaTalebiEpostasiGonder } from "@/lib/eczanem/baglamaTalebiEposta";
+import { eczanemUyelikDurumEpostasiGonder } from "@/lib/eczanem/uyelikDurumEposta";
 
 function telefonMaskele(telefon: string): string {
   return `••• ••• ${telefon.slice(-4)}`;
@@ -66,7 +68,7 @@ export async function GET(request: NextRequest) {
     const sayfa = Math.max(1, Number.parseInt(request.nextUrl.searchParams.get("sayfa") ?? "1", 10) || 1);
     const limit = Math.min(50, Math.max(10, Number.parseInt(request.nextUrl.searchParams.get("limit") ?? "20", 10) || 20));
     const durum = request.nextUrl.searchParams.get("durum") ?? "tumu";
-    if (!['tumu', 'aktif', 'pasif'].includes(durum)) return validasyonHatasi("Geçersiz müşteri durumu.", ["durum"]);
+    if (!["tumu", "aktif", "pasif", "davet_bekliyor"].includes(durum)) return validasyonHatasi("Geçersiz müşteri durumu.", ["durum"]);
     const arama = (request.nextUrl.searchParams.get("q") ?? "")
       .trim()
       .slice(0, 80)
@@ -76,11 +78,17 @@ export async function GET(request: NextRequest) {
 
     let listeSorgusu = adminSupabase
       .from("v_eczanem_musteri_liste_admin")
-      .select("musteri_id, ad_soyad, telefon, eposta, aktif_mi, created_at", { count: "exact" })
+      .select("musteri_id, ad_soyad, telefon, eposta, aktif_mi, created_at, ad, soyad, davet_bekliyor, davet_gonderildi", { count: "exact" })
       .eq("eczane_id", ctx.eczaneId)
       .order("created_at", { ascending: false })
       .range(baslangic, bitis);
-    if (durum !== "tumu") listeSorgusu = listeSorgusu.eq("aktif_mi", durum === "aktif");
+    if (durum === "davet_bekliyor") {
+      listeSorgusu = listeSorgusu.eq("davet_bekliyor", true);
+    } else if (durum === "aktif") {
+      listeSorgusu = listeSorgusu.eq("aktif_mi", true).eq("davet_bekliyor", false);
+    } else if (durum === "pasif") {
+      listeSorgusu = listeSorgusu.eq("aktif_mi", false).eq("davet_bekliyor", false);
+    }
     if (arama) {
       const telefonArama = arama.replace(/\D/g, "");
       const filtreler = [`ad_soyad.ilike.%${arama}%`, `eposta.ilike.%${arama}%`];
@@ -89,33 +97,64 @@ export async function GET(request: NextRequest) {
     }
 
     const buAyBaslangici = ayBaslangici(new Date()).toISOString();
-    const [listeSonucu, toplamSonucu, aktifSonucu, yeniSonucu] = await Promise.all([
+    const [listeSonucu, toplamSonucu, aktifSonucu, davetSonucu, yeniSonucu] = await Promise.all([
       listeSorgusu,
       adminSupabase.from("v_eczanem_musteri_liste_admin").select("musteri_id", { count: "exact", head: true }).eq("eczane_id", ctx.eczaneId),
-      adminSupabase.from("v_eczanem_musteri_liste_admin").select("musteri_id", { count: "exact", head: true }).eq("eczane_id", ctx.eczaneId).eq("aktif_mi", true),
+      adminSupabase.from("v_eczanem_musteri_liste_admin").select("musteri_id", { count: "exact", head: true }).eq("eczane_id", ctx.eczaneId).eq("aktif_mi", true).eq("davet_bekliyor", false),
+      adminSupabase.from("v_eczanem_musteri_liste_admin").select("musteri_id", { count: "exact", head: true }).eq("eczane_id", ctx.eczaneId).eq("davet_bekliyor", true),
       adminSupabase.from("v_eczanem_musteri_liste_admin").select("musteri_id", { count: "exact", head: true }).eq("eczane_id", ctx.eczaneId).gte("created_at", buAyBaslangici),
     ]);
 
     const { data: kayitlar, error: listeHatasi, count } = listeSonucu;
 
     if (listeHatasi) return hataYaniti("Müşteriler çekilemedi.", "v_eczanem_musteri_liste_admin SELECT — eczane_id", listeHatasi);
-    const ozetHatasi = toplamSonucu.error ?? aktifSonucu.error ?? yeniSonucu.error;
+    const ozetHatasi = toplamSonucu.error ?? aktifSonucu.error ?? davetSonucu.error ?? yeniSonucu.error;
     if (ozetHatasi) return hataYaniti("Müşteri özeti çekilemedi.", "v_eczanem_musteri_liste_admin COUNT", ozetHatasi);
+
+    const musteriIdler = (kayitlar ?? []).map((k) => k.musteri_id);
+    const bekleyenBaglamaMap = new Map<string, string>();
+    if (musteriIdler.length > 0) {
+      const { data: bekleyenBaglamalar, error: bekleyenBaglamaHatasi } = await adminSupabase
+        .from("eczanem_baglama_talepleri")
+        .select("talep_id, musteri_id")
+        .eq("eczane_id", ctx.eczaneId)
+        .eq("durum", "bekliyor")
+        .gt("sona_erme", new Date().toISOString())
+        .in("musteri_id", musteriIdler);
+      if (bekleyenBaglamaHatasi && bekleyenBaglamaHatasi.code !== "42P01") {
+        return hataYaniti("Bağlantı onay durumları çekilemedi.", "eczanem_baglama_talepleri SELECT", bekleyenBaglamaHatasi);
+      }
+      for (const satir of (bekleyenBaglamalar ?? []) as Array<{ talep_id: string; musteri_id: string }>) {
+        bekleyenBaglamaMap.set(satir.musteri_id, satir.talep_id);
+      }
+    }
 
     const musteriler = (kayitlar ?? []).map((kayit) => ({
       musteri_id: kayit.musteri_id,
+      ad: kayit.ad ?? "",
+      soyad: kayit.soyad ?? "",
       ad_soyad: kayit.ad_soyad,
       telefon: telefonMaskele(kayit.telefon),
       eposta: epostaMaskele(kayit.eposta ?? null),
       aktif_mi: kayit.aktif_mi,
+      davet_bekliyor: Boolean(kayit.davet_bekliyor),
+      davet_gonderildi: Boolean(kayit.davet_gonderildi),
+      baglama_onayi_bekliyor: bekleyenBaglamaMap.has(kayit.musteri_id),
       created_at: kayit.created_at,
     }));
 
     const toplam = toplamSonucu.count ?? 0;
     const aktif = aktifSonucu.count ?? 0;
+    const davetBekliyor = davetSonucu.count ?? 0;
     return NextResponse.json({
       musteriler,
-      ozet: { toplam, aktif, pasif: Math.max(0, toplam - aktif), bu_ay_eklenen: yeniSonucu.count ?? 0 },
+      ozet: {
+        toplam,
+        aktif,
+        davet_bekliyor: davetBekliyor,
+        pasif: Math.max(0, toplam - aktif - davetBekliyor),
+        bu_ay_eklenen: yeniSonucu.count ?? 0,
+      },
       sayfalama: { sayfa, limit, toplam: count ?? 0, toplam_sayfa: Math.max(1, Math.ceil((count ?? 0) / limit)) },
     }, { status: 200 });
   } catch (err) {
@@ -139,6 +178,69 @@ export async function PUT(request: NextRequest) {
     if (!musteriId) return validasyonHatasi("musteri_id zorunludur.", ["musteri_id"]);
     if (typeof body?.aktif_mi !== "boolean") return validasyonHatasi("aktif_mi (true/false) zorunludur.", ["aktif_mi"]);
 
+    const { data: bekleyenKontrol } = await adminSupabase
+      .from("v_eczanem_musteri_liste_admin")
+      .select("davet_bekliyor")
+      .eq("eczane_id", ctx.eczaneId)
+      .eq("musteri_id", musteriId)
+      .maybeSingle();
+    if (bekleyenKontrol?.davet_bekliyor) {
+      return isKuraluHatasi("Davet bekleyen üye aktifleştirilemez veya pasife alınamaz; daveti yeniden gönderebilir veya iptal edebilirsiniz.");
+    }
+
+    // Pasife alınmış üyeliğin yeniden aktifleştirilmesi danışan onayına bağlıdır.
+    if (body.aktif_mi === true) {
+      const { data: musteri, error: musteriHatasi } = await adminSupabase
+        .from("eczanem_musteriler")
+        .select("auth_user_id")
+        .eq("musteri_id", musteriId)
+        .maybeSingle();
+      if (musteriHatasi || !musteri?.auth_user_id) {
+        return isKuraluHatasi("Üye hesabı bulunamadı.");
+      }
+
+      const { data: talepSonucu, error: talepHatasi } = await adminSupabase.rpc("eczanem_baglama_talebi_olustur", {
+        p_musteri_id: musteriId,
+        p_eczane_id: ctx.eczaneId,
+        p_islem_yapan_kisi_id: ctx.kisiId,
+      });
+      if (talepHatasi) return hataYaniti("Yeniden aktifleştirme talebi açılamadı.", "eczanem_baglama_talebi_olustur RPC", talepHatasi);
+      const talep = Array.isArray(talepSonucu) ? talepSonucu[0] : talepSonucu;
+      if (!talep?.ok || !talep.talep_id) {
+        return isKuraluHatasi(talep?.hata ?? "Yeniden aktifleştirme talebi açılamadı.");
+      }
+
+      if (talep.mevcut_bekleyen) {
+        return NextResponse.json({
+          ok: true,
+          onay_bekliyor: true,
+          mesaj: "Bu üye için zaten bekleyen bir yeniden aktifleştirme talebi bulunuyor.",
+        }, { status: 200 });
+      }
+
+      const { data: eczaneKaydi } = await adminSupabase
+        .from("eclub_eczaneler")
+        .select("eclub_eczane_master ( eczane_adi )")
+        .eq("eczane_id", ctx.eczaneId)
+        .maybeSingle();
+      const masterRaw = (eczaneKaydi as { eclub_eczane_master?: { eczane_adi?: string } | Array<{ eczane_adi?: string }> } | null)?.eclub_eczane_master;
+      const eczaneAdi = (Array.isArray(masterRaw) ? masterRaw[0] : masterRaw)?.eczane_adi ?? null;
+
+      await baglamaTalebiEpostasiGonder(adminSupabase, {
+        authUserId: musteri.auth_user_id,
+        talepId: talep.talep_id,
+        talepTuru: "yeniden_aktivasyon",
+        eczaneAdi,
+        origin: request.nextUrl.origin,
+      });
+
+      return NextResponse.json({
+        ok: true,
+        onay_bekliyor: true,
+        mesaj: "Yeniden aktifleştirme onay talebi üyeye gönderildi. Üye onayladığında üyeliği yeniden açılır.",
+      }, { status: 200 });
+    }
+
     const { data, error: updateHatasi } = await adminSupabase.rpc("eczanem_musteri_durum_degistir", {
       p_musteri_id: musteriId,
       p_eczane_id: ctx.eczaneId,
@@ -149,7 +251,23 @@ export async function PUT(request: NextRequest) {
     const sonuc = Array.isArray(data) ? data[0] : data;
     if (!sonuc?.ok) return isKuraluHatasi(sonuc?.hata ?? "Durum güncellenemedi.");
 
-    return NextResponse.json({ ok: true, mesaj: body.aktif_mi ? "Müşteri aktifleştirildi." : "Müşteri pasife alındı." }, { status: 200 });
+    const [{ data: pasifMusteri }, { data: eczaneKaydi }] = await Promise.all([
+      adminSupabase.from("eczanem_musteriler").select("auth_user_id, ad_soyad").eq("musteri_id", musteriId).maybeSingle(),
+      adminSupabase.from("eclub_eczaneler").select("eclub_eczane_master ( eczane_adi )").eq("eczane_id", ctx.eczaneId).maybeSingle(),
+    ]);
+    const masterRaw = (eczaneKaydi as { eclub_eczane_master?: { eczane_adi?: string } | Array<{ eczane_adi?: string }> } | null)?.eclub_eczane_master;
+    const eczaneAdi = (Array.isArray(masterRaw) ? masterRaw[0] : masterRaw)?.eczane_adi ?? null;
+    if (pasifMusteri?.auth_user_id) {
+      await eczanemUyelikDurumEpostasiGonder(adminSupabase, {
+        authUserId: pasifMusteri.auth_user_id,
+        adSoyad: pasifMusteri.ad_soyad,
+        eczaneAdi,
+        tur: "pasife_alindi",
+        origin: request.nextUrl.origin,
+      });
+    }
+
+    return NextResponse.json({ ok: true, mesaj: "Üye pasife alındı." }, { status: 200 });
   } catch (err) {
     return sunucuHatasi(err, "PUT /eczanem/eczane/api/musteriler");
   }
@@ -199,7 +317,24 @@ export async function DELETE(request: NextRequest) {
 
     if (silHatasi) return hataYaniti("Müşteri listeden silinemedi.", "eczanem_uyelik_listeden_sil RPC", silHatasi);
 
-    return NextResponse.json({ ok: true, mesaj: "Müşteri listeden silindi." }, { status: 200 });
+    const { data: eczaneKaydi } = await adminSupabase
+      .from("eclub_eczaneler")
+      .select("eclub_eczane_master ( eczane_adi )")
+      .eq("eczane_id", ctx.eczaneId)
+      .maybeSingle();
+    const masterRaw = (eczaneKaydi as { eclub_eczane_master?: { eczane_adi?: string } | Array<{ eczane_adi?: string }> } | null)?.eclub_eczane_master;
+    const eczaneAdi = (Array.isArray(masterRaw) ? masterRaw[0] : masterRaw)?.eczane_adi ?? null;
+
+    await eczanemUyelikDurumEpostasiGonder(adminSupabase, {
+      authUserId: musteri.auth_user_id,
+      eposta,
+      adSoyad: musteri.ad_soyad,
+      eczaneAdi,
+      tur: "listeden_silindi",
+      origin: request.nextUrl.origin,
+    });
+
+    return NextResponse.json({ ok: true, mesaj: "Üye listeden silindi." }, { status: 200 });
   } catch (err) {
     return sunucuHatasi(err, "DELETE /eczanem/eczane/api/musteriler");
   }

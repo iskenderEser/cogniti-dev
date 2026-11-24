@@ -1,11 +1,9 @@
 // app/(panel)/eczanem/eczane/api/musteri-ekle/route.ts
-// Eczacı/teknisyen — yeni müşteri kaydı veya mevcut müşteriyi eczaneye bağlama.
-// Telefon sistemde varsa kimlik/auth yeniden oluşturulmaz; yalnız eczane üyeliği
-// kurulur. Yeni müşteride Ad Soyad / Cep Tel / E-posta / Şifre zorunludur.
-//
-// UTT'nin eczacıyı kaydetme deseninin (auth.admin.createUser + kimlik + bağ,
-// atomik geri alma) müşteri tarafına uygulanmış halidir. Gerçek e-posta ve
-// şifre auth.users'da tutulur; eczanem_musteriler şeması değişmez.
+// Eczacı/teknisyen — yeni müşteri kaydı (şifre oluşturma daveti) veya mevcut
+// müşteriyi eczaneye bağlama. Telefon sistemde varsa kimlik/auth yeniden
+// oluşturulmaz; yalnız eczane üyeliği kurulur. Yeni müşteride Ad Soyad /
+// Cep Tel / E-posta zorunludur; şifre eczane tarafından belirlenmez, 24 saat
+// geçerli tek kullanımlık davet bağlantısıyla üye tarafından oluşturulur.
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
@@ -14,9 +12,17 @@ import { rolCozucu } from "@/lib/utils/rolCozucu";
 import { ECLUB_TUKETICI_ROLLERI } from "@/lib/utils/roller";
 import { eczaciAktifEczanesi } from "@/lib/eczanem/eczaci";
 import { telefonNormalize } from "@/lib/eczanem/telefon";
-import { ECLUB_UYESI_MUSTERI_OLAMAZ_MESAJI, eclubUyesiTelefonMu } from "@/lib/eczanem/eclubUyesiKontrol";
+import {
+  DIGER_KIMLIK_MUSTERI_OLAMAZ_MESAJI,
+  ECLUB_UYESI_MUSTERI_OLAMAZ_MESAJI,
+  digerKimlikTelefonuMu,
+  eclubUyesiTelefonMu,
+} from "@/lib/eczanem/eclubUyesiKontrol";
 import { authTelafisiYap, provizyonBaslat, provizyonDurumuYaz } from "@/lib/kimlik/provizyon";
 import { adSoyadBicimle } from "@/lib/utils/adSoyadBicimle";
+import { eczanemDavetAltyapisiKontrol, kayitSonrasiEczanemDavetiGonder } from "@/lib/eczanem/uyelikDaveti";
+import { baglamaTalebiEpostasiGonder } from "@/lib/eczanem/baglamaTalebiEposta";
+import { eczanemTelefonSorguIzniAl } from "@/lib/eczanem/telefonSorguSiniri";
 
 
 function epostaGecerliMi(eposta: string): boolean {
@@ -46,6 +52,22 @@ export async function POST(request: NextRequest) {
     const telefon = telefonNormalize(body?.telefon ?? "");
     if (!telefon) return validasyonHatasi("Geçerli bir cep telefonu girin.", ["telefon"]);
 
+    // Telefon sorgulamada hız sınırı ve şifreli denetim kaydı E-Club/Eczanem
+    // varlık kontrollerinden ÖNCE çalışır; toplu numara taramasını kapatır.
+    if (body?.islem === "sorgula") {
+      const sinir = await eczanemTelefonSorguIzniAl(adminSupabase, {
+        eczaneId: eden.eczaneId!,
+        kisiId: eden.kisiId!,
+        telefon,
+      });
+      if (!sinir.ok) {
+        return sunucuHatasi(sinir.dbHatasi, "eczanem_telefon_sorgu_kontrol RPC");
+      }
+      if (!sinir.izinli) {
+        return NextResponse.json({ hata: sinir.hata }, { status: 429 });
+      }
+    }
+
     // E-Club kimliği ile Eczanem müşteri kimliği global olarak ayrıdır.
     // Kontrol eczane bağına değil telefona bakar; başka eczanedeki E-Club
     // üyesi de bu eczaneye müşteri olarak kaydedilemez.
@@ -54,6 +76,14 @@ export async function POST(request: NextRequest) {
       return sunucuHatasi(eclubKontrol.hata, "eclub_kisiler SELECT — Eczanem müşteri telefon kontrolü");
     }
     if (eclubKontrol.uyeMi) return isKuraluHatasi(ECLUB_UYESI_MUSTERI_OLAMAZ_MESAJI);
+
+    const digerKimlikKontrol = await digerKimlikTelefonuMu(adminSupabase, telefon);
+    if (!digerKimlikKontrol.ok) {
+      return sunucuHatasi(digerKimlikKontrol.hata, "eczanem_telefon_baska_kimlik_kontrol RPC");
+    }
+    if (digerKimlikKontrol.cakismaVar) {
+      return isKuraluHatasi(digerKimlikKontrol.mesaj ?? DIGER_KIMLIK_MUSTERI_OLAMAZ_MESAJI);
+    }
 
     const islem = body?.islem === "sorgula" ? "sorgula" : body?.islem === "bagla" ? "bagla" : "kaydet";
 
@@ -66,9 +96,26 @@ export async function POST(request: NextRequest) {
       .maybeSingle();
     if (mevcutHatasi) return sunucuHatasi(mevcutHatasi, "eczanem_musteriler SELECT — telefon");
 
+    let mevcutDavetBekliyor = false;
+    if (mevcut?.auth_user_id) {
+      const { data: bekleyenDavet, error: bekleyenDavetHatasi } = await adminSupabase
+        .from("eczanem_uyelik_davetleri")
+        .select("durum")
+        .eq("auth_user_id", mevcut.auth_user_id)
+        .neq("durum", "tamamlandi")
+        .maybeSingle();
+      if (bekleyenDavetHatasi && bekleyenDavetHatasi.code !== "42P01") {
+        return sunucuHatasi(bekleyenDavetHatasi, "eczanem_uyelik_davetleri SELECT — mevcut kontrol");
+      }
+      mevcutDavetBekliyor = Boolean(bekleyenDavet);
+    }
+
     if (islem === "sorgula") {
       if (!mevcut) {
         return NextResponse.json({ ok: true, durum: "yeni", mesaj: "Bu telefonla kayıtlı Eczanem müşterisi bulunamadı." }, { status: 200 });
+      }
+      if (mevcutDavetBekliyor) {
+        return isKuraluHatasi("Bu telefonla bekleyen bir üyelik daveti bulunuyor; üye şifresini oluşturmadan yeni eczaneye bağlanamaz.");
       }
       if (!mevcut.aktif_mi || !mevcut.auth_user_id) {
         return isKuraluHatasi("Müşterinin genel hesabı aktif değil; yeni eczane üyeliği kurulamaz.");
@@ -82,6 +129,28 @@ export async function POST(request: NextRequest) {
         .maybeSingle();
       if (uyelikHatasi) return sunucuHatasi(uyelikHatasi, "eczanem_uyelikler SELECT — müşteri sorgulama");
 
+      if (!uyelik?.aktif_mi) {
+        const { data: bekleyenTalep, error: bekleyenTalepHatasi } = await adminSupabase
+          .from("eczanem_baglama_talepleri")
+          .select("talep_id")
+          .eq("musteri_id", mevcut.musteri_id)
+          .eq("eczane_id", eden.eczaneId!)
+          .eq("durum", "bekliyor")
+          .gt("sona_erme", new Date().toISOString())
+          .maybeSingle();
+        if (bekleyenTalepHatasi && bekleyenTalepHatasi.code !== "42P01") {
+          return sunucuHatasi(bekleyenTalepHatasi, "eczanem_baglama_talepleri SELECT — sorgulama");
+        }
+        if (bekleyenTalep) {
+          return NextResponse.json({
+            ok: true,
+            durum: "onay_bekliyor",
+            yeniden_aktif: Boolean(uyelik && !uyelik.aktif_mi),
+            mesaj: "Bu üye için zaten bekleyen bir bağlantı onay talebiniz bulunuyor.",
+          }, { status: 200 });
+        }
+      }
+
       return NextResponse.json({
         ok: true,
         durum: uyelik?.aktif_mi ? "zaten_bagli" : "kayitli",
@@ -94,6 +163,9 @@ export async function POST(request: NextRequest) {
 
     if (islem === "bagla") {
       if (!mevcut) return validasyonHatasi("Bu telefonla kayıtlı bir müşteri bulunamadı.", ["telefon"]);
+      if (mevcutDavetBekliyor) {
+        return isKuraluHatasi("Bu telefonla bekleyen bir üyelik daveti bulunuyor; üye şifresini oluşturmadan yeni eczaneye bağlanamaz.");
+      }
       if (!mevcut.aktif_mi || !mevcut.auth_user_id) {
         return isKuraluHatasi("Müşterinin genel hesabı aktif değil; eczane üyeliği kurulamadı.");
       }
@@ -109,19 +181,53 @@ export async function POST(request: NextRequest) {
         return validasyonHatasi("Bu müşteri zaten eczanenizin aktif üyesi.", ["telefon"]);
       }
 
-      const { data: bagSonucu, error: bagHatasi } = await adminSupabase.rpc("eczanem_musteri_bagla_atomik", {
+      const { data: talepSonucu, error: talepHatasi } = await adminSupabase.rpc("eczanem_baglama_talebi_olustur", {
         p_musteri_id: mevcut.musteri_id,
         p_eczane_id: eden.eczaneId!,
         p_islem_yapan_kisi_id: eden.kisiId!,
       });
-      if (bagHatasi) return sunucuHatasi(bagHatasi, "eczanem_musteri_bagla_atomik RPC");
-      const bag = Array.isArray(bagSonucu) ? bagSonucu[0] : bagSonucu;
-      if (!bag?.ok) return isKuraluHatasi(bag?.hata ?? "Müşteri eczanenize bağlanamadı.");
+      if (talepHatasi) return sunucuHatasi(talepHatasi, "eczanem_baglama_talebi_olustur RPC");
+      const talep = Array.isArray(talepSonucu) ? talepSonucu[0] : talepSonucu;
+      if (!talep?.ok || !talep.talep_id) {
+        return isKuraluHatasi(talep?.hata ?? "Bağlantı onay talebi oluşturulamadı.");
+      }
+
+      if (talep.mevcut_bekleyen) {
+        return NextResponse.json({
+          ok: true,
+          mevcut_musteri: true,
+          onay_bekliyor: true,
+          mesaj: "Bu üye için zaten bekleyen bir bağlantı onay talebiniz var; üyenin onayı bekleniyor.",
+        }, { status: 200 });
+      }
+
+      const { data: eczaneKaydi } = await adminSupabase
+        .from("eclub_eczaneler")
+        .select("eclub_eczane_master ( eczane_adi )")
+        .eq("eczane_id", eden.eczaneId!)
+        .maybeSingle();
+      const masterRaw = (eczaneKaydi as { eclub_eczane_master?: { eczane_adi?: string } | Array<{ eczane_adi?: string }> } | null)?.eclub_eczane_master;
+      const eczaneAdi = (Array.isArray(masterRaw) ? masterRaw[0] : masterRaw)?.eczane_adi ?? null;
+
+      const epostaSonuc = await baglamaTalebiEpostasiGonder(adminSupabase, {
+        authUserId: mevcut.auth_user_id,
+        talepId: talep.talep_id,
+        talepTuru: talep.talep_turu === "yeniden_aktivasyon" ? "yeniden_aktivasyon" : "yeni_bag",
+        eczaneAdi,
+        origin: request.nextUrl.origin,
+      });
+
+      const mesaj =
+        talep.talep_turu === "yeniden_aktivasyon"
+          ? "Yeniden aktifleştirme onay talebi üyeye gönderildi. Üye onayladığında üyeliği yeniden açılır."
+          : "Bağlantı onay talebi üyeye gönderildi. Üye onayladığında eczanenize bağlanır.";
 
       return NextResponse.json({
         ok: true,
         mevcut_musteri: true,
-        mesaj: bag.yeniden_aktif ? "Müşterinin eczane üyeliği yeniden aktifleştirildi." : "Kayıtlı müşteri eczanenize bağlandı.",
+        onay_bekliyor: true,
+        eposta_gonderildi: epostaSonuc.gonderildi,
+        mesaj,
       }, { status: 200 });
     }
 
@@ -156,8 +262,7 @@ export async function POST(request: NextRequest) {
     if (eposta.length > 200) return validasyonHatasi("E-posta 200 karakterden uzun olamaz.", ["eposta"]);
     if (!epostaGecerliMi(eposta)) return validasyonHatasi("Geçerli bir e-posta adresi giriniz.", ["eposta"]);
 
-    const sifre = String(body?.sifre ?? "");
-    if (sifre.length < 6) return validasyonHatasi("Şifre en az 6 karakter olmalıdır.", ["sifre"]);
+    await eczanemDavetAltyapisiKontrol(adminSupabase);
 
     // Auth dış kaynağı ile müşteri+üyelik RPC'si izlenen saga olarak çalışır.
     // RPC içindeki iki uygulama yazımı atomiktir; başarısızlıkta Auth telafisinin
@@ -169,8 +274,9 @@ export async function POST(request: NextRequest) {
 
     const { data: authData, error: authInsertHatasi } = await adminSupabase.auth.admin.createUser({
       email: eposta,
-      password: sifre,
-      email_confirm: true,
+      app_metadata: { eczanem_davet_bekliyor: true },
+      ban_duration: "876000h",
+      email_confirm: false,
       user_metadata: { kimlik: "eczanem_musteri", ad, soyad, ad_soyad: adSoyad },
     });
     if (authInsertHatasi || !authData?.user) {
@@ -204,6 +310,12 @@ export async function POST(request: NextRequest) {
       if (telafi.geriAlindi && musteriHatasi?.message?.includes("E-Club üyesi")) {
         return isKuraluHatasi(ECLUB_UYESI_MUSTERI_OLAMAZ_MESAJI);
       }
+      if (
+        telafi.geriAlindi &&
+        (musteriHatasi?.message?.includes("kurumsal kullanıcısına") || musteriHatasi?.message?.includes("iş partnerine"))
+      ) {
+        return isKuraluHatasi(musteriHatasi.message);
+      }
       if (musteriHatasi?.code === "23505" && telafi.geriAlindi) {
         return validasyonHatasi("Bu numara zaten kayıtlı.", ["telefon"]);
       }
@@ -220,7 +332,25 @@ export async function POST(request: NextRequest) {
       hedefKayitId: String(yeniMusteriId),
     });
 
-    return NextResponse.json({ ok: true, mesaj: "Müşteri kaydedildi." }, { status: 201 });
+    const { data: eczaneKaydi } = await adminSupabase
+      .from("eclub_eczaneler")
+      .select("eclub_eczane_master ( eczane_adi )")
+      .eq("eczane_id", eden.eczaneId!)
+      .maybeSingle();
+    const masterRaw = (eczaneKaydi as { eclub_eczane_master?: { eczane_adi?: string } | Array<{ eczane_adi?: string }> } | null)?.eclub_eczane_master;
+    const eczaneAdi = (Array.isArray(masterRaw) ? masterRaw[0] : masterRaw)?.eczane_adi ?? null;
+
+    const davet = await kayitSonrasiEczanemDavetiGonder(
+      adminSupabase,
+      authUserId,
+      request.nextUrl.origin,
+      eczaneAdi,
+    );
+
+    return NextResponse.json(
+      { ok: true, gonderildi: davet.gonderildi, mesaj: davet.mesaj },
+      { status: 201 },
+    );
   } catch (err) {
     return sunucuHatasi(err, "POST /eczanem/eczane/api/musteri-ekle");
   }

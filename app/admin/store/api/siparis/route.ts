@@ -4,6 +4,7 @@ import {adminGirisKontrol} from "@/lib/utils/adminGirisKontrol";
 import {uuidGecerliMi} from "@/lib/uretim/rpcTemel";
 import {talepFiltreleriniOku,httpsBaglantiGecerli,type FirmaTalepKesiti} from "@/lib/tclub/store/adminTalepler";
 import {firmaStoreEpostalariniIsle,firmaStoreGonderici} from "@/lib/tclub/store/cekEposta";
+import {firmaStoreCekIptalEpostasiGonder} from "@/lib/tclub/store/cekIptalEposta";
 import {pushYayinlaArkada} from "@/lib/push/orkestrasyon";
 import * as XLSX from "xlsx";
 
@@ -46,6 +47,7 @@ export async function PATCH(request:NextRequest) {
   if(r.error)return dbHatasi(r.error);
   // Teslim kaydı e-posta hatasından bağımsızdır. Kuyruk sonraki cron'da tekrar alınır.
   if(["teslim","eposta_yeniden"].includes(b.action))try{await firmaStoreEpostalariniIsle(db,b.siparis_id,1);}catch{ /* İş lease süresi dolunca yeniden alınabilir; kodlar loglanmaz. */ }
+  if(b.action==="iptal")try{await firmaStoreCekIptalEpostasiGonder(db,b.siparis_id);}catch{ /* İptal kaydı e-posta hatasından bağımsızdır. */ }
   if(["hazirla","teslim","iptal"].includes(b.action)){
    const {data:siparis}=await db.from("store_siparisler").select("kullanici_id").eq("siparis_id",b.siparis_id).maybeSingle();
    if(siparis?.kullanici_id){

@@ -221,7 +221,7 @@ export async function proformaOnayEpostasiGonder(
           resendGonder({
             to: adminEposta,
             replyTo: firmaAdminEposta ?? undefined,
-            subject: `Proforma fatura onayı — ${firmaAdi} (${satinAlimAdi})`,
+            subject: `${firmaAdi} Proforma Onay - ${satinAlimAdi}`,
             html:
               `<p style="margin: 0 0 16px 0;">${kacir(firmaAdi)} proforma faturayı onayladı:</p>` +
               maddeListesiHtml(adminMaddeler, false),
@@ -245,7 +245,7 @@ export async function proformaOnayEpostasiGonder(
         gonderimler.push(
           resendGonder({
             to: firmaAdminEposta,
-            subject: `${satinAlimAdi} proforma fatura onayınız alındı`,
+            subject: `${satinAlimAdi} Proforma Onayınız Alındı`,
             html:
               `<p style="margin: 0 0 16px 0;">${kacir(hitap)}</p>` +
               `<p style="margin: 0 0 16px 0;">${kacir(firmaAdi)} için aşağıdaki proforma fatura onayınız kaydedilmiştir. Resmi faturanız düzenlenecektir.</p>` +
@@ -274,7 +274,7 @@ export async function proformaOnayEpostasiGonder(
       gonderimler.push(
         resendGonder({
           to: firmaAdminEposta,
-          subject: `${satinAlimAdi} proforma faturanız onaylandı`,
+          subject: `${satinAlimAdi} Proforma Faturanız Onaylandı`,
           html:
             `<p style="margin: 0 0 16px 0;">${kacir(hitap)}</p>` +
             `<p style="margin: 0 0 16px 0;">${kacir(firmaAdi)} için aşağıdaki proforma faturanız Cogniti tarafından firma adına onaylanmıştır. Resmi faturanız düzenlenecektir.</p>` +

@@ -26,7 +26,7 @@ export async function firmaAdminYetkiEpostasiGonder(params: {
       body: JSON.stringify({
         from,
         to: [params.eposta],
-        subject: "Cogniti Firma Admini yetkiniz tanımlandı",
+        subject: "Cogniti Firma Admini Yetkiniz Tanımlandı",
         html:
           `<p style="margin: 0 0 16px 0;">${kacir(hitap)}</p>` +
           `<p style="margin: 0 0 16px 0;">${kacir(`${params.firmaAdi} için Cogniti Firma Admini yönetim yetkiniz aktif edilmiştir.`)}</p>` +

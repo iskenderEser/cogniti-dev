@@ -30,6 +30,7 @@ import { agoraKategoriVivaTuru, VIVA_EGITIM_SECENEKLERI, vivaUrunZorunlu } from 
 import { vivaGoogleTakvim, vivaOutlookTakvim } from "@/lib/viva/takvim";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { VIVA_SURE_HATASI, vivaSureGecerliMi, VIVA_DURUMLARI, vivaFormDogrula, vivaTarih, vivaTarihGirdisi, vivaYerelZamaniUtc, type VivaBaglam, type VivaDavetEpostaGirdisi, type VivaDetay, type VivaEtkinlik } from "@/lib/viva/sozlesme";
+import { SUREC13_TOAST, sonrakiSayfaToastOku, sonrakiSayfaToastYaz } from "@/lib/bildirimler/toastMesajlari";
 
 export type VivaGorunum = "liste" | "yeni" | "detay" | "duzenle" | "oda";
 export async function vivaIstek<T>(url: string, init?: RequestInit): Promise<T> {
@@ -47,7 +48,7 @@ function Ozet({ e }: { e: VivaEtkinlik }) {
     <p className="text-sm text-muted-foreground">Düzenleyen: {e.sahip_adi}</p>
   </div>;
 }
-function EtkinlikFormu({ baglam, detay, onKaydet, ilkTur }: { ilkTur?: "anlik" | "planli"; baglam: VivaBaglam; detay: VivaDetay | null; onKaydet: (d: VivaDetay, anlik: boolean) => void }) {
+function EtkinlikFormu({ baglam, detay, onKaydet, ilkTur }: { ilkTur?: "anlik" | "planli"; baglam: VivaBaglam; detay: VivaDetay | null; onKaydet: (d: VivaDetay, anlik: boolean, bildirim?: string) => void }) {
   const e = detay?.etkinlik;
   const agoraSiparis = detay?.agora_siparis ?? baglam.agora_siparis ?? null;
   const agoraKilitli = Boolean(agoraSiparis);
@@ -181,8 +182,15 @@ function EtkinlikFormu({ baglam, detay, onKaydet, ilkTur }: { ilkTur?: "anlik" |
       if (!anahtar.current || (girdiOzeti.current && girdiOzeti.current !== ozet)) anahtar.current = crypto.randomUUID();
       girdiOzeti.current = ozet;
       kilit.current = true; setBusy(true);
+      const bildirim = anlik
+        ? SUREC13_TOAST.anlikYayinOlusturuldu
+        : taslak
+          ? SUREC13_TOAST.taslakKaydedildi
+          : e && e.durum !== "taslak"
+            ? SUREC13_TOAST.etkinlikGuncellendi
+            : SUREC13_TOAST.yayinPlanlandi;
       onKaydet(await vivaIstek<VivaDetay>("/viva/api", { method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...v, islem: e ? "kaydet" : "olustur", etkinlik_id: e?.etkinlik_id ?? anahtar.current, ...(e ? { surum: e.surum } : {}) }) }), anlik);
+        body: JSON.stringify({ ...v, islem: e ? "kaydet" : "olustur", etkinlik_id: e?.etkinlik_id ?? anahtar.current, ...(e ? { surum: e.surum } : {}) }) }), anlik, bildirim);
     } catch (err) { setHata(err instanceof Error ? err.message : "Kaydedilemedi."); }
     finally { kilit.current = false; setBusy(false); }
   }
@@ -305,8 +313,8 @@ function DavetYonetimi({ detay, onDegis }: { detay: VivaDetay; onDegis: (d: Viva
       const d = await vivaIstek<VivaDetay & { davet_yolu?: string; uyari?: string }>("/viva/api", { method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ islem, etkinlik_id: e.etkinlik_id, surum: e.surum, ...(agoraSiparis ? { agora_siparis_id: agoraSiparis.siparis_id } : {}), ...ek }) });
       onDegis(d.eposta_davetleri ? d : { ...d, eposta_davetleri: detay.eposta_davetleri });
-      if (d.davet_yolu) { setLink(`${window.location.origin}${d.davet_yolu}`); setAd(""); setEposta(""); }
-      else setMesaj(d.uyari ?? (islem === "davet_yeniden_dene" ? "Davet yeniden gönderim kuyruğuna alındı." : "Davet iptal edildi."));
+      if (d.davet_yolu) { setLink(`${window.location.origin}${d.davet_yolu}`); setAd(""); setEposta(""); setMesaj(SUREC13_TOAST.ozelDavetOlusturuldu); }
+      else setMesaj(d.uyari ?? (islem === "davet_yeniden_dene" ? SUREC13_TOAST.davetYenidenGonderildi : SUREC13_TOAST.davetIptalEdildi));
     } catch (err) { setHata(err instanceof Error ? err.message : "İşlem tamamlanamadı."); }
     finally { kilit.current = false; setBusy(false); }
   }
@@ -324,7 +332,7 @@ function DavetYonetimi({ detay, onDegis }: { detay: VivaDetay; onDegis: (d: Viva
       <Button type="submit" disabled={busy} className="md:col-span-2 md:w-fit">Davet bağlantısı oluştur</Button>
               </form>
     {link && <div className={detayStyles.linkBox}><Label htmlFor="viva-davet-link">Davet bağlantısı — bu ekrandayken kopyalayın</Label><Input id="viva-davet-link" readOnly value={link} onFocus={x => x.target.select()} /><Button variant="outline" onClick={async () => {
-      try { await navigator.clipboard.writeText(link); setMesaj("Bağlantı kopyalandı."); }
+      try { await navigator.clipboard.writeText(link); setMesaj(SUREC13_TOAST.baglantiKopyalandi); }
       catch { setMesaj("Bağlantıyı seçip kopyalayabilirsiniz."); }
     }}>Bağlantıyı kopyala</Button></div>}
           {hata && <p role="alert" className="text-sm text-destructive">{hata}</p>}{mesaj && <p role="status" className="text-sm">{mesaj}</p>}
@@ -350,6 +358,12 @@ export default function VivaEkrani({ gorunum, etkinlikId, onizleme = false, anli
   const [data, setData] = useState<{ baglam: VivaBaglam; detay: VivaDetay | null; etkinlikler: VivaEtkinlik[]; devam: boolean } | null>(null);
   const [uyari, setUyari] = useState("");
   const [hata, setHata] = useState(""); const [busy, setBusy] = useState(false); const [yenileme, setYenileme] = useState(0);
+  useEffect(() => {
+    if (gorunum === "detay" || gorunum === "oda") {
+      const bekleyenToast = sonrakiSayfaToastOku();
+      if (bekleyenToast) setUyari(bekleyenToast.mesaj);
+    }
+  }, [gorunum, etkinlikId]);
   const yukle = useCallback(async (signal: AbortSignal) => {
     const agoraEk = agoraSiparisId ? `&agora_siparis=${encodeURIComponent(agoraSiparisId)}` : "";
     const [baglam, sonuc] = await Promise.all([
@@ -393,14 +407,14 @@ export default function VivaEkrani({ gorunum, etkinlikId, onizleme = false, anli
     try {
       const sonuc = await vivaIstek<{ mesaj: string; tekrar_gerekli?: boolean }>("/viva/api/yasam", { method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ islem: "katilimci_cikar", etkinlik_id: e.etkinlik_id, surum: e.surum, kisi_id: kisi.id, tur: kisi.tur }) });
-      setUyari(sonuc.tekrar_gerekli ? sonuc.mesaj : ""); setYenileme(n => n + 1);
+      setUyari(sonuc.tekrar_gerekli ? sonuc.mesaj : SUREC13_TOAST.katilimciCikarildi); setYenileme(n => n + 1);
     } catch (err) { setHata(err instanceof Error ? err.message : "Katılımcı çıkarılamadı."); }
     finally { setBusy(false); }
   }
   async function iptal() {
     if (!data?.detay || busy) return;
     setBusy(true); setHata("");
-    try { const r = await vivaIstek<VivaDetay & { uyari?: string }>("/viva/api", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ islem: "iptal", etkinlik_id: etkinlikId, surum: data.detay.etkinlik.surum }) }); guncelle(r); setUyari(r.uyari ?? ""); }
+    try { const r = await vivaIstek<VivaDetay & { uyari?: string }>("/viva/api", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ islem: "iptal", etkinlik_id: etkinlikId, surum: data.detay.etkinlik.surum }) }); guncelle(r); setUyari(r.uyari ?? SUREC13_TOAST.etkinlikIptalEdildi); }
     catch (err) { setHata(err instanceof Error ? err.message : "İptal edilemedi."); }
     finally { setBusy(false); }
   }
@@ -418,7 +432,7 @@ export default function VivaEkrani({ gorunum, etkinlikId, onizleme = false, anli
       {hata && <div className={formStyles.loadError} role="alert"><p>{hata}</p><Button variant="outline" onClick={() => setYenileme(n => n + 1)}>Yeniden dene</Button></div>}
       {!data && !hata && <div role="status" className={formStyles.loading}>Etkinlik formu yükleniyor…</div>}
       {data && (yetkili
-        ? <EtkinlikFormu key={`${etkinlikId ?? "yeni"}-${yenileme}`} baglam={data.baglam} detay={data.detay} ilkTur={ilkTur} onKaydet={(d, anlik) => { guncelle(d); router.push(`/viva/${d.etkinlik.etkinlik_id}${anlik ? "/oda?baslat=1" : ""}`); }} />
+        ? <EtkinlikFormu key={`${etkinlikId ?? "yeni"}-${yenileme}`} baglam={data.baglam} detay={data.detay} ilkTur={ilkTur} onKaydet={(d, anlik, bildirim) => { guncelle(d); if (bildirim) sonrakiSayfaToastYaz(bildirim); router.push(`/viva/${d.etkinlik.etkinlik_id}${anlik ? "/oda?baslat=1" : ""}`); }} />
         : <Card className={formStyles.loadError}><p role="alert">Bu etkinliği oluşturma veya düzenleme yetkiniz yok.</p></Card>)}
     </main>;
   }

@@ -10,6 +10,7 @@ import { SadeSecim } from "@/components/kontrol/SadeKontroller";
 
 import { useAuth } from "@/app/providers/AuthProvider";
 import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
+import { SUREC12_TOAST, sonrakiSayfaToastYaz } from "@/lib/bildirimler/toastMesajlari";
 import SayfaRehberi from "@/components/rehber/SayfaRehberi";
 import { YenileButonu } from "@/components/ui/yenile-butonu";
 import { useHbstoreTakvim } from "@/hooks/useHbstoreTakvim";
@@ -327,6 +328,7 @@ export default function StorePage() {
       const data = await res.json();
       if (!res.ok) { setSiparisHatasi(data.hata ?? "Talepleriniz kaydedilemedi."); return; }
       hbstoreBakiyesiDegistiBildir(); setOnayUrunleri([]); setOnayAnahtari(null); setSecilenIdler([]);
+      sonrakiSayfaToastYaz(SUREC12_TOAST.cekTalebiAlindi);
       router.push("/store/siparislerim");
     } catch { setSiparisHatasi("Talepleriniz kaydedilemedi. Bağlantınızı kontrol edip yeniden deneyin."); }
     finally { siparisKilidi.current = false; setSiparisVeriliyor(false); }

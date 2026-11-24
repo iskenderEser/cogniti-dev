@@ -4,7 +4,9 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { BarChart3, Check, ClipboardCheck, Clock, Compass, Link2, Pencil, Plus, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
 import { YenileButonu } from "@/components/ui/yenile-butonu";
+import { SUREC16_TOAST, sonrakiSayfaToastOku } from "@/lib/bildirimler/toastMesajlari";
 import {
   SadeKontrolButonu,
   SadeKontrolGrubu,
@@ -26,6 +28,7 @@ type KatilimciFiltre = "aktif" | "tamamlanan";
 
 export default function BolisAnaSayfa() {
   const router = useRouter();
+  const { mesajlar, basari: toastBasari } = useHataMesaji();
   const [yukleniyor, setYukleniyor] = useState(true);
   const [hata, setHata] = useState("");
   const [yoneticiMi, setYoneticiMi] = useState(false);
@@ -35,6 +38,13 @@ export default function BolisAnaSayfa() {
   const [katilimciFiltresi, setKatilimciFiltresi] = useState<KatilimciFiltre>("aktif");
   const [kopyalananId, setKopyalananId] = useState<string | null>(null);
   const [durumIslenenId, setDurumIslenenId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const bekleyen = sonrakiSayfaToastOku();
+    if (bekleyen) {
+      toastBasari(bekleyen.mesaj);
+    }
+  }, [toastBasari]);
 
   const yenile = useCallback(async () => {
     setYukleniyor(true);
@@ -84,6 +94,7 @@ export default function BolisAnaSayfa() {
     try {
       await navigator.clipboard.writeText(url);
       setKopyalananId(s.sinav_id);
+      toastBasari(SUREC16_TOAST.baglantiKopyalandi);
       window.setTimeout(() => setKopyalananId((mevcut) => (mevcut === s.sinav_id ? null : mevcut)), 2000);
     } catch {
       setHata("Sınav bağlantısı kopyalanamadı.");
@@ -103,6 +114,15 @@ export default function BolisAnaSayfa() {
       if (!r.ok) {
         setHata(d.hata ?? "Sınav durumu güncellenemedi.");
         return;
+      }
+      if (yeniDurum === "yayinda") {
+        toastBasari(
+          (d.kayit_tipi ?? s.kayit_tipi) === "hazir_liste"
+            ? SUREC16_TOAST.hazirListeYayinlandi
+            : SUREC16_TOAST.sinavYayinlandi,
+        );
+      } else if (yeniDurum === "kapali") {
+        toastBasari(SUREC16_TOAST.sinavKapatildi);
       }
       await yenile();
     } catch {
@@ -444,6 +464,7 @@ export default function BolisAnaSayfa() {
           ))}
         </div>
       )}
+      <HataMesajiContainer mesajlar={mesajlar} />
     </div>
   );
 }

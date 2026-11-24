@@ -162,6 +162,25 @@ export async function eczaneAdMap(
   return map;
 }
 
+// ── Ortak yardımcı: davet aşamasındaki (henüz aktifleşmemiş) auth kimlikleri ─
+async function bekleyenDavetAuthIdleri(
+  adminSupabase: SupabaseClient,
+  authUserIdler: string[],
+): Promise<Set<string>> {
+  const benzersiz = [...new Set(authUserIdler.filter(Boolean))];
+  if (benzersiz.length === 0) return new Set();
+  const { data, error } = await adminSupabase
+    .from("eczanem_uyelik_davetleri")
+    .select("auth_user_id")
+    .in("auth_user_id", benzersiz)
+    .neq("durum", "tamamlandi");
+  if (error) {
+    if (error.code === "42P01") return new Set();
+    throw new Error("Eczanem davet durumları okunamadı.");
+  }
+  return new Set((data ?? []).map((satir: { auth_user_id: string }) => satir.auth_user_id));
+}
+
 // ── Ortak yardımcı: eczane_id'lere göre aktif üye sayıları ──────────────────
 async function aktifUyeSayilari(
   adminSupabase: SupabaseClient,
@@ -171,11 +190,34 @@ async function aktifUyeSayilari(
   if (eczaneIdler.length === 0) return map;
   const { data, error } = await adminSupabase
     .from("eczanem_uyelikler")
-    .select("eczane_id")
+    .select("eczane_id, musteri_id")
     .in("eczane_id", eczaneIdler)
     .eq("aktif_mi", true);
   if (error) throw new Error("Eczane aktif üye sayıları okunamadı.");
-  for (const u of (data as Array<{ eczane_id: string }> | null) ?? []) {
+  const uyelikler = (data as Array<{ eczane_id: string; musteri_id: string }> | null) ?? [];
+  if (uyelikler.length === 0) return map;
+
+  const musteriIdler = [...new Set(uyelikler.map((u) => u.musteri_id))];
+  const { data: musteriler, error: musteriHatasi } = await adminSupabase
+    .from("eczanem_musteriler")
+    .select("musteri_id, auth_user_id")
+    .in("musteri_id", musteriIdler)
+    .eq("aktif_mi", true);
+  if (musteriHatasi) throw new Error("Eczane aktif müşteri bilgileri okunamadı.");
+
+  const aktifMusteriler = (musteriler as Array<{ musteri_id: string; auth_user_id: string | null }> | null) ?? [];
+  const bekleyenAuthIdler = await bekleyenDavetAuthIdleri(
+    adminSupabase,
+    aktifMusteriler.flatMap((m) => (m.auth_user_id ? [m.auth_user_id] : [])),
+  );
+  const uygunMusteriIdler = new Set(
+    aktifMusteriler
+      .filter((m) => !m.auth_user_id || !bekleyenAuthIdler.has(m.auth_user_id))
+      .map((m) => m.musteri_id),
+  );
+
+  for (const u of uyelikler) {
+    if (!uygunMusteriIdler.has(u.musteri_id)) continue;
     const ez = u.eczane_id;
     map.set(ez, (map.get(ez) ?? 0) + 1);
   }
@@ -548,10 +590,16 @@ export async function eczaneAktifUyeler(
 
   const { data: musteriler, error: musteriHatasi } = await adminSupabase
     .from("eczanem_musteriler")
-    .select("musteri_id, ad_soyad, telefon")
+    .select("musteri_id, ad_soyad, telefon, auth_user_id")
     .in("musteri_id", musteriIdler)
     .eq("aktif_mi", true);
   if (musteriHatasi) throw new Error("Eczane müşterileri okunamadı.");
+
+  const musteriListesi = (musteriler as Array<{ musteri_id: string; ad_soyad: string; telefon: string; auth_user_id: string | null }> | null) ?? [];
+  const bekleyenAuthIdler = await bekleyenDavetAuthIdleri(
+    adminSupabase,
+    musteriListesi.flatMap((m) => (m.auth_user_id ? [m.auth_user_id] : [])),
+  );
 
   const { data: gecisler, error: gecisHatasi } = await adminSupabase
     .from("eczanem_eclub_gecis_talepleri")
@@ -572,8 +620,8 @@ export async function eczaneAktifUyeler(
     for (const gonderim of gonderimler ?? []) gonderilen.add(gonderim.musteri_id);
   }
 
-  return (musteriler ?? [])
-    .filter((musteri) => !gecistekiMusteriler.has(musteri.musteri_id))
+  return musteriListesi
+    .filter((musteri) => !gecistekiMusteriler.has(musteri.musteri_id) && (!musteri.auth_user_id || !bekleyenAuthIdler.has(musteri.auth_user_id)))
     .map((m) => ({
       musteri_id: m.musteri_id,
       ad_soyad: m.ad_soyad,
