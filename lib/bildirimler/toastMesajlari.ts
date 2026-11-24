@@ -136,3 +136,9 @@ export const SUREC4_TOAST = {
       ? `${PROFORMA_TOAST_ADLARI[tur]} proforma faturası firma adına onaylandı.`
       : `${PROFORMA_TOAST_ADLARI[tur]} proforma faturası onaylandı.`,
 } as const;
+
+export const SUREC5_TOAST = {
+  icerikUretimiOnaylandi: "Siparişiniz başarıyla işleme alınmıştır.",
+  iuAtamaGuncellendi: "İçerik üreticisi ataması güncellendi.",
+  gorevDevredildi: "Görev yeni içerik üreticisine devredildi.",
+} as const;

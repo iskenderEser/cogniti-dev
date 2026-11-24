@@ -7,6 +7,7 @@ import {
   AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription,
   AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { SUREC5_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import type { BakiyeTuru } from "@/lib/satinAlma/esnekPaket";
 
 export type IcerikUretimiSiparisi = { talep_id: string; token: number };
@@ -66,7 +67,7 @@ function AcikSiparisOnayi({ siparis, onKapat, onOdendi }: {
 
     window.dispatchEvent(new Event("cogniti-token-bakiye-yenile"));
     onKapat();
-    onOdendi("Siparişiniz başarıyla işleme alınmıştır.");
+    onOdendi(SUREC5_TOAST.icerikUretimiOnaylandi);
   }
 
   return (

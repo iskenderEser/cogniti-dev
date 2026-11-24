@@ -418,7 +418,7 @@ export default function UretimGorevDetayPage() {
           return hata(data.hata ?? "Podcast teslim edilemedi.", "podcast teslimi");
         }
       }
-      basari("Podcast üretici incelemesine gönderildi.");
+      basari(uretimToast({ rol: "iu", olay: "teslim", asama: gorev.asama, revize: gorev.durum === "revizyon_bekliyor" }, toastBaglam));
       gorevBildiriminiKapat(gorev.gorev_id);
       setPodcastDosyalari({});
       await veriCek();
@@ -436,7 +436,7 @@ export default function UretimGorevDetayPage() {
     const kontrol = aracYuklemeKontroluOlustur();
     try {
       await hazirGorselYukle({ talepId: gorev.talep_id, gorsel: gorselDosyasi, kaynak: "iu", gorevId: gorev.gorev_id, aracId: gorev.arac_id ?? undefined, kontrol });
-      basari("Dijital Broşür üretici incelemesine gönderildi.");
+      basari(uretimToast({ rol: "iu", olay: "teslim", asama: gorev.asama, revize: gorev.durum === "revizyon_bekliyor" }, toastBaglam));
       gorevBildiriminiKapat(gorev.gorev_id);
       setGorselDosyasi(null);
       await veriCek();
@@ -451,7 +451,7 @@ export default function UretimGorevDetayPage() {
     const kontrol = aracYuklemeKontroluOlustur();
     try {
       await hazirFlipPdfYukle({ talepId: gorev.talep_id, pdf: flipPdfDosyasi, kapak: flipPdfKapagi ?? undefined, kaynak: "iu", gorevId: gorev.gorev_id, aracId: gorev.arac_id ?? undefined, kontrol });
-      basari("Literatür üretici incelemesine gönderildi.");
+      basari(uretimToast({ rol: "iu", olay: "teslim", asama: gorev.asama, revize: gorev.durum === "revizyon_bekliyor" }, toastBaglam));
       gorevBildiriminiKapat(gorev.gorev_id);
       setFlipPdfDosyasi(null);
       await veriCek();

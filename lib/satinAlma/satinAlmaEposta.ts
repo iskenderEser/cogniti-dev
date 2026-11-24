@@ -1,8 +1,10 @@
 import "server-only";
 
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { ogrenmeAraciMetinleri } from "@/lib/ogrenmeAraci/etiketler";
 import { abonelikIlkDonem } from "@/lib/satinAlma/abonelikIlkDonem";
 import { FIRMA_ADMIN_ROLU } from "@/lib/utils/roller";
+import { talepBilgisiTalep } from "@/lib/utils/talepZinciri";
 
 const kacir = (v: string) =>
   v.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
@@ -250,5 +252,73 @@ export async function kkoBaslatildiEpostasiGonder(
     });
   } catch (err) {
     console.error("[satin-alma-eposta] kko hazırlık hatası:", err);
+  }
+}
+
+function tarihSaatBicim(iso?: string | null): string {
+  const tarih = iso ? new Date(iso) : new Date();
+  const gecerli = Number.isNaN(tarih.getTime()) ? new Date() : tarih;
+  return new Intl.DateTimeFormat("tr-TR", {
+    timeZone: "Europe/Istanbul",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(gecerli);
+}
+
+export async function icerikUretimiOnaylandiEpostasiGonder(
+  db: SupabaseClient,
+  params: {
+    kullaniciId: string;
+    talepId: string;
+    hesapTuru: "kisisel" | "firma_ortak";
+    tokenAdedi: number;
+  }
+) {
+  try {
+    const [alici, talep] = await Promise.all([
+      alicilariCoz(db, params.kullaniciId),
+      talepBilgisiTalep(db, params.talepId),
+    ]);
+    if (!alici) return;
+
+    const icerikAdi = talep?.urun_adi && talep.urun_adi !== "-" ? talep.urun_adi : "İçerik";
+    const aracAdi = ogrenmeAraciMetinleri(talep?.ogrenme_araci_turu).ad;
+
+    const hitap = alici.adSoyad ? `Sayın ${alici.adSoyad},` : "Sayın Kullanıcı,";
+    const hesap = hesapIfadesi(params.hesapTuru, alici.firmaAdi);
+    const tokenMetni = `${sayiBicim(params.tokenAdedi)} token`;
+    const islemTarihi = tarihSaatBicim();
+    const icerikEtiketi = `${icerikAdi} (${aracAdi})`;
+
+    await resendSatinAlmaGonder({
+      to: alici.eposta,
+      cc: alici.ccEposta,
+      subject: "Cogniti içerik üretimi siparişiniz onaylandı",
+      html:
+        `<p style="margin: 0 0 16px 0;">${kacir(hitap)}</p>` +
+        `<p style="margin: 0 0 16px 0;">${kacir(`${hesap} üzerinden içerik üretimi siparişiniz onaylanmış ve ilgili token tutarı hesabınızdan tahsil edilmiştir.`)}</p>` +
+        `<ul style="margin: 0 0 16px 0; padding-left: 20px;">` +
+        `<li style="margin: 0 0 6px 0;"><strong>İçerik:</strong> ${kacir(icerikEtiketi)}</li>` +
+        `<li style="margin: 0 0 6px 0;"><strong>Tahsil edilen tutar:</strong> ${kacir(tokenMetni)}</li>` +
+        `<li style="margin: 0 0 6px 0;"><strong>Kullanılan hesap:</strong> ${kacir(hesap)}</li>` +
+        `<li style="margin: 0;"><strong>İşlem tarihi:</strong> ${kacir(islemTarihi)}</li>` +
+        `</ul>` +
+        `<p style="margin: 0;">Cogniti · bilgi taşır</p>`,
+      text:
+        `${hitap}\n\n` +
+        `${hesap} üzerinden içerik üretimi siparişiniz onaylanmış ve ilgili token tutarı hesabınızdan tahsil edilmiştir.\n\n` +
+        `- İçerik: ${icerikEtiketi}\n` +
+        `- Tahsil edilen tutar: ${tokenMetni}\n` +
+        `- Kullanılan hesap: ${hesap}\n` +
+        `- İşlem tarihi: ${islemTarihi}\n\n` +
+        `Cogniti · bilgi taşır`,
+      idempotencyKey: `icerik-uretimi-onaylandi/${params.talepId}`,
+      etiket: "icerik-uretimi",
+    });
+  } catch (err) {
+    console.error("[satin-alma-eposta] icerik-uretimi hazırlık hatası:", err);
   }
 }

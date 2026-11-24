@@ -1,6 +1,7 @@
 "use client";
 
 import { SadeKisiSecimi } from "@/components/kontrol/KisiKontroller";
+import { SUREC5_TOAST } from "@/lib/bildirimler/toastMesajlari";
 
 import type { UretimGorevi } from "@/lib/uretim/gorevTipleri";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -66,7 +67,7 @@ export default function UretimAtamaPaneli({ hata, basari }: Props) {
       const res = await fetch("/admin/api/uretim/atamalar", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
       const veri = await res.json();
       if (!res.ok) return hata(veri.hata ?? "IU ataması güncellenemedi.", veri.adim, veri.detay);
-      basari("İçerik üreticisi ataması güncellendi."); await veriCek();
+      basari(SUREC5_TOAST.iuAtamaGuncellendi); await veriCek();
     } finally { setIslem(""); }
   };
 
@@ -77,7 +78,7 @@ export default function UretimAtamaPaneli({ hata, basari }: Props) {
       const res = await fetch("/admin/api/uretim/gorev-devret", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ gorev_id: devirGorevi, yeni_iu_id: devirIu, neden: devirNedeni, islem_anahtari: crypto.randomUUID() }) });
       const veri = await res.json();
       if (!res.ok) return hata(veri.hata ?? "Görev devredilemedi.", veri.adim, veri.detay);
-      basari("Görev yeni içerik üreticisine devredildi."); setDevirGorevi(null); setDevirIu(""); setDevirNedeni(""); await veriCek();
+      basari(SUREC5_TOAST.gorevDevredildi); setDevirGorevi(null); setDevirIu(""); setDevirNedeni(""); await veriCek();
     } finally { setIslem(""); }
   };
 
