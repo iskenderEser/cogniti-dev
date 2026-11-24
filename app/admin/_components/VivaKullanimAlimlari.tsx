@@ -13,7 +13,7 @@ const basliklar=['Yayın Tarihi','Yayın Adı','Düzenleyen','Katılımcı Sayı
 const para=(n:number)=>`${n.toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2})} TL`;
 const AYLAR=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
 const ay=(s:string)=>new Date(`${s}-01T00:00:00+03:00`).toLocaleDateString('tr-TR',{timeZone:'Europe/Istanbul',month:'long',year:'numeric'});
-export default function VivaKullanimAlimlari({firmaId,basari}:{firmaId:string;basari:(mesaj:string)=>void}) {
+export default function VivaKullanimAlimlari({firmaId,basari,hata}:{firmaId:string;basari:(mesaj:string)=>void;hata?:(mesaj:string)=>void}) {
  const [aramaMetni,setAramaMetni]=useState(''),[arama,setArama]=useState(''),[yenileme,setYenileme]=useState(0);
  const [seciliAy,setSeciliAy]=useState('');
  const [sonuc,setSonuc]=useState<{anahtar:string;veri?:VivaAlimYaniti;hata?:string}|null>(null);
@@ -48,7 +48,7 @@ export default function VivaKullanimAlimlari({firmaId,basari}:{firmaId:string;ba
  <td className={local.rakam}>{s.katilimci_sayisi.toLocaleString('tr-TR')}</td><td className={local.rakam}>{s.kisi_dakika.toLocaleString('tr-TR',{maximumFractionDigits:4})}</td><td className={local.rakam}>{para(s.birim_fiyat)}</td><td className={local.rakam}>{para(s.tutar)}</td></tr>)}
  {!b.satirlar.length&&<tr><td colSpan={7}>Henüz kesinleşmiş Viva kullanımı bulunmuyor.</td></tr>}</tbody></MobilUyumluTablo></div>
  <dl className={local.toplamlar}><div><dt>Toplam Tutar</dt><dd>{para(b.toplam_tutar)}</dd></div><div><dt>KDV (%20)</dt><dd>{para(b.kdv)}</dd></div><div className={local.genel}><dt>Genel Tutar</dt><dd>{para(b.genel_tutar)}</dd></div></dl>
- <VivaProformaAlani key={`${firmaId}:${b.donem}`} firmaId={firmaId} ay={b.donem} basari={basari}/></div>)}
+ <VivaProformaAlani key={`${firmaId}:${b.donem}`} firmaId={firmaId} ay={b.donem} basari={basari} hata={hata}/></div>)}
  </>}
  <p className={local.bilgi}>Tutarlar kesinleşmiş Viva kullanımlarından hesaplanır. Birim fiyat TL/kişi-dakikadır.</p>
  </section>;

@@ -3,10 +3,11 @@ import {useEffect,useId,useRef,useState} from 'react';
 import {Button} from '@/components/ui/button';
 import {AlertDialog,AlertDialogContent,AlertDialogDescription,AlertDialogFooter,AlertDialogHeader,AlertDialogTitle,AlertDialogCancel} from '@/components/ui/alert-dialog';
 import {vivaProformaGecerli,proformaOnayiGecerli,type VivaProforma} from '@/lib/satinAlma/vivaProforma';
+import { SUREC4_TOAST } from '@/lib/bildirimler/toastMesajlari';
 import VivaProformaBelgesi from './VivaProformaBelgesi';
 import styles from '../admin.module.css';
 import local from './esnek-proforma.module.css';
-export default function VivaProformaAlani({firmaId,ay,sadeceOnayli=false,basari}:{firmaId:string;ay:string;sadeceOnayli?:boolean;basari?:(mesaj:string)=>void}) {
+export default function VivaProformaAlani({firmaId,ay,sadeceOnayli=false,basari,hata:hataToast}:{firmaId:string;ay:string;sadeceOnayli?:boolean;basari?:(mesaj:string)=>void;hata?:(mesaj:string)=>void}) {
  const [sonuc,setSonuc]=useState<{anahtar:string;veri?:VivaProforma;hata?:string}|null>(null),[yenileme,setYenileme]=useState(0);
  const [acik,setAcik]=useState(false),[modal,setModal]=useState(false),[aciklama,setAciklama]=useState(''),[hata,setHata]=useState(''),[kaydediyor,setKaydediyor]=useState(false);
  const kilit=useRef(false),id=useId(),anahtar=`${firmaId}:${ay}:${sadeceOnayli}:${yenileme}`;
@@ -19,13 +20,13 @@ export default function VivaProformaAlani({firmaId,ay,sadeceOnayli=false,basari}
  useEffect(()=>{const yenile=()=>setYenileme(n=>n+1);window.addEventListener('focus',yenile);return()=>window.removeEventListener('focus',yenile);},[]);
  async function onayla(){
  if(kilit.current||!d?.onaylanabilir||d.onay)return;
- if(d.admin_onayi&&!aciklama.trim()){setHata('Admin onayı için açıklama zorunludur.');return;}
+ if(d.admin_onayi&&!aciklama.trim()){const mesaj='Admin onayı için açıklama zorunludur.';if(hataToast)hataToast(mesaj);else setHata(mesaj);return;}
  kilit.current=true;setKaydediyor(true);setHata('');
  try{const r=await fetch(`/admin/api/firmalar/${firmaId}/viva-proformalar`,{method:'POST',headers:{'Content-Type':'application/json'},signal:AbortSignal.timeout(15000),body:JSON.stringify({ay,aciklama:aciklama.trim()})});const v=await r.json();
  if(!r.ok)throw Error(typeof v.hata==='string'?v.hata:'Onay kaydedilemedi.');if(!proformaOnayiGecerli(v))throw Error('Onay sonucu doğrulanamadı.');
- if (!d.admin_onayi) basari?.("Proforma fatura onaylanmıştır.");
+ basari?.(SUREC4_TOAST.proformaOnaylandi('viva', v.tur === 'admin'));
  setModal(false);setYenileme(n=>n+1);
- }catch(e){setHata(e instanceof Error?e.message:'Onay kaydedilemedi.');}finally{kilit.current=false;setKaydediyor(false);}
+ }catch(e){const mesaj=e instanceof Error?e.message:'Onay kaydedilemedi.';if(hataToast)hataToast(mesaj);else setHata(mesaj);}finally{kilit.current=false;setKaydediyor(false);}
  }
  if(!guncel)return <p className={styles.cardBody} role="status">Proforma bilgileri yükleniyor…</p>;
  if(guncel.hata)return <div className={styles.cardBody} role="alert"><p>{guncel.hata}</p><Button variant="outline" onClick={()=>setYenileme(n=>n+1)}>Yeniden Dene</Button></div>;
@@ -41,7 +42,7 @@ export default function VivaProformaAlani({firmaId,ay,sadeceOnayli=false,basari}
  <AlertDialog open={modal} onOpenChange={v=>{if(!kilit.current)setModal(v);}}><AlertDialogContent>
  <AlertDialogHeader><AlertDialogTitle>{d.admin_onayi?'Admin Onayı':'Proforma Fatura Onayı'}</AlertDialogTitle><AlertDialogDescription>{d.admin_onayi?'Ayın tüm Viva kullanımlarını firma adına onaylamak için açıklamanızı yazın.':'Onayınızdan sonra Cogniti tarafından resmi faturanız düzenlenecektir.'}</AlertDialogDescription></AlertDialogHeader>
  {d.admin_onayi&&<label className={local.modalAlan} htmlFor={`${id}-aciklama`}>Açıklama *<textarea id={`${id}-aciklama`} required maxLength={2000} value={aciklama} onChange={e=>setAciklama(e.target.value)} disabled={kaydediyor}/></label>}
- {hata&&<p role="alert" className={local.hata}>{hata}</p>}
+ {!hataToast&&hata&&<p role="alert" className={local.hata}>{hata}</p>}
  <AlertDialogFooter><AlertDialogCancel disabled={kaydediyor}>Vazgeç</AlertDialogCancel><Button type="button" disabled={kaydediyor||(d.admin_onayi&&!aciklama.trim())} onClick={()=>void onayla()}>{kaydediyor?'Kaydediliyor…':d.admin_onayi?'Kaydet':'Onayla'}</Button></AlertDialogFooter>
  </AlertDialogContent></AlertDialog></>;
 }

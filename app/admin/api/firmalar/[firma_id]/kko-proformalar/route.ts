@@ -3,6 +3,7 @@ import { createAdminClient } from "@/lib/supabase/server";
 import { partnerJsonOku, partnerYanit } from "@/lib/agora/partnerHttp";
 import { uuidGecerliMi } from "@/lib/uretim/rpcTemel";
 import { kkoProformaListesiGecerli, proformaOnayiGecerli } from "@/lib/satinAlma/kkoProforma";
+import { proformaOnayEpostasiGonder } from "@/lib/satinAlma/proformaEposta";
 
 type Baglam = { params: Promise<{ firma_id: string }> };
 function hataDurumu(kod: string) {
@@ -44,11 +45,19 @@ export async function POST(request: Request, { params }: Baglam) {
     if (!uuidGecerliMi(siparisId) || typeof aciklama !== "string" || aciklama.length > 2000 || aciklama.includes("\0")) {
       return partnerYanit({ hata: "Geçersiz onay bilgisi." }, 400);
     }
-    const { data, error } = await createAdminClient(AbortSignal.timeout(10000)).rpc("cogniti_kko_proforma_onayla", {
+    const db = createAdminClient(AbortSignal.timeout(10000));
+    const { data, error } = await db.rpc("cogniti_kko_proforma_onayla", {
       p_auth_id: auth.kullaniciId, p_firma: firma_id, p_siparis: siparisId, p_aciklama: aciklama.trim(),
     });
     if (error) return partnerYanit({ hata: error.code === "22023" ? "KKÖ döneminin tamamlandığını ve zorunlu admin açıklamasını kontrol edin." : "Proforma onayı kaydedilemedi." }, hataDurumu(error.code));
     if (!proformaOnayiGecerli(data)) return partnerYanit({ hata: "Onay sonucu doğrulanamadı. Tekrar deneyin." }, 503);
+    await proformaOnayEpostasiGonder(db, {
+      tur: "kko",
+      firmaId: firma_id,
+      kayitAnahtari: siparisId,
+      onaylayanId: auth.kullaniciId,
+      onay: data,
+    });
     return partnerYanit(data);
   } catch { return partnerYanit({ hata: "Onay sonucu alınamadı. Tekrar deneyin." }, 503); }
 }

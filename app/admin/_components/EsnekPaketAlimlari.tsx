@@ -5,6 +5,7 @@ import { Search, ShoppingBag, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogCancel } from "@/components/ui/alert-dialog";
 import { esnekProformaListesiGecerli, proformaOnayiGecerli, type EsnekProformaKaydi, type EsnekProformaListesi } from "@/lib/satinAlma/esnekProforma";
+import { SUREC4_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import EsnekProformaBelgesi from "./EsnekProformaBelgesi";
 import { SadeKapsulFiltre } from "@/components/kontrol/SadeKontroller";
 import { SATIN_ALIM_AYLARI, satinAlimAyi, aylikSiparisleriOku } from "@/lib/satinAlma/aylikSiparisler";
@@ -16,7 +17,17 @@ import local from "./esnek-proforma.module.css";
 const basliklar = ["Sipariş Tarihi", "Sipariş Veren", "Token Hesabı", "Paket", "Token Adedi", "Birim Fiyat", "Toplam Tutar", "KDV", "Genel Tutar", "Proforma", "Onay"];
 const para = (n: number) => `${n.toLocaleString("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TL`;
 
-export default function EsnekPaketAlimlari({ firmaId, sadeceOnayli = false }: { firmaId: string; sadeceOnayli?: boolean }) {
+export default function EsnekPaketAlimlari({
+  firmaId,
+  sadeceOnayli = false,
+  basari,
+  hata: hataToast,
+}: {
+  firmaId: string;
+  sadeceOnayli?: boolean;
+  basari?: (mesaj: string) => void;
+  hata?: (mesaj: string) => void;
+}) {
   const [seciliAy,setSeciliAy]=useState(satinAlimAyi);
   const [sayfa, setSayfa] = useState(0);
   const [aramaMetni, setAramaMetni] = useState("");
@@ -59,7 +70,7 @@ export default function EsnekPaketAlimlari({ firmaId, sadeceOnayli = false }: { 
     {!guncel ? <p className={styles.cardBody} role="status">Kayıtlar yükleniyor…</p> : guncel.hata ? <div className={styles.cardBody} role="alert"><p>{guncel.hata}</p><Button type="button" variant="outline" onClick={() => setYenileme(v => v + 1)}>Yeniden Dene</Button></div> : veri && <>
       <div className={styles.tableWrap}><MobilUyumluTablo basliklar={basliklar} className={local.tablo} aria-label="Esnek paket alımları ve proforma onayları">
         <thead><tr>{basliklar.map((b, i) => <th key={b} className={i >= 4 && i <= 8 ? local.rakam : undefined}>{b}</th>)}</tr></thead>
-        <tbody>{veri.siparisler.map(s => <EsnekSatiri key={s.kayit_id} kayit={s} firmaId={firmaId} adminOnayi={veri.admin_onayi} onYenile={() => setYenileme(v => v + 1)} />)}
+        <tbody>{veri.siparisler.map(s => <EsnekSatiri key={s.kayit_id} kayit={s} firmaId={firmaId} adminOnayi={veri.admin_onayi} basari={basari} hataToast={hataToast} onYenile={() => setYenileme(v => v + 1)} />)}
           {!veri.siparisler.length && <tr><td colSpan={11}>{sadeceOnayli ? "Henüz onaylanan proforma bulunmuyor." : arama ? "Aramayla eşleşen kayıt bulunamadı." : "Henüz satın alma kaydı bulunmuyor."}</td></tr>}
         </tbody>
       </MobilUyumluTablo></div>
@@ -72,7 +83,10 @@ export default function EsnekPaketAlimlari({ firmaId, sadeceOnayli = false }: { 
   </section>;
 }
 
-function EsnekSatiri({ kayit: s, firmaId, adminOnayi, onYenile }: { kayit: EsnekProformaKaydi; firmaId: string; adminOnayi: boolean; onYenile: () => void }) {
+function EsnekSatiri({ kayit: s, firmaId, adminOnayi, basari, hataToast, onYenile }: {
+  kayit: EsnekProformaKaydi; firmaId: string; adminOnayi: boolean;
+  basari?: (mesaj: string) => void; hataToast?: (mesaj: string) => void; onYenile: () => void;
+}) {
   const [proformaAcik, setProformaAcik] = useState(false);
   const [modalAcik, setModalAcik] = useState(false);
   const [aciklama, setAciklama] = useState("");
@@ -82,7 +96,11 @@ function EsnekSatiri({ kayit: s, firmaId, adminOnayi, onYenile }: { kayit: Esnek
   const id = useId();
   async function onayla() {
     if (kilit.current || s.onay) return;
-    if (adminOnayi && !aciklama.trim()) { setHata("Admin onayı için açıklama zorunludur."); return; }
+    if (adminOnayi && !aciklama.trim()) {
+      const mesaj = "Admin onayı için açıklama zorunludur.";
+      if (hataToast) hataToast(mesaj); else setHata(mesaj);
+      return;
+    }
     kilit.current = true; setKaydediyor(true); setHata("");
     try {
       const yanit = await fetch(`/admin/api/firmalar/${firmaId}/esnek-proformalar`, {
@@ -92,8 +110,13 @@ function EsnekSatiri({ kayit: s, firmaId, adminOnayi, onYenile }: { kayit: Esnek
       const veri = await yanit.json();
       if (!yanit.ok) throw new Error(typeof veri.hata === "string" ? veri.hata : "Onay kaydedilemedi.");
       if (!proformaOnayiGecerli(veri)) throw new Error("Onay sonucu doğrulanamadı. Tekrar deneyin.");
-      setModalAcik(false); onYenile();
-    } catch (error) { setHata(error instanceof Error ? error.message : "Onay sonucu alınamadı. Tekrar deneyin."); }
+      setModalAcik(false);
+      basari?.(SUREC4_TOAST.proformaOnaylandi("esnek", veri.tur === "admin"));
+      onYenile();
+    } catch (error) {
+      const mesaj = error instanceof Error ? error.message : "Onay sonucu alınamadı. Tekrar deneyin.";
+      if (hataToast) hataToast(mesaj); else setHata(mesaj);
+    }
     finally { kilit.current = false; setKaydediyor(false); }
   }
   return <Fragment>
@@ -114,7 +137,7 @@ function EsnekSatiri({ kayit: s, firmaId, adminOnayi, onYenile }: { kayit: Esnek
       {adminOnayi && <label className={local.modalAlan} htmlFor={`${id}-aciklama`}>Açıklama *
         <textarea id={`${id}-aciklama`} required maxLength={2000} value={aciklama} onChange={e => setAciklama(e.target.value)} disabled={kaydediyor} placeholder="Firma adına onay verme gerekçenizi yazın." />
       </label>}
-      {hata && <p className={local.hata} role="alert">{hata}</p>}
+      {!hataToast && hata && <p className={local.hata} role="alert">{hata}</p>}
       <AlertDialogFooter><AlertDialogCancel disabled={kaydediyor}>Vazgeç</AlertDialogCancel>
         <Button type="button" disabled={kaydediyor || (adminOnayi && !aciklama.trim())} onClick={() => void onayla()}>{kaydediyor ? "Kaydediliyor…" : adminOnayi ? "Kaydet" : "Onayla"}</Button>
       </AlertDialogFooter>

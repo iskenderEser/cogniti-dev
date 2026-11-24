@@ -6,16 +6,19 @@ import {
   AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription,
   AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { SUREC4_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import styles from "../admin.module.css";
 import local from "./esnek-proforma.module.css";
 
 export type Taraf = { unvan: string; adres: string; vergi_dairesi: string; vergi_numarasi: string };
 const tarih = new Intl.DateTimeFormat("tr-TR", { dateStyle: "short", timeStyle: "short", timeZone: "Europe/Istanbul" });
 
-export default function CekProforma({ veri, belge, yol, donemAdi, baslik, yenile, children }: {
+export default function CekProforma({ veri, belge, yol, donemAdi, baslik, tur, basari, hata: hataToast, yenile, children }: {
   veri: { onay_anahtari: string | null; onay: { ad: string; tarih: string } | null };
   belge: { belge_no: string; duzenleyen: Taraf; alici: Taraf };
-  yol: string; donemAdi: string; baslik: string; yenile: () => void; children: ReactNode;
+  yol: string; donemAdi: string; baslik: string; tur: "firmastore" | "eczane";
+  basari?: (mesaj: string) => void; hata?: (mesaj: string) => void;
+  yenile: () => void; children: ReactNode;
 }) {
   const [belgeAcik, setBelgeAcik] = useState(false);
   const [onayAcik, setOnayAcik] = useState(false);
@@ -36,9 +39,11 @@ export default function CekProforma({ veri, belge, yol, donemAdi, baslik, yenile
       const sonuc = await yanit.json();
       if (!yanit.ok || !sonuc.onay) throw new Error(sonuc.hata ?? "Onay doğrulanamadı.");
       setOnayAcik(false);
+      basari?.(SUREC4_TOAST.proformaOnaylandi(tur, false));
       yenile();
     } catch (error) {
-      setHata(error instanceof Error ? error.message : "Onay kaydedilemedi.");
+      const mesaj = error instanceof Error ? error.message : "Onay kaydedilemedi.";
+      if (hataToast) hataToast(mesaj); else setHata(mesaj);
     } finally {
       kilit.current = false;
       setKaydediyor(false);
@@ -77,7 +82,7 @@ export default function CekProforma({ veri, belge, yol, donemAdi, baslik, yenile
           <AlertDialogTitle>Proforma Fatura Onayı</AlertDialogTitle>
           <AlertDialogDescription>Onayınızdan sonra Cogniti tarafından resmi faturanız düzenlenecektir.</AlertDialogDescription>
         </AlertDialogHeader>
-        {hata && <p role="alert" className={local.hata}>{hata}</p>}
+        {!hataToast && hata && <p role="alert" className={local.hata}>{hata}</p>}
         <AlertDialogFooter>
           <AlertDialogCancel disabled={kaydediyor}>Vazgeç</AlertDialogCancel>
           <Button disabled={kaydediyor} onClick={() => void onayla()}>{kaydediyor ? "Kaydediliyor…" : "Onayla"}</Button>

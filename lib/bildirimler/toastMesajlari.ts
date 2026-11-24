@@ -106,3 +106,33 @@ export const SUREC3_TOAST = {
   kkoTanimlandi: (hesapTuru: "kisisel" | "firma_ortak") =>
     `Kullandığın Kadar Öde (KKÖ) paketi ${hesapTuru === "kisisel" ? "kişisel hesabınız" : "firma ortak hesabı"} için tanımlandı.`,
 } as const;
+
+export type ProformaToastTuru =
+  | "kko"
+  | "esnek"
+  | "abonelik"
+  | "viva"
+  | "banner"
+  | "agora"
+  | "icerik"
+  | "firmastore"
+  | "eczane";
+
+const PROFORMA_TOAST_ADLARI: Record<ProformaToastTuru, string> = {
+  kko: "Kullandığın Kadar Öde",
+  esnek: "Esnek Paket",
+  abonelik: "Aylık Abonelik",
+  viva: "Viva Kullanımı",
+  banner: "Banner Alımı",
+  agora: "Agora Yayını Alımı",
+  icerik: "İçerik Üretimi Alımı",
+  firmastore: "FirmaStore Çekleri",
+  eczane: "Eczane Çekleri",
+};
+
+export const SUREC4_TOAST = {
+  proformaOnaylandi: (tur: ProformaToastTuru, adminOnayi: boolean) =>
+    adminOnayi
+      ? `${PROFORMA_TOAST_ADLARI[tur]} proforma faturası firma adına onaylandı.`
+      : `${PROFORMA_TOAST_ADLARI[tur]} proforma faturası onaylandı.`,
+} as const;

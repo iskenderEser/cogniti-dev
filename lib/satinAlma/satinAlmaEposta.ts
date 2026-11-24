@@ -1,6 +1,7 @@
 import "server-only";
 
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { abonelikIlkDonem } from "@/lib/satinAlma/abonelikIlkDonem";
 import { FIRMA_ADMIN_ROLU } from "@/lib/utils/roller";
 
 const kacir = (v: string) =>
@@ -108,26 +109,26 @@ function hesapIfadesi(hesapTuru: "kisisel" | "firma_ortak", firmaAdi: string): s
 
 export async function abonelikBaslatildiEpostasiGonder(
   db: SupabaseClient,
-  params: { kullaniciId: string; siparisId: string; hesapTuru: "kisisel" | "firma_ortak" }
+  params: {
+    kullaniciId: string;
+    siparisId: string;
+    hesapTuru: "kisisel" | "firma_ortak";
+    aylikToken: number;
+    aylikKurus: number;
+    baslangic: string;
+  }
 ) {
   try {
-    const [alici, siparisSonuc] = await Promise.all([
-      alicilariCoz(db, params.kullaniciId),
-      db
-        .from("cogniti_abonelik_siparisleri")
-        .select("aylik_token,aylik_kurus,ilk_donem_token,ilk_donem_kurus")
-        .eq("siparis_id", params.siparisId)
-        .maybeSingle(),
-    ]);
-    if (!alici || !siparisSonuc.data) return;
+    const alici = await alicilariCoz(db, params.kullaniciId);
+    if (!alici) return;
 
-    const s = siparisSonuc.data;
+    const ilk = abonelikIlkDonem(params.baslangic, params.aylikToken, params.aylikKurus);
     const hitap = alici.adSoyad ? `Sayın ${alici.adSoyad},` : "Sayın Kullanıcı,";
     const hesap = hesapIfadesi(params.hesapTuru, alici.firmaAdi);
-    const aylikToken = sayiBicim(Number(s.aylik_token));
-    const aylikTutar = tlBicim(Number(s.aylik_kurus) / 100);
-    const ilkToken = sayiBicim(Number(s.ilk_donem_token));
-    const ilkTutar = tlBicim(Number(s.ilk_donem_kurus) / 100);
+    const aylikToken = sayiBicim(params.aylikToken);
+    const aylikTutar = tlBicim(params.aylikKurus / 100);
+    const ilkToken = sayiBicim(ilk.token);
+    const ilkTutar = tlBicim(ilk.kurus / 100);
 
     await resendSatinAlmaGonder({
       to: alici.eposta,

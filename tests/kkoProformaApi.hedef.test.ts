@@ -17,6 +17,7 @@ function setup() {
   "@/lib/supabase/server": { createAdminClient: () => ({ rpc:async (name:string,args:Record<string,unknown>) => { calls.push({name,args}); return { data:state.data,error:state.code?{code:state.code}:null }; } }) },
   "@/lib/agora/partnerHttp": { partnerJsonOku,partnerYanit }, "@/lib/uretim/rpcTemel": { uuidGecerliMi },
   "@/lib/satinAlma/kkoProforma": { kkoProformaListesiGecerli,proformaOnayiGecerli },
+  "@/lib/satinAlma/proformaEposta": { proformaOnayEpostasiGonder: async () => {} },
  };
  vm.runInNewContext(ts.transpileModule(readFileSync("app/admin/api/firmalar/[firma_id]/kko-proformalar/route.ts","utf8"),{
   compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022},

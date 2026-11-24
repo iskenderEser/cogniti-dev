@@ -19,7 +19,7 @@ type Satir = {
 };
 type Liste = { firma_id: string; ay: string; sayfa: number; toplam: number; sayfa_boyutu: number; satirlar: Satir[] };
 
-export default function BannerAlimlari({ firmaId, basari }: { firmaId: string; basari: (mesaj: string) => void }) {
+export default function BannerAlimlari({ firmaId, basari, hata }: { firmaId: string; basari: (mesaj: string) => void; hata?: (mesaj: string) => void }) {
   const [ay, setAy] = useState(satinAlimAyi);
   const [sayfa, setSayfa] = useState(0);
   const [deneme, setDeneme] = useState(0);
@@ -59,7 +59,7 @@ export default function BannerAlimlari({ firmaId, basari }: { firmaId: string; b
     {guncel?.hata && <div role="alert" className={styles.cardBody}><p>{guncel.hata}</p>
       <Button variant="outline" onClick={() => setDeneme(n => n + 1)}>Yeniden Dene</Button></div>}
     {veri && <>
-      <BannerProformaAlani key={ay} firmaId={firmaId} ay={ay} basari={basari} alimSutunSayisi={BANNER_ALIM_SUTUNLARI.length} tablo={(proformaSatiri, proformaHucreleri) => (
+      <BannerProformaAlani key={ay} firmaId={firmaId} ay={ay} basari={basari} hata={hata} alimSutunSayisi={BANNER_ALIM_SUTUNLARI.length} tablo={(proformaSatiri, proformaHucreleri) => (
       <div className={styles.tableWrap}>
         <MobilUyumluTablo basliklar={basliklar} className={tablo.tablo} aria-label="Banner alımları">
           <thead><tr>{basliklar.map(b => <th key={b} scope="col" className={BANNER_SAYISAL_SUTUNLAR.has(b) ? tablo.rakam : undefined}>{b}</th>)}</tr></thead>

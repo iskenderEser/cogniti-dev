@@ -200,15 +200,15 @@ function AdminPanelIcerigi() {
               {(seciliSekme === "faturalar" || seciliSekme === "proforma-fatura" || faturaSayfasi) && !firmaAdmin && !platformSecili &&
                 <FirmaFaturalari key={`${f.firma_id}-${seciliSekme}`} firmaId={f.firma_id} proforma={seciliSekme === "proforma-fatura" || faturaSayfasi?.bolum.id === "proforma"} kalem={faturaSayfasi?.kalem.id} />}
 
-              {seciliSekme === "paket-alimlari-esnek" && <EsnekPaketAlimlari key={f.firma_id} firmaId={f.firma_id} />}
-              {seciliSekme === "paket-alimlari-abonelik" && <AbonelikPaketAlimlari key={f.firma_id} firmaId={f.firma_id} />}
-              {seciliSekme === "paket-alimlari-kko" && <KkoPaketAlimlari key={f.firma_id} firmaId={f.firma_id} />}
-              {seciliSekme === "banner-alim" && <BannerAlimlari key={f.firma_id} firmaId={f.firma_id} basari={admin.basari} />}
-              {seciliSekme === "agora-yayin-alim" && <AgoraYayinAlimlari key={f.firma_id} firmaId={f.firma_id} basari={admin.basari} />}
-              {seciliSekme === "icerik-uretimi-alimi" && <IcerikUretimiAlimlari key={f.firma_id} firmaId={f.firma_id} />}
-              {seciliSekme === "firmstore-cekleri" && <FirmaStoreCekAlimlari key={f.firma_id} firmaId={f.firma_id} />}
-              {seciliSekme === "eczane-cekleri" && <EczaneCekAlimlari key={f.firma_id} firmaId={f.firma_id} />}
-              {seciliSekme === "viva-kullanim" && <VivaKullanimAlimlari key={f.firma_id} firmaId={f.firma_id} basari={admin.basari} />}
+              {seciliSekme === "paket-alimlari-esnek" && <EsnekPaketAlimlari key={f.firma_id} firmaId={f.firma_id} basari={admin.basari} hata={admin.hata} />}
+              {seciliSekme === "paket-alimlari-abonelik" && <AbonelikPaketAlimlari key={f.firma_id} firmaId={f.firma_id} basari={admin.basari} hata={admin.hata} />}
+              {seciliSekme === "paket-alimlari-kko" && <KkoPaketAlimlari key={f.firma_id} firmaId={f.firma_id} basari={admin.basari} hata={admin.hata} />}
+              {seciliSekme === "banner-alim" && <BannerAlimlari key={f.firma_id} firmaId={f.firma_id} basari={admin.basari} hata={admin.hata} />}
+              {seciliSekme === "agora-yayin-alim" && <AgoraYayinAlimlari key={f.firma_id} firmaId={f.firma_id} basari={admin.basari} hata={admin.hata} />}
+              {seciliSekme === "icerik-uretimi-alimi" && <IcerikUretimiAlimlari key={f.firma_id} firmaId={f.firma_id} basari={admin.basari} hata={admin.hata} />}
+              {seciliSekme === "firmstore-cekleri" && <FirmaStoreCekAlimlari key={f.firma_id} firmaId={f.firma_id} basari={admin.basari} hata={admin.hata} />}
+              {seciliSekme === "eczane-cekleri" && <EczaneCekAlimlari key={f.firma_id} firmaId={f.firma_id} basari={admin.basari} hata={admin.hata} />}
+              {seciliSekme === "viva-kullanim" && <VivaKullanimAlimlari key={f.firma_id} firmaId={f.firma_id} basari={admin.basari} hata={admin.hata} />}
               {seciliSekme === "abonelik-paketleri" && <SatinAlinanPaketler key={`${f.firma_id}:${seciliSekme}`} firmaId={f.firma_id} />}
               {seciliSekme === "token" && <FirmaTokenKullanimi key={f.firma_id} firmaId={f.firma_id} />}
 

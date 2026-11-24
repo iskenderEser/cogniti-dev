@@ -4,6 +4,7 @@ import { partnerJsonOku, partnerYanit } from "@/lib/agora/partnerHttp";
 import { uuidGecerliMi } from "@/lib/uretim/rpcTemel";
 import { proformaOnayiGecerli } from "@/lib/satinAlma/esnekProforma";
 import { icerikAlimListesiGecerli } from "@/lib/satinAlma/icerikProforma";
+import { proformaOnayEpostasiGonder } from "@/lib/satinAlma/proformaEposta";
 
 type Baglam = { params: Promise<{ firma_id: string }> };
 
@@ -49,12 +50,20 @@ export async function POST(request: Request, { params }: Baglam) {
       || aciklama.includes("\0") || (!auth.firmaAdmin && !aciklama.trim())) {
       return partnerYanit({ hata: "Talep ve onay açıklamasını kontrol edin." }, 400);
     }
-    const { data, error } = await createAdminClient(AbortSignal.timeout(10000)).rpc("cogniti_icerik_proforma_onayla", {
+    const db = createAdminClient(AbortSignal.timeout(10000));
+    const { data, error } = await db.rpc("cogniti_icerik_proforma_onayla", {
       p_auth: auth.kullaniciId, p_firma: firma_id, p_talep: talepId, p_aciklama: aciklama.trim(),
     });
     if (error?.code === "42501") return partnerYanit({ hata: "Bu alana erişiminiz yok." }, 403);
     if (error?.code === "22023") return partnerYanit({ hata: "Alım kaydı proforma onayına uygun değil." }, 400);
     if (error || !proformaOnayiGecerli(data)) return partnerYanit({ hata: "Onay sonucu doğrulanamadı. Tekrar deneyin." }, 503);
+    await proformaOnayEpostasiGonder(db, {
+      tur: "icerik",
+      firmaId: firma_id,
+      kayitAnahtari: talepId,
+      onaylayanId: auth.kullaniciId,
+      onay: data,
+    });
     return partnerYanit(data);
   } catch {
     return partnerYanit({ hata: "Onay sonucu alınamadı. Tekrar deneyin." }, 503);

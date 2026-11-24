@@ -10,6 +10,7 @@ import {
 import { satinAlimAyi, SATIN_ALIM_AYLARI } from "@/lib/satinAlma/aylikSiparisler";
 import { proformaOnayiGecerli } from "@/lib/satinAlma/esnekProforma";
 import { icerikAlimListesiGecerli, type IcerikAlimi, type IcerikAlimListesi } from "@/lib/satinAlma/icerikProforma";
+import { SUREC4_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import MobilUyumluTablo from "./MobilUyumluTablo";
 import styles from "../admin.module.css";
 import local from "./esnek-proforma.module.css";
@@ -18,7 +19,17 @@ const basliklar = ["Tahsilat Tarihi", "İçerik", "Üretici", "Token Hesabı", "
 const para = new Intl.NumberFormat("tr-TR", { style: "currency", currency: "TRY" });
 const tarih = new Intl.DateTimeFormat("tr-TR", { dateStyle: "short", timeStyle: "short", timeZone: "Europe/Istanbul" });
 
-export default function IcerikUretimiAlimlari({ firmaId, sadeceOnayli = false }: { firmaId: string; sadeceOnayli?: boolean }) {
+export default function IcerikUretimiAlimlari({
+  firmaId,
+  sadeceOnayli = false,
+  basari,
+  hata: hataToast,
+}: {
+  firmaId: string;
+  sadeceOnayli?: boolean;
+  basari?: (mesaj: string) => void;
+  hata?: (mesaj: string) => void;
+}) {
   const [ay, setAy] = useState(satinAlimAyi);
   const [sayfa, setSayfa] = useState(0);
   const [yenileme, setYenileme] = useState(0);
@@ -60,7 +71,7 @@ export default function IcerikUretimiAlimlari({ firmaId, sadeceOnayli = false }:
         <MobilUyumluTablo basliklar={basliklar} className={local.tablo} aria-label={baslik}>
           <thead><tr>{basliklar.map(b => <th key={b} scope="col">{b}</th>)}</tr></thead>
           <tbody>
-            {veri.alimlar.map(alim => <AlimSatiri key={alim.talep_id} alim={alim} yol={yol} adminOnayi={veri.admin_onayi} onYenile={yenile} />)}
+            {veri.alimlar.map(alim => <AlimSatiri key={alim.talep_id} alim={alim} yol={yol} adminOnayi={veri.admin_onayi} basari={basari} hataToast={hataToast} onYenile={yenile} />)}
             {veri.alimlar.length === 0 && <tr><td colSpan={basliklar.length}>{sadeceOnayli ? "Bu ay için onaylı proforma bulunmuyor." : "Bu ay için içerik alımı bulunmuyor."}</td></tr>}
           </tbody>
         </MobilUyumluTablo>
@@ -74,8 +85,9 @@ export default function IcerikUretimiAlimlari({ firmaId, sadeceOnayli = false }:
   </section>;
 }
 
-function AlimSatiri({ alim, yol, adminOnayi, onYenile }: {
-  alim: IcerikAlimi; yol: string; adminOnayi: boolean; onYenile: () => void;
+function AlimSatiri({ alim, yol, adminOnayi, basari, hataToast, onYenile }: {
+  alim: IcerikAlimi; yol: string; adminOnayi: boolean;
+  basari?: (mesaj: string) => void; hataToast?: (mesaj: string) => void; onYenile: () => void;
 }) {
   const [belgeAcik, setBelgeAcik] = useState(false);
   const [onayAcik, setOnayAcik] = useState(false);
@@ -98,9 +110,11 @@ function AlimSatiri({ alim, yol, adminOnayi, onYenile }: {
       const veri = await yanit.json();
       if (!yanit.ok || !proformaOnayiGecerli(veri)) throw new Error(veri?.hata ?? "Onay sonucu doğrulanamadı.");
       setOnayAcik(false);
+      basari?.(SUREC4_TOAST.proformaOnaylandi("icerik", veri.tur === "admin"));
       onYenile();
     } catch (error) {
-      setHata(error instanceof Error ? error.message : "Onay kaydedilemedi.");
+      const mesaj = error instanceof Error ? error.message : "Onay kaydedilemedi.";
+      if (hataToast) hataToast(mesaj); else setHata(mesaj);
     } finally {
       kilit.current = false;
       setKaydediyor(false);
@@ -146,7 +160,7 @@ function AlimSatiri({ alim, yol, adminOnayi, onYenile }: {
         {adminOnayi && <label className={local.modalAlan}>Açıklama *
           <textarea required maxLength={2000} value={aciklama} disabled={kaydediyor} onChange={e => setAciklama(e.target.value)} />
         </label>}
-        {hata && <p role="alert" className={local.hata}>{hata}</p>}
+        {!hataToast && hata && <p role="alert" className={local.hata}>{hata}</p>}
         <AlertDialogFooter>
           <AlertDialogCancel disabled={kaydediyor}>Vazgeç</AlertDialogCancel>
           <Button disabled={kaydediyor || (adminOnayi && !aciklama.trim())} onClick={() => void onayla()}>{kaydediyor ? "Kaydediliyor…" : "Onayla"}</Button>

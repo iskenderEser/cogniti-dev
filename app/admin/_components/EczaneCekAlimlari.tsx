@@ -30,7 +30,17 @@ function varsayilanDonem() {
   return onceki === 0 ? `${yil - 1}-P6` : `${yil}-P${onceki}`;
 }
 
-export default function EczaneCekAlimlari({ firmaId, sadeceOnayli = false }: { firmaId: string; sadeceOnayli?: boolean }) {
+export default function EczaneCekAlimlari({
+  firmaId,
+  sadeceOnayli = false,
+  basari,
+  hata,
+}: {
+  firmaId: string;
+  sadeceOnayli?: boolean;
+  basari?: (mesaj: string) => void;
+  hata?: (mesaj: string) => void;
+}) {
   const [donem, setDonem] = useState(varsayilanDonem);
   const [yenileme, setYenileme] = useState(0);
   const [sonuc, setSonuc] = useState<{ anahtar: string; veri: Sonuc | null }>();
@@ -81,7 +91,7 @@ export default function EczaneCekAlimlari({ firmaId, sadeceOnayli = false }: { f
     {veri?.liste?.toplam_tl === null && <p className={styles.cardBody}>Bazı taleplerin TL tutarı eksik veya geçersiz.</p>}
     {sadeceOnayli && veri && !veri.belge && <p className={styles.cardBody}>Bu dönem için onaylı proforma bulunmuyor.</p>}
     {veri?.belge && <CekProforma key={yol} veri={veri} belge={veri.belge} yol={yol}
-      donemAdi={donemAdi} baslik={baslik} yenile={yenile}>
+      donemAdi={donemAdi} baslik={baslik} tur="eczane" basari={basari} hata={hata} yenile={yenile}>
       <div className={styles.tableWrap}>
         <MobilUyumluTablo basliklar={["Kalem", "Adet", "Toplam Tutar"]} className={local.tablo} aria-label="Proforma kalemleri">
           <thead><tr><th scope="col">Kalem</th><th scope="col">Adet</th><th scope="col">Toplam Tutar</th></tr></thead>

@@ -1,6 +1,7 @@
 import { firmaYonetimOkumaKontrol } from "@/lib/admin/firmaYonetimOkuma";
 import { partnerJsonOku, partnerYanit } from "@/lib/agora/partnerHttp";
 import { createAdminClient } from "@/lib/supabase/server";
+import { proformaOnayEpostasiGonder } from "@/lib/satinAlma/proformaEposta";
 import { uuidGecerliMi } from "@/lib/uretim/rpcTemel";
 
 type Baglam = { params: Promise<{ firma_id: string }> };
@@ -37,7 +38,8 @@ async function proforma(request: Request, { params }: Baglam, onayla: boolean) {
       }
       onayAnahtari = anahtar;
     }
-    const { data, error } = await createAdminClient(AbortSignal.timeout(10000)).rpc("cogniti_firmastore_proforma", {
+    const db = createAdminClient(AbortSignal.timeout(10000));
+    const { data, error } = await db.rpc("cogniti_firmastore_proforma", {
       p_auth: auth.kullaniciId, p_firma: firma_id, p_donem: donem,
       p_onayli: sadeceOnayli, p_onay_anahtari: onayAnahtari,
     });
@@ -45,6 +47,20 @@ async function proforma(request: Request, { params }: Baglam, onayla: boolean) {
     if (error?.code === "22023") return partnerYanit({ hata: "Proforma değişti veya henüz onaya hazır değil. Listeyi yenileyin." }, 409);
     if (error || !data || (onayla && !data.onay)) {
       return partnerYanit({ hata: "FirmaStore proforma bilgisi alınamadı." }, 503);
+    }
+    if (onayla && data.onay) {
+      await proformaOnayEpostasiGonder(db, {
+        tur: "firmastore",
+        firmaId: firma_id,
+        kayitAnahtari: donem,
+        onaylayanId: auth.kullaniciId,
+        onay: {
+          tur: "firma",
+          onaylayan: typeof data.onay.ad === "string" ? data.onay.ad : "",
+          tarih: typeof data.onay.tarih === "string" ? data.onay.tarih : new Date().toISOString(),
+        },
+        belge: data.belge ?? null,
+      });
     }
     return partnerYanit(data);
   } catch {

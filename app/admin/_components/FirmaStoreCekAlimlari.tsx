@@ -32,7 +32,17 @@ function varsayilanDonem() {
   return oncekiCeyrek < 0 ? `${yil - 1}-10-01` : `${yil}-${donemler[oncekiCeyrek].ay}-01`;
 }
 
-export default function FirmaStoreCekAlimlari({ firmaId, sadeceOnayli = false }: { firmaId: string; sadeceOnayli?: boolean }) {
+export default function FirmaStoreCekAlimlari({
+  firmaId,
+  sadeceOnayli = false,
+  basari,
+  hata,
+}: {
+  firmaId: string;
+  sadeceOnayli?: boolean;
+  basari?: (mesaj: string) => void;
+  hata?: (mesaj: string) => void;
+}) {
   const [donem, setDonem] = useState(varsayilanDonem);
   const [yenileme, setYenileme] = useState(0);
   const [sonuc, setSonuc] = useState<{ anahtar: string; veri: Sonuc | null }>();
@@ -78,7 +88,7 @@ export default function FirmaStoreCekAlimlari({ firmaId, sadeceOnayli = false }:
     {!guncel && <p className={styles.cardBody} role="status">Kayıtlar yükleniyor…</p>}
     {guncel && !veri && <p className={styles.cardBody} role="alert">FirmaStore çek alımları alınamadı.</p>}
     {veri?.liste && <SiparisTablosu liste={veri.liste} />}
-    {veri?.belge && <CekProforma key={yol} veri={veri} belge={veri.belge} yol={yol} donemAdi={donemAdi} baslik="FirmaStore Çekleri" yenile={yenile}>
+    {veri?.belge && <CekProforma key={yol} veri={veri} belge={veri.belge} yol={yol} donemAdi={donemAdi} baslik="FirmaStore Çekleri" tur="firmastore" basari={basari} hata={hata} yenile={yenile}>
       <ProformaKalemleri belge={veri.belge} />
     </CekProforma>}
     {veri && !veri.belge && <div className={styles.cardBody}>

@@ -5,6 +5,7 @@ import MobilUyumluTablo from './MobilUyumluTablo';
 import {Button} from '@/components/ui/button';
 import {AlertDialog,AlertDialogContent,AlertDialogDescription,AlertDialogFooter,AlertDialogHeader,AlertDialogTitle,AlertDialogCancel} from '@/components/ui/alert-dialog';
 import {bannerProformaGecerli,proformaOnayiGecerli,type BannerProforma} from '@/lib/satinAlma/bannerProforma';
+import { SUREC4_TOAST } from '@/lib/bildirimler/toastMesajlari';
 import BannerProformaBelgesi from './BannerProformaBelgesi';
 import styles from '../admin.module.css';
 import local from './esnek-proforma.module.css';
@@ -14,8 +15,8 @@ const tarih = (deger: string) => new Date(deger).toLocaleDateString('tr-TR', {ti
 export const BANNER_PROFORMA_SUTUNLARI = ['Toplam Tutar', 'KDV', 'Genel Tutar', 'Proforma', 'Onay'];
 const para = (tutar: number) => tutar.toLocaleString('tr-TR', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' TL';
 
-export default function BannerProformaAlani({firmaId,ay,sadeceOnayli=false,basari,tablo,alimSutunSayisi=0}:{
- firmaId:string;ay:string;sadeceOnayli?:boolean;basari?:(mesaj:string)=>void;
+export default function BannerProformaAlani({firmaId,ay,sadeceOnayli=false,basari,hata:hataToast,tablo,alimSutunSayisi=0}:{
+ firmaId:string;ay:string;sadeceOnayli?:boolean;basari?:(mesaj:string)=>void;hata?:(mesaj:string)=>void;
  tablo?:(ekSatir:ReactNode, proformaHucreleri?:ReactNode)=>ReactNode; alimSutunSayisi?:number;
 }) {
  const [sonuc,setSonuc]=useState<{anahtar:string;veri?:BannerProforma;hata?:string}|null>(null),[yenileme,setYenileme]=useState(0);
@@ -30,13 +31,13 @@ export default function BannerProformaAlani({firmaId,ay,sadeceOnayli=false,basar
  useEffect(()=>{const yenile=()=>setYenileme(n=>n+1);window.addEventListener('focus',yenile);return()=>window.removeEventListener('focus',yenile);},[]);
  async function onayla(){
  if(kilit.current||!d?.onaylanabilir||d.onay)return;
- if(d.admin_onayi&&!aciklama.trim()){setHata('Admin onayı için açıklama zorunludur.');return;}
+ if(d.admin_onayi&&!aciklama.trim()){const mesaj='Admin onayı için açıklama zorunludur.';if(hataToast)hataToast(mesaj);else setHata(mesaj);return;}
  kilit.current=true;setKaydediyor(true);setHata('');
  try{const r=await fetch(`/admin/api/firmalar/${firmaId}/banner-proformalar`,{method:'POST',headers:{'Content-Type':'application/json'},signal:AbortSignal.timeout(15000),body:JSON.stringify({ay,aciklama:aciklama.trim()})});const v=await r.json();
  if(!r.ok)throw Error(typeof v.hata==='string'?v.hata:'Onay kaydedilemedi.');if(!proformaOnayiGecerli(v))throw Error('Onay sonucu doğrulanamadı.');
- if (!d.admin_onayi) basari?.("Proforma fatura onaylanmıştır.");
+ basari?.(SUREC4_TOAST.proformaOnaylandi('banner', v.tur === 'admin'));
  setModal(false);setYenileme(n=>n+1);
- }catch(e){setHata(e instanceof Error?e.message:'Onay kaydedilemedi.');}finally{kilit.current=false;setKaydediyor(false);}
+ }catch(e){const mesaj=e instanceof Error?e.message:'Onay kaydedilemedi.';if(hataToast)hataToast(mesaj);else setHata(mesaj);}finally{kilit.current=false;setKaydediyor(false);}
  }
  const sutunlar = [...BANNER_ALIM_SUTUNLARI, ...BANNER_PROFORMA_SUTUNLARI];
  const satirlar = (icerik: ReactNode) => tablo ? tablo(icerik) : (
@@ -82,7 +83,7 @@ export default function BannerProformaAlani({firmaId,ay,sadeceOnayli=false,basar
  <AlertDialog open={modal} onOpenChange={v=>{if(!kilit.current)setModal(v);}}><AlertDialogContent>
  <AlertDialogHeader><AlertDialogTitle>{d.admin_onayi?'Admin Onayı':'Proforma Fatura Onayı'}</AlertDialogTitle><AlertDialogDescription>{d.admin_onayi?'Ayın tüm banner alımlarını firma adına onaylamak için açıklamanızı yazın.':'Onayınızdan sonra Cogniti tarafından resmi faturanız düzenlenecektir.'}</AlertDialogDescription></AlertDialogHeader>
  {d.admin_onayi&&<label className={local.modalAlan} htmlFor={`${id}-aciklama`}>Açıklama *<textarea id={`${id}-aciklama`} required maxLength={2000} value={aciklama} onChange={e=>setAciklama(e.target.value)} disabled={kaydediyor}/></label>}
- {hata&&<p role="alert" className={local.hata}>{hata}</p>}
+ {!hataToast&&hata&&<p role="alert" className={local.hata}>{hata}</p>}
  <AlertDialogFooter><AlertDialogCancel disabled={kaydediyor}>Vazgeç</AlertDialogCancel><Button type="button" disabled={kaydediyor||(d.admin_onayi&&!aciklama.trim())} onClick={()=>void onayla()}>{kaydediyor?'Kaydediliyor…':d.admin_onayi?'Kaydet':'Onayla'}</Button></AlertDialogFooter>
  </AlertDialogContent></AlertDialog></>;
 }

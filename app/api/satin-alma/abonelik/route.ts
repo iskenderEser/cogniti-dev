@@ -3,7 +3,7 @@ import { abonelikBaslatildiEpostasiGonder } from "@/lib/satinAlma/satinAlmaEpost
 import { createAdminClient, createClient } from "@/lib/supabase/server";
 import { uuidGecerliMi } from "@/lib/uretim/rpcTemel";
 
-const pozitifTamSayi = (deger: unknown, enCok: number) =>
+const pozitifTamSayi = (deger: unknown, enCok: number): deger is number =>
   typeof deger === "number" && Number.isSafeInteger(deger) && deger > 0 && deger <= enCok;
 
 export async function POST(request: Request) {
@@ -42,6 +42,9 @@ export async function POST(request: Request) {
       kullaniciId: user.id,
       siparisId: data.siparis_id,
       hesapTuru,
+      aylikToken,
+      aylikKurus,
+      baslangic,
     });
 
     return partnerYanit({ ok: true, siparisId: data.siparis_id });
