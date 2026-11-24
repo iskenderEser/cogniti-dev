@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Building2, Edit3, Gift, LoaderCircle, Plus, Search, Trophy, Users, UserCheck } from "lucide-react";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
+import { SUREC10_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -86,7 +87,7 @@ function UttEclubEczanelerimPage() {
       if (!res.ok) throw new Error(d.hata ?? "Takım adı kaydedilemedi.");
       setTakimAdi(yeniAd);
       setTakimDuzenleniyor(false);
-      basari("Takım adı kaydedildi.");
+      basari(SUREC10_TOAST.takimAdiKaydedildi);
     } catch (err) {
       hata(err instanceof Error ? err.message : "Takım adı kaydedilemedi.");
     } finally {

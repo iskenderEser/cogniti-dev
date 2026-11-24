@@ -1,4 +1,5 @@
 "use client";
+import { SUREC6_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import type { BakiyeTuru } from "@/lib/satinAlma/esnekPaket";
 
 
@@ -426,8 +427,13 @@ export function useYayinYonetimi({ kapsam = "geleneksel", kullaniciId, aktifAnaS
     const d = await res.json();
     if (!res.ok) { hata(d.hata ?? "Yayına alınamadı.", d.adim, d.detay); }
     else {
-      // Planlı yayında API tarihli mesaj döner; hemen yayında bilinen metin.
-      basari(d.mesaj ?? `${b.urun_adi} yayına alındı.`);
+      const planliGun = yayinGunleri[b.soru_seti_durum_id];
+      if (planliGun) {
+        const [yil, ay, gun] = planliGun.split("-");
+        basari(d.mesaj ?? SUREC6_TOAST.yayinPlanlandi(`${gun}.${ay}.${yil} 07:00`));
+      } else {
+        basari(SUREC6_TOAST.yayinaAlindi(b.urun_adi));
+      }
       window.dispatchEvent(new Event("cogniti-token-bakiye-yenile"));
       setYayinGunleri(prev => { const yeni = { ...prev }; delete yeni[b.soru_seti_durum_id]; return yeni; });
       await veriCek();
@@ -449,7 +455,7 @@ export function useYayinYonetimi({ kapsam = "geleneksel", kullaniciId, aktifAnaS
       });
       const d = await res.json();
       if (!res.ok) hata(d.hata ?? "Yayın adayı silinemedi.", d.adim, d.detay);
-      else basari(d.mesaj ?? "Yayın adayı kalıcı olarak silindi.");
+      else basari(SUREC6_TOAST.yayinAdayiSilindi);
       await veriCek();
     } catch (err) {
       hata("Yayın adayı silinemedi.", "Yayın öncesi silme", err instanceof Error ? err.message : undefined);
@@ -469,7 +475,18 @@ export function useYayinYonetimi({ kapsam = "geleneksel", kullaniciId, aktifAnaS
     const d = await res.json();
     window.dispatchEvent(new Event("cogniti-token-bakiye-yenile"));
     if (!res.ok) { hata(d.hata ?? "İşlem gerçekleştirilemedi.", d.adim, d.detay); }
-    else { basari(d.mesaj ?? "İşlem tamamlandı."); await veriCek(); }
+    else {
+      const planMesaji =
+        islem === "hemen_yayinla"
+          ? SUREC6_TOAST.planHemenYayinlandi
+          : islem === "tarih_degistir"
+            ? SUREC6_TOAST.planTarihiGuncellendi
+            : islem === "plan_iptal"
+              ? SUREC6_TOAST.planIptalEdildi
+              : (d.mesaj ?? "İşlem tamamlandı.");
+      basari(planMesaji);
+      await veriCek();
+    }
     setIslemLoading(null);
   };
 
@@ -479,7 +496,7 @@ export function useYayinYonetimi({ kapsam = "geleneksel", kullaniciId, aktifAnaS
     const d = await res.json();
     window.dispatchEvent(new Event("cogniti-token-bakiye-yenile"));
     if (!res.ok) { hata(d.hata ?? "İşlem gerçekleştirilemedi.", d.adim, d.detay); }
-    else { basari(mevcutDurum === "yayinda" ? "Yayın durduruldu." : "Yayın yeniden başlatıldı."); await veriCek(); }
+    else { basari(mevcutDurum === "yayinda" ? SUREC6_TOAST.yayinDurduruldu : SUREC6_TOAST.yayinYenidenBaslatildi); await veriCek(); }
     setIslemLoading(null);
   };
 

@@ -14,6 +14,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { CheckCircle2 } from "lucide-react";
+import { SUREC9_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import { createVideoPlayer, type VideoPlayer } from "@/lib/video/videoPlayer";
 import VideoCercevesi from "@/components/video/VideoCercevesi";
 import TuketimOynaticisi from "@/components/ogrenme-araci/TuketimOynaticisi";
@@ -260,11 +261,11 @@ export default function CcVideoOynatici({
 
     if (d.kazanilan_puan > 0) {
       setKazanilanPuan(d.kazanilan_puan);
-      basari(`+${d.kazanilan_puan} puan kazandınız!`);
+      basari(SUREC9_TOAST.izlemePuaniKazanildi(d.kazanilan_puan));
     }
 
     if (d.ileri_sarildi) {
-      uyari("Öğrenme içeriğinde ileri gidildiği için sorular gösterilmeyecek.");
+      uyari(SUREC9_TOAST.ileriSarmaSoruYok);
     }
 
     if (d.soru_gosterilecek) {
@@ -318,9 +319,9 @@ export default function CcVideoOynatici({
     setCevapSonuclari(d.sonuclar);
     setNetPuan(d.net);
     if (d.net > 0) {
-      basari(`Net +${d.net} puan kazandınız!`);
+      basari(SUREC9_TOAST.netPuanKazanildi(d.net));
     } else if (d.net < 0) {
-      uyari(`Net ${d.net} puan kaybettiniz.`);
+      uyari(SUREC9_TOAST.netPuanKaybi(d.net));
     }
 
     // Sorular cevaplandıktan sonra kullanıcıya sonuçları gösterip otomatik listeye dönüş
@@ -560,8 +561,8 @@ export default function CcVideoOynatici({
                     style={{ color: netPuan >= 0 ? "var(--tema-oynatici-cc-basari-metin)" : "var(--tema-oynatici-cc-kayip-metin)" }}
                   >
                     {netPuan >= 0
-                      ? `Net +${netPuan} puan kazandınız!`
-                      : `Net ${netPuan} puan kaybettiniz.`}
+                      ? SUREC9_TOAST.netPuanKazanildi(netPuan)
+                      : SUREC9_TOAST.netPuanKaybi(netPuan)}
                   </span>
                 </div>
               )}

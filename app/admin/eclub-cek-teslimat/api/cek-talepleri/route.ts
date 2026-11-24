@@ -1,4 +1,5 @@
 import { cekKoduGecerli, cekBaglantisiGecerli } from "@/lib/eclub/store/teslimat";
+import { eclubCekIptalEpostasiGonder } from "@/lib/eclub/store/cekIptalEposta";
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/server";
 import { adminGirisKontrol } from "@/lib/utils/adminGirisKontrol";
@@ -50,6 +51,9 @@ export async function PATCH(request: NextRequest) {
   if (r.error) return dbHatasi(r.error);
   const sonuc = Array.isArray(r.data) ? r.data[0] : r.data;
   if (!sonuc?.ok) return isKuraluHatasi(sonuc?.hata || "Talep işlemi tamamlanamadı.");
+  if (b.action === "iptal") {
+    await eclubCekIptalEpostasiGonder(db, b.talep_id.toLowerCase());
+  }
   return NextResponse.json({ mesaj: b.action === "iptal" ? "Talep iptal edildi; bağlı puan kullanımı kaldırıldı." : "Çek kodu kaydedildi; e-posta ve push teslimat kuyruğuna alındı." });
  } catch (error) { return sunucuHatasi(error, "PATCH E-Club admin firma talepleri"); }
 }

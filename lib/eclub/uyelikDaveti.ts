@@ -39,11 +39,23 @@ export async function uyelikDavetiGonder(db: SupabaseClient, authId: string, ori
     const from = process.env.ECLUB_DAVET_EMAIL_FROM || process.env.ECLUB_CEK_EMAIL_FROM;
     if (!apiKey || !from) throw new Error("Davet e-postası için RESEND_API_KEY ve ECLUB_DAVET_EMAIL_FROM tanımlanmalı.");
     const link = `${adres}/sifre-olustur?token=${token}`;
+    const adSoyad = [data.user.user_metadata.ad, data.user.user_metadata.soyad].filter(Boolean).join(" ").trim();
+    const hitap = adSoyad ? `Sayın ${adSoyad},` : "Sayın Üyemiz,";
     const r = await fetch("https://api.resend.com/emails", {
       method: "POST", signal: AbortSignal.timeout(10000),
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json", "Idempotency-Key": `eclub-davet/${davetId}` },
       body: JSON.stringify({ from, to: [data.user.email], subject: "Cogniti E-Club üyelik davetiniz",
-        html: `<p>Merhaba ${kacir(String(data.user.user_metadata.ad ?? ""))},</p><p>E-Club üyeliğinizi tamamlamak için kendi şifrenizi oluşturun.</p><p><a href="${kacir(link)}">Şifre oluştur</a></p><p>Bu bağlantı 24 saat geçerlidir ve tek kullanımlıktır. Süresi dolarsa temsilcinizden daveti yeniden göndermesini isteyebilirsiniz.</p>`,
+        html:
+          `<p style="margin: 0 0 16px 0;">${kacir(hitap)}</p>` +
+          `<p style="margin: 0 0 16px 0;">E-Club üyeliğinizi tamamlamak için aşağıdaki bağlantıdan şifrenizi oluşturabilirsiniz.</p>` +
+          `<p style="margin: 0 0 16px 0;"><a href="${kacir(link)}" style="color: #0b63ce; font-weight: 700; text-decoration: underline;">Şifre oluştur</a></p>` +
+          `<p style="margin: 0 0 16px 0;">Bu bağlantı 24 saat geçerlidir ve tek kullanımlıktır. Süresi dolarsa temsilcinizden daveti yeniden göndermesini isteyebilirsiniz.</p>` +
+          `<p style="margin: 0;">Cogniti · bilgi taşır</p>`,
+        text:
+          `${hitap}\n\n` +
+          `E-Club üyeliğinizi tamamlamak için aşağıdaki bağlantıdan şifrenizi oluşturabilirsiniz:\n${link}\n\n` +
+          `Bu bağlantı 24 saat geçerlidir ve tek kullanımlıktır. Süresi dolarsa temsilcinizden daveti yeniden göndermesini isteyebilirsiniz.\n\n` +
+          `Cogniti · bilgi taşır`,
       }),
     });
     if (!r.ok) throw new Error("Davet e-postası gönderilemedi.");

@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CheckCircle2, Clock3, Gift, Store, XCircle } from "lucide-react";
 import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
+import { SUREC10_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { cekTakipOnbellegi, type CekTalebi, type CekTakipVerisi } from "@/lib/eclub/store/cekTakipOnbellek";
 import { vitrinOnbellegi } from "@/lib/eclub/store/vitrinOnbellek";
@@ -126,7 +127,7 @@ export default function EclubCekTaleplerimPage() {
       });
       const data = await res.json();
       if (!res.ok) { hata(data.hata ?? "Talep iptal edilemedi.", data.adim, data.detay); return; }
-      basari(data.mesaj ?? "Çek talebi iptal edildi.");
+      basari(data.mesaj ?? SUREC10_TOAST.cekTalebiIptalEdildi);
       if (onbellekAnahtari) { cekTakipOnbellegi.sil(onbellekAnahtari); vitrinOnbellegi.sil(onbellekAnahtari); }
       await Promise.all([talepleriCek(), secim.panel?.veriCek(true)]);
     } catch (err) {

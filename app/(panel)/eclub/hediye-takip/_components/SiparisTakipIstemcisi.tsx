@@ -1,6 +1,18 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { SUREC10_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import { SIPARIS_TAKIP_SAYFA_LIMITI, type SiparisTakipApiYaniti, type SiparisTakipStatlari } from "@/lib/eclub/hediyeTakip/siparisTakip";
 import SiparisTakipFiltreleri, { BOS_SIPARIS_TAKIP_FILTRELERI, type SiparisTakipFiltreDegerleri } from "./SiparisTakipFiltreleri";
 import SiparisTakipListesi from "./SiparisTakipListesi";
@@ -8,6 +20,7 @@ import SiparisTakipListesi from "./SiparisTakipListesi";
 const BOS_SECENEKLER: SiparisTakipApiYaniti["filtre_secenekleri"] = { eczaneler: [], urunler: [] };
 
 export default function SiparisTakipIstemcisi({ onStatlar }: { onStatlar: (statlar: SiparisTakipStatlari | undefined) => void }) {
+  const { mesajlar, basari } = useHataMesaji();
   const [filtreler, setFiltreler] = useState<SiparisTakipFiltreDegerleri>({ ...BOS_SIPARIS_TAKIP_FILTRELERI });
   const [veri, setVeri] = useState<SiparisTakipApiYaniti | null>(null);
   const [secenekler, setSecenekler] = useState<SiparisTakipApiYaniti["filtre_secenekleri"]>(BOS_SECENEKLER);
@@ -15,6 +28,7 @@ export default function SiparisTakipIstemcisi({ onStatlar }: { onStatlar: (statl
   const [dahaYukleniyor, setDahaYukleniyor] = useState(false);
   const [hata, setHata] = useState<string | null>(null);
   const [islemdekiId, setIslemdekiId] = useState<string | null>(null);
+  const [onayBekleyenId, setOnayBekleyenId] = useState<string | null>(null);
   const [yenilemeAnahtari, setYenilemeAnahtari] = useState(0);
   const istekSirasi = useRef(0);
   const aktifIstek = useRef<AbortController | null>(null);
@@ -86,8 +100,8 @@ export default function SiparisTakipIstemcisi({ onStatlar }: { onStatlar: (statl
 
   const onayla = async (talepId: string) => {
     if (islemKilidi.current) return;
-    if (!window.confirm("Sipariş bilgilerini kontrol ettiniz mi? Bu siparişi UTT olarak onaylayacaksınız.")) return;
     islemKilidi.current = true;
+    setOnayBekleyenId(null);
     setIslemdekiId(talepId);
     setHata(null);
     try {
@@ -96,6 +110,7 @@ export default function SiparisTakipIstemcisi({ onStatlar }: { onStatlar: (statl
       });
       const sonuc = await yanit.json();
       if (!yanit.ok) throw new Error(sonuc.hata ?? "Sipariş onaylanamadı.");
+      basari(SUREC10_TOAST.uttSiparisOnaylandi);
       setYenilemeAnahtari((deger) => deger + 1);
     } catch (error) {
       setHata(error instanceof Error ? error.message : "Sipariş onaylanamadı.");
@@ -111,8 +126,25 @@ export default function SiparisTakipIstemcisi({ onStatlar }: { onStatlar: (statl
       talepler={veri?.talepler ?? []} yukleniyor={yukleniyor} hata={hata}
       filtreVar={Object.values(filtreler).some(Boolean)} dahaVar={veri?.sayfalama.sonraki_kayit_var_mi ?? false}
       dahaYukleniyor={dahaYukleniyor} islemdekiId={islemdekiId}
-      onOnayla={(id) => void onayla(id)} onDahaFazla={() => void dahaFazlaYukle()}
+      onOnayla={(id) => setOnayBekleyenId(id)} onDahaFazla={() => void dahaFazlaYukle()}
       onYenidenDene={() => setYenilemeAnahtari((deger) => deger + 1)}
     />
+    <AlertDialog open={onayBekleyenId !== null} onOpenChange={(acik) => { if (!acik && !islemKilidi.current) setOnayBekleyenId(null); }}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Sipariş Onayı</AlertDialogTitle>
+          <AlertDialogDescription>
+            Sipariş bilgilerini kontrol ettiniz mi? Bu siparişi UTT olarak onaylayacaksınız.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Vazgeç</AlertDialogCancel>
+          <AlertDialogAction onClick={() => { if (onayBekleyenId) void onayla(onayBekleyenId); }}>
+            Onayla
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+    <HataMesajiContainer mesajlar={mesajlar} />
   </div>;
 }

@@ -30,6 +30,10 @@ export async function eclubCekEpostaKuyrugunuTuket(maxIsSayisi = 10) {
     if (!is?.outbox_id) break;
 
     try {
+      const adTemiz = String(is.alici_adi ?? "").trim();
+      const hitapHtml = adTemiz ? `Sayın ${htmlKacir(is.alici_adi || "")},` : "Sayın Eczacımız,";
+      const hitapMetin = adTemiz ? `Sayın ${adTemiz},` : "Sayın Eczacımız,";
+      const linkGecerli = Boolean(is.kullanim_linki && cekBaglantisiGecerli(is.kullanim_linki));
       const yanit = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {
@@ -41,7 +45,24 @@ export async function eclubCekEpostaKuyrugunuTuket(maxIsSayisi = 10) {
           from,
           to: [is.alici_eposta],
           subject: "Hediye çekiniz hazır",
-          html: `<p>Merhaba ${htmlKacir(is.alici_adi || "")},</p><p><strong>${htmlKacir(is.cek_tutari_tl)} TL</strong> değerindeki Hediye çekiniz hazırdır.</p><p>Çek kodunuz: <strong>${htmlKacir(is.cek_kodu)}</strong></p>${is.kullanim_linki && cekBaglantisiGecerli(is.kullanim_linki) ? `<p>Kullanım bağlantısı: <a href="${htmlKacir(is.kullanim_linki)}">Hediye çekini kullan</a></p>` : ""}<p>Kodu ve varsa kullanım bağlantısını Cogniti içindeki Hediye Çeki Takibi alanından da görebilirsiniz.</p>`,
+          html:
+            `<p style="margin: 0 0 16px 0;">${hitapHtml}</p>` +
+            `<p style="margin: 0 0 16px 0;"><strong>${htmlKacir(is.cek_tutari_tl)} TL</strong> değerindeki hediye çekiniz hazırdır.</p>` +
+            `<ul style="margin: 0 0 16px 0; padding-left: 20px;">` +
+            `<li style="margin: 0 0 ${linkGecerli ? 6 : 0}px 0;"><strong>Çek kodunuz:</strong> ${htmlKacir(is.cek_kodu)}</li>` +
+            (linkGecerli
+              ? `<li style="margin: 0;"><strong>Kullanım bağlantısı:</strong> <a href="${htmlKacir(is.kullanim_linki)}" style="color: #0b63ce; font-weight: 700; text-decoration: underline;">Hediye çekini kullan</a></li>`
+              : "") +
+            `</ul>` +
+            `<p style="margin: 0 0 16px 0;">Çek kodunu${linkGecerli ? " ve kullanım bağlantısını" : ""} Cogniti içindeki Hediye Çeki Takibi alanından da görebilirsiniz.</p>` +
+            `<p style="margin: 0;">Cogniti · bilgi taşır</p>`,
+          text:
+            `${hitapMetin}\n\n` +
+            `${is.cek_tutari_tl} TL değerindeki hediye çekiniz hazırdır.\n\n` +
+            `- Çek kodunuz: ${is.cek_kodu}\n` +
+            (linkGecerli ? `- Kullanım bağlantısı: ${is.kullanim_linki}\n` : "") +
+            `\nÇek kodunu${linkGecerli ? " ve kullanım bağlantısını" : ""} Cogniti içindeki Hediye Çeki Takibi alanından da görebilirsiniz.\n\n` +
+            `Cogniti · bilgi taşır`,
         }),
       });
       if (!yanit.ok) throw new Error(`RESEND_${yanit.status}`);

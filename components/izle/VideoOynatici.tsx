@@ -13,6 +13,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import { SUREC8_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import { createVideoPlayer, bunnyEmbedUrl, type VideoPlayer } from "@/lib/video/videoPlayer";
 import { oynatmaBaslatilmaliMi } from "@/lib/izleme/baslat";
 import VideoCercevesi from "@/components/video/VideoCercevesi";
@@ -63,7 +64,7 @@ const PUAN_ETIKET: Record<string, string> = {
 
 // Kazanılan puan kalemlerinden birleşik, motive edici toast metni kurar.
 // 0 puanlı kalemler gizlenir. Tek kalem: "İzlemeden 40 puan kazandınız. Tebrikler!"
-// Çok kalem: "İzlemeden 40 puan ve doğru cevaplamadan 10 puan, toplam da 50 puan
+// Çok kalem: "İzlemeden 40 puan ve doğru cevaplamadan 10 puan, toplamda 50 puan
 // kazandınız. Tebrikler!". Kazanç yoksa null döner (toast atılmaz).
 function puanMesaji(kalemler: PuanKalemi[]): string | null {
   const dolu = kalemler.filter((k) => k.puan > 0);
@@ -73,13 +74,13 @@ function puanMesaji(kalemler: PuanKalemi[]): string | null {
   const buyuk = (s: string) => s.charAt(0).toLocaleUpperCase("tr-TR") + s.slice(1);
   const parca = dolu.map((k, i) => `${i === 0 ? buyuk(etiket(k.tur)) : etiket(k.tur)} ${k.puan} puan`);
 
-  if (parca.length === 1) return `${parca[0]} kazandınız. Tebrikler!`;
+  if (parca.length === 1) return SUREC8_TOAST.puanKazanildiTek(parca[0]);
 
   const govde = parca.length === 2
     ? parca.join(" ve ")
     : `${parca.slice(0, -1).join(", ")} ve ${parca[parca.length - 1]}`;
   const toplam = dolu.reduce((t, k) => t + k.puan, 0);
-  return `${govde}, toplam da ${toplam} puan kazandınız. Tebrikler!`;
+  return SUREC8_TOAST.puanKazanildiCoklu(govde, toplam);
 }
 
 interface Props {
@@ -393,9 +394,9 @@ export default function VideoOynatici({ video, tuketici, onizlemeYuzeyi = false,
         playerRef.current.play(); // onay: sarılan noktadan devam et
       }
       if ((d.kaybedilen_puan ?? 0) > 0) {
-        uyari(`İleri sarma kaydedildi: ${d.kaybedilen_puan} puan kaybettiniz.`);
+        uyari(SUREC8_TOAST.ileriSarmaPuanKaybi(d.kaybedilen_puan));
       } else {
-        uyari("İleri sarma kaydedildi. Bu izleme için soru hakkı kapandı.");
+        uyari(SUREC8_TOAST.ileriSarmaSoruHakkiKapandi);
       }
       setBekleyenSeekBitis(null);
       ileriSarmaOlayIdRef.current = null;
@@ -491,16 +492,10 @@ export default function VideoOynatici({ video, tuketici, onizlemeYuzeyi = false,
         return;
       }
       setIzlemeTamamlandi(true); setSoruGosterilecek(d.soru_gosterilecek);
-      if (!d.puan_kazanildi && !d.soru_gosterilecek) uyari(d.mesaj ?? "Puan kazanma saatleri dışında izlendi.");
+      if (!d.puan_kazanildi && !d.soru_gosterilecek) uyari(d.mesaj ?? SUREC8_TOAST.puanSaatleriDisi);
       if (d.puan_uyarisi) uyari(d.puan_uyarisi); // B-08: puan yazım hatası kullanıcıya görünür
       if (!d.soru_gosterilecek && d.soru_hakki_nedeni) {
-        const nedenMesaji: Record<string, string> = {
-          ileri_sarma: "Öğrenme içeriğinde ileri gidildiği için bu tamamlama sonunda sorular gösterilmeyecek.",
-          yarim_deneme: "Bu turda daha önce yarım kalan bir deneme olduğu için sorular gösterilmeyecek.",
-          tekrar_izleme: "Bu öğrenme içeriği bu turda daha önce tamamlandığı için sorular tekrar gösterilmeyecek.",
-          puan_disinda: "Puan saatleri dışında tamamlandığı için sorular gösterilmeyecek.",
-        };
-        const mesaj = nedenMesaji[d.soru_hakki_nedeni];
+        const mesaj = SUREC8_TOAST.soruHakkiNedenleri[d.soru_hakki_nedeni];
         if (mesaj) uyari(mesaj);
       }
       const bitirKalemleri: PuanKalemi[] = d.kazanilan_puanlar ?? [];

@@ -8,6 +8,7 @@ import { HEDEF_ROL_TASARIM } from "@/app/(panel)/talepler/_types";
 import { useAuth } from "@/app/providers/AuthProvider";
 import UttGonderimIncelemesi from "@/components/eclub/UttGonderimIncelemesi";
 import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
+import { SUREC10_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import type { YayinTuruFiltreDegeri } from "@/components/ogrenme-araci/YayinTuruFiltresi";
 import SayfaRehberi from "@/components/rehber/SayfaRehberi";
 import { PeriyotButonlari } from "@/components/ui/periyot-butonlari";
@@ -132,7 +133,7 @@ function UttEclubVideolarimPage() {
   };
 
   const yayinSecimiDegistir = (yayinId: string) => {
-    if (!seciliYayinIdleri.includes(yayinId) && seciliYayinIdleri.length >= 20) { hata("Tek işlemde en fazla 20 yayın seçebilirsiniz."); return; }
+    if (!seciliYayinIdleri.includes(yayinId) && seciliYayinIdleri.length >= 20) { hata(SUREC10_TOAST.yayinSecimLimiti); return; }
     setSeciliYayinIdleri((onceki) => onceki.includes(yayinId) ? onceki.filter((id) => id !== yayinId) : [...onceki, yayinId]);
   };
 

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { useHataMesaji } from "@/components/HataMesaji";
+import { SUREC8_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import type { OneriKaydi } from "../_components/BmOneriTakibi";
 import type { TmBmKaydi, TmOneriKaydi } from "../_components/TmOneriTakibi";
 import type { Periyot } from "@/lib/utils/raporUtils";
@@ -37,7 +38,7 @@ export function useOneriler(bitisYaklasan = false) {
     });
     const d = await res.json();
     if (!res.ok) {
-      hata(d.hata ?? "Beğeni işlemi başarısız.", d.adim, d.detay);
+      hata(d.hata ?? SUREC8_TOAST.begeniHatasi, d.adim, d.detay);
       return;
     }
     setOneriler((prev) =>
@@ -62,7 +63,7 @@ export function useOneriler(bitisYaklasan = false) {
     });
     const d = await res.json();
     if (!res.ok) {
-      hata(d.hata ?? "Favori işlemi başarısız.", d.adim, d.detay);
+      hata(d.hata ?? SUREC8_TOAST.favoriHatasi, d.adim, d.detay);
       return;
     }
     setOneriler((prev) =>

@@ -12,6 +12,7 @@ import BmOneriGonderimPaneli, { type BmOneriAlici, type BmOneriLimitler } from "
 import { useBmOneriSecimi } from "@/components/yayin/BmOneriSecimi";
 import { UttYayinKartIskeletleri, UttYayinListeAkisi } from "@/components/yayin/UttYayinListeOrtaklari";
 import { YayinKarti } from "@/components/yayin/YayinKarti";
+import { SUREC7_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import { oneriTarihKurali } from "@/lib/tclub/oneri/tarihKurali";
 import { yayin_kodu } from "@/lib/utils/yayinKodu";
 import type { UttVideoKategorisi } from "@/lib/video/uttVideoKategorileri";
@@ -111,7 +112,7 @@ export default function BmEgitimYayinlari({ kategoriBilgisi }: { kategoriBilgisi
   const yayinSec = (yayinId: string) => {
     setSeciliYayinIdleri((mevcut) => {
       if (mevcut.includes(yayinId)) return mevcut.filter((id) => id !== yayinId);
-      if (mevcut.length >= 3) { hata("Tek seferde en fazla 3 yayın önerilebilir."); return mevcut; }
+      if (mevcut.length >= 3) { hata(SUREC7_TOAST.limitAsildi); return mevcut; }
       return [...mevcut, yayinId];
     });
   };
@@ -137,9 +138,9 @@ export default function BmEgitimYayinlari({ kategoriBilgisi }: { kategoriBilgisi
       if (basariliIdler.size === 0) { setPanelHatasi(veri.hata ?? "Önerilerin hiçbiri gönderilemedi. Seçimleriniz korundu."); return; }
       setSeciliYayinIdleri((mevcut) => mevcut.filter((id) => !basariliIdler.has(id)));
       if (basarisizSayisi > 0) {
-        uyari(`${basariliIdler.size} öneri gönderildi, ${basarisizSayisi} öneri gönderilemedi. Gönderilemeyen yayınlar seçili kaldı.`, undefined, true);
+        uyari(SUREC7_TOAST.oneriKismiGonderildi(basariliIdler.size, basarisizSayisi), undefined, true);
       } else {
-        basari(`${basariliIdler.size} öneri gönderildi.`);
+        basari(SUREC7_TOAST.oneriGonderildi(basariliIdler.size));
       }
       setPanelAcik(false);
       setAliciId("");

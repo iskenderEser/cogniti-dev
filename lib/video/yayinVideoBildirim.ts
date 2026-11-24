@@ -1,6 +1,62 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { pushYayinlaArkada } from "@/lib/push/orkestrasyon";
 
+const kacir = (v: string) =>
+  v.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
+
+async function yayinVideoHataEpostasiGonder(
+  adminSupabase: SupabaseClient,
+  params: { yayinId: string; ureticiId: string; urunAdi: string },
+) {
+  const apiKey = process.env.RESEND_API_KEY;
+  const from = process.env.COGNITI_UYELIK_EMAIL_FROM || process.env.ECLUB_DAVET_EMAIL_FROM;
+  if (!apiKey || !from) return;
+
+  try {
+    const { data: uretici } = await adminSupabase
+      .from("kullanicilar")
+      .select("ad, soyad, eposta")
+      .eq("kullanici_id", params.ureticiId)
+      .maybeSingle();
+
+    const eposta = uretici?.eposta ? String(uretici.eposta).trim().toLowerCase() : "";
+    if (!eposta) return;
+
+    const adSoyad = [uretici?.ad, uretici?.soyad].filter(Boolean).join(" ").trim();
+    const hitap = adSoyad ? `Sayın ${adSoyad},` : "Sayın Kullanıcı,";
+
+    const yanit = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      signal: AbortSignal.timeout(10000),
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+        "Idempotency-Key": `yayin-video-hatasi/${params.yayinId}`,
+      },
+      body: JSON.stringify({
+        from,
+        to: [eposta],
+        subject: "Yayınınız video işleme hatası nedeniyle durduruldu",
+        html:
+          `<p style="margin: 0 0 16px 0;">${kacir(hitap)}</p>` +
+          `<p style="margin: 0 0 16px 0;">${kacir(`${params.urunAdi} adlı yayınınızın video dosyası işlenemediği için yayınınız otomatik olarak durdurulmuştur.`)}</p>` +
+          `<p style="margin: 0 0 16px 0;">Yayın Yönetimi ekranından içeriği kontrol edip yeniden yükleyebilirsiniz.</p>` +
+          `<p style="margin: 0;">Cogniti · bilgi taşır</p>`,
+        text:
+          `${hitap}\n\n` +
+          `${params.urunAdi} adlı yayınınızın video dosyası işlenemediği için yayınınız otomatik olarak durdurulmuştur.\n\n` +
+          `Yayın Yönetimi ekranından içeriği kontrol edip yeniden yükleyebilirsiniz.\n\n` +
+          `Cogniti · bilgi taşır`,
+      }),
+    });
+    if (!yanit.ok) {
+      console.error("[yayin-video-eposta] video işleme hatası e-postası gönderilemedi:", yanit.status);
+    }
+  } catch (err) {
+    console.error("[yayin-video-eposta] video işleme hatası e-posta istisnası:", err);
+  }
+}
+
 /**
  * Video Bunny'de işlenirken oluşturulan yayınlar için,
  * kodlama tamamlandığında veya hata verdiğinde üreticiye bildirim oluşturur.
@@ -113,6 +169,11 @@ export async function yayinVideoSonucunuBildir(
       );
 
       pushYayinlaArkada(adminSupabase, "video_yayini", [y.uretici_id], { yayinId: y.yayin_id });
+      await yayinVideoHataEpostasiGonder(adminSupabase, {
+        yayinId: y.yayin_id,
+        ureticiId: y.uretici_id,
+        urunAdi,
+      });
     } else if (durum.hazir && (durum.videoSuresiSaniye ?? 0) > 0) {
       await adminSupabase.from("bildirimler").upsert(
         {

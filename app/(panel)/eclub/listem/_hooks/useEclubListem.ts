@@ -2,6 +2,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { SUREC10_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import type { Eczane, Kisi, YeniKisiForm, GlnSorguSonuc, EclubGecisTalebi } from "../_types";
 
 interface UseEclubListemArgs {
@@ -89,7 +90,7 @@ export function useEclubListem({ hazir, hata, basari }: UseEclubListemArgs) {
         hata(d.hata ?? "Eczane eklenemedi.", d.adim, d.detay);
         return false;
       }
-      basari(d.mesaj ?? "Eczane listenize eklendi.");
+      basari(d.mesaj ?? SUREC10_TOAST.eczaneEklendi);
       await veriCek();
       return true;
     } catch (err) {
@@ -114,7 +115,7 @@ export function useEclubListem({ hazir, hata, basari }: UseEclubListemArgs) {
         hata(d.hata ?? "Eczane çıkarılamadı.", d.adim, d.detay);
         return false;
       }
-      basari(d.mesaj ?? "Eczane listenizden çıkarıldı.");
+      basari(d.mesaj ?? SUREC10_TOAST.eczaneCikarildi);
       await veriCek();
       return true;
     } catch (err) {
@@ -146,7 +147,7 @@ export function useEclubListem({ hazir, hata, basari }: UseEclubListemArgs) {
         hata(d.hata ?? "Kişi eklenemedi.", d.adim, d.detay);
         return false;
       }
-      basari(d.mesaj ?? "Kişi eklendi.");
+      basari(d.mesaj ?? SUREC10_TOAST.kisiEklendi);
       await veriCek();
       return true;
     } catch (err) {
@@ -175,7 +176,7 @@ export function useEclubListem({ hazir, hata, basari }: UseEclubListemArgs) {
         hata(d.hata ?? "Kişi güncellenemedi.", d.adim, d.detay);
         return false;
       }
-      basari(d.mesaj ?? "Kişi güncellendi.");
+      basari(d.mesaj ?? SUREC10_TOAST.kisiGuncellendi);
       await veriCek();
       return true;
     } catch (err) {
@@ -200,7 +201,7 @@ export function useEclubListem({ hazir, hata, basari }: UseEclubListemArgs) {
         hata(d.hata ?? "Kişi pasife alınamadı.", d.adim, d.detay);
         return false;
       }
-      basari(d.mesaj ?? "Kişi pasife alındı.");
+      basari(d.mesaj ?? SUREC10_TOAST.kisiPasifeAlindi);
       await veriCek();
       return true;
     } catch (err) {

@@ -1,6 +1,7 @@
 "use client";
 
 import { vivaDonusYolu } from "@/lib/viva/sozlesme";
+import { panelDonusYolu } from "@/lib/panel/donusYolu";
 import { panelBaslangici } from "@/lib/panel/baslangic";
 import { FIRMA_ADMIN_ROLU } from "@/lib/utils/roller";
 import { firmaAdminBaslangicYolu } from "@/lib/admin/firmaAdminErisimi";
@@ -98,7 +99,8 @@ export default function LoginPage() {
         }
       }
 
-      if (!iptalEdildi && !karsilamayaDonuluyor.current) window.location.replace(vivaDonusYolu(window.location.search) ?? (kullanici.rol === "admin" ? "/admin" : panelBaslangici(kullanici.rol).yol));
+      const donusYolu = panelDonusYolu(window.location.search) ?? vivaDonusYolu(window.location.search);
+      if (!iptalEdildi && !karsilamayaDonuluyor.current) window.location.replace(donusYolu ?? (kullanici.rol === "admin" ? "/admin" : panelBaslangici(kullanici.rol).yol));
     };
     yonlendir();
     return () => { iptalEdildi = true; };
@@ -125,7 +127,7 @@ export default function LoginPage() {
         if (!res.ok) { hata(data.hata ?? "Telefon veya şifre hatalı."); setLoading(false); return; }
         beniHatirlaKaydet(beniHatirla);
         // Tam sayfa geçiş: AuthProvider yeni oturumu temiz durumla yüklesin.
-        window.location.href = vivaDonusYolu(window.location.search) ?? data.yonlendir ?? "/login";
+        window.location.href = panelDonusYolu(window.location.search) ?? vivaDonusYolu(window.location.search) ?? data.yonlendir ?? "/login";
       } catch {
         hata("Giriş yapılamadı; yeniden deneyin.");
         setLoading(false);

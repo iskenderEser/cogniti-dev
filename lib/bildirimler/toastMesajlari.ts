@@ -142,3 +142,74 @@ export const SUREC5_TOAST = {
   iuAtamaGuncellendi: "İçerik üreticisi ataması güncellendi.",
   gorevDevredildi: "Görev yeni içerik üreticisine devredildi.",
 } as const;
+
+export const SUREC6_TOAST = {
+  yayinaAlindi: (urunAdi: string) =>
+    urunAdi.trim() ? `${urunAdi.trim()} yayına alındı.` : "Öğrenme içeriği yayına alındı.",
+  yayinPlanlandi: (tarihMetni: string) => `Yayın ${tarihMetni} için planlandı.`,
+  planHemenYayinlandi: "Yayın hemen yayına alındı.",
+  planTarihiGuncellendi: "Yayın tarihi ve token rezervasyonu güncellendi.",
+  planIptalEdildi:
+    "Plan iptal edildi; ayrılan tokenlar serbest bırakıldı ve içerik yayına bekleyenlere döndü.",
+  yayinDurduruldu: "Yayın durduruldu.",
+  yayinYenidenBaslatildi: "Yayın yeniden başlatıldı.",
+  yayinAdayiSilindi: "Yayın adayı kalıcı olarak silindi.",
+} as const;
+
+export const SUREC7_TOAST = {
+  limitAsildi: "Tek seferde en fazla 3 yayın önerilebilir.",
+  oneriGonderildi: (adet: number) => `${adet} öneri gönderildi ve bilgilendirme e-postası iletildi.`,
+  oneriKismiGonderildi: (basarili: number, basarisiz: number) =>
+    `${basarili} öneri gönderildi, ${basarisiz} öneri gönderilemedi. Gönderilemeyen yayınlar seçili kaldı.`,
+} as const;
+
+export const SUREC8_TOAST = {
+  puanKazanildiTek: (parca: string) => `${parca} kazandınız. Tebrikler!`,
+  puanKazanildiCoklu: (govde: string, toplam: number) =>
+    `${govde}, toplamda ${toplam} puan kazandınız. Tebrikler!`,
+  puanSaatleriDisi: "Puan kazanma saatleri dışında izlendi.",
+  ileriSarmaPuanKaybi: (kaybedilenPuan: number) =>
+    `İleri sarma kaydedildi: ${kaybedilenPuan} puan kaybettiniz.`,
+  ileriSarmaSoruHakkiKapandi: "İleri sarma kaydedildi. Bu izleme için soru hakkı kapandı.",
+  soruHakkiNedenleri: {
+    ileri_sarma: "Öğrenme içeriğinde ileri gidildiği için bu tamamlama sonunda sorular gösterilmeyecek.",
+    yarim_deneme: "Bu turda daha önce yarım kalan bir deneme olduğu için sorular gösterilmeyecek.",
+    tekrar_izleme: "Bu öğrenme içeriği bu turda daha önce tamamlandığı için sorular tekrar gösterilmeyecek.",
+    puan_disinda: "Puan saatleri dışında tamamlandığı için sorular gösterilmeyecek.",
+  } as Record<string, string>,
+  begeniHatasi: "Beğeni işlemi başarısız.",
+  favoriHatasi: "Favori işlemi başarısız.",
+} as const;
+
+export const SUREC9_TOAST = {
+  challengeGonderildi: (adet: number) => `${adet} challenge gönderildi.`,
+  izlemePuaniKazanildi: (puan: number) => `+${puan} puan kazandınız!`,
+  netPuanKazanildi: (net: number) => `Net +${net} puan kazandınız!`,
+  netPuanKaybi: (net: number) => `Net ${Math.abs(net)} puan kaybettiniz.`,
+  ileriSarmaSoruYok: "Öğrenme içeriğinde ileri gidildiği için sorular gösterilmeyecek.",
+  icerikYayindaDegil: "İçerik şu an yayında değil.",
+  begeniHatasi: "Beğeni işlemi başarısız.",
+  favoriHatasi: "Favori işlemi başarısız.",
+} as const;
+
+export const SUREC10_TOAST = {
+  eczaneEklendi: "Eczane listenize eklendi.",
+  eczaneCikarildi: "Eczane listenizden çıkarıldı.",
+  kisiEklendi: "Kişi eklendi.",
+  kisiGuncellendi: "Kişi güncellendi.",
+  kisiPasifeAlindi: "Kişi pasife alındı.",
+  takimAdiKaydedildi: "Takım adı kaydedildi.",
+  yayinSecimLimiti: "Tek işlemde en fazla 20 yayın seçebilirsiniz.",
+  izlemePuaniKazanildi: (netPuan: number) => `+${netPuan} net izleme puanı kazandınız!`,
+  izlemePuaniKazanildiKayipli: (netPuan: number, brutPuan: number, kayip: number) =>
+    `+${netPuan} net izleme puanı kazandınız! (${brutPuan} brüt - ${kayip} ileri sarma kaybı)`,
+  cevapPuaniKazanildi: (puan: number) => `+${puan} cevaplama puanı kazandınız!`,
+  ileriSarmaPuanKaybi: (kayip: number) =>
+    `İleri sarma kaydedildi: ${kayip} puan kaybettiniz ve soru hakkınız kapandı.`,
+  ileriSarmaSoruYok: "İleri sarma kaydedildi; bu izleme sonunda sorular gösterilmeyecek.",
+  ileriSarmaSoruGosterilmeyecek:
+    "Öğrenme içeriğinde ileri gidildiği için bu tamamlama sonunda sorular gösterilmeyecek.",
+  cekTalebiIptalEdildi: "Çek talebi iptal edildi; talebe bağlı puan kullanımı kaldırıldı.",
+  uttSiparisOnaylandi: "Sipariş onaylandı ve BM onayına gönderildi.",
+  bmSiparisOnaylandi: "Sipariş BM tarafından onaylandı.",
+} as const;

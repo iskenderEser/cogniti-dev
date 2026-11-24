@@ -10,6 +10,7 @@ import { useRouter, useParams, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/app/providers/AuthProvider";
 import CcVideoOynatici from "@/components/challenge-club/CcVideoOynatici";
+import { SUREC9_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import { HataMesajiContainer, 
   useHataMesaji,
 } from "@/components/HataMesaji";
@@ -88,7 +89,7 @@ export default function CcIzlemePage() {
       }
 
       if (data.durum !== "yayinda") {
-        hata(`Video şu an yayında değil. Durum: ${data.durum}`, "durum kontrolü");
+        hata(SUREC9_TOAST.icerikYayindaDegil, "durum kontrolü");
         setLoading(false);
         return;
       }

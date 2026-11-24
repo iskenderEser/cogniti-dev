@@ -411,7 +411,7 @@ export async function POST(request: NextRequest) {
     // bildirim gider ve tur penceresi erken başlardı.
     if (planliTarih) {
       return NextResponse.json({
-        mesaj: `Yayın planlandı: ${planliTarih.toLocaleDateString("tr-TR", { day: "2-digit", month: "2-digit", year: "numeric" })} 07:00.`,
+        mesaj: `Yayın ${planliTarih.toLocaleDateString("tr-TR", { day: "2-digit", month: "2-digit", year: "numeric" })} 07:00 için planlandı.`,
         yayin: yeniYayin,
       }, { status: 201 });
     }

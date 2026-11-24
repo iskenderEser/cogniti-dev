@@ -75,7 +75,11 @@ export async function proxy(request: NextRequest) {
   // Kullanıcı paneli ve karşılama ayrı adreslerdir; /ana-sayfa asla rewrite edilmez.
   if (pathname === "/ana-sayfa") {
     if (!user) {
-      const girisResponse = NextResponse.redirect(new URL("/login", request.url));
+      const loginUrl = new URL("/login", request.url);
+      if (request.nextUrl.search) {
+        loginUrl.searchParams.set("donus", `${pathname}${request.nextUrl.search}`);
+      }
+      const girisResponse = NextResponse.redirect(loginUrl);
       supabaseResponse.cookies.getAll().forEach((cookie) => girisResponse.cookies.set(cookie));
       girisResponse.headers.set("Cache-Control", "private, no-store");
       return girisResponse;

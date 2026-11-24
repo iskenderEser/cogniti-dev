@@ -4,6 +4,7 @@ import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { TUKETICI_ROLLER, YONLENDIRICI_ROLLER, hedefRolleriOku, type HedefRoller } from "@/lib/utils/roller";
 import { hataYaniti, sunucuHatasi, yetkiHatasi, rolHatasi, validasyonHatasi, isKuraluHatasi } from "@/lib/utils/hataIsle";
 import { bildirimOlustur } from "@/lib/utils/bildirimOlustur";
+import { bmOneriEpostasiGonder } from "@/lib/tclub/oneri/oneriEposta";
 import { oneriTarihKurali } from "@/lib/tclub/oneri/tarihKurali";
 import { haftalikLimitKontrol, aylikKotaKontrol, MAKS_ALICI_HAFTA } from "@/lib/tclub/oneri/limitKontrol";
 import { rolCozucu } from "@/lib/utils/rolCozucu";
@@ -485,12 +486,12 @@ export async function POST(request: NextRequest) {
     const yayinIds = [...new Set(oneriler.map((oneri) => oneri.yayin_id))];
     const { data: yayinlar, error: yayinError } = await adminSupabase
       .from("v_yayin_detay")
-      .select("yayin_id, durum, urun_adi, hedef_roller, firma_id, takim_id")
+      .select("yayin_id, durum, urun_adi, arac_turu, hedef_roller, firma_id, takim_id")
       .in("yayin_id", yayinIds);
 
     if (yayinError) return hataYaniti("Yayınlar sorgulanırken hata oluştu.", "v_yayin_detay view SELECT", yayinError);
 
-    const yayinMap = new Map<string, { durum: string; urun_adi: string | null; hedef_roller: HedefRoller; firma_id: string | null; takim_id: string | null }>();
+    const yayinMap = new Map<string, { durum: string; urun_adi: string | null; arac_turu?: string | null; hedef_roller: HedefRoller; firma_id: string | null; takim_id: string | null }>();
     for (const y of yayinlar ?? []) {
       yayinMap.set(y.yayin_id, { ...y, hedef_roller: hedefRolleriOku(y) });
     }
@@ -551,6 +552,25 @@ export async function POST(request: NextRequest) {
         mesaj: `Yeni izleme öneriniz var: ${urun_adi}`,
       });
     }
+
+    const siteAdresi = process.env.COGNITI_SITE_URL?.trim() || "https://cogniti.net";
+    await bmOneriEpostasiGonder(adminSupabase, {
+      onerenId: user.id,
+      siteAdresi,
+      kayitlar: kaydedilenler.map((yeniOneri) => {
+        const y = yayinMap.get(yeniOneri.yayin_id);
+        return {
+          oneriId: yeniOneri.oneri_id,
+          yayinId: yeniOneri.yayin_id,
+          aliciId: yeniOneri.kullanici_id,
+          urunAdi: y?.urun_adi ?? "Yayın",
+          aracTuru: y?.arac_turu ?? null,
+          oneriBaslangic: yeniOneri.oneri_baslangic,
+          oneriBitis: yeniOneri.oneri_bitis,
+        };
+      }),
+    });
+
     return NextResponse.json({
       mesaj: `${kaydedilenler.length} öneri kaydedildi.`,
       oneriler: kaydedilenler,

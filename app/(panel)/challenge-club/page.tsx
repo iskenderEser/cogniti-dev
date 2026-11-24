@@ -7,6 +7,7 @@
 "use client";
 
 import { panelBaslangici } from "@/lib/panel/baslangic";
+import { SUREC9_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import { SadeKontrolButonu, SadeKontrolGrubu } from "@/components/kontrol/SadeKontroller";
 
 import { useAuth } from "@/app/providers/AuthProvider";
@@ -270,7 +271,7 @@ export default function ChallengeClubPage() {
       });
       const d = await res.json();
       if (!res.ok) { hata(d.hata ?? "Challenge gönderilemedi.", d.adim, d.detay); return null; }
-      if ((d.gonderilen_sayisi ?? 0) > 0) basari(`${d.gonderilen_sayisi} challenge gönderildi.`);
+      if ((d.gonderilen_sayisi ?? 0) > 0) basari(SUREC9_TOAST.challengeGonderildi(d.gonderilen_sayisi));
       await verileriCek();
       return { gonderilen_sayisi: d.gonderilen_sayisi ?? 0, atlanan: d.atlanan ?? [] };
     } catch (err) {
@@ -307,7 +308,7 @@ export default function ChallengeClubPage() {
       setBekleyenler((prev) => guncelle(prev));
       setGonderdiklerim((prev) => guncelle(prev));
     } catch {
-      hata(`${tur === "begeni" ? "Beğeni" : "Favori"} işlemi başarısız.`);
+      hata(tur === "begeni" ? SUREC9_TOAST.begeniHatasi : SUREC9_TOAST.favoriHatasi);
     }
   };
   const handleBegeni = (e: MouseEvent, yayin_id: string) => etkilesim("begeni", e, yayin_id);

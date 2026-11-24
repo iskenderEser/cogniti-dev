@@ -18,6 +18,7 @@ import type { IzlemeCevapSonucu, IzlemeSorusu } from "@/lib/soru/izlemeTipleri";
 import { eclubHoykSureDurumu, eclubHoykUcRengi, sonrakiTurkiyeGeceYarisi } from "@/lib/eclub/hoykSureCercevesi";
 import { hesaplananRenk } from "@/lib/tema/cizimRenkleri";
 import { bildirimRozetleriniYenile } from "@/lib/bildirimler/rozet";
+import { SUREC10_TOAST } from "@/lib/bildirimler/toastMesajlari";
 
 interface OynaticiOneri {
   oneri_id: string;
@@ -306,8 +307,8 @@ export default function EclubVideoOynatici({ oneri, onKapat, onTamamlandi, hata,
       playerRef.current?.play(); // onay: sarılan noktadan devam et
       const kayip = Number(d.kaybedilen_puan ?? 0);
       uyari(kayip > 0
-        ? `İleri sarma kaydedildi: ${kayip} puan kaybettiniz ve soru hakkınız kapandı.`
-        : "İleri sarma kaydedildi; bu izleme sonunda sorular gösterilmeyecek.");
+        ? SUREC10_TOAST.ileriSarmaPuanKaybi(kayip)
+        : SUREC10_TOAST.ileriSarmaSoruYok);
       setBekleyenSeekBitis(null);
       ileriSarmaOlayIdRef.current = null;
     } catch (err) {
@@ -354,12 +355,12 @@ export default function EclubVideoOynatici({ oneri, onKapat, onTamamlandi, hata,
         const netPuan = Number(d.net_izleme_puani ?? d.izleme_puani);
         const ileriSarmaKaybi = Number(d.ileri_sarma_kaybi ?? 0);
         basari(ileriSarmaKaybi > 0
-          ? `+${netPuan} net izleme puanı kazandınız! (${d.izleme_puani} brüt - ${ileriSarmaKaybi} ileri sarma kaybı)`
-          : `+${netPuan} net izleme puanı kazandınız!`);
+          ? SUREC10_TOAST.izlemePuaniKazanildiKayipli(netPuan, d.izleme_puani, ileriSarmaKaybi)
+          : SUREC10_TOAST.izlemePuaniKazanildi(netPuan));
       }
       if (d.puan_uyarisi) hata(d.puan_uyarisi, "puan kaydı"); // B-08: yazım hatası kullanıcıya görünür
       if (!d.soru_gosterilecek && d.soru_hakki_nedeni === "ileri_sarma") {
-        uyari("Öğrenme içeriğinde ileri gidildiği için bu tamamlama sonunda sorular gösterilmeyecek.");
+        uyari(SUREC10_TOAST.ileriSarmaSoruGosterilmeyecek);
       }
 
       // Sorular tamamlama anında bu izlemeye sabitlenir ve ayrı uçtan güvenli biçimde çekilir.
@@ -405,7 +406,7 @@ export default function EclubVideoOynatici({ oneri, onKapat, onTamamlandi, hata,
     }
     setCevapSonuclari(d.sonuclar ?? []);
     if (d.kazanilan_puan > 0) {
-      basari(`+${d.kazanilan_puan} cevaplama puanı kazandınız!`);
+      basari(SUREC10_TOAST.cevapPuaniKazanildi(d.kazanilan_puan));
     }
     if (d.puan_uyarisi) hata(d.puan_uyarisi, "puan kaydı"); // B-08: yazım hatası kullanıcıya görünür
     setIslemLoading(false);

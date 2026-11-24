@@ -1,6 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { HataMesajiContainer, useHataMesaji } from "@/components/HataMesaji";
+import { SUREC10_TOAST } from "@/lib/bildirimler/toastMesajlari";
 import { CEK_TAKIP_SAYFA_LIMITI, type CekTakipApiYaniti } from "@/lib/eclub/hediyeTakip/cekTakip";
 import { SIPARIS_TAKIP_SAYFA_LIMITI, type SiparisTakipApiYaniti, type SiparisTakipStatlari } from "@/lib/eclub/hediyeTakip/siparisTakip";
 import CekTakipFiltreleri, { BOS_CEK_TAKIP_FILTRELERI, type CekTakipFiltreDegerleri } from "./CekTakipFiltreleri";
@@ -155,6 +157,7 @@ function BmSiparisTakibi({ rol, ilkDurum, uttId, onUttDegistir, uttler, onUttler
   onUttler: (uttler: UttSecenegi[]) => void;
   onStatlar: (statlar: SiparisTakipStatlari | undefined) => void;
 }) {
+  const { mesajlar, basari } = useHataMesaji();
   const [filtreler, setFiltreler] = useState<SiparisTakipFiltreDegerleri>({ ...BOS_SIPARIS_TAKIP_FILTRELERI, durum: ilkDurum });
   const [veri, setVeri] = useState<BmSiparisYaniti | null>(null);
   const [secenekler, setSecenekler] = useState(BOS_SIPARIS_SECENEKLER);
@@ -226,6 +229,7 @@ function BmSiparisTakibi({ rol, ilkDurum, uttId, onUttDegistir, uttler, onUttler
             ...talep, durum: "bm_onayladi", bm_onay_tarihi: sonuc.bm_onay_tarihi, onaylanabilir_mi: false,
           } : talep) } : onceki);
           onStatlar(statlar);
+          basari(SUREC10_TOAST.bmSiparisOnaylandi);
         } catch (error) {
           setHata(error instanceof Error ? error.message : "Sipariş onaylanamadı.");
         } finally {
@@ -236,5 +240,6 @@ function BmSiparisTakibi({ rol, ilkDurum, uttId, onUttDegistir, uttler, onUttler
       onDahaFazla={() => void yukle(veri?.talepler.length ?? 0, true)} onYenidenDene={() => setYenilemeAnahtari((deger) => deger + 1)}
       uttGoster saltOkunur={rol === "tm"}
     />
+    <HataMesajiContainer mesajlar={mesajlar} />
   </div>;
 }

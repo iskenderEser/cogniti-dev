@@ -115,7 +115,7 @@ export async function PUT(
           .eq("yayin_id", yayin_id).eq("durum", "planlandi").select("yayin_id");
         if (silError) return hataYaniti("Plan iptal edilemedi.", "yayin_yonetimi DELETE — plan iptali", silError);
         if (!silinen?.length) return isKuraluHatasi("Plan durumu değişti. Listeyi yenileyin.");
-        return NextResponse.json({ mesaj: "Plan iptal edildi; ayrılan tokenlar serbest bırakıldı; video yayına bekleyenlere döndü." }, { status: 200 });
+        return NextResponse.json({ mesaj: "Plan iptal edildi; ayrılan tokenlar serbest bırakıldı ve içerik yayına bekleyenlere döndü." }, { status: 200 });
       }
 
       return validasyonHatasi("Planlanmış yayın için islem 'tarih_degistir', 'hemen_yayinla' ya da 'plan_iptal' olmalıdır.", ["islem"]);

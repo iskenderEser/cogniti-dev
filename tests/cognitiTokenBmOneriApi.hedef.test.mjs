@@ -11,7 +11,7 @@ const requests = [
   { yayin_id: 'pub-1', kullanici_id: 'utt-2', oneri_baslangic: '2030-01-02', oneri_bitis: '2030-01-04' },
 ];
 function setup({ dbError = null, dateExpires = false, role = 'bm', weekly = true, monthly = true, recipientAllowed = true } = {}) {
-  const inserts = [], notifications = [];
+  const inserts = [], notifications = [], emails = [];
   let dateCalls = 0;
   const db = { from(table) {
     const filters = new Map(); let insert;
@@ -54,6 +54,7 @@ function setup({ dbError = null, dateExpires = false, role = 'bm', weekly = true
     '@/lib/utils/roller': { TUKETICI_ROLLER: ['utt','kd_utt'], YONLENDIRICI_ROLLER: ['bm','tm'], hedefRolleriOku: y => y.hedef_roller },
     '@/lib/utils/hataIsle': errors,
     '@/lib/utils/bildirimOlustur': { bildirimOlustur: async p => notifications.push(p) },
+    '@/lib/tclub/oneri/oneriEposta': { bmOneriEpostasiGonder: async (_db, p) => emails.push(p) },
     '@/lib/tclub/oneri/tarihKurali': { oneriTarihKurali: (a,b) => {
       dateCalls++;
       return dateExpires && dateCalls > requests.length ? { gecerli: false, sebep: 'gecmis_tarih' } : {
@@ -73,8 +74,8 @@ function setup({ dbError = null, dateExpires = false, role = 'bm', weekly = true
     // Bu bağımlılıklar yalnız GET yolunda kullanılıyor.
     if (name.startsWith('@/lib/')) return {};
     throw new Error(`Beklenmeyen modül: ${name}`);
-  }, console, Response });
-  return { inserts, notifications, post: () => exports.POST({ json: async () => ({ oneriler: requests }) }) };
+  }, console, Response, process });
+  return { inserts, notifications, emails, post: () => exports.POST({ json: async () => ({ oneriler: requests }) }) };
 }
 
 test('İki BM önerisi tek toplu INSERT ile kaydedilir; bildirimler başarıdan sonra oluşturulur', async () => {
@@ -82,12 +83,15 @@ test('İki BM önerisi tek toplu INSERT ile kaydedilir; bildirimler başarıdan 
   assert.equal(response.status, 201); assert.equal(s.inserts.length, 1);
   assert.equal(s.inserts[0].length, 2); assert.equal(data.oneriler.length, 2);
   assert.equal(s.notifications.length, 2);
+  assert.equal(s.emails.length, 1);
+  assert.equal(s.emails[0].kayitlar.length, 2);
   assert.ok(s.inserts[0].every(r => r.oneren_id === 'bm-1'));
 });
 test('Veritabanı hatasında başarı dönülmez ve bildirim oluşturulmaz', async () => {
   const s = setup({ dbError: { code: '23514', message: 'fixture error' } });
   const response = await s.post(); assert.equal(response.status, 500);
   assert.equal(s.notifications.length, 0);
+  assert.equal(s.emails.length, 0);
 });
 test('Gönderim öncesi tarih geçersizleşirse hiç INSERT yapılmaz', async () => {
   const s = setup({ dateExpires: true }); const response = await s.post();

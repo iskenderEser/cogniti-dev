@@ -140,6 +140,18 @@ function olusturMockDb(ayarlar?: { oncedenBildirildi?: boolean }) {
           },
         };
       }
+      if (tablo === "kullanicilar") {
+        return {
+          select: () => ({
+            eq: () => ({
+              maybeSingle: () => Promise.resolve({
+                data: { ad: "Mehmet", soyad: "Kaya", eposta: "mehmet@hepifarma.com" },
+                error: null,
+              }),
+            }),
+          }),
+        };
+      }
       return {};
     },
   } as unknown as SupabaseClient;
@@ -190,4 +202,44 @@ test("aynı yayın için ikinci kez tetiklendiğinde mükerrer bildirim oluştur
   await yayinVideoSonucunuBildir(mockDb, "test-guid", { hazir: true, videoSuresiSaniye: 120 });
 
   assert.equal(bildirimler.length, 0);
+});
+
+test("video kodlaması başarısız olduğunda Resend ayarlıysa üreticiye e-posta gönderilir, başarıda gönderilmez", async () => {
+  const oncekiKey = process.env.RESEND_API_KEY;
+  const oncekiFrom = process.env.COGNITI_UYELIK_EMAIL_FROM;
+  const oncekiFetch = globalThis.fetch;
+  const gidenler: Array<{ url: string; headers: Record<string, string>; body: Record<string, unknown> }> = [];
+
+  process.env.RESEND_API_KEY = "test-key";
+  process.env.COGNITI_UYELIK_EMAIL_FROM = "Cogniti <bildirim@cogniti.net>";
+  globalThis.fetch = (async (url: string | URL | Request, init?: RequestInit) => {
+    gidenler.push({
+      url: String(url),
+      headers: (init?.headers ?? {}) as Record<string, string>,
+      body: JSON.parse(String(init?.body ?? "{}")),
+    });
+    return new Response(JSON.stringify({ id: "email-1" }), { status: 200 });
+  }) as typeof fetch;
+
+  try {
+    const { mockDb } = olusturMockDb();
+    await yayinVideoSonucunuBildir(mockDb, "test-guid-ok", { hazir: true, videoSuresiSaniye: 90 });
+    assert.equal(gidenler.length, 0);
+
+    await yayinVideoSonucunuBildir(mockDb, "test-guid-fail", { hazir: false, hatali: true });
+    assert.equal(gidenler.length, 1);
+    assert.equal(gidenler[0].url, "https://api.resend.com/emails");
+    assert.equal(gidenler[0].headers["Idempotency-Key"], "yayin-video-hatasi/yayin-123");
+    assert.deepEqual(gidenler[0].body.to, ["mehmet@hepifarma.com"]);
+    assert.equal(gidenler[0].body.subject, "Yayınınız video işleme hatası nedeniyle durduruldu");
+    assert.match(String(gidenler[0].body.text), /Sayın Mehmet Kaya,/);
+    assert.match(String(gidenler[0].body.text), /Aspirin Plus adlı yayınınızın video dosyası işlenemediği/);
+    assert.match(String(gidenler[0].body.text), /Cogniti · bilgi taşır$/);
+  } finally {
+    globalThis.fetch = oncekiFetch;
+    if (oncekiKey === undefined) delete process.env.RESEND_API_KEY;
+    else process.env.RESEND_API_KEY = oncekiKey;
+    if (oncekiFrom === undefined) delete process.env.COGNITI_UYELIK_EMAIL_FROM;
+    else process.env.COGNITI_UYELIK_EMAIL_FROM = oncekiFrom;
+  }
 });
