@@ -13,7 +13,6 @@ export interface PartnerHakEdisKaydi {
   kdv_tutari: number;
   kdvli_odenecek_tutar: number;
   planlanan_odeme_gunu: string | null;
-  odenen_gun: string | null;
 }
 
 export type PartnerHakEdisToplamlari = Pick<PartnerHakEdisKaydi,
@@ -53,7 +52,7 @@ function hakedisKaydiGecerli(deger: unknown): deger is PartnerHakEdisKaydi {
     && typeof r.siparis_tarihi === "string" && Number.isFinite(Date.parse(r.siparis_tarihi))
     && tutarlar.every(alan => { const tutar = r[alan]; return typeof tutar === "number" && Number.isFinite(tutar) && tutar >= 0; })
     && (r.hizmet_orani === undefined || partnerKomisyonOraniGecerli(r.hizmet_orani))
-    && odemeGunuGecerli(r.planlanan_odeme_gunu) && odemeGunuGecerli(r.odenen_gun);
+    && odemeGunuGecerli(r.planlanan_odeme_gunu);
 }
 
 export function partnerHakEdisListesiGecerli(

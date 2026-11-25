@@ -537,7 +537,7 @@ BEGIN
   );
 END $f$;
 
--- 9. Partner & Admin Hak Ediş okuma RPC'si (satır bazında hizmet_orani ve güncel komisyon_orani döner)
+-- 9. Partner & Admin Hak Ediş okuma RPC'si (güncel komisyon_orani ile dinamik hesaplama)
 CREATE OR REPLACE FUNCTION public.agora_partner_hakedis_filtre_kayitlari(
   p_partner_id uuid,
   p_sayfa integer,
@@ -570,18 +570,35 @@ BEGIN
 
   v_oran := public.agora_partner_komisyon_orani_oku();
 
-  WITH tum_siparisler AS (
+  WITH ham_siparisler AS (
     SELECT siparis_id, partner_id, partner_egitim_id, egitim_adi, siparis_tarihi,
-           satin_alma_bedeli, hizmet_orani, hizmet_bedeli, odenecek_tutar,
-           kdv_tutari, kdvli_odenecek_tutar, planlanan_odeme_gunu, odenen_gun
+           round(satin_alma_bedeli, 2) AS satin_alma_bedeli,
+           planlanan_odeme_gunu
     FROM public.agora_siparisleri
     WHERE partner_id = p_partner_id
     UNION ALL
     SELECT siparis_id, partner_id, partner_egitim_id, egitim_adi, siparis_tarihi,
-           satin_alma_bedeli, hizmet_orani, hizmet_bedeli, odenecek_tutar,
-           kdv_tutari, kdvli_odenecek_tutar, planlanan_odeme_gunu, odenen_gun
+           round(satin_alma_bedeli, 2) AS satin_alma_bedeli,
+           planlanan_odeme_gunu
     FROM public.agora_canli_siparisleri
     WHERE partner_id = p_partner_id
+  ),
+  hesapli_siparisler AS (
+    SELECT siparis_id, partner_id, partner_egitim_id, egitim_adi, siparis_tarihi,
+           satin_alma_bedeli,
+           v_oran AS hizmet_orani,
+           round(satin_alma_bedeli * v_oran / 100.0, 2) AS hizmet_bedeli,
+           satin_alma_bedeli - round(satin_alma_bedeli * v_oran / 100.0, 2) AS odenecek_tutar,
+           planlanan_odeme_gunu
+    FROM ham_siparisler
+  ),
+  tum_siparisler AS (
+    SELECT siparis_id, partner_id, partner_egitim_id, egitim_adi, siparis_tarihi,
+           satin_alma_bedeli, hizmet_orani, hizmet_bedeli, odenecek_tutar,
+           round(odenecek_tutar * 0.20, 2) AS kdv_tutari,
+           round(odenecek_tutar * 1.20, 2) AS kdvli_odenecek_tutar,
+           planlanan_odeme_gunu
+    FROM hesapli_siparisler
   ),
   filtrelenmis AS (
     SELECT *
@@ -613,7 +630,7 @@ BEGIN
      FROM (
        SELECT siparis_id, partner_egitim_id, egitim_adi, siparis_tarihi,
               satin_alma_bedeli, hizmet_orani, hizmet_bedeli, odenecek_tutar AS hak_edis,
-              kdv_tutari, kdvli_odenecek_tutar, planlanan_odeme_gunu, odenen_gun
+              kdv_tutari, kdvli_odenecek_tutar, planlanan_odeme_gunu
        FROM filtrelenmis
        ORDER BY siparis_tarihi DESC, siparis_id DESC
        LIMIT 20 OFFSET (p_sayfa - 1) * 20

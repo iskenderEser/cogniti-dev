@@ -12,7 +12,7 @@ const id = n => '10000000-0000-4000-8000-' + String(n).padStart(12, '0');
 const partner = id(11), admin = id(1);
 let partnerAuth = true, adminRole = 'admin', adminActive = true, calls = [], rpcError = null, override;
 const row = { siparis_id: id(21), partner_egitim_id: 'PE-10001', egitim_adi: 'Eğitim', siparis_tarihi: '2026-11-06T08:00:00+00:00',
-  satin_alma_bedeli: 10000, hizmet_bedeli: 1500, hak_edis: 8500, kdv_tutari: 1700, kdvli_odenecek_tutar: 10200, planlanan_odeme_gunu: null, odenen_gun: null };
+  satin_alma_bedeli: 10000, hizmet_bedeli: 1500, hak_edis: 8500, kdv_tutari: 1700, kdvli_odenecek_tutar: 10200, planlanan_odeme_gunu: null };
 const toplamlar={satin_alma_bedeli:10000,hizmet_bedeli:1500,hak_edis:8500,kdv_tutari:1700,kdvli_odenecek_tutar:10200};
 const list = (partnerId = partner, sayfa = 1) => ({ genel_toplam:{...toplamlar},filtre_toplam:{...toplamlar}, partner_id: partnerId, toplam: 1, sayfa, sayfa_boyutu: 20, kayitlar: [structuredClone(row)] });
 const db = { rpc: async (name, args) => {
@@ -77,7 +77,7 @@ for (const [code, expected] of [['42501', 403], ['22023', 400], ['42883', 503], 
 }
 rpcError = null;
 for (const invalid of [list(id(99)), { ...list(), sayfa: 2 }, { ...list(), toplam: -1 }, { ...list(), sayfa_boyutu: 21 },
-  { ...list(), kayitlar: [{ ...row, kdv_tutari: -1 }] }, { ...list(), kayitlar: [{ ...row, odenen_gun: 'yanlis' }] },
+  { ...list(), kayitlar: [{ ...row, kdv_tutari: -1 }] }, { ...list(), kayitlar: [{ ...row, planlanan_odeme_gunu: 'yanlis' }] },
   { ...list(), toplam: 2, kayitlar: [row, row] }, { ...list(), kayitlar: [{ ...row, satin_alma_bedeli: '10000' }] }]) {
   override = invalid; eq((await get()).status, 503); eq((await getAdmin()).status, 503);
 }

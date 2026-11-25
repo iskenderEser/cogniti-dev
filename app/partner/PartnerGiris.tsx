@@ -161,11 +161,14 @@ export default function PartnerGiris() {
           </g>
         </svg>
 
+        <div className={styles.ustDonusSatiri}>
+          <Link href="/welcome" prefetch={false} className={`${styles.topBack} ${styles.ustDonusBaglantisi}`}>
+            ← Cogniti’yi tanıyın
+          </Link>
+        </div>
+
         <section className={styles.sahne} aria-labelledby="partner-baslik">
           <div className={styles.metin}>
-            <Link href="/welcome" prefetch={false} className={styles.topBack}>
-              ← Cogniti’yi tanıyın
-            </Link>
             <div className={styles.ustSatir}>
               <p className={styles.bolumEtiketi}>COGNITI İŞ PARTNERLİĞİ</p>
               <button
