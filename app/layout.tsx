@@ -34,6 +34,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="tr" data-tema={VARSAYILAN_TEMA} suppressHydrationWarning>
       <body className={`${nunito.variable}`} style={{ fontFamily: "var(--font-nunito), sans-serif" }}>
+        <Script
+          id="google-tag-manager"
+          src="https://www.googletagmanager.com/gtm.js?id=GTM-P3PS23GF"
+          strategy="beforeInteractive"
+        />
+        <Script id="google-gtag-init" strategy="beforeInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+          `}
+        </Script>
         <Script id="cogniti-tema-baslangic" strategy="beforeInteractive">
           {LOGIN_TEMA_BASLANGIC_BETIGI}
         </Script>
