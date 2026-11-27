@@ -83,12 +83,12 @@ export default function CognitiHakkinda() {
           <div className={styles.yaklasimlar}>
             <div className={styles.yaklasimBlok}>
               <div className={styles.yaklasim}>
-                <BadgeCheck className={styles.yaklasimIkon} aria-hidden="true" />
-                <p>Eczaneler <strong>Cogniti E-Promotion (CEP)</strong> ile danışanlara ürünleriniz hakkında kanıta dayalı bilgiler iletirken, ürünlerinizin eczanelerden alınmasını teşvik edebilirsiniz.</p>
-              </div>
-              <div className={styles.yaklasim}>
                 <UsersRound className={styles.yaklasimIkon} aria-hidden="true" />
                 <p>Saha ekibiniz, <strong>Cogniti E-Promotion (CEP)</strong> uygulamasıyla eczacılara ve eczane teknisyenlerine e-tanıtımlar yaparken, her tanıtımın etkisini ölçebilirsiniz</p>
+              </div>
+              <div className={styles.yaklasim}>
+                <BadgeCheck className={styles.yaklasimIkon} aria-hidden="true" />
+                <p>Saha ekibinizin <strong>Cogniti E-Promotion (CEP)</strong> uygulaması ile eczanelere ilettiği yayınlar, eczanelerden danışanlara (son kullanıcılara) kanıta dayalı bilgilerin iletilmesini sağlarken, ürünlerinizin eczanelerden alınmasını teşvik edebilirsiniz.</p>
               </div>
             </div>
             <div className={styles.yaklasimBlok}>
