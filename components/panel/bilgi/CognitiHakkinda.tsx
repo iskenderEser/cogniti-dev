@@ -69,7 +69,7 @@ export default function CognitiHakkinda({ sosyalLinkler = [] }: { sosyalLinkler?
           ))}
         </g>
       </svg>
-      <header className={styles.sahne}>
+      <header className={sosyalLinkler.length > 0 ? `${styles.sahne} ${styles.sahneSosyalVar}` : styles.sahne}>
 
         <div className={styles.metin}>
           {sosyalLinkler.length > 0 && (
