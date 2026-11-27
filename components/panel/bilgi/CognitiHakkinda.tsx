@@ -1,6 +1,7 @@
 import { useId } from "react";
 import { BadgeCheck, BookOpen, FileImage, Headphones, MessageSquareText, Play, Radio, Trophy, UsersRound } from "lucide-react";
 import { YAYIN_TURU_SUNUMU } from "@/lib/ogrenmeAraci/turSunumu";
+import type { KamuSosyalLink } from "@/lib/sosyalLinkler";
 import CognitiFaydaModali from "./CognitiFaydaModali";
 import styles from "./cogniti-hakkinda.module.css";
 
@@ -18,7 +19,7 @@ const ADIMLAR = [
 ] as const;
 
 /** Metin alanı sakin tutulan, sayfa boyunca kenarlardan akan bilgi çizgileri. */
-export default function CognitiHakkinda() {
+export default function CognitiHakkinda({ sosyalLinkler = [] }: { sosyalLinkler?: KamuSosyalLink[] }) {
   const id = useId();
 
   return (
@@ -71,6 +72,23 @@ export default function CognitiHakkinda() {
       <header className={styles.sahne}>
 
         <div className={styles.metin}>
+          {sosyalLinkler.length > 0 && (
+            <nav className={styles.sosyalAlani} aria-label="Sosyal medya ve bağlantılar">
+              {sosyalLinkler.map((link) => (
+                <a
+                  key={link.id}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.sosyalBaglanti}
+                  aria-label={link.ad}
+                  title={link.ad}
+                >
+                  <img src={link.ikonUrl} alt="" className={styles.sosyalIkon} aria-hidden="true" />
+                </a>
+              ))}
+            </nav>
+          )}
           <div className={styles.ustSatir}>
             <p className={styles.bolumEtiketi}>COGNITI NEDİR?</p>
             <CognitiFaydaModali />

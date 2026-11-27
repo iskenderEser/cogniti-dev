@@ -51,6 +51,7 @@ import TakimBolgeFormu from "./_components/TakimBolgeFormu";
 import UrunTeknikYonetimi from "./_components/UrunTeknikYonetimi";
 import LogoKimlikYonetimi from "./_components/LogoKimlikYonetimi";
 import CognitiBannerlari from "./_components/CognitiBannerlari";
+import SosyalLinkYonetimi from "./_components/SosyalLinkYonetimi";
 import SistemAyarlari from "./_components/SistemAyarlari";
 import HbStorePaneli from "./_components/global/HbStorePaneli";
 import EczanemFirmaCekTanimlari from "./eczanem/_components/EczanemFirmaCekTanimlari";
@@ -83,7 +84,7 @@ function AdminPanelIcerigi() {
   const faturaSayfasi = faturaSayfasiBilgisi(seciliSekme);
   const bolumParametresi = aramaParametreleri.get("bolum")
     ?? (!firmaAdmin && !firmaId && !aramaParametreleri.has("sayfa") ? "yeni-firma" : null);
-  const globalBolum = bolumParametresi && (bolumParametresi !== "uyelik-basvurulari" || oturumKullanicisi?.rol === "admin") && ["partnerler", "bannerlar", "sistem", "hbstore", "eclubstore", "veri-sil", "uretim", "yeni-firma", "uyelik-basvurulari"].includes(bolumParametresi)
+  const globalBolum = bolumParametresi && (bolumParametresi !== "uyelik-basvurulari" || oturumKullanicisi?.rol === "admin") && ["partnerler", "bannerlar", "sosyal-linkler", "sistem", "hbstore", "eclubstore", "veri-sil", "uretim", "yeni-firma", "uyelik-basvurulari"].includes(bolumParametresi)
     ? bolumParametresi as GlobalBolumId | "yeni-firma" : null;
   const admin = useAdminPanel(firmaId);
   const partnerler = usePartnerFirmalari(!firmaAdmin && !!oturumKullanicisi);
@@ -135,7 +136,7 @@ function AdminPanelIcerigi() {
   const saltOkunur = !globalBolum && seciliSekme !== "firma-admin-yonetimi" && !firmaAdmin && f?.firma_admin_aktif === true;
   const platformSecili = !!f && platformBannerFirmasi(f.firma_id);
   const sayfa = yonetimSayfasiBilgisi(seciliSekme, platformSecili);
-  const globalBaslik = globalBolum ? ({ partnerler:"Cogniti Partner Yönetimi", bannerlar:"Cogniti Bannerları", sistem:"Sistem Ayarları", hbstore:"FirmaStore Çek Yönetimi", eclubstore:"E-Club Çek Teslimatı", "veri-sil":"Yayın Toplu/Tekil Silme", uretim:"İçerik Üretimi", "uyelik-basvurulari":"Firma Üyelik Başvuruları", "yeni-firma":"Yeni Firma Kayıt" }[globalBolum]) : null;
+  const globalBaslik = globalBolum ? ({ partnerler:"Cogniti Partner Yönetimi", bannerlar:"Cogniti Bannerları", "sosyal-linkler":"Sosyal Medya ve Link Ekleme", sistem:"Sistem Ayarları", hbstore:"FirmaStore Çek Yönetimi", eclubstore:"E-Club Çek Teslimatı", "veri-sil":"Yayın Toplu/Tekil Silme", uretim:"İçerik Üretimi", "uyelik-basvurulari":"Firma Üyelik Başvuruları", "yeni-firma":"Yeni Firma Kayıt" }[globalBolum]) : null;
 
   return (
     <FirmaYonetimYetkisi value={saltOkunur}><div className={styles.shell}>
@@ -175,6 +176,8 @@ function AdminPanelIcerigi() {
             <YeniFirmaFormu onKaydet={admin.handleFirmaEkle} />
           ) : globalBolum === "bannerlar" ? (
             <CognitiBannerlari firmalar={admin.firmalar} />
+          ) : globalBolum === "sosyal-linkler" ? (
+            <SosyalLinkYonetimi hata={admin.hata} basari={admin.basari} />
           ) : globalBolum === "sistem" ? (
             <SistemAyarlari hata={admin.hata} basari={admin.basari} />
           ) : globalBolum === "hbstore" ? (

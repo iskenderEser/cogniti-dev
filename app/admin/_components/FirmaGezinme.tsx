@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useSyncExternalStore } from "react";
-import { Handshake, Building2, ChevronDown, ChevronRight, ClipboardList, Factory, ImageIcon, Plus, Settings2, Store, Ticket, Trash2, X, LogOut } from "lucide-react";
+import { Handshake, Building2, ChevronDown, ChevronRight, ClipboardList, Factory, ImageIcon, Plus, Settings2, Share2, Store, Ticket, Trash2, X, LogOut } from "lucide-react";
 import { PARTNER_SAYFALARI, type PartnerSayfasi, type PartnerFirmaOzeti } from "@/lib/agora/partnerFirmaYonetimi";
 import type { Firma } from "../_types";
 import type { GlobalBolumId, ModulSekmeId } from "../_constants";
@@ -220,6 +220,7 @@ export default function FirmaGezinme(p: Props) {
         <button type="button" className={styles.navButton} aria-current={p.globalBolum === "eclubstore" ? "page" : undefined} onClick={() => { p.onKapat(); p.onGlobalSec("eclubstore"); }}><Ticket />E-Club Çek Teslimatı</button>
         <button type="button" className={styles.navButton} aria-current={p.globalBolum === "veri-sil" ? "page" : undefined} onClick={() => { p.onKapat(); p.onGlobalSec("veri-sil"); }}><Trash2 />Yayın Toplu/Tekil Silme</button>
         <button type="button" className={styles.navButton} aria-current={p.globalBolum === "bannerlar" ? "page" : undefined} onClick={() => { p.onKapat(); p.onGlobalSec("bannerlar"); }}><ImageIcon />Cogniti Bannerları</button>
+        <button type="button" className={styles.navButton} aria-current={p.globalBolum === "sosyal-linkler" ? "page" : undefined} onClick={() => { p.onKapat(); p.onGlobalSec("sosyal-linkler"); }}><Share2 />Sosyal Medya ve Link Ekleme</button>
       </div>
     </div>
     }

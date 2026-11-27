@@ -8,15 +8,17 @@ import CognitiIsSurecleri from "./CognitiIsSurecleri";
 import CognitiSunduklari from "./CognitiSunduklari";
 import { useTema } from "@/app/providers/TemaProvider";
 import GirisAltBilgileri from "@/app/login/_components/GirisAltBilgileri";
+import type { KamuSosyalLink } from "@/lib/sosyalLinkler";
 import styles from "@/app/login/login.module.css";
 import switchStyles from "@/components/tema/tema-secici.module.css";
 
 interface Props {
   bunnyLibraryId?: string;
   bunnyPullZone?: string;
+  sosyalLinkler?: KamuSosyalLink[];
 }
 
-export default function KarsilamaSayfasi({ bunnyLibraryId = "707975", bunnyPullZone }: Props) {
+export default function KarsilamaSayfasi({ bunnyLibraryId = "707975", bunnyPullZone, sosyalLinkler = [] }: Props) {
   const { tema, temaDegistir } = useTema();
   return (
     <div className={`${styles.page} ${styles.welcomePage}`}>
@@ -32,7 +34,7 @@ export default function KarsilamaSayfasi({ bunnyLibraryId = "707975", bunnyPullZ
           <Link className={`${styles.action} ${styles.partnerAction}`} href="/partner"><LogIn size={16} aria-hidden="true" />Cogniti İş Partnerliği</Link>
         </nav>
       </header>
-      <main><CognitiHakkinda /></main>
+      <main><CognitiHakkinda sosyalLinkler={sosyalLinkler} /></main>
       <CognitiIsSurecleri />
       <CognitiSunduklari bunnyLibraryId={bunnyLibraryId} bunnyPullZone={bunnyPullZone} />
       <GirisAltBilgileri gorunum={

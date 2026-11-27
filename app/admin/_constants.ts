@@ -129,7 +129,7 @@ export const MODUL_SEKMELERI: ModulSekme[] = [
   { id: "firmastore", etiket: "FirmaStore", grup: "modul", firmaAdminGorur: true },
 ];
 
-export type GlobalBolumId = "uyelik-basvurulari" | "partnerler" | "hbstore" | "eclubstore" | "uretim" | "sistem" | "bannerlar" | "veri-sil";
+export type GlobalBolumId = "uyelik-basvurulari" | "partnerler" | "hbstore" | "eclubstore" | "uretim" | "sistem" | "bannerlar" | "sosyal-linkler" | "veri-sil";
 
 export interface GlobalBolum {
   id: GlobalBolumId;
@@ -139,6 +139,7 @@ export interface GlobalBolum {
 
 export const GLOBAL_BOLUMLER: GlobalBolum[] = [
   { id:"bannerlar", etiket:"Cogniti Bannerları", firmaAdminGorur:false },
+  { id: "sosyal-linkler", etiket: "Sosyal Medya ve Link Ekleme", firmaAdminGorur: false },
   { id: "hbstore", etiket: "FirmaStore Çek Yönetimi", firmaAdminGorur: false },
   { id: "eclubstore", etiket: "E-Club Çek Teslimatı", firmaAdminGorur: false },
   { id: "uyelik-basvurulari", etiket: "Firma Üyelik Başvuruları", firmaAdminGorur: false },
